@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+ <title>(or emacs</title>
+ <link href="https://twitter.com/_abo_abo/atom.xml" rel="self"/>
+ <link href="https://twitter.com/_abo_abo/"/>
+ <updated>2014-12-21T17:50:06+01:00</updated>
+ <id>https://twitter.com/_abo_abo</id>
+ <author>
+   <name></name>
+   <email></email>
+ </author>
+
+ 
+ <entry>
+   <title>Easy helm improvement</title>
+   <link href="https://twitter.com/_abo_abo/2014/12/21/helm-backspace/"/>
+   <updated>2014-12-21T00:00:00+01:00</updated>
+   <id>https://twitter.com/_abo_abo/2014/12/21/helm-backspace</id>
+   <content type="html">&lt;p&gt;When you press &lt;kbd&gt;DEL&lt;/kbd&gt; (also known as backspace) in a &lt;code&gt;helm&lt;/code&gt;
+buffer, and there isn&amp;#39;t any input to delete, it only errors at you
+with:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Text is read only&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Why not make it do something useful instead, for instance close &lt;code&gt;helm&lt;/code&gt;?&lt;/p&gt;
+
+&lt;p&gt;Easy:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-cl&quot; data-lang=&quot;cl&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;helm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;helm-backspace&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Forward to `backward-delete-char&amp;#39;.&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;On error (read-only), quit without selecting.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;condition-case&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;backward-delete-char&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;error&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;helm-keyboard-quit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;helm-map&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;DEL&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;helm-backspace&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>Poyekhali!</title>
+   <link href="https://twitter.com/_abo_abo/2014/12/20/poyekhali!/"/>
+   <updated>2014-12-20T00:00:00+01:00</updated>
+   <id>https://twitter.com/_abo_abo/2014/12/20/poyekhali!</id>
+   <content type="html">&lt;p&gt;Welcome to &lt;b&gt;&lt;code&gt;(or emacs&lt;/code&gt;&lt;/b&gt;!&lt;/p&gt;
+
+&lt;p&gt;My name is Oleh and I&amp;#39;ve been using Emacs for about 3 years now.  I
+think that it&amp;#39;s an awesome editor, and I&amp;#39;ve accumulated some know-how
+to make it even better (at least for me and people who think like me).
+Sharing is caring, so here we go.&lt;/p&gt;
+
+&lt;h2&gt;&lt;code&gt;ace-window&lt;/code&gt; update&lt;/h2&gt;
+
+&lt;p&gt;On this weekend I&amp;#39;ve made a major update to my package
+&lt;a href=&quot;https://github.com/abo-abo/ace-window&quot;&gt;ace-window&lt;/a&gt; that allows it to
+be used as a library. Luckily the change went smoothly, as there are
+no complaints in the github issues so far.  In case you don&amp;#39;t know
+what the package does in the first place, a short blurb follows.&lt;/p&gt;
+
+&lt;h2&gt;&lt;code&gt;ace-window&lt;/code&gt;&amp;#39;s &amp;quot;what and why&amp;quot;&lt;/h2&gt;
+
+&lt;p&gt;I&amp;#39;m sure you&amp;#39;re aware of the &lt;code&gt;other-window&lt;/code&gt; command. While it&amp;#39;s great for
+two windows, it quickly loses its value when there are more windows:
+you need to call it many times, and since it&amp;#39;s not easily predictable,
+you have to check each time if you&amp;#39;re in the window that you wanted.&lt;/p&gt;
+
+&lt;p&gt;Another approach is to use &lt;code&gt;windmove-left&lt;/code&gt;, &lt;code&gt;windmove-up&lt;/code&gt; etc.  These
+are fast and predictable. Their disadvantage is that they need 4 key
+bindings.  The default ones are shift+arrows, which are hard to reach.&lt;/p&gt;
+
+&lt;p&gt;This package aims to take the speed and predictability of &lt;code&gt;windmove&lt;/code&gt;
+and pack it into a single key binding, similar to &lt;code&gt;other-window&lt;/code&gt;.  To
+achieve this, I&amp;#39;m using the excellent
+&lt;a href=&quot;https://github.com/winterTTr/ace-jump-mode&quot;&gt;ace-jump-mode&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;#39;s how the package looks in action: &lt;a href=&quot;/download/ace-window.gif&quot;&gt;ace-window.gif&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Since switching windows is a frequently used operation, I recommend
+binding &lt;code&gt;ace-window&lt;/code&gt; to something short, like &lt;kbd&gt;M-p&lt;/kbd&gt;.&lt;/p&gt;
+
+&lt;p&gt;By default, three actions are available:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;M-p&lt;/kbd&gt; - select window&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;C-u M-p&lt;/kbd&gt; - swap the current window with the selected window&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;C-u C-u M-p&lt;/kbd&gt; - delete the selected window&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;finally, the library part&lt;/h2&gt;
+
+&lt;p&gt;So now, what if you want to select a window to maximize with &lt;code&gt;ace-window&lt;/code&gt;?
+After the change that I&amp;#39;ve mentioned, the code to do this is dirt simple:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-cl&quot; data-lang=&quot;cl&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ace-maximize-window&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Ace maximize window.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;aw--current-op&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;aj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;wnd&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;aj-position-window&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;aj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;select-window&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;wnd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;delete-other-windows&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;aw--doit&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot; Ace - Maximize Window&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-M-o&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ace-maximize-window&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
+ </entry>
+ 
+
+</feed>
