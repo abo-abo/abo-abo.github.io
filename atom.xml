@@ -4,13 +4,211 @@
  <title>(or emacs</title>
  <link href="https://twitter.com/_abo_abo/atom.xml" rel="self"/>
  <link href="https://twitter.com/_abo_abo/"/>
- <updated>2014-12-21T19:38:52+01:00</updated>
+ <updated>2014-12-22T14:38:16+01:00</updated>
  <id>https://twitter.com/_abo_abo</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Sometimes things break</title>
+   <link href="https://twitter.com/_abo_abo/2014/12/22/sometimes-things-break/"/>
+   <updated>2014-12-22T00:00:00+01:00</updated>
+   <id>https://twitter.com/_abo_abo/2014/12/22/sometimes-things-break</id>
+   <content type="html">&lt;p&gt;I was very surprised to find the
+&lt;a href=&quot;https://github.com/abo-abo/lispy&quot;&gt;lispy&lt;/a&gt; build broken after I pushed
+some minor update, like a change to README.md.  I mean, how in the
+world would a few words in README.md break the Elisp tests?  Upon
+investigation, it turned out that only one test was broken &lt;sup id=&quot;fnref1&quot;&gt;&lt;a href=&quot;#fn1&quot; rel=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt;.  This
+one:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-cl&quot; data-lang=&quot;cl&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ert-deftest&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;clojure-thread-macro&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;cider&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;should&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;string=&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;lispy-with&lt;/span&gt;
+     &lt;span class=&quot;s&quot;&gt;&amp;quot;|(map sqr (filter odd? [1 2 3 4 5]))&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;2(-&amp;gt;&amp;gt;]&amp;lt;]&amp;lt;]wwlM&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;&amp;quot;(-&amp;gt;&amp;gt; [1 2 3 4 5]\n  (map sqr)\n  (filter odd?))|&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The culprit was an update in &lt;code&gt;clojure-mode&lt;/code&gt;&amp;#39;s indentation.
+The previous behavior:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;-&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;map &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;sqr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;filter &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;odd?&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;is now replaced with:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;-&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;map &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;sqr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;filter &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;odd?&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Thankfully, the &lt;a href=&quot;https://travis-ci.com/&quot;&gt;Travis CI&lt;/a&gt; in combination
+with &lt;a href=&quot;https://github.com/cask/cask&quot;&gt;cask&lt;/a&gt; is keeping me up to date.
+Apparently, there were some
+&lt;a href=&quot;https://github.com/clojure-emacs/clojure-mode/issues/265&quot;&gt;heated discussions&lt;/a&gt;
+accompanying the change, and there was some reverting going on.
+Anyway, it looks to me that both approaches have merit: the first one
+is more logical, since &lt;code&gt;-&amp;gt;&amp;gt;&lt;/code&gt; is an operation akin to Elisp&amp;#39;s
+&lt;code&gt;with-current-buffer&lt;/code&gt;, where the first argument is different from the
+others, while the second one is more aesthetically pleasing.  Fine
+with me either way, I&amp;#39;m not complaining:)&lt;/p&gt;
+
+&lt;p&gt;Also, the key sequence in the test is pretty ancient.  These days I&amp;#39;d
+probably use:
+&lt;kbd&gt;2(-&amp;gt;&amp;gt;&lt;/kbd&gt;&lt;kbd&gt;C-f&lt;/kbd&gt;&lt;kbd&gt;d&amp;lt;j&amp;lt;skwAM&lt;/kbd&gt;.  I&amp;#39;ve
+recently done a more complex Elisp refactoring screencast, check it
+out &lt;a href=&quot;https://www.youtube.com/watch?v=Djn6dXzXp_E&quot;&gt;here&lt;/a&gt;.  Later on, I
+plan to do more Emacs-related screencasts (not just &lt;code&gt;lispy&lt;/code&gt;-related)
+on my &lt;a href=&quot;https://www.youtube.com/user/abo5abo/videos&quot;&gt;channel&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;If you haven&amp;#39;t tried &lt;a href=&quot;https://github.com/abo-abo/lispy&quot;&gt;&lt;code&gt;lispy&lt;/code&gt;&lt;/a&gt; yet, you&amp;#39;re missing out -
+doing this refactor operation feels like you&amp;#39;re doing the 15-number puzzle:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/15-puzzle.png&quot; alt=&quot;15puzzle&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;And that&amp;#39;s fun in my book. But let me get back to the short overview
+of the Emacs testing tools that lead me to this post, mainly &lt;code&gt;cask&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2&gt;&lt;code&gt;cask&lt;/code&gt;: what does it do?&lt;/h2&gt;
+
+&lt;p&gt;According to &lt;a href=&quot;http://cask.readthedocs.org/en/latest/&quot;&gt;its own documentation&lt;/a&gt;:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Cask is a project management tool for Emacs Lisp to automate the
+package development cycle; development, dependencies, testing,
+building, packaging and more.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Yes, please, I&amp;#39;d like to do that! But after the exciting intro
+sentence, there&amp;#39;s very little followup documentation-wise.  It took me
+ages to figure out how &lt;code&gt;cask&lt;/code&gt; can actually give me some tangible
+benefits, since I thought that &lt;code&gt;package.el&lt;/code&gt; is enough to maintain my
+own config (it still is).&lt;/p&gt;
+
+&lt;h2&gt;tangible benefits of &lt;code&gt;cask&lt;/code&gt;&lt;/h2&gt;
+
+&lt;p&gt;I&amp;#39;d like to be sure that my packages work across recent Emacs
+versions.  I&amp;#39;m using the
+&lt;a href=&quot;http://savannah.gnu.org/git/?group=emacs&quot;&gt;bleeding edge&lt;/a&gt; myself, but
+people who download my packages from MELPA might be using something
+older, like &lt;code&gt;emacs-24.3&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;So I want to run my tests on both versions. Also, even for just one
+version, the tests need to be run in a minimum environment, i.e. with
+only the dependencies loaded, so that my personal configuration does
+not interfere with the tests.&lt;/p&gt;
+
+&lt;p&gt;This is where &lt;code&gt;cask&lt;/code&gt; actually shines: it can bootstrap a whole new
+&lt;code&gt;.emacs.d&lt;/code&gt;, separate from your own, just for running tests.  It can do
+it on your machine as well as on Travis CI.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;#39;s my &lt;code&gt;Cask&lt;/code&gt; file for &lt;code&gt;lispy&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;(source gnu)
+(source melpa)
+
+(package-file &amp;quot;lispy.el&amp;quot;)
+
+(files &amp;quot;*.el&amp;quot; (:exclude &amp;quot;init.el&amp;quot; &amp;quot;lispy-test.el&amp;quot;))
+
+(development
+ (depends-on &amp;quot;helm&amp;quot;)
+ (depends-on &amp;quot;ace-jump-mode&amp;quot;)
+ (depends-on &amp;quot;noflet&amp;quot;)
+ (depends-on &amp;quot;iedit&amp;quot;)
+ (depends-on &amp;quot;multiple-cursors&amp;quot;)
+ (depends-on &amp;quot;cider&amp;quot;)
+ (depends-on &amp;quot;slime&amp;quot;)
+ (depends-on &amp;quot;geiser&amp;quot;)
+ (depends-on &amp;quot;projectile&amp;quot;)
+ (depends-on &amp;quot;s&amp;quot;)
+ (depends-on &amp;quot;highlight&amp;quot;))
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And here&amp;#39;s the &lt;code&gt;Makefile&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-Makefile&quot; data-lang=&quot;Makefile&quot;&gt;&lt;span class=&quot;nv&quot;&gt;EMACS&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; emacs
+&lt;span class=&quot;c&quot;&gt;# EMACS = emacs-24.3&lt;/span&gt;
+
+&lt;span class=&quot;nv&quot;&gt;CASK&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; ~/.cask/bin/cask
+&lt;span class=&quot;nv&quot;&gt;CASKEMACS&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;CASK&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;exec&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;EMACS&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;LOAD&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; -l lispy-inline.el -l lispy.el -l lispy-test.el
+
+&lt;span class=&quot;nf&quot;&gt;all&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;test&lt;/span&gt;
+
+&lt;span class=&quot;nf&quot;&gt;cask&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;shell &lt;span class=&quot;nv&quot;&gt;EMACS&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;EMACS&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;CASK&lt;span class=&quot;k&quot;&gt;))&lt;/span&gt;
+
+&lt;span class=&quot;nf&quot;&gt;compile&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;CASKEMACS&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt; -q  &lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;LOAD&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt; lispy.el &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    --eval &lt;span class=&quot;s2&quot;&gt;&amp;quot;(progn (mapc #&amp;#39;byte-compile-file &amp;#39;(\&amp;quot;lispy.el\&amp;quot; \&amp;quot;lispy-inline.el\&amp;quot; \&amp;quot;le-clojure.el\&amp;quot; \&amp;quot;le-scheme.el\&amp;quot; \&amp;quot;le-lisp.el\&amp;quot;)) (switch-to-buffer \&amp;quot;*Compile-Log*\&amp;quot;) (ert t))&amp;quot;&lt;/span&gt;
+
+&lt;span class=&quot;nf&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;CASKEMACS&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt; -batch &lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;LOAD&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt; -f ert-run-tests-batch-and-exit
+
+&lt;span class=&quot;nf&quot;&gt;clean&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;
+    rm -f *.elc
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;As you can see, the &lt;code&gt;Makefile&lt;/code&gt; has two separate testing targets: an
+interactive one (&lt;code&gt;compile&lt;/code&gt;) and a non-interactive one (&lt;code&gt;test&lt;/code&gt;).
+There&amp;#39;s actually some validity to this, since it happened once that
+the same tests we failing in non-interactive mode, but passing in
+interactive mode. Also, &lt;code&gt;compile&lt;/code&gt; obviously compiles, testing for
+compilation warnings/errors.  I can change the Emacs version at the
+top, although I don&amp;#39;t have to do it too often.&lt;/p&gt;
+
+&lt;p&gt;Finally, here&amp;#39;s &lt;code&gt;.travis.yml&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;language: emacs-lisp
+env:
+  matrix:
+    - EMACS=emacs24
+
+before_install:
+  - sudo add-apt-repository -y ppa:cassou/emacs
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq $EMACS
+  - curl -fsSkL --max-time 10 --retry 10 --retry-delay 10 https://raw.github.com/cask/cask/master/go | python
+
+script:
+  - make cask
+  - make test
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;So each time I push a change to github, Travis CI will&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;install emacs24&lt;/li&gt;
+&lt;li&gt;install cask&lt;/li&gt;
+&lt;li&gt;install the packages from MELPA:
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;helm&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ace-jump-mode&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;noflet&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;iedit&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;multiple-cursors&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;cider&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;slime&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;geiser&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;projectile&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;s&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;highlight&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;load Emacs with these packages&lt;/li&gt;
+&lt;li&gt;load &lt;code&gt;lispy-test.el&lt;/code&gt; and run it&lt;/li&gt;
+&lt;li&gt;show up green if &lt;code&gt;make test&lt;/code&gt; returned &lt;code&gt;0&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Seems a bit wasteful, but it&amp;#39;s &lt;a href=&quot;http://xkcd.com/908/&quot;&gt;the Cloud&lt;/a&gt; - what can you do?&lt;/p&gt;
+
+&lt;div class=&quot;footnotes&quot;&gt;
+&lt;hr&gt;
+&lt;ol&gt;
+
+&lt;li id=&quot;fn1&quot;&gt;
+&lt;p&gt;upon even further investigation, the test itself was broken for almost a year, since &lt;code&gt;lispy-with-clojure&lt;/code&gt; should have been used instead of &lt;code&gt;lispy-with&lt;/code&gt;, but &lt;code&gt;cider&lt;/code&gt; was changing the indentation of &lt;code&gt;-&amp;gt;&amp;gt;&lt;/code&gt; also for &lt;code&gt;emacs-lisp-mode&lt;/code&gt;, so things were kind of working out&amp;nbsp;&lt;a href=&quot;#fnref1&quot; rev=&quot;footnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+
+&lt;/ol&gt;
+&lt;/div&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Easy helm improvement</title>
