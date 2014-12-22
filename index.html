@@ -162,9 +162,9 @@ some minor update, like a change to README.md.  I mean, how in the
 world would a few words in README.md break the Elisp tests?  Upon
 investigation, it turned out that only one test was broken <sup id="fnref1"><a href="#fn1" rel="footnote">1</a></sup>.  This
 one:</p>
-<div class="highlight"><pre><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">ert-deftest</span> <span class="nv">clojure-thread-macro</span> <span class="p">()</span>
+<div class="highlight"><pre><code class="language-emacs-lisp" data-lang="emacs-lisp"><span class="p">(</span><span class="nb">ert-deftest</span> <span class="nv">clojure-thread-macro</span> <span class="p">()</span>
   <span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;cider</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">should</span>
+  <span class="p">(</span><span class="nb">should</span>
    <span class="p">(</span><span class="nb">string=</span>
     <span class="p">(</span><span class="nv">lispy-with</span>
      <span class="s">&quot;|(map sqr (filter odd? [1 2 3 4 5]))&quot;</span> <span class="s">&quot;2(-&gt;&gt;]&lt;]&lt;]wwlM&quot;</span><span class="p">)</span>
@@ -374,7 +374,7 @@ with:</p>
   <span class="s">&quot;Forward to `backward-delete-char&#39;.</span>
 <span class="s">On error (read-only), quit without selecting.&quot;</span>
   <span class="p">(</span><span class="nv">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">condition-case</span> <span class="no">nil</span>
+  <span class="p">(</span><span class="nb">condition-case</span> <span class="no">nil</span>
       <span class="p">(</span><span class="nv">backward-delete-char</span> <span class="mi">1</span><span class="p">)</span>
     <span class="p">(</span><span class="nb">error</span>
      <span class="p">(</span><span class="nv">helm-keyboard-quit</span><span class="p">))))</span>

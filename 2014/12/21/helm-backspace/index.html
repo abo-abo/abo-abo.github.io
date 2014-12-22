@@ -164,7 +164,7 @@ with:</p>
   <span class="s">&quot;Forward to `backward-delete-char&#39;.</span>
 <span class="s">On error (read-only), quit without selecting.&quot;</span>
   <span class="p">(</span><span class="nv">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">condition-case</span> <span class="no">nil</span>
+  <span class="p">(</span><span class="nb">condition-case</span> <span class="no">nil</span>
       <span class="p">(</span><span class="nv">backward-delete-char</span> <span class="mi">1</span><span class="p">)</span>
     <span class="p">(</span><span class="nb">error</span>
      <span class="p">(</span><span class="nv">helm-keyboard-quit</span><span class="p">))))</span>

@@ -4,7 +4,7 @@
  <title>(or emacs</title>
  <link href="https://twitter.com/_abo_abo/atom.xml" rel="self"/>
  <link href="https://twitter.com/_abo_abo/"/>
- <updated>2014-12-22T14:38:16+01:00</updated>
+ <updated>2014-12-22T18:22:33+01:00</updated>
  <id>https://twitter.com/_abo_abo</id>
  <author>
    <name></name>
@@ -23,9 +23,9 @@ some minor update, like a change to README.md.  I mean, how in the
 world would a few words in README.md break the Elisp tests?  Upon
 investigation, it turned out that only one test was broken &lt;sup id=&quot;fnref1&quot;&gt;&lt;a href=&quot;#fn1&quot; rel=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt;.  This
 one:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-cl&quot; data-lang=&quot;cl&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ert-deftest&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;clojure-thread-macro&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-emacs-lisp&quot; data-lang=&quot;emacs-lisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;ert-deftest&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;clojure-thread-macro&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;cider&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;should&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;should&lt;/span&gt;
    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;string=&lt;/span&gt;
     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;lispy-with&lt;/span&gt;
      &lt;span class=&quot;s&quot;&gt;&amp;quot;|(map sqr (filter odd? [1 2 3 4 5]))&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;2(-&amp;gt;&amp;gt;]&amp;lt;]&amp;lt;]wwlM&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
@@ -231,7 +231,7 @@ with:&lt;/p&gt;
   &lt;span class=&quot;s&quot;&gt;&amp;quot;Forward to `backward-delete-char&amp;#39;.&lt;/span&gt;
 &lt;span class=&quot;s&quot;&gt;On error (read-only), quit without selecting.&amp;quot;&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;condition-case&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;condition-case&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;
       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;backward-delete-char&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;error&lt;/span&gt;
      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;helm-keyboard-quit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
