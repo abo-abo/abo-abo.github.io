@@ -7,15 +7,15 @@ td.linenos { background-color: #f0f0f0; padding-right: 10px; }
 span.lineno { background-color: #f0f0f0; padding: 0 5px 0 5px; }
 pre { line-height: 125%; }
 body .hll { background-color: #ffffcc }
-body  { background: #f8f8f8; }
-body .c { color: #408080; font-style: italic } /* Comment */
+body  { background: #ffffff; }
+body .c { color: #3F7F5F } /* Comment */
 body .err { border: 1px solid #FF0000 } /* Error */
-body .k { color: #008000; font-weight: bold } /* Keyword */
+body .k { color: #7F0055; font-weight: bold } /* Keyword */
 body .o { color: #666666 } /* Operator */
-body .cm { color: #408080; font-style: italic } /* Comment.Multiline */
+body .cm { color: #3F7F5F } /* Comment.Multiline */
 body .cp { color: #BC7A00 } /* Comment.Preproc */
-body .c1 { color: #408080; font-style: italic } /* Comment.Single */
-body .cs { color: #408080; font-style: italic } /* Comment.Special */
+body .c1 { color: #3F7F5F } /* Comment.Single */
+body .cs { color: #3F7F5F } /* Comment.Special */
 body .gd { color: #A00000 } /* Generic.Deleted */
 body .ge { font-style: italic } /* Generic.Emph */
 body .gr { color: #FF0000 } /* Generic.Error */
@@ -26,22 +26,22 @@ body .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
 body .gs { font-weight: bold } /* Generic.Strong */
 body .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
 body .gt { color: #0044DD } /* Generic.Traceback */
-body .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-body .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-body .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-body .kp { color: #008000 } /* Keyword.Pseudo */
-body .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+body .kc { color: #7F0055; font-weight: bold } /* Keyword.Constant */
+body .kd { color: #7F0055; font-weight: bold } /* Keyword.Declaration */
+body .kn { color: #7F0055; font-weight: bold } /* Keyword.Namespace */
+body .kp { color: #7F0055 } /* Keyword.Pseudo */
+body .kr { color: #7F0055; font-weight: bold } /* Keyword.Reserved */
 body .kt { color: #B00040 } /* Keyword.Type */
 body .m { color: #666666 } /* Literal.Number */
-body .s { color: #BA2121 } /* Literal.String */
+body .s { color: #2A00FF } /* Literal.String */
 body .na { color: #7D9029 } /* Name.Attribute */
-body .nb { color: #008000 } /* Name.Builtin */
+body .nb { color: #7F0055; font-weight: bold } /* Name.Builtin */
 body .nc { color: #0000FF; font-weight: bold } /* Name.Class */
 body .no { color: #880000 } /* Name.Constant */
 body .nd { color: #AA22FF } /* Name.Decorator */
 body .ni { color: #999999; font-weight: bold } /* Name.Entity */
 body .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
-body .nf { color: #0000FF } /* Name.Function */
+body .nf { color: #880000 } /* Name.Function */
 body .nl { color: #A0A000 } /* Name.Label */
 body .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
 body .nt { color: #008000; font-weight: bold } /* Name.Tag */
@@ -53,18 +53,18 @@ body .mf { color: #666666 } /* Literal.Number.Float */
 body .mh { color: #666666 } /* Literal.Number.Hex */
 body .mi { color: #666666 } /* Literal.Number.Integer */
 body .mo { color: #666666 } /* Literal.Number.Oct */
-body .sb { color: #BA2121 } /* Literal.String.Backtick */
-body .sc { color: #BA2121 } /* Literal.String.Char */
-body .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-body .s2 { color: #BA2121 } /* Literal.String.Double */
+body .sb { color: #2A00FF } /* Literal.String.Backtick */
+body .sc { color: #2A00FF } /* Literal.String.Char */
+body .sd { color: #2A00FF; font-style: italic } /* Literal.String.Doc */
+body .s2 { color: #2A00FF } /* Literal.String.Double */
 body .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
-body .sh { color: #BA2121 } /* Literal.String.Heredoc */
+body .sh { color: #2A00FF } /* Literal.String.Heredoc */
 body .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
 body .sx { color: #008000 } /* Literal.String.Other */
 body .sr { color: #BB6688 } /* Literal.String.Regex */
-body .s1 { color: #BA2121 } /* Literal.String.Single */
+body .s1 { color: #2A00FF } /* Literal.String.Single */
 body .ss { color: #19177C } /* Literal.String.Symbol */
-body .bp { color: #008000 } /* Name.Builtin.Pseudo */
+body .bp { color: #7F0055; font-weight: bold } /* Name.Builtin.Pseudo */
 body .vc { color: #19177C } /* Name.Variable.Class */
 body .vg { color: #19177C } /* Name.Variable.Global */
 body .vi { color: #19177C } /* Name.Variable.Instance */
@@ -191,7 +191,7 @@ body .il { color: #666666 } /* Literal.Number.Integer.Long */
 
 <span class="c1">;; Compiler pacifier</span>
 <span class="p">(</span><span class="nb">eval-and-compile</span>
-  <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nf">fboundp</span> <span class="ss">'declare-function</span><span class="p">)</span> <span class="p">(</span><span class="nb">defmacro</span> <span class="nb">declare-function</span> <span class="p">(</span><span class="k">&amp;rest</span>  <span class="nv">_r</span><span class="p">))))</span>
+  <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nf">fboundp</span> <span class="ss">'declare-function</span><span class="p">)</span> <span class="p">(</span><span class="nb">defmacro</span> <span class="nb">declare-function</span> <span class="p">(</span><span class="kp">&amp;rest</span>  <span class="nv">_r</span><span class="p">))))</span>
 
 <span class="p">(</span><span class="nb">require</span> <span class="ss">'ediff-util</span><span class="p">)</span>
 <span class="c1">;; end pacifier</span>
@@ -228,16 +228,16 @@ body .il { color: #666666 } /* Literal.Number.Integer.Long */
     <span class="p">(</span><span class="k">setq</span> <span class="nv">buffer-read-only</span> <span class="no">t</span><span class="p">)))</span>
 
 <span class="p">(</span><span class="nb">declare-function</span> <span class="nv">dired-get-filename</span> <span class="s">"dired"</span>
-                  <span class="p">(</span><span class="k">&amp;optional</span> <span class="nv">localp</span> <span class="nv">no-error-if-not-filep</span><span class="p">))</span>
+                  <span class="p">(</span><span class="kp">&amp;optional</span> <span class="nv">localp</span> <span class="nv">no-error-if-not-filep</span><span class="p">))</span>
 <span class="p">(</span><span class="nb">declare-function</span> <span class="nv">dired-get-marked-files</span> <span class="s">"dired"</span>
-                  <span class="p">(</span><span class="k">&amp;optional</span> <span class="nv">localp</span> <span class="nv">arg</span> <span class="nv">filter</span> <span class="nv">distinguish-one-marked</span><span class="p">))</span>
+                  <span class="p">(</span><span class="kp">&amp;optional</span> <span class="nv">localp</span> <span class="nv">arg</span> <span class="nv">filter</span> <span class="nv">distinguish-one-marked</span><span class="p">))</span>
 
 <span class="c1">;; Return a plausible default for ediff's first file:</span>
 <span class="c1">;; In dired, return the file number FILENO (or 0) in the list</span>
 <span class="c1">;; (all-selected-files, filename under the cursor), where directories are</span>
 <span class="c1">;; ignored. Otherwise, return DEFAULT file name, if non-nil. Else,</span>
 <span class="c1">;; if the buffer is visiting a file, return that file name.</span>
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">ediff-get-default-file-name</span> <span class="p">(</span><span class="k">&amp;optional</span> <span class="nv">default</span> <span class="nv">fileno</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">ediff-get-default-file-name</span> <span class="p">(</span><span class="kp">&amp;optional</span> <span class="nv">default</span> <span class="nv">fileno</span><span class="p">)</span>
   <span class="p">(</span><span class="k">cond</span> <span class="p">((</span><span class="nf">eq</span> <span class="nv">major-mode</span> <span class="ss">'dired-mode</span><span class="p">)</span>
 	 <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">current</span> <span class="p">(</span><span class="nv">dired-get-filename</span> <span class="no">nil</span> <span class="ss">'no-error</span><span class="p">))</span>
 	       <span class="p">(</span><span class="nv">marked</span> <span class="p">(</span><span class="k">condition-case</span> <span class="no">nil</span>
@@ -261,7 +261,7 @@ body .il { color: #666666 } /* Literal.Number.Integer.Long */
 <span class="c1">;;; Compare files/buffers</span>
 
 <span class="c1">;;;###autoload</span>
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">ediff-files</span> <span class="p">(</span><span class="nv">file-A</span> <span class="nv">file-B</span> <span class="k">&amp;optional</span> <span class="nv">startup-hooks</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">ediff-files</span> <span class="p">(</span><span class="nv">file-A</span> <span class="nv">file-B</span> <span class="kp">&amp;optional</span> <span class="nv">startup-hooks</span><span class="p">)</span>
   <span class="s">"Run Ediff on a pair of files, FILE-A and FILE-B."</span>
   <span class="p">(</span><span class="k">interactive</span>
    <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">dir-A</span> <span class="p">(</span><span class="k">if</span> <span class="nv">ediff-use-last-dir</span>
@@ -297,7 +297,7 @@ body .il { color: #666666 } /* Literal.Number.Integer.Long */
 			<span class="ss">'ediff-files</span><span class="p">))</span>
 
 <span class="c1">;;;###autoload</span>
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">ediff-files3</span> <span class="p">(</span><span class="nv">file-A</span> <span class="nv">file-B</span> <span class="nv">file-C</span> <span class="k">&amp;optional</span> <span class="nv">startup-hooks</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">ediff-files3</span> <span class="p">(</span><span class="nv">file-A</span> <span class="nv">file-B</span> <span class="nv">file-C</span> <span class="kp">&amp;optional</span> <span class="nv">startup-hooks</span><span class="p">)</span>
   <span class="s">"Run Ediff on three files, FILE-A, FILE-B, and FILE-C."</span>
   <span class="p">(</span><span class="k">interactive</span>
    <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">dir-A</span> <span class="p">(</span><span class="k">if</span> <span class="nv">ediff-use-last-dir</span>
@@ -351,7 +351,7 @@ body .il { color: #666666 } /* Literal.Number.Integer.Long */
 <span class="p">(</span><span class="nb">defalias</span> <span class="ss">'ediff3</span> <span class="ss">'ediff-files3</span><span class="p">)</span>
 
 
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">ediff-find-file</span> <span class="p">(</span><span class="nv">file-var</span> <span class="nf">buffer-name</span> <span class="k">&amp;optional</span> <span class="nv">last-dir</span> <span class="nv">hooks-var</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">ediff-find-file</span> <span class="p">(</span><span class="nv">file-var</span> <span class="nf">buffer-name</span> <span class="kp">&amp;optional</span> <span class="nv">last-dir</span> <span class="nv">hooks-var</span><span class="p">)</span>
   <span class="s">"Visit FILE and arrange its buffer to Ediff's liking.</span>
 <span class="s">FILE-VAR is actually a variable symbol whose value must contain a true</span>
 <span class="s">file name.</span>
@@ -404,7 +404,7 @@ body .il { color: #666666 } /* Literal.Number.Integer.Long */
 
 <span class="c1">;; MERGE-BUFFER-FILE is the file to be associated with the merge buffer</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">ediff-files-internal</span> <span class="p">(</span><span class="nv">file-A</span> <span class="nv">file-B</span> <span class="nv">file-C</span> <span class="nv">startup-hooks</span> <span class="nv">job-name</span>
-				    <span class="k">&amp;optional</span> <span class="nv">merge-buffer-file</span><span class="p">)</span>
+				    <span class="kp">&amp;optional</span> <span class="nv">merge-buffer-file</span><span class="p">)</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">buf-A</span> <span class="nv">buf-B</span> <span class="nv">buf-C</span><span class="p">)</span>
     <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">string=</span> <span class="nv">file-A</span> <span class="nv">file-B</span><span class="p">)</span>
 	<span class="p">(</span><span class="ne">error</span> <span class="s">"Files A and B are the same"</span><span class="p">))</span>
@@ -495,7 +495,7 @@ body .il { color: #666666 } /* Literal.Number.Integer.Long */
     <span class="p">(</span><span class="nv">ediff-files</span> <span class="nv">bak</span> <span class="nv">ori</span><span class="p">)))</span>
 
 <span class="c1">;;;###autoload</span>
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">ediff-buffers</span> <span class="p">(</span><span class="nv">buffer-A</span> <span class="nv">buffer-B</span> <span class="k">&amp;optional</span> <span class="nv">startup-hooks</span> <span class="nv">job-name</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">ediff-buffers</span> <span class="p">(</span><span class="nv">buffer-A</span> <span class="nv">buffer-B</span> <span class="kp">&amp;optional</span> <span class="nv">startup-hooks</span> <span class="nv">job-name</span><span class="p">)</span>
   <span class="s">"Run Ediff on a pair of buffers, BUFFER-A and BUFFER-B."</span>
   <span class="p">(</span><span class="k">interactive</span>
    <span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">bf</span><span class="p">)</span>
@@ -517,7 +517,7 @@ body .il { color: #666666 } /* Literal.Number.Integer.Long */
 
 <span class="c1">;;;###autoload</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">ediff-buffers3</span> <span class="p">(</span><span class="nv">buffer-A</span> <span class="nv">buffer-B</span> <span class="nv">buffer-C</span>
-				 <span class="k">&amp;optional</span> <span class="nv">startup-hooks</span> <span class="nv">job-name</span><span class="p">)</span>
+				 <span class="kp">&amp;optional</span> <span class="nv">startup-hooks</span> <span class="nv">job-name</span><span class="p">)</span>
   <span class="s">"Run Ediff on three buffers, BUFFER-A, BUFFER-B, and BUFFER-C."</span>
   <span class="p">(</span><span class="k">interactive</span>
    <span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">bf</span> <span class="nv">bff</span><span class="p">)</span>
@@ -548,7 +548,7 @@ body .il { color: #666666 } /* Literal.Number.Integer.Long */
 
 <span class="c1">;; MERGE-BUFFER-FILE is the file to be associated with the merge buffer</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">ediff-buffers-internal</span> <span class="p">(</span><span class="nv">buf-A</span> <span class="nv">buf-B</span> <span class="nv">buf-C</span> <span class="nv">startup-hooks</span> <span class="nv">job-name</span>
-				     <span class="k">&amp;optional</span> <span class="nv">merge-buffer-file</span><span class="p">)</span>
+				     <span class="kp">&amp;optional</span> <span class="nv">merge-buffer-file</span><span class="p">)</span>
   <span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">buf-A-file-name</span> <span class="p">(</span><span class="nf">buffer-file-name</span> <span class="p">(</span><span class="nf">get-buffer</span> <span class="nv">buf-A</span><span class="p">)))</span>
 	 <span class="p">(</span><span class="nv">buf-B-file-name</span> <span class="p">(</span><span class="nf">buffer-file-name</span> <span class="p">(</span><span class="nf">get-buffer</span> <span class="nv">buf-B</span><span class="p">)))</span>
 	 <span class="p">(</span><span class="nv">buf-C-is-alive</span> <span class="p">(</span><span class="nv">ediff-buffer-live-p</span> <span class="nv">buf-C</span><span class="p">))</span>
@@ -711,7 +711,7 @@ body .il { color: #666666 } /* Literal.Number.Integer.Long */
 <span class="p">(</span><span class="nb">defalias</span> <span class="ss">'edirs3</span> <span class="ss">'ediff-directories3</span><span class="p">)</span>
 
 <span class="c1">;;;###autoload</span>
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">ediff-merge-directories</span> <span class="p">(</span><span class="nv">dir1</span> <span class="nv">dir2</span> <span class="nv">regexp</span> <span class="k">&amp;optional</span> <span class="nv">merge-autostore-dir</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">ediff-merge-directories</span> <span class="p">(</span><span class="nv">dir1</span> <span class="nv">dir2</span> <span class="nv">regexp</span> <span class="kp">&amp;optional</span> <span class="nv">merge-autostore-dir</span><span class="p">)</span>
   <span class="s">"Run Ediff on a pair of directories, DIR1 and DIR2, merging files that have</span>
 <span class="s">the same name in both.  The third argument, REGEXP, is nil or a regular</span>
 <span class="s">expression; only file names that match the regexp are considered."</span>
@@ -745,7 +745,7 @@ body .il { color: #666666 } /* Literal.Number.Integer.Long */
 
 <span class="c1">;;;###autoload</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">ediff-merge-directories-with-ancestor</span> <span class="p">(</span><span class="nv">dir1</span> <span class="nv">dir2</span> <span class="nv">ancestor-dir</span> <span class="nv">regexp</span>
-						   <span class="k">&amp;optional</span>
+						   <span class="kp">&amp;optional</span>
 						   <span class="nv">merge-autostore-dir</span><span class="p">)</span>
   <span class="s">"Merge files in directories DIR1 and DIR2 using files in ANCESTOR-DIR as ancestors.</span>
 <span class="s">Ediff merges files that have identical names in DIR1, DIR2.  If a pair of files</span>
@@ -784,7 +784,7 @@ body .il { color: #666666 } /* Literal.Number.Integer.Long */
 
 <span class="c1">;;;###autoload</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">ediff-merge-directory-revisions</span> <span class="p">(</span><span class="nv">dir1</span> <span class="nv">regexp</span>
-					     <span class="k">&amp;optional</span> <span class="nv">merge-autostore-dir</span><span class="p">)</span>
+					     <span class="kp">&amp;optional</span> <span class="nv">merge-autostore-dir</span><span class="p">)</span>
   <span class="s">"Run Ediff on a directory, DIR1, merging its files with their revisions.</span>
 <span class="s">The second argument, REGEXP, is a regular expression that filters the file</span>
 <span class="s">names.  Only the files that are under revision control are taken into account."</span>
@@ -813,7 +813,7 @@ body .il { color: #666666 } /* Literal.Number.Integer.Long */
 
 <span class="c1">;;;###autoload</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">ediff-merge-directory-revisions-with-ancestor</span> <span class="p">(</span><span class="nv">dir1</span> <span class="nv">regexp</span>
-							   <span class="k">&amp;optional</span>
+							   <span class="kp">&amp;optional</span>
 							   <span class="nv">merge-autostore-dir</span><span class="p">)</span>
   <span class="s">"Run Ediff on a directory, DIR1, merging its files with their revisions and ancestors.</span>
 <span class="s">The second argument, REGEXP, is a regular expression that filters the file</span>
@@ -855,7 +855,7 @@ body .il { color: #666666 } /* Literal.Number.Integer.Long */
 <span class="c1">;; JOBNAME is the symbol indicating the meta-job to be performed.</span>
 <span class="c1">;; MERGE-AUTOSTORE-DIR is the directory in which to store merged files.</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">ediff-directories-internal</span> <span class="p">(</span><span class="nv">dir1</span> <span class="nv">dir2</span> <span class="nv">dir3</span> <span class="nv">regexp</span> <span class="nv">action</span> <span class="nv">jobname</span>
-					<span class="k">&amp;optional</span> <span class="nv">startup-hooks</span>
+					<span class="kp">&amp;optional</span> <span class="nv">startup-hooks</span>
 					<span class="nv">merge-autostore-dir</span><span class="p">)</span>
   <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">stringp</span> <span class="nv">dir3</span><span class="p">)</span>
       <span class="p">(</span><span class="k">setq</span> <span class="nv">dir3</span> <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">file-directory-p</span> <span class="nv">dir3</span><span class="p">)</span> <span class="nv">dir3</span> <span class="p">(</span><span class="nf">file-name-directory</span> <span class="nv">dir3</span><span class="p">))))</span>
@@ -929,7 +929,7 @@ body .il { color: #666666 } /* Literal.Number.Integer.Long */
 <span class="c1">;; MERGE-AUTOSTORE-DIR can be given to tell ediff where to store the merged</span>
 <span class="c1">;; files</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">ediff-directory-revisions-internal</span> <span class="p">(</span><span class="nv">dir1</span> <span class="nv">regexp</span> <span class="nv">action</span> <span class="nv">jobname</span>
-						<span class="k">&amp;optional</span> <span class="nv">startup-hooks</span>
+						<span class="kp">&amp;optional</span> <span class="nv">startup-hooks</span>
 						<span class="nv">merge-autostore-dir</span><span class="p">)</span>
   <span class="p">(</span><span class="k">setq</span> <span class="nv">dir1</span> <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">file-directory-p</span> <span class="nv">dir1</span><span class="p">)</span> <span class="nv">dir1</span> <span class="p">(</span><span class="nf">file-name-directory</span> <span class="nv">dir1</span><span class="p">)))</span>
 
@@ -980,7 +980,7 @@ body .il { color: #666666 } /* Literal.Number.Integer.Long */
 <span class="c1">;;; Compare regions and windows</span>
 
 <span class="c1">;;;###autoload</span>
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">ediff-windows-wordwise</span> <span class="p">(</span><span class="nv">dumb-mode</span> <span class="k">&amp;optional</span> <span class="nv">wind-A</span> <span class="nv">wind-B</span> <span class="nv">startup-hooks</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">ediff-windows-wordwise</span> <span class="p">(</span><span class="nv">dumb-mode</span> <span class="kp">&amp;optional</span> <span class="nv">wind-A</span> <span class="nv">wind-B</span> <span class="nv">startup-hooks</span><span class="p">)</span>
   <span class="s">"Compare WIND-A and WIND-B, which are selected by clicking, wordwise.</span>
 <span class="s">With prefix argument, DUMB-MODE, or on a non-windowing display, works as</span>
 <span class="s">follows:</span>
@@ -991,7 +991,7 @@ body .il { color: #666666 } /* Literal.Number.Integer.Long */
 		 <span class="nv">startup-hooks</span> <span class="ss">'ediff-windows-wordwise</span> <span class="ss">'word-mode</span><span class="p">))</span>
 
 <span class="c1">;;;###autoload</span>
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">ediff-windows-linewise</span> <span class="p">(</span><span class="nv">dumb-mode</span> <span class="k">&amp;optional</span> <span class="nv">wind-A</span> <span class="nv">wind-B</span> <span class="nv">startup-hooks</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">ediff-windows-linewise</span> <span class="p">(</span><span class="nv">dumb-mode</span> <span class="kp">&amp;optional</span> <span class="nv">wind-A</span> <span class="nv">wind-B</span> <span class="nv">startup-hooks</span><span class="p">)</span>
   <span class="s">"Compare WIND-A and WIND-B, which are selected by clicking, linewise.</span>
 <span class="s">With prefix argument, DUMB-MODE, or on a non-windowing display, works as</span>
 <span class="s">follows:</span>
@@ -1038,7 +1038,7 @@ body .il { color: #666666 } /* Literal.Number.Integer.Long */
 
 
 <span class="c1">;;;###autoload</span>
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">ediff-regions-wordwise</span> <span class="p">(</span><span class="nv">buffer-A</span> <span class="nv">buffer-B</span> <span class="k">&amp;optional</span> <span class="nv">startup-hooks</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">ediff-regions-wordwise</span> <span class="p">(</span><span class="nv">buffer-A</span> <span class="nv">buffer-B</span> <span class="kp">&amp;optional</span> <span class="nv">startup-hooks</span><span class="p">)</span>
   <span class="s">"Run Ediff on a pair of regions in specified buffers.</span>
 <span class="s">Regions \(i.e., point and mark\) can be set in advance or marked interactively.</span>
 <span class="s">This function is effective only for relatively small regions, up to 200</span>
@@ -1078,7 +1078,7 @@ body .il { color: #666666 } /* Literal.Number.Integer.Long */
      <span class="nv">startup-hooks</span> <span class="ss">'ediff-regions-wordwise</span> <span class="ss">'word-mode</span> <span class="no">nil</span><span class="p">)))</span>
 
 <span class="c1">;;;###autoload</span>
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">ediff-regions-linewise</span> <span class="p">(</span><span class="nv">buffer-A</span> <span class="nv">buffer-B</span> <span class="k">&amp;optional</span> <span class="nv">startup-hooks</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">ediff-regions-linewise</span> <span class="p">(</span><span class="nv">buffer-A</span> <span class="nv">buffer-B</span> <span class="kp">&amp;optional</span> <span class="nv">startup-hooks</span><span class="p">)</span>
   <span class="s">"Run Ediff on a pair of regions in specified buffers.</span>
 <span class="s">Regions \(i.e., point and mark\) can be set in advance or marked interactively.</span>
 <span class="s">Each region is enlarged to contain full lines.</span>
@@ -1203,7 +1203,7 @@ body .il { color: #666666 } /* Literal.Number.Integer.Long */
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">ediff-merge-files</span> <span class="p">(</span><span class="nv">file-A</span> <span class="nv">file-B</span>
 				 <span class="c1">;; MERGE-BUFFER-FILE is the file to be</span>
 				 <span class="c1">;; associated with the merge buffer</span>
-				 <span class="k">&amp;optional</span> <span class="nv">startup-hooks</span> <span class="nv">merge-buffer-file</span><span class="p">)</span>
+				 <span class="kp">&amp;optional</span> <span class="nv">startup-hooks</span> <span class="nv">merge-buffer-file</span><span class="p">)</span>
   <span class="s">"Merge two files without ancestor."</span>
   <span class="p">(</span><span class="k">interactive</span>
    <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">dir-A</span> <span class="p">(</span><span class="k">if</span> <span class="nv">ediff-use-last-dir</span>
@@ -1242,7 +1242,7 @@ body .il { color: #666666 } /* Literal.Number.Integer.Long */
 
 <span class="c1">;;;###autoload</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">ediff-merge-files-with-ancestor</span> <span class="p">(</span><span class="nv">file-A</span> <span class="nv">file-B</span> <span class="nv">file-ancestor</span>
-					       <span class="k">&amp;optional</span>
+					       <span class="kp">&amp;optional</span>
 					       <span class="nv">startup-hooks</span>
 					       <span class="c1">;; MERGE-BUFFER-FILE is the file</span>
 					       <span class="c1">;; to be associated with the</span>
@@ -1302,7 +1302,7 @@ body .il { color: #666666 } /* Literal.Number.Integer.Long */
 
 <span class="c1">;;;###autoload</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">ediff-merge-buffers</span> <span class="p">(</span><span class="nv">buffer-A</span> <span class="nv">buffer-B</span>
-				     <span class="k">&amp;optional</span>
+				     <span class="kp">&amp;optional</span>
 				     <span class="c1">;; MERGE-BUFFER-FILE is the file to be</span>
 				     <span class="c1">;; associated with the merge buffer</span>
 				     <span class="nv">startup-hooks</span> <span class="nv">job-name</span> <span class="nv">merge-buffer-file</span><span class="p">)</span>
@@ -1326,7 +1326,7 @@ body .il { color: #666666 } /* Literal.Number.Integer.Long */
 
 <span class="c1">;;;###autoload</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">ediff-merge-buffers-with-ancestor</span> <span class="p">(</span><span class="nv">buffer-A</span> <span class="nv">buffer-B</span> <span class="nv">buffer-ancestor</span>
-						   <span class="k">&amp;optional</span>
+						   <span class="kp">&amp;optional</span>
 						   <span class="nv">startup-hooks</span>
 						   <span class="nv">job-name</span>
 						   <span class="c1">;; MERGE-BUFFER-FILE is the</span>
@@ -1361,7 +1361,7 @@ body .il { color: #666666 } /* Literal.Number.Integer.Long */
 
 
 <span class="c1">;;;###autoload</span>
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">ediff-merge-revisions</span> <span class="p">(</span><span class="k">&amp;optional</span> <span class="nv">file</span> <span class="nv">startup-hooks</span> <span class="nv">merge-buffer-file</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">ediff-merge-revisions</span> <span class="p">(</span><span class="kp">&amp;optional</span> <span class="nv">file</span> <span class="nv">startup-hooks</span> <span class="nv">merge-buffer-file</span><span class="p">)</span>
   <span class="c1">;; MERGE-BUFFER-FILE is the file to be associated with the merge buffer</span>
   <span class="s">"Run Ediff by merging two revisions of a file.</span>
 <span class="s">The file is the optional FILE argument or the file visited by the current</span>
@@ -1389,7 +1389,7 @@ body .il { color: #666666 } /* Literal.Number.Integer.Long */
 
 
 <span class="c1">;;;###autoload</span>
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">ediff-merge-revisions-with-ancestor</span> <span class="p">(</span><span class="k">&amp;optional</span>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">ediff-merge-revisions-with-ancestor</span> <span class="p">(</span><span class="kp">&amp;optional</span>
 					    <span class="nv">file</span> <span class="nv">startup-hooks</span>
 					    <span class="c1">;; MERGE-BUFFER-FILE is the file to</span>
 					    <span class="c1">;; be associated with the merge</span>
@@ -1428,12 +1428,12 @@ body .il { color: #666666 } /* Literal.Number.Integer.Long */
 <span class="p">(</span><span class="k">defvar</span> <span class="nv">ediff-last-dir-patch</span><span class="p">)</span>
 <span class="p">(</span><span class="k">defvar</span> <span class="nv">ediff-patch-default-directory</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">declare-function</span> <span class="nv">ediff-get-patch-buffer</span> <span class="s">"ediff-ptch"</span>
-                  <span class="p">(</span><span class="k">&amp;optional</span> <span class="nv">arg</span> <span class="nv">patch-buf</span><span class="p">))</span>
+                  <span class="p">(</span><span class="kp">&amp;optional</span> <span class="nv">arg</span> <span class="nv">patch-buf</span><span class="p">))</span>
 <span class="p">(</span><span class="nb">declare-function</span> <span class="nv">ediff-dispatch-file-patching-job</span> <span class="s">"ediff-ptch"</span>
-                  <span class="p">(</span><span class="nv">patch-buf</span> <span class="nv">filename</span> <span class="k">&amp;optional</span> <span class="nv">startup-hooks</span><span class="p">))</span>
+                  <span class="p">(</span><span class="nv">patch-buf</span> <span class="nv">filename</span> <span class="kp">&amp;optional</span> <span class="nv">startup-hooks</span><span class="p">))</span>
 
 <span class="c1">;;;###autoload</span>
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">ediff-patch-file</span> <span class="p">(</span><span class="k">&amp;optional</span> <span class="nv">arg</span> <span class="nv">patch-buf</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">ediff-patch-file</span> <span class="p">(</span><span class="kp">&amp;optional</span> <span class="nv">arg</span> <span class="nv">patch-buf</span><span class="p">)</span>
   <span class="s">"Query for a file name, and then run Ediff by patching that file.</span>
 <span class="s">If optional PATCH-BUF is given, use the patch in that buffer</span>
 <span class="s">and don't ask the user.</span>
@@ -1460,10 +1460,10 @@ body .il { color: #666666 } /* Literal.Number.Integer.Long */
     <span class="p">(</span><span class="nv">ediff-dispatch-file-patching-job</span> <span class="nv">patch-buf</span> <span class="nv">source-file</span><span class="p">)))</span>
 
 <span class="p">(</span><span class="nb">declare-function</span> <span class="nv">ediff-patch-buffer-internal</span> <span class="s">"ediff-ptch"</span>
-                  <span class="p">(</span><span class="nv">patch-buf</span> <span class="nv">buf-to-patch-name</span> <span class="k">&amp;optional</span> <span class="nv">startup-hooks</span><span class="p">))</span>
+                  <span class="p">(</span><span class="nv">patch-buf</span> <span class="nv">buf-to-patch-name</span> <span class="kp">&amp;optional</span> <span class="nv">startup-hooks</span><span class="p">))</span>
 
 <span class="c1">;;;###autoload</span>
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">ediff-patch-buffer</span> <span class="p">(</span><span class="k">&amp;optional</span> <span class="nv">arg</span> <span class="nv">patch-buf</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">ediff-patch-buffer</span> <span class="p">(</span><span class="kp">&amp;optional</span> <span class="nv">arg</span> <span class="nv">patch-buf</span><span class="p">)</span>
   <span class="s">"Run Ediff by patching the buffer specified at prompt.</span>
 <span class="s">Without the optional prefix ARG, asks if the patch is in some buffer and</span>
 <span class="s">prompts for the buffer or a file, depending on the answer.</span>
@@ -1494,7 +1494,7 @@ body .il { color: #666666 } /* Literal.Number.Integer.Long */
 <span class="c1">;;; Versions Control functions</span>
 
 <span class="c1">;;;###autoload</span>
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">ediff-revision</span> <span class="p">(</span><span class="k">&amp;optional</span> <span class="nv">file</span> <span class="nv">startup-hooks</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">ediff-revision</span> <span class="p">(</span><span class="kp">&amp;optional</span> <span class="nv">file</span> <span class="nv">startup-hooks</span><span class="p">)</span>
   <span class="s">"Run Ediff by comparing versions of a file.</span>
 <span class="s">The file is an optional FILE argument or the file entered at the prompt.</span>
 <span class="s">Default: the file visited by the current buffer.</span>
@@ -1536,7 +1536,7 @@ body .il { color: #666666 } /* Literal.Number.Integer.Long */
 
 <span class="c1">;; Test if version control package is loaded and load if not</span>
 <span class="c1">;; Is SILENT is non-nil, don't report error if package is not found.</span>
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">ediff-load-version-control</span> <span class="p">(</span><span class="k">&amp;optional</span> <span class="nv">silent</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">ediff-load-version-control</span> <span class="p">(</span><span class="kp">&amp;optional</span> <span class="nv">silent</span><span class="p">)</span>
   <span class="p">(</span><span class="nb">require</span> <span class="ss">'ediff-vers</span><span class="p">)</span>
   <span class="p">(</span><span class="k">or</span> <span class="p">(</span><span class="nb">featurep</span> <span class="nv">ediff-version-control-package</span><span class="p">)</span>
       <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">locate-library</span> <span class="p">(</span><span class="nf">symbol-name</span> <span class="nv">ediff-version-control-package</span><span class="p">))</span>
@@ -1560,10 +1560,10 @@ body .il { color: #666666 } /* Literal.Number.Integer.Long */
     <span class="p">(</span><span class="nf">format</span> <span class="s">"Ediff %s of %s"</span> <span class="nv">ediff-version</span> <span class="nv">ediff-date</span><span class="p">)))</span>
 
 <span class="c1">;; info is run first, and will autoload info.el.</span>
-<span class="p">(</span><span class="nb">declare-function</span> <span class="nv">Info-goto-node</span> <span class="s">"info"</span> <span class="p">(</span><span class="nv">nodename</span> <span class="k">&amp;optional</span> <span class="nv">fork</span> <span class="nv">strict-case</span><span class="p">))</span>
+<span class="p">(</span><span class="nb">declare-function</span> <span class="nv">Info-goto-node</span> <span class="s">"info"</span> <span class="p">(</span><span class="nv">nodename</span> <span class="kp">&amp;optional</span> <span class="nv">fork</span> <span class="nv">strict-case</span><span class="p">))</span>
 
 <span class="c1">;;;###autoload</span>
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">ediff-documentation</span> <span class="p">(</span><span class="k">&amp;optional</span> <span class="nv">node</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">ediff-documentation</span> <span class="p">(</span><span class="kp">&amp;optional</span> <span class="nv">node</span><span class="p">)</span>
   <span class="s">"Display Ediff's manual.</span>
 <span class="s">With optional NODE, goes to that node."</span>
   <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
