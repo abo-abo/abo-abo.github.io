@@ -11,7 +11,7 @@
 
   <title>
     
-      Poyekhali! &middot; (or emacs
+      upcase-word, you so silly &middot; (or emacs
     
   </title>
 
@@ -146,83 +146,76 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Poyekhali!</h1>
-  <span class="post-date">20 Dec 2014</span>
-  <p>Welcome to <b><code>(or emacs</code></b>!</p>
+  <h1 class="post-title">upcase-word, you so silly</h1>
+  <span class="post-date">23 Dec 2014</span>
+  <p>Do you know what the
+<a href="http://ergoemacs.org/emacs/command-frequency.html">most frequently used</a>
+Emacs commands are? I can confirm by my own experience that they are
+<code>next-line</code> and <code>previous-line</code> (in that order).
+So why do <kbd>M-u</kbd> - <code>upcase-word</code>, <kbd>M-l</kbd> - <code>downcase-word</code>, and
+<kbd>M-c</kbd> - <code>capitalize-word</code> have such terrible synergy with Emacs&#39;s best commands?</p>
 
-<p>My name is Oleh and I&#39;ve been using Emacs for about 3 years now.  I
-think that it&#39;s an awesome editor, and I&#39;ve accumulated some know-how
-to make it even better (at least for me and people who think like me).
-Sharing is caring, so here we go.</p>
+<p>No, <code>upcase-word</code>, this is not what I had in mind:</p>
 
-<h2><code>ace-window</code> update</h2>
+<table><tbody><tr><td>
+<pre style="font-size: 0.6em">
+Learn basic key<cursor>s</cursor>troke commands
+Overview of Emacs features at gnu.org
+</pre>
+</td><td>
+<kbd>M-u</kbd>
+</td><td>
+<pre style="font-size: 0.6em">
+Learn basic keySTROKE<cursor> </cursor>commands
+Overview of Emacs features at gnu.org
+</pre>
+</td></tr></tbody></table>
 
-<p>On this weekend I&#39;ve made a major update to my package
-<a href="https://github.com/abo-abo/ace-window">ace-window</a> that allows it to
-be used as a library. Luckily the change went smoothly, as there are
-no complaints in the github issues so far.  In case you don&#39;t know
-what the package does in the first place, a short blurb follows.</p>
+<p>If you say:</p>
 
-<h2><code>ace-window</code>&#39;s &quot;what and why&quot;</h2>
+<blockquote>
+<p>But how did you get the cursor in such a crazy position in the first
+place? You should have used <kbd>M-b</kbd>/<kbd>M-f</kbd>.</p>
+</blockquote>
 
-<p>I&#39;m sure you&#39;re aware of the <code>other-window</code> command. While it&#39;s great for
-two windows, it quickly loses its value when there are more windows:
-you need to call it many times, and since it&#39;s not easily predictable,
-you have to check each time if you&#39;re in the window that you wanted.</p>
+<p>Well, I got there with <code>previous-line</code> - one of the best Emacs commands!</p>
 
-<p>Another approach is to use <code>windmove-left</code>, <code>windmove-up</code> etc.  These
-are fast and predictable. Their disadvantage is that they need 4 key
-bindings.  The default ones are shift+arrows, which are hard to reach.</p>
+<h2>Resolve the <code>*-word</code> malarkey with <code>defadvice</code></h2>
 
-<p>This package aims to take the speed and predictability of <code>windmove</code>
-and pack it into a single key binding, similar to <code>other-window</code>.  To
-achieve this, I&#39;m using the excellent
-<a href="https://github.com/winterTTr/ace-jump-mode">ace-jump-mode</a>.</p>
+<p>Here are some simple advice commands that I&#39;ve just rolled:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defadvice</span> <span class="nv">upcase-word</span> <span class="p">(</span><span class="nv">before</span> <span class="nv">upcase-word-advice</span> <span class="nv">activate</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nv">looking-back</span> <span class="s">&quot;\\b&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">backward-word</span><span class="p">)))</span>
 
-<p>Here&#39;s how the package looks in action: <a href="/download/ace-window.gif">ace-window.gif</a></p>
+<span class="p">(</span><span class="nb">defadvice</span> <span class="nv">downcase-word</span> <span class="p">(</span><span class="nv">before</span> <span class="nv">downcase-word-advice</span> <span class="nv">activate</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nv">looking-back</span> <span class="s">&quot;\\b&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">backward-word</span><span class="p">)))</span>
 
-<p>Since switching windows is a frequently used operation, I recommend
-binding <code>ace-window</code> to something short, like <kbd>M-p</kbd>.</p>
-
-<p>By default, three actions are available:</p>
-
-<ul>
-<li><kbd>M-p</kbd> - select window</li>
-<li><kbd>C-u M-p</kbd> - swap the current window with the selected window</li>
-<li><kbd>C-u C-u M-p</kbd> - delete the selected window</li>
-</ul>
-
-<h2>finally, the library part</h2>
-
-<p>So now, what if you want to select a window to maximize with <code>ace-window</code>?
-After the change that I&#39;ve mentioned, the code to do this is dirt simple:</p>
-<div class="highlight"><pre><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nb">defun</span> <span class="nv">ace-maximize-window</span> <span class="p">()</span>
-  <span class="s">&quot;Ace maximize window.&quot;</span>
-  <span class="p">(</span><span class="nv">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">setq</span> <span class="nv">aw--current-op</span>
-        <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">aj</span><span class="p">)</span>
-          <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">wnd</span> <span class="p">(</span><span class="nv">aj-position-window</span> <span class="nv">aj</span><span class="p">)))</span>
-            <span class="p">(</span><span class="nv">select-window</span> <span class="nv">wnd</span><span class="p">)</span>
-            <span class="p">(</span><span class="nv">delete-other-windows</span><span class="p">))))</span>
-  <span class="p">(</span><span class="nv">aw--doit</span> <span class="s">&quot; Ace - Maximize Window&quot;</span><span class="p">))</span>
-
-<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-M-o&quot;</span><span class="p">)</span> <span class="ss">&#39;ace-maximize-window</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">defadvice</span> <span class="nv">capitalize-word</span> <span class="p">(</span><span class="nv">before</span> <span class="nv">capitalize-word-advice</span> <span class="nv">activate</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nv">looking-back</span> <span class="s">&quot;\\b&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">backward-word</span><span class="p">)))</span>
 </code></pre></div>
+<p>Small explanation to the Elisp novices:</p>
+
+<ol>
+<li>before <code>upcase-word</code> is called, execute the body of <code>upcase-word-advice</code></li>
+<li><code>unless</code> we are at the beginning of the word</li>
+<li><code>backward-word</code> once to move to the beginning of the word</li>
+</ol>
+
+<p>I&#39;m intentionally not using the newest advice system here, since not everyone
+has yet upgraded to Emacs 24.4.
+In fact, I saw this gem today at Stack Overflow:</p>
+
+<blockquote>
+<p>I am using Emacs 23 and cedet 1.0.1 ...</p>
+</blockquote>
+
 </div>
 
 <div class="related">
   <h2>Related Posts</h2>
   <ul class="related-posts">
-    
-      <li>
-        <h3>
-          <!-- <a href="//2014/12/23/upcase-word-you-silly/"> -->
-          <a href="/2014/12/23/upcase-word-you-silly/">
-            upcase-word, you so silly
-            <small>23 Dec 2014</small>
-          </a>
-        </h3>
-      </li>
     
       <li>
         <h3>
@@ -240,6 +233,16 @@ After the change that I&#39;ve mentioned, the code to do this is dirt simple:</p
           <a href="/2014/12/21/helm-backspace/">
             Easy helm improvement
             <small>21 Dec 2014</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2014/12/20/poyekhali!/"> -->
+          <a href="/2014/12/20/poyekhali!/">
+            Poyekhali!
+            <small>20 Dec 2014</small>
           </a>
         </h3>
       </li>

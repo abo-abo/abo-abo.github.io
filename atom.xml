@@ -4,13 +4,83 @@
  <title>(or emacs</title>
  <link href="https://twitter.com/_abo_abo/atom.xml" rel="self"/>
  <link href="https://twitter.com/_abo_abo/"/>
- <updated>2014-12-22T18:22:33+01:00</updated>
+ <updated>2014-12-23T11:02:56+01:00</updated>
  <id>https://twitter.com/_abo_abo</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>upcase-word, you so silly</title>
+   <link href="https://twitter.com/_abo_abo/2014/12/23/upcase-word-you-silly/"/>
+   <updated>2014-12-23T00:00:00+01:00</updated>
+   <id>https://twitter.com/_abo_abo/2014/12/23/upcase-word-you-silly</id>
+   <content type="html">&lt;p&gt;Do you know what the
+&lt;a href=&quot;http://ergoemacs.org/emacs/command-frequency.html&quot;&gt;most frequently used&lt;/a&gt;
+Emacs commands are? I can confirm by my own experience that they are
+&lt;code&gt;next-line&lt;/code&gt; and &lt;code&gt;previous-line&lt;/code&gt; (in that order).
+So why do &lt;kbd&gt;M-u&lt;/kbd&gt; - &lt;code&gt;upcase-word&lt;/code&gt;, &lt;kbd&gt;M-l&lt;/kbd&gt; - &lt;code&gt;downcase-word&lt;/code&gt;, and
+&lt;kbd&gt;M-c&lt;/kbd&gt; - &lt;code&gt;capitalize-word&lt;/code&gt; have such terrible synergy with Emacs&amp;#39;s best commands?&lt;/p&gt;
+
+&lt;p&gt;No, &lt;code&gt;upcase-word&lt;/code&gt;, this is not what I had in mind:&lt;/p&gt;
+
+&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;
+&lt;pre style=&quot;font-size: 0.6em&quot;&gt;
+Learn basic key&lt;cursor&gt;s&lt;/cursor&gt;troke commands
+Overview of Emacs features at gnu.org
+&lt;/pre&gt;
+&lt;/td&gt;&lt;td&gt;
+&lt;kbd&gt;M-u&lt;/kbd&gt;
+&lt;/td&gt;&lt;td&gt;
+&lt;pre style=&quot;font-size: 0.6em&quot;&gt;
+Learn basic keySTROKE&lt;cursor&gt; &lt;/cursor&gt;commands
+Overview of Emacs features at gnu.org
+&lt;/pre&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+
+&lt;p&gt;If you say:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;But how did you get the cursor in such a crazy position in the first
+place? You should have used &lt;kbd&gt;M-b&lt;/kbd&gt;/&lt;kbd&gt;M-f&lt;/kbd&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Well, I got there with &lt;code&gt;previous-line&lt;/code&gt; - one of the best Emacs commands!&lt;/p&gt;
+
+&lt;h2&gt;Resolve the &lt;code&gt;*-word&lt;/code&gt; malarkey with &lt;code&gt;defadvice&lt;/code&gt;&lt;/h2&gt;
+
+&lt;p&gt;Here are some simple advice commands that I&amp;#39;ve just rolled:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defadvice&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;upcase-word&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;before&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;upcase-word-advice&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;activate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;unless&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;looking-back&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;\\b&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;backward-word&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defadvice&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;downcase-word&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;before&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;downcase-word-advice&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;activate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;unless&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;looking-back&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;\\b&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;backward-word&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defadvice&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;capitalize-word&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;before&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;capitalize-word-advice&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;activate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;unless&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;looking-back&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;\\b&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;backward-word&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Small explanation to the Elisp novices:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;before &lt;code&gt;upcase-word&lt;/code&gt; is called, execute the body of &lt;code&gt;upcase-word-advice&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;unless&lt;/code&gt; we are at the beginning of the word&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;backward-word&lt;/code&gt; once to move to the beginning of the word&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;I&amp;#39;m intentionally not using the newest advice system here, since not everyone
+has yet upgraded to Emacs 24.4.
+In fact, I saw this gem today at Stack Overflow:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;I am using Emacs 23 and cedet 1.0.1 ...&lt;/p&gt;
+&lt;/blockquote&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Sometimes things break</title>
@@ -23,7 +93,7 @@ some minor update, like a change to README.md.  I mean, how in the
 world would a few words in README.md break the Elisp tests?  Upon
 investigation, it turned out that only one test was broken &lt;sup id=&quot;fnref1&quot;&gt;&lt;a href=&quot;#fn1&quot; rel=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt;.  This
 one:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-emacs-lisp&quot; data-lang=&quot;emacs-lisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;ert-deftest&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;clojure-thread-macro&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-cl&quot; data-lang=&quot;cl&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;ert-deftest&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;clojure-thread-macro&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;cider&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;should&lt;/span&gt;
    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;string=&lt;/span&gt;
