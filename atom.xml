@@ -4,13 +4,202 @@
  <title>(or emacs</title>
  <link href="https://twitter.com/_abo_abo/atom.xml" rel="self"/>
  <link href="https://twitter.com/_abo_abo/"/>
- <updated>2014-12-23T11:02:56+01:00</updated>
+ <updated>2014-12-24T13:21:21+01:00</updated>
  <id>https://twitter.com/_abo_abo</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Light it up! Pygments for Emacs Lisp.</title>
+   <link href="https://twitter.com/_abo_abo/2014/12/24/light-it-up/"/>
+   <updated>2014-12-24T00:00:00+01:00</updated>
+   <id>https://twitter.com/_abo_abo/2014/12/24/light-it-up</id>
+   <content type="html">&lt;h2&gt;The Challenge&lt;/h2&gt;
+
+&lt;p&gt;More than 2 years ago, the formidable @bbatsov of &lt;a href=&quot;http://emacsredux.com&quot;&gt;Emacs Redux&lt;/a&gt; had this to say:&lt;/p&gt;
+
+&lt;blockquote class=&quot;twitter-tweet&quot; lang=&quot;en&quot;&gt;&lt;p&gt;After so many years pygments (a popular syntax highlighting library used by GitHub &amp;amp; others) still lacks proper support for Emacs Lisp &lt;a href=&quot;https://twitter.com/hashtag/fail?src=hash&quot;&gt;#fail&lt;/a&gt;&lt;/p&gt;&amp;mdash; Bozhidar Batsov (@bbatsov) &lt;a href=&quot;https://twitter.com/bbatsov/status/246929917546221568&quot;&gt;September 15, 2012&lt;/a&gt;&lt;/blockquote&gt;
+
+&lt;script async src=&quot;//platform.twitter.com/widgets.js&quot; charset=&quot;utf-8&quot;&gt;&lt;/script&gt;
+
+&lt;p&gt;Well, let&amp;#39;s turn that #fail-frown upside down!&lt;/p&gt;
+
+&lt;h2&gt;The Python&lt;/h2&gt;
+
+&lt;p&gt;A quick search brought me to this page:
+&lt;a href=&quot;http://pygments.org/docs/lexerdevelopment/&quot;&gt;Write your own lexer -- Pygments&lt;/a&gt;.
+Turns out that the Pygments development takes place on
+&lt;a href=&quot;https://bitbucket.org/birkenfeld/pygments-main&quot;&gt;Bitbucket&lt;/a&gt;, so I had
+to start an account there. I shortly cloned the repository:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;hg clone https://abo-abo@bitbucket.org/birkenfeld/pygments-main
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Then I quickly copy-pasted some starting code:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;n&quot;&gt;__all__&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;SchemeLexer&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;CommonLispLexer&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+           &lt;span class=&quot;s&quot;&gt;&amp;#39;HyLexer&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;RacketLexer&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+           &lt;span class=&quot;s&quot;&gt;&amp;#39;NewLispLexer&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;EmacsLispLexer&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;EmacsLispLexer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;RegexLexer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;sd&quot;&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;sd&quot;&gt;    An ELisp lexer, parsing a stream and outputting the tokens&lt;/span&gt;
+&lt;span class=&quot;sd&quot;&gt;    needed to highlight elisp code.&lt;/span&gt;
+&lt;span class=&quot;sd&quot;&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;ELisp&amp;#39;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;aliases&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;emacs&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;elisp&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;filenames&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;*.el&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;mimetypes&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;text/x-elisp&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;flags&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;re&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;MULTILINE&lt;/span&gt;
+
+    &lt;span class=&quot;c&quot;&gt;# the rest of the code was copied from CommonLispLexer for now&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Apparently, infrastructure-wise, I only need to know two commands.
+The first one needs to be run just once, so that Pygments is aware of the new lexer:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ cd ~/git/pygments-main &amp;amp;&amp;amp; make mapfiles
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The second command is to (re-)generate &lt;code&gt;/tmp/example.html&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ cp ~/git/emacs/lisp/vc/ediff.el \
+  ~/git/pygments-main/tests/examplefiles/
+$ ./pygmentize -O full -f html -o /tmp/example.html \
+  tests/examplefiles/ediff.el
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;I would repeat the last line with each update to the code, and then
+refresh the page in Firefox to see the result.&lt;/p&gt;
+
+&lt;h2&gt;The Elisp&lt;/h2&gt;
+
+&lt;p&gt;To finalize the lexer, the following tasks ensued:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;get a list of built-in macros&lt;/li&gt;
+&lt;li&gt;get a list of special forms&lt;/li&gt;
+&lt;li&gt;get a list of built-in functions&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;In the process, I&amp;#39;ve added two more lists:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;a list of built-in functions that are highlighted with &lt;code&gt;font-lock-keyword-face&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&amp;#39;defvaralias&amp;#39;, &amp;#39;provide&amp;#39;, &amp;#39;require&amp;#39;,
+&amp;#39;with-no-warnings&amp;#39;, &amp;#39;define-widget&amp;#39;, &amp;#39;with-electric-help&amp;#39;,
+&amp;#39;throw&amp;#39;, &amp;#39;defalias&amp;#39;, &amp;#39;featurep&amp;#39;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;a list of built-in functions and macros that are highlighted with &lt;code&gt;font-lock-warning-face&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&amp;#39;cl-assert&amp;#39;, &amp;#39;cl-check-type&amp;#39;, &amp;#39;error&amp;#39;, &amp;#39;signal&amp;#39;,
+&amp;#39;user-error&amp;#39;, &amp;#39;warn&amp;#39;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;To generate the other three lists, I started off writing things in
+&lt;code&gt;*scratch*&lt;/code&gt;, but after a while my compulsion to &lt;kbd&gt;C-x C-s&lt;/kbd&gt;
+kicked in and I&amp;#39;ve saved the work to &lt;code&gt;research.el&lt;/code&gt;.  At least,
+&lt;a href=&quot;http://batsov.com/articles/2012/03/08/emacs-tip-number-5-save-buffers-automatically-on-buffer-or-window-switch/&quot;&gt;thanks to @bbatsov&lt;/a&gt;,
+I&amp;#39;m not &lt;kbd&gt;C-x C-s&lt;/kbd&gt;-ing that much since I&amp;#39;ve added this:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;save-and-switch-buffer&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;and&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;buffer-file-name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+             &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;not&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;bound-and-true-p&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;archive-subfile-mode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;save-buffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ido-switch-buffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;η&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;save-and-switch-buffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;But it&amp;#39;s time for the student to one-up the master, so here&amp;#39;s a tip to
+improve even further:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;oleh-ido-setup-hook&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ido-buffer-completion-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;η&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ido-next-match&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This way I can cycle the buffers with the same shortcut that invokes
+&lt;code&gt;save-and-switch-buffer&lt;/code&gt;. The defaults are &lt;kbd&gt;C-s&lt;/kbd&gt; and
+&lt;kbd&gt;C-r&lt;/kbd&gt;, in case you didn&amp;#39;t know.&lt;/p&gt;
+
+&lt;h2&gt;The C&lt;/h2&gt;
+
+&lt;p&gt;Getting the list of built-in C functions and special forms, obviously
+involved browsing the C source code. In case you don&amp;#39;t (yet) have the Emacs sources,
+they&amp;#39;re here:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ git clone git://git.savannah.gnu.org/emacs.git
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;I switched to the &lt;code&gt;./src&lt;/code&gt; directory and called &lt;kbd&gt;M-x&lt;/kbd&gt; &lt;code&gt;find-name-dired&lt;/code&gt; with
+&lt;code&gt;*.c&lt;/code&gt; to build a list of all the sources.
+Then I ran the following code from &lt;code&gt;research.el&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defvar&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;foo-c-functions&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defvar&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;foo-c-special-forms&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c-research&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;files&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;dired-get-marked-files&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;dolist&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;file&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;files&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;message&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;%d&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;incf&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;with-current-buffer&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;find-file-noselect&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;goto-char&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;point-min&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;re-search-forward&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;^DEFUN (&amp;quot;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;backward-char&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;beg&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;point&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;end&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;save-excursion&lt;/span&gt;
+                       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;forward-list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;point&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+                &lt;span class=&quot;nv&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;forward-char&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;search-forward&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;\&amp;quot;&amp;quot;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;str&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;read&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;buffer-substring-no-properties&lt;/span&gt;
+                             &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;beg&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;1-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;point&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;re-search-forward&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;UNEVALLED&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;end&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;push&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;str&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;foo-c-special-forms&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+              &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;push&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;str&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;foo-c-functions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This was beautiful, by the way, to just generate this sort of
+documentation from such well-formatted and documented C sources.  Free
+Software FTW.&lt;/p&gt;
+
+&lt;p&gt;If you&amp;#39;re interested, there are 1294 built-in functions.
+Here&amp;#39;s a list of 24 special forms that I found:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;k&quot;&gt;and&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;catch&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;cond&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;condition-case&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;defconst&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;defvar&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;let*&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;or&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;prog1&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;prog2&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;progn&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;quote&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;save-current-buffer&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;save-excursion&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;save-restriction&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;setq-default&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;subr-arity&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;unwind-protect&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;while&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;You can read up on the special forms in the
+&lt;a href=&quot;http://mitpress.mit.edu/sicp/full-text/book/book-Z-H-10.html#%_sec_1.1.3&quot;&gt;SICP&lt;/a&gt;.
+There&amp;#39;s no node for them, so just use isearch.&lt;/p&gt;
+
+&lt;h2&gt;The Result&lt;/h2&gt;
+
+&lt;p&gt;You can see it here: &lt;a href=&quot;/download/ediff.html&quot;&gt;ediff.html&lt;/a&gt;, as well as on
+the rest of the site, since I&amp;#39;ve switched it on everywhere.&lt;/p&gt;
+
+&lt;h2&gt;The Impact&lt;/h2&gt;
+
+&lt;p&gt;Unfortunately this won&amp;#39;t have impact on the Github source code
+highlighter, since
+&lt;a href=&quot;http://www.greghendershott.com/2014/11/github-dropped-pygments.html&quot;&gt;Github dropped Pygments&lt;/a&gt;
+recently.&lt;/p&gt;
+
+&lt;p&gt;But people that use the static blog generator
+&lt;a href=&quot;http://jekyllrb.com&quot;&gt;Jekyll&lt;/a&gt; or the LaTeX package
+&lt;a href=&quot;http://code.google.com/p/minted&quot;&gt;minted&lt;/a&gt; (that&amp;#39;s the package that
+&lt;code&gt;org-mode&lt;/code&gt;&amp;#39;s PDF Export uses by default) will be able to get better
+Elisp highlighting. In fact, this blog is already using the new highlighter.&lt;/p&gt;
+
+&lt;p&gt;See the rest of projects that use Pygments
+&lt;a href=&quot;http://pygments.org/faq/#who-uses-pygments&quot;&gt;here&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2&gt;The Bitbucket&lt;/h2&gt;
+
+&lt;p&gt;So now, to share the new lexer with the world I just have to learn how to:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;stage and commit in Mercurial&lt;/li&gt;
+&lt;li&gt;push Mercurial to Bitbucket&lt;/li&gt;
+&lt;li&gt;open a pull request on Bitbucket&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I don&amp;#39;t &lt;em&gt;want&lt;/em&gt; to become a &lt;a href=&quot;http://xkcd.com/1220/&quot;&gt;hipster&lt;/a&gt;, these things just happen.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>upcase-word, you so silly</title>
@@ -52,17 +241,17 @@ place? You should have used &lt;kbd&gt;M-b&lt;/kbd&gt;/&lt;kbd&gt;M-f&lt;/kbd&gt
 &lt;h2&gt;Resolve the &lt;code&gt;*-word&lt;/code&gt; malarkey with &lt;code&gt;defadvice&lt;/code&gt;&lt;/h2&gt;
 
 &lt;p&gt;Here are some simple advice commands that I&amp;#39;ve just rolled:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defadvice&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;upcase-word&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;before&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;upcase-word-advice&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;activate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defadvice&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;upcase-word&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;before&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;upcase-word-advice&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;activate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;unless&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;looking-back&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;\\b&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;backward-word&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
 
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defadvice&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;downcase-word&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;before&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;downcase-word-advice&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;activate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defadvice&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;downcase-word&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;before&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;downcase-word-advice&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;activate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;unless&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;looking-back&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;\\b&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;backward-word&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
 
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defadvice&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;capitalize-word&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;before&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;capitalize-word-advice&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;activate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defadvice&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;capitalize-word&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;before&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;capitalize-word-advice&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;activate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;unless&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;looking-back&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;\\b&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;backward-word&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;backward-word&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Small explanation to the Elisp novices:&lt;/p&gt;
 
@@ -93,10 +282,10 @@ some minor update, like a change to README.md.  I mean, how in the
 world would a few words in README.md break the Elisp tests?  Upon
 investigation, it turned out that only one test was broken &lt;sup id=&quot;fnref1&quot;&gt;&lt;a href=&quot;#fn1&quot; rel=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt;.  This
 one:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-cl&quot; data-lang=&quot;cl&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;ert-deftest&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;clojure-thread-macro&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;ert-deftest&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;clojure-thread-macro&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;cider&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;should&lt;/span&gt;
-   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;string=&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;should&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;string=&lt;/span&gt;
     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;lispy-with&lt;/span&gt;
      &lt;span class=&quot;s&quot;&gt;&amp;quot;|(map sqr (filter odd? [1 2 3 4 5]))&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;2(-&amp;gt;&amp;gt;]&amp;lt;]&amp;lt;]wwlM&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
     &lt;span class=&quot;s&quot;&gt;&amp;quot;(-&amp;gt;&amp;gt; [1 2 3 4 5]\n  (map sqr)\n  (filter odd?))|&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
@@ -296,17 +485,17 @@ with:&lt;/p&gt;
 &lt;p&gt;Why not make it do something useful instead, for instance close &lt;code&gt;helm&lt;/code&gt;?&lt;/p&gt;
 
 &lt;p&gt;Easy:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-cl&quot; data-lang=&quot;cl&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;helm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;helm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;helm-backspace&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
   &lt;span class=&quot;s&quot;&gt;&amp;quot;Forward to `backward-delete-char&amp;#39;.&lt;/span&gt;
 &lt;span class=&quot;s&quot;&gt;On error (read-only), quit without selecting.&amp;quot;&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;condition-case&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;condition-case&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;
       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;backward-delete-char&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;error&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ne&quot;&gt;error&lt;/span&gt;
      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;helm-keyboard-quit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
 
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;helm-map&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;DEL&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;helm-backspace&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;helm-map&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;DEL&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;helm-backspace&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
  </entry>
  
@@ -363,13 +552,13 @@ binding &lt;code&gt;ace-window&lt;/code&gt; to something short, like &lt;kbd&gt;
 
 &lt;p&gt;So now, what if you want to select a window to maximize with &lt;code&gt;ace-window&lt;/code&gt;?
 After the change that I&amp;#39;ve mentioned, the code to do this is dirt simple:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-cl&quot; data-lang=&quot;cl&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ace-maximize-window&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ace-maximize-window&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
   &lt;span class=&quot;s&quot;&gt;&amp;quot;Ace maximize window.&amp;quot;&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;aw--current-op&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;aj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;aj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
           &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;wnd&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;aj-position-window&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;aj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
-            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;select-window&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;wnd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;select-window&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;wnd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
             &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;delete-other-windows&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;aw--doit&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot; Ace - Maximize Window&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
 

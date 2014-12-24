@@ -196,13 +196,13 @@ binding <code>ace-window</code> to something short, like <kbd>M-p</kbd>.</p>
 
 <p>So now, what if you want to select a window to maximize with <code>ace-window</code>?
 After the change that I&#39;ve mentioned, the code to do this is dirt simple:</p>
-<div class="highlight"><pre><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nb">defun</span> <span class="nv">ace-maximize-window</span> <span class="p">()</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">ace-maximize-window</span> <span class="p">()</span>
   <span class="s">&quot;Ace maximize window.&quot;</span>
-  <span class="p">(</span><span class="nv">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
   <span class="p">(</span><span class="k">setq</span> <span class="nv">aw--current-op</span>
-        <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">aj</span><span class="p">)</span>
+        <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">aj</span><span class="p">)</span>
           <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">wnd</span> <span class="p">(</span><span class="nv">aj-position-window</span> <span class="nv">aj</span><span class="p">)))</span>
-            <span class="p">(</span><span class="nv">select-window</span> <span class="nv">wnd</span><span class="p">)</span>
+            <span class="p">(</span><span class="nf">select-window</span> <span class="nv">wnd</span><span class="p">)</span>
             <span class="p">(</span><span class="nv">delete-other-windows</span><span class="p">))))</span>
   <span class="p">(</span><span class="nv">aw--doit</span> <span class="s">&quot; Ace - Maximize Window&quot;</span><span class="p">))</span>
 
@@ -210,9 +210,28 @@ After the change that I&#39;ve mentioned, the code to do this is dirt simple:</p
 </code></pre></div>
 </div>
 
+<div class="twitter-share">
+  <a href="https://twitter.com/share"
+     class="twitter-share-button"
+     data-via="_abo_abo"
+     data-dnt="true">
+    Tweet
+  </a>
+</div>
+
 <div class="related">
   <h2>Related Posts</h2>
   <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <!-- <a href="//2014/12/24/light-it-up/"> -->
+          <a href="/2014/12/24/light-it-up/">
+            Light it up! Pygments for Emacs Lisp.
+            <small>24 Dec 2014</small>
+          </a>
+        </h3>
+      </li>
     
       <li>
         <h3>
@@ -234,16 +253,6 @@ After the change that I&#39;ve mentioned, the code to do this is dirt simple:</p
         </h3>
       </li>
     
-      <li>
-        <h3>
-          <!-- <a href="//2014/12/21/helm-backspace/"> -->
-          <a href="/2014/12/21/helm-backspace/">
-            Easy helm improvement
-            <small>21 Dec 2014</small>
-          </a>
-        </h3>
-      </li>
-    
   </ul>
 </div>
 
@@ -257,6 +266,10 @@ After the change that I&#39;ve mentioned, the code to do this is dirt simple:</p
   dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
   (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
   })();
+</script>
+
+<script>
+  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
 </script>
 <noscript>
   Please enable JavaScript to view the

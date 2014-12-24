@@ -183,17 +183,17 @@ place? You should have used <kbd>M-b</kbd>/<kbd>M-f</kbd>.</p>
 <h2>Resolve the <code>*-word</code> malarkey with <code>defadvice</code></h2>
 
 <p>Here are some simple advice commands that I&#39;ve just rolled:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defadvice</span> <span class="nv">upcase-word</span> <span class="p">(</span><span class="nv">before</span> <span class="nv">upcase-word-advice</span> <span class="nv">activate</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defadvice</span> <span class="nf">upcase-word</span> <span class="p">(</span><span class="nv">before</span> <span class="nv">upcase-word-advice</span> <span class="nv">activate</span><span class="p">)</span>
   <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nv">looking-back</span> <span class="s">&quot;\\b&quot;</span><span class="p">)</span>
     <span class="p">(</span><span class="nv">backward-word</span><span class="p">)))</span>
 
-<span class="p">(</span><span class="nb">defadvice</span> <span class="nv">downcase-word</span> <span class="p">(</span><span class="nv">before</span> <span class="nv">downcase-word-advice</span> <span class="nv">activate</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">defadvice</span> <span class="nf">downcase-word</span> <span class="p">(</span><span class="nv">before</span> <span class="nv">downcase-word-advice</span> <span class="nv">activate</span><span class="p">)</span>
   <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nv">looking-back</span> <span class="s">&quot;\\b&quot;</span><span class="p">)</span>
     <span class="p">(</span><span class="nv">backward-word</span><span class="p">)))</span>
 
-<span class="p">(</span><span class="nb">defadvice</span> <span class="nv">capitalize-word</span> <span class="p">(</span><span class="nv">before</span> <span class="nv">capitalize-word-advice</span> <span class="nv">activate</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">defadvice</span> <span class="nf">capitalize-word</span> <span class="p">(</span><span class="nv">before</span> <span class="nv">capitalize-word-advice</span> <span class="nv">activate</span><span class="p">)</span>
   <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nv">looking-back</span> <span class="s">&quot;\\b&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">backward-word</span><span class="p">)))</span>
+    <span class="p">(</span><span class="nv">backward-word</span><span class="p">)))</span>
 </code></pre></div>
 <p>Small explanation to the Elisp novices:</p>
 
@@ -213,9 +213,28 @@ In fact, I saw this gem today at Stack Overflow:</p>
 
 </div>
 
+<div class="twitter-share">
+  <a href="https://twitter.com/share"
+     class="twitter-share-button"
+     data-via="_abo_abo"
+     data-dnt="true">
+    Tweet
+  </a>
+</div>
+
 <div class="related">
   <h2>Related Posts</h2>
   <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <!-- <a href="//2014/12/24/light-it-up/"> -->
+          <a href="/2014/12/24/light-it-up/">
+            Light it up! Pygments for Emacs Lisp.
+            <small>24 Dec 2014</small>
+          </a>
+        </h3>
+      </li>
     
       <li>
         <h3>
@@ -237,16 +256,6 @@ In fact, I saw this gem today at Stack Overflow:</p>
         </h3>
       </li>
     
-      <li>
-        <h3>
-          <!-- <a href="//2014/12/20/poyekhali!/"> -->
-          <a href="/2014/12/20/poyekhali!/">
-            Poyekhali!
-            <small>20 Dec 2014</small>
-          </a>
-        </h3>
-      </li>
-    
   </ul>
 </div>
 
@@ -260,6 +269,10 @@ In fact, I saw this gem today at Stack Overflow:</p>
   dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
   (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
   })();
+</script>
+
+<script>
+  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
 </script>
 <noscript>
   Please enable JavaScript to view the

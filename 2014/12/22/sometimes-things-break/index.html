@@ -154,10 +154,10 @@ some minor update, like a change to README.md.  I mean, how in the
 world would a few words in README.md break the Elisp tests?  Upon
 investigation, it turned out that only one test was broken <sup id="fnref1"><a href="#fn1" rel="footnote">1</a></sup>.  This
 one:</p>
-<div class="highlight"><pre><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nb">ert-deftest</span> <span class="nv">clojure-thread-macro</span> <span class="p">()</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">ert-deftest</span> <span class="nv">clojure-thread-macro</span> <span class="p">()</span>
   <span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;cider</span><span class="p">)</span>
-  <span class="p">(</span><span class="nb">should</span>
-   <span class="p">(</span><span class="nb">string=</span>
+  <span class="p">(</span><span class="nv">should</span>
+   <span class="p">(</span><span class="nv">string=</span>
     <span class="p">(</span><span class="nv">lispy-with</span>
      <span class="s">&quot;|(map sqr (filter odd? [1 2 3 4 5]))&quot;</span> <span class="s">&quot;2(-&gt;&gt;]&lt;]&lt;]wwlM&quot;</span><span class="p">)</span>
     <span class="s">&quot;(-&gt;&gt; [1 2 3 4 5]\n  (map sqr)\n  (filter odd?))|&quot;</span><span class="p">)))</span>
@@ -341,9 +341,28 @@ script:
 
 </div>
 
+<div class="twitter-share">
+  <a href="https://twitter.com/share"
+     class="twitter-share-button"
+     data-via="_abo_abo"
+     data-dnt="true">
+    Tweet
+  </a>
+</div>
+
 <div class="related">
   <h2>Related Posts</h2>
   <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <!-- <a href="//2014/12/24/light-it-up/"> -->
+          <a href="/2014/12/24/light-it-up/">
+            Light it up! Pygments for Emacs Lisp.
+            <small>24 Dec 2014</small>
+          </a>
+        </h3>
+      </li>
     
       <li>
         <h3>
@@ -365,16 +384,6 @@ script:
         </h3>
       </li>
     
-      <li>
-        <h3>
-          <!-- <a href="//2014/12/20/poyekhali!/"> -->
-          <a href="/2014/12/20/poyekhali!/">
-            Poyekhali!
-            <small>20 Dec 2014</small>
-          </a>
-        </h3>
-      </li>
-    
   </ul>
 </div>
 
@@ -388,6 +397,10 @@ script:
   dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
   (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
   })();
+</script>
+
+<script>
+  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
 </script>
 <noscript>
   Please enable JavaScript to view the

@@ -159,23 +159,42 @@ with:</p>
 <p>Why not make it do something useful instead, for instance close <code>helm</code>?</p>
 
 <p>Easy:</p>
-<div class="highlight"><pre><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;helm</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;helm</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">helm-backspace</span> <span class="p">()</span>
   <span class="s">&quot;Forward to `backward-delete-char&#39;.</span>
 <span class="s">On error (read-only), quit without selecting.&quot;</span>
-  <span class="p">(</span><span class="nv">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="nb">condition-case</span> <span class="no">nil</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">condition-case</span> <span class="no">nil</span>
       <span class="p">(</span><span class="nv">backward-delete-char</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="p">(</span><span class="nb">error</span>
+    <span class="p">(</span><span class="ne">error</span>
      <span class="p">(</span><span class="nv">helm-keyboard-quit</span><span class="p">))))</span>
 
-<span class="p">(</span><span class="nv">define-key</span> <span class="nv">helm-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;DEL&quot;</span><span class="p">)</span> <span class="ss">&#39;helm-backspace</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">define-key</span> <span class="nv">helm-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;DEL&quot;</span><span class="p">)</span> <span class="ss">&#39;helm-backspace</span><span class="p">)</span>
 </code></pre></div>
+</div>
+
+<div class="twitter-share">
+  <a href="https://twitter.com/share"
+     class="twitter-share-button"
+     data-via="_abo_abo"
+     data-dnt="true">
+    Tweet
+  </a>
 </div>
 
 <div class="related">
   <h2>Related Posts</h2>
   <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <!-- <a href="//2014/12/24/light-it-up/"> -->
+          <a href="/2014/12/24/light-it-up/">
+            Light it up! Pygments for Emacs Lisp.
+            <small>24 Dec 2014</small>
+          </a>
+        </h3>
+      </li>
     
       <li>
         <h3>
@@ -197,16 +216,6 @@ with:</p>
         </h3>
       </li>
     
-      <li>
-        <h3>
-          <!-- <a href="//2014/12/20/poyekhali!/"> -->
-          <a href="/2014/12/20/poyekhali!/">
-            Poyekhali!
-            <small>20 Dec 2014</small>
-          </a>
-        </h3>
-      </li>
-    
   </ul>
 </div>
 
@@ -220,6 +229,10 @@ with:</p>
   dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
   (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
   })();
+</script>
+
+<script>
+  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
 </script>
 <noscript>
   Please enable JavaScript to view the
