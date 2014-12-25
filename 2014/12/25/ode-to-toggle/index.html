@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Ode to the toggle &middot; (or emacs
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="/public/css/octicons.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body class="layout-reverse theme-base-08">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <!-- <div class="sidebar-item"> -->
+  <!--   <p>unused</p> -->
+  <!-- </div> -->
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about/">About</a>
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/archive/">Archive</a>
+        
+      
+    
+      
+    
+      
+        
+      
+    
+
+    <div id="github" class="sidebar-nav-item">
+      <!-- <a data-style="mega" href="https://github.com/abo-abo" class="github-button">My Emacs Projects</a> -->
+      <span class="octicon octicon-mark-github"></span> My Emacs Projects
+      <ul>
+        <li>
+          <a href="https://github.com/abo-abo/lispy">lispy</a>
+          <p>vi-like Paredit</p>
+        </li>
+        <li>
+          <a href="https://github.com/abo-abo/worf">worf</a>
+          <p>vi-like bindings for org-mode</p>
+        </li>
+        <li>
+          <a href="https://github.com/abo-abo/ace-window">ace-window</a>
+          <p>switch windows with <code>ace-jump-mode</code></p>
+        </li>
+        <li>
+          <a href="https://github.com/abo-abo/ace-link">ace-link</a>
+          <p>follow links with <code>ace-jump-mode</code></p>
+        </li>
+        <li>
+          <a href="https://github.com/abo-abo/function-args">function-args</a>
+          <p>enhance <code>CEDET</code> for C++</p>
+        </li>
+        <li>
+          <a href="https://github.com/abo-abo/helm-make">helm-make</a>
+          <p>select a Makefile target with <code>helm</code></p>
+        </li>
+        <li>
+          <a href="https://github.com/abo-abo/make-it-so">make-it-so</a>
+          <p>transform files with Makefile recipes</p>
+        </li>
+        <li>
+          <a href="https://github.com/abo-abo/org-download">org-download</a>
+          <p>drag-and-drop images to <code>org-mode</code></p>
+        </li>
+        <li>
+          <a href="https://github.com/abo-abo?tab=repositories">
+            <span class="octicon octicon-octoface"></span>
+            and more
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
+
+  <div class="sidebar-item">
+    <p>
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.0/">
+        <img alt="Creative Commons License"
+             style="border-width:0"
+             src="https://i.creativecommons.org/l/by-nc-sa/2.0/88x31.png"/>
+      </a>
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">(or emacs</a>
+            <small>irrelevant)</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Ode to the toggle</h1>
+  <span class="post-date">25 Dec 2014</span>
+  <p>Man, I just love toggles: the light switches, the
+<kbd>f</kbd> - full-screen key in <code>vlc</code>, and the clicky pens (ooh, those
+are the best). So I try to model some of my Emacs key bindings as
+toggles.</p>
+
+<p>Let me just quantify the two features that make a good toggle:</p>
+
+<ul>
+<li>only two states: <em>on</em> and <em>off</em></li>
+<li>the state is visible at a glance</li>
+</ul>
+
+<p>One could argue that with <code>undo</code> most editing commands become toggles.
+But they&#39;re not, since each time you call <code>undo</code>, you mess with
+Emacs&#39;s undo state. And the undo state isn&#39;t visible at a glance, so
+both requirements for a good toggle aren&#39;t fulfilled.</p>
+
+<p>I&#39;ll demonstrate the two editing commands that I use every day,
+<code>capitalize-word-toggle</code> and <code>upcase-word-toggle</code>, that are good
+toggles.</p>
+
+<h2><code>capitalize-word-toggle</code></h2>
+
+<blockquote>
+<p>Talk is cheap. Show me the code.</p>
+</blockquote>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">char-upcasep</span> <span class="p">(</span><span class="nv">letter</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">eq</span> <span class="nv">letter</span> <span class="p">(</span><span class="nf">upcase</span> <span class="nv">letter</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">capitalize-word-toggle</span> <span class="p">()</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">start</span>
+         <span class="p">(</span><span class="nf">car</span>
+          <span class="p">(</span><span class="k">save-excursion</span>
+            <span class="p">(</span><span class="nv">backward-word</span><span class="p">)</span>
+            <span class="p">(</span><span class="nv">bounds-of-thing-at-point</span> <span class="ss">&#39;symbol</span><span class="p">)))))</span>
+    <span class="p">(</span><span class="k">if</span> <span class="nv">start</span>
+        <span class="p">(</span><span class="k">save-excursion</span>
+          <span class="p">(</span><span class="nf">goto-char</span> <span class="nv">start</span><span class="p">)</span>
+          <span class="p">(</span><span class="nf">funcall</span>
+           <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">char-upcasep</span> <span class="p">(</span><span class="nf">char-after</span><span class="p">))</span>
+               <span class="ss">&#39;downcase-region</span>
+             <span class="ss">&#39;upcase-region</span><span class="p">)</span>
+           <span class="nv">start</span> <span class="p">(</span><span class="nf">1+</span> <span class="nv">start</span><span class="p">)))</span>
+      <span class="p">(</span><span class="nf">capitalize-word</span> <span class="mi">-1</span><span class="p">))))</span>
+<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-z&quot;</span><span class="p">)</span> <span class="ss">&#39;capitalize-word-toggle</span><span class="p">)</span>
+</code></pre></div>
+<p>I may not have mentioned this before, but you should for the most part
+ignore the key bindings mentioned on this blog. I&#39;m actually using
+them, they work for me because of my non-standard layout, but you
+should assign what works for you.</p>
+
+<p>Anyway, <code>capitalize-word-toggle</code> clearly has a state that&#39;s visible at
+a glance: the first char of the current symbol. Also, there are only
+two possible states: the char can either be upper-case or lower-case.
+Hence, I can toggle this state with <kbd>C-z</kbd> for fun and profit.</p>
+
+<p>Maybe some background on how this command is useful for me. I write a bunch of C++,
+and the code features a lot of lines like this:</p>
+<div class="highlight"><pre><code class="language-c++" data-lang="c++"><span class="n">Triangulation</span> <span class="n">triangulation</span><span class="p">;</span> <span class="c1">// duh</span>
+</code></pre></div>
+<p>So when I&#39;m using <code>auto-complete</code>, it often eagerly expands to
+<code>Triangulation</code> when I want <code>triangulation</code>, and the other way around.
+So <code>capitalize-word-toggle</code> is super-useful there.</p>
+
+<h2><code>upcase-word-toggle</code></h2>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">upcase-word-toggle</span> <span class="p">()</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">bounds</span> <span class="p">(</span><span class="nv">bounds-of-thing-at-point</span> <span class="ss">&#39;symbol</span><span class="p">))</span>
+        <span class="nv">beg</span> <span class="nv">end</span>
+        <span class="p">(</span><span class="nv">regionp</span>
+         <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">eq</span> <span class="nv">this-command</span> <span class="nv">last-command</span><span class="p">)</span>
+             <span class="p">(</span><span class="nf">get</span> <span class="nv">this-command</span> <span class="ss">&#39;regionp</span><span class="p">)</span>
+           <span class="p">(</span><span class="nf">put</span> <span class="nv">this-command</span> <span class="ss">&#39;regionp</span> <span class="no">nil</span><span class="p">))))</span>
+    <span class="p">(</span><span class="k">cond</span>
+      <span class="p">((</span><span class="k">or</span> <span class="p">(</span><span class="nv">region-active-p</span><span class="p">)</span> <span class="nv">regionp</span><span class="p">)</span>
+       <span class="p">(</span><span class="k">setq</span> <span class="nv">beg</span> <span class="p">(</span><span class="nf">region-beginning</span><span class="p">)</span>
+             <span class="nv">end</span> <span class="p">(</span><span class="nf">region-end</span><span class="p">))</span>
+       <span class="p">(</span><span class="nf">put</span> <span class="nv">this-command</span> <span class="ss">&#39;regionp</span> <span class="no">t</span><span class="p">))</span>
+      <span class="p">(</span><span class="nv">bounds</span>
+       <span class="p">(</span><span class="k">setq</span> <span class="nv">beg</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">bounds</span><span class="p">)</span>
+             <span class="nv">end</span> <span class="p">(</span><span class="nf">cdr</span> <span class="nv">bounds</span><span class="p">)))</span>
+      <span class="p">(</span><span class="no">t</span>
+       <span class="p">(</span><span class="k">setq</span> <span class="nv">beg</span> <span class="p">(</span><span class="nf">point</span><span class="p">)</span>
+             <span class="nv">end</span> <span class="p">(</span><span class="nf">1+</span> <span class="nv">beg</span><span class="p">))))</span>
+    <span class="p">(</span><span class="k">save-excursion</span>
+      <span class="p">(</span><span class="nf">goto-char</span> <span class="p">(</span><span class="nf">1-</span> <span class="nv">beg</span><span class="p">))</span>
+      <span class="p">(</span><span class="k">and</span> <span class="p">(</span><span class="nf">re-search-forward</span> <span class="s">&quot;[A-Za-z]&quot;</span> <span class="nv">end</span> <span class="no">t</span><span class="p">)</span>
+           <span class="p">(</span><span class="nf">funcall</span> <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">char-upcasep</span> <span class="p">(</span><span class="nf">char-before</span><span class="p">))</span>
+                        <span class="ss">&#39;downcase-region</span>
+                      <span class="ss">&#39;upcase-region</span><span class="p">)</span>
+                    <span class="nv">beg</span> <span class="nv">end</span><span class="p">)))))</span>
+<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-&gt;&quot;</span><span class="p">)</span> <span class="ss">&#39;upcase-word-toggle</span><span class="p">)</span>
+</code></pre></div>
+<p><code>upcase-word-toggle</code>&#39;s state becomes binary after you call it once,
+since initially the thing at point could have mixed case.
+But afterwards, it&#39;s either all lowercase or all uppercase.
+So again, a clearly visible binary state is a good thing.</p>
+
+<p>This command works either on <code>(bounds-of-thing-at-point &#39;symbol)</code> or
+on the active region. Since <code>region-active-p</code> is deactivated after you
+call the command once, there&#39;s some machinery to remember the state
+and to toggle when called again.</p>
+
+</div>
+
+<div class="twitter-share">
+  <a href="https://twitter.com/share"
+     class="twitter-share-button"
+     data-via="_abo_abo"
+     data-dnt="true">
+    Tweet
+  </a>
+</div>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <!-- <a href="//2014/12/24/light-it-up/"> -->
+          <a href="/2014/12/24/light-it-up/">
+            Light it up! Pygments for Emacs Lisp.
+            <small>24 Dec 2014</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2014/12/23/upcase-word-you-silly/"> -->
+          <a href="/2014/12/23/upcase-word-you-silly/">
+            upcase-word, you so silly
+            <small>23 Dec 2014</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2014/12/22/sometimes-things-break/"> -->
+          <a href="/2014/12/22/sometimes-things-break/">
+            Sometimes things break
+            <small>22 Dec 2014</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'oremacs'; // required: replace example with your forum shortname
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+<script>
+  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+</script>
+<noscript>
+  Please enable JavaScript to view the
+  <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>
