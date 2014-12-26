@@ -4,13 +4,348 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2014-12-25T10:06:08+01:00</updated>
+ <updated>2014-12-26T15:00:42+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>tiny.el - the little package that could</title>
+   <link href="http://oremacs.com/2014/12/26/the-little-package-that-could/"/>
+   <updated>2014-12-26T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2014/12/26/the-little-package-that-could</id>
+   <content type="html">&lt;h2&gt;The Challenge&lt;/h2&gt;
+
+&lt;p&gt;It all started with a heated discussion with the author of
+&lt;a href=&quot;https://github.com/capitaomorte/yasnippet&quot;&gt;yasnippet&lt;/a&gt; over some minor
+nonsense. In the end, we agreed to disagree, but not before he suggested:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;So I hereby challenge you to create this stripped down, no-crap,
+version of yasnippet. Dub it &amp;quot; tiny is not yasnippet &amp;quot; after your
+grandiose views and in the glorious unix tradition of recursive
+acronyms&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2&gt;The Thought Process&lt;/h2&gt;
+
+&lt;p&gt;Well, doing exactly that would probably be lame, but I really loved
+the acronym. Somewhere around that time I saw some post about using
+eval-and-replace, i.e. inserting some Elisp in your non-Elisp buffer
+and then replacing that code in-place with the result of the eval.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;#39;s the type of code that I was playing around with:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;mapcar&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;number-sequence&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;7&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Then I realized that the code should probably produce a string.
+Here&amp;#39;s a more refined version:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;mapconcat&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;hex: 0x%x&amp;quot;&lt;/span&gt;
+           &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;number-sequence&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;7&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+ &lt;span class=&quot;s&quot;&gt;&amp;quot;;\n&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Loops are a useful thing to have, they are a blind spot of
+&lt;code&gt;yasnippet&lt;/code&gt;, and looping is exactly what the code above does.  The
+parameters for this loop expansion are:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;integer range start: &lt;code&gt;1&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;integer range end: &lt;code&gt;7&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;separator to join the expressions: &lt;code&gt;&amp;quot;;\n&amp;quot;&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Elisp expression to transform the linear range: &lt;code&gt;(* x x)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;format&lt;/code&gt; expression for the result: &lt;code&gt;&amp;quot;hex: 0x%x&amp;quot;&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;So ideally, in order to have a package called &lt;code&gt;tiny&lt;/code&gt;, I&amp;#39;d like to
+keep only the parameters and throw away everything else.&lt;/p&gt;
+
+&lt;h2&gt;The Result&lt;/h2&gt;
+
+&lt;p&gt;Here&amp;#39;s the final result of the shortening, and what &lt;code&gt;tiny-expand&lt;/code&gt; would produce:&lt;/p&gt;
+
+&lt;ul&gt;&lt;li&gt;&lt;button type=&quot;button&quot; class=&quot;btn btn-info&quot; data-toggle=&quot;collapse&quot; data-target=&quot;#demo-1&quot;&gt;&lt;code&gt;m1;\n7*xx|hex: 0x%x&lt;/code&gt;&lt;/button&gt;
+&lt;div id=&quot;demo-1&quot; class=&quot;collapse&quot;&gt;
+&lt;pre&gt;&lt;code&gt;
+hex: 0x1;
+hex: 0x4;
+hex: 0x9;
+hex: 0x10;
+hex: 0x19;
+hex: 0x24;
+hex: 0x31
+&lt;/pre&gt;&lt;/code&gt;
+&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;
+
+&lt;p&gt;As you see, it&amp;#39;s pretty compact, with only two characters which are not
+actually the parameters of the template:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;m&lt;/code&gt; signifies the start of the template. I think this way is much
+better than something like having to mark the template body with a
+region before expanding. &lt;code&gt;tiny-expand&lt;/code&gt; should be called from the end
+of the snippet, so there&amp;#39;s no need to mark the end position.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;|&lt;/code&gt; signifies the end of the Elisp expression and the start of the format string.
+It can be omitted if your format string starts with a &lt;code&gt;%&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Note also the use of shortened Elisp. You can still use the full thing
+if you want.  Or just use only the closing parens to resolve the
+ambiguities.&lt;/p&gt;
+
+&lt;h2&gt;The Demos&lt;/h2&gt;
+
+&lt;p&gt;Here are some more snippets, you can click on them to see what they
+expand to. You can also find them and more in the comments section of
+the source code:
+&lt;li&gt;&lt;button type=&quot;button&quot; class=&quot;btn btn-info&quot;
+data-toggle=&quot;collapse&quot; data-target=&quot;#demo-2&quot;&gt; &lt;code&gt;m10&lt;/code&gt;
+&lt;/button&gt; &lt;div id=&quot;demo-2&quot; class=&quot;collapse&quot;&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;0 1 2 3 4 5 6 7 8 9 10
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;button type=&quot;button&quot; class=&quot;btn btn-info&quot;
+data-toggle=&quot;collapse&quot; data-target=&quot;#demo-3&quot;&gt;&lt;code&gt;m5 10&lt;/code&gt;&lt;/button&gt;
+&lt;div id=&quot;demo-3&quot; class=&quot;collapse&quot;&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;5 6 7 8 9 10
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;button type=&quot;button&quot; class=&quot;btn btn-info&quot;
+data-toggle=&quot;collapse&quot; data-target=&quot;#demo-4&quot;&gt;&lt;code&gt;m5,10&lt;/code&gt;&lt;/button&gt;
+&lt;div id=&quot;demo-4&quot; class=&quot;collapse&quot;&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;5,6,7,8,9,10
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;button type=&quot;button&quot; class=&quot;btn btn-info&quot;
+data-toggle=&quot;collapse&quot; data-target=&quot;#demo-5&quot;&gt;&lt;code&gt;m5 10*xx&lt;/code&gt;&lt;/button&gt;
+&lt;div id=&quot;demo-5&quot; class=&quot;collapse&quot;&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;25 36 49 64 81 100
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;button type=&quot;button&quot; class=&quot;btn btn-info&quot;
+data-toggle=&quot;collapse&quot; data-target=&quot;#demo-6&quot;&gt;&lt;code&gt;m5 10*xx%x&lt;/code&gt;&lt;/button&gt;
+&lt;div id=&quot;demo-6&quot; class=&quot;collapse&quot;&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;19 24 31 40 51 64
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;button type=&quot;button&quot; class=&quot;btn btn-info&quot;
+data-toggle=&quot;collapse&quot; data-target=&quot;#demo-7&quot;&gt;&lt;code&gt;m5 10*xx|0x%x&lt;/code&gt;&lt;/button&gt;
+&lt;div id=&quot;demo-7&quot; class=&quot;collapse&quot;&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;0x19 0x24 0x31 0x40 0x51 0x64
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;button type=&quot;button&quot; class=&quot;btn btn-info&quot;
+data-toggle=&quot;collapse&quot; data-target=&quot;#demo-8&quot;&gt;
+&lt;code&gt;m25+x?a%c&lt;/code&gt;
+&lt;/button&gt;
+&lt;div id=&quot;demo-8&quot; class=&quot;collapse&quot;&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;a b c d e f g h i j k l m n o p q r s t u v w x y z
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;button type=&quot;button&quot; class=&quot;btn btn-info&quot;
+data-toggle=&quot;collapse&quot; data-target=&quot;#demo-9&quot;&gt;
+&lt;code&gt;m25+x?A%c&lt;/code&gt;
+&lt;/button&gt;
+&lt;div id=&quot;demo-9&quot; class=&quot;collapse&quot;&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;button type=&quot;button&quot; class=&quot;btn btn-info&quot;
+data-toggle=&quot;collapse&quot; data-target=&quot;#demo-10&quot;&gt;
+&lt;code&gt;m97,122(string x)&lt;/code&gt;
+&lt;/button&gt;
+&lt;div id=&quot;demo-10&quot; class=&quot;collapse&quot;&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;button type=&quot;button&quot; class=&quot;btn btn-info&quot;
+data-toggle=&quot;collapse&quot; data-target=&quot;#demo-11&quot;&gt;
+&lt;code&gt;m97,122stringxx&lt;/code&gt;
+&lt;/button&gt;
+&lt;div id=&quot;demo-11&quot; class=&quot;collapse&quot;&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;aa,bb,cc,dd,ee,ff,gg,hh,ii,jj,kk,ll,mm,nn,oo,pp,qq,rr,ss,tt,uu,vv,ww,xx,yy,zz
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;button type=&quot;button&quot; class=&quot;btn btn-info&quot;
+data-toggle=&quot;collapse&quot; data-target=&quot;#demo-12&quot;&gt;
+&lt;code&gt;m97,120stringxupcasex&lt;/code&gt;
+&lt;/button&gt;
+&lt;div id=&quot;demo-12&quot; class=&quot;collapse&quot;&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;aA,bB,cC,dD,eE,fF,gG,hH,iI,jJ,kK,lL,mM,nN,oO,pP,qQ,rR,sS,tT,uU,vV,wW,xX
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;button type=&quot;button&quot; class=&quot;btn btn-info&quot;
+data-toggle=&quot;collapse&quot; data-target=&quot;#demo-13&quot;&gt;
+&lt;code&gt;m97,120stringxupcasex)x&lt;/code&gt;
+&lt;/button&gt;
+&lt;div id=&quot;demo-13&quot; class=&quot;collapse&quot;&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;aAa,bBb,cCc,dDd,eEe,fFf,gGg,hHh,iIi,jJj,kKk,lLl,mMm,nNn,oOo,pPp,qQq,rRr,sSs,tTt,uUu,vVv,wWw,xXx
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;button type=&quot;button&quot; class=&quot;btn btn-info&quot;
+data-toggle=&quot;collapse&quot; data-target=&quot;#demo-14&quot;&gt;
+&lt;code&gt;m\n10|%(+ x x) and %(* x x) and %s&lt;/code&gt;
+&lt;/button&gt;
+&lt;div id=&quot;demo-14&quot; class=&quot;collapse&quot;&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;0 and 0 and 0
+2 and 1 and 1
+4 and 4 and 2
+6 and 9 and 3
+8 and 16 and 4
+10 and 25 and 5
+12 and 36 and 6
+14 and 49 and 7
+16 and 64 and 8
+18 and 81 and 9
+20 and 100 and 10
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;button type=&quot;button&quot; class=&quot;btn btn-info&quot;
+data-toggle=&quot;collapse&quot; data-target=&quot;#demo-15&quot;&gt;
+&lt;code&gt;m10*2+3x&lt;/code&gt;
+&lt;/button&gt;
+&lt;div id=&quot;demo-15&quot; class=&quot;collapse&quot;&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;6 8 10 12 14 16 18 20 22 24 26
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;button type=&quot;button&quot; class=&quot;btn btn-info&quot;
+data-toggle=&quot;collapse&quot; data-target=&quot;#demo-16&quot;&gt;
+&lt;code&gt;m\n10expx&lt;/code&gt;
+&lt;/button&gt;
+&lt;div id=&quot;demo-16&quot; class=&quot;collapse&quot;&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;1.0
+2.718281828459045
+7.38905609893065
+20.085536923187668
+54.598150033144236
+148.4131591025766
+403.4287934927351
+1096.6331584284585
+2980.9579870417283
+8103.083927575384
+22026.465794806718
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;button type=&quot;button&quot; class=&quot;btn btn-info&quot;
+data-toggle=&quot;collapse&quot; data-target=&quot;#demo-17&quot;&gt;
+&lt;code&gt;m1\n20expx%014.2f&lt;/code&gt;
+&lt;/button&gt;
+&lt;div id=&quot;demo-17&quot; class=&quot;collapse&quot;&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;00000000002.72
+00000000007.39
+00000000020.09
+00000000054.60
+00000000148.41
+00000000403.43
+00000001096.63
+00000002980.96
+00000008103.08
+00000022026.47
+00000059874.14
+00000162754.79
+00000442413.39
+00001202604.28
+00003269017.37
+00008886110.52
+00024154952.75
+00065659969.14
+00178482300.96
+00485165195.41
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;button type=&quot;button&quot; class=&quot;btn btn-info&quot;
+data-toggle=&quot;collapse&quot; data-target=&quot;#demo-18&quot;&gt;
+&lt;code&gt;m7|%(expt 2 x)&lt;/code&gt;
+&lt;/button&gt;
+&lt;div id=&quot;demo-18&quot; class=&quot;collapse&quot;&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;1 2 4 8 16 32 64 128
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;button type=&quot;button&quot; class=&quot;btn btn-info&quot;
+data-toggle=&quot;collapse&quot; data-target=&quot;#demo-19&quot;&gt;
+&lt;code&gt;m, 7|0x%02x&lt;/code&gt;
+&lt;/button&gt;
+&lt;div id=&quot;demo-19&quot; class=&quot;collapse&quot;&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;button type=&quot;button&quot; class=&quot;btn btn-info&quot;
+data-toggle=&quot;collapse&quot; data-target=&quot;#demo-20&quot;&gt;
+&lt;code&gt;m10|%0.2f&lt;/code&gt;
+&lt;/button&gt;
+&lt;div id=&quot;demo-20&quot; class=&quot;collapse&quot;&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;0.00 1.00 2.00 3.00 4.00 5.00 6.00 7.00 8.00 9.00 10.00
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;button type=&quot;button&quot; class=&quot;btn btn-info&quot;
+data-toggle=&quot;collapse&quot; data-target=&quot;#demo-21&quot;&gt;
+&lt;code&gt;m1\n14|* TODO http://emacsrocks.com/e%02d.html&lt;/code&gt;
+&lt;/button&gt;
+&lt;div id=&quot;demo-21&quot; class=&quot;collapse&quot;&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;* TODO http://emacsrocks.com/e01.html
+* TODO http://emacsrocks.com/e02.html
+* TODO http://emacsrocks.com/e03.html
+* TODO http://emacsrocks.com/e04.html
+* TODO http://emacsrocks.com/e05.html
+* TODO http://emacsrocks.com/e06.html
+* TODO http://emacsrocks.com/e07.html
+* TODO http://emacsrocks.com/e08.html
+* TODO http://emacsrocks.com/e09.html
+* TODO http://emacsrocks.com/e10.html
+* TODO http://emacsrocks.com/e11.html
+* TODO http://emacsrocks.com/e12.html
+* TODO http://emacsrocks.com/e13.html
+* TODO http://emacsrocks.com/e14.html
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;button type=&quot;button&quot; class=&quot;btn btn-info&quot;
+data-toggle=&quot;collapse&quot; data-target=&quot;#demo-22&quot;&gt;
+&lt;code&gt;m\n8|* TODO Wash dog %(+ x 2) \nDEADLINE: &amp;lt;%(date &amp;quot;Jan 1&amp;quot; (* x 5))&amp;gt;&lt;/code&gt;
+&lt;/button&gt;
+&lt;div id=&quot;demo-22&quot; class=&quot;collapse&quot;&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;* TODO Wash dog 2
+DEADLINE: &amp;lt;2015-01-01 Thu&amp;gt;
+* TODO Wash dog 3
+DEADLINE: &amp;lt;2015-01-06 Tue&amp;gt;
+* TODO Wash dog 4
+DEADLINE: &amp;lt;2015-01-11 Sun&amp;gt;
+* TODO Wash dog 5
+DEADLINE: &amp;lt;2015-01-16 Fri&amp;gt;
+* TODO Wash dog 6
+DEADLINE: &amp;lt;2015-01-21 Wed&amp;gt;
+* TODO Wash dog 7
+DEADLINE: &amp;lt;2015-01-26 Mon&amp;gt;
+* TODO Wash dog 8
+DEADLINE: &amp;lt;2015-01-31 Sat&amp;gt;
+* TODO Wash dog 9
+DEADLINE: &amp;lt;2015-02-05 Thu&amp;gt;
+* TODO Wash dog 10
+DEADLINE: &amp;lt;2015-02-10 Tue&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;/div&gt;&lt;/p&gt;
+
+&lt;p&gt;You can expand them one-by-one to see what they do.  As you can see,
+Ruby-style interpolation is available in the format string.  There&amp;#39;s
+also one special function called &lt;code&gt;date&lt;/code&gt; that you can use there.  It
+takes the start date as a string (&lt;code&gt;&amp;quot;Jan 1&amp;quot;&lt;/code&gt; in the example) and an
+integer shift and prints an &lt;code&gt;org&lt;/code&gt;-style date.&lt;/p&gt;
+
+&lt;h2&gt;The Summary&lt;/h2&gt;
+
+&lt;p&gt;In the end, &lt;a href=&quot;https://github.com/abo-abo/tiny&quot;&gt;tiny&lt;/a&gt; lives up to the name,
+implementing only one snippet that can be used in a variety of ways.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;tiny is not yasnippet&lt;/p&gt;
+&lt;/blockquote&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Ode to the toggle</title>
