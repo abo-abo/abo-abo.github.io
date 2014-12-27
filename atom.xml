@@ -4,13 +4,62 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2014-12-26T19:57:16+01:00</updated>
+ <updated>2014-12-27T11:38:32+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>mmm... minty</title>
+   <link href="http://oremacs.com/2014/12/27/mmm-minty/"/>
+   <updated>2014-12-27T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2014/12/27/mmm-minty</id>
+   <content type="html">&lt;h2&gt;The backstory&lt;/h2&gt;
+
+&lt;p&gt;In &lt;a href=&quot;/2014/12/24/light-it-up/&quot;&gt;one of the earlier posts&lt;/a&gt;,
+I was discussing the implementation of an Emacs Lisp lexer for
+&lt;a href=&quot;http://pygments.org/&quot;&gt;Pygments&lt;/a&gt;. Here, I&amp;#39;ll show how to install the
+update and get nicely highlighted code in a pdf via the
+&lt;a href=&quot;http://code.google.com/p/minted&quot;&gt;minted&lt;/a&gt; LaTeX package.&lt;/p&gt;
+
+&lt;h2&gt;The install&lt;/h2&gt;
+
+&lt;p&gt;Assuming that you are on a Debian-related system:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;sudo apt-get install mercurial
+mkdir ~/git &amp;amp;&amp;amp; cd ~/git
+hg clone https://bitbucket.org/abo-abo/pygments-main
+cd pygments-main
+make mapfiles
+sudo python setup.py install
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And, of course, I&amp;#39;m assuming that you already have TeX Live installed.
+I&amp;#39;m not too sophisticated about it, so I just install everything:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;sudo apt-get install texlive-full
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;The result&lt;/h2&gt;
+
+&lt;p&gt;So here I took some code from
+&lt;a href=&quot;/2014/12/25/ode-to-toggle/&quot;&gt;a previous post&lt;/a&gt; and
+copy-pasted it into &lt;a href=&quot;/download/minty.org&quot;&gt;minty.org&lt;/a&gt; file.
+And here&amp;#39;s the result of the PDF export (&lt;kbd&gt;C-c C-e lo&lt;/kbd&gt;):
+&lt;a href=&quot;/download/minty.pdf&quot;&gt;minty.pdf&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2&gt;The red tape&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;org-mode&lt;/code&gt; had trouble exporting on my laptop until I did this:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;cd /usr/bin/
+sudo ln -s /usr/local/texlive/2013/bin/x86_64-linux/pdflatex
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Also be mindful of the &lt;code&gt;-shell-escape&lt;/code&gt; flag to &lt;code&gt;pdflatex&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-latex-pdf-process&lt;/span&gt;
+      &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f&amp;quot;&lt;/span&gt;
+        &lt;span class=&quot;s&quot;&gt;&amp;quot;pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f&amp;quot;&lt;/span&gt;
+        &lt;span class=&quot;s&quot;&gt;&amp;quot;pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
+ </entry>
  
  <entry>
    <title>tiny.el - the little package that could</title>
