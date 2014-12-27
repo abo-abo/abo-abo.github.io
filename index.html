@@ -536,6 +536,24 @@ also one special function called <code>date</code> that you can use there.  It
 takes the start date as a string (<code>&quot;Jan 1&quot;</code> in the example) and an
 integer shift and prints an <code>org</code>-style date.</p>
 
+<h2>The full syntax</h2>
+
+<p>The full syntax for the snippet is:</p>
+
+<pre style="font-size: 0.6em"><code>m{range start:=0}{separator:= }{range end}{Lisp expr:=indentity}|{format expr:=%d}</code></pre>
+
+<ul>
+<li>You always start with <code>m</code>.</li>
+<li>Then optional <code>range start</code> that defaults to <code>0</code>.</li>
+<li>Then optional <code>separator</code> that defaults to a single space.</li>
+<li>Then mandatory <code>range end</code>.</li>
+<li>Then optional <code>Lisp expr</code>, that defaults to <code>identity</code>.</li>
+<li>Then optional <code>format</code>-style string, that defaults to <code>%d</code>. You have
+to separate it with <code>|</code> if the format string does not start with
+<code>%</code>. You can also Ruby-style interpolation here, e.g. <code>%(* x x)</code>.</li>
+<li>With the point at the end of the snippet, <kbd>M-x</kbd><code>tiny-expand</code>.</li>
+</ul>
+
 <h2>The Summary</h2>
 
 <p>In the end, <a href="https://github.com/abo-abo/tiny">tiny</a> lives up to the name,

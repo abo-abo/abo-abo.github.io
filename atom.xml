@@ -4,7 +4,7 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2014-12-27T11:38:32+01:00</updated>
+ <updated>2014-12-27T15:48:31+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
@@ -384,6 +384,24 @@ Ruby-style interpolation is available in the format string.  There&amp;#39;s
 also one special function called &lt;code&gt;date&lt;/code&gt; that you can use there.  It
 takes the start date as a string (&lt;code&gt;&amp;quot;Jan 1&amp;quot;&lt;/code&gt; in the example) and an
 integer shift and prints an &lt;code&gt;org&lt;/code&gt;-style date.&lt;/p&gt;
+
+&lt;h2&gt;The full syntax&lt;/h2&gt;
+
+&lt;p&gt;The full syntax for the snippet is:&lt;/p&gt;
+
+&lt;pre style=&quot;font-size: 0.6em&quot;&gt;&lt;code&gt;m{range start:=0}{separator:= }{range end}{Lisp expr:=indentity}|{format expr:=%d}&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;You always start with &lt;code&gt;m&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Then optional &lt;code&gt;range start&lt;/code&gt; that defaults to &lt;code&gt;0&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Then optional &lt;code&gt;separator&lt;/code&gt; that defaults to a single space.&lt;/li&gt;
+&lt;li&gt;Then mandatory &lt;code&gt;range end&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Then optional &lt;code&gt;Lisp expr&lt;/code&gt;, that defaults to &lt;code&gt;identity&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Then optional &lt;code&gt;format&lt;/code&gt;-style string, that defaults to &lt;code&gt;%d&lt;/code&gt;. You have
+to separate it with &lt;code&gt;|&lt;/code&gt; if the format string does not start with
+&lt;code&gt;%&lt;/code&gt;. You can also Ruby-style interpolation here, e.g. &lt;code&gt;%(* x x)&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;With the point at the end of the snippet, &lt;kbd&gt;M-x&lt;/kbd&gt;&lt;code&gt;tiny-expand&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;h2&gt;The Summary&lt;/h2&gt;
 
