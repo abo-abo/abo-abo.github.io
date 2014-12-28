@@ -4,13 +4,147 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2014-12-27T15:48:31+01:00</updated>
+ <updated>2014-12-28T11:23:39+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Throwing abbrevs into the mix</title>
+   <link href="http://oremacs.com/2014/12/28/trying-abbrevs/"/>
+   <updated>2014-12-28T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2014/12/28/trying-abbrevs</id>
+   <content type="html">&lt;p&gt;Currently, I&amp;#39;m using two methods for completing Elisp: &lt;code&gt;company-mode&lt;/code&gt;
+and &lt;code&gt;helm-lisp-completion-at-point&lt;/code&gt;. The latter is the cannon, the big
+gun: it always gets the job done, but I don&amp;#39;t want to shoot at
+sparrows with it. So I only bring it out for hairy cases, like for
+stuff that starts with &lt;code&gt;LaTeX-&lt;/code&gt;. Hence, the &lt;code&gt;company-mode&lt;/code&gt;.  But too
+often have I typed &lt;code&gt;region-&lt;/code&gt; only to find 7 candidates staring at me,
+4 of them useless. Which prompted me to look for an additional
+completion method.&lt;/p&gt;
+
+&lt;h2&gt;Enter abbrevs&lt;/h2&gt;
+
+&lt;p&gt;According to the &lt;a href=&quot;http://www.gnu.org/software/emacs/manual/html_node/emacs/Abbrevs.html&quot;&gt;manual&lt;/a&gt;,&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;A defined &amp;quot;abbrev&amp;quot; is a word which &amp;quot;expands&amp;quot;, if you insert it, into
+some different text&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Also,&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Abbrevs can have &amp;quot;mode-specific&amp;quot; definitions, active only in one
+major mode&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Sounds like something that could solve my problem with &lt;code&gt;region-&lt;/code&gt; commands:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;rb -&amp;gt; region-beginning
+re -&amp;gt; region-end
+ra -&amp;gt; region-active-p
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Also, obviously,&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Abbrevs expand only when Abbrev mode, a buffer-local minor mode, is
+enabled&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Add it to the mix:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;oleh-emacs-lisp-hook&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;outline-regexp&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;;; ———&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;company-mode&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;abbrev-mode&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;make-local-variable&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;company-backends&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+       &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;company-elisp&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:with&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;company-dabbrev-code&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;yas-minor-mode-on&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;lispy-mode&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;auto-compile-mode&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;Some data acquisition&lt;/h2&gt;
+
+&lt;p&gt;I had the whole abbrev thing in the back of my mind until I saw a link
+to the post
+&lt;a href=&quot;https://groups.google.com/forum/#!topic/gnu.emacs.help/kHvUcFdiXFM&quot;&gt;Abbrevs for the most frequent elisp symbols&lt;/a&gt;.
+That&amp;#39;s when I decided to act.
+That post eventually links to a pastebin, where 1600 abbrevs are defined.
+With my handy &lt;a href=&quot;https://addons.mozilla.org/en-US/firefox/addon/its-all-text/&quot;&gt;best extension&lt;/a&gt;
+for &lt;a href=&quot;https://www.mozilla.org/en-US/firefox/new/&quot;&gt;best browser&lt;/a&gt; I&amp;#39;ve opened
+the paste in &lt;s&gt;Emacs&lt;/s&gt; &lt;a href=&quot;http://www.gnu.org/software/emacs/&quot;&gt;best editor&lt;/a&gt; by just clocking the &lt;strong&gt;edit&lt;/strong&gt; button
+in the &lt;em&gt;RAW Paste Data&lt;/em&gt; section.&lt;/p&gt;
+
+&lt;p&gt;I had to &lt;kbd&gt;M-x&lt;/kbd&gt; &lt;code&gt;emacs-lisp-mode&lt;/code&gt;, since the file opened in
+&lt;code&gt;text-mode&lt;/code&gt;. And boy, it&amp;#39;s big. In &lt;code&gt;lispy-mode&lt;/code&gt;, I usually use
+&lt;kbd&gt;99j&lt;/kbd&gt; to navigate 99 sexps down and therefore to the end of
+the list. Well, for this file even &lt;kbd&gt;999j&lt;/kbd&gt; wasn&amp;#39;t enough.
+I quickly tired of deleting one-by-one the each individual useless abbrev.
+I mean:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;ek -&amp;gt; echo-keystrokes,
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;when is that ever going to be useful? So I wrote this throw-away code:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;foobar&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;lispy-mark-list&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;str&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;read&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;lispy--string-dwim&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+        &lt;span class=&quot;nv&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;other-window&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;goto-char&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;point-min&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;count&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;count-matches&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;other-window&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;lispy-out-backward&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;deactivate-mark&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;count&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;lispy-delete&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;message&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;%d&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;local-set-key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-.&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;foobar&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;After switching to a two-pane window layout, with point in the
+pastebin buffer, calling &lt;code&gt;foobar&lt;/code&gt; would count the amount of the abbrev
+matches in
+&lt;a href=&quot;https://github.com/abo-abo/lispy/commits/master&quot;&gt;my most frequent elisp buffer&lt;/a&gt;.
+If it was less than 5, the abbrev was auto-deleted, otherwise the
+decision was up to me, as holding &lt;kbd&gt;C-.&lt;/kbd&gt; would no longer
+delete. In the end, there were only 56 abbrevs left out of 1600.&lt;/p&gt;
+
+&lt;h2&gt;The final result&lt;/h2&gt;
+
+&lt;p&gt;Here&amp;#39;s what I have put into my &lt;code&gt;abbrev_defs&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;define-abbrev-table&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;emacs-lisp-mode-abbrev-table&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;sm&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;string-match&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;mm&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;major-mode&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;rb&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;region-beginning&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;ca&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;char-after&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;smd&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;save-match-data&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;mb&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;match-beginning&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;pm&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;point-min&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;ir&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;indent-region&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;sf&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;search-forward&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;ci&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;call-interactively&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;sn&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;symbol-name&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;se&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;save-excursion&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;scb&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;skip-chars-backward&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;fc&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;forward-char&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;ff&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;find-file&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;fs&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;forward-sexp&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;pa&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;prefix-arg&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;re&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;region-end&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;dc&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;delete-char&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;ms&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;match-string&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;tc&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;this-command&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;dd&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;default-directory&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;bc&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;backward-char&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;rsf&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;re-search-forward&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;snp&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;substring-no-properties&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;bsnp&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;buffer-substring-no-properties&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;lep&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;line-end-position&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;bs&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;buffer-substring&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;cc&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;condition-case&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;ul&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;up-list&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;bfn&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;buffer-file-name&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;lb&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;looking-back&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;tap&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;thing-at-point&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;rm&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;replace-match&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;fl&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;forward-line&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;df&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;declare-function&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;ntr&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;narrow-to-region&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;dr&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;delete-region&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;rsb&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;re-search-backward&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;scf&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;skip-chars-forward&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;wcb&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;with-current-buffer&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;ie&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;ignore-errors&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;gc&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;goto-char&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;jos&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;just-one-space&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;la&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;looking-at&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;ow&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;other-window&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;dk&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;define-key&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;dm&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;deactivate-mark&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;bod&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;beginning-of-defun&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;sic&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;self-insert-command&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;eol&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;end-of-line&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;me&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;match-end&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;nai&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;newline-and-indent&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;cb&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;current-buffer&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;atl&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;add-to-list&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;rris&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;replace-regexp-in-string&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
+ </entry>
  
  <entry>
    <title>mmm... minty</title>

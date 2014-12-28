@@ -84,7 +84,7 @@
     <div id="github" class="sidebar-nav-item">
       <!-- <a data-style="mega" href="https://github.com/abo-abo" class="github-button">My Emacs Projects</a> -->
       <span class="octicon octicon-mark-github"></span> My Emacs Projects
-      <ul>
+      <ul style="margin-bottom:0em;">
         <li>
           <a href="https://github.com/abo-abo/lispy">lispy</a>
           <p>vi-like Paredit</p>
@@ -154,6 +154,144 @@
 
       <div class="container content">
         <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/2014/12/28/trying-abbrevs/">
+        Throwing abbrevs into the mix
+      </a>
+    </h1>
+
+    <span class="post-date">28 Dec 2014</span>
+
+    <p>Currently, I&#39;m using two methods for completing Elisp: <code>company-mode</code>
+and <code>helm-lisp-completion-at-point</code>. The latter is the cannon, the big
+gun: it always gets the job done, but I don&#39;t want to shoot at
+sparrows with it. So I only bring it out for hairy cases, like for
+stuff that starts with <code>LaTeX-</code>. Hence, the <code>company-mode</code>.  But too
+often have I typed <code>region-</code> only to find 7 candidates staring at me,
+4 of them useless. Which prompted me to look for an additional
+completion method.</p>
+
+<h2>Enter abbrevs</h2>
+
+<p>According to the <a href="http://www.gnu.org/software/emacs/manual/html_node/emacs/Abbrevs.html">manual</a>,</p>
+
+<blockquote>
+<p>A defined &quot;abbrev&quot; is a word which &quot;expands&quot;, if you insert it, into
+some different text</p>
+</blockquote>
+
+<p>Also,</p>
+
+<blockquote>
+<p>Abbrevs can have &quot;mode-specific&quot; definitions, active only in one
+major mode</p>
+</blockquote>
+
+<p>Sounds like something that could solve my problem with <code>region-</code> commands:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">rb -&gt; region-beginning
+re -&gt; region-end
+ra -&gt; region-active-p
+</code></pre></div>
+<p>Also, obviously,</p>
+
+<blockquote>
+<p>Abbrevs expand only when Abbrev mode, a buffer-local minor mode, is
+enabled</p>
+</blockquote>
+
+<p>Add it to the mix:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">oleh-emacs-lisp-hook</span> <span class="p">()</span>
+  <span class="p">(</span><span class="k">setq</span> <span class="nv">outline-regexp</span> <span class="s">&quot;;; ———&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">company-mode</span> <span class="mi">1</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">abbrev-mode</span> <span class="mi">1</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">set</span> <span class="p">(</span><span class="nf">make-local-variable</span> <span class="ss">&#39;company-backends</span><span class="p">)</span>
+       <span class="o">&#39;</span><span class="p">((</span><span class="nv">company-elisp</span> <span class="nb">:with</span> <span class="nv">company-dabbrev-code</span><span class="p">)))</span>
+  <span class="p">(</span><span class="nv">yas-minor-mode-on</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">lispy-mode</span> <span class="mi">1</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">auto-compile-mode</span> <span class="mi">1</span><span class="p">))</span>
+</code></pre></div>
+<h2>Some data acquisition</h2>
+
+<p>I had the whole abbrev thing in the back of my mind until I saw a link
+to the post
+<a href="https://groups.google.com/forum/#!topic/gnu.emacs.help/kHvUcFdiXFM">Abbrevs for the most frequent elisp symbols</a>.
+That&#39;s when I decided to act.
+That post eventually links to a pastebin, where 1600 abbrevs are defined.
+With my handy <a href="https://addons.mozilla.org/en-US/firefox/addon/its-all-text/">best extension</a>
+for <a href="https://www.mozilla.org/en-US/firefox/new/">best browser</a> I&#39;ve opened
+the paste in <s>Emacs</s> <a href="http://www.gnu.org/software/emacs/">best editor</a> by just clocking the <strong>edit</strong> button
+in the <em>RAW Paste Data</em> section.</p>
+
+<p>I had to <kbd>M-x</kbd> <code>emacs-lisp-mode</code>, since the file opened in
+<code>text-mode</code>. And boy, it&#39;s big. In <code>lispy-mode</code>, I usually use
+<kbd>99j</kbd> to navigate 99 sexps down and therefore to the end of
+the list. Well, for this file even <kbd>999j</kbd> wasn&#39;t enough.
+I quickly tired of deleting one-by-one the each individual useless abbrev.
+I mean:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">ek -&gt; echo-keystrokes,
+</code></pre></div>
+<p>when is that ever going to be useful? So I wrote this throw-away code:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">foobar</span> <span class="p">()</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">lispy-mark-list</span> <span class="mi">2</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">str</span> <span class="p">(</span><span class="nf">read</span> <span class="p">(</span><span class="nv">lispy--string-dwim</span><span class="p">)))</span>
+        <span class="nv">count</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">other-window</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="p">(</span><span class="nf">goto-char</span> <span class="p">(</span><span class="nf">point-min</span><span class="p">))</span>
+    <span class="p">(</span><span class="k">setq</span> <span class="nv">count</span> <span class="p">(</span><span class="nv">count-matches</span> <span class="nv">str</span><span class="p">))</span>
+    <span class="p">(</span><span class="nv">other-window</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">lispy-out-backward</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">deactivate-mark</span><span class="p">)</span>
+    <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">&lt;</span> <span class="nv">count</span> <span class="mi">5</span><span class="p">)</span>
+        <span class="p">(</span><span class="nv">lispy-delete</span> <span class="mi">1</span><span class="p">)</span>
+      <span class="p">(</span><span class="nf">message</span> <span class="s">&quot;%d&quot;</span> <span class="nv">count</span><span class="p">))))</span>
+<span class="p">(</span><span class="nv">local-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-.&quot;</span><span class="p">)</span> <span class="ss">&#39;foobar</span><span class="p">)</span>
+</code></pre></div>
+<p>After switching to a two-pane window layout, with point in the
+pastebin buffer, calling <code>foobar</code> would count the amount of the abbrev
+matches in
+<a href="https://github.com/abo-abo/lispy/commits/master">my most frequent elisp buffer</a>.
+If it was less than 5, the abbrev was auto-deleted, otherwise the
+decision was up to me, as holding <kbd>C-.</kbd> would no longer
+delete. In the end, there were only 56 abbrevs left out of 1600.</p>
+
+<h2>The final result</h2>
+
+<p>Here&#39;s what I have put into my <code>abbrev_defs</code>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">define-abbrev-table</span> <span class="ss">&#39;emacs-lisp-mode-abbrev-table</span>
+    <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;sm&quot;</span> <span class="s">&quot;string-match&quot;</span><span class="p">)</span> <span class="p">(</span><span class="s">&quot;mm&quot;</span> <span class="s">&quot;major-mode&quot;</span><span class="p">)</span>
+      <span class="p">(</span><span class="s">&quot;rb&quot;</span> <span class="s">&quot;region-beginning&quot;</span><span class="p">)</span> <span class="p">(</span><span class="s">&quot;ca&quot;</span> <span class="s">&quot;char-after&quot;</span><span class="p">)</span>
+      <span class="p">(</span><span class="s">&quot;smd&quot;</span> <span class="s">&quot;save-match-data&quot;</span><span class="p">)</span> <span class="p">(</span><span class="s">&quot;mb&quot;</span> <span class="s">&quot;match-beginning&quot;</span><span class="p">)</span>
+      <span class="p">(</span><span class="s">&quot;pm&quot;</span> <span class="s">&quot;point-min&quot;</span><span class="p">)</span> <span class="p">(</span><span class="s">&quot;ir&quot;</span> <span class="s">&quot;indent-region&quot;</span><span class="p">)</span>
+      <span class="p">(</span><span class="s">&quot;sf&quot;</span> <span class="s">&quot;search-forward&quot;</span><span class="p">)</span> <span class="p">(</span><span class="s">&quot;ci&quot;</span> <span class="s">&quot;call-interactively&quot;</span><span class="p">)</span>
+      <span class="p">(</span><span class="s">&quot;sn&quot;</span> <span class="s">&quot;symbol-name&quot;</span><span class="p">)</span> <span class="p">(</span><span class="s">&quot;se&quot;</span> <span class="s">&quot;save-excursion&quot;</span><span class="p">)</span>
+      <span class="p">(</span><span class="s">&quot;scb&quot;</span> <span class="s">&quot;skip-chars-backward&quot;</span><span class="p">)</span> <span class="p">(</span><span class="s">&quot;fc&quot;</span> <span class="s">&quot;forward-char&quot;</span><span class="p">)</span>
+      <span class="p">(</span><span class="s">&quot;ff&quot;</span> <span class="s">&quot;find-file&quot;</span><span class="p">)</span> <span class="p">(</span><span class="s">&quot;fs&quot;</span> <span class="s">&quot;forward-sexp&quot;</span><span class="p">)</span>
+      <span class="p">(</span><span class="s">&quot;pa&quot;</span> <span class="s">&quot;prefix-arg&quot;</span><span class="p">)</span> <span class="p">(</span><span class="s">&quot;re&quot;</span> <span class="s">&quot;region-end&quot;</span><span class="p">)</span>
+      <span class="p">(</span><span class="s">&quot;dc&quot;</span> <span class="s">&quot;delete-char&quot;</span><span class="p">)</span> <span class="p">(</span><span class="s">&quot;ms&quot;</span> <span class="s">&quot;match-string&quot;</span><span class="p">)</span>
+      <span class="p">(</span><span class="s">&quot;tc&quot;</span> <span class="s">&quot;this-command&quot;</span><span class="p">)</span> <span class="p">(</span><span class="s">&quot;dd&quot;</span> <span class="s">&quot;default-directory&quot;</span><span class="p">)</span>
+      <span class="p">(</span><span class="s">&quot;bc&quot;</span> <span class="s">&quot;backward-char&quot;</span><span class="p">)</span> <span class="p">(</span><span class="s">&quot;rsf&quot;</span> <span class="s">&quot;re-search-forward&quot;</span><span class="p">)</span>
+      <span class="p">(</span><span class="s">&quot;snp&quot;</span> <span class="s">&quot;substring-no-properties&quot;</span><span class="p">)</span>
+      <span class="p">(</span><span class="s">&quot;bsnp&quot;</span> <span class="s">&quot;buffer-substring-no-properties&quot;</span><span class="p">)</span>
+      <span class="p">(</span><span class="s">&quot;lep&quot;</span> <span class="s">&quot;line-end-position&quot;</span><span class="p">)</span> <span class="p">(</span><span class="s">&quot;bs&quot;</span> <span class="s">&quot;buffer-substring&quot;</span><span class="p">)</span>
+      <span class="p">(</span><span class="s">&quot;cc&quot;</span> <span class="s">&quot;condition-case&quot;</span><span class="p">)</span> <span class="p">(</span><span class="s">&quot;ul&quot;</span> <span class="s">&quot;up-list&quot;</span><span class="p">)</span>
+      <span class="p">(</span><span class="s">&quot;bfn&quot;</span> <span class="s">&quot;buffer-file-name&quot;</span><span class="p">)</span> <span class="p">(</span><span class="s">&quot;lb&quot;</span> <span class="s">&quot;looking-back&quot;</span><span class="p">)</span>
+      <span class="p">(</span><span class="s">&quot;tap&quot;</span> <span class="s">&quot;thing-at-point&quot;</span><span class="p">)</span> <span class="p">(</span><span class="s">&quot;rm&quot;</span> <span class="s">&quot;replace-match&quot;</span><span class="p">)</span>
+      <span class="p">(</span><span class="s">&quot;fl&quot;</span> <span class="s">&quot;forward-line&quot;</span><span class="p">)</span> <span class="p">(</span><span class="s">&quot;df&quot;</span> <span class="s">&quot;declare-function&quot;</span><span class="p">)</span>
+      <span class="p">(</span><span class="s">&quot;ntr&quot;</span> <span class="s">&quot;narrow-to-region&quot;</span><span class="p">)</span> <span class="p">(</span><span class="s">&quot;dr&quot;</span> <span class="s">&quot;delete-region&quot;</span><span class="p">)</span>
+      <span class="p">(</span><span class="s">&quot;rsb&quot;</span> <span class="s">&quot;re-search-backward&quot;</span><span class="p">)</span> <span class="p">(</span><span class="s">&quot;scf&quot;</span> <span class="s">&quot;skip-chars-forward&quot;</span><span class="p">)</span>
+      <span class="p">(</span><span class="s">&quot;wcb&quot;</span> <span class="s">&quot;with-current-buffer&quot;</span><span class="p">)</span> <span class="p">(</span><span class="s">&quot;ie&quot;</span> <span class="s">&quot;ignore-errors&quot;</span><span class="p">)</span>
+      <span class="p">(</span><span class="s">&quot;gc&quot;</span> <span class="s">&quot;goto-char&quot;</span><span class="p">)</span> <span class="p">(</span><span class="s">&quot;jos&quot;</span> <span class="s">&quot;just-one-space&quot;</span><span class="p">)</span>
+      <span class="p">(</span><span class="s">&quot;la&quot;</span> <span class="s">&quot;looking-at&quot;</span><span class="p">)</span> <span class="p">(</span><span class="s">&quot;ow&quot;</span> <span class="s">&quot;other-window&quot;</span><span class="p">)</span>
+      <span class="p">(</span><span class="s">&quot;dk&quot;</span> <span class="s">&quot;define-key&quot;</span><span class="p">)</span> <span class="p">(</span><span class="s">&quot;dm&quot;</span> <span class="s">&quot;deactivate-mark&quot;</span><span class="p">)</span>
+      <span class="p">(</span><span class="s">&quot;bod&quot;</span> <span class="s">&quot;beginning-of-defun&quot;</span><span class="p">)</span> <span class="p">(</span><span class="s">&quot;sic&quot;</span> <span class="s">&quot;self-insert-command&quot;</span><span class="p">)</span>
+      <span class="p">(</span><span class="s">&quot;eol&quot;</span> <span class="s">&quot;end-of-line&quot;</span><span class="p">)</span> <span class="p">(</span><span class="s">&quot;me&quot;</span> <span class="s">&quot;match-end&quot;</span><span class="p">)</span>
+      <span class="p">(</span><span class="s">&quot;nai&quot;</span> <span class="s">&quot;newline-and-indent&quot;</span><span class="p">)</span> <span class="p">(</span><span class="s">&quot;cb&quot;</span> <span class="s">&quot;current-buffer&quot;</span><span class="p">)</span>
+      <span class="p">(</span><span class="s">&quot;atl&quot;</span> <span class="s">&quot;add-to-list&quot;</span><span class="p">)</span> <span class="p">(</span><span class="s">&quot;rris&quot;</span> <span class="s">&quot;replace-regexp-in-string&quot;</span><span class="p">)))</span>
+</code></pre></div>
+  </div>
   
   <div class="post">
     <h1 class="post-title">
@@ -870,80 +1008,6 @@ Elisp highlighting. In fact, this blog is already using the new highlighter.</p>
 </ul>
 
 <p>I don&#39;t <em>want</em> to become a <a href="http://xkcd.com/1220/">hipster</a>, these things just happen.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2014/12/23/upcase-word-you-silly/">
-        upcase-word, you so silly
-      </a>
-    </h1>
-
-    <span class="post-date">23 Dec 2014</span>
-
-    <p>Do you know what the
-<a href="http://ergoemacs.org/emacs/command-frequency.html">most frequently used</a>
-Emacs commands are? I can confirm by my own experience that they are
-<code>next-line</code> and <code>previous-line</code> (in that order).
-So why do <kbd>M-u</kbd> - <code>upcase-word</code>, <kbd>M-l</kbd> - <code>downcase-word</code>, and
-<kbd>M-c</kbd> - <code>capitalize-word</code> have such terrible synergy with Emacs&#39;s best commands?</p>
-
-<p>No, <code>upcase-word</code>, this is not what I had in mind:</p>
-
-<table><tbody><tr><td>
-<pre style="font-size: 0.6em">
-Learn basic key<cursor>s</cursor>troke commands
-Overview of Emacs features at gnu.org
-</pre>
-</td><td>
-<kbd>M-u</kbd>
-</td><td>
-<pre style="font-size: 0.6em">
-Learn basic keySTROKE<cursor> </cursor>commands
-Overview of Emacs features at gnu.org
-</pre>
-</td></tr></tbody></table>
-
-<p>If you say:</p>
-
-<blockquote>
-<p>But how did you get the cursor in such a crazy position in the first
-place? You should have used <kbd>M-b</kbd>/<kbd>M-f</kbd>.</p>
-</blockquote>
-
-<p>Well, I got there with <code>previous-line</code> - one of the best Emacs commands!</p>
-
-<h2>Resolve the <code>*-word</code> malarkey with <code>defadvice</code></h2>
-
-<p>Here are some simple advice commands that I&#39;ve just rolled:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defadvice</span> <span class="nf">upcase-word</span> <span class="p">(</span><span class="nv">before</span> <span class="nv">upcase-word-advice</span> <span class="nv">activate</span><span class="p">)</span>
-  <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nv">looking-back</span> <span class="s">&quot;\\b&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">backward-word</span><span class="p">)))</span>
-
-<span class="p">(</span><span class="nb">defadvice</span> <span class="nf">downcase-word</span> <span class="p">(</span><span class="nv">before</span> <span class="nv">downcase-word-advice</span> <span class="nv">activate</span><span class="p">)</span>
-  <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nv">looking-back</span> <span class="s">&quot;\\b&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">backward-word</span><span class="p">)))</span>
-
-<span class="p">(</span><span class="nb">defadvice</span> <span class="nf">capitalize-word</span> <span class="p">(</span><span class="nv">before</span> <span class="nv">capitalize-word-advice</span> <span class="nv">activate</span><span class="p">)</span>
-  <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nv">looking-back</span> <span class="s">&quot;\\b&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">backward-word</span><span class="p">)))</span>
-</code></pre></div>
-<p>Small explanation to the Elisp novices:</p>
-
-<ol>
-<li>before <code>upcase-word</code> is called, execute the body of <code>upcase-word-advice</code></li>
-<li><code>unless</code> we are at the beginning of the word</li>
-<li><code>backward-word</code> once to move to the beginning of the word</li>
-</ol>
-
-<p>I&#39;m intentionally not using the newest advice system here, since not everyone
-has yet upgraded to Emacs 24.4.
-In fact, I saw this gem today at Stack Overflow:</p>
-
-<blockquote>
-<p>I am using Emacs 23 and cedet 1.0.1 ...</p>
-</blockquote>
 
   </div>
   
