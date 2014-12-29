@@ -4,13 +4,83 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2014-12-28T11:23:39+01:00</updated>
+ <updated>2014-12-29T09:42:04+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Monkeying around with JavaScript</title>
+   <link href="http://oremacs.com/2014/12/29/monkeying-around-with-javascript/"/>
+   <updated>2014-12-29T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2014/12/29/monkeying-around-with-javascript</id>
+   <content type="html">&lt;h2&gt;Exciting encounter&lt;/h2&gt;
+
+&lt;p&gt;Recently, I happened upon a wonderful blog called
+&lt;a href=&quot;http://axisofeval.blogspot.nl&quot;&gt;The Axis of Eval&lt;/a&gt;.  I knew that I&amp;#39;d
+love it just when I read the name. &lt;a href=&quot;/&quot;&gt;(or emacs&lt;/a&gt; pales in comparison,
+but I couldn&amp;#39;t just sit on my hands for months or years while thinking
+up a perfect blog name. If you think of a blog name as awesome as &amp;quot;The
+Axis of Eval&amp;quot; and are willing to let me use it, I&amp;#39;ll probably make the
+switch.&lt;/p&gt;
+
+&lt;p&gt;The blog did not disappoint, featuring gems like this:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;In the Lisp world, new languages are built by combining large,
+battle-tested building blocks, and polishing or updating them when
+needed, instead of starting over from toothpicks and double-sided
+duct tape. A large Lisp like Common Lisp is like a toolchain of
+decades-old tools that have proven their worth, and have been
+codified in standards, folklore, and implementations.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;The only thing in the way of extracting information and enjoyment from
+this blog was the horrendous theme of black background, white
+foreground and magenta links. Plus the RSS was kind of quirky, and I
+couldn&amp;#39;t just feed all of it into
+&lt;a href=&quot;https://github.com/skeeto/elfeed&quot;&gt;Elfeed&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2&gt;Greasemonkey to the rescue!&lt;/h2&gt;
+
+&lt;p&gt;In the previous post I&amp;#39;ve mentioned that, in addition to using
+&lt;a href=&quot;http://www.gnu.org/software/emacs/&quot;&gt;the best editor&lt;/a&gt;, I&amp;#39;m using
+&lt;a href=&quot;https://www.mozilla.org/en-US/firefox/new/&quot;&gt;the best browser&lt;/a&gt;.  Well,
+this particular best browser has an extension called
+&lt;a href=&quot;https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/&quot;&gt;Greasemonkey&lt;/a&gt;
+that allows you to automatically run your own JavaScript on certain
+websites.&lt;/p&gt;
+
+&lt;p&gt;I&amp;#39;m not very proficient in JavaScript, the following code I just found
+by searching around. The part to note is the &lt;code&gt;@include&lt;/code&gt; - the pattern
+of website names for which this script should be run automatically.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;c1&quot;&gt;// ==UserScript==&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// @name        background&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// @namespace   abo-abo&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// @include     http://axisofeval.blogspot.nl/*&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// @version     1&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// @grant       none&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// ==/UserScript==&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;document&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;body&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;setAttribute&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;style&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                      &lt;span class=&quot;s2&quot;&gt;&amp;quot;background-color: #ffffff; color:#000&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;nodesArray&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;document&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;getElementsByTagName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;a&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;nodesArray&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;nodesArray&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;style&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;color&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;red&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;})();&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;I can barely stand to look at it. How could you take Scheme and turn
+it into this monstrosity? Such a shame. But it works, so I guess
+everyone should learn JavaScript. All hail the mighty
+&lt;s&gt;HypnoToad&lt;/s&gt; JavaScript!&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Throwing abbrevs into the mix</title>
@@ -74,7 +144,7 @@ That&amp;#39;s when I decided to act.
 That post eventually links to a pastebin, where 1600 abbrevs are defined.
 With my handy &lt;a href=&quot;https://addons.mozilla.org/en-US/firefox/addon/its-all-text/&quot;&gt;best extension&lt;/a&gt;
 for &lt;a href=&quot;https://www.mozilla.org/en-US/firefox/new/&quot;&gt;best browser&lt;/a&gt; I&amp;#39;ve opened
-the paste in &lt;s&gt;Emacs&lt;/s&gt; &lt;a href=&quot;http://www.gnu.org/software/emacs/&quot;&gt;best editor&lt;/a&gt; by just clocking the &lt;strong&gt;edit&lt;/strong&gt; button
+the paste in &lt;s&gt;Emacs&lt;/s&gt; &lt;a href=&quot;http://www.gnu.org/software/emacs/&quot;&gt;best editor&lt;/a&gt; by just clicking the &lt;strong&gt;edit&lt;/strong&gt; button
 in the &lt;em&gt;RAW Paste Data&lt;/em&gt; section.&lt;/p&gt;
 
 &lt;p&gt;I had to &lt;kbd&gt;M-x&lt;/kbd&gt; &lt;code&gt;emacs-lisp-mode&lt;/code&gt;, since the file opened in

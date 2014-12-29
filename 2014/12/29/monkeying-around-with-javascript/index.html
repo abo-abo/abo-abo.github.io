@@ -11,7 +11,7 @@
 
   <title>
     
-      mmm... minty &middot; (or emacs
+      Monkeying around with JavaScript &middot; (or emacs
     
   </title>
 
@@ -154,50 +154,71 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">mmm... minty</h1>
-  <span class="post-date">27 Dec 2014</span>
-  <h2>The backstory</h2>
+  <h1 class="post-title">Monkeying around with JavaScript</h1>
+  <span class="post-date">29 Dec 2014</span>
+  <h2>Exciting encounter</h2>
 
-<p>In <a href="/2014/12/24/light-it-up/">one of the earlier posts</a>,
-I was discussing the implementation of an Emacs Lisp lexer for
-<a href="http://pygments.org/">Pygments</a>. Here, I&#39;ll show how to install the
-update and get nicely highlighted code in a pdf via the
-<a href="http://code.google.com/p/minted">minted</a> LaTeX package.</p>
+<p>Recently, I happened upon a wonderful blog called
+<a href="http://axisofeval.blogspot.nl">The Axis of Eval</a>.  I knew that I&#39;d
+love it just when I read the name. <a href="/">(or emacs</a> pales in comparison,
+but I couldn&#39;t just sit on my hands for months or years while thinking
+up a perfect blog name. If you think of a blog name as awesome as &quot;The
+Axis of Eval&quot; and are willing to let me use it, I&#39;ll probably make the
+switch.</p>
 
-<h2>The install</h2>
+<p>The blog did not disappoint, featuring gems like this:</p>
 
-<p>Assuming that you are on a Debian-related system:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">sudo apt-get install mercurial
-mkdir ~/git &amp;&amp; cd ~/git
-hg clone https://bitbucket.org/abo-abo/pygments-main
-cd pygments-main
-make mapfiles
-sudo python setup.py install
+<blockquote>
+<p>In the Lisp world, new languages are built by combining large,
+battle-tested building blocks, and polishing or updating them when
+needed, instead of starting over from toothpicks and double-sided
+duct tape. A large Lisp like Common Lisp is like a toolchain of
+decades-old tools that have proven their worth, and have been
+codified in standards, folklore, and implementations.</p>
+</blockquote>
+
+<p>The only thing in the way of extracting information and enjoyment from
+this blog was the horrendous theme of black background, white
+foreground and magenta links. Plus the RSS was kind of quirky, and I
+couldn&#39;t just feed all of it into
+<a href="https://github.com/skeeto/elfeed">Elfeed</a>.</p>
+
+<h2>Greasemonkey to the rescue!</h2>
+
+<p>In the previous post I&#39;ve mentioned that, in addition to using
+<a href="http://www.gnu.org/software/emacs/">the best editor</a>, I&#39;m using
+<a href="https://www.mozilla.org/en-US/firefox/new/">the best browser</a>.  Well,
+this particular best browser has an extension called
+<a href="https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/">Greasemonkey</a>
+that allows you to automatically run your own JavaScript on certain
+websites.</p>
+
+<p>I&#39;m not very proficient in JavaScript, the following code I just found
+by searching around. The part to note is the <code>@include</code> - the pattern
+of website names for which this script should be run automatically.</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="c1">// ==UserScript==</span>
+<span class="c1">// @name        background</span>
+<span class="c1">// @namespace   abo-abo</span>
+<span class="c1">// @include     http://axisofeval.blogspot.nl/*</span>
+<span class="c1">// @version     1</span>
+<span class="c1">// @grant       none</span>
+<span class="c1">// ==/UserScript==</span>
+<span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="nb">document</span>
+        <span class="p">.</span><span class="nx">body</span>
+        <span class="p">.</span><span class="nx">setAttribute</span><span class="p">(</span><span class="s2">&quot;style&quot;</span><span class="p">,</span>
+                      <span class="s2">&quot;background-color: #ffffff; color:#000&quot;</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">nodesArray</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementsByTagName</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">nodesArray</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">nodesArray</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">style</span><span class="p">.</span><span class="nx">color</span> <span class="o">=</span> <span class="s1">&#39;red&#39;</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">})();</span>
 </code></pre></div>
-<p>And, of course, I&#39;m assuming that you already have TeX Live installed.
-I&#39;m not too sophisticated about it, so I just install everything:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">sudo apt-get install texlive-full
-</code></pre></div>
-<h2>The result</h2>
+<p>I can barely stand to look at it. How could you take Scheme and turn
+it into this monstrosity? Such a shame. But it works, so I guess
+everyone should learn JavaScript. All hail the mighty
+<s>HypnoToad</s> JavaScript!</p>
 
-<p>So here I took some code from
-<a href="/2014/12/25/ode-to-toggle/">a previous post</a> and
-copy-pasted it into <a href="/download/minty.org">minty.org</a> file.
-And here&#39;s the result of the PDF export (<kbd>C-c C-e lo</kbd>):
-<a href="/download/minty.pdf">minty.pdf</a>.</p>
-
-<h2>The red tape</h2>
-
-<p><code>org-mode</code> had trouble exporting on my laptop until I did this:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">cd /usr/bin/
-sudo ln -s /usr/local/texlive/2013/bin/x86_64-linux/pdflatex
-</code></pre></div>
-<p>Also be mindful of the <code>-shell-escape</code> flag to <code>pdflatex</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">org-latex-pdf-process</span>
-      <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f&quot;</span>
-        <span class="s">&quot;pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f&quot;</span>
-        <span class="s">&quot;pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f&quot;</span><span class="p">))</span>
-</code></pre></div>
 </div>
 
 <div class="twitter-share">
@@ -215,20 +236,20 @@ sudo ln -s /usr/local/texlive/2013/bin/x86_64-linux/pdflatex
     
       <li>
         <h3>
-          <!-- <a href="//2014/12/29/monkeying-around-with-javascript/"> -->
-          <a href="/2014/12/29/monkeying-around-with-javascript/">
-            Monkeying around with JavaScript
-            <small>29 Dec 2014</small>
+          <!-- <a href="//2014/12/28/trying-abbrevs/"> -->
+          <a href="/2014/12/28/trying-abbrevs/">
+            Throwing abbrevs into the mix
+            <small>28 Dec 2014</small>
           </a>
         </h3>
       </li>
     
       <li>
         <h3>
-          <!-- <a href="//2014/12/28/trying-abbrevs/"> -->
-          <a href="/2014/12/28/trying-abbrevs/">
-            Throwing abbrevs into the mix
-            <small>28 Dec 2014</small>
+          <!-- <a href="//2014/12/27/mmm-minty/"> -->
+          <a href="/2014/12/27/mmm-minty/">
+            mmm... minty
+            <small>27 Dec 2014</small>
           </a>
         </h3>
       </li>
