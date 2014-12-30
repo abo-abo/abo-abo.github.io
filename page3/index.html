@@ -11,7 +11,7 @@
 
   <title>
     
-      Archive &middot; (or emacs
+      (or emacs &middot; irrelevant)
     
   </title>
 
@@ -70,7 +70,7 @@
     
       
         
-          <a class="sidebar-nav-item active" href="/archive/">Archive</a>
+          <a class="sidebar-nav-item" href="/archive/">Archive</a>
         
       
     
@@ -157,146 +157,92 @@
       </div>
 
       <div class="container content">
-        <div class="page">
-  <h1 class="page-title">Archive</h1>
-  <!-- ## Blog Posts -->
-
-<!-- 
-  * 30 Dec 2014 &raquo; [ Emacs Web Wowser (EWW) got ace-link ](/2014/12/30/ace-link-eww/)
-
-  * 29 Dec 2014 &raquo; [ Monkeying around with JavaScript ](/2014/12/29/monkeying-around-with-javascript/)
-
-  * 28 Dec 2014 &raquo; [ Throwing abbrevs into the mix ](/2014/12/28/trying-abbrevs/)
-
-  * 27 Dec 2014 &raquo; [ mmm... minty ](/2014/12/27/mmm-minty/)
-
-  * 26 Dec 2014 &raquo; [ tiny.el - the little package that could ](/2014/12/26/the-little-package-that-could/)
-
-  * 25 Dec 2014 &raquo; [ Ode to the toggle ](/2014/12/25/ode-to-toggle/)
-
-  * 24 Dec 2014 &raquo; [ Light it up! Pygments for Emacs Lisp. ](/2014/12/24/light-it-up/)
-
-  * 23 Dec 2014 &raquo; [ upcase-word, you so silly ](/2014/12/23/upcase-word-you-silly/)
-
-  * 22 Dec 2014 &raquo; [ Sometimes things break ](/2014/12/22/sometimes-things-break/)
-
-  * 21 Dec 2014 &raquo; [ Easy helm improvement ](/2014/12/21/helm-backspace/)
-
-  * 20 Dec 2014 &raquo; [ Poyekhali! ](/2014/12/20/poyekhali!/)
- -->
-
-<ul class="tags">
+        <div class="posts">
   
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/2014/12/20/poyekhali!/">
+        Poyekhali!
+      </a>
+    </h1>
+
+    <span class="post-date">20 Dec 2014</span>
+
+    <p>Welcome to <b><code>(or emacs</code></b>!</p>
+
+<p>My name is Oleh and I&#39;ve been using Emacs for about 3 years now.  I
+think that it&#39;s an awesome editor, and I&#39;ve accumulated some know-how
+to make it even better (at least for me and people who think like me).
+Sharing is caring, so here we go.</p>
+
+<h2><code>ace-window</code> update</h2>
+
+<p>On this weekend I&#39;ve made a major update to my package
+<a href="https://github.com/abo-abo/ace-window">ace-window</a> that allows it to
+be used as a library. Luckily the change went smoothly, as there are
+no complaints in the github issues so far.  In case you don&#39;t know
+what the package does in the first place, a short blurb follows.</p>
+
+<h2><code>ace-window</code>&#39;s &quot;what and why&quot;</h2>
+
+<p>I&#39;m sure you&#39;re aware of the <code>other-window</code> command. While it&#39;s great for
+two windows, it quickly loses its value when there are more windows:
+you need to call it many times, and since it&#39;s not easily predictable,
+you have to check each time if you&#39;re in the window that you wanted.</p>
+
+<p>Another approach is to use <code>windmove-left</code>, <code>windmove-up</code> etc.  These
+are fast and predictable. Their disadvantage is that they need 4 key
+bindings.  The default ones are shift+arrows, which are hard to reach.</p>
+
+<p>This package aims to take the speed and predictability of <code>windmove</code>
+and pack it into a single key binding, similar to <code>other-window</code>.  To
+achieve this, I&#39;m using the excellent
+<a href="https://github.com/winterTTr/ace-jump-mode">ace-jump-mode</a>.</p>
+
+<p>Here&#39;s how the package looks in action: <a href="/download/ace-window.gif">ace-window.gif</a></p>
+
+<p>Since switching windows is a frequently used operation, I recommend
+binding <code>ace-window</code> to something short, like <kbd>M-p</kbd>.</p>
+
+<p>By default, three actions are available:</p>
+
+<ul>
+<li><kbd>M-p</kbd> - select window</li>
+<li><kbd>C-u M-p</kbd> - swap the current window with the selected window</li>
+<li><kbd>C-u C-u M-p</kbd> - delete the selected window</li>
 </ul>
 
-<div>
-  <span style="float: left;"><a href="/2014/12/30/ace-link-eww/">Emacs Web Wowser (EWW) got ace-link</span>
-  <span style="float: right;">30 Dec 2014</span>
-</div>
+<h2>finally, the library part</h2>
 
-<div style="clear: both;"></div>​
+<p>So now, what if you want to select a window to maximize with <code>ace-window</code>?
+After the change that I&#39;ve mentioned, the code to do this is dirt simple:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">ace-maximize-window</span> <span class="p">()</span>
+  <span class="s">&quot;Ace maximize window.&quot;</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">setq</span> <span class="nv">aw--current-op</span>
+        <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">aj</span><span class="p">)</span>
+          <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">wnd</span> <span class="p">(</span><span class="nv">aj-position-window</span> <span class="nv">aj</span><span class="p">)))</span>
+            <span class="p">(</span><span class="nf">select-window</span> <span class="nv">wnd</span><span class="p">)</span>
+            <span class="p">(</span><span class="nv">delete-other-windows</span><span class="p">))))</span>
+  <span class="p">(</span><span class="nv">aw--doit</span> <span class="s">&quot; Ace - Maximize Window&quot;</span><span class="p">))</span>
 
-<ul class="tags">
+<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-M-o&quot;</span><span class="p">)</span> <span class="ss">&#39;ace-maximize-window</span><span class="p">)</span>
+</code></pre></div>
+  </div>
   
-</ul>
-<div>
-  <span style="float: left;"><a href="/2014/12/29/monkeying-around-with-javascript/">Monkeying around with JavaScript</span>
-  <span style="float: right;">29 Dec 2014</span>
 </div>
 
-<div style="clear: both;"></div>​
-
-<ul class="tags">
+<div class="pagination">
   
-</ul>
-<div>
-  <span style="float: left;"><a href="/2014/12/28/trying-abbrevs/">Throwing abbrevs into the mix</span>
-  <span style="float: right;">28 Dec 2014</span>
-</div>
-
-<div style="clear: both;"></div>​
-
-<ul class="tags">
+    <span class="pagination-item older">Older</span>
   
-</ul>
-<div>
-  <span style="float: left;"><a href="/2014/12/27/mmm-minty/">mmm... minty</span>
-  <span style="float: right;">27 Dec 2014</span>
-</div>
-
-<div style="clear: both;"></div>​
-
-<ul class="tags">
   
-</ul>
-<div>
-  <span style="float: left;"><a href="/2014/12/26/the-little-package-that-could/">tiny.el - the little package that could</span>
-  <span style="float: right;">26 Dec 2014</span>
-</div>
-
-<div style="clear: both;"></div>​
-
-<ul class="tags">
+    
+      <a class="pagination-item newer" href="/page2">Newer</a>
+    
   
-</ul>
-<div>
-  <span style="float: left;"><a href="/2014/12/25/ode-to-toggle/">Ode to the toggle</span>
-  <span style="float: right;">25 Dec 2014</span>
 </div>
 
-<div style="clear: both;"></div>​
-
-<ul class="tags">
-  
-</ul>
-<div>
-  <span style="float: left;"><a href="/2014/12/24/light-it-up/">Light it up! Pygments for Emacs Lisp.</span>
-  <span style="float: right;">24 Dec 2014</span>
-</div>
-
-<div style="clear: both;"></div>​
-
-<ul class="tags">
-  
-</ul>
-<div>
-  <span style="float: left;"><a href="/2014/12/23/upcase-word-you-silly/">upcase-word, you so silly</span>
-  <span style="float: right;">23 Dec 2014</span>
-</div>
-
-<div style="clear: both;"></div>​
-
-<ul class="tags">
-  
-</ul>
-<div>
-  <span style="float: left;"><a href="/2014/12/22/sometimes-things-break/">Sometimes things break</span>
-  <span style="float: right;">22 Dec 2014</span>
-</div>
-
-<div style="clear: both;"></div>​
-
-<ul class="tags">
-  
-</ul>
-<div>
-  <span style="float: left;"><a href="/2014/12/21/helm-backspace/">Easy helm improvement</span>
-  <span style="float: right;">21 Dec 2014</span>
-</div>
-
-<div style="clear: both;"></div>​
-
-<ul class="tags">
-  
-</ul>
-<div>
-  <span style="float: left;"><a href="/2014/12/20/poyekhali!/">Poyekhali!</span>
-  <span style="float: right;">20 Dec 2014</span>
-</div>
-
-<p><div style="clear: both;"></div>​</p>
-
-</div>
 
       </div>
     </div>

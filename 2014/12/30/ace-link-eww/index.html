@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Emacs Web Wowser (EWW) got ace-link &middot; (or emacs
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="/public/css/octicons.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Scripts -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body class="layout-reverse theme-base-08">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <!-- <div class="sidebar-item"> -->
+  <!--   <p>unused</p> -->
+  <!-- </div> -->
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about/">About</a>
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/archive/">Archive</a>
+        
+      
+    
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+
+    <div id="github" class="sidebar-nav-item">
+      <!-- <a data-style="mega" href="https://github.com/abo-abo" class="github-button">My Emacs Projects</a> -->
+      <span class="octicon octicon-mark-github"></span> My Emacs Projects
+      <ul style="margin-bottom:0em;">
+        <li>
+          <a href="https://github.com/abo-abo/lispy">lispy</a>
+          <p>vi-like Paredit</p>
+        </li>
+        <li>
+          <a href="https://github.com/abo-abo/worf">worf</a>
+          <p>vi-like bindings for org-mode</p>
+        </li>
+        <li>
+          <a href="https://github.com/abo-abo/ace-window">ace-window</a>
+          <p>switch windows with <code>ace-jump-mode</code></p>
+        </li>
+        <li>
+          <a href="https://github.com/abo-abo/ace-link">ace-link</a>
+          <p>follow links with <code>ace-jump-mode</code></p>
+        </li>
+        <li>
+          <a href="https://github.com/abo-abo/function-args">function-args</a>
+          <p>enhance <code>CEDET</code> for C++</p>
+        </li>
+        <li>
+          <a href="https://github.com/abo-abo/helm-make">helm-make</a>
+          <p>select a Makefile target with <code>helm</code></p>
+        </li>
+        <li>
+          <a href="https://github.com/abo-abo/make-it-so">make-it-so</a>
+          <p>transform files with Makefile recipes</p>
+        </li>
+        <li>
+          <a href="https://github.com/abo-abo/org-download">org-download</a>
+          <p>drag-and-drop images to <code>org-mode</code></p>
+        </li>
+        <li>
+          <a href="https://github.com/abo-abo?tab=repositories">
+            <span class="octicon octicon-octoface"></span>
+            and more
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
+
+  <div class="sidebar-item">
+    <p>
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.0/">
+        <img alt="Creative Commons License"
+             style="border-width:0"
+             src="https://i.creativecommons.org/l/by-nc-sa/2.0/88x31.png"/>
+      </a>
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">(or emacs</a>
+            <small>irrelevant)</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Emacs Web Wowser (EWW) got ace-link</h1>
+  <span class="post-date">30 Dec 2014</span>
+  <h2>Emacs goodness incoming</h2>
+
+<p>I&#39;ve discovered a nice Emacs-related blog -
+<a href="http://mbork.pl/Content_AND_Presentation">Content AND Presentation</a>.
+Unlike <a href="http://axisofeval.blogspot.nl">The Axis of Eval</a>, the blog
+that I mentioned yesterday, this one is pretty self-contained, i.e. it
+doesn&#39;t link to many external information sources.  So I thought that
+it&#39;s perfect for trying EWW to read it.</p>
+
+<h2>Not so fast! Configure first.</h2>
+
+<p>For modes that don&#39;t require to self-insert (and even for some that
+do), I like to navigate with
+<kbd>h</kbd>/<kbd>j</kbd>/<kbd>k</kbd>/<kbd>l</kbd> as arrows.  These
+arrows are on the home row, so navigation becomes a pleasant and
+relaxed experience.  But for EWW I decided to add a little twist: if
+the point is in the first column, <kbd>j</kbd>/<kbd>k</kbd> will move
+down/up not by one line, but by one paragraph.  This is great for
+concentration: I navigate to a paragraph, read it, navigate to the
+next one. The point shows me the paragraph that I&#39;m reading,
+everything before the point I&#39;ve already read.  So every time I press
+<kbd>j</kbd>, I get a tiny warm feeling of accomplishment.
+I can also pair this with <kbd>v</kbd>, which I bind to recenter the
+current line to the top.</p>
+
+<p>So here&#39;s what my key setup currently looks like:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">oleh-eww-hook</span> <span class="p">()</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;j&quot;</span> <span class="ss">&#39;oww-down</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;k&quot;</span> <span class="ss">&#39;oww-up</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;l&quot;</span> <span class="ss">&#39;forward-char</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;L&quot;</span> <span class="ss">&#39;eww-back-url</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;h&quot;</span> <span class="ss">&#39;backward-char</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;v&quot;</span> <span class="ss">&#39;recenter-top-bottom</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;V&quot;</span> <span class="ss">&#39;eww-view-source</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;m&quot;</span> <span class="ss">&#39;eww-follow-link</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;a&quot;</span> <span class="ss">&#39;move-beginning-of-line</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;e&quot;</span> <span class="ss">&#39;move-end-of-line</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;o&quot;</span> <span class="ss">&#39;ace-link-eww</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;y&quot;</span> <span class="ss">&#39;eww</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;eww-mode-hook</span> <span class="ss">&#39;oleh-eww-hook</span><span class="p">)</span>
+</code></pre></div>
+<p>As you see, I was careful to re-assign <code>eww-back-url</code> and
+<code>eww-view-source</code> - the commands that I&#39;ve displaced from <kbd>l</kbd>
+and <kbd>v</kbd>.  And here&#39;s the implementation of the arrows:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">oww-down</span> <span class="p">(</span><span class="nv">arg</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">interactive</span> <span class="s">&quot;p&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">bolp</span><span class="p">)</span>
+      <span class="p">(</span><span class="k">progn</span>
+        <span class="p">(</span><span class="nv">forward-paragraph</span> <span class="nv">arg</span><span class="p">)</span>
+        <span class="p">(</span><span class="nf">forward-line</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="p">(</span><span class="nv">line-move</span> <span class="nv">arg</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">oww-up</span> <span class="p">(</span><span class="nv">arg</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">interactive</span> <span class="s">&quot;p&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">bolp</span><span class="p">)</span>
+      <span class="p">(</span><span class="k">progn</span>
+        <span class="p">(</span><span class="nf">forward-line</span> <span class="mi">-1</span><span class="p">)</span>
+        <span class="p">(</span><span class="nv">backward-paragraph</span> <span class="nv">arg</span><span class="p">)</span>
+        <span class="p">(</span><span class="nf">forward-line</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="p">(</span><span class="nv">line-move</span> <span class="p">(</span><span class="nf">-</span> <span class="nv">arg</span><span class="p">))))</span>
+</code></pre></div>
+<h2>Cherry on the top</h2>
+
+<p>And while I was at it, I&#39;ve added <a href="https://github.com/abo-abo/ace-link">ace-link</a> support for EWW.  It was
+pretty easy, basically the same routine as for <code>help-mode</code> and
+<code>info-mode</code>. The only hard part was to figure out what part of the
+code keeps binding <code>shr-save-contents</code> to <kbd>o</kbd>, my preferred
+binding for <code>ace-link</code>. Turns out it was <code>eww-link-keymap</code>, and not
+<code>shr-map</code>. So here&#39;s the new key binding code:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">ace-link-setup-default</span> <span class="p">()</span>
+  <span class="s">&quot;Setup the defualt shortcuts.&quot;</span>
+  <span class="p">(</span><span class="nv">eval-after-load</span> <span class="s">&quot;info&quot;</span>
+    <span class="o">&#39;</span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">Info-mode-map</span> <span class="s">&quot;o&quot;</span> <span class="ss">&#39;ace-link-info</span><span class="p">))</span>
+  <span class="p">(</span><span class="nv">eval-after-load</span> <span class="s">&quot;help-mode&quot;</span>
+    <span class="o">&#39;</span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">help-mode-map</span> <span class="s">&quot;o&quot;</span> <span class="ss">&#39;ace-link-help</span><span class="p">))</span>
+  <span class="p">(</span><span class="nv">eval-after-load</span> <span class="s">&quot;eww&quot;</span>
+    <span class="o">&#39;</span><span class="p">(</span><span class="k">progn</span>
+      <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-link-keymap</span> <span class="s">&quot;o&quot;</span> <span class="ss">&#39;ace-link-eww</span><span class="p">)</span>
+      <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;o&quot;</span> <span class="ss">&#39;ace-link-eww</span><span class="p">))))</span>
+</code></pre></div>
+<p>If you haven&#39;t tried <a href="https://github.com/abo-abo/ace-link">ace-link</a>
+before, you can get it from MELPA.  The minimal configuration that you
+need is this:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">ace-link-setup-default</span><span class="p">)</span>
+</code></pre></div>
+<p>Here&#39;s the setup that I&#39;m actually using:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">use-package</span> <span class="nv">ace-link</span>
+    <span class="nb">:load-path</span> <span class="s">&quot;~/git/ace-link&quot;</span>
+    <span class="nb">:init</span> <span class="p">(</span><span class="nv">ace-link-setup-default</span><span class="p">))</span>
+</code></pre></div>
+<p>I&#39;m using it from my git folder since when I want to edit a project, I
+like to use <a href="https://github.com/nonsequitur/smex">smex</a>&#39;s
+jump-to-definition.</p>
+
+<p>And <a href="https://github.com/jwiegley/use-package">use-package</a> is useful
+for the cases when my <code>~/git/</code> happens not to contain <code>ace-link</code>.  In
+that case, instead of getting a debugger error on starting Emacs, I
+get only a polite &quot;Could not load package ace-link&quot; in my <code>*Messages*</code>
+buffer.</p>
+
+</div>
+
+<div class="twitter-share">
+  <a href="https://twitter.com/share"
+     class="twitter-share-button"
+     data-via="_abo_abo"
+     data-dnt="true">
+    Tweet
+  </a>
+</div>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <!-- <a href="//2014/12/29/monkeying-around-with-javascript/"> -->
+          <a href="/2014/12/29/monkeying-around-with-javascript/">
+            Monkeying around with JavaScript
+            <small>29 Dec 2014</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2014/12/28/trying-abbrevs/"> -->
+          <a href="/2014/12/28/trying-abbrevs/">
+            Throwing abbrevs into the mix
+            <small>28 Dec 2014</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2014/12/27/mmm-minty/"> -->
+          <a href="/2014/12/27/mmm-minty/">
+            mmm... minty
+            <small>27 Dec 2014</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'oremacs'; // required: replace example with your forum shortname
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+<script>
+  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+</script>
+<noscript>
+  Please enable JavaScript to view the
+  <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>
