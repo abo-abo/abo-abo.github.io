@@ -4,13 +4,166 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2014-12-30T10:07:05+01:00</updated>
+ <updated>2014-12-31T11:37:02+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>The keymap arms race</title>
+   <link href="http://oremacs.com/2014/12/31/keymap-arms-race/"/>
+   <updated>2014-12-31T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2014/12/31/keymap-arms-race</id>
+   <content type="html">&lt;p&gt;Sometimes new Emacs packages have to fight for their place in the sun,
+as all the good bindings and huge keymap areas are already taken by
+the older packages. This post will cover some practical problems that
+you may encounter when your package needs to be aware of another
+active package.&lt;/p&gt;
+
+&lt;h2&gt;&lt;code&gt;ace-window&lt;/code&gt; vs. &lt;code&gt;helm&lt;/code&gt;&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/emacs-helm/helm&quot;&gt;helm&lt;/a&gt; is a wonderful package,
+it&amp;#39;s my goto-package when I need completion. All of the following
+packages use it:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/abo-abo/lispy&quot;&gt;lispy&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/abo-abo/function-args&quot;&gt;function-args&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/abo-abo/helm-make&quot;&gt;helm-make&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/abo-abo/worf&quot;&gt;worf&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/abo-abo/helm-j-cheatsheet&quot;&gt;helm-j-cheatsheet&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;But &lt;code&gt;helm&lt;/code&gt; is super-greedy: once you&amp;#39;re in the &lt;code&gt;helm&lt;/code&gt;-minibuffer,
+there&amp;#39;s no way out except either a successful completion or a cancel.
+But exiting the minibuffer for a short while may be useful. For
+instance, you could copy some text and yank it in the
+&lt;code&gt;helm&lt;/code&gt;-minibuffer.  The default minibuffer functions, as well as &lt;code&gt;ido&lt;/code&gt;
+easily allow it.&lt;/p&gt;
+
+&lt;p&gt;I started to investigate into this when I got
+&lt;a href=&quot;https://github.com/abo-abo/ace-window/issues/15&quot;&gt;issue #15: Does not work with helm in minibuffer&lt;/a&gt;
+for &lt;code&gt;ace-window&lt;/code&gt;. I checked it, and indeed you could not &lt;code&gt;ace-window&lt;/code&gt;
+out of a &lt;code&gt;helm&lt;/code&gt;-minibuffer. In fact, it was not possible to exit with
+&lt;code&gt;other-window&lt;/code&gt; either. This looked like good news, since I had an
+inkling that it used to work at some point. So I checked out a
+year-old version of &lt;code&gt;helm&lt;/code&gt; and it did work.&lt;/p&gt;
+
+&lt;h3&gt;&lt;code&gt;magit-bisect&lt;/code&gt; to the rescue!&lt;/h3&gt;
+
+&lt;p&gt;It&amp;#39;s very simple:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Check out the master of &lt;code&gt;helm&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Call &lt;code&gt;magit-bisect-start&lt;/code&gt; and mark &lt;code&gt;HEAD&lt;/code&gt; as &lt;em&gt;bad&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;magit&lt;/code&gt; will automatically check out a revision that is halfway
+between a &lt;em&gt;bad&lt;/em&gt; state and the initial commit. Now I exit Emacs and try
+&lt;code&gt;helm&lt;/code&gt; again to see if I can exit from the minibuffer.
+It&amp;#39;s kind of lame to have to exit Emacs, but somehow I don&amp;#39;t trust
+&lt;code&gt;unload-feature&lt;/code&gt; to do the right thing. Anyway, if the thing works,
+move to &lt;code&gt;helm&lt;/code&gt;&amp;#39;s repository and call &lt;code&gt;magit-bisect-good&lt;/code&gt;, otherwise
+call &lt;code&gt;magit-bisect-bad&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Continue this process until termination. I needed 10 iterations
+in this case.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;The culprit commit was &lt;a href=&quot;https://github.com/emacs-helm/helm/commit/61e85df&quot;&gt;this one&lt;/a&gt;:&lt;/p&gt;
+
+&lt;pre&gt;
+&lt;span class=&quot;diff-context&quot;&gt;&lt;span class=&quot;region&quot;&gt;     (let* ((source (helm-get-current-source))
+            (kmap (and (listp source) ; Check if source is empty.
+                       (assoc-default 'keymap source))))
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;diff-indicator-removed&quot;&gt;&lt;span class=&quot;region&quot;&gt;-&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;diff-removed&quot;&gt;&lt;span class=&quot;region&quot;&gt;      (when kmap (setq overriding-local-map kmap)))))
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;diff-indicator-added&quot;&gt;&lt;span class=&quot;region&quot;&gt;+&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;diff-added&quot;&gt;&lt;span class=&quot;region&quot;&gt;      (when kmap (set-transient-map kmap)))))&lt;/span&gt;&lt;/span&gt;&lt;/pre&gt;
+
+&lt;h3&gt;the priority of maps&lt;/h3&gt;
+
+&lt;p&gt;In Emacs, &lt;code&gt;set-transient-map&lt;/code&gt; has priority over
+&lt;code&gt;overriding-local-map&lt;/code&gt;, which was exactly what &lt;code&gt;ace-window&lt;/code&gt; was using.
+It&amp;#39;s also funny that &lt;code&gt;ace-window&lt;/code&gt; used to work with &lt;code&gt;helm&lt;/code&gt; for a week,
+since it was published on &lt;code&gt;Mar 26&lt;/code&gt; and &lt;code&gt;helm&lt;/code&gt; switched to
+&lt;code&gt;set-transient-map&lt;/code&gt; on &lt;code&gt;Apr 2&lt;/code&gt;. And I found out that it&amp;#39;s not working only
+now.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;#39;s what &lt;code&gt;helm&lt;/code&gt; is using currently:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;fboundp&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;set-transient-map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;set-transient-map&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;it&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;set-temporary-overlay-map&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;it&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;So I&amp;#39;ve amended &lt;code&gt;ace-window&lt;/code&gt; with similar code. The way
+&lt;code&gt;set-transient-map&lt;/code&gt; works, the last call to it overrides the previous
+one, so I thought that it would work out since &lt;code&gt;ace-window&lt;/code&gt; is always
+called after &lt;code&gt;helm&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;It didn&amp;#39;t work out, because &lt;code&gt;helm&lt;/code&gt; adds the code that calls
+&lt;code&gt;set-transient-map&lt;/code&gt; to &lt;code&gt;post-command-hook&lt;/code&gt;.
+In the end, this finally worked:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;remove-hook&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;post-command-hook&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;helm--maybe-update-keymap&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;&lt;code&gt;lispy&lt;/code&gt; vs. &lt;code&gt;SLIME&lt;/code&gt; and &lt;code&gt;CIDER&lt;/code&gt;&lt;/h2&gt;
+
+&lt;p&gt;I thought that enabling &lt;code&gt;lispy-mode&lt;/code&gt; for &lt;code&gt;slime-repl-mode&lt;/code&gt; and
+&lt;code&gt;cider-repl-mode&lt;/code&gt; might be a good idea.
+Extra navigation options are always good, and the ability to
+call &lt;code&gt;raise&lt;/code&gt; is just so useful.&lt;/p&gt;
+
+&lt;p&gt;For instance, you start with:&lt;/p&gt;
+
+&lt;pre&gt;
+; SLIME 2014-11-28
+&lt;span class=&quot;slime-repl-prompt&quot;&gt;CL-USER&amp;gt; &lt;/span&gt;&lt;span class=&quot;slime-repl-old&quot;&gt;(expt (expt 2 10) 3)&lt;/span&gt;
+&lt;span class=&quot;slime-repl-result&quot;&gt;&lt;span class=&quot;slime-repl-inputed-output&quot;&gt;1073741824&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;slime-repl-result&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;slime-repl-prompt&quot;&gt;CL-USER&amp;gt; &lt;cursor&gt; &lt;/cursor&gt;&lt;/span&gt;&lt;/pre&gt;
+
+&lt;p&gt;With &lt;code&gt;lispy-mode&lt;/code&gt; on you can: &lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;kbd&gt;M-p&lt;/kbd&gt; to get the previous input&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;f&lt;/kbd&gt; to move the cursor after &lt;code&gt;(expt 2 10)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;r&lt;/kbd&gt; to raise &lt;code&gt;(expt 2 10)&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Here&amp;#39;s the final state:&lt;/p&gt;
+
+&lt;pre&gt;
+; SLIME 2014-11-28
+&lt;span class=&quot;slime-repl-prompt&quot;&gt;CL-USER&amp;gt; &lt;/span&gt;&lt;span class=&quot;slime-repl-old&quot;&gt;(expt (expt 2 10) 3)&lt;/span&gt;
+&lt;span class=&quot;slime-repl-result&quot;&gt;&lt;span class=&quot;slime-repl-inputed-output&quot;&gt;1073741824&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;slime-repl-result&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;slime-repl-prompt&quot;&gt;CL-USER&amp;gt;&lt;/span&gt; (expt 2 10)&lt;cursor&gt; &lt;/cursor&gt;&lt;/pre&gt;
+
+&lt;p&gt;But the problem was that SLIME has &lt;code&gt;slime-repl-map-mode&lt;/code&gt; minor mode on
+that competes for &lt;code&gt;lispy&lt;/code&gt;&amp;#39;s shortcuts, and CIDER has something similar
+as well.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;When two minor modes bind the same keys, which one wins?&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;The answer is the first one on &lt;code&gt;minor-mode-map-alist&lt;/code&gt;.
+This function I&amp;#39;ve found on the &lt;a href=&quot;http://www.emacswiki.org/emacs/minor-mode-hack.el&quot;&gt;wiki&lt;/a&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;lispy-raise-minor-mode&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;mode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Make MODE the first on `minor-mode-map-alist&amp;#39;.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;assq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;mode&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;minor-mode-map-alist&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;minor-mode-map-alist&lt;/span&gt;
+              &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;cons&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;delq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;mode&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;minor-mode-map-alist&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;I didn&amp;#39;t want &lt;code&gt;lispy-mode&lt;/code&gt; to mess with &lt;code&gt;minor-mode-map-alist&lt;/code&gt; too
+actively, so I went with this approach: if &lt;code&gt;lispy-mode&lt;/code&gt; is called
+interactively, i.e. via a key binding or &lt;kbd&gt;M-x&lt;/kbd&gt;, put it ahead:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;and&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;lispy-mode&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;called-interactively-p&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;any&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;mapc&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;#&amp;#39;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;lispy-raise-minor-mode&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;cons&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;lispy-mode&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;lispy-known-verbs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;It&amp;#39;s still a work in progress, currently only &lt;code&gt;lispy&lt;/code&gt;&amp;#39;s &lt;kbd&gt;RET&lt;/kbd&gt;
+properly yields to call &lt;code&gt;cider-repl-return&lt;/code&gt; and &lt;code&gt;slime-repl-return&lt;/code&gt;
+respectively. I&amp;#39;ll see if there are more key bindings that need to
+yield. Happy coding in the New Year!&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Emacs Web Wowser (EWW) got ace-link</title>
@@ -324,7 +477,7 @@ delete. In the end, there were only 56 abbrevs left out of 1600.&lt;/p&gt;
  </entry>
  
  <entry>
-   <title>mmm... minty</title>
+   <title>Mmm... minty</title>
    <link href="http://oremacs.com/2014/12/27/mmm-minty/"/>
    <updated>2014-12-27T00:00:00+01:00</updated>
    <id>http://oremacs.com/2014/12/27/mmm-minty</id>
