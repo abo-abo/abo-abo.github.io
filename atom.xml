@@ -4,13 +4,51 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2014-12-31T11:37:02+01:00</updated>
+ <updated>2015-01-01T14:18:39+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Three ansi-term tips</title>
+   <link href="http://oremacs.com/2015/01/01/three-ansi-term-tips/"/>
+   <updated>2015-01-01T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/01/01/three-ansi-term-tips</id>
+   <content type="html">&lt;h2&gt;Tip #1&lt;/h2&gt;
+
+&lt;p&gt;There&amp;#39;s no reason not to have &lt;code&gt;/bin/bash&lt;/code&gt; instead of &lt;code&gt;/bin/sh&lt;/code&gt; as the
+default choice when you &lt;kbd&gt;M-x&lt;/kbd&gt; &lt;code&gt;term&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;explicit-shell-file-name&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;/bin/bash&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;Tip #2&lt;/h2&gt;
+
+&lt;p&gt;After you close the terminal, you get a useless buffer with no
+process. It&amp;#39;s probably left there for you to have a history of what
+you did. I find it not useful, so here&amp;#39;s a way to kill that buffer
+automatically:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;oleh-term-exec-hook&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;buff&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;current-buffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;proc&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;get-buffer-process&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;buff&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;set-process-sentinel&lt;/span&gt;
+     &lt;span class=&quot;nv&quot;&gt;proc&lt;/span&gt;
+     &lt;span class=&quot;o&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;process&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;string=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;event&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;finished\n&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;kill-buffer&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;buff&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;add-hook&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;term-exec-hook&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;oleh-term-exec-hook&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;Tip #3&lt;/h2&gt;
+
+&lt;p&gt;By default, &lt;kbd&gt;C-y&lt;/kbd&gt; calls term&amp;#39;s own &lt;code&gt;yank&lt;/code&gt;, which is different
+from Emacs&amp;#39;s &lt;code&gt;yank&lt;/code&gt;.  So, until recently, I was using
+&lt;kbd&gt;S-&amp;lt;insert&amp;gt;&lt;/kbd&gt; to paste stuff into &lt;code&gt;*term*&lt;/code&gt;. Here&amp;#39;s a
+more ergonomic way:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;term-raw-map&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-c C-y&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;term-paste&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
+ </entry>
  
  <entry>
    <title>The keymap arms race</title>

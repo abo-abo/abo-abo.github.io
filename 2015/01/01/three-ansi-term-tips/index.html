@@ -11,7 +11,7 @@
 
   <title>
     
-      Archive &middot; (or emacs
+      Three ansi-term tips &middot; (or emacs
     
   </title>
 
@@ -70,7 +70,7 @@
     
       
         
-          <a class="sidebar-nav-item active" href="/archive/">Archive</a>
+          <a class="sidebar-nav-item" href="/archive/">Archive</a>
         
       
     
@@ -157,170 +157,107 @@
       </div>
 
       <div class="container content">
-        <div class="page">
-  <h1 class="page-title">Archive</h1>
-  <!-- ## Blog Posts -->
+        <div class="post">
+  <h1 class="post-title">Three ansi-term tips</h1>
+  <span class="post-date">01 Jan 2015</span>
+  <h2>Tip #1</h2>
 
-<!-- 
-  * 01 Jan 2015 &raquo; [ Three ansi-term tips ](/2015/01/01/three-ansi-term-tips/)
+<p>There&#39;s no reason not to have <code>/bin/bash</code> instead of <code>/bin/sh</code> as the
+default choice when you <kbd>M-x</kbd> <code>term</code>.</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">explicit-shell-file-name</span> <span class="s">&quot;/bin/bash&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h2>Tip #2</h2>
 
-  * 31 Dec 2014 &raquo; [ The keymap arms race ](/2014/12/31/keymap-arms-race/)
+<p>After you close the terminal, you get a useless buffer with no
+process. It&#39;s probably left there for you to have a history of what
+you did. I find it not useful, so here&#39;s a way to kill that buffer
+automatically:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">oleh-term-exec-hook</span> <span class="p">()</span>
+  <span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">buff</span> <span class="p">(</span><span class="nf">current-buffer</span><span class="p">))</span>
+         <span class="p">(</span><span class="nv">proc</span> <span class="p">(</span><span class="nf">get-buffer-process</span> <span class="nv">buff</span><span class="p">)))</span>
+    <span class="p">(</span><span class="nf">set-process-sentinel</span>
+     <span class="nv">proc</span>
+     <span class="o">`</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">process</span> <span class="nv">event</span><span class="p">)</span>
+        <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">string=</span> <span class="nv">event</span> <span class="s">&quot;finished\n&quot;</span><span class="p">)</span>
+            <span class="p">(</span><span class="nf">kill-buffer</span> <span class="o">,</span><span class="nv">buff</span><span class="p">))))))</span>
 
-  * 30 Dec 2014 &raquo; [ Emacs Web Wowser (EWW) got ace-link ](/2014/12/30/ace-link-eww/)
+<span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;term-exec-hook</span> <span class="ss">&#39;oleh-term-exec-hook</span><span class="p">)</span>
+</code></pre></div>
+<h2>Tip #3</h2>
 
-  * 29 Dec 2014 &raquo; [ Monkeying around with JavaScript ](/2014/12/29/monkeying-around-with-javascript/)
-
-  * 28 Dec 2014 &raquo; [ Throwing abbrevs into the mix ](/2014/12/28/trying-abbrevs/)
-
-  * 27 Dec 2014 &raquo; [ Mmm... minty ](/2014/12/27/mmm-minty/)
-
-  * 26 Dec 2014 &raquo; [ tiny.el - the little package that could ](/2014/12/26/the-little-package-that-could/)
-
-  * 25 Dec 2014 &raquo; [ Ode to the toggle ](/2014/12/25/ode-to-toggle/)
-
-  * 24 Dec 2014 &raquo; [ Light it up! Pygments for Emacs Lisp. ](/2014/12/24/light-it-up/)
-
-  * 23 Dec 2014 &raquo; [ upcase-word, you so silly ](/2014/12/23/upcase-word-you-silly/)
-
-  * 22 Dec 2014 &raquo; [ Sometimes things break ](/2014/12/22/sometimes-things-break/)
-
-  * 21 Dec 2014 &raquo; [ Easy helm improvement ](/2014/12/21/helm-backspace/)
-
-  * 20 Dec 2014 &raquo; [ Poyekhali! ](/2014/12/20/poyekhali!/)
- -->
-
-<ul class="tags">
-  
-</ul>
-
-<div>
-  <span style="float: left;"><a href="/2015/01/01/three-ansi-term-tips/">Three ansi-term tips</span>
-  <span style="float: right;">01 Jan 2015</span>
+<p>By default, <kbd>C-y</kbd> calls term&#39;s own <code>yank</code>, which is different
+from Emacs&#39;s <code>yank</code>.  So, until recently, I was using
+<kbd>S-&lt;insert&gt;</kbd> to paste stuff into <code>*term*</code>. Here&#39;s a
+more ergonomic way:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">term-raw-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c C-y&quot;</span><span class="p">)</span> <span class="ss">&#39;term-paste</span><span class="p">)</span>
+</code></pre></div>
 </div>
 
-<div style="clear: both;"></div>​
-
-<ul class="tags">
-  
-</ul>
-<div>
-  <span style="float: left;"><a href="/2014/12/31/keymap-arms-race/">The keymap arms race</span>
-  <span style="float: right;">31 Dec 2014</span>
+<div class="twitter-share">
+  <a href="https://twitter.com/share"
+     class="twitter-share-button"
+     data-via="_abo_abo"
+     data-dnt="true">
+    Tweet
+  </a>
 </div>
 
-<div style="clear: both;"></div>​
-
-<ul class="tags">
-  
-</ul>
-<div>
-  <span style="float: left;"><a href="/2014/12/30/ace-link-eww/">Emacs Web Wowser (EWW) got ace-link</span>
-  <span style="float: right;">30 Dec 2014</span>
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <!-- <a href="//2014/12/31/keymap-arms-race/"> -->
+          <a href="/2014/12/31/keymap-arms-race/">
+            The keymap arms race
+            <small>31 Dec 2014</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2014/12/30/ace-link-eww/"> -->
+          <a href="/2014/12/30/ace-link-eww/">
+            Emacs Web Wowser (EWW) got ace-link
+            <small>30 Dec 2014</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2014/12/29/monkeying-around-with-javascript/"> -->
+          <a href="/2014/12/29/monkeying-around-with-javascript/">
+            Monkeying around with JavaScript
+            <small>29 Dec 2014</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
 </div>
 
-<div style="clear: both;"></div>​
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'oremacs'; // required: replace example with your forum shortname
 
-<ul class="tags">
-  
-</ul>
-<div>
-  <span style="float: left;"><a href="/2014/12/29/monkeying-around-with-javascript/">Monkeying around with JavaScript</span>
-  <span style="float: right;">29 Dec 2014</span>
-</div>
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
 
-<div style="clear: both;"></div>​
-
-<ul class="tags">
-  
-</ul>
-<div>
-  <span style="float: left;"><a href="/2014/12/28/trying-abbrevs/">Throwing abbrevs into the mix</span>
-  <span style="float: right;">28 Dec 2014</span>
-</div>
-
-<div style="clear: both;"></div>​
-
-<ul class="tags">
-  
-</ul>
-<div>
-  <span style="float: left;"><a href="/2014/12/27/mmm-minty/">Mmm... minty</span>
-  <span style="float: right;">27 Dec 2014</span>
-</div>
-
-<div style="clear: both;"></div>​
-
-<ul class="tags">
-  
-</ul>
-<div>
-  <span style="float: left;"><a href="/2014/12/26/the-little-package-that-could/">tiny.el - the little package that could</span>
-  <span style="float: right;">26 Dec 2014</span>
-</div>
-
-<div style="clear: both;"></div>​
-
-<ul class="tags">
-  
-</ul>
-<div>
-  <span style="float: left;"><a href="/2014/12/25/ode-to-toggle/">Ode to the toggle</span>
-  <span style="float: right;">25 Dec 2014</span>
-</div>
-
-<div style="clear: both;"></div>​
-
-<ul class="tags">
-  
-</ul>
-<div>
-  <span style="float: left;"><a href="/2014/12/24/light-it-up/">Light it up! Pygments for Emacs Lisp.</span>
-  <span style="float: right;">24 Dec 2014</span>
-</div>
-
-<div style="clear: both;"></div>​
-
-<ul class="tags">
-  
-</ul>
-<div>
-  <span style="float: left;"><a href="/2014/12/23/upcase-word-you-silly/">upcase-word, you so silly</span>
-  <span style="float: right;">23 Dec 2014</span>
-</div>
-
-<div style="clear: both;"></div>​
-
-<ul class="tags">
-  
-</ul>
-<div>
-  <span style="float: left;"><a href="/2014/12/22/sometimes-things-break/">Sometimes things break</span>
-  <span style="float: right;">22 Dec 2014</span>
-</div>
-
-<div style="clear: both;"></div>​
-
-<ul class="tags">
-  
-</ul>
-<div>
-  <span style="float: left;"><a href="/2014/12/21/helm-backspace/">Easy helm improvement</span>
-  <span style="float: right;">21 Dec 2014</span>
-</div>
-
-<div style="clear: both;"></div>​
-
-<ul class="tags">
-  
-</ul>
-<div>
-  <span style="float: left;"><a href="/2014/12/20/poyekhali!/">Poyekhali!</span>
-  <span style="float: right;">20 Dec 2014</span>
-</div>
-
-<p><div style="clear: both;"></div>​</p>
-
-</div>
+<script>
+  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+</script>
+<noscript>
+  Please enable JavaScript to view the
+  <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
 
       </div>
     </div>
