@@ -11,7 +11,7 @@
 
   <title>
     
-      Mmm... minty &middot; (or emacs
+      Wrap a region with a LaTeX environment &middot; (or emacs
     
   </title>
 
@@ -164,50 +164,72 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Mmm... minty</h1>
-  <span class="post-date">27 Dec 2014</span>
-  <h2>The backstory</h2>
+  <h1 class="post-title">Wrap a region with a LaTeX environment</h1>
+  <span class="post-date">02 Jan 2015</span>
+  <p>Prompted by <a href="http://stackoverflow.com/questions/27736102/wrap-text-around-a-selection-in-emacs">this StackOverflow question</a>,
+I wrote down a new package called <a href="https://github.com/abo-abo/latex-wrap">latex-wrap</a>.
+It&#39;s only a few hours old, but I like it a lot.
+I&#39;ve grepped the sources of AUCTeX, and it doesn&#39;t seem to have this functionality.</p>
 
-<p>In <a href="/2014/12/24/light-it-up/">one of the earlier posts</a>,
-I was discussing the implementation of an Emacs Lisp lexer for
-<a href="http://pygments.org/">Pygments</a>. Here, I&#39;ll show how to install the
-update and get nicely highlighted code in a pdf via the
-<a href="http://code.google.com/p/minted">minted</a> LaTeX package.</p>
+<h2>Here&#39;s how it works</h2>
 
-<h2>The install</h2>
+<p>You start with an active region:</p>
 
-<p>Assuming that you are on a Debian-related system:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">sudo apt-get install mercurial
-mkdir ~/git &amp;&amp; cd ~/git
-hg clone https://bitbucket.org/abo-abo/pygments-main
-cd pygments-main
-make mapfiles
-sudo python setup.py install
+<pre><code><region>Homer
+Marge
+Bart
+Lisa
+Maggie<cursor> </cursor>
+</region></code></pre>
+
+<p>After calling <kbd>M-x</kbd> <code>latex-wrap-region</code> and selecting
+<em>enumerate</em> from the list of environments (others being <em>itemize</em>,
+<em>center</em> etc.), you get this:</p>
+
+<div class="highlight"><pre><code class="language-latex" data-lang="latex"><span class="k">\begin</span><span class="nb">{</span>enumerate<span class="nb">}</span>
+<span class="k">\item</span> Homer
+<span class="k">\item</span> Marge
+<span class="k">\item</span> Bart
+<span class="k">\item</span> Lisa
+<span class="k">\item</span> Maggie<cursor> </cursor>
+<span class="k">\end</span><span class="nb">{</span>enumerate<span class="nb">}</span>
 </code></pre></div>
-<p>And, of course, I&#39;m assuming that you already have TeX Live installed.
-I&#39;m not too sophisticated about it, so I just install everything:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">sudo apt-get install texlive-full
-</code></pre></div>
-<h2>The result</h2>
 
-<p>So here I took some code from
-<a href="/2014/12/25/ode-to-toggle/">a previous post</a> and
-copy-pasted it into <a href="/download/minty.org">minty.org</a> file.
-And here&#39;s the result of the PDF export (<kbd>C-c C-e lo</kbd>):
-<a href="/download/minty.pdf">minty.pdf</a>.</p>
+<p>Let&#39;s mark everything, <kbd>M-x</kbd> <code>latex-wrap-region</code>, and select
+<em>center</em>:</p>
 
-<h2>The red tape</h2>
+<div class="highlight"><pre><code class="language-latex" data-lang="latex"><span class="k">\begin</span><span class="nb">{</span>center<span class="nb">}</span>
+  <span class="k">\begin</span><span class="nb">{</span>enumerate<span class="nb">}</span>
+  <span class="k">\item</span> Homer
+  <span class="k">\item</span> Marge
+  <span class="k">\item</span> Bart
+  <span class="k">\item</span> Lisa
+  <span class="k">\item</span> Maggie
+  <span class="k">\end</span><span class="nb">{</span>enumerate<span class="nb">}</span><cursor> </cursor>
+<span class="k">\end</span><span class="nb">{</span>center<span class="nb">}</span>
+</code></pre></div>
 
-<p><code>org-mode</code> had trouble exporting on my laptop until I did this:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">cd /usr/bin/
-sudo ln -s /usr/local/texlive/2013/bin/x86_64-linux/pdflatex
-</code></pre></div>
-<p>Also be mindful of the <code>-shell-escape</code> flag to <code>pdflatex</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">org-latex-pdf-process</span>
-      <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f&quot;</span>
-        <span class="s">&quot;pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f&quot;</span>
-        <span class="s">&quot;pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f&quot;</span><span class="p">))</span>
-</code></pre></div>
+<p>As you can see, I want to make sure that it&#39;s possible to conveniently
+continue by always placing the point on the end of the last line of
+the inserted environment.</p>
+
+<h2>How it works with no active region</h2>
+
+<p>If <code>(looking-back &quot;^ *&quot;)</code> is true, the current line is used as if it was
+the region.  Otherwise, an empty environment is inserted after the
+current line.</p>
+
+<h2>Using the code</h2>
+
+<p>If you like the idea, you can check out the code at
+<a href="https://github.com/abo-abo/latex-wrap">github</a> and test it out.  If
+you know of another package that already does this, do let me know,
+otherwise I&#39;ll post the package on MELPA soon.  And if you have some
+ideas, or want to add a few environments that I forgot to mention to
+the list, just post
+<a href="https://github.com/abo-abo/latex-wrap/issues">an issue</a>, I don&#39;t
+bite.</p>
+
 </div>
 
 <div class="twitter-share">
@@ -225,16 +247,6 @@ sudo ln -s /usr/local/texlive/2013/bin/x86_64-linux/pdflatex
     
       <li>
         <h3>
-          <!-- <a href="//2015/01/02/wrap-with-latex/"> -->
-          <a href="/2015/01/02/wrap-with-latex/">
-            Wrap a region with a LaTeX environment
-            <small>02 Jan 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
           <!-- <a href="//2015/01/01/three-ansi-term-tips/"> -->
           <a href="/2015/01/01/three-ansi-term-tips/">
             Three ansi-term tips
@@ -249,6 +261,16 @@ sudo ln -s /usr/local/texlive/2013/bin/x86_64-linux/pdflatex
           <a href="/2014/12/31/keymap-arms-race/">
             The keymap arms race
             <small>31 Dec 2014</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2014/12/30/ace-link-eww/"> -->
+          <a href="/2014/12/30/ace-link-eww/">
+            Emacs Web Wowser (EWW) got ace-link
+            <small>30 Dec 2014</small>
           </a>
         </h3>
       </li>

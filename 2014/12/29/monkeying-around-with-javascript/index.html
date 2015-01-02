@@ -86,48 +86,54 @@
     
 
     <div id="github" class="sidebar-nav-item">
-      <!-- <a data-style="mega" href="https://github.com/abo-abo" class="github-button">My Emacs Projects</a> -->
-      <span class="octicon octicon-mark-github"></span> My Emacs Projects
-      <ul style="margin-bottom:0em;">
-        <li>
-          <a href="https://github.com/abo-abo/lispy">lispy</a>
-          <p>vi-like Paredit</p>
-        </li>
-        <li>
-          <a href="https://github.com/abo-abo/worf">worf</a>
-          <p>vi-like bindings for org-mode</p>
-        </li>
-        <li>
-          <a href="https://github.com/abo-abo/ace-window">ace-window</a>
-          <p>switch windows with <code>ace-jump-mode</code></p>
-        </li>
-        <li>
-          <a href="https://github.com/abo-abo/ace-link">ace-link</a>
-          <p>follow links with <code>ace-jump-mode</code></p>
-        </li>
-        <li>
-          <a href="https://github.com/abo-abo/function-args">function-args</a>
-          <p>enhance <code>CEDET</code> for C++</p>
-        </li>
-        <li>
-          <a href="https://github.com/abo-abo/helm-make">helm-make</a>
-          <p>select a Makefile target with <code>helm</code></p>
-        </li>
-        <li>
-          <a href="https://github.com/abo-abo/make-it-so">make-it-so</a>
-          <p>transform files with Makefile recipes</p>
-        </li>
-        <li>
-          <a href="https://github.com/abo-abo/org-download">org-download</a>
-          <p>drag-and-drop images to <code>org-mode</code></p>
-        </li>
-        <li>
-          <a href="https://github.com/abo-abo?tab=repositories">
-            <span class="octicon octicon-octoface"></span>
-            and more
-          </a>
-        </li>
-      </ul>
+      <button type="button"
+              class="btn btn-info"
+              data-toggle="collapse"
+              data-target="#github-projects">
+        <span class="octicon octicon-mark-github"></span> My Emacs Projects
+      </button>
+      <div id="github-projects" class="collapse">
+        <ul style="margin-bottom:0em;">
+          <li>
+            <a href="https://github.com/abo-abo/lispy">lispy</a>
+            <p>vi-like Paredit</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/worf">worf</a>
+            <p>vi-like bindings for org-mode</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-window">ace-window</a>
+            <p>switch windows with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-link">ace-link</a>
+            <p>follow links with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/function-args">function-args</a>
+            <p>enhance <code>CEDET</code> for C++</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/helm-make">helm-make</a>
+            <p>select a Makefile target with <code>helm</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/make-it-so">make-it-so</a>
+            <p>transform files with Makefile recipes</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/org-download">org-download</a>
+            <p>drag-and-drop images to <code>org-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo?tab=repositories">
+              <span class="octicon octicon-octoface"></span>
+              and more
+            </a>
+          </li>
+        </ul>
+      </div>
     </div>
   </nav>
   <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
@@ -136,7 +142,7 @@
     <p>
       <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.0/">
         <img alt="Creative Commons License"
-             style="border-width:0"
+             style="border-width:0;opacity: 0.3;"
              src="https://i.creativecommons.org/l/by-nc-sa/2.0/88x31.png"/>
       </a>
     </p>
@@ -240,6 +246,16 @@ everyone should learn JavaScript. All hail the mighty
     
       <li>
         <h3>
+          <!-- <a href="//2015/01/02/wrap-with-latex/"> -->
+          <a href="/2015/01/02/wrap-with-latex/">
+            Wrap a region with a LaTeX environment
+            <small>02 Jan 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
           <!-- <a href="//2015/01/01/three-ansi-term-tips/"> -->
           <a href="/2015/01/01/three-ansi-term-tips/">
             Three ansi-term tips
@@ -254,16 +270,6 @@ everyone should learn JavaScript. All hail the mighty
           <a href="/2014/12/31/keymap-arms-race/">
             The keymap arms race
             <small>31 Dec 2014</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
-          <!-- <a href="//2014/12/30/ace-link-eww/"> -->
-          <a href="/2014/12/30/ace-link-eww/">
-            Emacs Web Wowser (EWW) got ace-link
-            <small>30 Dec 2014</small>
           </a>
         </h3>
       </li>

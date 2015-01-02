@@ -4,13 +4,84 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-01-01T14:18:39+01:00</updated>
+ <updated>2015-01-02T14:23:56+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Wrap a region with a LaTeX environment</title>
+   <link href="http://oremacs.com/2015/01/02/wrap-with-latex/"/>
+   <updated>2015-01-02T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/01/02/wrap-with-latex</id>
+   <content type="html">&lt;p&gt;Prompted by &lt;a href=&quot;http://stackoverflow.com/questions/27736102/wrap-text-around-a-selection-in-emacs&quot;&gt;this StackOverflow question&lt;/a&gt;,
+I wrote down a new package called &lt;a href=&quot;https://github.com/abo-abo/latex-wrap&quot;&gt;latex-wrap&lt;/a&gt;.
+It&amp;#39;s only a few hours old, but I like it a lot.
+I&amp;#39;ve grepped the sources of AUCTeX, and it doesn&amp;#39;t seem to have this functionality.&lt;/p&gt;
+
+&lt;h2&gt;Here&amp;#39;s how it works&lt;/h2&gt;
+
+&lt;p&gt;You start with an active region:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&lt;region&gt;Homer
+Marge
+Bart
+Lisa
+Maggie&lt;cursor&gt; &lt;/cursor&gt;
+&lt;/region&gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;After calling &lt;kbd&gt;M-x&lt;/kbd&gt; &lt;code&gt;latex-wrap-region&lt;/code&gt; and selecting
+&lt;em&gt;enumerate&lt;/em&gt; from the list of environments (others being &lt;em&gt;itemize&lt;/em&gt;,
+&lt;em&gt;center&lt;/em&gt; etc.), you get this:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-latex&quot; data-lang=&quot;latex&quot;&gt;&lt;span class=&quot;k&quot;&gt;\begin&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;{&lt;/span&gt;enumerate&lt;span class=&quot;nb&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;\item&lt;/span&gt; Homer
+&lt;span class=&quot;k&quot;&gt;\item&lt;/span&gt; Marge
+&lt;span class=&quot;k&quot;&gt;\item&lt;/span&gt; Bart
+&lt;span class=&quot;k&quot;&gt;\item&lt;/span&gt; Lisa
+&lt;span class=&quot;k&quot;&gt;\item&lt;/span&gt; Maggie&lt;cursor&gt; &lt;/cursor&gt;
+&lt;span class=&quot;k&quot;&gt;\end&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;{&lt;/span&gt;enumerate&lt;span class=&quot;nb&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Let&amp;#39;s mark everything, &lt;kbd&gt;M-x&lt;/kbd&gt; &lt;code&gt;latex-wrap-region&lt;/code&gt;, and select
+&lt;em&gt;center&lt;/em&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-latex&quot; data-lang=&quot;latex&quot;&gt;&lt;span class=&quot;k&quot;&gt;\begin&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;{&lt;/span&gt;center&lt;span class=&quot;nb&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;\begin&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;{&lt;/span&gt;enumerate&lt;span class=&quot;nb&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;\item&lt;/span&gt; Homer
+  &lt;span class=&quot;k&quot;&gt;\item&lt;/span&gt; Marge
+  &lt;span class=&quot;k&quot;&gt;\item&lt;/span&gt; Bart
+  &lt;span class=&quot;k&quot;&gt;\item&lt;/span&gt; Lisa
+  &lt;span class=&quot;k&quot;&gt;\item&lt;/span&gt; Maggie
+  &lt;span class=&quot;k&quot;&gt;\end&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;{&lt;/span&gt;enumerate&lt;span class=&quot;nb&quot;&gt;}&lt;/span&gt;&lt;cursor&gt; &lt;/cursor&gt;
+&lt;span class=&quot;k&quot;&gt;\end&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;{&lt;/span&gt;center&lt;span class=&quot;nb&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;As you can see, I want to make sure that it&amp;#39;s possible to conveniently
+continue by always placing the point on the end of the last line of
+the inserted environment.&lt;/p&gt;
+
+&lt;h2&gt;How it works with no active region&lt;/h2&gt;
+
+&lt;p&gt;If &lt;code&gt;(looking-back &amp;quot;^ *&amp;quot;)&lt;/code&gt; is true, the current line is used as if it was
+the region.  Otherwise, an empty environment is inserted after the
+current line.&lt;/p&gt;
+
+&lt;h2&gt;Using the code&lt;/h2&gt;
+
+&lt;p&gt;If you like the idea, you can check out the code at
+&lt;a href=&quot;https://github.com/abo-abo/latex-wrap&quot;&gt;github&lt;/a&gt; and test it out.  If
+you know of another package that already does this, do let me know,
+otherwise I&amp;#39;ll post the package on MELPA soon.  And if you have some
+ideas, or want to add a few environments that I forgot to mention to
+the list, just post
+&lt;a href=&quot;https://github.com/abo-abo/latex-wrap/issues&quot;&gt;an issue&lt;/a&gt;, I don&amp;#39;t
+bite.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Three ansi-term tips</title>
