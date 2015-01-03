@@ -4,13 +4,89 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-01-02T14:23:56+01:00</updated>
+ <updated>2015-01-03T20:26:45+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Time flies</title>
+   <link href="http://oremacs.com/2015/01/03/time-flies/"/>
+   <updated>2015-01-03T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/01/03/time-flies</id>
+   <content type="html">&lt;p&gt;This is the 15th post on this blog. Thankfully, no heart attacks after
+the 13th one or anything.  So I&amp;#39;ll commemorate it with a post on
+dealing with dates in &lt;code&gt;calc&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2&gt;How much time has passed since I started this blog?&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Open &lt;code&gt;calc&lt;/code&gt; with &lt;kbd&gt;C-x **&lt;/kbd&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;--- Emacs Calculator Mode ---
+    .
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Enter &lt;code&gt;20 Dec 2014&lt;/code&gt; with &lt;kbd&gt;&amp;#39;&amp;lt;12 20 14&lt;/kbd&gt;&lt;kbd&gt;RET&lt;/kbd&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;--- Emacs Calculator Mode ---
+1:  &amp;lt;Sat Dec 20, 2014&amp;gt;
+    .
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Enter current time with &lt;kbd&gt;tN&lt;/kbd&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;--- Emacs Calculator Mode ---
+2:  &amp;lt;Sat Dec 20, 2014&amp;gt;
+1:  &amp;lt;11:56:27am Sat Jan 3, 2015&amp;gt;
+    .
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Subtract with &lt;kbd&gt;-&lt;/kbd&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;--- Emacs Calculator Mode ---
+1:  -14.498044
+    .
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;This means that, if I want to maintain my one-post-per-day streak, I
+still have half of a day to post this. Unfortunately, I have only an
+old version of the blog repository on this machine, and the current
+one is on a laptop at home. So I&amp;#39;ll post this in the evening.&lt;/p&gt;
+
+&lt;h2&gt;Did you know what 2015 looks like in binary?&lt;/h2&gt;
+
+&lt;p&gt;In your current &lt;code&gt;calc&lt;/code&gt; session,&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Enter &lt;kbd&gt;2015&lt;/kbd&gt; &lt;kbd&gt;SPC&lt;/kbd&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;--- Emacs Calculator Mode ---
+2:  -14.498044
+1:  2015
+    .
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Switch to binary with &lt;kbd&gt;d2&lt;/kbd&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;--- Emacs Calculator Mode ---
+2:  -2#1110.011111110111111111001111110001
+1:  2#11111011111
+.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Wow, a palindrome. It&amp;#39;s too spooky, switch back to decimal with &lt;kbd&gt;d0&lt;/kbd&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;--- Emacs Calculator Mode ---
+2:  -14.498044
+1:  2015
+    .
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;If you&amp;#39;re new to &lt;code&gt;calc&lt;/code&gt;, you&amp;#39;ll probably wonder why you can&amp;#39;t enter
+negative numbers with &lt;kbd&gt;-&lt;/kbd&gt;. It can be done with &lt;kbd&gt;_&lt;/kbd&gt;,
+just like in
+&lt;a href=&quot;http://www.jsoftware.com/help/primer/negative_number.htm&quot;&gt;J&lt;/a&gt;. Find
+out more in the
+&lt;a href=&quot;http://www.gnu.org/software/emacs/manual/html_mono/calc.html&quot;&gt;info&lt;/a&gt;;
+the
+&lt;a href=&quot;http://www.gnu.org/software/emacs/manual/html_mono/calc.html#Tutorial&quot;&gt;interactive tutorial&lt;/a&gt;
+is absolutely excellent.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Wrap a region with a LaTeX environment</title>

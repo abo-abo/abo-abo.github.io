@@ -167,6 +167,86 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/01/03/time-flies/">
+        Time flies
+      </a>
+    </h1>
+
+    <span class="post-date">03 Jan 2015</span>
+
+    <p>This is the 15th post on this blog. Thankfully, no heart attacks after
+the 13th one or anything.  So I&#39;ll commemorate it with a post on
+dealing with dates in <code>calc</code>.</p>
+
+<h2>How much time has passed since I started this blog?</h2>
+
+<ol>
+<li><p>Open <code>calc</code> with <kbd>C-x **</kbd>:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">--- Emacs Calculator Mode ---
+    .
+</code></pre></div></li>
+<li><p>Enter <code>20 Dec 2014</code> with <kbd>&#39;&lt;12 20 14</kbd><kbd>RET</kbd>:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">--- Emacs Calculator Mode ---
+1:  &lt;Sat Dec 20, 2014&gt;
+    .
+</code></pre></div></li>
+<li><p>Enter current time with <kbd>tN</kbd>:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">--- Emacs Calculator Mode ---
+2:  &lt;Sat Dec 20, 2014&gt;
+1:  &lt;11:56:27am Sat Jan 3, 2015&gt;
+    .
+</code></pre></div></li>
+<li><p>Subtract with <kbd>-</kbd>:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">--- Emacs Calculator Mode ---
+1:  -14.498044
+    .
+</code></pre></div></li>
+</ol>
+
+<p>This means that, if I want to maintain my one-post-per-day streak, I
+still have half of a day to post this. Unfortunately, I have only an
+old version of the blog repository on this machine, and the current
+one is on a laptop at home. So I&#39;ll post this in the evening.</p>
+
+<h2>Did you know what 2015 looks like in binary?</h2>
+
+<p>In your current <code>calc</code> session,</p>
+
+<ol>
+<li><p>Enter <kbd>2015</kbd> <kbd>SPC</kbd>:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">--- Emacs Calculator Mode ---
+2:  -14.498044
+1:  2015
+    .
+</code></pre></div></li>
+<li><p>Switch to binary with <kbd>d2</kbd>:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">--- Emacs Calculator Mode ---
+2:  -2#1110.011111110111111111001111110001
+1:  2#11111011111
+.
+</code></pre></div></li>
+<li><p>Wow, a palindrome. It&#39;s too spooky, switch back to decimal with <kbd>d0</kbd>:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">--- Emacs Calculator Mode ---
+2:  -14.498044
+1:  2015
+    .
+</code></pre></div></li>
+</ol>
+
+<p>If you&#39;re new to <code>calc</code>, you&#39;ll probably wonder why you can&#39;t enter
+negative numbers with <kbd>-</kbd>. It can be done with <kbd>_</kbd>,
+just like in
+<a href="http://www.jsoftware.com/help/primer/negative_number.htm">J</a>. Find
+out more in the
+<a href="http://www.gnu.org/software/emacs/manual/html_mono/calc.html">info</a>;
+the
+<a href="http://www.gnu.org/software/emacs/manual/html_mono/calc.html#Tutorial">interactive tutorial</a>
+is absolutely excellent.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/01/02/wrap-with-latex/">
         Wrap a region with a LaTeX environment
       </a>
@@ -547,80 +627,6 @@ for the cases when my <code>~/git/</code> happens not to contain <code>ace-link<
 that case, instead of getting a debugger error on starting Emacs, I
 get only a polite &quot;Could not load package ace-link&quot; in my <code>*Messages*</code>
 buffer.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2014/12/29/monkeying-around-with-javascript/">
-        Monkeying around with JavaScript
-      </a>
-    </h1>
-
-    <span class="post-date">29 Dec 2014</span>
-
-    <h2>Exciting encounter</h2>
-
-<p>Recently, I happened upon a wonderful blog called
-<a href="http://axisofeval.blogspot.nl">The Axis of Eval</a>.  I knew that I&#39;d
-love it just when I read the name. <a href="/">(or emacs</a> pales in comparison,
-but I couldn&#39;t just sit on my hands for months or years while thinking
-up a perfect blog name. If you think of a blog name as awesome as &quot;The
-Axis of Eval&quot; and are willing to let me use it, I&#39;ll probably make the
-switch.</p>
-
-<p>The blog did not disappoint, featuring gems like this:</p>
-
-<blockquote>
-<p>In the Lisp world, new languages are built by combining large,
-battle-tested building blocks, and polishing or updating them when
-needed, instead of starting over from toothpicks and double-sided
-duct tape. A large Lisp like Common Lisp is like a toolchain of
-decades-old tools that have proven their worth, and have been
-codified in standards, folklore, and implementations.</p>
-</blockquote>
-
-<p>The only thing in the way of extracting information and enjoyment from
-this blog was the horrendous theme of black background, white
-foreground and magenta links. Plus the RSS was kind of quirky, and I
-couldn&#39;t just feed all of it into
-<a href="https://github.com/skeeto/elfeed">Elfeed</a>.</p>
-
-<h2>Greasemonkey to the rescue!</h2>
-
-<p>In the previous post I&#39;ve mentioned that, in addition to using
-<a href="http://www.gnu.org/software/emacs/">the best editor</a>, I&#39;m using
-<a href="https://www.mozilla.org/en-US/firefox/new/">the best browser</a>.  Well,
-this particular best browser has an extension called
-<a href="https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/">Greasemonkey</a>
-that allows you to automatically run your own JavaScript on certain
-websites.</p>
-
-<p>I&#39;m not very proficient in JavaScript, the following code I just found
-by searching around. The part to note is the <code>@include</code> - the pattern
-of website names for which this script should be run automatically.</p>
-<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="c1">// ==UserScript==</span>
-<span class="c1">// @name        background</span>
-<span class="c1">// @namespace   abo-abo</span>
-<span class="c1">// @include     http://axisofeval.blogspot.nl/*</span>
-<span class="c1">// @version     1</span>
-<span class="c1">// @grant       none</span>
-<span class="c1">// ==/UserScript==</span>
-<span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-    <span class="nb">document</span>
-        <span class="p">.</span><span class="nx">body</span>
-        <span class="p">.</span><span class="nx">setAttribute</span><span class="p">(</span><span class="s2">&quot;style&quot;</span><span class="p">,</span>
-                      <span class="s2">&quot;background-color: #ffffff; color:#000&quot;</span><span class="p">);</span>
-    <span class="kd">var</span> <span class="nx">nodesArray</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementsByTagName</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">);</span>
-    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">nodesArray</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">nodesArray</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">style</span><span class="p">.</span><span class="nx">color</span> <span class="o">=</span> <span class="s1">&#39;red&#39;</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">})();</span>
-</code></pre></div>
-<p>I can barely stand to look at it. How could you take Scheme and turn
-it into this monstrosity? Such a shame. But it works, so I guess
-everyone should learn JavaScript. All hail the mighty
-<s>HypnoToad</s> JavaScript!</p>
 
   </div>
   

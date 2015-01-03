@@ -11,7 +11,7 @@
 
   <title>
     
-      Three ansi-term tips &middot; (or emacs
+      Time flies &middot; (or emacs
     
   </title>
 
@@ -164,39 +164,77 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Three ansi-term tips</h1>
-  <span class="post-date">01 Jan 2015</span>
-  <h2>Tip #1</h2>
+  <h1 class="post-title">Time flies</h1>
+  <span class="post-date">03 Jan 2015</span>
+  <p>This is the 15th post on this blog. Thankfully, no heart attacks after
+the 13th one or anything.  So I&#39;ll commemorate it with a post on
+dealing with dates in <code>calc</code>.</p>
 
-<p>There&#39;s no reason not to have <code>/bin/bash</code> instead of <code>/bin/sh</code> as the
-default choice when you <kbd>M-x</kbd> <code>term</code>.</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">explicit-shell-file-name</span> <span class="s">&quot;/bin/bash&quot;</span><span class="p">)</span>
-</code></pre></div>
-<h2>Tip #2</h2>
+<h2>How much time has passed since I started this blog?</h2>
 
-<p>After you close the terminal, you get a useless buffer with no
-process. It&#39;s probably left there for you to have a history of what
-you did. I find it not useful, so here&#39;s a way to kill that buffer
-automatically:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">oleh-term-exec-hook</span> <span class="p">()</span>
-  <span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">buff</span> <span class="p">(</span><span class="nf">current-buffer</span><span class="p">))</span>
-         <span class="p">(</span><span class="nv">proc</span> <span class="p">(</span><span class="nf">get-buffer-process</span> <span class="nv">buff</span><span class="p">)))</span>
-    <span class="p">(</span><span class="nf">set-process-sentinel</span>
-     <span class="nv">proc</span>
-     <span class="o">`</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">process</span> <span class="nv">event</span><span class="p">)</span>
-        <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">string=</span> <span class="nv">event</span> <span class="s">&quot;finished\n&quot;</span><span class="p">)</span>
-            <span class="p">(</span><span class="nf">kill-buffer</span> <span class="o">,</span><span class="nv">buff</span><span class="p">))))))</span>
+<ol>
+<li><p>Open <code>calc</code> with <kbd>C-x **</kbd>:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">--- Emacs Calculator Mode ---
+    .
+</code></pre></div></li>
+<li><p>Enter <code>20 Dec 2014</code> with <kbd>&#39;&lt;12 20 14</kbd><kbd>RET</kbd>:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">--- Emacs Calculator Mode ---
+1:  &lt;Sat Dec 20, 2014&gt;
+    .
+</code></pre></div></li>
+<li><p>Enter current time with <kbd>tN</kbd>:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">--- Emacs Calculator Mode ---
+2:  &lt;Sat Dec 20, 2014&gt;
+1:  &lt;11:56:27am Sat Jan 3, 2015&gt;
+    .
+</code></pre></div></li>
+<li><p>Subtract with <kbd>-</kbd>:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">--- Emacs Calculator Mode ---
+1:  -14.498044
+    .
+</code></pre></div></li>
+</ol>
 
-<span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;term-exec-hook</span> <span class="ss">&#39;oleh-term-exec-hook</span><span class="p">)</span>
-</code></pre></div>
-<h2>Tip #3</h2>
+<p>This means that, if I want to maintain my one-post-per-day streak, I
+still have half of a day to post this. Unfortunately, I have only an
+old version of the blog repository on this machine, and the current
+one is on a laptop at home. So I&#39;ll post this in the evening.</p>
 
-<p>By default, <kbd>C-y</kbd> calls term&#39;s own <code>yank</code>, which is different
-from Emacs&#39;s <code>yank</code>.  So, until recently, I was using
-<kbd>S-&lt;insert&gt;</kbd> to paste stuff into <code>*term*</code>. Here&#39;s a
-more ergonomic way:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">term-raw-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c C-y&quot;</span><span class="p">)</span> <span class="ss">&#39;term-paste</span><span class="p">)</span>
-</code></pre></div>
+<h2>Did you know what 2015 looks like in binary?</h2>
+
+<p>In your current <code>calc</code> session,</p>
+
+<ol>
+<li><p>Enter <kbd>2015</kbd> <kbd>SPC</kbd>:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">--- Emacs Calculator Mode ---
+2:  -14.498044
+1:  2015
+    .
+</code></pre></div></li>
+<li><p>Switch to binary with <kbd>d2</kbd>:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">--- Emacs Calculator Mode ---
+2:  -2#1110.011111110111111111001111110001
+1:  2#11111011111
+.
+</code></pre></div></li>
+<li><p>Wow, a palindrome. It&#39;s too spooky, switch back to decimal with <kbd>d0</kbd>:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">--- Emacs Calculator Mode ---
+2:  -14.498044
+1:  2015
+    .
+</code></pre></div></li>
+</ol>
+
+<p>If you&#39;re new to <code>calc</code>, you&#39;ll probably wonder why you can&#39;t enter
+negative numbers with <kbd>-</kbd>. It can be done with <kbd>_</kbd>,
+just like in
+<a href="http://www.jsoftware.com/help/primer/negative_number.htm">J</a>. Find
+out more in the
+<a href="http://www.gnu.org/software/emacs/manual/html_mono/calc.html">info</a>;
+the
+<a href="http://www.gnu.org/software/emacs/manual/html_mono/calc.html#Tutorial">interactive tutorial</a>
+is absolutely excellent.</p>
+
 </div>
 
 <div class="twitter-share">
@@ -214,20 +252,20 @@ more ergonomic way:</p>
     
       <li>
         <h3>
-          <!-- <a href="//2015/01/03/time-flies/"> -->
-          <a href="/2015/01/03/time-flies/">
-            Time flies
-            <small>03 Jan 2015</small>
+          <!-- <a href="//2015/01/02/wrap-with-latex/"> -->
+          <a href="/2015/01/02/wrap-with-latex/">
+            Wrap a region with a LaTeX environment
+            <small>02 Jan 2015</small>
           </a>
         </h3>
       </li>
     
       <li>
         <h3>
-          <!-- <a href="//2015/01/02/wrap-with-latex/"> -->
-          <a href="/2015/01/02/wrap-with-latex/">
-            Wrap a region with a LaTeX environment
-            <small>02 Jan 2015</small>
+          <!-- <a href="//2015/01/01/three-ansi-term-tips/"> -->
+          <a href="/2015/01/01/three-ansi-term-tips/">
+            Three ansi-term tips
+            <small>01 Jan 2015</small>
           </a>
         </h3>
       </li>
