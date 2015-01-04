@@ -4,13 +4,112 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-01-03T20:26:45+01:00</updated>
+ <updated>2015-01-04T12:22:54+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Start a process from dired</title>
+   <link href="http://oremacs.com/2015/01/04/dired-nohup/"/>
+   <updated>2015-01-04T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/01/04/dired-nohup</id>
+   <content type="html">&lt;p&gt;Here are the standard &lt;code&gt;dired&lt;/code&gt; functions for starting processes:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;!&lt;/kbd&gt; calls &lt;code&gt;dired-do-shell-command&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;&amp;amp;&lt;/kbd&gt; calls &lt;code&gt;dired-do-async-shell-command&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;While the second one is usually better than the first one, having the
+benefit of not locking up Emacs, it&amp;#39;s still not convenient enough for
+me. The reason is pretty simple: I want to keep the processes that I
+started even when I close Emacs (like opened PDFs or videos).  This is
+a non-issue for people with months-long &lt;code&gt;emacs-uptime&lt;/code&gt;, but for me an
+Emacs session lasts on the order of hours, since I mess about with
+Elisp a lot. Below, I&amp;#39;ll share some of my &lt;code&gt;dired&lt;/code&gt; process-related
+customizations.&lt;/p&gt;
+
+&lt;h2&gt;Ignore running processes when closing Emacs&lt;/h2&gt;
+
+&lt;p&gt;Usually there&amp;#39;s nothing wrong with just killing a spawned process,
+like an &lt;code&gt;ipython&lt;/code&gt; shell or something.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;c1&quot;&gt;;; add `flet&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;cl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defadvice&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;save-buffers-kill-emacs&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;around&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;no-query-kill-emacs&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;activate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Prevent \&amp;quot;Active processes exist\&amp;quot; query on exit.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;flet&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;process-list&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()))&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ad-do-it&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;Guess programs by file extension&lt;/h2&gt;
+
+&lt;p&gt;With this setup, usually there&amp;#39;s no need to manually type in the
+command name.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;dired-x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dired-guess-shell-alist-user&lt;/span&gt;
+      &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;\\.pdf\\&amp;#39;&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;evince&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;okular&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;\\.\\(?:djvu\\|eps\\)\\&amp;#39;&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;evince&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;\\.\\(?:jpg\\|jpeg\\|png\\|gif\\|xpm\\)\\&amp;#39;&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;eog&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;\\.\\(?:xcf\\)\\&amp;#39;&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;gimp&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;\\.csv\\&amp;#39;&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;libreoffice&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;\\.tex\\&amp;#39;&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;pdflatex&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;latex&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;\\.\\(?:mp4\\|mkv\\|avi\\|flv\\|ogv\\)\\(?:\\.part\\)?\\&amp;#39;&amp;quot;&lt;/span&gt;
+         &lt;span class=&quot;s&quot;&gt;&amp;quot;vlc&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;\\.\\(?:mp3\\|flac\\)\\&amp;#39;&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;rhythmbox&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;\\.html?\\&amp;#39;&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;firefox&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;\\.cue?\\&amp;#39;&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;audacious&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;Add nohup&lt;/h2&gt;
+
+&lt;p&gt;According to &lt;code&gt;info nohup&lt;/code&gt;:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;`nohup&amp;#39; runs the given COMMAND with hangup signals ignored, so that
+the command can continue running in the background after you log
+out.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;In my case, it means that the processes started by Emacs can
+continue running even when Emacs is closed.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;dired-aux&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defvar&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dired-filelist-cmd&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;vlc&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;-L&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dired-start-process&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;cmd&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;&amp;amp;optional&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;file-list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;files&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;dired-get-marked-files&lt;/span&gt;
+                 &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;current-prefix-arg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;list&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;dired-read-shell-command&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;amp; on %s: &amp;quot;&lt;/span&gt;
+                                &lt;span class=&quot;nv&quot;&gt;current-prefix-arg&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;files&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;nv&quot;&gt;files&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;list-switch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;start-process&lt;/span&gt;
+     &lt;span class=&quot;nv&quot;&gt;cmd&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;shell-file-name&lt;/span&gt;
+     &lt;span class=&quot;nv&quot;&gt;shell-command-switch&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;format&lt;/span&gt;
+      &lt;span class=&quot;s&quot;&gt;&amp;quot;nohup 1&amp;gt;/dev/null 2&amp;gt;/dev/null %s \&amp;quot;%s\&amp;quot;&amp;quot;&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;and&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;length&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;file-list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+               &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;list-switch&lt;/span&gt;
+                     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;cadr&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;assoc&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cmd&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dired-filelist-cmd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;%s %s&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cmd&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;list-switch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;nv&quot;&gt;cmd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;mapconcat&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;#&amp;#39;expand-file-name&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;file-list&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;\&amp;quot; \&amp;quot;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The &lt;code&gt;dired-filelist-cmd&lt;/code&gt; is necessary because &lt;code&gt;vlc&lt;/code&gt; weirdly
+doesn&amp;#39;t make a playlist when given a list of files.&lt;/p&gt;
+
+&lt;p&gt;Then I bind it to &lt;kbd&gt;r&lt;/kbd&gt; - a nice shortcut not bound
+by default in &lt;code&gt;dired&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dired-mode-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;r&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;dired-start-process&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
+ </entry>
  
  <entry>
    <title>Time flies</title>
