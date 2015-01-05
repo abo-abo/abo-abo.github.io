@@ -4,13 +4,111 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-01-04T12:22:54+01:00</updated>
+ <updated>2015-01-05T18:20:19+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Yet another youtube-dl interface for Emacs</title>
+   <link href="http://oremacs.com/2015/01/05/youtube-dl/"/>
+   <updated>2015-01-05T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/01/05/youtube-dl</id>
+   <content type="html">&lt;p&gt;If you haven&amp;#39;t been living under a rock, you already know what
+&lt;a href=&quot;https://www.youtube.com/&quot;&gt;Youtube&lt;/a&gt; is.  It&amp;#39;s a repository with videos of
+varying degree of usefulness with a terrible media player tacked on.
+Instead, I like to watch my videos in
+&lt;a href=&quot;http://www.videolan.org/vlc/index.html&quot;&gt;VLC&lt;/a&gt;, which comes closest to
+providing an Emacs-like experience among video players.&lt;/p&gt;
+
+&lt;h2&gt;Useful VLC shortcuts&lt;/h2&gt;
+
+&lt;p&gt;Here is a list of shortcuts that really make me stick with VLC:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;f&lt;/kbd&gt; - toggle full-screen&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;b&lt;/kbd&gt; - toggle audio track&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;n&lt;/kbd&gt; - toggle subtitle track&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;&amp;#93;&lt;/kbd&gt; - speed up play by &lt;code&gt;0.1&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;&amp;#91;&lt;/kbd&gt; - slow down play by &lt;code&gt;0.1&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;M-right&lt;/kbd&gt; - forward by 15 seconds&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;M-left&lt;/kbd&gt; - backward by 15 seconds&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;C-right&lt;/kbd&gt; - forward by 60 seconds&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;C-left&lt;/kbd&gt; - backward by 60 seconds&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;M-1&lt;/kbd&gt; - quarter of video size&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;M-2&lt;/kbd&gt; - half of video size&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;M-3&lt;/kbd&gt; - full video size&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;M-4&lt;/kbd&gt; - double video size&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;C-h&lt;/kbd&gt; - toggle mouse buttons&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;So if you&amp;#39;re not watching instructional videos at &lt;code&gt;1.6&lt;/code&gt; speed,
+or skipping the Simpsons intro sequence with &lt;kbd&gt;M-right&lt;/kbd&gt;, you&amp;#39;re missing out.&lt;/p&gt;
+
+&lt;h2&gt;From Youtube to VLC&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/rg3/youtube-dl/&quot;&gt;youtube-dl&lt;/a&gt; is an excellent command-line tool
+for saving the videos from Youtube. It downloads the highest resolution at a usually
+higher speed than Youtube&amp;#39;s player buffers. I&amp;#39;ve discovered it when I had to download
+a bunch of lecture videos from &lt;a href=&quot;https://www.edx.org/&quot;&gt;edX&lt;/a&gt;.
+You can install it with:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;sudo pip install youtube-dl
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;One Emacs script to rule them all&lt;/h2&gt;
+
+&lt;p&gt;I quickly tired of opening a shell, setting the directory, entering
+the command, and pasting the link. So I wrote some Elisp code that does it for me.
+It&amp;#39;s nothing too sophisticated, but I&amp;#39;ve been using this version for a couple months:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;youtube-dl&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;str&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;current-kill&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;default-directory&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;~/Downloads&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;proc&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;get-buffer-process&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ansi-term&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;/bin/bash&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;term-send-string&lt;/span&gt;
+     &lt;span class=&quot;nv&quot;&gt;proc&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;concat&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;cd ~/Downloads &amp;amp;&amp;amp; youtube-dl &amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;str&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;\n&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;How it works:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Copy the link in Firefox&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;M-x&lt;/kbd&gt; &lt;code&gt;youtube-dl&lt;/code&gt;.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;That&amp;#39;s it. A new &lt;code&gt;*ansi-term*&lt;/code&gt; will open with the task of downloading the video from the link
+in the clipboard to &lt;code&gt;~/Downloads&lt;/code&gt;.
+I don&amp;#39;t have to wait for the download to finish and can immediately open the video from &lt;code&gt;dired&lt;/code&gt;.
+See &lt;a href=&quot;/2015/01/04/dired-nohup/&quot;&gt;the previous post&lt;/a&gt; for the description of
+&lt;code&gt;dired&lt;/code&gt; process-starting setup. I can stack up multiple downloads at once if I wish in different
+&lt;code&gt;*ansi-term*&lt;/code&gt;s.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;This is my script. There are many like it, but this one is mine.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;I did an internet search before writing this post. Apparently many
+others had the same idea of integrating &lt;code&gt;youtube-dl&lt;/code&gt; into Emacs.  You
+can use mine or any other code to generate a setup that works for you.
+For instance, for a while, instead of copy-pasting the URL and calling
+&lt;code&gt;youtube-dl&lt;/code&gt; I used to just click the
+&lt;a href=&quot;https://addons.mozilla.org/en-US/firefox/addon/org-mode-capture/&quot;&gt;org-mode capture&lt;/a&gt;
+button in Firefox, and it would automatically create a &lt;code&gt;TODO&lt;/code&gt; item,
+download the video, and put the link to the downloaded video in the
+&lt;code&gt;TODO&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;I&amp;#39;ve dropped this workflow when
+&lt;a href=&quot;http://debbugs.gnu.org/cgi/bugreport.cgi?bug=16737&quot;&gt;the yank bug&lt;/a&gt;
+surfaced. I don&amp;#39;t yet have enough experience of working with Emacs&amp;#39;s C
+code to fix it.  Although, according to this
+&lt;a href=&quot;https://plus.google.com/u/0/+JorgenSch%C3%A4fer/posts/ZaZcunihGqc&quot;&gt;excellent rant&lt;/a&gt;,
+fixing the bug is only half of the problem: getting it merged is hard.
+I&amp;#39;ll see how it goes with &lt;a href=&quot;http://debbugs.gnu.org/cgi/bugreport.cgi?bug=19493&quot;&gt;my latest tiny patch&lt;/a&gt;.
+So far it has been ignored, but it is only two days old as of now.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Start a process from dired</title>

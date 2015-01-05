@@ -11,7 +11,7 @@
 
   <title>
     
-      Wrap a region with a LaTeX environment &middot; (or emacs
+      Yet another youtube-dl interface for Emacs &middot; (or emacs
     
   </title>
 
@@ -168,71 +168,98 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Wrap a region with a LaTeX environment</h1>
-  <span class="post-date">02 Jan 2015</span>
-  <p>Prompted by <a href="http://stackoverflow.com/questions/27736102/wrap-text-around-a-selection-in-emacs">this StackOverflow question</a>,
-I wrote down a new package called <a href="https://github.com/abo-abo/latex-wrap">latex-wrap</a>.
-It&#39;s only a few hours old, but I like it a lot.
-I&#39;ve grepped the sources of AUCTeX, and it doesn&#39;t seem to have this functionality.</p>
+  <h1 class="post-title">Yet another youtube-dl interface for Emacs</h1>
+  <span class="post-date">05 Jan 2015</span>
+  <p>If you haven&#39;t been living under a rock, you already know what
+<a href="https://www.youtube.com/">Youtube</a> is.  It&#39;s a repository with videos of
+varying degree of usefulness with a terrible media player tacked on.
+Instead, I like to watch my videos in
+<a href="http://www.videolan.org/vlc/index.html">VLC</a>, which comes closest to
+providing an Emacs-like experience among video players.</p>
 
-<h2>Here&#39;s how it works</h2>
+<h2>Useful VLC shortcuts</h2>
 
-<p>You start with an active region:</p>
+<p>Here is a list of shortcuts that really make me stick with VLC:</p>
 
-<pre><code><region>Homer
-Marge
-Bart
-Lisa
-Maggie<cursor> </cursor>
-</region></code></pre>
+<ul>
+<li><kbd>f</kbd> - toggle full-screen</li>
+<li><kbd>b</kbd> - toggle audio track</li>
+<li><kbd>n</kbd> - toggle subtitle track</li>
+<li><kbd>&#93;</kbd> - speed up play by <code>0.1</code></li>
+<li><kbd>&#91;</kbd> - slow down play by <code>0.1</code></li>
+<li><kbd>M-right</kbd> - forward by 15 seconds</li>
+<li><kbd>M-left</kbd> - backward by 15 seconds</li>
+<li><kbd>C-right</kbd> - forward by 60 seconds</li>
+<li><kbd>C-left</kbd> - backward by 60 seconds</li>
+<li><kbd>M-1</kbd> - quarter of video size</li>
+<li><kbd>M-2</kbd> - half of video size</li>
+<li><kbd>M-3</kbd> - full video size</li>
+<li><kbd>M-4</kbd> - double video size</li>
+<li><kbd>C-h</kbd> - toggle mouse buttons</li>
+</ul>
 
-<p>After calling <kbd>M-x</kbd> <code>latex-wrap-region</code> and selecting
-<em>enumerate</em> from the list of environments (others being <em>itemize</em>,
-<em>center</em> etc.), you get this:</p>
+<p>So if you&#39;re not watching instructional videos at <code>1.6</code> speed,
+or skipping the Simpsons intro sequence with <kbd>M-right</kbd>, you&#39;re missing out.</p>
 
-<div class="highlight"><pre><code class="language-latex" data-lang="latex"><span class="k">\begin</span><span class="nb">{</span>enumerate<span class="nb">}</span>
-<span class="k">\item</span> Homer
-<span class="k">\item</span> Marge
-<span class="k">\item</span> Bart
-<span class="k">\item</span> Lisa
-<span class="k">\item</span> Maggie<cursor> </cursor>
-<span class="k">\end</span><span class="nb">{</span>enumerate<span class="nb">}</span>
+<h2>From Youtube to VLC</h2>
+
+<p><a href="https://github.com/rg3/youtube-dl/">youtube-dl</a> is an excellent command-line tool
+for saving the videos from Youtube. It downloads the highest resolution at a usually
+higher speed than Youtube&#39;s player buffers. I&#39;ve discovered it when I had to download
+a bunch of lecture videos from <a href="https://www.edx.org/">edX</a>.
+You can install it with:</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">sudo pip install youtube-dl
 </code></pre></div>
+<h2>One Emacs script to rule them all</h2>
 
-<p>Let&#39;s mark everything, <kbd>M-x</kbd> <code>latex-wrap-region</code>, and select
-<em>center</em>:</p>
-
-<div class="highlight"><pre><code class="language-latex" data-lang="latex"><span class="k">\begin</span><span class="nb">{</span>center<span class="nb">}</span>
-  <span class="k">\begin</span><span class="nb">{</span>enumerate<span class="nb">}</span>
-  <span class="k">\item</span> Homer
-  <span class="k">\item</span> Marge
-  <span class="k">\item</span> Bart
-  <span class="k">\item</span> Lisa
-  <span class="k">\item</span> Maggie
-  <span class="k">\end</span><span class="nb">{</span>enumerate<span class="nb">}</span><cursor> </cursor>
-<span class="k">\end</span><span class="nb">{</span>center<span class="nb">}</span>
+<p>I quickly tired of opening a shell, setting the directory, entering
+the command, and pasting the link. So I wrote some Elisp code that does it for me.
+It&#39;s nothing too sophisticated, but I&#39;ve been using this version for a couple months:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">youtube-dl</span> <span class="p">()</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">str</span> <span class="p">(</span><span class="nv">current-kill</span> <span class="mi">0</span><span class="p">))</span>
+         <span class="p">(</span><span class="nv">default-directory</span> <span class="s">&quot;~/Downloads&quot;</span><span class="p">)</span>
+         <span class="p">(</span><span class="nv">proc</span> <span class="p">(</span><span class="nf">get-buffer-process</span> <span class="p">(</span><span class="nv">ansi-term</span> <span class="s">&quot;/bin/bash&quot;</span><span class="p">))))</span>
+    <span class="p">(</span><span class="nv">term-send-string</span>
+     <span class="nv">proc</span>
+     <span class="p">(</span><span class="nf">concat</span> <span class="s">&quot;cd ~/Downloads &amp;&amp; youtube-dl &quot;</span> <span class="nv">str</span> <span class="s">&quot;\n&quot;</span><span class="p">))))</span>
 </code></pre></div>
+<p>How it works:</p>
 
-<p>As you can see, I want to make sure that it&#39;s possible to conveniently
-continue by always placing the point on the end of the last line of
-the inserted environment.</p>
+<ol>
+<li>Copy the link in Firefox</li>
+<li><kbd>M-x</kbd> <code>youtube-dl</code>.</li>
+</ol>
 
-<h2>How it works with no active region</h2>
+<p>That&#39;s it. A new <code>*ansi-term*</code> will open with the task of downloading the video from the link
+in the clipboard to <code>~/Downloads</code>.
+I don&#39;t have to wait for the download to finish and can immediately open the video from <code>dired</code>.
+See <a href="/2015/01/04/dired-nohup/">the previous post</a> for the description of
+<code>dired</code> process-starting setup. I can stack up multiple downloads at once if I wish in different
+<code>*ansi-term*</code>s.</p>
 
-<p>If <code>(looking-back &quot;^ *&quot;)</code> is true, the current line is used as if it was
-the region.  Otherwise, an empty environment is inserted after the
-current line.</p>
+<blockquote>
+<p>This is my script. There are many like it, but this one is mine.</p>
+</blockquote>
 
-<h2>Using the code</h2>
+<p>I did an internet search before writing this post. Apparently many
+others had the same idea of integrating <code>youtube-dl</code> into Emacs.  You
+can use mine or any other code to generate a setup that works for you.
+For instance, for a while, instead of copy-pasting the URL and calling
+<code>youtube-dl</code> I used to just click the
+<a href="https://addons.mozilla.org/en-US/firefox/addon/org-mode-capture/">org-mode capture</a>
+button in Firefox, and it would automatically create a <code>TODO</code> item,
+download the video, and put the link to the downloaded video in the
+<code>TODO</code>.</p>
 
-<p>If you like the idea, you can check out the code at
-<a href="https://github.com/abo-abo/latex-wrap">github</a> and test it out.  If
-you know of another package that already does this, do let me know,
-otherwise I&#39;ll post the package on MELPA soon.  And if you have some
-ideas, or want to add a few environments that I forgot to mention to
-the list, just post
-<a href="https://github.com/abo-abo/latex-wrap/issues">an issue</a>, I don&#39;t
-bite.</p>
+<p>I&#39;ve dropped this workflow when
+<a href="http://debbugs.gnu.org/cgi/bugreport.cgi?bug=16737">the yank bug</a>
+surfaced. I don&#39;t yet have enough experience of working with Emacs&#39;s C
+code to fix it.  Although, according to this
+<a href="https://plus.google.com/u/0/+JorgenSch%C3%A4fer/posts/ZaZcunihGqc">excellent rant</a>,
+fixing the bug is only half of the problem: getting it merged is hard.
+I&#39;ll see how it goes with <a href="http://debbugs.gnu.org/cgi/bugreport.cgi?bug=19493">my latest tiny patch</a>.
+So far it has been ignored, but it is only two days old as of now.</p>
 
 </div>
 
@@ -251,16 +278,6 @@ bite.</p>
     
       <li>
         <h3>
-          <!-- <a href="//2015/01/05/youtube-dl/"> -->
-          <a href="/2015/01/05/youtube-dl/">
-            Yet another youtube-dl interface for Emacs
-            <small>05 Jan 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
           <!-- <a href="//2015/01/04/dired-nohup/"> -->
           <a href="/2015/01/04/dired-nohup/">
             Start a process from dired
@@ -275,6 +292,16 @@ bite.</p>
           <a href="/2015/01/03/time-flies/">
             Time flies
             <small>03 Jan 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/01/02/wrap-with-latex/"> -->
+          <a href="/2015/01/02/wrap-with-latex/">
+            Wrap a region with a LaTeX environment
+            <small>02 Jan 2015</small>
           </a>
         </h3>
       </li>
