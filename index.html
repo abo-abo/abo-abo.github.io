@@ -567,7 +567,8 @@ automatically:</p>
 from Emacs&#39;s <code>yank</code>.  So, until recently, I was using
 <kbd>S-&lt;insert&gt;</kbd> to paste stuff into <code>*term*</code>. Here&#39;s a
 more ergonomic way:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">term-raw-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c C-y&quot;</span><span class="p">)</span> <span class="ss">&#39;term-paste</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">eval-after-load</span> <span class="s">&quot;term&quot;</span>
+  <span class="o">&#39;</span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">term-raw-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c C-y&quot;</span><span class="p">)</span> <span class="ss">&#39;term-paste</span><span class="p">))</span>
 </code></pre></div>
   </div>
   
