@@ -11,7 +11,7 @@
 
   <title>
     
-      Monkeying around with JavaScript &middot; (or emacs
+      Rushing headlong &middot; (or emacs
     
   </title>
 
@@ -168,70 +168,81 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Monkeying around with JavaScript</h1>
-  <span class="post-date">29 Dec 2014</span>
-  <h2>Exciting encounter</h2>
+  <h1 class="post-title">Rushing headlong</h1>
+  <span class="post-date">06 Jan 2015</span>
+  <blockquote>
+<p>And you&#39;re rushing headlong out of control...</p>
 
-<p>Recently, I happened upon a wonderful blog called
-<a href="http://axisofeval.blogspot.nl">The Axis of Eval</a>.  I knew that I&#39;d
-love it just when I read the name. <a href="/">(or emacs</a> pales in comparison,
-but I couldn&#39;t just sit on my hands for months or years while thinking
-up a perfect blog name. If you think of a blog name as awesome as &quot;The
-Axis of Eval&quot; and are willing to let me use it, I&#39;ll probably make the
-switch.</p>
-
-<p>The blog did not disappoint, featuring gems like this:</p>
-
-<blockquote>
-<p>In the Lisp world, new languages are built by combining large,
-battle-tested building blocks, and polishing or updating them when
-needed, instead of starting over from toothpicks and double-sided
-duct tape. A large Lisp like Common Lisp is like a toolchain of
-decades-old tools that have proven their worth, and have been
-codified in standards, folklore, and implementations.</p>
+<p>-- <cite>Brian May</cite></p>
 </blockquote>
 
-<p>The only thing in the way of extracting information and enjoyment from
-this blog was the horrendous theme of black background, white
-foreground and magenta links. Plus the RSS was kind of quirky, and I
-couldn&#39;t just feed all of it into
-<a href="https://github.com/skeeto/elfeed">Elfeed</a>.</p>
+<p>I&#39;ve finally wrapped a piece of config that I was using for a while in
+a package called <a href="https://github.com/abo-abo/headlong">headlong</a>.</p>
 
-<h2>Greasemonkey to the rescue!</h2>
+<h2>What does it do?</h2>
 
-<p>In the previous post I&#39;ve mentioned that, in addition to using
-<a href="http://www.gnu.org/software/emacs/">the best editor</a>, I&#39;m using
-<a href="https://www.mozilla.org/en-US/firefox/new/">the best browser</a>.  Well,
-this particular best browser has an extension called
-<a href="https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/">Greasemonkey</a>
-that allows you to automatically run your own JavaScript on certain
-websites.</p>
-
-<p>I&#39;m not very proficient in JavaScript, the following code I just found
-by searching around. The part to note is the <code>@include</code> - the pattern
-of website names for which this script should be run automatically.</p>
-<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="c1">// ==UserScript==</span>
-<span class="c1">// @name        background</span>
-<span class="c1">// @namespace   abo-abo</span>
-<span class="c1">// @include     http://axisofeval.blogspot.nl/*</span>
-<span class="c1">// @version     1</span>
-<span class="c1">// @grant       none</span>
-<span class="c1">// ==/UserScript==</span>
-<span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-    <span class="nb">document</span>
-        <span class="p">.</span><span class="nx">body</span>
-        <span class="p">.</span><span class="nx">setAttribute</span><span class="p">(</span><span class="s2">&quot;style&quot;</span><span class="p">,</span>
-                      <span class="s2">&quot;background-color: #ffffff; color:#000&quot;</span><span class="p">);</span>
-    <span class="kd">var</span> <span class="nx">nodesArray</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementsByTagName</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">);</span>
-    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">nodesArray</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">nodesArray</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">style</span><span class="p">.</span><span class="nx">color</span> <span class="o">=</span> <span class="s1">&#39;red&#39;</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">})();</span>
+<p>It provides a macro called <code>headlong-with</code> that modifies minibuffer
+completion for the forms within it, making it faster in some
+situations.  For instance:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">headlong-with</span>
+ <span class="p">(</span><span class="nf">completing-read</span> <span class="s">&quot;Jump to bookmark: &quot;</span>
+                  <span class="nv">bookmark-alist</span> <span class="no">nil</span> <span class="no">t</span><span class="p">))</span>
 </code></pre></div>
-<p>I can barely stand to look at it. How could you take Scheme and turn
-it into this monstrosity? Such a shame. But it works, so I guess
-everyone should learn JavaScript. All hail the mighty
-<s>HypnoToad</s> JavaScript!</p>
+<p>or:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">headlong-with</span> <span class="p">(</span><span class="nv">read-extended-command</span><span class="p">))</span>
+</code></pre></div>
+<p>But more importantly, it provides two commands that can use it
+efficiently: <code>headlong-bookmark-jump</code> and
+<code>headlong-bookmark-jump-other</code>. The second one is basically the same
+as the first one, except it opens the bookmark with <code>pop-to-buffer</code>,
+i.e. in other window.</p>
+
+<h2>How does this completion work?</h2>
+
+<p>It&#39;s nothing fancy, you will just exit the minibuffer automatically as
+soon as there is only one completion candidate left.
+So it saves you <strong>one</strong> keystroke, namely <kbd>RET</kbd>.
+How much is <em>one</em> keystroke worth? It depends.</p>
+
+<p>If you arrange your bookmarks in a way that I do, with each one
+starting with a different letter, it saves you 33% of the total
+keystrokes.  For example, suppose I have:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-p&quot;</span><span class="p">)</span> <span class="ss">&#39;bookmark-jump</span><span class="p">)</span>
+<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-o&quot;</span><span class="p">)</span> <span class="ss">&#39;headlong-bookmark-jump</span><span class="p">)</span>
+</code></pre></div>
+<p>Then I can jump to my bookmarked directory named <code>&quot;s: sources&quot;</code> with
+two methods:</p>
+
+<ul>
+<li><kbd>M-p</kbd><kbd>s</kbd><kbd>RET</kbd> </li>
+<li><kbd>M-o</kbd><kbd>s</kbd></li>
+</ul>
+
+<p>The second method looks like it&#39;s 33% shorter, but it feels like it&#39;s
+even more, since pressing <kbd>RET</kbd> is harder than it should be
+on most keyboards.</p>
+
+<h2>Why is this cool?</h2>
+
+<p>This is cool because you can implement your bookmarks as efficiently
+as you would with just wrapping stuff with a <code>lambda</code> and using
+<code>global-set-key</code>, except that you can view and edit the bindings with
+<code>bookmark-bmenu-list</code>, and quickly the update bookmark positions with
+<code>bookmark-set</code>.</p>
+
+<p>Here&#39;s what I get when I call <kbd>M-x</kbd> <code>bookmark-bmenu-list</code>:</p>
+
+<p><img src="/download/bookmarks.png" alt="bookmarks"></p>
+
+<p>In the list above:</p>
+
+<ul>
+<li>black bookmarks are files</li>
+<li>blue bookmarks are directories</li>
+<li>pink bookmarks are functions (you need <code>bookmark+</code> for them)</li>
+</ul>
+
+<p>The package should be available in MELPA soon.</p>
 
 </div>
 
@@ -250,16 +261,6 @@ everyone should learn JavaScript. All hail the mighty
     
       <li>
         <h3>
-          <!-- <a href="//2015/01/06/rushing-headlong/"> -->
-          <a href="/2015/01/06/rushing-headlong/">
-            Rushing headlong
-            <small>06 Jan 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
           <!-- <a href="//2015/01/05/youtube-dl/"> -->
           <a href="/2015/01/05/youtube-dl/">
             Yet another youtube-dl interface for Emacs
@@ -274,6 +275,16 @@ everyone should learn JavaScript. All hail the mighty
           <a href="/2015/01/04/dired-nohup/">
             Start a process from dired
             <small>04 Jan 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/01/03/time-flies/"> -->
+          <a href="/2015/01/03/time-flies/">
+            Time flies
+            <small>03 Jan 2015</small>
           </a>
         </h3>
       </li>

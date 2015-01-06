@@ -4,13 +4,94 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-01-05T20:50:58+01:00</updated>
+ <updated>2015-01-06T17:38:10+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Rushing headlong</title>
+   <link href="http://oremacs.com/2015/01/06/rushing-headlong/"/>
+   <updated>2015-01-06T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/01/06/rushing-headlong</id>
+   <content type="html">&lt;blockquote&gt;
+&lt;p&gt;And you&amp;#39;re rushing headlong out of control...&lt;/p&gt;
+
+&lt;p&gt;-- &lt;cite&gt;Brian May&lt;/cite&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;I&amp;#39;ve finally wrapped a piece of config that I was using for a while in
+a package called &lt;a href=&quot;https://github.com/abo-abo/headlong&quot;&gt;headlong&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2&gt;What does it do?&lt;/h2&gt;
+
+&lt;p&gt;It provides a macro called &lt;code&gt;headlong-with&lt;/code&gt; that modifies minibuffer
+completion for the forms within it, making it faster in some
+situations.  For instance:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;headlong-with&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;completing-read&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Jump to bookmark: &amp;quot;&lt;/span&gt;
+                  &lt;span class=&quot;nv&quot;&gt;bookmark-alist&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;or:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;headlong-with&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;read-extended-command&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;But more importantly, it provides two commands that can use it
+efficiently: &lt;code&gt;headlong-bookmark-jump&lt;/code&gt; and
+&lt;code&gt;headlong-bookmark-jump-other&lt;/code&gt;. The second one is basically the same
+as the first one, except it opens the bookmark with &lt;code&gt;pop-to-buffer&lt;/code&gt;,
+i.e. in other window.&lt;/p&gt;
+
+&lt;h2&gt;How does this completion work?&lt;/h2&gt;
+
+&lt;p&gt;It&amp;#39;s nothing fancy, you will just exit the minibuffer automatically as
+soon as there is only one completion candidate left.
+So it saves you &lt;strong&gt;one&lt;/strong&gt; keystroke, namely &lt;kbd&gt;RET&lt;/kbd&gt;.
+How much is &lt;em&gt;one&lt;/em&gt; keystroke worth? It depends.&lt;/p&gt;
+
+&lt;p&gt;If you arrange your bookmarks in a way that I do, with each one
+starting with a different letter, it saves you 33% of the total
+keystrokes.  For example, suppose I have:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;M-p&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;bookmark-jump&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;M-o&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;headlong-bookmark-jump&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Then I can jump to my bookmarked directory named &lt;code&gt;&amp;quot;s: sources&amp;quot;&lt;/code&gt; with
+two methods:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;M-p&lt;/kbd&gt;&lt;kbd&gt;s&lt;/kbd&gt;&lt;kbd&gt;RET&lt;/kbd&gt; &lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;M-o&lt;/kbd&gt;&lt;kbd&gt;s&lt;/kbd&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The second method looks like it&amp;#39;s 33% shorter, but it feels like it&amp;#39;s
+even more, since pressing &lt;kbd&gt;RET&lt;/kbd&gt; is harder than it should be
+on most keyboards.&lt;/p&gt;
+
+&lt;h2&gt;Why is this cool?&lt;/h2&gt;
+
+&lt;p&gt;This is cool because you can implement your bookmarks as efficiently
+as you would with just wrapping stuff with a &lt;code&gt;lambda&lt;/code&gt; and using
+&lt;code&gt;global-set-key&lt;/code&gt;, except that you can view and edit the bindings with
+&lt;code&gt;bookmark-bmenu-list&lt;/code&gt;, and quickly the update bookmark positions with
+&lt;code&gt;bookmark-set&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;#39;s what I get when I call &lt;kbd&gt;M-x&lt;/kbd&gt; &lt;code&gt;bookmark-bmenu-list&lt;/code&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/bookmarks.png&quot; alt=&quot;bookmarks&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;In the list above:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;black bookmarks are files&lt;/li&gt;
+&lt;li&gt;blue bookmarks are directories&lt;/li&gt;
+&lt;li&gt;pink bookmarks are functions (you need &lt;code&gt;bookmark+&lt;/code&gt; for them)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The package should be available in MELPA soon.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Yet another youtube-dl interface for Emacs</title>
