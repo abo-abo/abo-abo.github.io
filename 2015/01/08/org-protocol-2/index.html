@@ -11,7 +11,7 @@
 
   <title>
     
-      Easy helm improvement &middot; (or emacs
+      My org-protocol setup, part 2. &middot; (or emacs
     
   </title>
 
@@ -168,31 +168,51 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Easy helm improvement</h1>
-  <span class="post-date">21 Dec 2014</span>
-  <p>When you press <kbd>DEL</kbd> (also known as backspace) in a <code>helm</code>
-buffer, and there isn&#39;t any input to delete, it only errors at you
-with:</p>
+  <h1 class="post-title">My org-protocol setup, part 2.</h1>
+  <span class="post-date">08 Jan 2015</span>
+  <p>This continues the code from <a href="/2015/01/07/org-protocol-1/">the part 1</a>.</p>
 
-<blockquote>
-<p>Text is read only</p>
-</blockquote>
+<h2><code>org-handle-link-youtube</code></h2>
 
-<p>Why not make it do something useful instead, for instance close <code>helm</code>?</p>
-
-<p>Easy:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;helm</span><span class="p">)</span>
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">helm-backspace</span> <span class="p">()</span>
-  <span class="s">&quot;Forward to `backward-delete-char&#39;.</span>
-<span class="s">On error (read-only), quit without selecting.&quot;</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">condition-case</span> <span class="no">nil</span>
-      <span class="p">(</span><span class="nv">backward-delete-char</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="p">(</span><span class="ne">error</span>
-     <span class="p">(</span><span class="nv">helm-keyboard-quit</span><span class="p">))))</span>
-
-<span class="p">(</span><span class="nf">define-key</span> <span class="nv">helm-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;DEL&quot;</span><span class="p">)</span> <span class="ss">&#39;helm-backspace</span><span class="p">)</span>
+<p>I tried to make the first call to <code>youtube-dl</code> asynchronous, but it
+wasn&#39;t working out.  So for the current code, there&#39;s still about a 2
+second delay before the capture buffer appears.</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;async</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">org-handle-link-youtube</span> <span class="p">(</span><span class="nv">link</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">lexical-let*</span>
+      <span class="p">((</span><span class="nv">file-name</span> <span class="p">(</span><span class="nv">org-trim</span>
+                   <span class="p">(</span><span class="nv">shell-command-to-string</span>
+                    <span class="p">(</span><span class="nf">concat</span>
+                     <span class="s">&quot;youtube-dl \&quot;&quot;</span>
+                     <span class="nv">link</span>
+                     <span class="s">&quot;\&quot;&quot;</span>
+                     <span class="s">&quot; -o \&quot;%(title)s.%(ext)s\&quot; --get-filename&quot;</span><span class="p">))))</span>
+       <span class="p">(</span><span class="nv">dir</span> <span class="s">&quot;~/Downloads/Videos&quot;</span><span class="p">)</span>
+       <span class="p">(</span><span class="nv">full-name</span>
+        <span class="p">(</span><span class="nf">expand-file-name</span> <span class="nv">file-name</span> <span class="nv">dir</span><span class="p">)))</span>
+    <span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;org-link-hook</span>
+              <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span>
+                <span class="p">(</span><span class="nf">concat</span>
+                 <span class="p">(</span><span class="nv">org-make-link-string</span> <span class="nv">dir</span> <span class="nv">dir</span><span class="p">)</span>
+                 <span class="s">&quot;\n&quot;</span>
+                 <span class="p">(</span><span class="nv">org-make-link-string</span> <span class="nv">full-name</span> <span class="nv">file-name</span><span class="p">))))</span>
+    <span class="p">(</span><span class="nv">async-shell-command</span>
+     <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;youtube-dl \&quot;%s\&quot; -o \&quot;%s\&quot;&quot;</span> <span class="nv">link</span> <span class="nv">full-name</span><span class="p">))</span>
+    <span class="p">(</span><span class="nv">find-file</span> <span class="p">(</span><span class="nv">org-expand</span> <span class="s">&quot;ent.org&quot;</span><span class="p">))</span>
+    <span class="p">(</span><span class="nf">goto-char</span> <span class="p">(</span><span class="nf">point-min</span><span class="p">))</span>
+    <span class="p">(</span><span class="nf">re-search-forward</span> <span class="s">&quot;^\\*+ +Videos&quot;</span> <span class="no">nil</span> <span class="no">t</span><span class="p">)))</span>
 </code></pre></div>
+<p>Some notes for people who want to learn more Elisp:</p>
+
+<ul>
+<li><code>lexical-let*</code> is needed to have <code>dir</code> and <code>full-name</code> visible in the <code>lambda</code>.</li>
+<li><code>org-make-link-string</code> is a nice utility command that escapes all sorts of
+characters that <code>org-mode</code> doesn&#39;t like, e.g. brackets etc.</li>
+</ul>
+
+<p>You can see my full <code>org-capture</code> and <code>org-protocol</code> setup
+<a href="https://github.com/abo-abo/org-fu">here</a>.</p>
+
 </div>
 
 <div class="twitter-share">
@@ -210,16 +230,6 @@ with:</p>
     
       <li>
         <h3>
-          <!-- <a href="//2015/01/08/org-protocol-2/"> -->
-          <a href="/2015/01/08/org-protocol-2/">
-            My org-protocol setup, part 2.
-            <small>08 Jan 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
           <!-- <a href="//2015/01/07/org-protocol-1/"> -->
           <a href="/2015/01/07/org-protocol-1/">
             My org-protocol setup, part 1.
@@ -234,6 +244,16 @@ with:</p>
           <a href="/2015/01/06/rushing-headlong/">
             Rushing headlong
             <small>06 Jan 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/01/05/youtube-dl/"> -->
+          <a href="/2015/01/05/youtube-dl/">
+            Yet another youtube-dl interface for Emacs
+            <small>05 Jan 2015</small>
           </a>
         </h3>
       </li>

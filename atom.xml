@@ -4,13 +4,63 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-01-07T21:00:11+01:00</updated>
+ <updated>2015-01-08T16:26:10+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>My org-protocol setup, part 2.</title>
+   <link href="http://oremacs.com/2015/01/08/org-protocol-2/"/>
+   <updated>2015-01-08T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/01/08/org-protocol-2</id>
+   <content type="html">&lt;p&gt;This continues the code from &lt;a href=&quot;/2015/01/07/org-protocol-1/&quot;&gt;the part 1&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2&gt;&lt;code&gt;org-handle-link-youtube&lt;/code&gt;&lt;/h2&gt;
+
+&lt;p&gt;I tried to make the first call to &lt;code&gt;youtube-dl&lt;/code&gt; asynchronous, but it
+wasn&amp;#39;t working out.  So for the current code, there&amp;#39;s still about a 2
+second delay before the capture buffer appears.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;async&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-handle-link-youtube&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;link&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lexical-let*&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;file-name&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;org-trim&lt;/span&gt;
+                   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;shell-command-to-string&lt;/span&gt;
+                    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;concat&lt;/span&gt;
+                     &lt;span class=&quot;s&quot;&gt;&amp;quot;youtube-dl \&amp;quot;&amp;quot;&lt;/span&gt;
+                     &lt;span class=&quot;nv&quot;&gt;link&lt;/span&gt;
+                     &lt;span class=&quot;s&quot;&gt;&amp;quot;\&amp;quot;&amp;quot;&lt;/span&gt;
+                     &lt;span class=&quot;s&quot;&gt;&amp;quot; -o \&amp;quot;%(title)s.%(ext)s\&amp;quot; --get-filename&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;dir&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;~/Downloads/Videos&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;full-name&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;expand-file-name&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;file-name&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;add-hook&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;org-link-hook&lt;/span&gt;
+              &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;concat&lt;/span&gt;
+                 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;org-make-link-string&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dir&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                 &lt;span class=&quot;s&quot;&gt;&amp;quot;\n&amp;quot;&lt;/span&gt;
+                 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;org-make-link-string&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;full-name&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;file-name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;async-shell-command&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;youtube-dl \&amp;quot;%s\&amp;quot; -o \&amp;quot;%s\&amp;quot;&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;link&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;full-name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;find-file&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;org-expand&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;ent.org&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;goto-char&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;point-min&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;re-search-forward&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;^\\*+ +Videos&amp;quot;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Some notes for people who want to learn more Elisp:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;lexical-let*&lt;/code&gt; is needed to have &lt;code&gt;dir&lt;/code&gt; and &lt;code&gt;full-name&lt;/code&gt; visible in the &lt;code&gt;lambda&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;org-make-link-string&lt;/code&gt; is a nice utility command that escapes all sorts of
+characters that &lt;code&gt;org-mode&lt;/code&gt; doesn&amp;#39;t like, e.g. brackets etc.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;You can see my full &lt;code&gt;org-capture&lt;/code&gt; and &lt;code&gt;org-protocol&lt;/code&gt; setup
+&lt;a href=&quot;https://github.com/abo-abo/org-fu&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>My org-protocol setup, part 1.</title>
