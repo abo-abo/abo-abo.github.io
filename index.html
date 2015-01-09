@@ -88,6 +88,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -168,6 +172,147 @@
 
       <div class="container content">
         <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/2015/01/09/ido-find-file-tilde/">
+        tilde in ido-find-file
+      </a>
+    </h1>
+
+    <span class="post-date">09 Jan 2015</span>
+
+    <p>On seeing
+<a href="http://emacs.stackexchange.com/questions/7193/how-to-replicate-the-to-home-to-root-behaviour-in-ido-find-file-but">this Emacs Stack Exchange question</a>,
+it occurred to me that if some config code is old for me, it&#39;s not old
+for the new Emacs users. So I&#39;ll share one of the old <code>ido-find-file</code>
+hacks that I&#39;ve been using for ages.</p>
+
+<blockquote>
+<p>This song is an oldie ...but, uh ... <em>pause</em>
+Well, it&#39;s an oldie where I come from.</p>
+
+<p>-- <cite>Marty</cite></p>
+</blockquote>
+
+<h2>The code</h2>
+
+<p>This is the original code that I was using:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">oleh-ido-setup-hook</span> <span class="p">()</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">ido-file-dir-completion-map</span> <span class="s">&quot;~&quot;</span>
+    <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span>
+      <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+      <span class="p">(</span><span class="nv">ido-set-current-directory</span> <span class="s">&quot;~/&quot;</span><span class="p">)</span>
+      <span class="p">(</span><span class="k">setq</span> <span class="nv">ido-exit</span> <span class="ss">&#39;refresh</span><span class="p">)</span>
+      <span class="p">(</span><span class="nv">exit-minibuffer</span><span class="p">))))</span>
+
+<span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;ido-setup-hook</span> <span class="ss">&#39;oleh-ido-setup-hook</span><span class="p">)</span>
+</code></pre></div>
+<h2>The generalization</h2>
+
+<p>It wouldn&#39;t be a LISP if I couldn&#39;t generalize the code:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">ido-find-file-jump</span> <span class="p">(</span><span class="nv">dir</span><span class="p">)</span>
+  <span class="s">&quot;Return a command that sends DIR to `ido-find-file&#39;.&quot;</span>
+  <span class="o">`</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span>
+     <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+     <span class="p">(</span><span class="nv">ido-set-current-directory</span> <span class="o">,</span><span class="nv">dir</span><span class="p">)</span>
+     <span class="p">(</span><span class="k">setq</span> <span class="nv">ido-exit</span> <span class="ss">&#39;refresh</span><span class="p">)</span>
+     <span class="p">(</span><span class="nv">exit-minibuffer</span><span class="p">)))</span>
+</code></pre></div>
+<p>And here&#39;s how to leverage this generalization:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">oleh-ido-setup-hook</span> <span class="p">()</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">ido-file-dir-completion-map</span> <span class="s">&quot;~&quot;</span>
+    <span class="p">(</span><span class="nv">ido-find-file-jump</span> <span class="s">&quot;~/&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">ido-file-dir-completion-map</span> <span class="s">&quot;!&quot;</span>
+    <span class="p">(</span><span class="nv">ido-find-file-jump</span> <span class="s">&quot;~/Dropbox/source/site-lisp/&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">ido-file-dir-completion-map</span> <span class="s">&quot;@&quot;</span>
+    <span class="p">(</span><span class="nv">ido-find-file-jump</span> <span class="s">&quot;~/git/lispy/&quot;</span><span class="p">)))</span>
+</code></pre></div>
+<p>Note that this is pretty ugly, implementation-wise, since
+<code>ido-find-file-jump</code> would be called three times each time you do an
+<code>ido</code> related command, like <code>ido-switch-buffer</code> etc.
+I would have preferred to do it like this instead:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">eval-after-load</span> <span class="s">&quot;ido&quot;</span>
+  <span class="o">`</span><span class="p">(</span><span class="k">progn</span>
+     <span class="p">(</span><span class="nf">define-key</span> <span class="nv">ido-file-dir-completion-map</span> <span class="s">&quot;~&quot;</span>
+       <span class="p">(</span><span class="nv">ido-find-file-jump</span> <span class="s">&quot;~/&quot;</span><span class="p">))</span>
+     <span class="p">(</span><span class="nf">define-key</span> <span class="nv">ido-file-dir-completion-map</span> <span class="s">&quot;!&quot;</span>
+       <span class="p">(</span><span class="nv">ido-find-file-jump</span> <span class="s">&quot;~/Dropbox/source/site-lisp/&quot;</span><span class="p">))</span>
+     <span class="p">(</span><span class="nf">define-key</span> <span class="nv">ido-file-dir-completion-map</span> <span class="s">&quot;@&quot;</span>
+       <span class="p">(</span><span class="nv">ido-find-file-jump</span> <span class="s">&quot;~/git/lispy/&quot;</span><span class="p">))))</span>
+</code></pre></div>
+<p>But, for some strange reason, <code>ido</code> keeps overriding
+<code>ido-file-dir-completion-map</code> and I actually have to re-set my
+bindings in <code>ido-setup-hook</code>.</p>
+
+<h2>The further generalization</h2>
+
+<p>Here is the final iteration of the code:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">defvar</span> <span class="nv">oleh-ido-shortcuts</span>
+  <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;~/&quot;</span> <span class="s">&quot;~&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="s">&quot;~/Dropbox/source/site-lisp/&quot;</span> <span class="s">&quot;!&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="s">&quot;~/git/lispy/&quot;</span> <span class="s">&quot;@&quot;</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="nf">mapc</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+        <span class="p">(</span><span class="nf">setcar</span> <span class="nv">x</span> <span class="p">(</span><span class="nv">ido-find-file-jump</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">x</span><span class="p">))))</span>
+      <span class="nv">oleh-ido-shortcuts</span><span class="p">)</span>
+
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">oleh-ido-setup-hook</span> <span class="p">()</span>
+  <span class="p">(</span><span class="nf">mapc</span>
+   <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+     <span class="p">(</span><span class="nf">define-key</span> <span class="nv">ido-file-dir-completion-map</span> <span class="p">(</span><span class="nv">cadr</span> <span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">x</span><span class="p">)))</span>
+   <span class="nv">oleh-ido-shortcuts</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;ido-setup-hook</span> <span class="ss">&#39;oleh-ido-setup-hook</span><span class="p">)</span>
+</code></pre></div>
+<h2>The customize tricks</h2>
+
+<blockquote>
+<p>&quot;Custom setters?<br>
+In <em>my</em> Elisp?&quot;</p>
+
+<p>It&#39;s more likely than you think.</p>
+</blockquote>
+
+<p>Note that the <code>mapc</code> statement needs to be evaluated if I dynamically
+modify <code>oleh-ido-shortcuts</code>. This isn&#39;t a problem for me, but if I
+wanted to package a code like this, I would define
+<code>oleh-ido-shortcuts</code> like this:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defcustom</span> <span class="nv">oleh-ido-shortcuts</span>
+  <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;~/&quot;</span> <span class="s">&quot;~&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;~/Dropbox/source/site-lisp/&quot;</span> <span class="s">&quot;!&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="s">&quot;~/git/lispy/&quot;</span> <span class="s">&quot;@&quot;</span><span class="p">))</span>
+  <span class="s">&quot;A list of directory-shortcut pairs for `ido-find-file&#39;.&quot;</span>
+  <span class="nb">:set</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">symbol</span> <span class="nv">value</span><span class="p">)</span>
+         <span class="p">(</span><span class="nf">set-default</span>
+          <span class="nv">symbol</span>
+          <span class="p">(</span><span class="nf">mapcar</span>
+           <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+             <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">stringp</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">x</span><span class="p">))</span>
+                 <span class="p">(</span><span class="nf">cons</span> <span class="p">(</span><span class="nv">ido-find-file-jump</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">x</span><span class="p">))</span>
+                       <span class="p">(</span><span class="nf">cdr</span> <span class="nv">x</span><span class="p">))</span>
+               <span class="nv">x</span><span class="p">))</span>
+           <span class="nv">value</span><span class="p">))))</span>
+</code></pre></div>
+<p>Now, this should work:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">csetq</span> <span class="nv">oleh-ido-shortcuts</span>
+       <span class="p">(</span><span class="k">progn</span>
+         <span class="p">(</span><span class="nf">setcar</span> <span class="p">(</span><span class="nf">rassoc</span> <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;@&quot;</span><span class="p">)</span> <span class="nv">oleh-ido-shortcuts</span><span class="p">)</span>
+                 <span class="s">&quot;~/git/worf&quot;</span><span class="p">)</span>
+         <span class="nv">oleh-ido-shortcuts</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nv">csetq</span> <span class="nv">oleh-ido-shortcuts</span>
+       <span class="p">(</span><span class="nf">cons</span> <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;~/git/&quot;</span> <span class="s">&quot;^&quot;</span><span class="p">)</span>
+             <span class="nv">oleh-ido-shortcuts</span><span class="p">))</span>
+</code></pre></div>
+<p>Here, the appropriate lambda is auto-generated by using the <code>:set</code>
+property of <code>oleh-ido-shortcuts</code>.
+And <code>csetq</code> is just a <code>customize</code>-aware version of <code>setq</code>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defmacro</span> <span class="nv">csetq</span> <span class="p">(</span><span class="nv">variable</span> <span class="nv">value</span><span class="p">)</span>
+  <span class="o">`</span><span class="p">(</span><span class="nf">funcall</span> <span class="p">(</span><span class="k">or</span> <span class="p">(</span><span class="nf">get</span> <span class="ss">&#39;,variable</span> <span class="ss">&#39;custom-set</span><span class="p">)</span> <span class="ss">&#39;set-default</span><span class="p">)</span>
+            <span class="ss">&#39;,variable</span> <span class="o">,</span><span class="nv">value</span><span class="p">))</span>
+</code></pre></div>
+  </div>
   
   <div class="post">
     <h1 class="post-title">
@@ -496,109 +641,6 @@ fixing the bug is only half of the problem: getting it merged is hard.
 I&#39;ll see how it goes with <a href="http://debbugs.gnu.org/cgi/bugreport.cgi?bug=19493">my latest tiny patch</a>.
 So far it has been ignored, but it is only two days old as of now.</p>
 
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/01/04/dired-nohup/">
-        Start a process from dired
-      </a>
-    </h1>
-
-    <span class="post-date">04 Jan 2015</span>
-
-    <p>Here are the standard <code>dired</code> functions for starting processes:</p>
-
-<ul>
-<li><kbd>!</kbd> calls <code>dired-do-shell-command</code></li>
-<li><kbd>&amp;</kbd> calls <code>dired-do-async-shell-command</code></li>
-</ul>
-
-<p>While the second one is usually better than the first one, having the
-benefit of not locking up Emacs, it&#39;s still not convenient enough for
-me. The reason is pretty simple: I want to keep the processes that I
-started even when I close Emacs (like opened PDFs or videos).  This is
-a non-issue for people with months-long <code>emacs-uptime</code>, but for me an
-Emacs session lasts on the order of hours, since I mess about with
-Elisp a lot. Below, I&#39;ll share some of my <code>dired</code> process-related
-customizations.</p>
-
-<h2>Ignore running processes when closing Emacs</h2>
-
-<p>Usually there&#39;s nothing wrong with just killing a spawned process,
-like an <code>ipython</code> shell or something.</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="c1">;; add `flet&#39;</span>
-<span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;cl</span><span class="p">)</span>
-
-<span class="p">(</span><span class="nb">defadvice</span> <span class="nv">save-buffers-kill-emacs</span>
-  <span class="p">(</span><span class="nv">around</span> <span class="nv">no-query-kill-emacs</span> <span class="nv">activate</span><span class="p">)</span>
-  <span class="s">&quot;Prevent \&quot;Active processes exist\&quot; query on exit.&quot;</span>
-  <span class="p">(</span><span class="nb">flet</span> <span class="p">((</span><span class="nf">process-list</span> <span class="p">()))</span> <span class="nv">ad-do-it</span><span class="p">))</span>
-</code></pre></div>
-<h2>Guess programs by file extension</h2>
-
-<p>With this setup, usually there&#39;s no need to manually type in the
-command name.</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;dired-x</span><span class="p">)</span>
-
-<span class="p">(</span><span class="k">setq</span> <span class="nv">dired-guess-shell-alist-user</span>
-      <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;\\.pdf\\&#39;&quot;</span> <span class="s">&quot;evince&quot;</span> <span class="s">&quot;okular&quot;</span><span class="p">)</span>
-        <span class="p">(</span><span class="s">&quot;\\.\\(?:djvu\\|eps\\)\\&#39;&quot;</span> <span class="s">&quot;evince&quot;</span><span class="p">)</span>
-        <span class="p">(</span><span class="s">&quot;\\.\\(?:jpg\\|jpeg\\|png\\|gif\\|xpm\\)\\&#39;&quot;</span> <span class="s">&quot;eog&quot;</span><span class="p">)</span>
-        <span class="p">(</span><span class="s">&quot;\\.\\(?:xcf\\)\\&#39;&quot;</span> <span class="s">&quot;gimp&quot;</span><span class="p">)</span>
-        <span class="p">(</span><span class="s">&quot;\\.csv\\&#39;&quot;</span> <span class="s">&quot;libreoffice&quot;</span><span class="p">)</span>
-        <span class="p">(</span><span class="s">&quot;\\.tex\\&#39;&quot;</span> <span class="s">&quot;pdflatex&quot;</span> <span class="s">&quot;latex&quot;</span><span class="p">)</span>
-        <span class="p">(</span><span class="s">&quot;\\.\\(?:mp4\\|mkv\\|avi\\|flv\\|ogv\\)\\(?:\\.part\\)?\\&#39;&quot;</span>
-         <span class="s">&quot;vlc&quot;</span><span class="p">)</span>
-        <span class="p">(</span><span class="s">&quot;\\.\\(?:mp3\\|flac\\)\\&#39;&quot;</span> <span class="s">&quot;rhythmbox&quot;</span><span class="p">)</span>
-        <span class="p">(</span><span class="s">&quot;\\.html?\\&#39;&quot;</span> <span class="s">&quot;firefox&quot;</span><span class="p">)</span>
-        <span class="p">(</span><span class="s">&quot;\\.cue?\\&#39;&quot;</span> <span class="s">&quot;audacious&quot;</span><span class="p">)))</span>
-</code></pre></div>
-<h2>Add nohup</h2>
-
-<p>According to <code>info nohup</code>:</p>
-
-<blockquote>
-<p>`nohup&#39; runs the given COMMAND with hangup signals ignored, so that
-the command can continue running in the background after you log
-out.</p>
-</blockquote>
-
-<p>In my case, it means that the processes started by Emacs can
-continue running even when Emacs is closed.</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;dired-aux</span><span class="p">)</span>
-
-<span class="p">(</span><span class="k">defvar</span> <span class="nv">dired-filelist-cmd</span>
-  <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;vlc&quot;</span> <span class="s">&quot;-L&quot;</span><span class="p">)))</span>
-
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">dired-start-process</span> <span class="p">(</span><span class="nv">cmd</span> <span class="kp">&amp;optional</span> <span class="nv">file-list</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">interactive</span>
-   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">files</span> <span class="p">(</span><span class="nv">dired-get-marked-files</span>
-                 <span class="no">t</span> <span class="nv">current-prefix-arg</span><span class="p">)))</span>
-     <span class="p">(</span><span class="nf">list</span>
-      <span class="p">(</span><span class="nv">dired-read-shell-command</span> <span class="s">&quot;&amp; on %s: &quot;</span>
-                                <span class="nv">current-prefix-arg</span> <span class="nv">files</span><span class="p">)</span>
-      <span class="nv">files</span><span class="p">)))</span>
-  <span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">list-switch</span><span class="p">)</span>
-    <span class="p">(</span><span class="nf">start-process</span>
-     <span class="nv">cmd</span> <span class="no">nil</span> <span class="nv">shell-file-name</span>
-     <span class="nv">shell-command-switch</span>
-     <span class="p">(</span><span class="nf">format</span>
-      <span class="s">&quot;nohup 1&gt;/dev/null 2&gt;/dev/null %s \&quot;%s\&quot;&quot;</span>
-      <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="k">and</span> <span class="p">(</span><span class="nf">&gt;</span> <span class="p">(</span><span class="nf">length</span> <span class="nv">file-list</span><span class="p">)</span> <span class="mi">1</span><span class="p">)</span>
-               <span class="p">(</span><span class="k">setq</span> <span class="nv">list-switch</span>
-                     <span class="p">(</span><span class="nv">cadr</span> <span class="p">(</span><span class="nf">assoc</span> <span class="nv">cmd</span> <span class="nv">dired-filelist-cmd</span><span class="p">))))</span>
-          <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;%s %s&quot;</span> <span class="nv">cmd</span> <span class="nv">list-switch</span><span class="p">)</span>
-        <span class="nv">cmd</span><span class="p">)</span>
-      <span class="p">(</span><span class="nf">mapconcat</span> <span class="nf">#&#39;expand-file-name</span> <span class="nv">file-list</span> <span class="s">&quot;\&quot; \&quot;&quot;</span><span class="p">)))))</span>
-</code></pre></div>
-<p>The <code>dired-filelist-cmd</code> is necessary because <code>vlc</code> weirdly
-doesn&#39;t make a playlist when given a list of files.</p>
-
-<p>Then I bind it to <kbd>r</kbd> - a nice shortcut not bound
-by default in <code>dired</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="s">&quot;r&quot;</span> <span class="ss">&#39;dired-start-process</span><span class="p">)</span>
-</code></pre></div>
   </div>
   
 </div>
