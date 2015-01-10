@@ -175,6 +175,40 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2014/12/21/helm-backspace/">
+        Easy helm improvement
+      </a>
+    </h1>
+
+    <span class="post-date">21 Dec 2014</span>
+
+    <p>When you press <kbd>DEL</kbd> (also known as backspace) in a <code>helm</code>
+buffer, and there isn&#39;t any input to delete, it only errors at you
+with:</p>
+
+<blockquote>
+<p>Text is read only</p>
+</blockquote>
+
+<p>Why not make it do something useful instead, for instance close <code>helm</code>?</p>
+
+<p>Easy:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;helm</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">helm-backspace</span> <span class="p">()</span>
+  <span class="s">&quot;Forward to `backward-delete-char&#39;.</span>
+<span class="s">On error (read-only), quit without selecting.&quot;</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">condition-case</span> <span class="no">nil</span>
+      <span class="p">(</span><span class="nv">backward-delete-char</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="p">(</span><span class="ne">error</span>
+     <span class="p">(</span><span class="nv">helm-keyboard-quit</span><span class="p">))))</span>
+
+<span class="p">(</span><span class="nf">define-key</span> <span class="nv">helm-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;DEL&quot;</span><span class="p">)</span> <span class="ss">&#39;helm-backspace</span><span class="p">)</span>
+</code></pre></div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2014/12/20/poyekhali!/">
         Poyekhali!
       </a>

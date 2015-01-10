@@ -4,13 +4,118 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-01-09T11:54:01+01:00</updated>
+ <updated>2015-01-10T15:16:06+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>dired and ansi-term&#58; BFF</title>
+   <link href="http://oremacs.com/2015/01/10/dired-ansi-term/"/>
+   <updated>2015-01-10T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/01/10/dired-ansi-term</id>
+   <content type="html">&lt;p&gt;In the comments to
+&lt;a href=&quot;/2015/01/01/three-ansi-term-tips/&quot;&gt;my previous post on ansi-term&lt;/a&gt;, I discovered
+&lt;a href=&quot;https://github.com/adamrt/sane-term&quot;&gt;sane-term&lt;/a&gt; - a package that
+cycles though your terminals in Emacs, as well as implements some of
+the tips that I gave. While it&amp;#39;s nice and all, and you should check it
+out if you&amp;#39;re looking for something like that, it&amp;#39;s not really for
+me. I will describe the system that I&amp;#39;m currently using below.&lt;/p&gt;
+
+&lt;h2&gt;What is the best list length for cycling?&lt;/h2&gt;
+
+&lt;p&gt;In my opinion, it&amp;#39;s one or two. If it&amp;#39;s one, you&amp;#39;re not really
+cycling, if it&amp;#39;s two, it&amp;#39;s fine. Anything more than that causes
+stress, since you have to check each time if the outcome of the cycle
+ended up being the one that you wanted.&lt;/p&gt;
+
+&lt;p&gt;That&amp;#39;s why I usually have only one &lt;code&gt;*ansi-term*&lt;/code&gt; active in my Emacs
+session at all times.  Here&amp;#39;s how it looks like:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;terminal&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Switch to terminal. Launch if nonexistent.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;get-buffer&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;*ansi-term*&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;switch-to-buffer&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;*ansi-term*&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ansi-term&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;/bin/bash&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;get-buffer-process&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;*ansi-term*&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defalias&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;tt&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;terminal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;At one point, I had &lt;code&gt;terminal&lt;/code&gt; bound to &lt;kbd&gt;C-t&lt;/kbd&gt;, until I found
+a command even better suited for that binding, which was
+&lt;a href=&quot;https://github.com/nonsequitur/smex/&quot;&gt;smex&lt;/a&gt;. The actual &lt;code&gt;terminal&lt;/code&gt;
+command isn&amp;#39;t bound right now, I just launch it from &lt;code&gt;smex&lt;/code&gt; on very
+rare occasions.&lt;/p&gt;
+
+&lt;h2&gt;How I launch terminal 95% of the time&lt;/h2&gt;
+
+&lt;p&gt;From &lt;code&gt;dired&lt;/code&gt; of course. The shell&amp;#39;s natural way of switching the
+directory with &lt;code&gt;cd&lt;/code&gt; is extremely inefficient compared to &lt;code&gt;dired&lt;/code&gt;.  So
+any time I want to have a shell in a specific directory, I first
+navigate there with &lt;code&gt;dired&lt;/code&gt;, sometimes combined with
+&lt;code&gt;ido-find-file&lt;/code&gt;. Then I get my current &lt;code&gt;*ansi-term*&lt;/code&gt; and tell it to
+switch to the current &lt;code&gt;dired&lt;/code&gt; buffer&amp;#39;s directory with &lt;kbd&gt;`&lt;/kbd&gt;
+binding:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dired-mode-map&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;`&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;dired-open-term&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dired-open-term&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Open an `ansi-term&amp;#39; that corresponds to current directory.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;current-dir&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;dired-current-directory&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;term-send-string&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;terminal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;file-remote-p&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;current-dir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;v&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;tramp-dissect-file-name&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;current-dir&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+           &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;ssh %s@%s\n&amp;quot;&lt;/span&gt;
+                   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;aref&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;v&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;aref&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;v&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;cd &amp;#39;%s&amp;#39;\n&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;current-dir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;I also have a similar &lt;code&gt;eshell&lt;/code&gt; setup, although I have yet to
+comprehend why &lt;code&gt;eshell&lt;/code&gt; is great and am using &lt;code&gt;*ansi-term*&lt;/code&gt; most of the
+time instead.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dired-mode-map&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;#39;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;eshell-cmd&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;cd %s&amp;quot;&lt;/span&gt;
+             &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;expand-file-name&lt;/span&gt;
+              &lt;span class=&quot;nv&quot;&gt;default-directory&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;How I launch &lt;code&gt;dired&lt;/code&gt; 100% of the time&lt;/h2&gt;
+
+&lt;p&gt;With &lt;code&gt;dired-jump&lt;/code&gt;, of course. This command will examine your current
+buffer&amp;#39;s &lt;code&gt;default-directory&lt;/code&gt; and open a &lt;code&gt;dired&lt;/code&gt; buffer there. All you
+need is:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;dired-x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The &lt;code&gt;dired-jump&lt;/code&gt; command will be bound automatically to &lt;kbd&gt;C-x
+C-j&lt;/kbd&gt;.  I have it also bound to &lt;kbd&gt;C-:&lt;/kbd&gt;, since that&amp;#39;s more
+convenient to press with my keyboard layout.&lt;/p&gt;
+
+&lt;p&gt;It&amp;#39;s also better in the common situation when I want to jump to a
+&lt;code&gt;dired&lt;/code&gt; buffer from &lt;code&gt;*ansi-term*&lt;/code&gt;. In that situation, &lt;kbd&gt;C-x
+C-j&lt;/kbd&gt; will not work by default, and will call &lt;code&gt;term-line-mode&lt;/code&gt;
+instead. But it will work once you are in &lt;code&gt;term-line-mode&lt;/code&gt;.  You can
+go back to the default &lt;code&gt;term-char-mode&lt;/code&gt; with &lt;kbd&gt;C-x C-k&lt;/kbd&gt;.  To
+avoid this nonsense, just bind &lt;code&gt;dired-jump&lt;/code&gt; to some binding that&amp;#39;s
+convenient for you and works from &lt;code&gt;*ansi-term*&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2&gt;What I do when I need more than one terminal&lt;/h2&gt;
+
+&lt;p&gt;Then I just name one: since the default one is supposed to be named
+&lt;code&gt;*ansi-term*&lt;/code&gt;, if I create one named e.g. &lt;code&gt;*jekyll*&lt;/code&gt;, it will be
+ignored by &lt;code&gt;dired-open-term&lt;/code&gt;. This is exactly what I want, since I just
+create named terminals for long running processes like &lt;code&gt;jekyll serve&lt;/code&gt;.
+And I can switch to the named terminals with just &lt;code&gt;ido-switch-buffer&lt;/code&gt;.
+Here is the very simple code:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;named-term&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;sName: &amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ansi-term&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;/bin/bash&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
+ </entry>
  
  <entry>
    <title>tilde in ido-find-file</title>
