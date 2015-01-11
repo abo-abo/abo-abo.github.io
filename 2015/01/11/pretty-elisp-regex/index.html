@@ -11,7 +11,7 @@
 
   <title>
     
-      Mmm... minty &middot; (or emacs
+      Making Elisp regex look nicer &middot; (or emacs
     
   </title>
 
@@ -172,49 +172,54 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Mmm... minty</h1>
-  <span class="post-date">27 Dec 2014</span>
-  <h2>The backstory</h2>
+  <h1 class="post-title">Making Elisp regex look nicer</h1>
+  <span class="post-date">11 Jan 2015</span>
+  <p>This is just a small improvement to make e.g.  <code>\\(</code> show up in
+regular expressions without the escape chars, but instead fontified
+with <code>font-lock-keyword-face</code>. It doesn&#39;t affect the underlying code
+at all, just makes it look nicer. For the <code>\\|</code> I chose <code>∨</code> - the
+<em>logical or</em> character.</p>
 
-<p>In <a href="/2014/12/24/light-it-up/">one of the earlier posts</a>,
-I was discussing the implementation of an Emacs Lisp lexer for
-<a href="http://pygments.org/">Pygments</a>. Here, I&#39;ll show how to install the
-update and get nicely highlighted code in a pdf via the
-<a href="http://code.google.com/p/minted">minted</a> LaTeX package.</p>
+<h2>The code</h2>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">fontify-glyph</span> <span class="p">(</span><span class="nv">item</span> <span class="nv">glyph</span><span class="p">)</span>
+  <span class="o">`</span><span class="p">((</span><span class="o">,</span><span class="nv">item</span>
+     <span class="p">(</span><span class="mi">0</span> <span class="nv">font-lock-keyword-face</span> <span class="no">t</span><span class="p">)</span>
+     <span class="p">(</span><span class="mi">0</span> <span class="p">(</span><span class="k">prog1</span>
+            <span class="p">(</span><span class="nv">compose-region</span> <span class="p">(</span><span class="nf">match-beginning</span> <span class="mi">0</span><span class="p">)</span>
+                            <span class="p">(</span><span class="nf">match-end</span> <span class="mi">0</span><span class="p">)</span>
+                            <span class="o">,</span><span class="nv">glyph</span><span class="p">)</span> <span class="no">nil</span><span class="p">)))))</span>
 
-<h2>The install</h2>
-
-<p>Assuming that you are on a Debian-related system:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">sudo apt-get install mercurial
-mkdir ~/git &amp;&amp; cd ~/git
-hg clone https://bitbucket.org/abo-abo/pygments-main
-cd pygments-main
-make mapfiles
-sudo python setup.py install
+<span class="p">(</span><span class="nv">font-lock-add-keywords</span> <span class="ss">&#39;emacs-lisp-mode</span>
+                        <span class="p">(</span><span class="nv">fontify-glyph</span> <span class="s">&quot;\\\\\\\\|&quot;</span> <span class="s">&quot;∨&quot;</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">font-lock-add-keywords</span> <span class="ss">&#39;emacs-lisp-mode</span>
+                        <span class="p">(</span><span class="nv">fontify-glyph</span> <span class="s">&quot;\\\\\\\\(&quot;</span> <span class="s">&quot;(&quot;</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">font-lock-add-keywords</span> <span class="ss">&#39;emacs-lisp-mode</span>
+                        <span class="p">(</span><span class="nv">fontify-glyph</span> <span class="s">&quot;\\\\\\\\)&quot;</span> <span class="s">&quot;)&quot;</span><span class="p">))</span>
 </code></pre></div>
-<p>And, of course, I&#39;m assuming that you already have TeX Live installed.
-I&#39;m not too sophisticated about it, so I just install everything:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">sudo apt-get install texlive-full
+<h2>How it looks like</h2>
+
+<p>At first, I wanted to just inline <a href="/download/elisp-regex.png">a picture</a>,
+but then I thought that <code>htmlize-buffer</code> would be able to handle it.
+It didn&#39;t, so I just edited a small snippet by hand:</p>
+
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">or</span> <span class="p">(</span><span class="nf">string-match</span> <span class="s">&quot;^<span class="nb">(</span>[^\n%|]*?<span class="nb">)</span>|<span class="nb">(</span>([^\n]*<span class="nb">)</span>?$&quot;</span> <span class="nv">str</span><span class="p">)</span>
+    <span class="p">(</span><span class="nf">string-match</span> <span class="s">&quot;^<span class="nb">(</span>[^\n%|]*?<span class="nb">)</span><span class="nb">(</span>%[^\n]*<span class="nb">)</span>?$&quot;</span> <span class="nv">str</span><span class="p">))</span>
 </code></pre></div>
-<h2>The result</h2>
 
-<p>So here I took some code from
-<a href="/2014/12/25/ode-to-toggle/">a previous post</a> and
-copy-pasted it into <a href="/download/minty.org">minty.org</a> file.
-And here&#39;s the result of the PDF export (<kbd>C-c C-e lo</kbd>):
-<a href="/download/minty.pdf">minty.pdf</a>.</p>
-
-<h2>The red tape</h2>
-
-<p><code>org-mode</code> had trouble exporting on my laptop until I did this:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">cd /usr/bin/
-sudo ln -s /usr/local/texlive/2013/bin/x86_64-linux/pdflatex
-</code></pre></div>
-<p>Also be mindful of the <code>-shell-escape</code> flag to <code>pdflatex</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">org-latex-pdf-process</span>
-      <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f&quot;</span>
-        <span class="s">&quot;pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f&quot;</span>
-        <span class="s">&quot;pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f&quot;</span><span class="p">))</span>
+<p>It&#39;s really satisfying to see those escape chars vanish as I type in
+a capture group in the regex, especially with the help of
+<a href="https://github.com/abo-abo/lispy">lispy-mode</a>.
+Here are some relevant tests for the regex support:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">should</span> <span class="p">(</span><span class="nv">string=</span> <span class="p">(</span><span class="nv">lispy-with</span> <span class="s">&quot;\&quot;a regex \\\\|\&quot;&quot;</span> <span class="s">&quot;(&quot;</span><span class="p">)</span>
+                 <span class="s">&quot;\&quot;a regex \\\\(|\\\\)\&quot;&quot;</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">should</span> <span class="p">(</span><span class="nv">string=</span> <span class="p">(</span><span class="nv">lispy-with</span> <span class="s">&quot;\&quot;\\\\(|foo\\\\)\&quot;&quot;</span> <span class="s">&quot;\C-?&quot;</span><span class="p">)</span>
+                 <span class="s">&quot;\&quot;|foo\&quot;&quot;</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">should</span> <span class="p">(</span><span class="nv">string=</span> <span class="p">(</span><span class="nv">lispy-with</span> <span class="s">&quot;\&quot;\\\\(foo\\\\)|\&quot;&quot;</span> <span class="s">&quot;\C-?&quot;</span><span class="p">)</span>
+                 <span class="s">&quot;\&quot;foo|\&quot;&quot;</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">should</span> <span class="p">(</span><span class="nv">string=</span> <span class="p">(</span><span class="nv">lispy-with</span> <span class="s">&quot;\&quot;|\\\\(foo\\\\)\&quot;&quot;</span> <span class="s">&quot;\C-d&quot;</span><span class="p">)</span>
+                 <span class="s">&quot;\&quot;|foo\&quot;&quot;</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">should</span> <span class="p">(</span><span class="nv">string=</span> <span class="p">(</span><span class="nv">lispy-with</span> <span class="s">&quot;\&quot;\\\\(foo|\\\\)\&quot;&quot;</span> <span class="s">&quot;\C-d&quot;</span><span class="p">)</span>
+                 <span class="s">&quot;\&quot;foo|\&quot;&quot;</span><span class="p">))</span>
 </code></pre></div>
 </div>
 
@@ -233,16 +238,6 @@ sudo ln -s /usr/local/texlive/2013/bin/x86_64-linux/pdflatex
     
       <li>
         <h3>
-          <!-- <a href="//2015/01/11/pretty-elisp-regex/"> -->
-          <a href="/2015/01/11/pretty-elisp-regex/">
-            Making Elisp regex look nicer
-            <small>11 Jan 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
           <!-- <a href="//2015/01/10/dired-ansi-term/"> -->
           <a href="/2015/01/10/dired-ansi-term/">
             dired and ansi-term&#58; BFF
@@ -257,6 +252,16 @@ sudo ln -s /usr/local/texlive/2013/bin/x86_64-linux/pdflatex
           <a href="/2015/01/09/ido-find-file-tilde/">
             tilde in ido-find-file
             <small>09 Jan 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/01/08/org-protocol-2/"> -->
+          <a href="/2015/01/08/org-protocol-2/">
+            My org-protocol setup, part 2.
+            <small>08 Jan 2015</small>
           </a>
         </h3>
       </li>

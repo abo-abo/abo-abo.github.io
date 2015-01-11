@@ -4,13 +4,67 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-01-10T15:16:06+01:00</updated>
+ <updated>2015-01-11T15:36:56+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Making Elisp regex look nicer</title>
+   <link href="http://oremacs.com/2015/01/11/pretty-elisp-regex/"/>
+   <updated>2015-01-11T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/01/11/pretty-elisp-regex</id>
+   <content type="html">&lt;p&gt;This is just a small improvement to make e.g.  &lt;code&gt;\\(&lt;/code&gt; show up in
+regular expressions without the escape chars, but instead fontified
+with &lt;code&gt;font-lock-keyword-face&lt;/code&gt;. It doesn&amp;#39;t affect the underlying code
+at all, just makes it look nicer. For the &lt;code&gt;\\|&lt;/code&gt; I chose &lt;code&gt;∨&lt;/code&gt; - the
+&lt;em&gt;logical or&lt;/em&gt; character.&lt;/p&gt;
+
+&lt;h2&gt;The code&lt;/h2&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fontify-glyph&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;item&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;glyph&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;item&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;font-lock-keyword-face&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;prog1&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;compose-region&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;match-beginning&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;match-end&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                            &lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;glyph&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;font-lock-add-keywords&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;emacs-lisp-mode&lt;/span&gt;
+                        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;fontify-glyph&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;\\\\\\\\|&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;∨&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;font-lock-add-keywords&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;emacs-lisp-mode&lt;/span&gt;
+                        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;fontify-glyph&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;\\\\\\\\(&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;(&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;font-lock-add-keywords&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;emacs-lisp-mode&lt;/span&gt;
+                        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;fontify-glyph&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;\\\\\\\\)&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;)&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;How it looks like&lt;/h2&gt;
+
+&lt;p&gt;At first, I wanted to just inline &lt;a href=&quot;/download/elisp-regex.png&quot;&gt;a picture&lt;/a&gt;,
+but then I thought that &lt;code&gt;htmlize-buffer&lt;/code&gt; would be able to handle it.
+It didn&amp;#39;t, so I just edited a small snippet by hand:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;or&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;string-match&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;^&lt;span class=&quot;nb&quot;&gt;(&lt;/span&gt;[^\n%|]*?&lt;span class=&quot;nb&quot;&gt;)&lt;/span&gt;|&lt;span class=&quot;nb&quot;&gt;(&lt;/span&gt;([^\n]*&lt;span class=&quot;nb&quot;&gt;)&lt;/span&gt;?$&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;string-match&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;^&lt;span class=&quot;nb&quot;&gt;(&lt;/span&gt;[^\n%|]*?&lt;span class=&quot;nb&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;(&lt;/span&gt;%[^\n]*&lt;span class=&quot;nb&quot;&gt;)&lt;/span&gt;?$&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;It&amp;#39;s really satisfying to see those escape chars vanish as I type in
+a capture group in the regex, especially with the help of
+&lt;a href=&quot;https://github.com/abo-abo/lispy&quot;&gt;lispy-mode&lt;/a&gt;.
+Here are some relevant tests for the regex support:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;should&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;string=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;lispy-with&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;\&amp;quot;a regex \\\\|\&amp;quot;&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;(&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                 &lt;span class=&quot;s&quot;&gt;&amp;quot;\&amp;quot;a regex \\\\(|\\\\)\&amp;quot;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;should&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;string=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;lispy-with&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;\&amp;quot;\\\\(|foo\\\\)\&amp;quot;&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;\C-?&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                 &lt;span class=&quot;s&quot;&gt;&amp;quot;\&amp;quot;|foo\&amp;quot;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;should&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;string=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;lispy-with&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;\&amp;quot;\\\\(foo\\\\)|\&amp;quot;&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;\C-?&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                 &lt;span class=&quot;s&quot;&gt;&amp;quot;\&amp;quot;foo|\&amp;quot;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;should&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;string=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;lispy-with&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;\&amp;quot;|\\\\(foo\\\\)\&amp;quot;&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;\C-d&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                 &lt;span class=&quot;s&quot;&gt;&amp;quot;\&amp;quot;|foo\&amp;quot;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;should&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;string=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;lispy-with&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;\&amp;quot;\\\\(foo|\\\\)\&amp;quot;&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;\C-d&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                 &lt;span class=&quot;s&quot;&gt;&amp;quot;\&amp;quot;foo|\&amp;quot;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
+ </entry>
  
  <entry>
    <title>dired and ansi-term&#58; BFF</title>
