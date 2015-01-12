@@ -4,13 +4,61 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-01-11T15:36:56+01:00</updated>
+ <updated>2015-01-12T18:53:35+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>File sizes in dired</title>
+   <link href="http://oremacs.com/2015/01/12/dired-file-size/"/>
+   <updated>2015-01-12T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/01/12/dired-file-size</id>
+   <content type="html">&lt;p&gt;Today, I&amp;#39;ll continue with the trend of posting a small piece of my
+config when I don&amp;#39;t have the time to post something more substantial.&lt;/p&gt;
+
+&lt;h2&gt;Some code&lt;/h2&gt;
+
+&lt;p&gt;This one looks nice, although it only works on systems with &lt;code&gt;/usr/bin/du&lt;/code&gt;,
+which actually comprise 100% of the systems that I use:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dired-get-size&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;files&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;dired-get-marked-files&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;with-temp-buffer&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;apply&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;call-process&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;/usr/bin/du&amp;quot;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;-sch&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;files&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;message&lt;/span&gt;
+       &lt;span class=&quot;s&quot;&gt;&amp;quot;Size of all marked files: %s&amp;quot;&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;progn&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;re-search-backward&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;\\(^[0-9.,]+[A-Za-z]+\\).*total$&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;match-string&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;On doing a search, turns out that I got this code from
+&lt;a href=&quot;http://www.emacswiki.org/emacs/DiredGetFileSize&quot;&gt;the wiki&lt;/a&gt; at some
+point.  I can confirm that, unlike some of the other code on the wiki,
+this one still works as advertised: you can use it on a directory or
+on a series of marked files and directories.&lt;/p&gt;
+
+&lt;h2&gt;Standard &lt;code&gt;dired&lt;/code&gt; marking&lt;/h2&gt;
+
+&lt;p&gt;In &lt;code&gt;dired&lt;/code&gt;, you can:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;mark an item with &lt;kbd&gt;m&lt;/kbd&gt;&lt;/li&gt;
+&lt;li&gt;unmark an item with &lt;kbd&gt;DEL&lt;/kbd&gt;&lt;/li&gt;
+&lt;li&gt;inverse selection with &lt;kbd&gt;t&lt;/kbd&gt;&lt;/li&gt;
+&lt;li&gt;unmark everything with &lt;kbd&gt;U&lt;/kbd&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Compared to this, the selection with the mouse and the control and
+shift keys that many file browsers use looks like kindergarten.&lt;/p&gt;
+
+&lt;p&gt;This new action, getting the size of marked things, I&amp;#39;ve bound to &lt;kbd&gt;z&lt;/kbd&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dired-mode-map&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;z&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;dired-get-size&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
+ </entry>
  
  <entry>
    <title>Making Elisp regex look nicer</title>
