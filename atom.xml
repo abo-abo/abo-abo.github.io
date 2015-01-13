@@ -4,13 +4,57 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-01-12T18:53:35+01:00</updated>
+ <updated>2015-01-13T16:50:50+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Even more dired options</title>
+   <link href="http://oremacs.com/2015/01/13/dired-options/"/>
+   <updated>2015-01-13T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/01/13/dired-options</id>
+   <content type="html">&lt;p&gt;I&amp;#39;ve been posting a lot about &lt;code&gt;dired&lt;/code&gt; lately, and with good cause.  A
+lot of people say that &lt;code&gt;org-mode&lt;/code&gt; is the killer app of Emacs, but
+&lt;code&gt;dired&lt;/code&gt; should be in that group as well, especially if you count
+&lt;code&gt;tramp&lt;/code&gt; as part of &lt;code&gt;dired&lt;/code&gt;. Below, I&amp;#39;ll list a few dired options in my
+config that deviate from the defaults.&lt;/p&gt;
+
+&lt;h2&gt;&lt;code&gt;dired-listing-switches&lt;/code&gt;&lt;/h2&gt;
+
+&lt;p&gt;This is the essence of what &lt;code&gt;dired&lt;/code&gt; presents and how it presents it.
+A great thing about it is that these are just the &lt;code&gt;ls&lt;/code&gt; switches, so
+you can look them up with &lt;code&gt;info ls&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dired-listing-switches&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;-laGh1v --group-directories-first&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;l&lt;/code&gt;: Is the only mandatory one.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;a&lt;/code&gt;: Means to list invisible files.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;G&lt;/code&gt;: Don&amp;#39;t show group information. These days, when there are more
+laptops than people, the group info is rarely useful.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;h&lt;/code&gt;: Human readable sizes, such as &lt;strong&gt;M&lt;/strong&gt; for mebibytes.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;1v&lt;/code&gt;: Affects the sorting of digits, hopefully in a positive way.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--group-directories-first&lt;/code&gt;: self-explanatory, I like to have the directories on the top,
+separate from the files.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;On recursion&lt;/h2&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dired-recursive-copies&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;always&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dired-recursive-deletes&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;always&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;These settings make dired skip the confirmation when you can to
+copy or delete a directory that contains other directories.
+What&amp;#39;s the worse that could happen, right?&lt;/p&gt;
+
+&lt;pre&gt;
+&lt;span class=&quot;diff-indicator-removed&quot;&gt;-  rm -rf /usr /lib/nvidia-current/xorg/xorg&lt;/span&gt;
+&lt;span class=&quot;diff-indicator-added&quot;&gt;+  rm -rf /usr/lib/nvidia-current/xorg/xorg&lt;/span&gt;
+&lt;/pre&gt;
+</content>
+ </entry>
  
  <entry>
    <title>File sizes in dired</title>

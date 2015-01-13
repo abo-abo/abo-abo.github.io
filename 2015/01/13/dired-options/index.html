@@ -11,7 +11,7 @@
 
   <title>
     
-      Monkeying around with JavaScript &middot; (or emacs
+      Even more dired options &middot; (or emacs
     
   </title>
 
@@ -172,70 +172,44 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Monkeying around with JavaScript</h1>
-  <span class="post-date">29 Dec 2014</span>
-  <h2>Exciting encounter</h2>
+  <h1 class="post-title">Even more dired options</h1>
+  <span class="post-date">13 Jan 2015</span>
+  <p>I&#39;ve been posting a lot about <code>dired</code> lately, and with good cause.  A
+lot of people say that <code>org-mode</code> is the killer app of Emacs, but
+<code>dired</code> should be in that group as well, especially if you count
+<code>tramp</code> as part of <code>dired</code>. Below, I&#39;ll list a few dired options in my
+config that deviate from the defaults.</p>
 
-<p>Recently, I happened upon a wonderful blog called
-<a href="http://axisofeval.blogspot.nl">The Axis of Eval</a>.  I knew that I&#39;d
-love it just when I read the name. <a href="/">(or emacs</a> pales in comparison,
-but I couldn&#39;t just sit on my hands for months or years while thinking
-up a perfect blog name. If you think of a blog name as awesome as &quot;The
-Axis of Eval&quot; and are willing to let me use it, I&#39;ll probably make the
-switch.</p>
+<h2><code>dired-listing-switches</code></h2>
 
-<p>The blog did not disappoint, featuring gems like this:</p>
-
-<blockquote>
-<p>In the Lisp world, new languages are built by combining large,
-battle-tested building blocks, and polishing or updating them when
-needed, instead of starting over from toothpicks and double-sided
-duct tape. A large Lisp like Common Lisp is like a toolchain of
-decades-old tools that have proven their worth, and have been
-codified in standards, folklore, and implementations.</p>
-</blockquote>
-
-<p>The only thing in the way of extracting information and enjoyment from
-this blog was the horrendous theme of black background, white
-foreground and magenta links. Plus the RSS was kind of quirky, and I
-couldn&#39;t just feed all of it into
-<a href="https://github.com/skeeto/elfeed">Elfeed</a>.</p>
-
-<h2>Greasemonkey to the rescue!</h2>
-
-<p>In the previous post I&#39;ve mentioned that, in addition to using
-<a href="http://www.gnu.org/software/emacs/">the best editor</a>, I&#39;m using
-<a href="https://www.mozilla.org/en-US/firefox/new/">the best browser</a>.  Well,
-this particular best browser has an extension called
-<a href="https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/">Greasemonkey</a>
-that allows you to automatically run your own JavaScript on certain
-websites.</p>
-
-<p>I&#39;m not very proficient in JavaScript, the following code I just found
-by searching around. The part to note is the <code>@include</code> - the pattern
-of website names for which this script should be run automatically.</p>
-<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="c1">// ==UserScript==</span>
-<span class="c1">// @name        background</span>
-<span class="c1">// @namespace   abo-abo</span>
-<span class="c1">// @include     http://axisofeval.blogspot.nl/*</span>
-<span class="c1">// @version     1</span>
-<span class="c1">// @grant       none</span>
-<span class="c1">// ==/UserScript==</span>
-<span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-    <span class="nb">document</span>
-        <span class="p">.</span><span class="nx">body</span>
-        <span class="p">.</span><span class="nx">setAttribute</span><span class="p">(</span><span class="s2">&quot;style&quot;</span><span class="p">,</span>
-                      <span class="s2">&quot;background-color: #ffffff; color:#000&quot;</span><span class="p">);</span>
-    <span class="kd">var</span> <span class="nx">nodesArray</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementsByTagName</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">);</span>
-    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">nodesArray</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">nodesArray</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">style</span><span class="p">.</span><span class="nx">color</span> <span class="o">=</span> <span class="s1">&#39;red&#39;</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">})();</span>
+<p>This is the essence of what <code>dired</code> presents and how it presents it.
+A great thing about it is that these are just the <code>ls</code> switches, so
+you can look them up with <code>info ls</code>.</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">dired-listing-switches</span> <span class="s">&quot;-laGh1v --group-directories-first&quot;</span><span class="p">)</span>
 </code></pre></div>
-<p>I can barely stand to look at it. How could you take Scheme and turn
-it into this monstrosity? Such a shame. But it works, so I guess
-everyone should learn JavaScript. All hail the mighty
-<s>HypnoToad</s> JavaScript!</p>
+<ul>
+<li><code>l</code>: Is the only mandatory one.</li>
+<li><code>a</code>: Means to list invisible files.</li>
+<li><code>G</code>: Don&#39;t show group information. These days, when there are more
+laptops than people, the group info is rarely useful.</li>
+<li><code>h</code>: Human readable sizes, such as <strong>M</strong> for mebibytes.</li>
+<li><code>1v</code>: Affects the sorting of digits, hopefully in a positive way.</li>
+<li><code>--group-directories-first</code>: self-explanatory, I like to have the directories on the top,
+separate from the files.</li>
+</ul>
+
+<h2>On recursion</h2>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">dired-recursive-copies</span> <span class="ss">&#39;always</span><span class="p">)</span>
+<span class="p">(</span><span class="k">setq</span> <span class="nv">dired-recursive-deletes</span> <span class="ss">&#39;always</span><span class="p">)</span>
+</code></pre></div>
+<p>These settings make dired skip the confirmation when you can to
+copy or delete a directory that contains other directories.
+What&#39;s the worse that could happen, right?</p>
+
+<pre>
+<span class="diff-indicator-removed">-  rm -rf /usr /lib/nvidia-current/xorg/xorg</span>
+<span class="diff-indicator-added">+  rm -rf /usr/lib/nvidia-current/xorg/xorg</span>
+</pre>
 
 </div>
 
@@ -254,16 +228,6 @@ everyone should learn JavaScript. All hail the mighty
     
       <li>
         <h3>
-          <!-- <a href="//2015/01/13/dired-options/"> -->
-          <a href="/2015/01/13/dired-options/">
-            Even more dired options
-            <small>13 Jan 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
           <!-- <a href="//2015/01/12/dired-file-size/"> -->
           <a href="/2015/01/12/dired-file-size/">
             File sizes in dired
@@ -278,6 +242,16 @@ everyone should learn JavaScript. All hail the mighty
           <a href="/2015/01/11/pretty-elisp-regex/">
             Making Elisp regex look nicer
             <small>11 Jan 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/01/10/dired-ansi-term/"> -->
+          <a href="/2015/01/10/dired-ansi-term/">
+            dired and ansi-term&#58; BFF
+            <small>10 Jan 2015</small>
           </a>
         </h3>
       </li>
