@@ -11,7 +11,7 @@
 
   <title>
     
-      Time flies &middot; (or emacs
+      Zoom in / out with style &middot; (or emacs
     
   </title>
 
@@ -176,76 +176,54 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Time flies</h1>
-  <span class="post-date">03 Jan 2015</span>
-  <p>This is the 15th post on this blog. Thankfully, no heart attacks after
-the 13th one or anything.  So I&#39;ll commemorate it with a post on
-dealing with dates in <code>calc</code>.</p>
+  <h1 class="post-title">Zoom in / out with style</h1>
+  <span class="post-date">14 Jan 2015</span>
+  <p>I don&#39;t usually zoom a lot, typically I do it to size up other
+people&#39;s functions. Then, I zoom-out a couple times in a row until the
+function fits on the screen. Sometimes, I overshoot the zoom-out, and
+I have to zoom-in instead. I have <code>text-scale-increase</code> bound to
+<kbd>&lt;f2&gt; g</kbd> and <code>text-scale-decrease</code> bound to
+<kbd>&lt;f2&gt; l</kbd>.</p>
 
-<h2>How much time has passed since I started this blog?</h2>
+<p>Below, I&#39;ll demonstrate how to call those two commands interchangeably
+with e.g. <kbd>&lt;f2&gt; g g g l g g l</kbd>, i.e. omitting the
+<kbd>&lt;f2&gt;</kbd> prefix.</p>
 
-<ol>
-<li><p>Open <code>calc</code> with <kbd>C-x **</kbd>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">--- Emacs Calculator Mode ---
-    .
-</code></pre></div></li>
-<li><p>Enter <code>20 Dec 2014</code> with <kbd>&#39;&lt;12 20 14</kbd><kbd>RET</kbd>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">--- Emacs Calculator Mode ---
-1:  &lt;Sat Dec 20, 2014&gt;
-    .
-</code></pre></div></li>
-<li><p>Enter current time with <kbd>tN</kbd>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">--- Emacs Calculator Mode ---
-2:  &lt;Sat Dec 20, 2014&gt;
-1:  &lt;11:56:27am Sat Jan 3, 2015&gt;
-    .
-</code></pre></div></li>
-<li><p>Subtract with <kbd>-</kbd>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">--- Emacs Calculator Mode ---
-1:  -14.498044
-    .
-</code></pre></div></li>
-</ol>
+<h2>Define repeatable command</h2>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">def-rep-command</span> <span class="p">(</span><span class="nv">alist</span><span class="p">)</span>
+  <span class="s">&quot;Return a lambda that calls the first function of ALIST.</span>
+<span class="s">It sets the transient map to all functions of ALIST.&quot;</span>
+  <span class="p">(</span><span class="nb">lexical-let</span> <span class="p">((</span><span class="nv">keymap</span> <span class="p">(</span><span class="nf">make-sparse-keymap</span><span class="p">))</span>
+                <span class="p">(</span><span class="nv">func</span> <span class="p">(</span><span class="nv">cdar</span> <span class="nv">alist</span><span class="p">)))</span>
+    <span class="p">(</span><span class="nf">mapc</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+            <span class="p">(</span><span class="nf">define-key</span> <span class="nv">keymap</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nf">cdr</span> <span class="nv">x</span><span class="p">)))</span>
+          <span class="nv">alist</span><span class="p">)</span>
+    <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">arg</span><span class="p">)</span>
+      <span class="p">(</span><span class="k">interactive</span> <span class="s">&quot;p&quot;</span><span class="p">)</span>
+      <span class="p">(</span><span class="nf">funcall</span> <span class="nv">func</span> <span class="nv">arg</span><span class="p">)</span>
+      <span class="p">(</span><span class="nv">set-transient-map</span> <span class="nv">keymap</span> <span class="no">t</span><span class="p">))))</span>
+</code></pre></div>
+<p>This is a pretty simple function that takes an alist of keys and
+commands, and returns a lambda that calls the first command and sets
+the transient map to call the first and other commands.  The way the
+transient map works, it takes priority over almost all maps, but
+disappears as soon as you press something that doesn&#39;t belong to it.</p>
 
-<p>This means that, if I want to maintain my one-post-per-day streak, I
-still have half of a day to post this. Unfortunately, I have only an
-old version of the blog repository on this machine, and the current
-one is on a laptop at home. So I&#39;ll post this in the evening.</p>
-
-<h2>Did you know what 2015 looks like in binary?</h2>
-
-<p>In your current <code>calc</code> session,</p>
-
-<ol>
-<li><p>Enter <kbd>2015</kbd> <kbd>SPC</kbd>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">--- Emacs Calculator Mode ---
-2:  -14.498044
-1:  2015
-    .
-</code></pre></div></li>
-<li><p>Switch to binary with <kbd>d2</kbd>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">--- Emacs Calculator Mode ---
-2:  -2#1110.011111110111111111001111110001
-1:  2#11111011111
-.
-</code></pre></div></li>
-<li><p>Wow, a palindrome. It&#39;s too spooky, switch back to decimal with <kbd>d0</kbd>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">--- Emacs Calculator Mode ---
-2:  -14.498044
-1:  2015
-    .
-</code></pre></div></li>
-</ol>
-
-<p>If you&#39;re new to <code>calc</code>, you&#39;ll probably wonder why you can&#39;t enter
-negative numbers with <kbd>-</kbd>. It can be done with <kbd>_</kbd>,
-just like in
-<a href="http://www.jsoftware.com/help/primer/negative_number.htm">J</a>. Find
-out more in the
-<a href="http://www.gnu.org/software/emacs/manual/html_mono/calc.html">info</a>;
-the
-<a href="http://www.gnu.org/software/emacs/manual/html_mono/calc.html#Tutorial">interactive tutorial</a>
-is absolutely excellent.</p>
+<h2>The zoom-in / zoom-out use case</h2>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;&lt;f2&gt; g&quot;</span><span class="p">)</span>
+                <span class="p">(</span><span class="nv">def-rep-command</span>
+                    <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;g&quot;</span> <span class="o">.</span> <span class="nv">text-scale-increase</span><span class="p">)</span>
+                      <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="o">.</span> <span class="nv">text-scale-decrease</span><span class="p">))))</span>
+<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;&lt;f2&gt; l&quot;</span><span class="p">)</span>
+                <span class="p">(</span><span class="nv">def-rep-command</span>
+                    <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;l&quot;</span> <span class="o">.</span> <span class="nv">text-scale-decrease</span><span class="p">)</span>
+                      <span class="p">(</span><span class="s">&quot;g&quot;</span> <span class="o">.</span> <span class="nv">text-scale-increase</span><span class="p">))))</span>
+</code></pre></div>
+<p>And this is it. A nice thing about this setup is that I don&#39;t have to
+think about the zoom state and quitting it: I&#39;ll quit it automatically
+as soon as I press anything other than <kbd>l</kbd> or <kbd>g</kbd>.
+Moreover, the command that exited the zoom state will be executed as
+usual.</p>
 
 </div>
 
@@ -264,16 +242,6 @@ is absolutely excellent.</p>
     
       <li>
         <h3>
-          <!-- <a href="//2015/01/14/repeatable-commands/"> -->
-          <a href="/2015/01/14/repeatable-commands/">
-            Zoom in / out with style
-            <small>14 Jan 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
           <!-- <a href="//2015/01/13/dired-options/"> -->
           <a href="/2015/01/13/dired-options/">
             Even more dired options
@@ -288,6 +256,16 @@ is absolutely excellent.</p>
           <a href="/2015/01/12/dired-file-size/">
             File sizes in dired
             <small>12 Jan 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/01/11/pretty-elisp-regex/"> -->
+          <a href="/2015/01/11/pretty-elisp-regex/">
+            Making Elisp regex look nicer
+            <small>11 Jan 2015</small>
           </a>
         </h3>
       </li>
