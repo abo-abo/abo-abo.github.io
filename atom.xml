@@ -4,13 +4,110 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-01-14T17:03:16+01:00</updated>
+ <updated>2015-01-15T15:24:20+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>C++ - a dot inserts last var plus dot</title>
+   <link href="http://oremacs.com/2015/01/15/c++-smart-dot/"/>
+   <updated>2015-01-15T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/01/15/c++-smart-dot</id>
+   <content type="html">&lt;p&gt;It is very much in the spirit of C++ to pull an object into existence
+with e.g. a constructor definition and then poke and prod it with
+various method calls. Most of the time, the dot will have the object
+name on the left. So why not automatically insert the object name each
+time I press the dot? Below, I&amp;#39;ll show a code that does exactly that.&lt;/p&gt;
+
+&lt;h2&gt;The dot command&lt;/h2&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c++-smart-dot&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Insert a dot or an object name plus dot when appropriate.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;var-name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;and&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;looking-back&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;^[ \t]*&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+             &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;var-name&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;c++-get-recent-var&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;insert&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;var-name&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;.&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;insert&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;.&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This one is pretty simple: if we are at the beginning of the line,
+optionally with some spaces or (ugh) tabs before the point, then try
+to insert the object name along with a dot.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;#39;s how to bind it:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;eval-after-load&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;cc-mode&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c++-mode-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;.&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;c++-smart-dot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;How to get the recent variable&lt;/h2&gt;
+
+&lt;p&gt;This code doesn&amp;#39;t aim to be thorough, it&amp;#39;s just a hack that
+works reasonably well.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defconst&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c++-var-regex&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;[A-Za-z][A-Za-z0-9_]*&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;The regex for C++ variable name.&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c++-get-recent-var&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Return the closest thing that looks like an object.&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;The search is performed backwards through code.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;save-excursion&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;or&lt;/span&gt;
+           &lt;span class=&quot;c1&quot;&gt;;; variable dot chain&lt;/span&gt;
+           &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;looking-back&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot; \\(%s\\)\\.%s.*\n[\t ]*&amp;quot;&lt;/span&gt;
+                    &lt;span class=&quot;nv&quot;&gt;c++-var-regex&lt;/span&gt;
+                    &lt;span class=&quot;nv&quot;&gt;c++-var-regex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+           &lt;span class=&quot;c1&quot;&gt;;; variable constructor init&lt;/span&gt;
+           &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;looking-back&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;[\t ]+\\(%s\\)\\(?:([^)]*)\\)?;[\t\n ]*&amp;quot;&lt;/span&gt;
+                    &lt;span class=&quot;nv&quot;&gt;c++-var-regex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+           &lt;span class=&quot;c1&quot;&gt;;; variable dot, first on line&lt;/span&gt;
+           &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;re-search-backward&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;^[ \t]*\\(%s\\)\\.&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c++-var-regex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;match-string-no-properties&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;If you&amp;#39;re a stickler for performance and you don&amp;#39;t want to call format a bunch of times,
+you can amend the code like this:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defalias&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;c++-get-recent-var&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;byte-compile&lt;/span&gt;
+     &lt;span class=&quot;o&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;save-excursion&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;when&lt;/span&gt;
+              &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;or&lt;/span&gt;
+               &lt;span class=&quot;c1&quot;&gt;;; variable dot chain&lt;/span&gt;
+               &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;looking-back&lt;/span&gt;
+                &lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;format&lt;/span&gt;
+                  &lt;span class=&quot;s&quot;&gt;&amp;quot; \\(%s\\)\\.%s.*\n[\t ]*&amp;quot;&lt;/span&gt;
+                  &lt;span class=&quot;nv&quot;&gt;c++-var-regex&lt;/span&gt;
+                  &lt;span class=&quot;nv&quot;&gt;c++-var-regex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+               &lt;span class=&quot;c1&quot;&gt;;; variable constructor init&lt;/span&gt;
+               &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;looking-back&lt;/span&gt;
+                &lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;format&lt;/span&gt;
+                  &lt;span class=&quot;s&quot;&gt;&amp;quot;[\t ]+\\(%s\\)\\(?:([^)]*)\\)?;[\t\n ]*&amp;quot;&lt;/span&gt;
+                  &lt;span class=&quot;nv&quot;&gt;c++-var-regex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+               &lt;span class=&quot;c1&quot;&gt;;; variable dot, first on line&lt;/span&gt;
+               &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;re-search-backward&lt;/span&gt;
+                &lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;^[ \t]*\\(%s\\)\\.&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c++-var-regex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;match-string-no-properties&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Return the closest thing that looks like an object.&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;The search is performed backwards through code.&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The thing above looks slightly ugly. I&amp;#39;m open to suggestions to make
+it look nicer.&lt;/p&gt;
+
+&lt;h2&gt;The sample application&lt;/h2&gt;
+
+&lt;p&gt;For the happy people that have never seen C++:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-C++&quot; data-lang=&quot;C++&quot;&gt;&lt;span class=&quot;n&quot;&gt;DataOut&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dim&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;data_out&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;data_out&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;attach_dof_handler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dof_handler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;data_out&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add_data_vector&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;solution&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;u&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;data_out&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;build_patches&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Here, after defining an object &lt;code&gt;data_out&lt;/code&gt;, I insert it subsequently
+with just &lt;kbd&gt;.&lt;/kbd&gt;.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Zoom in / out with style</title>
@@ -99,9 +196,9 @@ separate from the files.&lt;/li&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dired-recursive-copies&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;always&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dired-recursive-deletes&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;always&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;These settings make dired skip the confirmation when you can to
-copy or delete a directory that contains other directories.
-What&amp;#39;s the worse that could happen, right?&lt;/p&gt;
+&lt;p&gt;These settings make dired skip the confirmation when you copy or
+delete a directory that contains other directories.  What&amp;#39;s the worse
+that could happen, right?&lt;/p&gt;
 
 &lt;pre&gt;
 &lt;span class=&quot;diff-indicator-removed&quot;&gt;-  rm -rf /usr /lib/nvidia-current/xorg/xorg&lt;/span&gt;

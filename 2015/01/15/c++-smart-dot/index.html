@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      C++ - a dot inserts last var plus dot &middot; (or emacs
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="/public/css/octicons.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Scripts -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body class="layout-reverse theme-base-08">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <!-- <div class="sidebar-item"> -->
+  <!--   <p>unused</p> -->
+  <!-- </div> -->
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about/">About</a>
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/archive/">Archive</a>
+        
+      
+    
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+
+    <div id="github" class="sidebar-nav-item">
+      <button type="button"
+              class="btn btn-info"
+              data-toggle="collapse"
+              data-target="#github-projects">
+        <span class="octicon octicon-mark-github"></span> My Emacs Projects
+      </button>
+      <div id="github-projects" class="collapse">
+        <ul style="margin-bottom:0em;">
+          <li>
+            <a href="https://github.com/abo-abo/lispy">lispy</a>
+            <p>vi-like Paredit</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/worf">worf</a>
+            <p>vi-like bindings for org-mode</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-window">ace-window</a>
+            <p>switch windows with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-link">ace-link</a>
+            <p>follow links with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/function-args">function-args</a>
+            <p>enhance <code>CEDET</code> for C++</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/helm-make">helm-make</a>
+            <p>select a Makefile target with <code>helm</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/make-it-so">make-it-so</a>
+            <p>transform files with Makefile recipes</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/org-download">org-download</a>
+            <p>drag-and-drop images to <code>org-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo?tab=repositories">
+              <span class="octicon octicon-octoface"></span>
+              and more
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
+
+  <div class="sidebar-item">
+    <p>
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.0/">
+        <img alt="Creative Commons License"
+             style="border-width:0;opacity: 0.3;"
+             src="https://i.creativecommons.org/l/by-nc-sa/2.0/88x31.png"/>
+      </a>
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">(or emacs</a>
+            <small>irrelevant)</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">C++ - a dot inserts last var plus dot</h1>
+  <span class="post-date">15 Jan 2015</span>
+  <p>It is very much in the spirit of C++ to pull an object into existence
+with e.g. a constructor definition and then poke and prod it with
+various method calls. Most of the time, the dot will have the object
+name on the left. So why not automatically insert the object name each
+time I press the dot? Below, I&#39;ll show a code that does exactly that.</p>
+
+<h2>The dot command</h2>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">c++-smart-dot</span> <span class="p">()</span>
+  <span class="s">&quot;Insert a dot or an object name plus dot when appropriate.&quot;</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">var-name</span><span class="p">)</span>
+    <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="k">and</span> <span class="p">(</span><span class="nv">looking-back</span> <span class="s">&quot;^[ \t]*&quot;</span><span class="p">)</span>
+             <span class="p">(</span><span class="k">setq</span> <span class="nv">var-name</span> <span class="p">(</span><span class="nv">c++-get-recent-var</span><span class="p">)))</span>
+        <span class="p">(</span><span class="nf">insert</span> <span class="nv">var-name</span> <span class="s">&quot;.&quot;</span><span class="p">)</span>
+      <span class="p">(</span><span class="nf">insert</span> <span class="s">&quot;.&quot;</span><span class="p">))))</span>
+</code></pre></div>
+<p>This one is pretty simple: if we are at the beginning of the line,
+optionally with some spaces or (ugh) tabs before the point, then try
+to insert the object name along with a dot.</p>
+
+<p>Here&#39;s how to bind it:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">eval-after-load</span> <span class="s">&quot;cc-mode&quot;</span>
+  <span class="o">`</span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">c++-mode-map</span> <span class="s">&quot;.&quot;</span> <span class="ss">&#39;c++-smart-dot</span><span class="p">))</span>
+</code></pre></div>
+<h2>How to get the recent variable</h2>
+
+<p>This code doesn&#39;t aim to be thorough, it&#39;s just a hack that
+works reasonably well.</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">defconst</span> <span class="nv">c++-var-regex</span> <span class="s">&quot;[A-Za-z][A-Za-z0-9_]*&quot;</span>
+  <span class="s">&quot;The regex for C++ variable name.&quot;</span><span class="p">)</span>
+
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">c++-get-recent-var</span> <span class="p">()</span>
+  <span class="s">&quot;Return the closest thing that looks like an object.</span>
+<span class="s">The search is performed backwards through code.&quot;</span>
+  <span class="p">(</span><span class="k">save-excursion</span>
+    <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="k">or</span>
+           <span class="c1">;; variable dot chain</span>
+           <span class="p">(</span><span class="nv">looking-back</span>
+            <span class="p">(</span><span class="nf">format</span> <span class="s">&quot; \\(%s\\)\\.%s.*\n[\t ]*&quot;</span>
+                    <span class="nv">c++-var-regex</span>
+                    <span class="nv">c++-var-regex</span><span class="p">))</span>
+           <span class="c1">;; variable constructor init</span>
+           <span class="p">(</span><span class="nv">looking-back</span>
+            <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;[\t ]+\\(%s\\)\\(?:([^)]*)\\)?;[\t\n ]*&quot;</span>
+                    <span class="nv">c++-var-regex</span><span class="p">))</span>
+           <span class="c1">;; variable dot, first on line</span>
+           <span class="p">(</span><span class="nf">re-search-backward</span>
+            <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;^[ \t]*\\(%s\\)\\.&quot;</span> <span class="nv">c++-var-regex</span><span class="p">)</span> <span class="no">nil</span> <span class="no">t</span><span class="p">))</span>
+      <span class="p">(</span><span class="nv">match-string-no-properties</span> <span class="mi">1</span><span class="p">))))</span>
+</code></pre></div>
+<p>If you&#39;re a stickler for performance and you don&#39;t want to call format a bunch of times,
+you can amend the code like this:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defalias</span> <span class="ss">&#39;c++-get-recent-var</span>
+    <span class="p">(</span><span class="nv">byte-compile</span>
+     <span class="o">`</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span>
+        <span class="p">(</span><span class="k">save-excursion</span>
+          <span class="p">(</span><span class="nb">when</span>
+              <span class="p">(</span><span class="k">or</span>
+               <span class="c1">;; variable dot chain</span>
+               <span class="p">(</span><span class="nv">looking-back</span>
+                <span class="o">,</span><span class="p">(</span><span class="nf">format</span>
+                  <span class="s">&quot; \\(%s\\)\\.%s.*\n[\t ]*&quot;</span>
+                  <span class="nv">c++-var-regex</span>
+                  <span class="nv">c++-var-regex</span><span class="p">))</span>
+               <span class="c1">;; variable constructor init</span>
+               <span class="p">(</span><span class="nv">looking-back</span>
+                <span class="o">,</span><span class="p">(</span><span class="nf">format</span>
+                  <span class="s">&quot;[\t ]+\\(%s\\)\\(?:([^)]*)\\)?;[\t\n ]*&quot;</span>
+                  <span class="nv">c++-var-regex</span><span class="p">))</span>
+               <span class="c1">;; variable dot, first on line</span>
+               <span class="p">(</span><span class="nf">re-search-backward</span>
+                <span class="o">,</span><span class="p">(</span><span class="nf">format</span> <span class="s">&quot;^[ \t]*\\(%s\\)\\.&quot;</span> <span class="nv">c++-var-regex</span><span class="p">)</span> <span class="no">nil</span> <span class="no">t</span><span class="p">))</span>
+            <span class="p">(</span><span class="nv">match-string-no-properties</span> <span class="mi">1</span><span class="p">)))))</span>
+  <span class="s">&quot;Return the closest thing that looks like an object.</span>
+<span class="s">The search is performed backwards through code.&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>The thing above looks slightly ugly. I&#39;m open to suggestions to make
+it look nicer.</p>
+
+<h2>The sample application</h2>
+
+<p>For the happy people that have never seen C++:</p>
+<div class="highlight"><pre><code class="language-C++" data-lang="C++"><span class="n">DataOut</span><span class="o">&lt;</span><span class="n">dim</span><span class="o">&gt;</span> <span class="n">data_out</span><span class="p">;</span>
+<span class="n">data_out</span><span class="p">.</span><span class="n">attach_dof_handler</span><span class="p">(</span><span class="n">dof_handler</span><span class="p">);</span>
+<span class="n">data_out</span><span class="p">.</span><span class="n">add_data_vector</span><span class="p">(</span><span class="n">solution</span><span class="p">,</span> <span class="s">&quot;u&quot;</span><span class="p">);</span>
+<span class="n">data_out</span><span class="p">.</span><span class="n">build_patches</span><span class="p">();</span>
+</code></pre></div>
+<p>Here, after defining an object <code>data_out</code>, I insert it subsequently
+with just <kbd>.</kbd>.</p>
+
+</div>
+
+<div class="twitter-share">
+  <a href="https://twitter.com/share"
+     class="twitter-share-button"
+     data-via="_abo_abo"
+     data-dnt="true">
+    Tweet
+  </a>
+</div>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/01/14/repeatable-commands/"> -->
+          <a href="/2015/01/14/repeatable-commands/">
+            Zoom in / out with style
+            <small>14 Jan 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/01/13/dired-options/"> -->
+          <a href="/2015/01/13/dired-options/">
+            Even more dired options
+            <small>13 Jan 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/01/12/dired-file-size/"> -->
+          <a href="/2015/01/12/dired-file-size/">
+            File sizes in dired
+            <small>12 Jan 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'oremacs'; // required: replace example with your forum shortname
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+<script>
+  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+</script>
+<noscript>
+  Please enable JavaScript to view the
+  <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>
