@@ -4,13 +4,68 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-01-15T15:24:20+01:00</updated>
+ <updated>2015-01-16T11:00:33+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Save before compile</title>
+   <link href="http://oremacs.com/2015/01/16/compile-savely/"/>
+   <updated>2015-01-16T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/01/16/compile-savely</id>
+   <content type="html">&lt;p&gt;Here&amp;#39;s a very simplistic function that I was using for a while:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;save-and-compile&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;save-buffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;compile&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;make -j4&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;pop-to-buffer&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;next-error-last-buffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;It will save the current buffer, run &lt;code&gt;compile&lt;/code&gt; and switch to
+compilation buffer.&lt;/p&gt;
+
+&lt;h2&gt;Compilation customization&lt;/h2&gt;
+
+&lt;p&gt;Turns out that there&amp;#39;s no need to save, since I get away with this:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;(setq compilation-ask-about-save nil)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The documentation says:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Non-nil means M-x &lt;code&gt;compile&lt;/code&gt; asks which buffers to save before
+compiling.  Otherwise, it saves all modified buffers without asking.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2&gt;Select compilation target&lt;/h2&gt;
+
+&lt;p&gt;A year ago, I wrote a package that looks for a &lt;code&gt;Makefile&lt;/code&gt; in the
+current directory, parses the available targets and allows you to
+choose one with &lt;a href=&quot;https://github.com/emacs-helm/helm&quot;&gt;helm&lt;/a&gt;.  It&amp;#39;s
+called &lt;a href=&quot;https://github.com/abo-abo/helm-make&quot;&gt;helm-make&lt;/a&gt;.  It&amp;#39;s almost
+the same as &lt;kbd&gt;M-x&lt;/kbd&gt; &lt;code&gt;compile&lt;/code&gt; (which also has completion for
+targets), and it wraps around &lt;code&gt;compile&lt;/code&gt;, but I just find it to be more
+convenient.&lt;/p&gt;
+
+&lt;p&gt;This package is as simple as it sounds, the only customization that
+you can do is to set &lt;code&gt;helm-make-do-save&lt;/code&gt; to save all open buffers
+visiting the &lt;code&gt;Makefile&lt;/code&gt;&amp;#39;s directory. It also provides, in addition to
+the plain &lt;code&gt;helm-make&lt;/code&gt; command, a &lt;code&gt;helm-make-projectile&lt;/code&gt; command, which
+is almost the same, except the &lt;code&gt;Makefile&lt;/code&gt; should come not from the
+current directory but from &lt;code&gt;projectile-project-root&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2&gt;Some error navigation to go with your compilation&lt;/h2&gt;
+
+&lt;p&gt;I&amp;#39;ve had these bindings for a very long time, just making sure
+that you&amp;#39;re aware of these commands:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;[f6]&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;next-error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;[C-f6]&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;previous-error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;These bindings work for &lt;kbd&gt;M-x&lt;/kbd&gt; &lt;code&gt;occur&lt;/code&gt; and &lt;code&gt;rgrep&lt;/code&gt; as well.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>C++ - a dot inserts last var plus dot</title>

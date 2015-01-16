@@ -11,7 +11,7 @@
 
   <title>
     
-      Monkeying around with JavaScript &middot; (or emacs
+      Save before compile &middot; (or emacs
     
   </title>
 
@@ -176,70 +176,55 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Monkeying around with JavaScript</h1>
-  <span class="post-date">29 Dec 2014</span>
-  <h2>Exciting encounter</h2>
+  <h1 class="post-title">Save before compile</h1>
+  <span class="post-date">16 Jan 2015</span>
+  <p>Here&#39;s a very simplistic function that I was using for a while:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">save-and-compile</span> <span class="p">()</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">save-buffer</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">compile</span> <span class="s">&quot;make -j4&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">pop-to-buffer</span> <span class="nv">next-error-last-buffer</span><span class="p">))</span>
+</code></pre></div>
+<p>It will save the current buffer, run <code>compile</code> and switch to
+compilation buffer.</p>
 
-<p>Recently, I happened upon a wonderful blog called
-<a href="http://axisofeval.blogspot.nl">The Axis of Eval</a>.  I knew that I&#39;d
-love it just when I read the name. <a href="/">(or emacs</a> pales in comparison,
-but I couldn&#39;t just sit on my hands for months or years while thinking
-up a perfect blog name. If you think of a blog name as awesome as &quot;The
-Axis of Eval&quot; and are willing to let me use it, I&#39;ll probably make the
-switch.</p>
+<h2>Compilation customization</h2>
 
-<p>The blog did not disappoint, featuring gems like this:</p>
+<p>Turns out that there&#39;s no need to save, since I get away with this:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">(setq compilation-ask-about-save nil)
+</code></pre></div>
+<p>The documentation says:</p>
 
 <blockquote>
-<p>In the Lisp world, new languages are built by combining large,
-battle-tested building blocks, and polishing or updating them when
-needed, instead of starting over from toothpicks and double-sided
-duct tape. A large Lisp like Common Lisp is like a toolchain of
-decades-old tools that have proven their worth, and have been
-codified in standards, folklore, and implementations.</p>
+<p>Non-nil means M-x <code>compile</code> asks which buffers to save before
+compiling.  Otherwise, it saves all modified buffers without asking.</p>
 </blockquote>
 
-<p>The only thing in the way of extracting information and enjoyment from
-this blog was the horrendous theme of black background, white
-foreground and magenta links. Plus the RSS was kind of quirky, and I
-couldn&#39;t just feed all of it into
-<a href="https://github.com/skeeto/elfeed">Elfeed</a>.</p>
+<h2>Select compilation target</h2>
 
-<h2>Greasemonkey to the rescue!</h2>
+<p>A year ago, I wrote a package that looks for a <code>Makefile</code> in the
+current directory, parses the available targets and allows you to
+choose one with <a href="https://github.com/emacs-helm/helm">helm</a>.  It&#39;s
+called <a href="https://github.com/abo-abo/helm-make">helm-make</a>.  It&#39;s almost
+the same as <kbd>M-x</kbd> <code>compile</code> (which also has completion for
+targets), and it wraps around <code>compile</code>, but I just find it to be more
+convenient.</p>
 
-<p>In the previous post I&#39;ve mentioned that, in addition to using
-<a href="http://www.gnu.org/software/emacs/">the best editor</a>, I&#39;m using
-<a href="https://www.mozilla.org/en-US/firefox/new/">the best browser</a>.  Well,
-this particular best browser has an extension called
-<a href="https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/">Greasemonkey</a>
-that allows you to automatically run your own JavaScript on certain
-websites.</p>
+<p>This package is as simple as it sounds, the only customization that
+you can do is to set <code>helm-make-do-save</code> to save all open buffers
+visiting the <code>Makefile</code>&#39;s directory. It also provides, in addition to
+the plain <code>helm-make</code> command, a <code>helm-make-projectile</code> command, which
+is almost the same, except the <code>Makefile</code> should come not from the
+current directory but from <code>projectile-project-root</code>.</p>
 
-<p>I&#39;m not very proficient in JavaScript, the following code I just found
-by searching around. The part to note is the <code>@include</code> - the pattern
-of website names for which this script should be run automatically.</p>
-<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="c1">// ==UserScript==</span>
-<span class="c1">// @name        background</span>
-<span class="c1">// @namespace   abo-abo</span>
-<span class="c1">// @include     http://axisofeval.blogspot.nl/*</span>
-<span class="c1">// @version     1</span>
-<span class="c1">// @grant       none</span>
-<span class="c1">// ==/UserScript==</span>
-<span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-    <span class="nb">document</span>
-        <span class="p">.</span><span class="nx">body</span>
-        <span class="p">.</span><span class="nx">setAttribute</span><span class="p">(</span><span class="s2">&quot;style&quot;</span><span class="p">,</span>
-                      <span class="s2">&quot;background-color: #ffffff; color:#000&quot;</span><span class="p">);</span>
-    <span class="kd">var</span> <span class="nx">nodesArray</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementsByTagName</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">);</span>
-    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">nodesArray</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">nodesArray</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">style</span><span class="p">.</span><span class="nx">color</span> <span class="o">=</span> <span class="s1">&#39;red&#39;</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">})();</span>
+<h2>Some error navigation to go with your compilation</h2>
+
+<p>I&#39;ve had these bindings for a very long time, just making sure
+that you&#39;re aware of these commands:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="nv">[f6]</span> <span class="ss">&#39;next-error</span><span class="p">)</span>
+<span class="p">(</span><span class="nv">global-set-key</span> <span class="nv">[C-f6]</span> <span class="ss">&#39;previous-error</span><span class="p">)</span>
 </code></pre></div>
-<p>I can barely stand to look at it. How could you take Scheme and turn
-it into this monstrosity? Such a shame. But it works, so I guess
-everyone should learn JavaScript. All hail the mighty
-<s>HypnoToad</s> JavaScript!</p>
+<p>These bindings work for <kbd>M-x</kbd> <code>occur</code> and <code>rgrep</code> as well.</p>
 
 </div>
 
@@ -258,16 +243,6 @@ everyone should learn JavaScript. All hail the mighty
     
       <li>
         <h3>
-          <!-- <a href="//2015/01/16/compile-savely/"> -->
-          <a href="/2015/01/16/compile-savely/">
-            Save before compile
-            <small>16 Jan 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
           <!-- <a href="//2015/01/15/c++-smart-dot/"> -->
           <a href="/2015/01/15/c++-smart-dot/">
             C++ - a dot inserts last var plus dot
@@ -282,6 +257,16 @@ everyone should learn JavaScript. All hail the mighty
           <a href="/2015/01/14/repeatable-commands/">
             Zoom in / out with style
             <small>14 Jan 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/01/13/dired-options/"> -->
+          <a href="/2015/01/13/dired-options/">
+            Even more dired options
+            <small>13 Jan 2015</small>
           </a>
         </h3>
       </li>
