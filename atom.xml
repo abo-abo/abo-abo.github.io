@@ -4,13 +4,125 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-01-16T11:00:33+01:00</updated>
+ <updated>2015-01-17T20:47:03+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Setting up Ediff</title>
+   <link href="http://oremacs.com/2015/01/17/setting-up-ediff/"/>
+   <updated>2015-01-17T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/01/17/setting-up-ediff</id>
+   <content type="html">&lt;p&gt;Once you make Ediff bearable, it becomes wonderful.  At least this was
+my experience. It&amp;#39;s a very good tool, but some of the defaults look
+very poor to me.&lt;/p&gt;
+
+&lt;h2&gt;Customizing the &lt;code&gt;customize&lt;/code&gt;&lt;/h2&gt;
+
+&lt;p&gt;First of all, I&amp;#39;ll list a macro that I&amp;#39;ve started to use for setting
+custom variables:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defmacro&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;csetq&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;variable&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;funcall&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;or&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;get&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;,variable&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;custom-set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;ss&quot;&gt;&amp;#39;set-default&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;ss&quot;&gt;&amp;#39;,variable&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This macro I&amp;#39;ve put together myself after searching though the code
+base and not finding something similar; &lt;code&gt;custom-set-variables&lt;/code&gt; comes
+close to what I want, or maybe &lt;code&gt;custom-initialize-changed&lt;/code&gt;.  Basically
+all I want is a &lt;code&gt;setq&lt;/code&gt; that is aware of the &lt;code&gt;custom-set&lt;/code&gt; property of a
+variable. If you know such a macro, please let me know.&lt;/p&gt;
+
+&lt;h2&gt;Changing some Ediff options&lt;/h2&gt;
+
+&lt;p&gt;Now, that I&amp;#39;ve explained the custom setter (by the way, using
+&lt;code&gt;custom-set-variables&lt;/code&gt; is absolutely equivalent to &lt;code&gt;csetq&lt;/code&gt;), here are
+my changes:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Don&amp;#39;t use the weird setup with the control panel in a separate
+frame.  I can manage windows in Emacs much better than my desktop
+(Unity or Gnome Shell) can manage the Emacs frames.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;(csetq ediff-window-setup-function &amp;#39;ediff-setup-windows-plain)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Split the windows horizontally instead of vertically. This way, it&amp;#39;s
+much easier to follow the changes.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;(csetq ediff-split-window-function &amp;#39;split-window-horizontally)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Ignore white space. I don&amp;#39;t write a lot of Python, so I don&amp;#39;t care
+about the white space in the diffs. At the same time, I re-format any
+LISP code that I edit to my liking, and I want to see only the
+important changes in the diff, and not the whitespace nonsense.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;(csetq ediff-diff-options &amp;quot;-w&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2&gt;Changing some Ediff key bindings&lt;/h2&gt;
+
+&lt;p&gt;This is just the standard stuff that I like to do for each mode that
+does not self-insert: assign &lt;kbd&gt;j&lt;/kbd&gt; to move down, and
+&lt;kbd&gt;k&lt;/kbd&gt; to move up.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ora-ediff-hook&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ediff-setup-keymap&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ediff-mode-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;j&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ediff-next-difference&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ediff-mode-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;k&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ediff-previous-difference&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;add-hook&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ediff-mode-hook&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ora-ediff-hook&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;Restoring the windows after Ediff quits&lt;/h2&gt;
+
+&lt;p&gt;When you quit an Ediff session with &lt;kbd&gt;q&lt;/kbd&gt;, it just leaves the
+two diff windows around, instead of restoring the window configuration
+from when Ediff was started. Here&amp;#39;s the (slightly hacky) code to
+restore the old window configuration:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;winner-mode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;add-hook&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ediff-after-quit-hook-internal&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;winner-undo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;List of ways that I use to invoke Ediff&lt;/h2&gt;
+
+&lt;h3&gt;from &lt;code&gt;magit&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;In 80% of the cases, I call Ediff with &lt;kbd&gt;e&lt;/kbd&gt; (&lt;code&gt;magit-ediff&lt;/code&gt;) from
+&lt;code&gt;magit-status-mode&lt;/code&gt;. This gives me a better overview of the changes,
+especially when I want to revert stuff with either &lt;kbd&gt;a&lt;/kbd&gt;
+(&lt;code&gt;ediff-copy-A-to-B&lt;/code&gt;) or &lt;kbd&gt;b&lt;/kbd&gt; (&lt;code&gt;ediff-copy-B-to-A&lt;/code&gt;). Probably
+with &lt;kbd&gt;a&lt;/kbd&gt;, since &lt;a href=&quot;https://github.com/magit/magit&quot;&gt;magit&lt;/a&gt; seems
+to consistently put the &lt;code&gt;@{index}&lt;/code&gt; file into the &lt;code&gt;A&lt;/code&gt; diff window, and
+the current file into the &lt;code&gt;B&lt;/code&gt; window.&lt;/p&gt;
+
+&lt;p&gt;So if I&amp;#39;m looking at a diff (to which I navigated with
+&lt;kbd&gt;j&lt;/kbd&gt;/&lt;kbd&gt;k&lt;/kbd&gt;), I can revert it with &lt;kbd&gt;a&lt;/kbd&gt;. At this
+point, the diff region in the current file will become equal to that
+of the index file. But it will not be saved yet. If I want to save the
+current file in the &lt;code&gt;B&lt;/code&gt; window, I can do it with &lt;kbd&gt;wb&lt;/kbd&gt;
+(&lt;code&gt;ediff-save-buffer&lt;/code&gt;). After a revert, it&amp;#39;s also useful to call
+&lt;kbd&gt;!&lt;/kbd&gt;(&lt;code&gt;ediff-update-diffs&lt;/code&gt;), which will remove the zero-length
+diffs and update the diff-count in the mode-line.&lt;/p&gt;
+
+&lt;h3&gt;other methods&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;ediff-buffers&lt;/code&gt; will diff two (different) buffers. If you happen to
+have only two windows open with the appropriate buffers, you get them
+as defaults and can choose them quickly with &lt;kbd&gt;RET&lt;/kbd&gt; &lt;kbd&gt;RET&lt;/kbd&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ediff-files&lt;/code&gt; is similar, but works on files instead. I like to just mark the appropriate files
+in &lt;code&gt;dired&lt;/code&gt; with &lt;kbd&gt;m&lt;/kbd&gt;, then they also get auto-selected by &lt;code&gt;ediff-files&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ediff-current-file&lt;/code&gt; is useful to see the unsaved changes to the current file.
+I rarely use it, since I have a compulsion to save every file every chance I get. There is little hope
+to recover from this addiction, unless someone implements an analogue of &lt;a href=&quot;https://github.com/bbatsov/guru-mode&quot;&gt;guru-mode&lt;/a&gt;
+that annoys you when you try to save a file. Actually, it&amp;#39;s not a bad idea - &lt;kbd&gt;C-x C-s&lt;/kbd&gt;:&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Oleh, you have saved this file &lt;code&gt;40 times&lt;/code&gt; in the last hour; the last
+save was &lt;code&gt;0 minutes 34 seconds ago&lt;/code&gt;; since then, you&amp;#39;ve changed &lt;code&gt;27
+bytes&lt;/code&gt; of information. Are you &lt;strong&gt;sure&lt;/strong&gt; you want to save &lt;code&gt;[y/N]&lt;/code&gt;?&lt;/p&gt;
+&lt;/blockquote&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Save before compile</title>
