@@ -4,13 +4,92 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-01-17T20:47:03+01:00</updated>
+ <updated>2015-01-18T15:25:37+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Sprucing up org-download</title>
+   <link href="http://oremacs.com/2015/01/18/sprucing-up-org-download/"/>
+   <updated>2015-01-18T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/01/18/sprucing-up-org-download</id>
+   <content type="html">&lt;p&gt;My interest in &lt;a href=&quot;https://github.com/abo-abo/org-download&quot;&gt;org-download&lt;/a&gt;
+was renewed today with
+&lt;a href=&quot;http://thread.gmane.org/gmane.emacs.orgmode/93964&quot;&gt;this thread&lt;/a&gt; on
+&lt;code&gt;org-mode&lt;/code&gt;&amp;#39;s mailing list.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;org-download&lt;/code&gt; allows you to drag-and-drop an image from e.g. Firefox
+or your own file system to an &lt;code&gt;org-mode&lt;/code&gt; buffer. When I originally
+wrote it, I was taking a Chemistry course on
+&lt;a href=&quot;https://www.edx.org/&quot;&gt;edX&lt;/a&gt;, which included homework and exams with a
+lot of images. Doing the homework in a literate style with &lt;code&gt;org-mode&lt;/code&gt;,
+I wanted the problems to be completely self-contained, and for that I
+needed to save all the images from the website, preferably quickly, to
+an &lt;code&gt;org-mode&lt;/code&gt; buffer. With a few hacks and some advice and
+contributions from more experienced hackers, &lt;code&gt;org-download&lt;/code&gt; came to
+be.&lt;/p&gt;
+
+&lt;h2&gt;Today&amp;#39;s commits&lt;/h2&gt;
+
+&lt;p&gt;The main contribution from today&amp;#39;s commits was adding the code that
+un-aliases images that point to HTML. I see a lot of these from the
+people that I&amp;#39;m following on my Twitter,
+&lt;a href=&quot;https://twitter.com/_abo_abo&quot;&gt;@&amp;#95;abo&amp;#95;abo&lt;/a&gt;. Here&amp;#39;s the code:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defcustom&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-download-img-regex-list&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;img +src=\&amp;quot;&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;img +\\(class=\&amp;quot;[^\&amp;quot;]+\&amp;quot;\\)? *src=\&amp;quot;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;This regex is used to unalias links that look like images.&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;The html to which the links points will be searched for these&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;regexes, one by one, until one succeeds.  The found image address&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;will be used.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;:group&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;org-download&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;and in &lt;code&gt;(org-download-image link)&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;unless&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;image-type-from-file-name&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;link&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;with-current-buffer&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;url-retrieve-synchronously&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;link&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;regexes&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-download-img-regex-list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;nv&quot;&gt;lnk&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;and&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;not&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;lnk&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;regexes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;goto-char&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;point-min&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;re-search-forward&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;pop&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;regexes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;backward-char&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;lnk&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;read&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;current-buffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;lnk&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;link&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;lnk&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ne&quot;&gt;error&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;link %s does not point to an image&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;link&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Here, &lt;code&gt;image-type-from-file-name&lt;/code&gt; is a built-in from &lt;code&gt;image.el&lt;/code&gt; that
+decides if &lt;code&gt;link&lt;/code&gt; looks like an image file or not.&lt;/p&gt;
+
+&lt;p&gt;As you can see, since I intend to use &lt;code&gt;link&lt;/code&gt; right after to be
+transformed right now, I&amp;#39;m using &lt;code&gt;url-retrieve-synchronously&lt;/code&gt;, instead
+of the asynchronous &lt;code&gt;url-retrieve&lt;/code&gt;. The other one is used by default
+to download the actual image.&lt;/p&gt;
+
+&lt;p&gt;Note the use of the &lt;code&gt;while&lt;/code&gt; / &lt;code&gt;pop&lt;/code&gt; combination for traversing a list.
+I&amp;#39;ve seen it used in some places in the Emacs core, and I think it&amp;#39;s
+pretty neat.&lt;/p&gt;
+
+&lt;p&gt;Arranging the regular expressions into a list is necessary to give
+priority to some regexes. For instance, the first element of
+&lt;code&gt;org-download-img-regex-list&lt;/code&gt; should match e.g. an actual referred
+image on Twitter, while the second element will match at least a
+profile picture in the case when there is no referred image.&lt;/p&gt;
+
+&lt;h2&gt;Visual demo&lt;/h2&gt;
+
+&lt;p&gt;I think that I might have over-engineered the custom options of
+&lt;code&gt;org-download&lt;/code&gt; a bit. Just to keep you motivated enough to figure them
+out, here&amp;#39;s a link to
+&lt;a href=&quot;https://www.youtube.com/watch?v=dAojpHR-6Uo&quot;&gt;a Youtube demo&lt;/a&gt; of the
+fast clickety-clicking (the mouse usage), that comes after some
+clackety-clacking (the customization).&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Setting up Ediff</title>
