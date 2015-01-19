@@ -96,6 +96,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -184,7 +188,7 @@ the older packages. This post will cover some practical problems that
 you may encounter when your package needs to be aware of another
 active package.</p>
 
-<h2><code>ace-window</code> vs. <code>helm</code></h2>
+<h2 id="ace-window-vs.-helm"><code>ace-window</code> vs. <code>helm</code></h2>
 
 <p><a href="https://github.com/emacs-helm/helm">helm</a> is a wonderful package,
 it&#39;s my goto-package when I need completion. All of the following
@@ -213,7 +217,7 @@ out of a <code>helm</code>-minibuffer. In fact, it was not possible to exit with
 inkling that it used to work at some point. So I checked out a
 year-old version of <code>helm</code> and it did work.</p>
 
-<h3><code>magit-bisect</code> to the rescue!</h3>
+<h3 id="magit-bisect-to-the-rescue!"><code>magit-bisect</code> to the rescue!</h3>
 
 <p>It&#39;s very simple:</p>
 
@@ -240,7 +244,7 @@ in this case.</li>
 </span></span><span class="diff-indicator-removed"><span class="region">-</span></span><span class="diff-removed"><span class="region">      (when kmap (setq overriding-local-map kmap)))))
 </span></span><span class="diff-indicator-added"><span class="region">+</span></span><span class="diff-added"><span class="region">      (when kmap (set-transient-map kmap)))))</span></span></pre>
 
-<h3>the priority of maps</h3>
+<h3 id="the-priority-of-maps">the priority of maps</h3>
 
 <p>In Emacs, <code>set-transient-map</code> has priority over
 <code>overriding-local-map</code>, which was exactly what <code>ace-window</code> was using.
@@ -264,7 +268,7 @@ called after <code>helm</code>.</p>
 In the end, this finally worked:</p>
 <div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">remove-hook</span> <span class="ss">&#39;post-command-hook</span> <span class="ss">&#39;helm--maybe-update-keymap</span><span class="p">)</span>
 </code></pre></div>
-<h2><code>lispy</code> vs. <code>SLIME</code> and <code>CIDER</code></h2>
+<h2 id="lispy-vs.-slime-and-cider"><code>lispy</code> vs. <code>SLIME</code> and <code>CIDER</code></h2>
 
 <p>I thought that enabling <code>lispy-mode</code> for <code>slime-repl-mode</code> and
 <code>cider-repl-mode</code> might be a good idea.
@@ -341,6 +345,16 @@ yield. Happy coding in the New Year!</p>
     
       <li>
         <h3>
+          <!-- <a href="//2015/01/19/lispy.0.21.0-is-out/"> -->
+          <a href="/2015/01/19/lispy.0.21.0-is-out/">
+            lispy 0.21.0 is out
+            <small>19 Jan 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
           <!-- <a href="//2015/01/18/sprucing-up-org-download/"> -->
           <a href="/2015/01/18/sprucing-up-org-download/">
             Sprucing up org-download
@@ -355,16 +369,6 @@ yield. Happy coding in the New Year!</p>
           <a href="/2015/01/17/setting-up-ediff/">
             Setting up Ediff
             <small>17 Jan 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
-          <!-- <a href="//2015/01/16/compile-savely/"> -->
-          <a href="/2015/01/16/compile-savely/">
-            Save before compile
-            <small>16 Jan 2015</small>
           </a>
         </h3>
       </li>

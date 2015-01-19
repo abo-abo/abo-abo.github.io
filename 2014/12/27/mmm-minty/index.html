@@ -96,6 +96,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -178,7 +182,7 @@
         <div class="post">
   <h1 class="post-title">Mmm... minty</h1>
   <span class="post-date">27 Dec 2014</span>
-  <h2>The backstory</h2>
+  <h2 id="the-backstory">The backstory</h2>
 
 <p>In <a href="/2014/12/24/light-it-up/">one of the earlier posts</a>,
 I was discussing the implementation of an Emacs Lisp lexer for
@@ -186,7 +190,7 @@ I was discussing the implementation of an Emacs Lisp lexer for
 update and get nicely highlighted code in a pdf via the
 <a href="http://code.google.com/p/minted">minted</a> LaTeX package.</p>
 
-<h2>The install</h2>
+<h2 id="the-install">The install</h2>
 
 <p>Assuming that you are on a Debian-related system:</p>
 <div class="highlight"><pre><code class="language-text" data-lang="text">sudo apt-get install mercurial
@@ -200,7 +204,7 @@ sudo python setup.py install
 I&#39;m not too sophisticated about it, so I just install everything:</p>
 <div class="highlight"><pre><code class="language-text" data-lang="text">sudo apt-get install texlive-full
 </code></pre></div>
-<h2>The result</h2>
+<h2 id="the-result">The result</h2>
 
 <p>So here I took some code from
 <a href="/2014/12/25/ode-to-toggle/">a previous post</a> and
@@ -208,7 +212,7 @@ copy-pasted it into <a href="/download/minty.org">minty.org</a> file.
 And here&#39;s the result of the PDF export (<kbd>C-c C-e lo</kbd>):
 <a href="/download/minty.pdf">minty.pdf</a>.</p>
 
-<h2>The red tape</h2>
+<h2 id="the-red-tape">The red tape</h2>
 
 <p><code>org-mode</code> had trouble exporting on my laptop until I did this:</p>
 <div class="highlight"><pre><code class="language-text" data-lang="text">cd /usr/bin/
@@ -237,6 +241,16 @@ sudo ln -s /usr/local/texlive/2013/bin/x86_64-linux/pdflatex
     
       <li>
         <h3>
+          <!-- <a href="//2015/01/19/lispy.0.21.0-is-out/"> -->
+          <a href="/2015/01/19/lispy.0.21.0-is-out/">
+            lispy 0.21.0 is out
+            <small>19 Jan 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
           <!-- <a href="//2015/01/18/sprucing-up-org-download/"> -->
           <a href="/2015/01/18/sprucing-up-org-download/">
             Sprucing up org-download
@@ -251,16 +265,6 @@ sudo ln -s /usr/local/texlive/2013/bin/x86_64-linux/pdflatex
           <a href="/2015/01/17/setting-up-ediff/">
             Setting up Ediff
             <small>17 Jan 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
-          <!-- <a href="//2015/01/16/compile-savely/"> -->
-          <a href="/2015/01/16/compile-savely/">
-            Save before compile
-            <small>16 Jan 2015</small>
           </a>
         </h3>
       </li>

@@ -96,6 +96,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -191,7 +195,7 @@ Well, it&#39;s an oldie where I come from.</p>
 <p>-- <cite>Marty</cite></p>
 </blockquote>
 
-<h2>The code</h2>
+<h2 id="the-code">The code</h2>
 
 <p>This is the original code that I was using:</p>
 <div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">oleh-ido-setup-hook</span> <span class="p">()</span>
@@ -204,7 +208,7 @@ Well, it&#39;s an oldie where I come from.</p>
 
 <span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;ido-setup-hook</span> <span class="ss">&#39;oleh-ido-setup-hook</span><span class="p">)</span>
 </code></pre></div>
-<h2>The generalization</h2>
+<h2 id="the-generalization">The generalization</h2>
 
 <p>It wouldn&#39;t be a LISP if I couldn&#39;t generalize the code:</p>
 <div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">ido-find-file-jump</span> <span class="p">(</span><span class="nv">dir</span><span class="p">)</span>
@@ -241,7 +245,7 @@ I would have preferred to do it like this instead:</p>
 <code>ido-file-dir-completion-map</code> and I actually have to re-set my
 bindings in <code>ido-setup-hook</code>.</p>
 
-<h2>The further generalization</h2>
+<h2 id="the-further-generalization">The further generalization</h2>
 
 <p>Here is the final iteration of the code:</p>
 <div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">defvar</span> <span class="nv">oleh-ido-shortcuts</span>
@@ -261,7 +265,7 @@ bindings in <code>ido-setup-hook</code>.</p>
 
 <span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;ido-setup-hook</span> <span class="ss">&#39;oleh-ido-setup-hook</span><span class="p">)</span>
 </code></pre></div>
-<h2>The customize tricks</h2>
+<h2 id="the-customize-tricks">The customize tricks</h2>
 
 <blockquote>
 <p>&quot;Custom setters?<br>
@@ -325,6 +329,16 @@ And <code>csetq</code> is just a <code>customize</code>-aware version of <code>s
     
       <li>
         <h3>
+          <!-- <a href="//2015/01/19/lispy.0.21.0-is-out/"> -->
+          <a href="/2015/01/19/lispy.0.21.0-is-out/">
+            lispy 0.21.0 is out
+            <small>19 Jan 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
           <!-- <a href="//2015/01/18/sprucing-up-org-download/"> -->
           <a href="/2015/01/18/sprucing-up-org-download/">
             Sprucing up org-download
@@ -339,16 +353,6 @@ And <code>csetq</code> is just a <code>customize</code>-aware version of <code>s
           <a href="/2015/01/17/setting-up-ediff/">
             Setting up Ediff
             <small>17 Jan 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
-          <!-- <a href="//2015/01/16/compile-savely/"> -->
-          <a href="/2015/01/16/compile-savely/">
-            Save before compile
-            <small>16 Jan 2015</small>
           </a>
         </h3>
       </li>

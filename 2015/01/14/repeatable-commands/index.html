@@ -96,6 +96,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -189,7 +193,7 @@ I have to zoom-in instead. I have <code>text-scale-increase</code> bound to
 with e.g. <kbd>&lt;f2&gt; g g g l g g l</kbd>, i.e. omitting the
 <kbd>&lt;f2&gt;</kbd> prefix.</p>
 
-<h2>Define repeatable command</h2>
+<h2 id="define-repeatable-command">Define repeatable command</h2>
 <div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">def-rep-command</span> <span class="p">(</span><span class="nv">alist</span><span class="p">)</span>
   <span class="s">&quot;Return a lambda that calls the first function of ALIST.</span>
 <span class="s">It sets the transient map to all functions of ALIST.&quot;</span>
@@ -209,7 +213,7 @@ the transient map to call the first and other commands.  The way the
 transient map works, it takes priority over almost all maps, but
 disappears as soon as you press something that doesn&#39;t belong to it.</p>
 
-<h2>The zoom-in / zoom-out use case</h2>
+<h2 id="the-zoom-in-/-zoom-out-use-case">The zoom-in / zoom-out use case</h2>
 <div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;&lt;f2&gt; g&quot;</span><span class="p">)</span>
                 <span class="p">(</span><span class="nv">def-rep-command</span>
                     <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;g&quot;</span> <span class="o">.</span> <span class="nv">text-scale-increase</span><span class="p">)</span>
@@ -242,6 +246,16 @@ usual.</p>
     
       <li>
         <h3>
+          <!-- <a href="//2015/01/19/lispy.0.21.0-is-out/"> -->
+          <a href="/2015/01/19/lispy.0.21.0-is-out/">
+            lispy 0.21.0 is out
+            <small>19 Jan 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
           <!-- <a href="//2015/01/18/sprucing-up-org-download/"> -->
           <a href="/2015/01/18/sprucing-up-org-download/">
             Sprucing up org-download
@@ -256,16 +270,6 @@ usual.</p>
           <a href="/2015/01/17/setting-up-ediff/">
             Setting up Ediff
             <small>17 Jan 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
-          <!-- <a href="//2015/01/16/compile-savely/"> -->
-          <a href="/2015/01/16/compile-savely/">
-            Save before compile
-            <small>16 Jan 2015</small>
           </a>
         </h3>
       </li>

@@ -4,13 +4,363 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-01-18T15:25:37+01:00</updated>
+ <updated>2015-01-19T19:57:48+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>lispy 0.21.0 is out</title>
+   <link href="http://oremacs.com/2015/01/19/lispy.0.21.0-is-out/"/>
+   <updated>2015-01-19T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/01/19/lispy.0.21.0-is-out</id>
+   <content type="html">&lt;p&gt;The last release was more than a month ago, and there have been more
+than 130 commits to master since then. Somehow, I&amp;#39;ve been dragging my
+feet with this release: the (3 pages of)
+&lt;a href=&quot;https://github.com/abo-abo/lispy/releases/tag/0.21.0&quot;&gt;release notes&lt;/a&gt;
+were in the draft stage for 10 days now, while I kept committing on
+top of them.&lt;/p&gt;
+
+&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
+
+&lt;p&gt;This project is my vision of efficient LISP editing. According to
+Github, I started it more than a year ago, although the initial commit
+already contained around 1000 lines of code. After a year, it&amp;#39;s more
+than 100 interactive commands in 5000 lines of code and 1000 lines of
+tests.&lt;/p&gt;
+
+&lt;p&gt;Initially, I started the project because, while I wanted to learn
+Paredit to get more efficient, I did not want to learn Paredit&amp;#39;s
+cumbersome bindings. Having established a skeleton that allows to call
+Paredit-like commands with plain letters, over time, I&amp;#39;ve tacked on
+anything LISP-related here. In this way, it&amp;#39;s very similar to
+&lt;code&gt;org-mode&lt;/code&gt;, which starts with an outline and TODO skeleton, and then
+adds everything else in the world on top of that. Heck, I actually
+tacked on &lt;code&gt;org-mode&lt;/code&gt;&amp;#39;s outline features on top of &lt;code&gt;lispy&lt;/code&gt;: when at an
+outline, &lt;kbd&gt;i&lt;/kbd&gt; is equivalent to &lt;code&gt;org-mode&lt;/code&gt;&amp;#39;s &lt;kbd&gt;TAB&lt;/kbd&gt;, and
+&lt;kbd&gt;I&lt;/kbd&gt; is equivalent to &lt;kbd&gt;S-tab&lt;/kbd&gt;.&lt;/p&gt;
+
+&lt;p&gt;Among the other packages with which &lt;code&gt;lispy&lt;/code&gt;
+integrates/cooperates/coexists are: &lt;code&gt;edebug&lt;/code&gt;, &lt;code&gt;ediff&lt;/code&gt;, &lt;code&gt;eldoc&lt;/code&gt;, &lt;code&gt;ert&lt;/code&gt;,
+&lt;code&gt;outline&lt;/code&gt;, &lt;code&gt;semantic&lt;/code&gt;, &lt;code&gt;semantic/db&lt;/code&gt;, &lt;code&gt;ace-jump-mode&lt;/code&gt;, &lt;code&gt;iedit&lt;/code&gt;,
+&lt;code&gt;delsel&lt;/code&gt;, &lt;code&gt;helm&lt;/code&gt;, &lt;code&gt;multiple-cursors&lt;/code&gt;, &lt;code&gt;fancy-narrow&lt;/code&gt;, &lt;code&gt;projectile&lt;/code&gt;,
+&lt;code&gt;god-mode&lt;/code&gt;, &lt;code&gt;auto-complete&lt;/code&gt;, &lt;code&gt;company&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;main-idea-behind-lispy&quot;&gt;Main idea behind &lt;code&gt;lispy&lt;/code&gt;&lt;/h2&gt;
+
+&lt;p&gt;The idea is to have plain letters, like &lt;kbd&gt;h&lt;/kbd&gt; or &lt;kbd&gt;r&lt;/kbd&gt;,
+call commands instead of self-inserting, but &lt;strong&gt;only if the point
+position is such that you wouldn&amp;#39;t want to self-insert anyway&lt;/strong&gt;.  When
+this situation occurs, I like to say &lt;a href=&quot;#evolution-of-special&quot;&gt;&amp;quot;the point is special&amp;quot;&lt;/a&gt;; this
+shortcut is all over the code and the docs.&lt;/p&gt;
+
+&lt;p&gt;This is a bit similar to &lt;code&gt;vi&lt;/code&gt;&amp;#39;s normal/insert states, but instead of
+&amp;quot;holding&amp;quot; the current state in your head, it&amp;#39;s visible through &lt;em&gt;just
+the point position&lt;/em&gt;.  And instead of having just the
+&lt;kbd&gt;Esc&lt;/kbd&gt;/&lt;kbd&gt;i&lt;/kbd&gt; combination to toggle normal/insert state,
+you can do it with &lt;strong&gt;any&lt;/strong&gt; command that moves point,
+e.g. &lt;kbd&gt;C-f&lt;/kbd&gt;, or &lt;kbd&gt;C-a&lt;/kbd&gt;, or even any custom command
+that you write. &lt;code&gt;lispy&lt;/code&gt; does provide &lt;kbd&gt;[&lt;/kbd&gt;, &lt;kbd&gt;]&lt;/kbd&gt;, and
+&lt;kbd&gt;C-3&lt;/kbd&gt; key bindings for getting into special, but you are free
+to use any other binding or command that you want.&lt;/p&gt;
+
+&lt;p&gt;For instance, starting from this code and point position (which is already special):&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;arg&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;cursor&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;/cursor&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;arg&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;you can move to the &lt;code&gt;when&lt;/code&gt; statement with &lt;kbd&gt;h&lt;/kbd&gt; (&lt;code&gt;lispy-right&lt;/code&gt;):&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;cursor&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;/cursor&gt;&lt;span class=&quot;nb&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;arg&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;arg&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;or you can remove the &lt;code&gt;when&lt;/code&gt; statement altogether with &lt;kbd&gt;r&lt;/kbd&gt; (&lt;code&gt;lispy-raise&lt;/code&gt;):&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;cursor&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;/cursor&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;arg&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;or you can:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;evaluate &lt;code&gt;(setq arg 2000)&lt;/code&gt; statement with &lt;kbd&gt;e&lt;/kbd&gt; (&lt;code&gt;lispy-eval&lt;/code&gt;); the result will be displayed in the echo area; works for multiple LISP dialects&lt;/li&gt;
+&lt;li&gt;evaluate and insert with &lt;kbd&gt;E&lt;/kbd&gt; (&lt;code&gt;lispy-eval-and-insert&lt;/code&gt;); the actual value &lt;code&gt;2000&lt;/code&gt; will be inserted below the expression&lt;/li&gt;
+&lt;li&gt;evaluate and replace with &lt;kbd&gt;xr&lt;/kbd&gt; (&lt;code&gt;lispy-eval-and-replace&lt;/code&gt;); the expression will be replaced with &lt;code&gt;2000&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;copy the statement to the kill ring with &lt;kbd&gt;n&lt;/kbd&gt; (&lt;code&gt;lispy-new-copy&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;delete the statement with &lt;kbd&gt;C-d&lt;/kbd&gt; (&lt;code&gt;lispy-delete&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;insert a copy of the statement below with &lt;kbd&gt;c&lt;/kbd&gt; (&lt;code&gt;lispy-clone&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;insert 3 copies of the statement below with &lt;kbd&gt;3c&lt;/kbd&gt; (&lt;code&gt;digit-argument&lt;/code&gt;, &lt;code&gt;lispy-clone&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;move the statement on the previous line with &lt;kbd&gt;DEL&lt;/kbd&gt; (&lt;code&gt;lispy-delete-backward&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;mark the statement with &lt;kbd&gt;m&lt;/kbd&gt; (&lt;code&gt;lispy-mark-list&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;mark only &lt;code&gt;arg&lt;/code&gt; with &lt;kbd&gt;2m&lt;/kbd&gt; (&lt;code&gt;digit-argument&lt;/code&gt;, &lt;code&gt;lispy-mark-list&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;get help for &lt;code&gt;setq&lt;/code&gt; with &lt;kbd&gt;xh&lt;/kbd&gt; (&lt;code&gt;lispy-describe&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;get help for &lt;code&gt;arg&lt;/code&gt; with &lt;kbd&gt;2mxh&lt;/kbd&gt; (&lt;code&gt;digit-argument&lt;/code&gt;, &lt;code&gt;lispy-mark-list&lt;/code&gt;, &lt;code&gt;lispy-describe&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;copy &lt;code&gt;2000&lt;/code&gt; to kill ring with &lt;kbd&gt;3mn&lt;/kbd&gt; (&lt;code&gt;digit-argument&lt;/code&gt;, &lt;code&gt;lispy-mark-list&lt;/code&gt;, &lt;code&gt;lispy-new-copy&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;move the statement outside of &lt;code&gt;when&lt;/code&gt; with &lt;kbd&gt;oh&lt;/kbd&gt; (&lt;code&gt;lispy-other&lt;/code&gt;, &lt;code&gt;lispy-left&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;swap &lt;code&gt;(= arg 0)&lt;/code&gt; with &lt;code&gt;(setq arg 2000)&lt;/code&gt; with &lt;kbd&gt;w&lt;/kbd&gt; (&lt;code&gt;lispy-move-up&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;move it back with &lt;kbd&gt;s&lt;/kbd&gt; (&lt;code&gt;lispy-move-down&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;put the whole &lt;code&gt;when&lt;/code&gt; expression on one line with &lt;kbd&gt;hO&lt;/kbd&gt; (&lt;code&gt;lispy-left&lt;/code&gt;, &lt;code&gt;lispy-oneline&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;narrow the buffer to current sexp with &lt;kbd&gt;N&lt;/kbd&gt; (&lt;code&gt;lispy-narrow&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;widen the buffer with &lt;kbd&gt;W&lt;/kbd&gt; (&lt;code&gt;lispy-widen&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;a lot of other things, there are 52 plain letters, after all&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Note that in the following code, the point is not special:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;wh&lt;cursor&gt;e&lt;/cursor&gt;n&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;arg&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;arg&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;so if you would type &lt;kbd&gt;h&lt;/kbd&gt;, it would not call &lt;code&gt;lispy-left&lt;/code&gt;, but would insert &amp;quot;h&amp;quot; instead, yielding &lt;code&gt;whhen&lt;/code&gt;.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;to get the point into special before &lt;code&gt;(when&lt;/code&gt;, you can use either &lt;kbd&gt;C-a&lt;/kbd&gt; or &lt;kbd&gt;&amp;#91;&lt;/kbd&gt; or &lt;kbd&gt;C-M-a&lt;/kbd&gt;&lt;/li&gt;
+&lt;li&gt;to get the point into special after &lt;code&gt;arg 0)&lt;/code&gt;, you can use either &lt;kbd&gt;C-e&lt;/kbd&gt; or &lt;kbd&gt;&amp;#93;&lt;/kbd&gt;&lt;/li&gt;
+&lt;li&gt;to get the point into special after &lt;code&gt;2000))&lt;/code&gt;, you can use &lt;kbd&gt;C-3&lt;/kbd&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;evolution-of-special&quot;&gt;Evolution of special&lt;/h2&gt;
+
+&lt;p&gt;Initially, the special state was only for the point before an open
+paren or after a close paren, since you almost never-ever want to
+insert characters at those positions. Over time, other point states
+were added to special:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;region is active (supersedes
+&lt;a href=&quot;https://github.com/magnars/expand-region.el&quot;&gt;expand-region&lt;/a&gt; for LISP
+dialects)&lt;/li&gt;
+&lt;li&gt;the point is at the start of a comment&lt;/li&gt;
+&lt;li&gt;the point is at the start of an outline&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Region selection is especially important, since it is super-useful for
+manipulating (move, copy, eval, get-help, goto-definition) symbols
+inside lists. Since these symbols aren&amp;#39;t delimited with parens, the
+only way to get to them with special is though region selection.&lt;/p&gt;
+
+&lt;p&gt;Happily, region selection will fix the largest source of Paredit
+unbalanced paren errors: while using &lt;code&gt;lispy&lt;/code&gt; region-manipulating
+commands, you can&amp;#39;t copy an unbalanced expression, and thus you can&amp;#39;t
+yank an unbalanced expression. You just have to use &lt;kbd&gt;m&lt;/kbd&gt; and
+&lt;kbd&gt;M-m&lt;/kbd&gt; instead of &lt;kbd&gt;C-SPC&lt;/kbd&gt;; and &lt;kbd&gt;h&lt;/kbd&gt;,
+&lt;kbd&gt;j&lt;/kbd&gt;, &lt;kbd&gt;k&lt;/kbd&gt;, &lt;kbd&gt;l&lt;/kbd&gt;, &lt;kbd&gt;i&lt;/kbd&gt;,
+&lt;kbd&gt;&amp;gt;&lt;/kbd&gt;, and &lt;kbd&gt;&amp;lt;&lt;/kbd&gt; instead of e.g. &lt;kbd&gt;C-f&lt;/kbd&gt; and
+&lt;kbd&gt;M-f&lt;/kbd&gt;.&lt;/p&gt;
+
+&lt;p&gt;Since there are only 26 lower-case letters and 26 upper-case letters,
+the state of the command bindings in &lt;code&gt;lispy&lt;/code&gt; quickly turned into
+&lt;em&gt;survival of the fittest&lt;/em&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;the commands that were used the most got the priority bindings of
+lower case letters on the home row&lt;/li&gt;
+&lt;li&gt;the second tier got the other lower-case bindings&lt;/li&gt;
+&lt;li&gt;the third tier of commands were put on upper-case letters and on
+&lt;kbd&gt;x&lt;/kbd&gt; + lower-case letters&lt;/li&gt;
+&lt;li&gt;the fourth tier of commands are not bound at all, and I&amp;#39;m
+considering to obsolete some of them, just to keep things simpler.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;add:-the-annoyance-driven-development&quot;&gt;ADD: the Annoyance-Driven Development&lt;/h2&gt;
+
+&lt;p&gt;The other part of evolving and refining the commands, consisted of
+noticing small annoyances for when some generic command wasn&amp;#39;t working
+as intended, or it was working in a sub-optimal way in a certain
+situation. After this, I would fix the command and put a test on it,
+to make sure that the annoyance does not surface in the future.&lt;/p&gt;
+
+&lt;h2 id=&quot;notes-on-lisp-dialects&quot;&gt;Notes on LISP dialects&lt;/h2&gt;
+
+&lt;p&gt;My priority is Elisp, since that&amp;#39;s what I&amp;#39;m using to implement
+&lt;code&gt;lispy&lt;/code&gt;, but the following dialects are also supported:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Clojure, via &lt;a href=&quot;https://github.com/clojure-emacs/cider&quot;&gt;CIDER&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Common Lisp, via &lt;a href=&quot;https://github.com/slime/slime&quot;&gt;SLIME&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Scheme, via &lt;a href=&quot;https://github.com/jaor/geiser&quot;&gt;Geiser&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;To be supported, all a LISP dialect needs is just to use &lt;code&gt;(&lt;/code&gt; or &lt;code&gt;{&lt;/code&gt; or
+&lt;code&gt;[&lt;/code&gt; as the opening delimiter; and &lt;code&gt;)&lt;/code&gt; or &lt;code&gt;}&lt;/code&gt; or &lt;code&gt;]&lt;/code&gt; as the closing
+delimiter, no actual adaptations in the &lt;code&gt;lispy&lt;/code&gt; code are necessary.&lt;/p&gt;
+
+&lt;p&gt;The only thing that needs to be implemented on a per-dialect basis is
+the language-specific eval:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;e&lt;/kbd&gt; (&lt;code&gt;lispy-eval&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;E&lt;/kbd&gt; (&lt;code&gt;lispy-eval-and-insert&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;xr&lt;/kbd&gt; (&lt;code&gt;lispy-eval-and-replace&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;xj&lt;/kbd&gt; (&lt;code&gt;lispy-debug-step-in&lt;/code&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Also, though the jump-to-definition functionality could be implemented
+via CEDET, environments like SLIME can do it much better, so
+&lt;kbd&gt;F&lt;/kbd&gt; (&lt;code&gt;lispy-follow&lt;/code&gt;) and &lt;kbd&gt;M-.&lt;/kbd&gt; (&lt;code&gt;lispy-goto-symbol&lt;/code&gt;) use the
+appropriate environment&amp;#39;s facilities. Somehow, I still haven&amp;#39;t managed
+to implement this for Geiser.&lt;/p&gt;
+
+&lt;h2 id=&quot;drinking-from-the-lispy-fire-hose&quot;&gt;Drinking from the &lt;code&gt;lispy&lt;/code&gt; fire hose&lt;/h2&gt;
+
+&lt;p&gt;I&amp;#39;ll get you started with the most basic and composable commands
+below.  You can find the rest in the
+&lt;a href=&quot;http://oremacs.com/lispy/&quot;&gt;function reference&lt;/a&gt; or by just calling
+&lt;kbd&gt;xv&lt;/kbd&gt; (&lt;code&gt;lispy-view-test&lt;/code&gt;) on &lt;code&gt;should&lt;/code&gt; statements of
+&lt;a href=&quot;https://github.com/abo-abo/lispy/blob/master/lispy-test.el&quot;&gt;lispy-test.el&lt;/a&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/lispy-view-test.png&quot; alt=&quot;sample-test&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;In the screenshot above, I start with the code and point position on
+the top. Then, after typing &lt;kbd&gt;miji&lt;/kbd&gt;, I should end up with the
+state below: the point and mark position have moved. In this
+particular situation, I could follow-up with &lt;kbd&gt;e&lt;/kbd&gt; to see the
+value of &lt;code&gt;auto-mode-alist&lt;/code&gt;. Here&amp;#39;s how to decipher &lt;kbd&gt;miji&lt;/kbd&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;m&lt;/kbd&gt; - &lt;code&gt;lispy-mark-list&lt;/code&gt;: marks current expression&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;i&lt;/kbd&gt; - &lt;code&gt;lispy-tab&lt;/code&gt; (mnemonic for &lt;em&gt;indent&lt;/em&gt; or &lt;em&gt;inner&lt;/em&gt;): marks the &lt;code&gt;car&lt;/code&gt; of current expression&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;j&lt;/kbd&gt; - &lt;code&gt;lispy-down&lt;/code&gt; (vi shortcut to move down): moves the point and mark down by one sexp, selecting the quoted expression&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;i&lt;/kbd&gt; - &lt;code&gt;lispy-tab&lt;/code&gt;: selects the &lt;code&gt;car&lt;/code&gt; of the quoted expression, i.e. &lt;code&gt;auto-mode-alist&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;As you see from the screenshot, I have &lt;code&gt;show-paren-mode&lt;/code&gt; always
+on. It&amp;#39;s even on in the tests visualization!&lt;/p&gt;
+
+&lt;h2 id=&quot;the-most-basic-lispy-commands:-the-arrows&quot;&gt;The most basic &lt;code&gt;lispy&lt;/code&gt; commands: the arrows&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;h&lt;/kbd&gt; is left&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;j&lt;/kbd&gt; is down&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;k&lt;/kbd&gt; is up&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;l&lt;/kbd&gt; is right&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The directions are literal only if you have your code properly
+indented, with newlines after each sexp. Otherwise, it may be the case
+that &lt;kbd&gt;j&lt;/kbd&gt; moves literally right, instead of down; still, it&amp;#39;s
+down figuratively.&lt;/p&gt;
+
+&lt;h3 id=&quot;arrows-like-digits&quot;&gt;arrows like digits&lt;/h3&gt;
+
+&lt;p&gt;All of them take digit arguments, so that e.g. &lt;kbd&gt;5j&lt;/kbd&gt; is equivalent to &lt;kbd&gt;jjjjj&lt;/kbd&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;kbd&gt;h&lt;/kbd&gt; and &lt;kbd&gt;j&lt;/kbd&gt; maintain the guarantee of not exiting the
+current list, so you can use e.g. &lt;kbd&gt;99j&lt;/kbd&gt; to move to the last
+element, if your list length is smaller than 99.&lt;/p&gt;
+
+&lt;h3 id=&quot;arrows-like-regions&quot;&gt;arrows like regions&lt;/h3&gt;
+
+&lt;p&gt;When the region is active, the arrows move the mark appropriately with
+the point. You can activate and deactivate the region by repeatedly
+pressing &lt;kbd&gt;m&lt;/kbd&gt;.&lt;/p&gt;
+
+&lt;p&gt;You can also mark a symbol with &lt;kbd&gt;M-m&lt;/kbd&gt;
+(&lt;code&gt;lispy-mark-symbol&lt;/code&gt;). There&amp;#39;s no need to be in special for this
+command to work. I call these type of bindings &lt;em&gt;global&lt;/em&gt;, while the
+bindings that only work in special I call &lt;em&gt;local&lt;/em&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;arrows-like-outlines&quot;&gt;arrows like outlines&lt;/h3&gt;
+
+&lt;p&gt;When located at the outline, &lt;kbd&gt;j&lt;/kbd&gt; will call
+&lt;code&gt;outline-next-visible-heading&lt;/code&gt;, and &lt;kbd&gt;k&lt;/kbd&gt; will call
+&lt;code&gt;outline-previous-visible-heading&lt;/code&gt;. &lt;kbd&gt;l&lt;/kbd&gt; will move to the
+first list of the outline, while &lt;kbd&gt;h&lt;/kbd&gt; will jump between the
+top-level sexp and the containing outline.&lt;/p&gt;
+
+&lt;h3 id=&quot;switching-to-a-different-side-of-the-expression&quot;&gt;switching to a different side of the expression&lt;/h3&gt;
+
+&lt;p&gt;Arrows can&amp;#39;t do this easily; this can instead be done with
+&lt;kbd&gt;d&lt;/kbd&gt; (&lt;code&gt;lispy-different&lt;/code&gt;). Works for lists and regions.&lt;/p&gt;
+
+&lt;h2 id=&quot;moving-the-code-instead-of-moving-around-the-code&quot;&gt;Moving the code instead of moving around the code&lt;/h2&gt;
+
+&lt;p&gt;The most basic commands are:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;w&lt;/kbd&gt; is &lt;code&gt;lispy-move-up&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;s&lt;/kbd&gt; is &lt;code&gt;lispy-move-down&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;These will &amp;quot;hold on&amp;quot; to the current expression while moving it in the
+appropriate direction. There&amp;#39;s no need to worry to mess up with them,
+since they cancel each other out perfectly.&lt;/p&gt;
+
+&lt;p&gt;Note that, just like with the arrows, if you don&amp;#39;t have an opening or
+closing delimiter to &amp;quot;grab&amp;quot;, you can mark a symbol &lt;kbd&gt;M-m&lt;/kbd&gt; to
+be in special and use &lt;kbd&gt;w&lt;/kbd&gt; / &lt;kbd&gt;s&lt;/kbd&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;modified-arrows-can-move-too&quot;&gt;Modified arrows can move too&lt;/h2&gt;
+
+&lt;p&gt;&lt;kbd&gt;o&lt;/kbd&gt; will modify the arrow keys temporarily, just for one
+command, with a minor mode. You can think of it as making the arrows
+move the point &lt;strong&gt;and&lt;/strong&gt; the sexp in the usual direction, instead of
+moving just the point.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;ol&lt;/kbd&gt;: move current sexp outside of the parent list, forwards&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;oh&lt;/kbd&gt;: move current sexp outside of the parent list, backwards&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;oj&lt;/kbd&gt;: move current sexp inside the next list, making it the first element&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;ok&lt;/kbd&gt;: move current sexp inside the preceding list, making it the last element&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;extending-or-shrinking-the-current-list-or-region&quot;&gt;Extending or shrinking the current list or region&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;&amp;gt;&lt;/kbd&gt; (&lt;code&gt;lispy-slurp&lt;/code&gt;) grows the current list or region in the current direction by one sexp&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;&amp;lt;&lt;/kbd&gt; (&lt;code&gt;lispy-barf&lt;/code&gt;) shrinks the current list or region in the current direction by one sexp&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Similarly to &lt;kbd&gt;j&lt;/kbd&gt; and &lt;kbd&gt;k&lt;/kbd&gt;, these commands maintain
+the guarantee of not exiting the parent list, so you can slurp until
+the end of the list with e.g. &lt;kbd&gt;99&amp;gt;&lt;/kbd&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;This project is very far from being final, I&amp;#39;m expecting to reach
+&lt;code&gt;0.99.0&lt;/code&gt; before getting to &lt;code&gt;1.0.0&lt;/code&gt;. The reason is that the package
+aims to build intuition to the point of automation. For each small
+step in that direction, every small bug is two steps back, since it
+breaks the process of building intuition. So every possible situation
+needs to be tested and bugs fixed until the package is finally ironed
+out.&lt;/p&gt;
+
+&lt;p&gt;While I do appreciate the
+&lt;a href=&quot;https://github.com/abo-abo/lispy/stargazers&quot;&gt;stars&lt;/a&gt;, actually trying
+to do things with &lt;code&gt;lispy&lt;/code&gt; and raising
+&lt;a href=&quot;https://github.com/abo-abo/lispy/issues&quot;&gt;issues&lt;/a&gt; would help me a
+great deal more. For instance, if you raise an issue like&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;How can I generate a function call right after the function definition?&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;I would say to just use &lt;kbd&gt;2mcol(&lt;/kbd&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;mark the function name with &lt;kbd&gt;2m&lt;/kbd&gt;&lt;/li&gt;
+&lt;li&gt;clone region with &lt;kbd&gt;c&lt;/kbd&gt;&lt;/li&gt;
+&lt;li&gt;move region outside the function body with &lt;kbd&gt;ol&lt;/kbd&gt;&lt;/li&gt;
+&lt;li&gt;wrap the region with parens while deactivating it with &lt;kbd&gt;(&lt;/kbd&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;And this would be a sort of FAQ question / recipe already done there.&lt;/p&gt;
+
+&lt;p&gt;Or you could raise an issue like:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Why doesn&amp;#39;t &lt;kbd&gt;F&lt;/kbd&gt; work for Racket?&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;I would say it&amp;#39;s because I haven&amp;#39;t implemented it yet, since it was
+tricky.  But I&amp;#39;ll get to it, now that I see that there&amp;#39;s some interest
+in &lt;code&gt;lispy&lt;/code&gt; from Racket users.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Sprucing up org-download</title>
@@ -33,7 +383,7 @@ an &lt;code&gt;org-mode&lt;/code&gt; buffer. With a few hacks and some advice an
 contributions from more experienced hackers, &lt;code&gt;org-download&lt;/code&gt; came to
 be.&lt;/p&gt;
 
-&lt;h2&gt;Today&amp;#39;s commits&lt;/h2&gt;
+&lt;h2 id=&quot;today&amp;#39;s-commits&quot;&gt;Today&amp;#39;s commits&lt;/h2&gt;
 
 &lt;p&gt;The main contribution from today&amp;#39;s commits was adding the code that
 un-aliases images that point to HTML. I see a lot of these from the
@@ -80,7 +430,7 @@ priority to some regexes. For instance, the first element of
 image on Twitter, while the second element will match at least a
 profile picture in the case when there is no referred image.&lt;/p&gt;
 
-&lt;h2&gt;Visual demo&lt;/h2&gt;
+&lt;h2 id=&quot;visual-demo&quot;&gt;Visual demo&lt;/h2&gt;
 
 &lt;p&gt;I think that I might have over-engineered the custom options of
 &lt;code&gt;org-download&lt;/code&gt; a bit. Just to keep you motivated enough to figure them
@@ -100,7 +450,7 @@ clackety-clacking (the customization).&lt;/p&gt;
 my experience. It&amp;#39;s a very good tool, but some of the defaults look
 very poor to me.&lt;/p&gt;
 
-&lt;h2&gt;Customizing the &lt;code&gt;customize&lt;/code&gt;&lt;/h2&gt;
+&lt;h2 id=&quot;customizing-the-customize&quot;&gt;Customizing the &lt;code&gt;customize&lt;/code&gt;&lt;/h2&gt;
 
 &lt;p&gt;First of all, I&amp;#39;ll list a macro that I&amp;#39;ve started to use for setting
 custom variables:&lt;/p&gt;
@@ -115,7 +465,7 @@ close to what I want, or maybe &lt;code&gt;custom-initialize-changed&lt;/code&gt
 all I want is a &lt;code&gt;setq&lt;/code&gt; that is aware of the &lt;code&gt;custom-set&lt;/code&gt; property of a
 variable. If you know such a macro, please let me know.&lt;/p&gt;
 
-&lt;h2&gt;Changing some Ediff options&lt;/h2&gt;
+&lt;h2 id=&quot;changing-some-ediff-options&quot;&gt;Changing some Ediff options&lt;/h2&gt;
 
 &lt;p&gt;Now, that I&amp;#39;ve explained the custom setter (by the way, using
 &lt;code&gt;custom-set-variables&lt;/code&gt; is absolutely equivalent to &lt;code&gt;csetq&lt;/code&gt;), here are
@@ -139,7 +489,7 @@ important changes in the diff, and not the whitespace nonsense.&lt;/p&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;h2&gt;Changing some Ediff key bindings&lt;/h2&gt;
+&lt;h2 id=&quot;changing-some-ediff-key-bindings&quot;&gt;Changing some Ediff key bindings&lt;/h2&gt;
 
 &lt;p&gt;This is just the standard stuff that I like to do for each mode that
 does not self-insert: assign &lt;kbd&gt;j&lt;/kbd&gt; to move down, and
@@ -151,7 +501,7 @@ does not self-insert: assign &lt;kbd&gt;j&lt;/kbd&gt; to move down, and
 
 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;add-hook&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ediff-mode-hook&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ora-ediff-hook&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2&gt;Restoring the windows after Ediff quits&lt;/h2&gt;
+&lt;h2 id=&quot;restoring-the-windows-after-ediff-quits&quot;&gt;Restoring the windows after Ediff quits&lt;/h2&gt;
 
 &lt;p&gt;When you quit an Ediff session with &lt;kbd&gt;q&lt;/kbd&gt;, it just leaves the
 two diff windows around, instead of restoring the window configuration
@@ -160,9 +510,9 @@ restore the old window configuration:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;winner-mode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;add-hook&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ediff-after-quit-hook-internal&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;winner-undo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2&gt;List of ways that I use to invoke Ediff&lt;/h2&gt;
+&lt;h2 id=&quot;list-of-ways-that-i-use-to-invoke-ediff&quot;&gt;List of ways that I use to invoke Ediff&lt;/h2&gt;
 
-&lt;h3&gt;from &lt;code&gt;magit&lt;/code&gt;&lt;/h3&gt;
+&lt;h3 id=&quot;from-magit&quot;&gt;from &lt;code&gt;magit&lt;/code&gt;&lt;/h3&gt;
 
 &lt;p&gt;In 80% of the cases, I call Ediff with &lt;kbd&gt;e&lt;/kbd&gt; (&lt;code&gt;magit-ediff&lt;/code&gt;) from
 &lt;code&gt;magit-status-mode&lt;/code&gt;. This gives me a better overview of the changes,
@@ -181,7 +531,7 @@ current file in the &lt;code&gt;B&lt;/code&gt; window, I can do it with &lt;kbd&
 &lt;kbd&gt;!&lt;/kbd&gt;(&lt;code&gt;ediff-update-diffs&lt;/code&gt;), which will remove the zero-length
 diffs and update the diff-count in the mode-line.&lt;/p&gt;
 
-&lt;h3&gt;other methods&lt;/h3&gt;
+&lt;h3 id=&quot;other-methods&quot;&gt;other methods&lt;/h3&gt;
 
 &lt;ol&gt;
 &lt;li&gt;&lt;code&gt;ediff-buffers&lt;/code&gt; will diff two (different) buffers. If you happen to
@@ -218,7 +568,7 @@ bytes&lt;/code&gt; of information. Are you &lt;strong&gt;sure&lt;/strong&gt; you
 &lt;p&gt;It will save the current buffer, run &lt;code&gt;compile&lt;/code&gt; and switch to
 compilation buffer.&lt;/p&gt;
 
-&lt;h2&gt;Compilation customization&lt;/h2&gt;
+&lt;h2 id=&quot;compilation-customization&quot;&gt;Compilation customization&lt;/h2&gt;
 
 &lt;p&gt;Turns out that there&amp;#39;s no need to save, since I get away with this:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;(setq compilation-ask-about-save nil)
@@ -230,7 +580,7 @@ compilation buffer.&lt;/p&gt;
 compiling.  Otherwise, it saves all modified buffers without asking.&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;h2&gt;Select compilation target&lt;/h2&gt;
+&lt;h2 id=&quot;select-compilation-target&quot;&gt;Select compilation target&lt;/h2&gt;
 
 &lt;p&gt;A year ago, I wrote a package that looks for a &lt;code&gt;Makefile&lt;/code&gt; in the
 current directory, parses the available targets and allows you to
@@ -247,7 +597,7 @@ the plain &lt;code&gt;helm-make&lt;/code&gt; command, a &lt;code&gt;helm-make-pr
 is almost the same, except the &lt;code&gt;Makefile&lt;/code&gt; should come not from the
 current directory but from &lt;code&gt;projectile-project-root&lt;/code&gt;.&lt;/p&gt;
 
-&lt;h2&gt;Some error navigation to go with your compilation&lt;/h2&gt;
+&lt;h2 id=&quot;some-error-navigation-to-go-with-your-compilation&quot;&gt;Some error navigation to go with your compilation&lt;/h2&gt;
 
 &lt;p&gt;I&amp;#39;ve had these bindings for a very long time, just making sure
 that you&amp;#39;re aware of these commands:&lt;/p&gt;
@@ -269,7 +619,7 @@ various method calls. Most of the time, the dot will have the object
 name on the left. So why not automatically insert the object name each
 time I press the dot? Below, I&amp;#39;ll show a code that does exactly that.&lt;/p&gt;
 
-&lt;h2&gt;The dot command&lt;/h2&gt;
+&lt;h2 id=&quot;the-dot-command&quot;&gt;The dot command&lt;/h2&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c++-smart-dot&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
   &lt;span class=&quot;s&quot;&gt;&amp;quot;Insert a dot or an object name plus dot when appropriate.&amp;quot;&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
@@ -287,7 +637,7 @@ to insert the object name along with a dot.&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;eval-after-load&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;cc-mode&amp;quot;&lt;/span&gt;
   &lt;span class=&quot;o&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c++-mode-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;.&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;c++-smart-dot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2&gt;How to get the recent variable&lt;/h2&gt;
+&lt;h2 id=&quot;how-to-get-the-recent-variable&quot;&gt;How to get the recent variable&lt;/h2&gt;
 
 &lt;p&gt;This code doesn&amp;#39;t aim to be thorough, it&amp;#39;s just a hack that
 works reasonably well.&lt;/p&gt;
@@ -342,7 +692,7 @@ you can amend the code like this:&lt;/p&gt;
 &lt;p&gt;The thing above looks slightly ugly. I&amp;#39;m open to suggestions to make
 it look nicer.&lt;/p&gt;
 
-&lt;h2&gt;The sample application&lt;/h2&gt;
+&lt;h2 id=&quot;the-sample-application&quot;&gt;The sample application&lt;/h2&gt;
 
 &lt;p&gt;For the happy people that have never seen C++:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-C++&quot; data-lang=&quot;C++&quot;&gt;&lt;span class=&quot;n&quot;&gt;DataOut&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dim&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;data_out&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
@@ -371,7 +721,7 @@ I have to zoom-in instead. I have &lt;code&gt;text-scale-increase&lt;/code&gt; b
 with e.g. &lt;kbd&gt;&amp;lt;f2&amp;gt; g g g l g g l&lt;/kbd&gt;, i.e. omitting the
 &lt;kbd&gt;&amp;lt;f2&amp;gt;&lt;/kbd&gt; prefix.&lt;/p&gt;
 
-&lt;h2&gt;Define repeatable command&lt;/h2&gt;
+&lt;h2 id=&quot;define-repeatable-command&quot;&gt;Define repeatable command&lt;/h2&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;def-rep-command&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;alist&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
   &lt;span class=&quot;s&quot;&gt;&amp;quot;Return a lambda that calls the first function of ALIST.&lt;/span&gt;
 &lt;span class=&quot;s&quot;&gt;It sets the transient map to all functions of ALIST.&amp;quot;&lt;/span&gt;
@@ -391,7 +741,7 @@ the transient map to call the first and other commands.  The way the
 transient map works, it takes priority over almost all maps, but
 disappears as soon as you press something that doesn&amp;#39;t belong to it.&lt;/p&gt;
 
-&lt;h2&gt;The zoom-in / zoom-out use case&lt;/h2&gt;
+&lt;h2 id=&quot;the-zoom-in-/-zoom-out-use-case&quot;&gt;The zoom-in / zoom-out use case&lt;/h2&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;f2&amp;gt; g&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
                 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;def-rep-command&lt;/span&gt;
                     &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;g&amp;quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;text-scale-increase&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
@@ -420,7 +770,7 @@ lot of people say that &lt;code&gt;org-mode&lt;/code&gt; is the killer app of Em
 &lt;code&gt;tramp&lt;/code&gt; as part of &lt;code&gt;dired&lt;/code&gt;. Below, I&amp;#39;ll list a few dired options in my
 config that deviate from the defaults.&lt;/p&gt;
 
-&lt;h2&gt;&lt;code&gt;dired-listing-switches&lt;/code&gt;&lt;/h2&gt;
+&lt;h2 id=&quot;dired-listing-switches&quot;&gt;&lt;code&gt;dired-listing-switches&lt;/code&gt;&lt;/h2&gt;
 
 &lt;p&gt;This is the essence of what &lt;code&gt;dired&lt;/code&gt; presents and how it presents it.
 A great thing about it is that these are just the &lt;code&gt;ls&lt;/code&gt; switches, so
@@ -438,7 +788,7 @@ laptops than people, the group info is rarely useful.&lt;/li&gt;
 separate from the files.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2&gt;On recursion&lt;/h2&gt;
+&lt;h2 id=&quot;on-recursion&quot;&gt;On recursion&lt;/h2&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dired-recursive-copies&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;always&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dired-recursive-deletes&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;always&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
@@ -461,7 +811,7 @@ that could happen, right?&lt;/p&gt;
    <content type="html">&lt;p&gt;Today, I&amp;#39;ll continue with the trend of posting a small piece of my
 config when I don&amp;#39;t have the time to post something more substantial.&lt;/p&gt;
 
-&lt;h2&gt;Some code&lt;/h2&gt;
+&lt;h2 id=&quot;some-code&quot;&gt;Some code&lt;/h2&gt;
 
 &lt;p&gt;This one looks nice, although it only works on systems with &lt;code&gt;/usr/bin/du&lt;/code&gt;,
 which actually comprise 100% of the systems that I use:&lt;/p&gt;
@@ -482,7 +832,7 @@ point.  I can confirm that, unlike some of the other code on the wiki,
 this one still works as advertised: you can use it on a directory or
 on a series of marked files and directories.&lt;/p&gt;
 
-&lt;h2&gt;Standard &lt;code&gt;dired&lt;/code&gt; marking&lt;/h2&gt;
+&lt;h2 id=&quot;standard-dired-marking&quot;&gt;Standard &lt;code&gt;dired&lt;/code&gt; marking&lt;/h2&gt;
 
 &lt;p&gt;In &lt;code&gt;dired&lt;/code&gt;, you can:&lt;/p&gt;
 
@@ -512,7 +862,7 @@ with &lt;code&gt;font-lock-keyword-face&lt;/code&gt;. It doesn&amp;#39;t affect 
 at all, just makes it look nicer. For the &lt;code&gt;\\|&lt;/code&gt; I chose &lt;code&gt;∨&lt;/code&gt; - the
 &lt;em&gt;logical or&lt;/em&gt; character.&lt;/p&gt;
 
-&lt;h2&gt;The code&lt;/h2&gt;
+&lt;h2 id=&quot;the-code&quot;&gt;The code&lt;/h2&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fontify-glyph&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;item&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;glyph&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
   &lt;span class=&quot;o&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;item&lt;/span&gt;
      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;font-lock-keyword-face&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
@@ -528,7 +878,7 @@ at all, just makes it look nicer. For the &lt;code&gt;\\|&lt;/code&gt; I chose &
 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;font-lock-add-keywords&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;emacs-lisp-mode&lt;/span&gt;
                         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;fontify-glyph&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;\\\\\\\\)&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;)&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2&gt;How it looks like&lt;/h2&gt;
+&lt;h2 id=&quot;how-it-looks-like&quot;&gt;How it looks like&lt;/h2&gt;
 
 &lt;p&gt;At first, I wanted to just inline &lt;a href=&quot;/download/elisp-regex.png&quot;&gt;a picture&lt;/a&gt;,
 but then I thought that &lt;code&gt;htmlize-buffer&lt;/code&gt; would be able to handle it.
@@ -568,7 +918,7 @@ the tips that I gave. While it&amp;#39;s nice and all, and you should check it
 out if you&amp;#39;re looking for something like that, it&amp;#39;s not really for
 me. I will describe the system that I&amp;#39;m currently using below.&lt;/p&gt;
 
-&lt;h2&gt;What is the best list length for cycling?&lt;/h2&gt;
+&lt;h2 id=&quot;what-is-the-best-list-length-for-cycling?&quot;&gt;What is the best list length for cycling?&lt;/h2&gt;
 
 &lt;p&gt;In my opinion, it&amp;#39;s one or two. If it&amp;#39;s one, you&amp;#39;re not really
 cycling, if it&amp;#39;s two, it&amp;#39;s fine. Anything more than that causes
@@ -593,7 +943,7 @@ a command even better suited for that binding, which was
 command isn&amp;#39;t bound right now, I just launch it from &lt;code&gt;smex&lt;/code&gt; on very
 rare occasions.&lt;/p&gt;
 
-&lt;h2&gt;How I launch terminal 95% of the time&lt;/h2&gt;
+&lt;h2 id=&quot;how-i-launch-terminal-95%-of-the-time&quot;&gt;How I launch terminal 95% of the time&lt;/h2&gt;
 
 &lt;p&gt;From &lt;code&gt;dired&lt;/code&gt; of course. The shell&amp;#39;s natural way of switching the
 directory with &lt;code&gt;cd&lt;/code&gt; is extremely inefficient compared to &lt;code&gt;dired&lt;/code&gt;.  So
@@ -627,7 +977,7 @@ time instead.&lt;/p&gt;
              &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;expand-file-name&lt;/span&gt;
               &lt;span class=&quot;nv&quot;&gt;default-directory&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2&gt;How I launch &lt;code&gt;dired&lt;/code&gt; 100% of the time&lt;/h2&gt;
+&lt;h2 id=&quot;how-i-launch-dired-100%-of-the-time&quot;&gt;How I launch &lt;code&gt;dired&lt;/code&gt; 100% of the time&lt;/h2&gt;
 
 &lt;p&gt;With &lt;code&gt;dired-jump&lt;/code&gt;, of course. This command will examine your current
 buffer&amp;#39;s &lt;code&gt;default-directory&lt;/code&gt; and open a &lt;code&gt;dired&lt;/code&gt; buffer there. All you
@@ -646,7 +996,7 @@ go back to the default &lt;code&gt;term-char-mode&lt;/code&gt; with &lt;kbd&gt;C
 avoid this nonsense, just bind &lt;code&gt;dired-jump&lt;/code&gt; to some binding that&amp;#39;s
 convenient for you and works from &lt;code&gt;*ansi-term*&lt;/code&gt;.&lt;/p&gt;
 
-&lt;h2&gt;What I do when I need more than one terminal&lt;/h2&gt;
+&lt;h2 id=&quot;what-i-do-when-i-need-more-than-one-terminal&quot;&gt;What I do when I need more than one terminal&lt;/h2&gt;
 
 &lt;p&gt;Then I just name one: since the default one is supposed to be named
 &lt;code&gt;*ansi-term*&lt;/code&gt;, if I create one named e.g. &lt;code&gt;*jekyll*&lt;/code&gt;, it will be
@@ -678,7 +1028,7 @@ Well, it&amp;#39;s an oldie where I come from.&lt;/p&gt;
 &lt;p&gt;-- &lt;cite&gt;Marty&lt;/cite&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;h2&gt;The code&lt;/h2&gt;
+&lt;h2 id=&quot;the-code&quot;&gt;The code&lt;/h2&gt;
 
 &lt;p&gt;This is the original code that I was using:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;oleh-ido-setup-hook&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
@@ -691,7 +1041,7 @@ Well, it&amp;#39;s an oldie where I come from.&lt;/p&gt;
 
 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;add-hook&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ido-setup-hook&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;oleh-ido-setup-hook&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2&gt;The generalization&lt;/h2&gt;
+&lt;h2 id=&quot;the-generalization&quot;&gt;The generalization&lt;/h2&gt;
 
 &lt;p&gt;It wouldn&amp;#39;t be a LISP if I couldn&amp;#39;t generalize the code:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ido-find-file-jump&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;dir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
@@ -728,7 +1078,7 @@ I would have preferred to do it like this instead:&lt;/p&gt;
 &lt;code&gt;ido-file-dir-completion-map&lt;/code&gt; and I actually have to re-set my
 bindings in &lt;code&gt;ido-setup-hook&lt;/code&gt;.&lt;/p&gt;
 
-&lt;h2&gt;The further generalization&lt;/h2&gt;
+&lt;h2 id=&quot;the-further-generalization&quot;&gt;The further generalization&lt;/h2&gt;
 
 &lt;p&gt;Here is the final iteration of the code:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defvar&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;oleh-ido-shortcuts&lt;/span&gt;
@@ -748,7 +1098,7 @@ bindings in &lt;code&gt;ido-setup-hook&lt;/code&gt;.&lt;/p&gt;
 
 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;add-hook&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ido-setup-hook&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;oleh-ido-setup-hook&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2&gt;The customize tricks&lt;/h2&gt;
+&lt;h2 id=&quot;the-customize-tricks&quot;&gt;The customize tricks&lt;/h2&gt;
 
 &lt;blockquote&gt;
 &lt;p&gt;&amp;quot;Custom setters?&lt;br&gt;
@@ -804,7 +1154,7 @@ And &lt;code&gt;csetq&lt;/code&gt; is just a &lt;code&gt;customize&lt;/code&gt;-
    <id>http://oremacs.com/2015/01/08/org-protocol-2</id>
    <content type="html">&lt;p&gt;This continues the code from &lt;a href=&quot;/2015/01/07/org-protocol-1/&quot;&gt;the part 1&lt;/a&gt;.&lt;/p&gt;
 
-&lt;h2&gt;&lt;code&gt;org-handle-link-youtube&lt;/code&gt;&lt;/h2&gt;
+&lt;h2 id=&quot;org-handle-link-youtube&quot;&gt;&lt;code&gt;org-handle-link-youtube&lt;/code&gt;&lt;/h2&gt;
 
 &lt;p&gt;I tried to make the first call to &lt;code&gt;youtube-dl&lt;/code&gt; asynchronous, but it
 wasn&amp;#39;t working out.  So for the current code, there&amp;#39;s still about a 2
@@ -858,7 +1208,7 @@ creating TODO tasks in certain &lt;code&gt;org-mode&lt;/code&gt; files by clicki
 Firefox, thanks to
 &lt;a href=&quot;https://addons.mozilla.org/en-US/firefox/addon/org-mode-capture/&quot;&gt;org-mode capture&lt;/a&gt;.&lt;/p&gt;
 
-&lt;h2&gt;&lt;code&gt;org-protocol&lt;/code&gt; starter&lt;/h2&gt;
+&lt;h2 id=&quot;org-protocol-starter&quot;&gt;&lt;code&gt;org-protocol&lt;/code&gt; starter&lt;/h2&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-emacs&quot; data-lang=&quot;emacs&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;org-capture&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;org-protocol&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-protocol-default-template-key&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;l&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
@@ -872,7 +1222,7 @@ Firefox, thanks to
 &lt;li&gt;&lt;code&gt;org-link-hooks&lt;/code&gt; should insert some extra information&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2&gt;&lt;code&gt;org-wash-link&lt;/code&gt;&lt;/h2&gt;
+&lt;h2 id=&quot;org-wash-link&quot;&gt;&lt;code&gt;org-wash-link&lt;/code&gt;&lt;/h2&gt;
 
 &lt;p&gt;Basically, when I capture a question on
 &lt;a href=&quot;http://stackoverflow.com/questions/tagged/emacs&quot;&gt;Stack Overflow&lt;/a&gt;, I
@@ -885,7 +1235,7 @@ since the TODO itself is stored in &lt;code&gt;wiki/stack.org/* Questions&lt;/co
                  &lt;span class=&quot;s&quot;&gt;&amp;quot; - Stack Overflow&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;title&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;org-make-link-string&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;link&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;title&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2&gt;&lt;code&gt;org-link-hooks&lt;/code&gt;&lt;/h2&gt;
+&lt;h2 id=&quot;org-link-hooks&quot;&gt;&lt;code&gt;org-link-hooks&lt;/code&gt;&lt;/h2&gt;
 
 &lt;p&gt;This is just a hack for passing information around that
 functions from &lt;code&gt;org-handle-link&lt;/code&gt; can use.&lt;/p&gt;
@@ -898,7 +1248,7 @@ functions from &lt;code&gt;org-handle-link&lt;/code&gt; can use.&lt;/p&gt;
                  &lt;span class=&quot;s&quot;&gt;&amp;quot;\n&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-link-hook&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2&gt;&lt;code&gt;org-handle-link&lt;/code&gt;&lt;/h2&gt;
+&lt;h2 id=&quot;org-handle-link&quot;&gt;&lt;code&gt;org-handle-link&lt;/code&gt;&lt;/h2&gt;
 
 &lt;p&gt;This is the heart of the setup.&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-emacs&quot; data-lang=&quot;emacs&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-handle-link&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
@@ -945,7 +1295,7 @@ perceptible delay when capturing.&lt;/p&gt;
 &lt;p&gt;I&amp;#39;ve finally wrapped a piece of config that I was using for a while in
 a package called &lt;a href=&quot;https://github.com/abo-abo/headlong&quot;&gt;headlong&lt;/a&gt;.&lt;/p&gt;
 
-&lt;h2&gt;What does it do?&lt;/h2&gt;
+&lt;h2 id=&quot;what-does-it-do?&quot;&gt;What does it do?&lt;/h2&gt;
 
 &lt;p&gt;It provides a macro called &lt;code&gt;headlong-with&lt;/code&gt; that modifies minibuffer
 completion for the forms within it, making it faster in some
@@ -963,7 +1313,7 @@ efficiently: &lt;code&gt;headlong-bookmark-jump&lt;/code&gt; and
 as the first one, except it opens the bookmark with &lt;code&gt;pop-to-buffer&lt;/code&gt;,
 i.e. in other window.&lt;/p&gt;
 
-&lt;h2&gt;How does this completion work?&lt;/h2&gt;
+&lt;h2 id=&quot;how-does-this-completion-work?&quot;&gt;How does this completion work?&lt;/h2&gt;
 
 &lt;p&gt;It&amp;#39;s nothing fancy, you will just exit the minibuffer automatically as
 soon as there is only one completion candidate left.
@@ -988,7 +1338,7 @@ two methods:&lt;/p&gt;
 even more, since pressing &lt;kbd&gt;RET&lt;/kbd&gt; is harder than it should be
 on most keyboards.&lt;/p&gt;
 
-&lt;h2&gt;Why is this cool?&lt;/h2&gt;
+&lt;h2 id=&quot;why-is-this-cool?&quot;&gt;Why is this cool?&lt;/h2&gt;
 
 &lt;p&gt;This is cool because you can implement your bookmarks as efficiently
 as you would with just wrapping stuff with a &lt;code&gt;lambda&lt;/code&gt; and using
@@ -1024,7 +1374,7 @@ Instead, I like to watch my videos in
 &lt;a href=&quot;http://www.videolan.org/vlc/index.html&quot;&gt;VLC&lt;/a&gt;, which comes closest to
 providing an Emacs-like experience among video players.&lt;/p&gt;
 
-&lt;h2&gt;Useful VLC shortcuts&lt;/h2&gt;
+&lt;h2 id=&quot;useful-vlc-shortcuts&quot;&gt;Useful VLC shortcuts&lt;/h2&gt;
 
 &lt;p&gt;Here is a list of shortcuts that really make me stick with VLC:&lt;/p&gt;
 
@@ -1048,7 +1398,7 @@ providing an Emacs-like experience among video players.&lt;/p&gt;
 &lt;p&gt;So if you&amp;#39;re not watching instructional videos at &lt;code&gt;1.6&lt;/code&gt; speed,
 or skipping the Simpsons intro sequence with &lt;kbd&gt;M-right&lt;/kbd&gt;, you&amp;#39;re missing out.&lt;/p&gt;
 
-&lt;h2&gt;From Youtube to VLC&lt;/h2&gt;
+&lt;h2 id=&quot;from-youtube-to-vlc&quot;&gt;From Youtube to VLC&lt;/h2&gt;
 
 &lt;p&gt;&lt;a href=&quot;https://github.com/rg3/youtube-dl/&quot;&gt;youtube-dl&lt;/a&gt; is an excellent command-line tool
 for saving the videos from Youtube. It downloads the highest resolution at a usually
@@ -1057,7 +1407,7 @@ a bunch of lecture videos from &lt;a href=&quot;https://www.edx.org/&quot;&gt;ed
 You can install it with:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;sudo pip install youtube-dl
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2&gt;One Emacs script to rule them all&lt;/h2&gt;
+&lt;h2 id=&quot;one-emacs-script-to-rule-them-all&quot;&gt;One Emacs script to rule them all&lt;/h2&gt;
 
 &lt;p&gt;I quickly tired of opening a shell, setting the directory, entering
 the command, and pasting the link. So I wrote some Elisp code that does it for me.
@@ -1131,7 +1481,7 @@ Emacs session lasts on the order of hours, since I mess about with
 Elisp a lot. Below, I&amp;#39;ll share some of my &lt;code&gt;dired&lt;/code&gt; process-related
 customizations.&lt;/p&gt;
 
-&lt;h2&gt;Ignore running processes when closing Emacs&lt;/h2&gt;
+&lt;h2 id=&quot;ignore-running-processes-when-closing-emacs&quot;&gt;Ignore running processes when closing Emacs&lt;/h2&gt;
 
 &lt;p&gt;Usually there&amp;#39;s nothing wrong with just killing a spawned process,
 like an &lt;code&gt;ipython&lt;/code&gt; shell or something.&lt;/p&gt;
@@ -1143,7 +1493,7 @@ like an &lt;code&gt;ipython&lt;/code&gt; shell or something.&lt;/p&gt;
   &lt;span class=&quot;s&quot;&gt;&amp;quot;Prevent \&amp;quot;Active processes exist\&amp;quot; query on exit.&amp;quot;&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;flet&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;process-list&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()))&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ad-do-it&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2&gt;Guess programs by file extension&lt;/h2&gt;
+&lt;h2 id=&quot;guess-programs-by-file-extension&quot;&gt;Guess programs by file extension&lt;/h2&gt;
 
 &lt;p&gt;With this setup, usually there&amp;#39;s no need to manually type in the
 command name.&lt;/p&gt;
@@ -1162,7 +1512,7 @@ command name.&lt;/p&gt;
         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;\\.html?\\&amp;#39;&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;firefox&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;\\.cue?\\&amp;#39;&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;audacious&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2&gt;Add nohup&lt;/h2&gt;
+&lt;h2 id=&quot;add-nohup&quot;&gt;Add nohup&lt;/h2&gt;
 
 &lt;p&gt;According to &lt;code&gt;info nohup&lt;/code&gt;:&lt;/p&gt;
 
@@ -1218,7 +1568,7 @@ by default in &lt;code&gt;dired&lt;/code&gt;:&lt;/p&gt;
 the 13th one or anything.  So I&amp;#39;ll commemorate it with a post on
 dealing with dates in &lt;code&gt;calc&lt;/code&gt;.&lt;/p&gt;
 
-&lt;h2&gt;How much time has passed since I started this blog?&lt;/h2&gt;
+&lt;h2 id=&quot;how-much-time-has-passed-since-i-started-this-blog?&quot;&gt;How much time has passed since I started this blog?&lt;/h2&gt;
 
 &lt;ol&gt;
 &lt;li&gt;&lt;p&gt;Open &lt;code&gt;calc&lt;/code&gt; with &lt;kbd&gt;C-x **&lt;/kbd&gt;:&lt;/p&gt;
@@ -1248,7 +1598,7 @@ still have half of a day to post this. Unfortunately, I have only an
 old version of the blog repository on this machine, and the current
 one is on a laptop at home. So I&amp;#39;ll post this in the evening.&lt;/p&gt;
 
-&lt;h2&gt;Did you know what 2015 looks like in binary?&lt;/h2&gt;
+&lt;h2 id=&quot;did-you-know-what-2015-looks-like-in-binary?&quot;&gt;Did you know what 2015 looks like in binary?&lt;/h2&gt;
 
 &lt;p&gt;In your current &lt;code&gt;calc&lt;/code&gt; session,&lt;/p&gt;
 
@@ -1295,7 +1645,7 @@ I wrote down a new package called &lt;a href=&quot;https://github.com/abo-abo/la
 It&amp;#39;s only a few hours old, but I like it a lot.
 I&amp;#39;ve grepped the sources of AUCTeX, and it doesn&amp;#39;t seem to have this functionality.&lt;/p&gt;
 
-&lt;h2&gt;Here&amp;#39;s how it works&lt;/h2&gt;
+&lt;h2 id=&quot;here&amp;#39;s-how-it-works&quot;&gt;Here&amp;#39;s how it works&lt;/h2&gt;
 
 &lt;p&gt;You start with an active region:&lt;/p&gt;
 
@@ -1337,13 +1687,13 @@ Maggie&lt;cursor&gt; &lt;/cursor&gt;
 continue by always placing the point on the end of the last line of
 the inserted environment.&lt;/p&gt;
 
-&lt;h2&gt;How it works with no active region&lt;/h2&gt;
+&lt;h2 id=&quot;how-it-works-with-no-active-region&quot;&gt;How it works with no active region&lt;/h2&gt;
 
 &lt;p&gt;If &lt;code&gt;(looking-back &amp;quot;^ *&amp;quot;)&lt;/code&gt; is true, the current line is used as if it was
 the region.  Otherwise, an empty environment is inserted after the
 current line.&lt;/p&gt;
 
-&lt;h2&gt;Using the code&lt;/h2&gt;
+&lt;h2 id=&quot;using-the-code&quot;&gt;Using the code&lt;/h2&gt;
 
 &lt;p&gt;If you like the idea, you can check out the code at
 &lt;a href=&quot;https://github.com/abo-abo/latex-wrap&quot;&gt;github&lt;/a&gt; and test it out.  If
@@ -1361,13 +1711,13 @@ bite.&lt;/p&gt;
    <link href="http://oremacs.com/2015/01/01/three-ansi-term-tips/"/>
    <updated>2015-01-01T00:00:00+01:00</updated>
    <id>http://oremacs.com/2015/01/01/three-ansi-term-tips</id>
-   <content type="html">&lt;h2&gt;Tip #1&lt;/h2&gt;
+   <content type="html">&lt;h2 id=&quot;tip-#1&quot;&gt;Tip #1&lt;/h2&gt;
 
 &lt;p&gt;There&amp;#39;s no reason not to have &lt;code&gt;/bin/bash&lt;/code&gt; instead of &lt;code&gt;/bin/sh&lt;/code&gt; as the
 default choice when you &lt;kbd&gt;M-x&lt;/kbd&gt; &lt;code&gt;term&lt;/code&gt;.&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;explicit-shell-file-name&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;/bin/bash&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2&gt;Tip #2&lt;/h2&gt;
+&lt;h2 id=&quot;tip-#2&quot;&gt;Tip #2&lt;/h2&gt;
 
 &lt;p&gt;After you close the terminal, you get a useless buffer with no
 process. It&amp;#39;s probably left there for you to have a history of what
@@ -1384,7 +1734,7 @@ automatically:&lt;/p&gt;
 
 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;add-hook&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;term-exec-hook&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;oleh-term-exec-hook&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2&gt;Tip #3&lt;/h2&gt;
+&lt;h2 id=&quot;tip-#3&quot;&gt;Tip #3&lt;/h2&gt;
 
 &lt;p&gt;By default, &lt;kbd&gt;C-y&lt;/kbd&gt; calls term&amp;#39;s own &lt;code&gt;yank&lt;/code&gt;, which is different
 from Emacs&amp;#39;s &lt;code&gt;yank&lt;/code&gt;.  So, until recently, I was using
@@ -1406,7 +1756,7 @@ the older packages. This post will cover some practical problems that
 you may encounter when your package needs to be aware of another
 active package.&lt;/p&gt;
 
-&lt;h2&gt;&lt;code&gt;ace-window&lt;/code&gt; vs. &lt;code&gt;helm&lt;/code&gt;&lt;/h2&gt;
+&lt;h2 id=&quot;ace-window-vs.-helm&quot;&gt;&lt;code&gt;ace-window&lt;/code&gt; vs. &lt;code&gt;helm&lt;/code&gt;&lt;/h2&gt;
 
 &lt;p&gt;&lt;a href=&quot;https://github.com/emacs-helm/helm&quot;&gt;helm&lt;/a&gt; is a wonderful package,
 it&amp;#39;s my goto-package when I need completion. All of the following
@@ -1435,7 +1785,7 @@ out of a &lt;code&gt;helm&lt;/code&gt;-minibuffer. In fact, it was not possible 
 inkling that it used to work at some point. So I checked out a
 year-old version of &lt;code&gt;helm&lt;/code&gt; and it did work.&lt;/p&gt;
 
-&lt;h3&gt;&lt;code&gt;magit-bisect&lt;/code&gt; to the rescue!&lt;/h3&gt;
+&lt;h3 id=&quot;magit-bisect-to-the-rescue!&quot;&gt;&lt;code&gt;magit-bisect&lt;/code&gt; to the rescue!&lt;/h3&gt;
 
 &lt;p&gt;It&amp;#39;s very simple:&lt;/p&gt;
 
@@ -1462,7 +1812,7 @@ in this case.&lt;/li&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;diff-indicator-removed&quot;&gt;&lt;span class=&quot;region&quot;&gt;-&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;diff-removed&quot;&gt;&lt;span class=&quot;region&quot;&gt;      (when kmap (setq overriding-local-map kmap)))))
 &lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;diff-indicator-added&quot;&gt;&lt;span class=&quot;region&quot;&gt;+&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;diff-added&quot;&gt;&lt;span class=&quot;region&quot;&gt;      (when kmap (set-transient-map kmap)))))&lt;/span&gt;&lt;/span&gt;&lt;/pre&gt;
 
-&lt;h3&gt;the priority of maps&lt;/h3&gt;
+&lt;h3 id=&quot;the-priority-of-maps&quot;&gt;the priority of maps&lt;/h3&gt;
 
 &lt;p&gt;In Emacs, &lt;code&gt;set-transient-map&lt;/code&gt; has priority over
 &lt;code&gt;overriding-local-map&lt;/code&gt;, which was exactly what &lt;code&gt;ace-window&lt;/code&gt; was using.
@@ -1486,7 +1836,7 @@ called after &lt;code&gt;helm&lt;/code&gt;.&lt;/p&gt;
 In the end, this finally worked:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;remove-hook&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;post-command-hook&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;helm--maybe-update-keymap&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2&gt;&lt;code&gt;lispy&lt;/code&gt; vs. &lt;code&gt;SLIME&lt;/code&gt; and &lt;code&gt;CIDER&lt;/code&gt;&lt;/h2&gt;
+&lt;h2 id=&quot;lispy-vs.-slime-and-cider&quot;&gt;&lt;code&gt;lispy&lt;/code&gt; vs. &lt;code&gt;SLIME&lt;/code&gt; and &lt;code&gt;CIDER&lt;/code&gt;&lt;/h2&gt;
 
 &lt;p&gt;I thought that enabling &lt;code&gt;lispy-mode&lt;/code&gt; for &lt;code&gt;slime-repl-mode&lt;/code&gt; and
 &lt;code&gt;cider-repl-mode&lt;/code&gt; might be a good idea.
@@ -1553,7 +1903,7 @@ yield. Happy coding in the New Year!&lt;/p&gt;
    <link href="http://oremacs.com/2014/12/30/ace-link-eww/"/>
    <updated>2014-12-30T00:00:00+01:00</updated>
    <id>http://oremacs.com/2014/12/30/ace-link-eww</id>
-   <content type="html">&lt;h2&gt;Emacs goodness incoming&lt;/h2&gt;
+   <content type="html">&lt;h2 id=&quot;emacs-goodness-incoming&quot;&gt;Emacs goodness incoming&lt;/h2&gt;
 
 &lt;p&gt;I&amp;#39;ve discovered a nice Emacs-related blog -
 &lt;a href=&quot;http://mbork.pl/Content_AND_Presentation&quot;&gt;Content AND Presentation&lt;/a&gt;.
@@ -1562,7 +1912,7 @@ that I mentioned yesterday, this one is pretty self-contained, i.e. it
 doesn&amp;#39;t link to many external information sources.  So I thought that
 it&amp;#39;s perfect for trying EWW to read it.&lt;/p&gt;
 
-&lt;h2&gt;Not so fast! Configure first.&lt;/h2&gt;
+&lt;h2 id=&quot;not-so-fast!-configure-first.&quot;&gt;Not so fast! Configure first.&lt;/h2&gt;
 
 &lt;p&gt;For modes that don&amp;#39;t require to self-insert (and even for some that
 do), I like to navigate with
@@ -1614,7 +1964,7 @@ and &lt;kbd&gt;v&lt;/kbd&gt;.  And here&amp;#39;s the implementation of the arro
         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;forward-line&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;line-move&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;arg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2&gt;Cherry on the top&lt;/h2&gt;
+&lt;h2 id=&quot;cherry-on-the-top&quot;&gt;Cherry on the top&lt;/h2&gt;
 
 &lt;p&gt;And while I was at it, I&amp;#39;ve added &lt;a href=&quot;https://github.com/abo-abo/ace-link&quot;&gt;ace-link&lt;/a&gt; support for EWW.  It was
 pretty easy, basically the same routine as for &lt;code&gt;help-mode&lt;/code&gt; and
@@ -1660,7 +2010,7 @@ buffer.&lt;/p&gt;
    <link href="http://oremacs.com/2014/12/29/monkeying-around-with-javascript/"/>
    <updated>2014-12-29T00:00:00+01:00</updated>
    <id>http://oremacs.com/2014/12/29/monkeying-around-with-javascript</id>
-   <content type="html">&lt;h2&gt;Exciting encounter&lt;/h2&gt;
+   <content type="html">&lt;h2 id=&quot;exciting-encounter&quot;&gt;Exciting encounter&lt;/h2&gt;
 
 &lt;p&gt;Recently, I happened upon a wonderful blog called
 &lt;a href=&quot;http://axisofeval.blogspot.nl&quot;&gt;The Axis of Eval&lt;/a&gt;.  I knew that I&amp;#39;d
@@ -1687,7 +2037,7 @@ foreground and magenta links. Plus the RSS was kind of quirky, and I
 couldn&amp;#39;t just feed all of it into
 &lt;a href=&quot;https://github.com/skeeto/elfeed&quot;&gt;Elfeed&lt;/a&gt;.&lt;/p&gt;
 
-&lt;h2&gt;Greasemonkey to the rescue!&lt;/h2&gt;
+&lt;h2 id=&quot;greasemonkey-to-the-rescue!&quot;&gt;Greasemonkey to the rescue!&lt;/h2&gt;
 
 &lt;p&gt;In the previous post I&amp;#39;ve mentioned that, in addition to using
 &lt;a href=&quot;http://www.gnu.org/software/emacs/&quot;&gt;the best editor&lt;/a&gt;, I&amp;#39;m using
@@ -1739,7 +2089,7 @@ often have I typed &lt;code&gt;region-&lt;/code&gt; only to find 7 candidates st
 4 of them useless. Which prompted me to look for an additional
 completion method.&lt;/p&gt;
 
-&lt;h2&gt;Enter abbrevs&lt;/h2&gt;
+&lt;h2 id=&quot;enter-abbrevs&quot;&gt;Enter abbrevs&lt;/h2&gt;
 
 &lt;p&gt;According to the &lt;a href=&quot;http://www.gnu.org/software/emacs/manual/html_node/emacs/Abbrevs.html&quot;&gt;manual&lt;/a&gt;,&lt;/p&gt;
 
@@ -1778,7 +2128,7 @@ enabled&lt;/p&gt;
   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;lispy-mode&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;auto-compile-mode&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2&gt;Some data acquisition&lt;/h2&gt;
+&lt;h2 id=&quot;some-data-acquisition&quot;&gt;Some data acquisition&lt;/h2&gt;
 
 &lt;p&gt;I had the whole abbrev thing in the back of my mind until I saw a link
 to the post
@@ -1823,7 +2173,7 @@ If it was less than 5, the abbrev was auto-deleted, otherwise the
 decision was up to me, as holding &lt;kbd&gt;C-.&lt;/kbd&gt; would no longer
 delete. In the end, there were only 56 abbrevs left out of 1600.&lt;/p&gt;
 
-&lt;h2&gt;The final result&lt;/h2&gt;
+&lt;h2 id=&quot;the-final-result&quot;&gt;The final result&lt;/h2&gt;
 
 &lt;p&gt;Here&amp;#39;s what I have put into my &lt;code&gt;abbrev_defs&lt;/code&gt;:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;define-abbrev-table&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;emacs-lisp-mode-abbrev-table&lt;/span&gt;
@@ -1864,7 +2214,7 @@ delete. In the end, there were only 56 abbrevs left out of 1600.&lt;/p&gt;
    <link href="http://oremacs.com/2014/12/27/mmm-minty/"/>
    <updated>2014-12-27T00:00:00+01:00</updated>
    <id>http://oremacs.com/2014/12/27/mmm-minty</id>
-   <content type="html">&lt;h2&gt;The backstory&lt;/h2&gt;
+   <content type="html">&lt;h2 id=&quot;the-backstory&quot;&gt;The backstory&lt;/h2&gt;
 
 &lt;p&gt;In &lt;a href=&quot;/2014/12/24/light-it-up/&quot;&gt;one of the earlier posts&lt;/a&gt;,
 I was discussing the implementation of an Emacs Lisp lexer for
@@ -1872,7 +2222,7 @@ I was discussing the implementation of an Emacs Lisp lexer for
 update and get nicely highlighted code in a pdf via the
 &lt;a href=&quot;http://code.google.com/p/minted&quot;&gt;minted&lt;/a&gt; LaTeX package.&lt;/p&gt;
 
-&lt;h2&gt;The install&lt;/h2&gt;
+&lt;h2 id=&quot;the-install&quot;&gt;The install&lt;/h2&gt;
 
 &lt;p&gt;Assuming that you are on a Debian-related system:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;sudo apt-get install mercurial
@@ -1886,7 +2236,7 @@ sudo python setup.py install
 I&amp;#39;m not too sophisticated about it, so I just install everything:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;sudo apt-get install texlive-full
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2&gt;The result&lt;/h2&gt;
+&lt;h2 id=&quot;the-result&quot;&gt;The result&lt;/h2&gt;
 
 &lt;p&gt;So here I took some code from
 &lt;a href=&quot;/2014/12/25/ode-to-toggle/&quot;&gt;a previous post&lt;/a&gt; and
@@ -1894,7 +2244,7 @@ copy-pasted it into &lt;a href=&quot;/download/minty.org&quot;&gt;minty.org&lt;/
 And here&amp;#39;s the result of the PDF export (&lt;kbd&gt;C-c C-e lo&lt;/kbd&gt;):
 &lt;a href=&quot;/download/minty.pdf&quot;&gt;minty.pdf&lt;/a&gt;.&lt;/p&gt;
 
-&lt;h2&gt;The red tape&lt;/h2&gt;
+&lt;h2 id=&quot;the-red-tape&quot;&gt;The red tape&lt;/h2&gt;
 
 &lt;p&gt;&lt;code&gt;org-mode&lt;/code&gt; had trouble exporting on my laptop until I did this:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;cd /usr/bin/
@@ -1913,7 +2263,7 @@ sudo ln -s /usr/local/texlive/2013/bin/x86_64-linux/pdflatex
    <link href="http://oremacs.com/2014/12/26/the-little-package-that-could/"/>
    <updated>2014-12-26T00:00:00+01:00</updated>
    <id>http://oremacs.com/2014/12/26/the-little-package-that-could</id>
-   <content type="html">&lt;h2&gt;The Challenge&lt;/h2&gt;
+   <content type="html">&lt;h2 id=&quot;the-challenge&quot;&gt;The Challenge&lt;/h2&gt;
 
 &lt;p&gt;It all started with a heated discussion with the author of
 &lt;a href=&quot;https://github.com/capitaomorte/yasnippet&quot;&gt;yasnippet&lt;/a&gt; over some minor
@@ -1926,7 +2276,7 @@ grandiose views and in the glorious unix tradition of recursive
 acronyms&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;h2&gt;The Thought Process&lt;/h2&gt;
+&lt;h2 id=&quot;the-thought-process&quot;&gt;The Thought Process&lt;/h2&gt;
 
 &lt;p&gt;Well, doing exactly that would probably be lame, but I really loved
 the acronym. Somewhere around that time I saw some post about using
@@ -1962,7 +2312,7 @@ parameters for this loop expansion are:&lt;/p&gt;
 &lt;p&gt;So ideally, in order to have a package called &lt;code&gt;tiny&lt;/code&gt;, I&amp;#39;d like to
 keep only the parameters and throw away everything else.&lt;/p&gt;
 
-&lt;h2&gt;The Result&lt;/h2&gt;
+&lt;h2 id=&quot;the-result&quot;&gt;The Result&lt;/h2&gt;
 
 &lt;p&gt;Here&amp;#39;s the final result of the shortening, and what &lt;code&gt;tiny-expand&lt;/code&gt; would produce:&lt;/p&gt;
 
@@ -1995,7 +2345,7 @@ It can be omitted if your format string starts with a &lt;code&gt;%&lt;/code&gt;
 if you want.  Or just use only the closing parens to resolve the
 ambiguities.&lt;/p&gt;
 
-&lt;h2&gt;The Demos&lt;/h2&gt;
+&lt;h2 id=&quot;the-demos&quot;&gt;The Demos&lt;/h2&gt;
 
 &lt;p&gt;Here are some more snippets, you can click on them to see what they
 expand to. You can also find them and more in the comments section of
@@ -2232,7 +2582,7 @@ also one special function called &lt;code&gt;date&lt;/code&gt; that you can use 
 takes the start date as a string (&lt;code&gt;&amp;quot;Jan 1&amp;quot;&lt;/code&gt; in the example) and an
 integer shift and prints an &lt;code&gt;org&lt;/code&gt;-style date.&lt;/p&gt;
 
-&lt;h2&gt;The full syntax&lt;/h2&gt;
+&lt;h2 id=&quot;the-full-syntax&quot;&gt;The full syntax&lt;/h2&gt;
 
 &lt;p&gt;The full syntax for the snippet is:&lt;/p&gt;
 
@@ -2250,7 +2600,7 @@ to separate it with &lt;code&gt;|&lt;/code&gt; if the format string does not sta
 &lt;li&gt;With the point at the end of the snippet, &lt;kbd&gt;M-x&lt;/kbd&gt;&lt;code&gt;tiny-expand&lt;/code&gt;.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2&gt;The Summary&lt;/h2&gt;
+&lt;h2 id=&quot;the-summary&quot;&gt;The Summary&lt;/h2&gt;
 
 &lt;p&gt;In the end, &lt;a href=&quot;https://github.com/abo-abo/tiny&quot;&gt;tiny&lt;/a&gt; lives up to the name,
 implementing only one snippet that can be used in a variety of ways.&lt;/p&gt;
@@ -2287,7 +2637,7 @@ both requirements for a good toggle aren&amp;#39;t fulfilled.&lt;/p&gt;
 &lt;code&gt;capitalize-word-toggle&lt;/code&gt; and &lt;code&gt;upcase-word-toggle&lt;/code&gt;, that are good
 toggles.&lt;/p&gt;
 
-&lt;h2&gt;&lt;code&gt;capitalize-word-toggle&lt;/code&gt;&lt;/h2&gt;
+&lt;h2 id=&quot;capitalize-word-toggle&quot;&gt;&lt;code&gt;capitalize-word-toggle&lt;/code&gt;&lt;/h2&gt;
 
 &lt;blockquote&gt;
 &lt;p&gt;Talk is cheap. Show me the code.&lt;/p&gt;
@@ -2331,7 +2681,7 @@ and the code features a lot of lines like this:&lt;/p&gt;
 &lt;code&gt;Triangulation&lt;/code&gt; when I want &lt;code&gt;triangulation&lt;/code&gt;, and the other way around.
 So &lt;code&gt;capitalize-word-toggle&lt;/code&gt; is super-useful there.&lt;/p&gt;
 
-&lt;h2&gt;&lt;code&gt;upcase-word-toggle&lt;/code&gt;&lt;/h2&gt;
+&lt;h2 id=&quot;upcase-word-toggle&quot;&gt;&lt;code&gt;upcase-word-toggle&lt;/code&gt;&lt;/h2&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;upcase-word-toggle&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;bounds&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;bounds-of-thing-at-point&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;symbol&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
@@ -2377,7 +2727,7 @@ and to toggle when called again.&lt;/p&gt;
    <link href="http://oremacs.com/2014/12/24/light-it-up/"/>
    <updated>2014-12-24T00:00:00+01:00</updated>
    <id>http://oremacs.com/2014/12/24/light-it-up</id>
-   <content type="html">&lt;h2&gt;The Challenge&lt;/h2&gt;
+   <content type="html">&lt;h2 id=&quot;the-challenge&quot;&gt;The Challenge&lt;/h2&gt;
 
 &lt;p&gt;More than 2 years ago, the formidable @bbatsov of &lt;a href=&quot;http://emacsredux.com&quot;&gt;Emacs Redux&lt;/a&gt; had this to say:&lt;/p&gt;
 
@@ -2387,7 +2737,7 @@ and to toggle when called again.&lt;/p&gt;
 
 &lt;p&gt;Well, let&amp;#39;s turn that #fail-frown upside down!&lt;/p&gt;
 
-&lt;h2&gt;The Python&lt;/h2&gt;
+&lt;h2 id=&quot;the-python&quot;&gt;The Python&lt;/h2&gt;
 
 &lt;p&gt;A quick search brought me to this page:
 &lt;a href=&quot;http://pygments.org/docs/lexerdevelopment/&quot;&gt;Write your own lexer -- Pygments&lt;/a&gt;.
@@ -2428,7 +2778,7 @@ $ ./pygmentize -O full -f html -o /tmp/example.html \
 &lt;p&gt;I would repeat the last line with each update to the code, and then
 refresh the page in Firefox to see the result.&lt;/p&gt;
 
-&lt;h2&gt;The Elisp&lt;/h2&gt;
+&lt;h2 id=&quot;the-elisp&quot;&gt;The Elisp&lt;/h2&gt;
 
 &lt;p&gt;To finalize the lexer, the following tasks ensued:&lt;/p&gt;
 
@@ -2474,7 +2824,7 @@ improve even further:&lt;/p&gt;
 &lt;code&gt;save-and-switch-buffer&lt;/code&gt;. The defaults are &lt;kbd&gt;C-s&lt;/kbd&gt; and
 &lt;kbd&gt;C-r&lt;/kbd&gt;, in case you didn&amp;#39;t know.&lt;/p&gt;
 
-&lt;h2&gt;The C&lt;/h2&gt;
+&lt;h2 id=&quot;the-c&quot;&gt;The C&lt;/h2&gt;
 
 &lt;p&gt;Getting the list of built-in C functions and special forms, obviously
 involved browsing the C source code. In case you don&amp;#39;t (yet) have the Emacs sources,
@@ -2526,12 +2876,12 @@ Here&amp;#39;s a list of 23 special forms that I found:&lt;/p&gt;
 &lt;a href=&quot;http://mitpress.mit.edu/sicp/full-text/book/book-Z-H-10.html#%_sec_1.1.3&quot;&gt;SICP&lt;/a&gt;.
 There&amp;#39;s no node for them, so just use isearch.&lt;/p&gt;
 
-&lt;h2&gt;The Result&lt;/h2&gt;
+&lt;h2 id=&quot;the-result&quot;&gt;The Result&lt;/h2&gt;
 
 &lt;p&gt;You can see it here: &lt;a href=&quot;/download/ediff.html&quot;&gt;ediff.html&lt;/a&gt;, as well as on
 the rest of the site, since I&amp;#39;ve switched it on everywhere.&lt;/p&gt;
 
-&lt;h2&gt;The Impact&lt;/h2&gt;
+&lt;h2 id=&quot;the-impact&quot;&gt;The Impact&lt;/h2&gt;
 
 &lt;p&gt;Unfortunately this won&amp;#39;t have impact on the Github source code
 highlighter, since
@@ -2547,7 +2897,7 @@ Elisp highlighting. In fact, this blog is already using the new highlighter.&lt;
 &lt;p&gt;See the rest of projects that use Pygments
 &lt;a href=&quot;http://pygments.org/faq/#who-uses-pygments&quot;&gt;here&lt;/a&gt;&lt;/p&gt;
 
-&lt;h2&gt;The Bitbucket&lt;/h2&gt;
+&lt;h2 id=&quot;the-bitbucket&quot;&gt;The Bitbucket&lt;/h2&gt;
 
 &lt;p&gt;So now, to share the new lexer with the world I just have to learn how to:&lt;/p&gt;
 
@@ -2598,7 +2948,7 @@ place? You should have used &lt;kbd&gt;M-b&lt;/kbd&gt;/&lt;kbd&gt;M-f&lt;/kbd&gt
 
 &lt;p&gt;Well, I got there with &lt;code&gt;previous-line&lt;/code&gt; - one of the best Emacs commands!&lt;/p&gt;
 
-&lt;h2&gt;Resolve the &lt;code&gt;*-word&lt;/code&gt; malarkey with &lt;code&gt;defadvice&lt;/code&gt;&lt;/h2&gt;
+&lt;h2 id=&quot;resolve-the-*-word-malarkey-with-defadvice&quot;&gt;Resolve the &lt;code&gt;*-word&lt;/code&gt; malarkey with &lt;code&gt;defadvice&lt;/code&gt;&lt;/h2&gt;
 
 &lt;p&gt;Here are some simple advice commands that I&amp;#39;ve just rolled:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defadvice&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;upcase-word&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;before&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;upcase-word-advice&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;activate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
@@ -2688,7 +3038,7 @@ doing this refactor operation feels like you&amp;#39;re doing the 15-number puzz
 &lt;p&gt;And that&amp;#39;s fun in my book. But let me get back to the short overview
 of the Emacs testing tools that lead me to this post, mainly &lt;code&gt;cask&lt;/code&gt;.&lt;/p&gt;
 
-&lt;h2&gt;&lt;code&gt;cask&lt;/code&gt;: what does it do?&lt;/h2&gt;
+&lt;h2 id=&quot;cask:-what-does-it-do?&quot;&gt;&lt;code&gt;cask&lt;/code&gt;: what does it do?&lt;/h2&gt;
 
 &lt;p&gt;According to &lt;a href=&quot;http://cask.readthedocs.org/en/latest/&quot;&gt;its own documentation&lt;/a&gt;:&lt;/p&gt;
 
@@ -2704,7 +3054,7 @@ ages to figure out how &lt;code&gt;cask&lt;/code&gt; can actually give me some t
 benefits, since I thought that &lt;code&gt;package.el&lt;/code&gt; is enough to maintain my
 own config (it still is).&lt;/p&gt;
 
-&lt;h2&gt;tangible benefits of &lt;code&gt;cask&lt;/code&gt;&lt;/h2&gt;
+&lt;h2 id=&quot;tangible-benefits-of-cask&quot;&gt;tangible benefits of &lt;code&gt;cask&lt;/code&gt;&lt;/h2&gt;
 
 &lt;p&gt;I&amp;#39;d like to be sure that my packages work across recent Emacs
 versions.  I&amp;#39;m using the
@@ -2871,7 +3221,7 @@ think that it&amp;#39;s an awesome editor, and I&amp;#39;ve accumulated some kno
 to make it even better (at least for me and people who think like me).
 Sharing is caring, so here we go.&lt;/p&gt;
 
-&lt;h2&gt;&lt;code&gt;ace-window&lt;/code&gt; update&lt;/h2&gt;
+&lt;h2 id=&quot;ace-window-update&quot;&gt;&lt;code&gt;ace-window&lt;/code&gt; update&lt;/h2&gt;
 
 &lt;p&gt;On this weekend I&amp;#39;ve made a major update to my package
 &lt;a href=&quot;https://github.com/abo-abo/ace-window&quot;&gt;ace-window&lt;/a&gt; that allows it to
@@ -2879,7 +3229,7 @@ be used as a library. Luckily the change went smoothly, as there are
 no complaints in the github issues so far.  In case you don&amp;#39;t know
 what the package does in the first place, a short blurb follows.&lt;/p&gt;
 
-&lt;h2&gt;&lt;code&gt;ace-window&lt;/code&gt;&amp;#39;s &amp;quot;what and why&amp;quot;&lt;/h2&gt;
+&lt;h2 id=&quot;ace-window&amp;#39;s-&amp;quot;what-and-why&amp;quot;&quot;&gt;&lt;code&gt;ace-window&lt;/code&gt;&amp;#39;s &amp;quot;what and why&amp;quot;&lt;/h2&gt;
 
 &lt;p&gt;I&amp;#39;m sure you&amp;#39;re aware of the &lt;code&gt;other-window&lt;/code&gt; command. While it&amp;#39;s great for
 two windows, it quickly loses its value when there are more windows:
@@ -2908,7 +3258,7 @@ binding &lt;code&gt;ace-window&lt;/code&gt; to something short, like &lt;kbd&gt;
 &lt;li&gt;&lt;kbd&gt;C-u C-u M-p&lt;/kbd&gt; - delete the selected window&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2&gt;finally, the library part&lt;/h2&gt;
+&lt;h2 id=&quot;finally,-the-library-part&quot;&gt;finally, the library part&lt;/h2&gt;
 
 &lt;p&gt;So now, what if you want to select a window to maximize with &lt;code&gt;ace-window&lt;/code&gt;?
 After the change that I&amp;#39;ve mentioned, the code to do this is dirt simple:&lt;/p&gt;

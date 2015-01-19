@@ -96,6 +96,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -178,7 +182,7 @@
         <div class="post">
   <h1 class="post-title">Light it up! Pygments for Emacs Lisp.</h1>
   <span class="post-date">24 Dec 2014</span>
-  <h2>The Challenge</h2>
+  <h2 id="the-challenge">The Challenge</h2>
 
 <p>More than 2 years ago, the formidable @bbatsov of <a href="http://emacsredux.com">Emacs Redux</a> had this to say:</p>
 
@@ -188,7 +192,7 @@
 
 <p>Well, let&#39;s turn that #fail-frown upside down!</p>
 
-<h2>The Python</h2>
+<h2 id="the-python">The Python</h2>
 
 <p>A quick search brought me to this page:
 <a href="http://pygments.org/docs/lexerdevelopment/">Write your own lexer -- Pygments</a>.
@@ -229,7 +233,7 @@ $ ./pygmentize -O full -f html -o /tmp/example.html \
 <p>I would repeat the last line with each update to the code, and then
 refresh the page in Firefox to see the result.</p>
 
-<h2>The Elisp</h2>
+<h2 id="the-elisp">The Elisp</h2>
 
 <p>To finalize the lexer, the following tasks ensued:</p>
 
@@ -275,7 +279,7 @@ improve even further:</p>
 <code>save-and-switch-buffer</code>. The defaults are <kbd>C-s</kbd> and
 <kbd>C-r</kbd>, in case you didn&#39;t know.</p>
 
-<h2>The C</h2>
+<h2 id="the-c">The C</h2>
 
 <p>Getting the list of built-in C functions and special forms, obviously
 involved browsing the C source code. In case you don&#39;t (yet) have the Emacs sources,
@@ -327,12 +331,12 @@ Here&#39;s a list of 23 special forms that I found:</p>
 <a href="http://mitpress.mit.edu/sicp/full-text/book/book-Z-H-10.html#%_sec_1.1.3">SICP</a>.
 There&#39;s no node for them, so just use isearch.</p>
 
-<h2>The Result</h2>
+<h2 id="the-result">The Result</h2>
 
 <p>You can see it here: <a href="/download/ediff.html">ediff.html</a>, as well as on
 the rest of the site, since I&#39;ve switched it on everywhere.</p>
 
-<h2>The Impact</h2>
+<h2 id="the-impact">The Impact</h2>
 
 <p>Unfortunately this won&#39;t have impact on the Github source code
 highlighter, since
@@ -348,7 +352,7 @@ Elisp highlighting. In fact, this blog is already using the new highlighter.</p>
 <p>See the rest of projects that use Pygments
 <a href="http://pygments.org/faq/#who-uses-pygments">here</a></p>
 
-<h2>The Bitbucket</h2>
+<h2 id="the-bitbucket">The Bitbucket</h2>
 
 <p>So now, to share the new lexer with the world I just have to learn how to:</p>
 
@@ -377,6 +381,16 @@ Elisp highlighting. In fact, this blog is already using the new highlighter.</p>
     
       <li>
         <h3>
+          <!-- <a href="//2015/01/19/lispy.0.21.0-is-out/"> -->
+          <a href="/2015/01/19/lispy.0.21.0-is-out/">
+            lispy 0.21.0 is out
+            <small>19 Jan 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
           <!-- <a href="//2015/01/18/sprucing-up-org-download/"> -->
           <a href="/2015/01/18/sprucing-up-org-download/">
             Sprucing up org-download
@@ -391,16 +405,6 @@ Elisp highlighting. In fact, this blog is already using the new highlighter.</p>
           <a href="/2015/01/17/setting-up-ediff/">
             Setting up Ediff
             <small>17 Jan 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
-          <!-- <a href="//2015/01/16/compile-savely/"> -->
-          <a href="/2015/01/16/compile-savely/">
-            Save before compile
-            <small>16 Jan 2015</small>
           </a>
         </h3>
       </li>

@@ -96,6 +96,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -184,7 +188,7 @@ creating TODO tasks in certain <code>org-mode</code> files by clicking a link in
 Firefox, thanks to
 <a href="https://addons.mozilla.org/en-US/firefox/addon/org-mode-capture/">org-mode capture</a>.</p>
 
-<h2><code>org-protocol</code> starter</h2>
+<h2 id="org-protocol-starter"><code>org-protocol</code> starter</h2>
 <div class="highlight"><pre><code class="language-emacs" data-lang="emacs"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;org-capture</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;org-protocol</span><span class="p">)</span>
 <span class="p">(</span><span class="k">setq</span> <span class="nv">org-protocol-default-template-key</span> <span class="s">&quot;l&quot;</span><span class="p">)</span>
@@ -198,7 +202,7 @@ Firefox, thanks to
 <li><code>org-link-hooks</code> should insert some extra information</li>
 </ul>
 
-<h2><code>org-wash-link</code></h2>
+<h2 id="org-wash-link"><code>org-wash-link</code></h2>
 
 <p>Basically, when I capture a question on
 <a href="http://stackoverflow.com/questions/tagged/emacs">Stack Overflow</a>, I
@@ -211,7 +215,7 @@ since the TODO itself is stored in <code>wiki/stack.org/* Questions</code>.</p>
                  <span class="s">&quot; - Stack Overflow&quot;</span> <span class="s">&quot;&quot;</span> <span class="nv">title</span><span class="p">))</span>
     <span class="p">(</span><span class="nv">org-make-link-string</span> <span class="nv">link</span> <span class="nv">title</span><span class="p">)))</span>
 </code></pre></div>
-<h2><code>org-link-hooks</code></h2>
+<h2 id="org-link-hooks"><code>org-link-hooks</code></h2>
 
 <p>This is just a hack for passing information around that
 functions from <code>org-handle-link</code> can use.</p>
@@ -224,7 +228,7 @@ functions from <code>org-handle-link</code> can use.</p>
                  <span class="s">&quot;\n&quot;</span><span class="p">)</span>
     <span class="p">(</span><span class="k">setq</span> <span class="nv">org-link-hook</span><span class="p">)))</span>
 </code></pre></div>
-<h2><code>org-handle-link</code></h2>
+<h2 id="org-handle-link"><code>org-handle-link</code></h2>
 
 <p>This is the heart of the setup.</p>
 <div class="highlight"><pre><code class="language-emacs" data-lang="emacs"><span class="p">(</span><span class="nb">defun</span> <span class="nv">org-handle-link</span> <span class="p">()</span>
@@ -272,6 +276,16 @@ perceptible delay when capturing.</p>
     
       <li>
         <h3>
+          <!-- <a href="//2015/01/19/lispy.0.21.0-is-out/"> -->
+          <a href="/2015/01/19/lispy.0.21.0-is-out/">
+            lispy 0.21.0 is out
+            <small>19 Jan 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
           <!-- <a href="//2015/01/18/sprucing-up-org-download/"> -->
           <a href="/2015/01/18/sprucing-up-org-download/">
             Sprucing up org-download
@@ -286,16 +300,6 @@ perceptible delay when capturing.</p>
           <a href="/2015/01/17/setting-up-ediff/">
             Setting up Ediff
             <small>17 Jan 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
-          <!-- <a href="//2015/01/16/compile-savely/"> -->
-          <a href="/2015/01/16/compile-savely/">
-            Save before compile
-            <small>16 Jan 2015</small>
           </a>
         </h3>
       </li>

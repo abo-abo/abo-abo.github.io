@@ -96,6 +96,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -179,6 +183,109 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/01/04/dired-nohup/">
+        Start a process from dired
+      </a>
+    </h1>
+
+    <span class="post-date">04 Jan 2015</span>
+
+    <p>Here are the standard <code>dired</code> functions for starting processes:</p>
+
+<ul>
+<li><kbd>!</kbd> calls <code>dired-do-shell-command</code></li>
+<li><kbd>&amp;</kbd> calls <code>dired-do-async-shell-command</code></li>
+</ul>
+
+<p>While the second one is usually better than the first one, having the
+benefit of not locking up Emacs, it&#39;s still not convenient enough for
+me. The reason is pretty simple: I want to keep the processes that I
+started even when I close Emacs (like opened PDFs or videos).  This is
+a non-issue for people with months-long <code>emacs-uptime</code>, but for me an
+Emacs session lasts on the order of hours, since I mess about with
+Elisp a lot. Below, I&#39;ll share some of my <code>dired</code> process-related
+customizations.</p>
+
+<h2 id="ignore-running-processes-when-closing-emacs">Ignore running processes when closing Emacs</h2>
+
+<p>Usually there&#39;s nothing wrong with just killing a spawned process,
+like an <code>ipython</code> shell or something.</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="c1">;; add `flet&#39;</span>
+<span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;cl</span><span class="p">)</span>
+
+<span class="p">(</span><span class="nb">defadvice</span> <span class="nv">save-buffers-kill-emacs</span>
+  <span class="p">(</span><span class="nv">around</span> <span class="nv">no-query-kill-emacs</span> <span class="nv">activate</span><span class="p">)</span>
+  <span class="s">&quot;Prevent \&quot;Active processes exist\&quot; query on exit.&quot;</span>
+  <span class="p">(</span><span class="nb">flet</span> <span class="p">((</span><span class="nf">process-list</span> <span class="p">()))</span> <span class="nv">ad-do-it</span><span class="p">))</span>
+</code></pre></div>
+<h2 id="guess-programs-by-file-extension">Guess programs by file extension</h2>
+
+<p>With this setup, usually there&#39;s no need to manually type in the
+command name.</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;dired-x</span><span class="p">)</span>
+
+<span class="p">(</span><span class="k">setq</span> <span class="nv">dired-guess-shell-alist-user</span>
+      <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;\\.pdf\\&#39;&quot;</span> <span class="s">&quot;evince&quot;</span> <span class="s">&quot;okular&quot;</span><span class="p">)</span>
+        <span class="p">(</span><span class="s">&quot;\\.\\(?:djvu\\|eps\\)\\&#39;&quot;</span> <span class="s">&quot;evince&quot;</span><span class="p">)</span>
+        <span class="p">(</span><span class="s">&quot;\\.\\(?:jpg\\|jpeg\\|png\\|gif\\|xpm\\)\\&#39;&quot;</span> <span class="s">&quot;eog&quot;</span><span class="p">)</span>
+        <span class="p">(</span><span class="s">&quot;\\.\\(?:xcf\\)\\&#39;&quot;</span> <span class="s">&quot;gimp&quot;</span><span class="p">)</span>
+        <span class="p">(</span><span class="s">&quot;\\.csv\\&#39;&quot;</span> <span class="s">&quot;libreoffice&quot;</span><span class="p">)</span>
+        <span class="p">(</span><span class="s">&quot;\\.tex\\&#39;&quot;</span> <span class="s">&quot;pdflatex&quot;</span> <span class="s">&quot;latex&quot;</span><span class="p">)</span>
+        <span class="p">(</span><span class="s">&quot;\\.\\(?:mp4\\|mkv\\|avi\\|flv\\|ogv\\)\\(?:\\.part\\)?\\&#39;&quot;</span>
+         <span class="s">&quot;vlc&quot;</span><span class="p">)</span>
+        <span class="p">(</span><span class="s">&quot;\\.\\(?:mp3\\|flac\\)\\&#39;&quot;</span> <span class="s">&quot;rhythmbox&quot;</span><span class="p">)</span>
+        <span class="p">(</span><span class="s">&quot;\\.html?\\&#39;&quot;</span> <span class="s">&quot;firefox&quot;</span><span class="p">)</span>
+        <span class="p">(</span><span class="s">&quot;\\.cue?\\&#39;&quot;</span> <span class="s">&quot;audacious&quot;</span><span class="p">)))</span>
+</code></pre></div>
+<h2 id="add-nohup">Add nohup</h2>
+
+<p>According to <code>info nohup</code>:</p>
+
+<blockquote>
+<p>`nohup&#39; runs the given COMMAND with hangup signals ignored, so that
+the command can continue running in the background after you log
+out.</p>
+</blockquote>
+
+<p>In my case, it means that the processes started by Emacs can
+continue running even when Emacs is closed.</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;dired-aux</span><span class="p">)</span>
+
+<span class="p">(</span><span class="k">defvar</span> <span class="nv">dired-filelist-cmd</span>
+  <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;vlc&quot;</span> <span class="s">&quot;-L&quot;</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">dired-start-process</span> <span class="p">(</span><span class="nv">cmd</span> <span class="kp">&amp;optional</span> <span class="nv">file-list</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">interactive</span>
+   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">files</span> <span class="p">(</span><span class="nv">dired-get-marked-files</span>
+                 <span class="no">t</span> <span class="nv">current-prefix-arg</span><span class="p">)))</span>
+     <span class="p">(</span><span class="nf">list</span>
+      <span class="p">(</span><span class="nv">dired-read-shell-command</span> <span class="s">&quot;&amp; on %s: &quot;</span>
+                                <span class="nv">current-prefix-arg</span> <span class="nv">files</span><span class="p">)</span>
+      <span class="nv">files</span><span class="p">)))</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">list-switch</span><span class="p">)</span>
+    <span class="p">(</span><span class="nf">start-process</span>
+     <span class="nv">cmd</span> <span class="no">nil</span> <span class="nv">shell-file-name</span>
+     <span class="nv">shell-command-switch</span>
+     <span class="p">(</span><span class="nf">format</span>
+      <span class="s">&quot;nohup 1&gt;/dev/null 2&gt;/dev/null %s \&quot;%s\&quot;&quot;</span>
+      <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="k">and</span> <span class="p">(</span><span class="nf">&gt;</span> <span class="p">(</span><span class="nf">length</span> <span class="nv">file-list</span><span class="p">)</span> <span class="mi">1</span><span class="p">)</span>
+               <span class="p">(</span><span class="k">setq</span> <span class="nv">list-switch</span>
+                     <span class="p">(</span><span class="nv">cadr</span> <span class="p">(</span><span class="nf">assoc</span> <span class="nv">cmd</span> <span class="nv">dired-filelist-cmd</span><span class="p">))))</span>
+          <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;%s %s&quot;</span> <span class="nv">cmd</span> <span class="nv">list-switch</span><span class="p">)</span>
+        <span class="nv">cmd</span><span class="p">)</span>
+      <span class="p">(</span><span class="nf">mapconcat</span> <span class="nf">#&#39;expand-file-name</span> <span class="nv">file-list</span> <span class="s">&quot;\&quot; \&quot;&quot;</span><span class="p">)))))</span>
+</code></pre></div>
+<p>The <code>dired-filelist-cmd</code> is necessary because <code>vlc</code> weirdly
+doesn&#39;t make a playlist when given a list of files.</p>
+
+<p>Then I bind it to <kbd>r</kbd> - a nice shortcut not bound
+by default in <code>dired</code>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="s">&quot;r&quot;</span> <span class="ss">&#39;dired-start-process</span><span class="p">)</span>
+</code></pre></div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/01/03/time-flies/">
         Time flies
       </a>
@@ -190,7 +297,7 @@
 the 13th one or anything.  So I&#39;ll commemorate it with a post on
 dealing with dates in <code>calc</code>.</p>
 
-<h2>How much time has passed since I started this blog?</h2>
+<h2 id="how-much-time-has-passed-since-i-started-this-blog?">How much time has passed since I started this blog?</h2>
 
 <ol>
 <li><p>Open <code>calc</code> with <kbd>C-x **</kbd>:</p>
@@ -220,7 +327,7 @@ still have half of a day to post this. Unfortunately, I have only an
 old version of the blog repository on this machine, and the current
 one is on a laptop at home. So I&#39;ll post this in the evening.</p>
 
-<h2>Did you know what 2015 looks like in binary?</h2>
+<h2 id="did-you-know-what-2015-looks-like-in-binary?">Did you know what 2015 looks like in binary?</h2>
 
 <p>In your current <code>calc</code> session,</p>
 
@@ -271,7 +378,7 @@ I wrote down a new package called <a href="https://github.com/abo-abo/latex-wrap
 It&#39;s only a few hours old, but I like it a lot.
 I&#39;ve grepped the sources of AUCTeX, and it doesn&#39;t seem to have this functionality.</p>
 
-<h2>Here&#39;s how it works</h2>
+<h2 id="here&#39;s-how-it-works">Here&#39;s how it works</h2>
 
 <p>You start with an active region:</p>
 
@@ -313,13 +420,13 @@ Maggie<cursor> </cursor>
 continue by always placing the point on the end of the last line of
 the inserted environment.</p>
 
-<h2>How it works with no active region</h2>
+<h2 id="how-it-works-with-no-active-region">How it works with no active region</h2>
 
 <p>If <code>(looking-back &quot;^ *&quot;)</code> is true, the current line is used as if it was
 the region.  Otherwise, an empty environment is inserted after the
 current line.</p>
 
-<h2>Using the code</h2>
+<h2 id="using-the-code">Using the code</h2>
 
 <p>If you like the idea, you can check out the code at
 <a href="https://github.com/abo-abo/latex-wrap">github</a> and test it out.  If
@@ -341,13 +448,13 @@ bite.</p>
 
     <span class="post-date">01 Jan 2015</span>
 
-    <h2>Tip #1</h2>
+    <h2 id="tip-#1">Tip #1</h2>
 
 <p>There&#39;s no reason not to have <code>/bin/bash</code> instead of <code>/bin/sh</code> as the
 default choice when you <kbd>M-x</kbd> <code>term</code>.</p>
 <div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">explicit-shell-file-name</span> <span class="s">&quot;/bin/bash&quot;</span><span class="p">)</span>
 </code></pre></div>
-<h2>Tip #2</h2>
+<h2 id="tip-#2">Tip #2</h2>
 
 <p>After you close the terminal, you get a useless buffer with no
 process. It&#39;s probably left there for you to have a history of what
@@ -364,7 +471,7 @@ automatically:</p>
 
 <span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;term-exec-hook</span> <span class="ss">&#39;oleh-term-exec-hook</span><span class="p">)</span>
 </code></pre></div>
-<h2>Tip #3</h2>
+<h2 id="tip-#3">Tip #3</h2>
 
 <p>By default, <kbd>C-y</kbd> calls term&#39;s own <code>yank</code>, which is different
 from Emacs&#39;s <code>yank</code>.  So, until recently, I was using
@@ -390,7 +497,7 @@ the older packages. This post will cover some practical problems that
 you may encounter when your package needs to be aware of another
 active package.</p>
 
-<h2><code>ace-window</code> vs. <code>helm</code></h2>
+<h2 id="ace-window-vs.-helm"><code>ace-window</code> vs. <code>helm</code></h2>
 
 <p><a href="https://github.com/emacs-helm/helm">helm</a> is a wonderful package,
 it&#39;s my goto-package when I need completion. All of the following
@@ -419,7 +526,7 @@ out of a <code>helm</code>-minibuffer. In fact, it was not possible to exit with
 inkling that it used to work at some point. So I checked out a
 year-old version of <code>helm</code> and it did work.</p>
 
-<h3><code>magit-bisect</code> to the rescue!</h3>
+<h3 id="magit-bisect-to-the-rescue!"><code>magit-bisect</code> to the rescue!</h3>
 
 <p>It&#39;s very simple:</p>
 
@@ -446,7 +553,7 @@ in this case.</li>
 </span></span><span class="diff-indicator-removed"><span class="region">-</span></span><span class="diff-removed"><span class="region">      (when kmap (setq overriding-local-map kmap)))))
 </span></span><span class="diff-indicator-added"><span class="region">+</span></span><span class="diff-added"><span class="region">      (when kmap (set-transient-map kmap)))))</span></span></pre>
 
-<h3>the priority of maps</h3>
+<h3 id="the-priority-of-maps">the priority of maps</h3>
 
 <p>In Emacs, <code>set-transient-map</code> has priority over
 <code>overriding-local-map</code>, which was exactly what <code>ace-window</code> was using.
@@ -470,7 +577,7 @@ called after <code>helm</code>.</p>
 In the end, this finally worked:</p>
 <div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">remove-hook</span> <span class="ss">&#39;post-command-hook</span> <span class="ss">&#39;helm--maybe-update-keymap</span><span class="p">)</span>
 </code></pre></div>
-<h2><code>lispy</code> vs. <code>SLIME</code> and <code>CIDER</code></h2>
+<h2 id="lispy-vs.-slime-and-cider"><code>lispy</code> vs. <code>SLIME</code> and <code>CIDER</code></h2>
 
 <p>I thought that enabling <code>lispy-mode</code> for <code>slime-repl-mode</code> and
 <code>cider-repl-mode</code> might be a good idea.
@@ -529,117 +636,6 @@ interactively, i.e. via a key binding or <kbd>M-x</kbd>, put it ahead:</p>
 properly yields to call <code>cider-repl-return</code> and <code>slime-repl-return</code>
 respectively. I&#39;ll see if there are more key bindings that need to
 yield. Happy coding in the New Year!</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2014/12/30/ace-link-eww/">
-        Emacs Web Wowser (EWW) got ace-link
-      </a>
-    </h1>
-
-    <span class="post-date">30 Dec 2014</span>
-
-    <h2>Emacs goodness incoming</h2>
-
-<p>I&#39;ve discovered a nice Emacs-related blog -
-<a href="http://mbork.pl/Content_AND_Presentation">Content AND Presentation</a>.
-Unlike <a href="http://axisofeval.blogspot.nl">The Axis of Eval</a>, the blog
-that I mentioned yesterday, this one is pretty self-contained, i.e. it
-doesn&#39;t link to many external information sources.  So I thought that
-it&#39;s perfect for trying EWW to read it.</p>
-
-<h2>Not so fast! Configure first.</h2>
-
-<p>For modes that don&#39;t require to self-insert (and even for some that
-do), I like to navigate with
-<kbd>h</kbd>/<kbd>j</kbd>/<kbd>k</kbd>/<kbd>l</kbd> as arrows.  These
-arrows are on the home row, so navigation becomes a pleasant and
-relaxed experience.  But for EWW I decided to add a little twist: if
-the point is in the first column, <kbd>j</kbd>/<kbd>k</kbd> will move
-down/up not by one line, but by one paragraph.  This is great for
-concentration: I navigate to a paragraph, read it, navigate to the
-next one. The point shows me the paragraph that I&#39;m reading,
-everything before the point I&#39;ve already read.  So every time I press
-<kbd>j</kbd>, I get a tiny warm feeling of accomplishment.
-I can also pair this with <kbd>v</kbd>, which I bind to recenter the
-current line to the top.</p>
-
-<p>So here&#39;s what my key setup currently looks like:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">oleh-eww-hook</span> <span class="p">()</span>
-  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;j&quot;</span> <span class="ss">&#39;oww-down</span><span class="p">)</span>
-  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;k&quot;</span> <span class="ss">&#39;oww-up</span><span class="p">)</span>
-  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;l&quot;</span> <span class="ss">&#39;forward-char</span><span class="p">)</span>
-  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;L&quot;</span> <span class="ss">&#39;eww-back-url</span><span class="p">)</span>
-  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;h&quot;</span> <span class="ss">&#39;backward-char</span><span class="p">)</span>
-  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;v&quot;</span> <span class="ss">&#39;recenter-top-bottom</span><span class="p">)</span>
-  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;V&quot;</span> <span class="ss">&#39;eww-view-source</span><span class="p">)</span>
-  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;m&quot;</span> <span class="ss">&#39;eww-follow-link</span><span class="p">)</span>
-  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;a&quot;</span> <span class="ss">&#39;move-beginning-of-line</span><span class="p">)</span>
-  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;e&quot;</span> <span class="ss">&#39;move-end-of-line</span><span class="p">)</span>
-  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;o&quot;</span> <span class="ss">&#39;ace-link-eww</span><span class="p">)</span>
-  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;y&quot;</span> <span class="ss">&#39;eww</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;eww-mode-hook</span> <span class="ss">&#39;oleh-eww-hook</span><span class="p">)</span>
-</code></pre></div>
-<p>As you see, I was careful to re-assign <code>eww-back-url</code> and
-<code>eww-view-source</code> - the commands that I&#39;ve displaced from <kbd>l</kbd>
-and <kbd>v</kbd>.  And here&#39;s the implementation of the arrows:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">oww-down</span> <span class="p">(</span><span class="nv">arg</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">interactive</span> <span class="s">&quot;p&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">bolp</span><span class="p">)</span>
-      <span class="p">(</span><span class="k">progn</span>
-        <span class="p">(</span><span class="nv">forward-paragraph</span> <span class="nv">arg</span><span class="p">)</span>
-        <span class="p">(</span><span class="nf">forward-line</span> <span class="mi">1</span><span class="p">))</span>
-    <span class="p">(</span><span class="nv">line-move</span> <span class="nv">arg</span><span class="p">)))</span>
-
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">oww-up</span> <span class="p">(</span><span class="nv">arg</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">interactive</span> <span class="s">&quot;p&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">bolp</span><span class="p">)</span>
-      <span class="p">(</span><span class="k">progn</span>
-        <span class="p">(</span><span class="nf">forward-line</span> <span class="mi">-1</span><span class="p">)</span>
-        <span class="p">(</span><span class="nv">backward-paragraph</span> <span class="nv">arg</span><span class="p">)</span>
-        <span class="p">(</span><span class="nf">forward-line</span> <span class="mi">1</span><span class="p">))</span>
-    <span class="p">(</span><span class="nv">line-move</span> <span class="p">(</span><span class="nf">-</span> <span class="nv">arg</span><span class="p">))))</span>
-</code></pre></div>
-<h2>Cherry on the top</h2>
-
-<p>And while I was at it, I&#39;ve added <a href="https://github.com/abo-abo/ace-link">ace-link</a> support for EWW.  It was
-pretty easy, basically the same routine as for <code>help-mode</code> and
-<code>info-mode</code>. The only hard part was to figure out what part of the
-code keeps binding <code>shr-save-contents</code> to <kbd>o</kbd>, my preferred
-binding for <code>ace-link</code>. Turns out it was <code>eww-link-keymap</code>, and not
-<code>shr-map</code>. So here&#39;s the new key binding code:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">ace-link-setup-default</span> <span class="p">()</span>
-  <span class="s">&quot;Setup the defualt shortcuts.&quot;</span>
-  <span class="p">(</span><span class="nv">eval-after-load</span> <span class="s">&quot;info&quot;</span>
-    <span class="o">&#39;</span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">Info-mode-map</span> <span class="s">&quot;o&quot;</span> <span class="ss">&#39;ace-link-info</span><span class="p">))</span>
-  <span class="p">(</span><span class="nv">eval-after-load</span> <span class="s">&quot;help-mode&quot;</span>
-    <span class="o">&#39;</span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">help-mode-map</span> <span class="s">&quot;o&quot;</span> <span class="ss">&#39;ace-link-help</span><span class="p">))</span>
-  <span class="p">(</span><span class="nv">eval-after-load</span> <span class="s">&quot;eww&quot;</span>
-    <span class="o">&#39;</span><span class="p">(</span><span class="k">progn</span>
-      <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-link-keymap</span> <span class="s">&quot;o&quot;</span> <span class="ss">&#39;ace-link-eww</span><span class="p">)</span>
-      <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;o&quot;</span> <span class="ss">&#39;ace-link-eww</span><span class="p">))))</span>
-</code></pre></div>
-<p>If you haven&#39;t tried <a href="https://github.com/abo-abo/ace-link">ace-link</a>
-before, you can get it from MELPA.  The minimal configuration that you
-need is this:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">ace-link-setup-default</span><span class="p">)</span>
-</code></pre></div>
-<p>Here&#39;s the setup that I&#39;m actually using:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">use-package</span> <span class="nv">ace-link</span>
-    <span class="nb">:load-path</span> <span class="s">&quot;~/git/ace-link&quot;</span>
-    <span class="nb">:init</span> <span class="p">(</span><span class="nv">ace-link-setup-default</span><span class="p">))</span>
-</code></pre></div>
-<p>I&#39;m using it from my git folder since when I want to edit a project, I
-like to use <a href="https://github.com/nonsequitur/smex">smex</a>&#39;s
-jump-to-definition.</p>
-
-<p>And <a href="https://github.com/jwiegley/use-package">use-package</a> is useful
-for the cases when my <code>~/git/</code> happens not to contain <code>ace-link</code>.  In
-that case, instead of getting a debugger error on starting Emacs, I
-get only a polite &quot;Could not load package ace-link&quot; in my <code>*Messages*</code>
-buffer.</p>
 
   </div>
   

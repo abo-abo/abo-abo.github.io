@@ -96,6 +96,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -182,7 +186,7 @@
 my experience. It&#39;s a very good tool, but some of the defaults look
 very poor to me.</p>
 
-<h2>Customizing the <code>customize</code></h2>
+<h2 id="customizing-the-customize">Customizing the <code>customize</code></h2>
 
 <p>First of all, I&#39;ll list a macro that I&#39;ve started to use for setting
 custom variables:</p>
@@ -197,7 +201,7 @@ close to what I want, or maybe <code>custom-initialize-changed</code>.  Basicall
 all I want is a <code>setq</code> that is aware of the <code>custom-set</code> property of a
 variable. If you know such a macro, please let me know.</p>
 
-<h2>Changing some Ediff options</h2>
+<h2 id="changing-some-ediff-options">Changing some Ediff options</h2>
 
 <p>Now, that I&#39;ve explained the custom setter (by the way, using
 <code>custom-set-variables</code> is absolutely equivalent to <code>csetq</code>), here are
@@ -221,7 +225,7 @@ important changes in the diff, and not the whitespace nonsense.</p>
 </code></pre></div></li>
 </ol>
 
-<h2>Changing some Ediff key bindings</h2>
+<h2 id="changing-some-ediff-key-bindings">Changing some Ediff key bindings</h2>
 
 <p>This is just the standard stuff that I like to do for each mode that
 does not self-insert: assign <kbd>j</kbd> to move down, and
@@ -233,7 +237,7 @@ does not self-insert: assign <kbd>j</kbd> to move down, and
 
 <span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;ediff-mode-hook</span> <span class="ss">&#39;ora-ediff-hook</span><span class="p">)</span>
 </code></pre></div>
-<h2>Restoring the windows after Ediff quits</h2>
+<h2 id="restoring-the-windows-after-ediff-quits">Restoring the windows after Ediff quits</h2>
 
 <p>When you quit an Ediff session with <kbd>q</kbd>, it just leaves the
 two diff windows around, instead of restoring the window configuration
@@ -242,9 +246,9 @@ restore the old window configuration:</p>
 <div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">winner-mode</span><span class="p">)</span>
 <span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;ediff-after-quit-hook-internal</span> <span class="ss">&#39;winner-undo</span><span class="p">)</span>
 </code></pre></div>
-<h2>List of ways that I use to invoke Ediff</h2>
+<h2 id="list-of-ways-that-i-use-to-invoke-ediff">List of ways that I use to invoke Ediff</h2>
 
-<h3>from <code>magit</code></h3>
+<h3 id="from-magit">from <code>magit</code></h3>
 
 <p>In 80% of the cases, I call Ediff with <kbd>e</kbd> (<code>magit-ediff</code>) from
 <code>magit-status-mode</code>. This gives me a better overview of the changes,
@@ -263,7 +267,7 @@ current file in the <code>B</code> window, I can do it with <kbd>wb</kbd>
 <kbd>!</kbd>(<code>ediff-update-diffs</code>), which will remove the zero-length
 diffs and update the diff-count in the mode-line.</p>
 
-<h3>other methods</h3>
+<h3 id="other-methods">other methods</h3>
 
 <ol>
 <li><code>ediff-buffers</code> will diff two (different) buffers. If you happen to
@@ -300,6 +304,16 @@ bytes</code> of information. Are you <strong>sure</strong> you want to save <cod
     
       <li>
         <h3>
+          <!-- <a href="//2015/01/19/lispy.0.21.0-is-out/"> -->
+          <a href="/2015/01/19/lispy.0.21.0-is-out/">
+            lispy 0.21.0 is out
+            <small>19 Jan 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
           <!-- <a href="//2015/01/18/sprucing-up-org-download/"> -->
           <a href="/2015/01/18/sprucing-up-org-download/">
             Sprucing up org-download
@@ -314,16 +328,6 @@ bytes</code> of information. Are you <strong>sure</strong> you want to save <cod
           <a href="/2015/01/16/compile-savely/">
             Save before compile
             <small>16 Jan 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
-          <!-- <a href="//2015/01/15/c++-smart-dot/"> -->
-          <a href="/2015/01/15/c++-smart-dot/">
-            C++ - a dot inserts last var plus dot
-            <small>15 Jan 2015</small>
           </a>
         </h3>
       </li>
