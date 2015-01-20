@@ -4,13 +4,127 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-01-19T19:57:48+01:00</updated>
+ <updated>2015-01-20T15:12:19+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Behold The Mighty Hydra!</title>
+   <link href="http://oremacs.com/2015/01/20/introducing-hydra/"/>
+   <updated>2015-01-20T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/01/20/introducing-hydra</id>
+   <content type="html">&lt;p&gt;I managed to spike a lot of interest for sticky key bindings in my earlier post,
+&lt;a href=&quot;/2015/01/14/repeatable-commands/&quot;&gt;Zoom in/out with style&lt;/a&gt;.
+So now, I&amp;#39;ve refactored this method into a convenient library
+&lt;a href=&quot;https://github.com/abo-abo/hydra&quot;&gt;hydra.el&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/Hydra.png&quot; alt=&quot;hydra&quot;&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;the-concept&quot;&gt;The Concept&lt;/h2&gt;
+
+&lt;p&gt;This package can be used to tie related functions into a family of
+short bindings with a common prefix - a Hydra.&lt;/p&gt;
+
+&lt;p&gt;Once you summon the Hydra through the prefixed binding (the body + any
+one head), all heads can be called in succession with only a short
+extension.&lt;/p&gt;
+
+&lt;p&gt;The Hydra is vanquished once Hercules, any binding that isn&amp;#39;t the
+Hydra&amp;#39;s head, arrives.  Note that Hercules, besides vanquishing the
+Hydra, will still serve his orignal purpose, calling his proper
+command.  This makes the Hydra very seamless, it&amp;#39;s like a minor mode
+that disables itself auto-magically.&lt;/p&gt;
+
+&lt;h2 id=&quot;an-example&quot;&gt;An Example&lt;/h2&gt;
+
+&lt;p&gt;This code will accomplish the task of the previous post:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;hydra&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hydra-create&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;f2&amp;gt;&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;g&amp;quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;text-scale-increase&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;l&amp;quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;text-scale-decrease&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now, &lt;kbd&gt;&amp;lt;f2&amp;gt;&lt;/kbd&gt; is the Hydra&amp;#39;s body: you need to press it
+only once, together with one of the heads (&lt;kbd&gt;g&lt;/kbd&gt; or
+&lt;kbd&gt;l&lt;/kbd&gt;), to summon the Hydra.&lt;/p&gt;
+
+&lt;p&gt;Afterwards, you can call the heads in succession without the body
+prefix, i.e. &lt;kbd&gt;&amp;lt;f2&amp;gt; g g g l&lt;/kbd&gt; will work.  To vanquish the
+Hydra, just call up Hercules: &lt;strong&gt;any&lt;/strong&gt; key binding that&amp;#39;s not
+&lt;kbd&gt;g&lt;/kbd&gt; or &lt;kbd&gt;l&lt;/kbd&gt;, e.g. &lt;kbd&gt;C-f&lt;/kbd&gt; or whatever you
+wanted to do.&lt;/p&gt;
+
+&lt;p&gt;Note that you can still assign an unrelated binding to
+e.g. &lt;kbd&gt;&amp;lt;f2&amp;gt; f&lt;/kbd&gt;: the Hydra &lt;em&gt;does not&lt;/em&gt; take over
+&lt;kbd&gt;&amp;lt;f2&amp;gt;&lt;/kbd&gt;, only over &lt;kbd&gt;&amp;lt;f2&amp;gt; l&lt;/kbd&gt; and
+&lt;kbd&gt;&amp;lt;f2&amp;gt; g&lt;/kbd&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-infrastructure&quot;&gt;The Infrastructure&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;hydra-create&lt;/code&gt; will create new interactive functions for you with the proper docstrings:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;hydra-&amp;lt;f2&amp;gt;-text-scale-increase is an interactive Lisp function.&lt;/p&gt;
+
+&lt;p&gt;It is bound to &amp;lt;f2&amp;gt; g.&lt;/p&gt;
+
+&lt;p&gt;(hydra-&amp;lt;f2&amp;gt;-text-scale-increase)&lt;/p&gt;
+
+&lt;p&gt;Create a hydra with a &amp;quot;&amp;lt;f2&amp;gt;&amp;quot; body and the heads:&lt;/p&gt;
+
+&lt;p&gt;&amp;quot;g&amp;quot;:    &lt;code&gt;text-scale-increase&lt;/code&gt;,&lt;/p&gt;
+&amp;quot;l&amp;quot;:    &lt;code&gt;text-scale-decrease&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Call the head: &lt;code&gt;text-scale-increase&lt;/code&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;an-exciting-new-hydra:-move-window-splitter&quot;&gt;An exciting new Hydra: move window splitter&lt;/h2&gt;
+
+&lt;p&gt;Zooming is old news, Hydra bundles a new application:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;hydra-examples&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hydra-create&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-M-o&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-example-move-window-splitter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;or in the expanded form (equivalent):&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hydra-create&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-M-o&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;h&amp;quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-move-splitter-left&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;j&amp;quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-move-splitter-down&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;k&amp;quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-move-splitter-up&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;l&amp;quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-move-splitter-right&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This will allow you to move the window splitter, after you issue
+&lt;kbd&gt;C-x 2&lt;/kbd&gt; or &lt;kbd&gt;C-x 3&lt;/kbd&gt; one or more times, with
+e.g. &lt;kbd&gt;C-M-o&lt;/kbd&gt; &lt;kbd&gt;h h j k j l k l h&lt;/kbd&gt;.  You can, of
+course, customize both the body and the heads of this Hydra to your
+preferences.&lt;/p&gt;
+
+&lt;p&gt;The docstrings for this Hydra look more impressive, too:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;hydra-C-M-o-move-splitter-up is an interactive Lisp function.&lt;/p&gt;
+
+&lt;p&gt;It is bound to C-M-o k.&lt;/p&gt;
+
+&lt;p&gt;(hydra-C-M-o-move-splitter-up)&lt;/p&gt;
+
+&lt;p&gt;Create a hydra with a &amp;quot;C-M-o&amp;quot; body and the heads:&lt;/p&gt;
+
+&lt;p&gt;&amp;quot;h&amp;quot;:    &lt;code&gt;hydra-move-splitter-left&lt;/code&gt;,&lt;/p&gt;
+&amp;quot;j&amp;quot;:    &lt;code&gt;hydra-move-splitter-down&lt;/code&gt;,&lt;/p&gt;
+&amp;quot;k&amp;quot;:    &lt;code&gt;hydra-move-splitter-up&lt;/code&gt;,&lt;/p&gt;
+&amp;quot;l&amp;quot;:    &lt;code&gt;hydra-move-splitter-right&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Call the head: &lt;code&gt;hydra-move-splitter-up&lt;/code&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;I hope that you enjoy the new library and let me know when you invent
+some novel and efficient Hydras. Happy hacking!&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>lispy 0.21.0 is out</title>
