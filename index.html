@@ -217,8 +217,8 @@ that disables itself auto-magically.</p>
 <p>This code will accomplish the task of the previous post:</p>
 <div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;hydra</span><span class="p">)</span>
 <span class="p">(</span><span class="nv">hydra-create</span> <span class="s">&quot;&lt;f2&gt;&quot;</span>
-  <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;g&quot;</span> <span class="o">.</span> <span class="nv">text-scale-increase</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="o">.</span> <span class="nv">text-scale-decrease</span><span class="p">)))</span>
+  <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;g&quot;</span> <span class="nv">text-scale-increase</span><span class="p">)</span>
+    <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nv">text-scale-decrease</span><span class="p">)))</span>
 </code></pre></div>
 <p>Now, <kbd>&lt;f2&gt;</kbd> is the Hydra&#39;s body: you need to press it
 only once, together with one of the heads (<kbd>g</kbd> or
@@ -262,10 +262,10 @@ e.g. <kbd>&lt;f2&gt; f</kbd>: the Hydra <em>does not</em> take over
 </code></pre></div>
 <p>or in the expanded form (equivalent):</p>
 <div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">hydra-create</span> <span class="s">&quot;C-M-o&quot;</span>
-  <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;h&quot;</span> <span class="o">.</span> <span class="nv">hydra-move-splitter-left</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="o">.</span> <span class="nv">hydra-move-splitter-down</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;k&quot;</span> <span class="o">.</span> <span class="nv">hydra-move-splitter-up</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="o">.</span> <span class="nv">hydra-move-splitter-right</span><span class="p">)))</span>
+  <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;h&quot;</span> <span class="nv">hydra-move-splitter-left</span><span class="p">)</span>
+    <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">hydra-move-splitter-down</span><span class="p">)</span>
+    <span class="p">(</span><span class="s">&quot;k&quot;</span> <span class="nv">hydra-move-splitter-up</span><span class="p">)</span>
+    <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nv">hydra-move-splitter-right</span><span class="p">)))</span>
 </code></pre></div>
 <p>This will allow you to move the window splitter, after you issue
 <kbd>C-x 2</kbd> or <kbd>C-x 3</kbd> one or more times, with
