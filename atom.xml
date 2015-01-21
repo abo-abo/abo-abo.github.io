@@ -4,13 +4,89 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-01-20T19:28:47+01:00</updated>
+ <updated>2015-01-21T16:02:41+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Even more dired key bindings</title>
+   <link href="http://oremacs.com/2015/01/21/dired-shortcuts/"/>
+   <updated>2015-01-21T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/01/21/dired-shortcuts</id>
+   <content type="html">&lt;p&gt;I&amp;#39;ve posted about &lt;code&gt;dired&lt;/code&gt; quite a few times now.  Below, I&amp;#39;ll do a
+short review of the old bindings and add a few remaining recipes from
+my &lt;code&gt;dired.el&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;old-stuff&quot;&gt;Old stuff&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Binding &lt;kbd&gt;r&lt;/kbd&gt; to &lt;code&gt;dired-start-process&lt;/code&gt; is covered &lt;a href=&quot;/2015/01/04/dired-nohup/&quot;&gt;here&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Binding &lt;kbd&gt;e&lt;/kbd&gt; to &lt;code&gt;ediff-files&lt;/code&gt; is mentioned &lt;a href=&quot;/2015/01/17/setting-up-ediff/&quot;&gt;here&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Binding &lt;kbd&gt;z&lt;/kbd&gt; to &lt;code&gt;dired-get-size&lt;/code&gt; is covered &lt;a href=&quot;/2015/01/12/dired-file-size/&quot;&gt;here&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Binding &lt;kbd&gt;&amp;#96;&lt;/kbd&gt; to &lt;code&gt;dired-open-term&lt;/code&gt; is covered &lt;a href=&quot;/2015/01/10/dired-ansi-term/&quot;&gt;here&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;jump-to-a-file-with-ido&quot;&gt;Jump to a file with &lt;code&gt;ido&lt;/code&gt;&lt;/h2&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dired-mode-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;i&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ido-find-file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;I use this one quite frequently: &lt;kbd&gt;i&lt;/kbd&gt; is somehow mnemonic to
+&lt;kbd&gt;C-i&lt;/kbd&gt;, which means completion.  Remember that you can select
+the current candidate with &lt;kbd&gt;C-m&lt;/kbd&gt; and the current text
+(usually to create a new file) with &lt;kbd&gt;C-j&lt;/kbd&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;move-up-and-down&quot;&gt;Move up and down&lt;/h2&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dired-mode-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;j&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;dired-next-line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dired-mode-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;k&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;dired-previous-line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;As I&amp;#39;ve mentioned before, this is my standard recipe for all modes
+that don&amp;#39;t self-insert.&lt;/p&gt;
+
+&lt;h2 id=&quot;flag-garbage-files&quot;&gt;Flag garbage files&lt;/h2&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dired-mode-map&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;%^&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;dired-flag-garbage-files&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Huh, I always thought this was the default binding. I have no idea
+where this came from, but I use this plus &lt;kbd&gt;x&lt;/kbd&gt; to get rid of
+the garbage produced by a LaTeX run:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dired-garbage-files-regexp&lt;/span&gt;
+      &lt;span class=&quot;s&quot;&gt;&amp;quot;\\.idx\\|\\.run\\.xml$\\|\\.bbl$\\|\\.bcf$\\|.blg$\\|-blx.bib$\\|.nav$\\|.snm$\\|.out$\\|.synctex.gz$\\|\\(?:\\.\\(?:aux\\|bak\\|dvi\\|log\\|orig\\|rej\\|toc\\|pyg\\)\\)\\&amp;#39;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;emacs&amp;#39;-adaptation-of-find&quot;&gt;Emacs&amp;#39; adaptation of &lt;code&gt;find&lt;/code&gt;&lt;/h2&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dired-mode-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;F&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;find-name-dired&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This little function is essential if you want to do perform some
+operation on all files in the current directory and its sub
+directories that match a pattern. Basically the same thing that you
+would do with the UNIX &lt;code&gt;find&lt;/code&gt;, just better.&lt;/p&gt;
+
+&lt;h2 id=&quot;ignore-unimportant-files&quot;&gt;Ignore unimportant files&lt;/h2&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dired-mode-map&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;M-o&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;dired-omit-mode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This will toggle the display of unimportant files, like:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dired-omit-files&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;\\(?:.*\\.\\(?:aux\\|log\\|synctex\\.gz\\|run\\.xml\\|bcf\\|am\\|in\\)\\&amp;#39;\\)\\|^\\.\\|-blx\\.bib&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;move-to-the-parent-directory&quot;&gt;Move to the parent directory&lt;/h2&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dired-mode-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;a&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;find-alternate-file&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;..&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;There probably is a default function that does this. I&amp;#39;ve been using
+this one for years, probably because it reuses the current &lt;code&gt;dired&lt;/code&gt;
+buffer of opening the parent directory.&lt;/p&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;Phew, that&amp;#39;s a lot of bindings. I don&amp;#39;t necessarily encourage you to
+use the same bindings as me; I just want to bring your attention to
+some of these functions, so that you can work them into your workflow.
+If you notice that I&amp;#39;m using some obsolete stuff, do let me know, I&amp;#39;m
+always looking to improve.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Behold The Mighty Hydra!</title>

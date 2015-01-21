@@ -11,7 +11,7 @@
 
   <title>
     
-      Easy helm improvement &middot; (or emacs
+      Even more dired key bindings &middot; (or emacs
     
   </title>
 
@@ -180,31 +180,77 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Easy helm improvement</h1>
-  <span class="post-date">21 Dec 2014</span>
-  <p>When you press <kbd>DEL</kbd> (also known as backspace) in a <code>helm</code>
-buffer, and there isn&#39;t any input to delete, it only errors at you
-with:</p>
+  <h1 class="post-title">Even more dired key bindings</h1>
+  <span class="post-date">21 Jan 2015</span>
+  <p>I&#39;ve posted about <code>dired</code> quite a few times now.  Below, I&#39;ll do a
+short review of the old bindings and add a few remaining recipes from
+my <code>dired.el</code>.</p>
 
-<blockquote>
-<p>Text is read only</p>
-</blockquote>
+<h2 id="old-stuff">Old stuff</h2>
 
-<p>Why not make it do something useful instead, for instance close <code>helm</code>?</p>
+<ul>
+<li>Binding <kbd>r</kbd> to <code>dired-start-process</code> is covered <a href="/2015/01/04/dired-nohup/">here</a>.</li>
+<li>Binding <kbd>e</kbd> to <code>ediff-files</code> is mentioned <a href="/2015/01/17/setting-up-ediff/">here</a>.</li>
+<li>Binding <kbd>z</kbd> to <code>dired-get-size</code> is covered <a href="/2015/01/12/dired-file-size/">here</a>.</li>
+<li>Binding <kbd>&#96;</kbd> to <code>dired-open-term</code> is covered <a href="/2015/01/10/dired-ansi-term/">here</a>.</li>
+</ul>
 
-<p>Easy:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;helm</span><span class="p">)</span>
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">helm-backspace</span> <span class="p">()</span>
-  <span class="s">&quot;Forward to `backward-delete-char&#39;.</span>
-<span class="s">On error (read-only), quit without selecting.&quot;</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">condition-case</span> <span class="no">nil</span>
-      <span class="p">(</span><span class="nv">backward-delete-char</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="p">(</span><span class="ne">error</span>
-     <span class="p">(</span><span class="nv">helm-keyboard-quit</span><span class="p">))))</span>
-
-<span class="p">(</span><span class="nf">define-key</span> <span class="nv">helm-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;DEL&quot;</span><span class="p">)</span> <span class="ss">&#39;helm-backspace</span><span class="p">)</span>
+<h2 id="jump-to-a-file-with-ido">Jump to a file with <code>ido</code></h2>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="s">&quot;i&quot;</span> <span class="ss">&#39;ido-find-file</span><span class="p">)</span>
 </code></pre></div>
+<p>I use this one quite frequently: <kbd>i</kbd> is somehow mnemonic to
+<kbd>C-i</kbd>, which means completion.  Remember that you can select
+the current candidate with <kbd>C-m</kbd> and the current text
+(usually to create a new file) with <kbd>C-j</kbd>.</p>
+
+<h2 id="move-up-and-down">Move up and down</h2>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="s">&quot;j&quot;</span> <span class="ss">&#39;dired-next-line</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="s">&quot;k&quot;</span> <span class="ss">&#39;dired-previous-line</span><span class="p">)</span>
+</code></pre></div>
+<p>As I&#39;ve mentioned before, this is my standard recipe for all modes
+that don&#39;t self-insert.</p>
+
+<h2 id="flag-garbage-files">Flag garbage files</h2>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;%^&quot;</span><span class="p">)</span> <span class="ss">&#39;dired-flag-garbage-files</span><span class="p">)</span>
+</code></pre></div>
+<p>Huh, I always thought this was the default binding. I have no idea
+where this came from, but I use this plus <kbd>x</kbd> to get rid of
+the garbage produced by a LaTeX run:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">dired-garbage-files-regexp</span>
+      <span class="s">&quot;\\.idx\\|\\.run\\.xml$\\|\\.bbl$\\|\\.bcf$\\|.blg$\\|-blx.bib$\\|.nav$\\|.snm$\\|.out$\\|.synctex.gz$\\|\\(?:\\.\\(?:aux\\|bak\\|dvi\\|log\\|orig\\|rej\\|toc\\|pyg\\)\\)\\&#39;&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="emacs&#39;-adaptation-of-find">Emacs&#39; adaptation of <code>find</code></h2>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="s">&quot;F&quot;</span> <span class="ss">&#39;find-name-dired</span><span class="p">)</span>
+</code></pre></div>
+<p>This little function is essential if you want to do perform some
+operation on all files in the current directory and its sub
+directories that match a pattern. Basically the same thing that you
+would do with the UNIX <code>find</code>, just better.</p>
+
+<h2 id="ignore-unimportant-files">Ignore unimportant files</h2>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-o&quot;</span><span class="p">)</span> <span class="ss">&#39;dired-omit-mode</span><span class="p">)</span>
+</code></pre></div>
+<p>This will toggle the display of unimportant files, like:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">dired-omit-files</span> <span class="s">&quot;\\(?:.*\\.\\(?:aux\\|log\\|synctex\\.gz\\|run\\.xml\\|bcf\\|am\\|in\\)\\&#39;\\)\\|^\\.\\|-blx\\.bib&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="move-to-the-parent-directory">Move to the parent directory</h2>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="s">&quot;a&quot;</span>
+    <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span>
+      <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+      <span class="p">(</span><span class="nv">find-alternate-file</span> <span class="s">&quot;..&quot;</span><span class="p">)))</span>
+</code></pre></div>
+<p>There probably is a default function that does this. I&#39;ve been using
+this one for years, probably because it reuses the current <code>dired</code>
+buffer of opening the parent directory.</p>
+
+<h2 id="outro">Outro</h2>
+
+<p>Phew, that&#39;s a lot of bindings. I don&#39;t necessarily encourage you to
+use the same bindings as me; I just want to bring your attention to
+some of these functions, so that you can work them into your workflow.
+If you notice that I&#39;m using some obsolete stuff, do let me know, I&#39;m
+always looking to improve.</p>
+
 </div>
 
 <div class="twitter-share">
@@ -222,16 +268,6 @@ with:</p>
     
       <li>
         <h3>
-          <!-- <a href="//2015/01/21/dired-shortcuts/"> -->
-          <a href="/2015/01/21/dired-shortcuts/">
-            Even more dired key bindings
-            <small>21 Jan 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
           <!-- <a href="//2015/01/20/introducing-hydra/"> -->
           <a href="/2015/01/20/introducing-hydra/">
             Behold The Mighty Hydra!
@@ -246,6 +282,16 @@ with:</p>
           <a href="/2015/01/19/lispy.0.21.0-is-out/">
             lispy 0.21.0 is out
             <small>19 Jan 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/01/18/sprucing-up-org-download/"> -->
+          <a href="/2015/01/18/sprucing-up-org-download/">
+            Sprucing up org-download
+            <small>18 Jan 2015</small>
           </a>
         </h3>
       </li>
