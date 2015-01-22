@@ -4,13 +4,77 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-01-21T16:02:41+01:00</updated>
+ <updated>2015-01-22T15:22:33+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Adding a bit of Clojure's sugar to Elisp</title>
+   <link href="http://oremacs.com/2015/01/22/clojure-sugar-for-elisp/"/>
+   <updated>2015-01-22T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/01/22/clojure-sugar-for-elisp</id>
+   <content type="html">&lt;p&gt;I just wanted to highlight my latest
+&lt;a href=&quot;http://comments.gmane.org/gmane.emacs.devel/181534&quot;&gt;submission to emacs-devel&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-patch&quot;&gt;The patch&lt;/h2&gt;
+
+&lt;p&gt;The attached
+&lt;a href=&quot;http://lists.gnu.org/archive/html/emacs-devel/2015-01/txtqCl_ExSFYV.txt&quot;&gt;patch&lt;/a&gt;,
+together with the macro
+&lt;a href=&quot;https://github.com/abo-abo/short-lambda&quot;&gt;short-lambda&lt;/a&gt; will add a
+shorthand for defining &lt;code&gt;lambda&lt;/code&gt;s in Emacs Lisp.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;#39;s an excerpt from &lt;a href=&quot;http://clojure.org/reader&quot;&gt;the Clojure reader docs&lt;/a&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Anonymous function literal (&lt;code&gt;#()&lt;/code&gt;)&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;#(...)&lt;/code&gt; =&amp;gt; &lt;code&gt;(fn [args] (...))&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;where args are determined by the presence of argument literals
+taking the form &lt;code&gt;%&lt;/code&gt;, &lt;code&gt;%n&lt;/code&gt; or &lt;code&gt;%&amp;amp;&lt;/code&gt;. &lt;code&gt;%&lt;/code&gt; is a synonym for &lt;code&gt;%1&lt;/code&gt;, &lt;code&gt;%n&lt;/code&gt; designates
+the nth arg (1-based), and &lt;code&gt;%&amp;amp;&lt;/code&gt; designates a rest arg. This is not a
+replacement for &lt;code&gt;fn&lt;/code&gt; - idiomatic used would be for very short one-off
+mapping/filter fns and the like.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;#()&lt;/code&gt; forms cannot be nested.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;what-the-patch-does&quot;&gt;What the patch does&lt;/h2&gt;
+
+&lt;p&gt;It makes it possible to write this in Elisp:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;mapc&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;#(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;put&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;disabled&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;upcase-region&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;downcase-region&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;narrow-to-region&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;You can also do this and other things that you would expect, if you&amp;#39;re
+familiar with Clojure:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;cl-mapcar&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;#(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;concat&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;%1&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot; are &amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;%2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+           &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;roses&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;violets&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+           &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;red&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;blue&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;;; =&amp;gt; (&amp;quot;roses are red&amp;quot; &amp;quot;violets are blue&amp;quot;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Or you could replace this snippet from &lt;code&gt;org-mode&lt;/code&gt;&amp;#39;s code:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;mapcar&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;and&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;member&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;car&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;matchers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;nth&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+        &lt;span class=&quot;nv&quot;&gt;org-latex-regexps&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;with this sugar-coated code:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;mapcar&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;#(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;and&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;member&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;car&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;matchers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;nth&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+        &lt;span class=&quot;nv&quot;&gt;org-latex-regexps&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;I hope that this gets accepted, although there are some conservative
+people that protest against this change.  Let me know if you would
+like to have this option for your Elisp setups.  And remember that you
+can try out the patch if you&amp;#39;re familiar with
+&lt;a href=&quot;http://www.emacswiki.org/emacs/BuildingEmacs&quot;&gt;building Emacs from source&lt;/a&gt;.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Even more dired key bindings</title>
