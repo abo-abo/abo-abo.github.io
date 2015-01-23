@@ -11,7 +11,7 @@
 
   <title>
     
-      My org-protocol setup, part 2. &middot; (or emacs
+      ElTeX - generate full LaTeX documents from Emacs Lisp &middot; (or emacs
     
   </title>
 
@@ -180,50 +180,101 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">My org-protocol setup, part 2.</h1>
-  <span class="post-date">08 Jan 2015</span>
-  <p>This continues the code from <a href="/2015/01/07/org-protocol-1/">the part 1</a>.</p>
+  <h1 class="post-title">ElTeX - generate full LaTeX documents from Emacs Lisp</h1>
+  <span class="post-date">23 Jan 2015</span>
+  <p>OK. Please stop laughing. It&#39;s a
+<a href="https://github.com/abo-abo/eltex">thing</a> now.</p>
 
-<h2 id="org-handle-link-youtube"><code>org-handle-link-youtube</code></h2>
+<p>Seriously though, it&#39;s my little project of writing a major mode for
+Emacs.  I&#39;ve written many minor modes, but this is my first major
+one. Granted, it&#39;s only a small derivation of <code>emacs-lisp-mode</code>.</p>
 
-<p>I tried to make the first call to <code>youtube-dl</code> asynchronous, but it
-wasn&#39;t working out.  So for the current code, there&#39;s still about a 2
-second delay before the capture buffer appears.</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;async</span><span class="p">)</span>
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">org-handle-link-youtube</span> <span class="p">(</span><span class="nv">link</span><span class="p">)</span>
-  <span class="p">(</span><span class="nb">lexical-let*</span>
-      <span class="p">((</span><span class="nv">file-name</span> <span class="p">(</span><span class="nv">org-trim</span>
-                   <span class="p">(</span><span class="nv">shell-command-to-string</span>
-                    <span class="p">(</span><span class="nf">concat</span>
-                     <span class="s">&quot;youtube-dl \&quot;&quot;</span>
-                     <span class="nv">link</span>
-                     <span class="s">&quot;\&quot;&quot;</span>
-                     <span class="s">&quot; -o \&quot;%(title)s.%(ext)s\&quot; --get-filename&quot;</span><span class="p">))))</span>
-       <span class="p">(</span><span class="nv">dir</span> <span class="s">&quot;~/Downloads/Videos&quot;</span><span class="p">)</span>
-       <span class="p">(</span><span class="nv">full-name</span>
-        <span class="p">(</span><span class="nf">expand-file-name</span> <span class="nv">file-name</span> <span class="nv">dir</span><span class="p">)))</span>
-    <span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;org-link-hook</span>
-              <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span>
-                <span class="p">(</span><span class="nf">concat</span>
-                 <span class="p">(</span><span class="nv">org-make-link-string</span> <span class="nv">dir</span> <span class="nv">dir</span><span class="p">)</span>
-                 <span class="s">&quot;\n&quot;</span>
-                 <span class="p">(</span><span class="nv">org-make-link-string</span> <span class="nv">full-name</span> <span class="nv">file-name</span><span class="p">))))</span>
-    <span class="p">(</span><span class="nv">async-shell-command</span>
-     <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;youtube-dl \&quot;%s\&quot; -o \&quot;%s\&quot;&quot;</span> <span class="nv">link</span> <span class="nv">full-name</span><span class="p">))</span>
-    <span class="p">(</span><span class="nv">find-file</span> <span class="p">(</span><span class="nv">org-expand</span> <span class="s">&quot;ent.org&quot;</span><span class="p">))</span>
-    <span class="p">(</span><span class="nf">goto-char</span> <span class="p">(</span><span class="nf">point-min</span><span class="p">))</span>
-    <span class="p">(</span><span class="nf">re-search-forward</span> <span class="s">&quot;^\\*+ +Videos&quot;</span> <span class="no">nil</span> <span class="no">t</span><span class="p">)))</span>
+<h2 id="how-the-eltex-looks-like">How the ElTeX looks like</h2>
+
+<p>Here&#39;s how a sample document outline looks like:</p>
+
+<p><img src="/download/eltex-fontified.png" alt="eltex-fontified"></p>
+
+<p>Here, <code>homogenization</code>, <code>smoluchowski-equation</code>, and
+<code>model-description-geometry</code> are simply Elisp functions that should
+produce a string on call. They are defined <a href="https://github.com/abo-abo/eltex/blob/master/demos/demo-math.elt">here</a>.</p>
+
+<p>On calling <kbd>M-x</kbd> <code>eltex-compile</code>, the corresponding LaTeX
+document will be written to the file to which <code>eltex-filename</code> points
+to.</p>
+
+<h2 id="how-the-corresponding-latex-looks-like">How the corresponding LaTeX looks like</h2>
+
+<p>Here&#39;s an excerpt of what will be generated:</p>
+<div class="highlight"><pre><code class="language-latex" data-lang="latex"><span class="k">\documentclass</span><span class="nb">{</span>article<span class="nb">}</span>
+<span class="k">\usepackage</span><span class="na">[fleqn]</span><span class="nb">{</span>amsmath<span class="nb">}</span>
+<span class="k">\usepackage</span><span class="nb">{</span>amsthm<span class="nb">}</span>
+<span class="k">\usepackage</span><span class="nb">{</span>enumerate<span class="nb">}</span>
+<span class="k">\usepackage</span><span class="nb">{</span>amsfonts<span class="nb">}</span>
+<span class="k">\usepackage</span><span class="nb">{</span>xcolor<span class="nb">}</span>
+<span class="k">\usepackage</span><span class="na">[style=numeric,natbib=true,backend=bibtex]</span><span class="nb">{</span>biblatex<span class="nb">}</span>
+<span class="k">\addbibresource</span><span class="nb">{</span>analysis.bib<span class="nb">}</span>
+<span class="k">\begin</span><span class="nb">{</span>document<span class="nb">}</span>
+
+<span class="k">\section</span><span class="nb">{</span>Introduction<span class="nb">}</span>
+
+<span class="k">\subsection</span><span class="nb">{</span>Homogenization<span class="nb">}</span>
 </code></pre></div>
-<p>Some notes for people who want to learn more Elisp:</p>
+<h2 id="how-the-original-eltex-looks-like-in-emacs-lisp-mode">How the original ElTeX looks like in <code>emacs-lisp-mode</code></h2>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">eltex-filename</span> <span class="s">&quot;~/tpaper/tpaper.tex&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;eltex-macros</span><span class="p">)</span>
 
-<ul>
-<li><code>lexical-let*</code> is needed to have <code>dir</code> and <code>full-name</code> visible in the <code>lambda</code>.</li>
-<li><code>org-make-link-string</code> is a nice utility command that escapes all sorts of
-characters that <code>org-mode</code> doesn&#39;t like, e.g. brackets etc.</li>
-</ul>
+<span class="c1">;;* Document</span>
+<span class="p">(</span><span class="nv">documentclass</span>
+ <span class="s">&quot;article&quot;</span>
+ <span class="p">(</span><span class="nv">usepackage</span>
+  <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;amsmath&quot;</span> <span class="s">&quot;fleqn&quot;</span><span class="p">)</span>
+  <span class="s">&quot;amsthm&quot;</span>
+  <span class="s">&quot;enumerate&quot;</span>
+  <span class="s">&quot;amsfonts&quot;</span>
+  <span class="s">&quot;xcolor&quot;</span>
+  <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;biblatex&quot;</span> <span class="s">&quot;style=numeric,natbib=true,backend=bibtex&quot;</span><span class="p">))</span>
+ <span class="p">(</span><span class="nv">bibliography</span> <span class="s">&quot;analysis&quot;</span><span class="p">)</span>
+ <span class="p">(</span><span class="nv">document</span>
+  <span class="p">(</span><span class="nv">section</span> <span class="s">&quot;Introduction&quot;</span>
+           <span class="p">(</span><span class="nv">homogenization</span><span class="p">)</span>
+           <span class="p">(</span><span class="nv">smoluchowski-equation</span><span class="p">))</span>
+  <span class="p">(</span><span class="nv">section</span> <span class="s">&quot;Notations and Assumptions&quot;</span>
+           <span class="p">(</span><span class="nv">model-description-geometry</span><span class="p">))</span>
+  <span class="s">&quot;\\printbibliography&quot;</span><span class="p">))</span>
+</code></pre></div>
+<h2 id="why-this?">Why this?</h2>
 
-<p>You can see my full <code>org-capture</code> and <code>org-protocol</code> setup
-<a href="https://github.com/abo-abo/org-fu">here</a>.</p>
+<p>Well, why not? At one point I was frustrated with LaTeX not allowing
+me to define mathematically rich entities. I did hack up a few TeX
+macros for this eventually, but it was very awkward.</p>
+
+<p>So I thought that I could make Emacs Lisp generate simple LaTeX in a
+similar way that C generates machine code. No more intricate LaTeX
+macros, only plain LaTeX, generated from (intricate) Elisp.</p>
+
+<p>This is still very much in a toy stage, I don&#39;t currently use it for
+anything serious.  Still, in case you&#39;re interested in defining
+derived major modes, you can look at my
+<a href="https://github.com/abo-abo/eltex/blob/master/eltex.el">implementation</a>,
+it&#39;s only 25 lines. The interesting thing about it, if you noticed, is
+that it replaces all double quoted strings visually with single quoted
+strings, so that they don&#39;t jump out as much.</p>
+
+<h2 id="more-examples">More examples</h2>
+
+<p>Here&#39;s how the typesetting of some mathematical logic looks like:</p>
+
+<p><img src="/download/eltex-math.png" alt="eltex-math"></p>
+
+<p>And here&#39;s the corresponding LaTeX:</p>
+
+<p><img src="/download/eltex-math-latex.png" alt="eltex-math-latex"></p>
+
+<p>Note how simple the resulting LaTeX is, considering how many variables
+were used to generate it. Now, I can update anything in the <code>with</code>
+Elisp binding, and the corresponding LaTeX will be appropriately
+regenerated, error-free.</p>
 
 </div>
 
@@ -242,16 +293,6 @@ characters that <code>org-mode</code> doesn&#39;t like, e.g. brackets etc.</li>
     
       <li>
         <h3>
-          <!-- <a href="//2015/01/23/eltex/"> -->
-          <a href="/2015/01/23/eltex/">
-            ElTeX - generate full LaTeX documents from Emacs Lisp
-            <small>23 Jan 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
           <!-- <a href="//2015/01/22/clojure-sugar-for-elisp/"> -->
           <a href="/2015/01/22/clojure-sugar-for-elisp/">
             Adding a bit of Clojure's sugar to Elisp
@@ -266,6 +307,16 @@ characters that <code>org-mode</code> doesn&#39;t like, e.g. brackets etc.</li>
           <a href="/2015/01/21/dired-shortcuts/">
             Even more dired key bindings
             <small>21 Jan 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/01/20/introducing-hydra/"> -->
+          <a href="/2015/01/20/introducing-hydra/">
+            Behold The Mighty Hydra!
+            <small>20 Jan 2015</small>
           </a>
         </h3>
       </li>

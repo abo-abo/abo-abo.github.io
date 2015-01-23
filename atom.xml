@@ -4,13 +4,114 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-01-22T15:43:52+01:00</updated>
+ <updated>2015-01-23T19:59:10+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>ElTeX - generate full LaTeX documents from Emacs Lisp</title>
+   <link href="http://oremacs.com/2015/01/23/eltex/"/>
+   <updated>2015-01-23T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/01/23/eltex</id>
+   <content type="html">&lt;p&gt;OK. Please stop laughing. It&amp;#39;s a
+&lt;a href=&quot;https://github.com/abo-abo/eltex&quot;&gt;thing&lt;/a&gt; now.&lt;/p&gt;
+
+&lt;p&gt;Seriously though, it&amp;#39;s my little project of writing a major mode for
+Emacs.  I&amp;#39;ve written many minor modes, but this is my first major
+one. Granted, it&amp;#39;s only a small derivation of &lt;code&gt;emacs-lisp-mode&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;how-the-eltex-looks-like&quot;&gt;How the ElTeX looks like&lt;/h2&gt;
+
+&lt;p&gt;Here&amp;#39;s how a sample document outline looks like:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/eltex-fontified.png&quot; alt=&quot;eltex-fontified&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Here, &lt;code&gt;homogenization&lt;/code&gt;, &lt;code&gt;smoluchowski-equation&lt;/code&gt;, and
+&lt;code&gt;model-description-geometry&lt;/code&gt; are simply Elisp functions that should
+produce a string on call. They are defined &lt;a href=&quot;https://github.com/abo-abo/eltex/blob/master/demos/demo-math.elt&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;On calling &lt;kbd&gt;M-x&lt;/kbd&gt; &lt;code&gt;eltex-compile&lt;/code&gt;, the corresponding LaTeX
+document will be written to the file to which &lt;code&gt;eltex-filename&lt;/code&gt; points
+to.&lt;/p&gt;
+
+&lt;h2 id=&quot;how-the-corresponding-latex-looks-like&quot;&gt;How the corresponding LaTeX looks like&lt;/h2&gt;
+
+&lt;p&gt;Here&amp;#39;s an excerpt of what will be generated:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-latex&quot; data-lang=&quot;latex&quot;&gt;&lt;span class=&quot;k&quot;&gt;\documentclass&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;{&lt;/span&gt;article&lt;span class=&quot;nb&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;\usepackage&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;[fleqn]&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;{&lt;/span&gt;amsmath&lt;span class=&quot;nb&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;\usepackage&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;{&lt;/span&gt;amsthm&lt;span class=&quot;nb&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;\usepackage&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;{&lt;/span&gt;enumerate&lt;span class=&quot;nb&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;\usepackage&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;{&lt;/span&gt;amsfonts&lt;span class=&quot;nb&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;\usepackage&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;{&lt;/span&gt;xcolor&lt;span class=&quot;nb&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;\usepackage&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;[style=numeric,natbib=true,backend=bibtex]&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;{&lt;/span&gt;biblatex&lt;span class=&quot;nb&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;\addbibresource&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;{&lt;/span&gt;analysis.bib&lt;span class=&quot;nb&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;\begin&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;{&lt;/span&gt;document&lt;span class=&quot;nb&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;\section&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;{&lt;/span&gt;Introduction&lt;span class=&quot;nb&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;\subsection&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;{&lt;/span&gt;Homogenization&lt;span class=&quot;nb&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;how-the-original-eltex-looks-like-in-emacs-lisp-mode&quot;&gt;How the original ElTeX looks like in &lt;code&gt;emacs-lisp-mode&lt;/code&gt;&lt;/h2&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;eltex-filename&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;~/tpaper/tpaper.tex&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;eltex-macros&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;;;* Document&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;documentclass&lt;/span&gt;
+ &lt;span class=&quot;s&quot;&gt;&amp;quot;article&amp;quot;&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;usepackage&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;amsmath&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;fleqn&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;amsthm&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;enumerate&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;amsfonts&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;xcolor&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;biblatex&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;style=numeric,natbib=true,backend=bibtex&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;bibliography&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;analysis&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;document&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;section&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Introduction&amp;quot;&lt;/span&gt;
+           &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;homogenization&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+           &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;smoluchowski-equation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;section&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Notations and Assumptions&amp;quot;&lt;/span&gt;
+           &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;model-description-geometry&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;\\printbibliography&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;why-this?&quot;&gt;Why this?&lt;/h2&gt;
+
+&lt;p&gt;Well, why not? At one point I was frustrated with LaTeX not allowing
+me to define mathematically rich entities. I did hack up a few TeX
+macros for this eventually, but it was very awkward.&lt;/p&gt;
+
+&lt;p&gt;So I thought that I could make Emacs Lisp generate simple LaTeX in a
+similar way that C generates machine code. No more intricate LaTeX
+macros, only plain LaTeX, generated from (intricate) Elisp.&lt;/p&gt;
+
+&lt;p&gt;This is still very much in a toy stage, I don&amp;#39;t currently use it for
+anything serious.  Still, in case you&amp;#39;re interested in defining
+derived major modes, you can look at my
+&lt;a href=&quot;https://github.com/abo-abo/eltex/blob/master/eltex.el&quot;&gt;implementation&lt;/a&gt;,
+it&amp;#39;s only 25 lines. The interesting thing about it, if you noticed, is
+that it replaces all double quoted strings visually with single quoted
+strings, so that they don&amp;#39;t jump out as much.&lt;/p&gt;
+
+&lt;h2 id=&quot;more-examples&quot;&gt;More examples&lt;/h2&gt;
+
+&lt;p&gt;Here&amp;#39;s how the typesetting of some mathematical logic looks like:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/eltex-math.png&quot; alt=&quot;eltex-math&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;And here&amp;#39;s the corresponding LaTeX:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/eltex-math-latex.png&quot; alt=&quot;eltex-math-latex&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Note how simple the resulting LaTeX is, considering how many variables
+were used to generate it. Now, I can update anything in the &lt;code&gt;with&lt;/code&gt;
+Elisp binding, and the corresponding LaTeX will be appropriately
+regenerated, error-free.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Adding a bit of Clojure's sugar to Elisp</title>
