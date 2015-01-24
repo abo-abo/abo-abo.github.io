@@ -11,7 +11,7 @@
 
   <title>
     
-      Easy helm improvement &middot; (or emacs
+      Do things after selecting window &middot; (or emacs
     
   </title>
 
@@ -184,31 +184,68 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Easy helm improvement</h1>
-  <span class="post-date">21 Dec 2014</span>
-  <p>When you press <kbd>DEL</kbd> (also known as backspace) in a <code>helm</code>
-buffer, and there isn&#39;t any input to delete, it only errors at you
-with:</p>
+  <h1 class="post-title">Do things after selecting window</h1>
+  <span class="post-date">24 Jan 2015</span>
+  <p>I saw this question today at Stack Overflow -
+<a href="http://stackoverflow.com/q/28124095/1350992">Emacs: How to enable toolbar mode and menubar mode only under a certain mode?</a>.
+Myself, I never use the menubar or the toolbar. But maybe it&#39;s just
+because it&#39;s useless in the modes to which I&#39;m used to. What if there
+was an option to have the menu bar <em>on</em> just for a few select
+modes?  For instance, if I decided that I want to learn Haskell
+tomorrow, I wouldn&#39;t mind to have the menu bar on for a while,
+especially if there was some useful stuff there in the menu.</p>
 
-<blockquote>
-<p>Text is read only</p>
-</blockquote>
+<h2 id="the-code">The Code</h2>
 
-<p>Why not make it do something useful instead, for instance close <code>helm</code>?</p>
+<p>I&#39;m not aware of a convenient hook for this job; I tried
+<code>after-change-major-mode-hook</code>, and it doesn&#39;t work when switching
+windows. The universal <code>post-command-hook</code> would be totally lame for this task.</p>
 
-<p>Easy:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;helm</span><span class="p">)</span>
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">helm-backspace</span> <span class="p">()</span>
-  <span class="s">&quot;Forward to `backward-delete-char&#39;.</span>
-<span class="s">On error (read-only), quit without selecting.&quot;</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">condition-case</span> <span class="no">nil</span>
-      <span class="p">(</span><span class="nv">backward-delete-char</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="p">(</span><span class="ne">error</span>
-     <span class="p">(</span><span class="nv">helm-keyboard-quit</span><span class="p">))))</span>
+<p>Then it occurred to me, that <code>select-window</code> <em>has</em> to be called
+eventually in most circumstances.  Even
+<a href="https://github.com/abo-abo/ace-window">ace-window</a> calls
+<code>select-window</code>.</p>
 
-<span class="p">(</span><span class="nf">define-key</span> <span class="nv">helm-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;DEL&quot;</span><span class="p">)</span> <span class="ss">&#39;helm-backspace</span><span class="p">)</span>
+<p>This is what I came up with so far:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">defvar</span> <span class="nv">menubar-last</span>
+  <span class="p">(</span><span class="nv">make-ring</span> <span class="mi">20</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">ring-insert</span> <span class="nv">menubar-last</span> <span class="s">&quot;dummy&quot;</span><span class="p">)</span>
+
+<span class="p">(</span><span class="nb">defadvice</span> <span class="nf">select-window</span> <span class="p">(</span><span class="nv">after</span> <span class="nv">select-window-menubar</span> <span class="nv">activate</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nf">equal</span> <span class="p">(</span><span class="nf">buffer-name</span><span class="p">)</span> <span class="p">(</span><span class="nv">ring-ref</span> <span class="nv">menubar-last</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="p">(</span><span class="nv">ring-insert</span> <span class="nv">menubar-last</span> <span class="p">(</span><span class="nf">buffer-name</span><span class="p">))</span>
+    <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">yes-or-no</span>
+           <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">memq</span> <span class="nv">major-mode</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">r-mode</span> <span class="nv">lisp-interaction-mode</span><span class="p">))</span>
+               <span class="mi">1</span> <span class="mi">-1</span><span class="p">)))</span>
+      <span class="p">(</span><span class="nv">menu-bar-mode</span> <span class="nv">yes-or-no</span><span class="p">)</span>
+      <span class="p">(</span><span class="nv">tool-bar-mode</span> <span class="nv">yes-or-no</span><span class="p">))))</span>
 </code></pre></div>
+<h2 id="the-ring-trickery">The Ring trickery</h2>
+
+<p>It&#39;s necessary at least for <code>magit</code>. Doing, for instance,
+<kbd>ll</kbd> operation switches windows many times.
+So I added a check that the current buffer isn&#39;t selected twice.</p>
+
+<p>In Emacs, a ring is like a stack with a limited length: you push onto
+the head, and if the stack becomes too large, the stuff gets removed
+from the tail. Perfect for debugging this code, since I don&#39;t care
+what happened 20 window switches ago, I&#39;m only interested in the most
+recent state. One small annoyance is that the following code will
+throw, if the ring is empty:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">ring-ref</span> <span class="nv">menubar-last</span> <span class="mi">0</span><span class="p">)</span>
+</code></pre></div>
+<p>I would prefer if it just returned <code>nil</code> instead. Hence the trick of
+initializing <code>menubar-last</code> with a dummy item.  Note that this
+annoyance propagates to other areas: <code>(current-kill 0)</code> will throw if
+you haven&#39;t yet copied text since Emacs started.</p>
+
+<h2 id="outro">Outro</h2>
+
+<p>I&#39;m not sure if this code is more annoying than useful, but, at least,
+I learned something new while writing it, and I hope you did too.  If
+you know of a better way to accomplish the original task, please do
+share.</p>
+
 </div>
 
 <div class="twitter-share">
@@ -226,16 +263,6 @@ with:</p>
     
       <li>
         <h3>
-          <!-- <a href="//2015/01/24/after-select-window/"> -->
-          <a href="/2015/01/24/after-select-window/">
-            Do things after selecting window
-            <small>24 Jan 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
           <!-- <a href="//2015/01/23/eltex/"> -->
           <a href="/2015/01/23/eltex/">
             ElTeX - generate full LaTeX documents from Emacs Lisp
@@ -250,6 +277,16 @@ with:</p>
           <a href="/2015/01/22/clojure-sugar-for-elisp/">
             Adding a bit of Clojure's sugar to Elisp
             <small>22 Jan 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/01/21/dired-shortcuts/"> -->
+          <a href="/2015/01/21/dired-shortcuts/">
+            Even more dired key bindings
+            <small>21 Jan 2015</small>
           </a>
         </h3>
       </li>

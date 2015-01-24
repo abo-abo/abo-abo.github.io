@@ -100,6 +100,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -180,6 +184,360 @@
 
       <div class="container content">
         <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/2015/01/19/lispy.0.21.0-is-out/">
+        lispy 0.21.0 is out
+      </a>
+    </h1>
+
+    <span class="post-date">19 Jan 2015</span>
+
+    <p>The last release was more than a month ago, and there have been more
+than 130 commits to master since then. Somehow, I&#39;ve been dragging my
+feet with this release: the (3 pages of)
+<a href="https://github.com/abo-abo/lispy/releases/tag/0.21.0">release notes</a>
+were in the draft stage for 10 days now, while I kept committing on
+top of them.</p>
+
+<h2 id="introduction">Introduction</h2>
+
+<p>This project is my vision of efficient LISP editing. According to
+Github, I started it more than a year ago, although the initial commit
+already contained around 1000 lines of code. After a year, it&#39;s more
+than 100 interactive commands in 5000 lines of code and 1000 lines of
+tests.</p>
+
+<p>Initially, I started the project because, while I wanted to learn
+Paredit to get more efficient, I did not want to learn Paredit&#39;s
+cumbersome bindings. Having established a skeleton that allows to call
+Paredit-like commands with plain letters, over time, I&#39;ve tacked on
+anything LISP-related here. In this way, it&#39;s very similar to
+<code>org-mode</code>, which starts with an outline and TODO skeleton, and then
+adds everything else in the world on top of that. Heck, I actually
+tacked on <code>org-mode</code>&#39;s outline features on top of <code>lispy</code>: when at an
+outline, <kbd>i</kbd> is equivalent to <code>org-mode</code>&#39;s <kbd>TAB</kbd>, and
+<kbd>I</kbd> is equivalent to <kbd>S-tab</kbd>.</p>
+
+<p>Among the other packages with which <code>lispy</code>
+integrates/cooperates/coexists are: <code>edebug</code>, <code>ediff</code>, <code>eldoc</code>, <code>ert</code>,
+<code>outline</code>, <code>semantic</code>, <code>semantic/db</code>, <code>ace-jump-mode</code>, <code>iedit</code>,
+<code>delsel</code>, <code>helm</code>, <code>multiple-cursors</code>, <code>fancy-narrow</code>, <code>projectile</code>,
+<code>god-mode</code>, <code>auto-complete</code>, <code>company</code>.</p>
+
+<h2 id="main-idea-behind-lispy">Main idea behind <code>lispy</code></h2>
+
+<p>The idea is to have plain letters, like <kbd>h</kbd> or <kbd>r</kbd>,
+call commands instead of self-inserting, but <strong>only if the point
+position is such that you wouldn&#39;t want to self-insert anyway</strong>.  When
+this situation occurs, I like to say <a href="#evolution-of-special">&quot;the point is special&quot;</a>; this
+shortcut is all over the code and the docs.</p>
+
+<p>This is a bit similar to <code>vi</code>&#39;s normal/insert states, but instead of
+&quot;holding&quot; the current state in your head, it&#39;s visible through <em>just
+the point position</em>.  And instead of having just the
+<kbd>Esc</kbd>/<kbd>i</kbd> combination to toggle normal/insert state,
+you can do it with <strong>any</strong> command that moves point,
+e.g. <kbd>C-f</kbd>, or <kbd>C-a</kbd>, or even any custom command
+that you write. <code>lispy</code> does provide <kbd>[</kbd>, <kbd>]</kbd>, and
+<kbd>C-3</kbd> key bindings for getting into special, but you are free
+to use any other binding or command that you want.</p>
+
+<p>For instance, starting from this code and point position (which is already special):</p>
+
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">=</span> <span class="nv">arg</span> <span class="mi">0</span><span class="p">)</span>
+  <cursor><span class="p">(</span></cursor><span class="k">setq</span> <span class="nv">arg</span> <span class="mi">2000</span><span class="p">))</span>
+</code></pre></div>
+
+<p>you can move to the <code>when</code> statement with <kbd>h</kbd> (<code>lispy-right</code>):</p>
+
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><cursor><span class="p">(</span></cursor><span class="nb">when</span> <span class="p">(</span><span class="nf">=</span> <span class="nv">arg</span> <span class="mi">0</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">setq</span> <span class="nv">arg</span> <span class="mi">2000</span><span class="p">))</span>
+</code></pre></div>
+
+<p>or you can remove the <code>when</code> statement altogether with <kbd>r</kbd> (<code>lispy-raise</code>):</p>
+
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><cursor><span class="p">(</span></cursor><span class="k">setq</span> <span class="nv">arg</span> <span class="mi">2000</span><span class="p">)</span>
+</code></pre></div>
+
+<p>or you can:</p>
+
+<ul>
+<li>evaluate <code>(setq arg 2000)</code> statement with <kbd>e</kbd> (<code>lispy-eval</code>); the result will be displayed in the echo area; works for multiple LISP dialects</li>
+<li>evaluate and insert with <kbd>E</kbd> (<code>lispy-eval-and-insert</code>); the actual value <code>2000</code> will be inserted below the expression</li>
+<li>evaluate and replace with <kbd>xr</kbd> (<code>lispy-eval-and-replace</code>); the expression will be replaced with <code>2000</code></li>
+<li>copy the statement to the kill ring with <kbd>n</kbd> (<code>lispy-new-copy</code>)</li>
+<li>delete the statement with <kbd>C-d</kbd> (<code>lispy-delete</code>)</li>
+<li>insert a copy of the statement below with <kbd>c</kbd> (<code>lispy-clone</code>)</li>
+<li>insert 3 copies of the statement below with <kbd>3c</kbd> (<code>digit-argument</code>, <code>lispy-clone</code>)</li>
+<li>move the statement on the previous line with <kbd>DEL</kbd> (<code>lispy-delete-backward</code>)</li>
+<li>mark the statement with <kbd>m</kbd> (<code>lispy-mark-list</code>)</li>
+<li>mark only <code>arg</code> with <kbd>2m</kbd> (<code>digit-argument</code>, <code>lispy-mark-list</code>)</li>
+<li>get help for <code>setq</code> with <kbd>xh</kbd> (<code>lispy-describe</code>)</li>
+<li>get help for <code>arg</code> with <kbd>2mxh</kbd> (<code>digit-argument</code>, <code>lispy-mark-list</code>, <code>lispy-describe</code>)</li>
+<li>copy <code>2000</code> to kill ring with <kbd>3mn</kbd> (<code>digit-argument</code>, <code>lispy-mark-list</code>, <code>lispy-new-copy</code>)</li>
+<li>move the statement outside of <code>when</code> with <kbd>oh</kbd> (<code>lispy-other</code>, <code>lispy-left</code>)</li>
+<li>swap <code>(= arg 0)</code> with <code>(setq arg 2000)</code> with <kbd>w</kbd> (<code>lispy-move-up</code>)</li>
+<li>move it back with <kbd>s</kbd> (<code>lispy-move-down</code>)</li>
+<li>put the whole <code>when</code> expression on one line with <kbd>hO</kbd> (<code>lispy-left</code>, <code>lispy-oneline</code>)</li>
+<li>narrow the buffer to current sexp with <kbd>N</kbd> (<code>lispy-narrow</code>)</li>
+<li>widen the buffer with <kbd>W</kbd> (<code>lispy-widen</code>)</li>
+<li>a lot of other things, there are 52 plain letters, after all</li>
+</ul>
+
+<p>Note that in the following code, the point is not special:</p>
+
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">wh<cursor>e</cursor>n</span> <span class="p">(</span><span class="nf">=</span> <span class="nv">arg</span> <span class="mi">0</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">setq</span> <span class="nv">arg</span> <span class="mi">2000</span><span class="p">))</span>
+</code></pre></div>
+
+<p>so if you would type <kbd>h</kbd>, it would not call <code>lispy-left</code>, but would insert &quot;h&quot; instead, yielding <code>whhen</code>.</p>
+
+<ul>
+<li>to get the point into special before <code>(when</code>, you can use either <kbd>C-a</kbd> or <kbd>&#91;</kbd> or <kbd>C-M-a</kbd></li>
+<li>to get the point into special after <code>arg 0)</code>, you can use either <kbd>C-e</kbd> or <kbd>&#93;</kbd></li>
+<li>to get the point into special after <code>2000))</code>, you can use <kbd>C-3</kbd></li>
+</ul>
+
+<h2 id="evolution-of-special">Evolution of special</h2>
+
+<p>Initially, the special state was only for the point before an open
+paren or after a close paren, since you almost never-ever want to
+insert characters at those positions. Over time, other point states
+were added to special:</p>
+
+<ul>
+<li>region is active (supersedes
+<a href="https://github.com/magnars/expand-region.el">expand-region</a> for LISP
+dialects)</li>
+<li>the point is at the start of a comment</li>
+<li>the point is at the start of an outline</li>
+</ul>
+
+<p>Region selection is especially important, since it is super-useful for
+manipulating (move, copy, eval, get-help, goto-definition) symbols
+inside lists. Since these symbols aren&#39;t delimited with parens, the
+only way to get to them with special is though region selection.</p>
+
+<p>Happily, region selection will fix the largest source of Paredit
+unbalanced paren errors: while using <code>lispy</code> region-manipulating
+commands, you can&#39;t copy an unbalanced expression, and thus you can&#39;t
+yank an unbalanced expression. You just have to use <kbd>m</kbd> and
+<kbd>M-m</kbd> instead of <kbd>C-SPC</kbd>; and <kbd>h</kbd>,
+<kbd>j</kbd>, <kbd>k</kbd>, <kbd>l</kbd>, <kbd>i</kbd>,
+<kbd>&gt;</kbd>, and <kbd>&lt;</kbd> instead of e.g. <kbd>C-f</kbd> and
+<kbd>M-f</kbd>.</p>
+
+<p>Since there are only 26 lower-case letters and 26 upper-case letters,
+the state of the command bindings in <code>lispy</code> quickly turned into
+<em>survival of the fittest</em>:</p>
+
+<ul>
+<li>the commands that were used the most got the priority bindings of
+lower case letters on the home row</li>
+<li>the second tier got the other lower-case bindings</li>
+<li>the third tier of commands were put on upper-case letters and on
+<kbd>x</kbd> + lower-case letters</li>
+<li>the fourth tier of commands are not bound at all, and I&#39;m
+considering to obsolete some of them, just to keep things simpler.</li>
+</ul>
+
+<h2 id="add:-the-annoyance-driven-development">ADD: the Annoyance-Driven Development</h2>
+
+<p>The other part of evolving and refining the commands, consisted of
+noticing small annoyances for when some generic command wasn&#39;t working
+as intended, or it was working in a sub-optimal way in a certain
+situation. After this, I would fix the command and put a test on it,
+to make sure that the annoyance does not surface in the future.</p>
+
+<h2 id="notes-on-lisp-dialects">Notes on LISP dialects</h2>
+
+<p>My priority is Elisp, since that&#39;s what I&#39;m using to implement
+<code>lispy</code>, but the following dialects are also supported:</p>
+
+<ul>
+<li>Clojure, via <a href="https://github.com/clojure-emacs/cider">CIDER</a></li>
+<li>Common Lisp, via <a href="https://github.com/slime/slime">SLIME</a></li>
+<li>Scheme, via <a href="https://github.com/jaor/geiser">Geiser</a></li>
+</ul>
+
+<p>To be supported, all a LISP dialect needs is just to use <code>(</code> or <code>{</code> or
+<code>[</code> as the opening delimiter; and <code>)</code> or <code>}</code> or <code>]</code> as the closing
+delimiter, no actual adaptations in the <code>lispy</code> code are necessary.</p>
+
+<p>The only thing that needs to be implemented on a per-dialect basis is
+the language-specific eval:</p>
+
+<ul>
+<li><kbd>e</kbd> (<code>lispy-eval</code>)</li>
+<li><kbd>E</kbd> (<code>lispy-eval-and-insert</code>)</li>
+<li><kbd>xr</kbd> (<code>lispy-eval-and-replace</code>)</li>
+<li><kbd>xj</kbd> (<code>lispy-debug-step-in</code>)</li>
+</ul>
+
+<p>Also, though the jump-to-definition functionality could be implemented
+via CEDET, environments like SLIME can do it much better, so
+<kbd>F</kbd> (<code>lispy-follow</code>) and <kbd>M-.</kbd> (<code>lispy-goto-symbol</code>) use the
+appropriate environment&#39;s facilities. Somehow, I still haven&#39;t managed
+to implement this for Geiser.</p>
+
+<h2 id="drinking-from-the-lispy-fire-hose">Drinking from the <code>lispy</code> fire hose</h2>
+
+<p>I&#39;ll get you started with the most basic and composable commands
+below.  You can find the rest in the
+<a href="http://oremacs.com/lispy/">function reference</a> or by just calling
+<kbd>xv</kbd> (<code>lispy-view-test</code>) on <code>should</code> statements of
+<a href="https://github.com/abo-abo/lispy/blob/master/lispy-test.el">lispy-test.el</a>:</p>
+
+<p><img src="/download/lispy-view-test.png" alt="sample-test"></p>
+
+<p>In the screenshot above, I start with the code and point position on
+the top. Then, after typing <kbd>miji</kbd>, I should end up with the
+state below: the point and mark position have moved. In this
+particular situation, I could follow-up with <kbd>e</kbd> to see the
+value of <code>auto-mode-alist</code>. Here&#39;s how to decipher <kbd>miji</kbd>:</p>
+
+<ul>
+<li><kbd>m</kbd> - <code>lispy-mark-list</code>: marks current expression</li>
+<li><kbd>i</kbd> - <code>lispy-tab</code> (mnemonic for <em>indent</em> or <em>inner</em>): marks the <code>car</code> of current expression</li>
+<li><kbd>j</kbd> - <code>lispy-down</code> (vi shortcut to move down): moves the point and mark down by one sexp, selecting the quoted expression</li>
+<li><kbd>i</kbd> - <code>lispy-tab</code>: selects the <code>car</code> of the quoted expression, i.e. <code>auto-mode-alist</code></li>
+</ul>
+
+<p>As you see from the screenshot, I have <code>show-paren-mode</code> always
+on. It&#39;s even on in the tests visualization!</p>
+
+<h2 id="the-most-basic-lispy-commands:-the-arrows">The most basic <code>lispy</code> commands: the arrows</h2>
+
+<ul>
+<li><kbd>h</kbd> is left</li>
+<li><kbd>j</kbd> is down</li>
+<li><kbd>k</kbd> is up</li>
+<li><kbd>l</kbd> is right</li>
+</ul>
+
+<p>The directions are literal only if you have your code properly
+indented, with newlines after each sexp. Otherwise, it may be the case
+that <kbd>j</kbd> moves literally right, instead of down; still, it&#39;s
+down figuratively.</p>
+
+<h3 id="arrows-like-digits">arrows like digits</h3>
+
+<p>All of them take digit arguments, so that e.g. <kbd>5j</kbd> is equivalent to <kbd>jjjjj</kbd>.</p>
+
+<p><kbd>h</kbd> and <kbd>j</kbd> maintain the guarantee of not exiting the
+current list, so you can use e.g. <kbd>99j</kbd> to move to the last
+element, if your list length is smaller than 99.</p>
+
+<h3 id="arrows-like-regions">arrows like regions</h3>
+
+<p>When the region is active, the arrows move the mark appropriately with
+the point. You can activate and deactivate the region by repeatedly
+pressing <kbd>m</kbd>.</p>
+
+<p>You can also mark a symbol with <kbd>M-m</kbd>
+(<code>lispy-mark-symbol</code>). There&#39;s no need to be in special for this
+command to work. I call these type of bindings <em>global</em>, while the
+bindings that only work in special I call <em>local</em>.</p>
+
+<h3 id="arrows-like-outlines">arrows like outlines</h3>
+
+<p>When located at the outline, <kbd>j</kbd> will call
+<code>outline-next-visible-heading</code>, and <kbd>k</kbd> will call
+<code>outline-previous-visible-heading</code>. <kbd>l</kbd> will move to the
+first list of the outline, while <kbd>h</kbd> will jump between the
+top-level sexp and the containing outline.</p>
+
+<h3 id="switching-to-a-different-side-of-the-expression">switching to a different side of the expression</h3>
+
+<p>Arrows can&#39;t do this easily; this can instead be done with
+<kbd>d</kbd> (<code>lispy-different</code>). Works for lists and regions.</p>
+
+<h2 id="moving-the-code-instead-of-moving-around-the-code">Moving the code instead of moving around the code</h2>
+
+<p>The most basic commands are:</p>
+
+<ul>
+<li><kbd>w</kbd> is <code>lispy-move-up</code></li>
+<li><kbd>s</kbd> is <code>lispy-move-down</code></li>
+</ul>
+
+<p>These will &quot;hold on&quot; to the current expression while moving it in the
+appropriate direction. There&#39;s no need to worry to mess up with them,
+since they cancel each other out perfectly.</p>
+
+<p>Note that, just like with the arrows, if you don&#39;t have an opening or
+closing delimiter to &quot;grab&quot;, you can mark a symbol <kbd>M-m</kbd> to
+be in special and use <kbd>w</kbd> / <kbd>s</kbd>.</p>
+
+<h2 id="modified-arrows-can-move-too">Modified arrows can move too</h2>
+
+<p><kbd>o</kbd> will modify the arrow keys temporarily, just for one
+command, with a minor mode. You can think of it as making the arrows
+move the point <strong>and</strong> the sexp in the usual direction, instead of
+moving just the point.</p>
+
+<ul>
+<li><kbd>ol</kbd>: move current sexp outside of the parent list, forwards</li>
+<li><kbd>oh</kbd>: move current sexp outside of the parent list, backwards</li>
+<li><kbd>oj</kbd>: move current sexp inside the next list, making it the first element</li>
+<li><kbd>ok</kbd>: move current sexp inside the preceding list, making it the last element</li>
+</ul>
+
+<h2 id="extending-or-shrinking-the-current-list-or-region">Extending or shrinking the current list or region</h2>
+
+<ul>
+<li><kbd>&gt;</kbd> (<code>lispy-slurp</code>) grows the current list or region in the current direction by one sexp</li>
+<li><kbd>&lt;</kbd> (<code>lispy-barf</code>) shrinks the current list or region in the current direction by one sexp</li>
+</ul>
+
+<p>Similarly to <kbd>j</kbd> and <kbd>k</kbd>, these commands maintain
+the guarantee of not exiting the parent list, so you can slurp until
+the end of the list with e.g. <kbd>99&gt;</kbd>.</p>
+
+<h2 id="outro">Outro</h2>
+
+<p>This project is very far from being final, I&#39;m expecting to reach
+<code>0.99.0</code> before getting to <code>1.0.0</code>. The reason is that the package
+aims to build intuition to the point of automation. For each small
+step in that direction, every small bug is two steps back, since it
+breaks the process of building intuition. So every possible situation
+needs to be tested and bugs fixed until the package is finally ironed
+out.</p>
+
+<p>While I do appreciate the
+<a href="https://github.com/abo-abo/lispy/stargazers">stars</a>, actually trying
+to do things with <code>lispy</code> and raising
+<a href="https://github.com/abo-abo/lispy/issues">issues</a> would help me a
+great deal more. For instance, if you raise an issue like</p>
+
+<blockquote>
+<p>How can I generate a function call right after the function definition?</p>
+</blockquote>
+
+<p>I would say to just use <kbd>2mcol(</kbd>:</p>
+
+<ul>
+<li>mark the function name with <kbd>2m</kbd></li>
+<li>clone region with <kbd>c</kbd></li>
+<li>move region outside the function body with <kbd>ol</kbd></li>
+<li>wrap the region with parens while deactivating it with <kbd>(</kbd></li>
+</ul>
+
+<p>And this would be a sort of FAQ question / recipe already done there.</p>
+
+<p>Or you could raise an issue like:</p>
+
+<blockquote>
+<p>Why doesn&#39;t <kbd>F</kbd> work for Racket?</p>
+</blockquote>
+
+<p>I would say it&#39;s because I haven&#39;t implemented it yet, since it was
+tricky.  But I&#39;ll get to it, now that I see that there&#39;s some interest
+in <code>lispy</code> from Racket users.</p>
+
+  </div>
   
   <div class="post">
     <h1 class="post-title">
@@ -537,64 +895,6 @@ it look nicer.</p>
 </code></pre></div>
 <p>Here, after defining an object <code>data_out</code>, I insert it subsequently
 with just <kbd>.</kbd>.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/01/14/repeatable-commands/">
-        Zoom in / out with style
-      </a>
-    </h1>
-
-    <span class="post-date">14 Jan 2015</span>
-
-    <p>I don&#39;t usually zoom a lot, typically I do it to size up other
-people&#39;s functions. Then, I zoom-out a couple times in a row until the
-function fits on the screen. Sometimes, I overshoot the zoom-out, and
-I have to zoom-in instead. I have <code>text-scale-increase</code> bound to
-<kbd>&lt;f2&gt; g</kbd> and <code>text-scale-decrease</code> bound to
-<kbd>&lt;f2&gt; l</kbd>.</p>
-
-<p>Below, I&#39;ll demonstrate how to call those two commands interchangeably
-with e.g. <kbd>&lt;f2&gt; g g g l g g l</kbd>, i.e. omitting the
-<kbd>&lt;f2&gt;</kbd> prefix.</p>
-
-<h2 id="define-repeatable-command">Define repeatable command</h2>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">def-rep-command</span> <span class="p">(</span><span class="nv">alist</span><span class="p">)</span>
-  <span class="s">&quot;Return a lambda that calls the first function of ALIST.</span>
-<span class="s">It sets the transient map to all functions of ALIST.&quot;</span>
-  <span class="p">(</span><span class="nb">lexical-let</span> <span class="p">((</span><span class="nv">keymap</span> <span class="p">(</span><span class="nf">make-sparse-keymap</span><span class="p">))</span>
-                <span class="p">(</span><span class="nv">func</span> <span class="p">(</span><span class="nv">cdar</span> <span class="nv">alist</span><span class="p">)))</span>
-    <span class="p">(</span><span class="nf">mapc</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
-            <span class="p">(</span><span class="nf">define-key</span> <span class="nv">keymap</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nf">cdr</span> <span class="nv">x</span><span class="p">)))</span>
-          <span class="nv">alist</span><span class="p">)</span>
-    <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">arg</span><span class="p">)</span>
-      <span class="p">(</span><span class="k">interactive</span> <span class="s">&quot;p&quot;</span><span class="p">)</span>
-      <span class="p">(</span><span class="nf">funcall</span> <span class="nv">func</span> <span class="nv">arg</span><span class="p">)</span>
-      <span class="p">(</span><span class="nv">set-transient-map</span> <span class="nv">keymap</span> <span class="no">t</span><span class="p">))))</span>
-</code></pre></div>
-<p>This is a pretty simple function that takes an alist of keys and
-commands, and returns a lambda that calls the first command and sets
-the transient map to call the first and other commands.  The way the
-transient map works, it takes priority over almost all maps, but
-disappears as soon as you press something that doesn&#39;t belong to it.</p>
-
-<h2 id="the-zoom-in-/-zoom-out-use-case">The zoom-in / zoom-out use case</h2>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;&lt;f2&gt; g&quot;</span><span class="p">)</span>
-                <span class="p">(</span><span class="nv">def-rep-command</span>
-                    <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;g&quot;</span> <span class="o">.</span> <span class="nv">text-scale-increase</span><span class="p">)</span>
-                      <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="o">.</span> <span class="nv">text-scale-decrease</span><span class="p">))))</span>
-<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;&lt;f2&gt; l&quot;</span><span class="p">)</span>
-                <span class="p">(</span><span class="nv">def-rep-command</span>
-                    <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;l&quot;</span> <span class="o">.</span> <span class="nv">text-scale-decrease</span><span class="p">)</span>
-                      <span class="p">(</span><span class="s">&quot;g&quot;</span> <span class="o">.</span> <span class="nv">text-scale-increase</span><span class="p">))))</span>
-</code></pre></div>
-<p>And this is it. A nice thing about this setup is that I don&#39;t have to
-think about the zoom state and quitting it: I&#39;ll quit it automatically
-as soon as I press anything other than <kbd>l</kbd> or <kbd>g</kbd>.
-Moreover, the command that exited the zoom state will be executed as
-usual.</p>
 
   </div>
   

@@ -4,13 +4,80 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-01-23T19:59:10+01:00</updated>
+ <updated>2015-01-24T15:19:20+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Do things after selecting window</title>
+   <link href="http://oremacs.com/2015/01/24/after-select-window/"/>
+   <updated>2015-01-24T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/01/24/after-select-window</id>
+   <content type="html">&lt;p&gt;I saw this question today at Stack Overflow -
+&lt;a href=&quot;http://stackoverflow.com/q/28124095/1350992&quot;&gt;Emacs: How to enable toolbar mode and menubar mode only under a certain mode?&lt;/a&gt;.
+Myself, I never use the menubar or the toolbar. But maybe it&amp;#39;s just
+because it&amp;#39;s useless in the modes to which I&amp;#39;m used to. What if there
+was an option to have the menu bar &lt;em&gt;on&lt;/em&gt; just for a few select
+modes?  For instance, if I decided that I want to learn Haskell
+tomorrow, I wouldn&amp;#39;t mind to have the menu bar on for a while,
+especially if there was some useful stuff there in the menu.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-code&quot;&gt;The Code&lt;/h2&gt;
+
+&lt;p&gt;I&amp;#39;m not aware of a convenient hook for this job; I tried
+&lt;code&gt;after-change-major-mode-hook&lt;/code&gt;, and it doesn&amp;#39;t work when switching
+windows. The universal &lt;code&gt;post-command-hook&lt;/code&gt; would be totally lame for this task.&lt;/p&gt;
+
+&lt;p&gt;Then it occurred to me, that &lt;code&gt;select-window&lt;/code&gt; &lt;em&gt;has&lt;/em&gt; to be called
+eventually in most circumstances.  Even
+&lt;a href=&quot;https://github.com/abo-abo/ace-window&quot;&gt;ace-window&lt;/a&gt; calls
+&lt;code&gt;select-window&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;This is what I came up with so far:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defvar&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;menubar-last&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;make-ring&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ring-insert&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;menubar-last&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;dummy&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defadvice&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;select-window&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;after&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;select-window-menubar&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;activate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;unless&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;equal&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;buffer-name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ring-ref&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;menubar-last&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ring-insert&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;menubar-last&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;buffer-name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;yes-or-no&lt;/span&gt;
+           &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;memq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;major-mode&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;r-mode&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;lisp-interaction-mode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+               &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;-1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;menu-bar-mode&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;yes-or-no&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;tool-bar-mode&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;yes-or-no&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;the-ring-trickery&quot;&gt;The Ring trickery&lt;/h2&gt;
+
+&lt;p&gt;It&amp;#39;s necessary at least for &lt;code&gt;magit&lt;/code&gt;. Doing, for instance,
+&lt;kbd&gt;ll&lt;/kbd&gt; operation switches windows many times.
+So I added a check that the current buffer isn&amp;#39;t selected twice.&lt;/p&gt;
+
+&lt;p&gt;In Emacs, a ring is like a stack with a limited length: you push onto
+the head, and if the stack becomes too large, the stuff gets removed
+from the tail. Perfect for debugging this code, since I don&amp;#39;t care
+what happened 20 window switches ago, I&amp;#39;m only interested in the most
+recent state. One small annoyance is that the following code will
+throw, if the ring is empty:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ring-ref&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;menubar-last&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;I would prefer if it just returned &lt;code&gt;nil&lt;/code&gt; instead. Hence the trick of
+initializing &lt;code&gt;menubar-last&lt;/code&gt; with a dummy item.  Note that this
+annoyance propagates to other areas: &lt;code&gt;(current-kill 0)&lt;/code&gt; will throw if
+you haven&amp;#39;t yet copied text since Emacs started.&lt;/p&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;I&amp;#39;m not sure if this code is more annoying than useful, but, at least,
+I learned something new while writing it, and I hope you did too.  If
+you know of a better way to accomplish the original task, please do
+share.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>ElTeX - generate full LaTeX documents from Emacs Lisp</title>
