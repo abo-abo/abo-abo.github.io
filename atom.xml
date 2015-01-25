@@ -4,13 +4,95 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-01-24T15:19:20+01:00</updated>
+ <updated>2015-01-25T20:14:36+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Exploring Emacs packages</title>
+   <link href="http://oremacs.com/2015/01/25/exploring-emacs-packages/"/>
+   <updated>2015-01-25T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/01/25/exploring-emacs-packages</id>
+   <content type="html">&lt;p&gt;Currently, &lt;a href=&quot;http://melpa.org/&quot;&gt;MELPA&lt;/a&gt; hosts over &lt;code&gt;2250&lt;/code&gt; packages. That&amp;#39;s
+quite a large number, although it&amp;#39;s still feasible to try most of the
+popular ones. In comparison,&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;apt-cache pkgnames &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; wc
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;gives me the number &lt;code&gt;50250&lt;/code&gt;. I don&amp;#39;t recall calling &lt;code&gt;apt-cache
+pkgnames&lt;/code&gt; ever before, while I call &lt;code&gt;package-list-packages&lt;/code&gt; all the
+time. I suppose that this will have to change when the number of
+packages grows further.&lt;/p&gt;
+
+&lt;p&gt;I usually explore packages just as they show up as new in &lt;code&gt;package-list-packages&lt;/code&gt;.
+I&amp;#39;ll share the two tools that I use for exploring them.&lt;/p&gt;
+
+&lt;h2 id=&quot;smex&quot;&gt;Smex&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/nonsequitur/smex&quot;&gt;Smex&lt;/a&gt; is an &lt;kbd&gt;M-x&lt;/kbd&gt; enhancement for Emacs.
+In addition to executing commands faster, it gives you an option to jump to the current command&amp;#39;s definition
+with &lt;kbd&gt;M-.&lt;/kbd&gt;.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;#39;s how I bind &lt;code&gt;smex&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;smex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;\C-t&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;smex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;smex-prepare-ido-bindings&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ido-completion-map&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-,&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;smex-describe-function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ido-completion-map&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-w&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;smex-where-is&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ido-completion-map&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-.&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;smex-find-function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ido-completion-map&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-a&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;move-beginning-of-line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;;; (define-key ido-completion-map &amp;quot;\C-i&amp;quot; &amp;#39;smex-helm)&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;;; (define-key ido-completion-map &amp;quot; &amp;quot; &amp;#39;smex-helm)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;I don&amp;#39;t feel bad at all for unbinding &lt;code&gt;transpose-chars&lt;/code&gt;,
+&lt;kbd&gt;C-t&lt;/kbd&gt; is such a prime binding, that only the best commands
+can deserve it. And since I touch-type, it&amp;#39;s easier for me to hit
+&lt;kbd&gt;M-DEL&lt;/kbd&gt; and retype the word when I notice a mistake, than to
+carefully navigate to the mistake location and call &lt;code&gt;transpose-chars&lt;/code&gt;
+with surgical precision. On the other hand, the number of Emacs
+packages is only going to grow, so it becomes less and less feasible
+to bind everything. Instead, seldom used stuff can be called though
+&lt;code&gt;smex&lt;/code&gt;. For instance, I don&amp;#39;t bind
+&lt;a href=&quot;https://github.com/ardumont/markdown-toc&quot;&gt;markdown-toc&lt;/a&gt; or
+&lt;a href=&quot;https://github.com/hagleitn/speed-type&quot;&gt;speed-type&lt;/a&gt; and call them via
+&lt;kbd&gt;C-t&lt;/kbd&gt; instead.&lt;/p&gt;
+
+&lt;p&gt;Back to the point, &lt;kbd&gt;C-t&lt;/kbd&gt; ... &lt;kbd&gt;C-.&lt;/kbd&gt;
+(&lt;code&gt;smex-find-function&lt;/code&gt;) allows me to quickly jump to the source of the
+package that I want to explore.&lt;/p&gt;
+
+&lt;h2 id=&quot;semantic-tags&quot;&gt;Semantic tags&lt;/h2&gt;
+
+&lt;p&gt;Once I&amp;#39;m in the source code, I can quickly get an overview with
+&lt;kbd&gt;g&lt;/kbd&gt; (&lt;code&gt;lispy-goto&lt;/code&gt;) from
+&lt;a href=&quot;https://github.com/abo-abo/lispy&quot;&gt;lispy&lt;/a&gt;. It uses CEDET&amp;#39;s semantic
+module to get a list of tags in current directory with
+&lt;a href=&quot;https://github.com/emacs-helm/helm&quot;&gt;helm&lt;/a&gt; for completion.  In my
+opinion, it&amp;#39;s much prettier than &lt;code&gt;helm&lt;/code&gt;&amp;#39;s own &lt;code&gt;helm-semantic&lt;/code&gt;. It also
+explores more tags for Emacs Lisp, for instance it will capture
+&lt;code&gt;use-package&lt;/code&gt; and &lt;code&gt;global-set-key&lt;/code&gt; tags.&lt;/p&gt;
+
+&lt;p&gt;A new cute feature that I added recently is a different background for
+user-visible functions, i.e.  the ones that are callable by
+&lt;kbd&gt;M-x&lt;/kbd&gt; or &lt;code&gt;smex&lt;/code&gt;.  Here&amp;#39;s how it looks like, for the
+&lt;code&gt;speed-type&lt;/code&gt; package (interactive functions have a purple background):&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/lispy-goto.png&quot; alt=&quot;lispy-goto&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;If the image text looks too small, you can right click / view image in
+your browser. Here, I can see at a glance, that there are three
+commands that I can call.  I can also see a few variables, two of them
+don&amp;#39;t include &lt;code&gt;--&lt;/code&gt;, so they&amp;#39;re probably customizable.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Do things after selecting window</title>

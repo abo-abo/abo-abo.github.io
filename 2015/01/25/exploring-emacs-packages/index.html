@@ -11,7 +11,7 @@
 
   <title>
     
-      Do things after selecting window &middot; (or emacs
+      Exploring Emacs packages &middot; (or emacs
     
   </title>
 
@@ -184,67 +184,82 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Do things after selecting window</h1>
-  <span class="post-date">24 Jan 2015</span>
-  <p>I saw this question today at Stack Overflow -
-<a href="http://stackoverflow.com/q/28124095/1350992">Emacs: How to enable toolbar mode and menubar mode only under a certain mode?</a>.
-Myself, I never use the menubar or the toolbar. But maybe it&#39;s just
-because it&#39;s useless in the modes to which I&#39;m used to. What if there
-was an option to have the menu bar <em>on</em> just for a few select
-modes?  For instance, if I decided that I want to learn Haskell
-tomorrow, I wouldn&#39;t mind to have the menu bar on for a while,
-especially if there was some useful stuff there in the menu.</p>
-
-<h2 id="the-code">The Code</h2>
-
-<p>I&#39;m not aware of a convenient hook for this job; I tried
-<code>after-change-major-mode-hook</code>, and it doesn&#39;t work when switching
-windows. The universal <code>post-command-hook</code> would be totally lame for this task.</p>
-
-<p>Then it occurred to me, that <code>select-window</code> <em>has</em> to be called
-eventually in most circumstances.  Even
-<a href="https://github.com/abo-abo/ace-window">ace-window</a> calls
-<code>select-window</code>.</p>
-
-<p>This is what I came up with so far:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">defvar</span> <span class="nv">menubar-last</span>
-  <span class="p">(</span><span class="nv">make-ring</span> <span class="mi">20</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">ring-insert</span> <span class="nv">menubar-last</span> <span class="s">&quot;dummy&quot;</span><span class="p">)</span>
-
-<span class="p">(</span><span class="nb">defadvice</span> <span class="nf">select-window</span> <span class="p">(</span><span class="nv">after</span> <span class="nv">select-window-menubar</span> <span class="nv">activate</span><span class="p">)</span>
-  <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nf">equal</span> <span class="p">(</span><span class="nf">buffer-name</span><span class="p">)</span> <span class="p">(</span><span class="nv">ring-ref</span> <span class="nv">menubar-last</span> <span class="mi">0</span><span class="p">))</span>
-    <span class="p">(</span><span class="nv">ring-insert</span> <span class="nv">menubar-last</span> <span class="p">(</span><span class="nf">buffer-name</span><span class="p">))</span>
-    <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">yes-or-no</span>
-           <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">memq</span> <span class="nv">major-mode</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">r-mode</span> <span class="nv">lisp-interaction-mode</span><span class="p">))</span>
-               <span class="mi">1</span> <span class="mi">-1</span><span class="p">)))</span>
-      <span class="p">(</span><span class="nv">menu-bar-mode</span> <span class="nv">yes-or-no</span><span class="p">)</span>
-      <span class="p">(</span><span class="nv">tool-bar-mode</span> <span class="nv">yes-or-no</span><span class="p">))))</span>
+  <h1 class="post-title">Exploring Emacs packages</h1>
+  <span class="post-date">25 Jan 2015</span>
+  <p>Currently, <a href="http://melpa.org/">MELPA</a> hosts over <code>2250</code> packages. That&#39;s
+quite a large number, although it&#39;s still feasible to try most of the
+popular ones. In comparison,</p>
+<div class="highlight"><pre><code class="language-sh" data-lang="sh">apt-cache pkgnames <span class="p">|</span> wc
 </code></pre></div>
-<h2 id="the-ring-trickery">The Ring trickery</h2>
+<p>gives me the number <code>50250</code>. I don&#39;t recall calling <code>apt-cache
+pkgnames</code> ever before, while I call <code>package-list-packages</code> all the
+time. I suppose that this will have to change when the number of
+packages grows further.</p>
 
-<p>It&#39;s necessary at least for <code>magit</code>. Doing, for instance,
-<kbd>ll</kbd> operation switches windows many times.
-So I added a check that the current buffer isn&#39;t selected twice.</p>
+<p>I usually explore packages just as they show up as new in <code>package-list-packages</code>.
+I&#39;ll share the two tools that I use for exploring them.</p>
 
-<p>In Emacs, a ring is like a stack with a limited length: you push onto
-the head, and if the stack becomes too large, the stuff gets removed
-from the tail. Perfect for debugging this code, since I don&#39;t care
-what happened 20 window switches ago, I&#39;m only interested in the most
-recent state. One small annoyance is that the following code will
-throw, if the ring is empty:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">ring-ref</span> <span class="nv">menubar-last</span> <span class="mi">0</span><span class="p">)</span>
+<h2 id="smex">Smex</h2>
+
+<p><a href="https://github.com/nonsequitur/smex">Smex</a> is an <kbd>M-x</kbd> enhancement for Emacs.
+In addition to executing commands faster, it gives you an option to jump to the current command&#39;s definition
+with <kbd>M-.</kbd>.</p>
+
+<p>Here&#39;s how I bind <code>smex</code>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;smex</span><span class="p">)</span>
+<span class="p">(</span><span class="nv">global-set-key</span> <span class="s">&quot;\C-t&quot;</span> <span class="ss">&#39;smex</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">smex-prepare-ido-bindings</span> <span class="p">()</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">ido-completion-map</span>
+      <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-,&quot;</span><span class="p">)</span> <span class="ss">&#39;smex-describe-function</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">ido-completion-map</span>
+      <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-w&quot;</span><span class="p">)</span> <span class="ss">&#39;smex-where-is</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">ido-completion-map</span>
+      <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-.&quot;</span><span class="p">)</span> <span class="ss">&#39;smex-find-function</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">ido-completion-map</span>
+      <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-a&quot;</span><span class="p">)</span> <span class="ss">&#39;move-beginning-of-line</span><span class="p">)</span>
+  <span class="c1">;; (define-key ido-completion-map &quot;\C-i&quot; &#39;smex-helm)</span>
+  <span class="c1">;; (define-key ido-completion-map &quot; &quot; &#39;smex-helm)</span>
+  <span class="p">)</span>
 </code></pre></div>
-<p>I would prefer if it just returned <code>nil</code> instead. Hence the trick of
-initializing <code>menubar-last</code> with a dummy item.  Note that this
-annoyance propagates to other areas: <code>(current-kill 0)</code> will throw if
-you haven&#39;t yet copied text since Emacs started.</p>
+<p>I don&#39;t feel bad at all for unbinding <code>transpose-chars</code>,
+<kbd>C-t</kbd> is such a prime binding, that only the best commands
+can deserve it. And since I touch-type, it&#39;s easier for me to hit
+<kbd>M-DEL</kbd> and retype the word when I notice a mistake, than to
+carefully navigate to the mistake location and call <code>transpose-chars</code>
+with surgical precision. On the other hand, the number of Emacs
+packages is only going to grow, so it becomes less and less feasible
+to bind everything. Instead, seldom used stuff can be called though
+<code>smex</code>. For instance, I don&#39;t bind
+<a href="https://github.com/ardumont/markdown-toc">markdown-toc</a> or
+<a href="https://github.com/hagleitn/speed-type">speed-type</a> and call them via
+<kbd>C-t</kbd> instead.</p>
 
-<h2 id="outro">Outro</h2>
+<p>Back to the point, <kbd>C-t</kbd> ... <kbd>C-.</kbd>
+(<code>smex-find-function</code>) allows me to quickly jump to the source of the
+package that I want to explore.</p>
 
-<p>I&#39;m not sure if this code is more annoying than useful, but, at least,
-I learned something new while writing it, and I hope you did too.  If
-you know of a better way to accomplish the original task, please do
-share.</p>
+<h2 id="semantic-tags">Semantic tags</h2>
+
+<p>Once I&#39;m in the source code, I can quickly get an overview with
+<kbd>g</kbd> (<code>lispy-goto</code>) from
+<a href="https://github.com/abo-abo/lispy">lispy</a>. It uses CEDET&#39;s semantic
+module to get a list of tags in current directory with
+<a href="https://github.com/emacs-helm/helm">helm</a> for completion.  In my
+opinion, it&#39;s much prettier than <code>helm</code>&#39;s own <code>helm-semantic</code>. It also
+explores more tags for Emacs Lisp, for instance it will capture
+<code>use-package</code> and <code>global-set-key</code> tags.</p>
+
+<p>A new cute feature that I added recently is a different background for
+user-visible functions, i.e.  the ones that are callable by
+<kbd>M-x</kbd> or <code>smex</code>.  Here&#39;s how it looks like, for the
+<code>speed-type</code> package (interactive functions have a purple background):</p>
+
+<p><img src="/download/lispy-goto.png" alt="lispy-goto"></p>
+
+<p>If the image text looks too small, you can right click / view image in
+your browser. Here, I can see at a glance, that there are three
+commands that I can call.  I can also see a few variables, two of them
+don&#39;t include <code>--</code>, so they&#39;re probably customizable.</p>
 
 </div>
 
@@ -263,10 +278,10 @@ share.</p>
     
       <li>
         <h3>
-          <!-- <a href="//2015/01/25/exploring-emacs-packages/"> -->
-          <a href="/2015/01/25/exploring-emacs-packages/">
-            Exploring Emacs packages
-            <small>25 Jan 2015</small>
+          <!-- <a href="//2015/01/24/after-select-window/"> -->
+          <a href="/2015/01/24/after-select-window/">
+            Do things after selecting window
+            <small>24 Jan 2015</small>
           </a>
         </h3>
       </li>
