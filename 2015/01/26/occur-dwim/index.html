@@ -11,7 +11,7 @@
 
   <title>
     
-      Making Elisp regex look nicer &middot; (or emacs
+      occur-dwim (Do What I Mean) &middot; (or emacs
     
   </title>
 
@@ -184,55 +184,61 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Making Elisp regex look nicer</h1>
-  <span class="post-date">11 Jan 2015</span>
-  <p>This is just a small improvement to make e.g.  <code>\\(</code> show up in
-regular expressions without the escape chars, but instead fontified
-with <code>font-lock-keyword-face</code>. It doesn&#39;t affect the underlying code
-at all, just makes it look nicer. For the <code>\\|</code> I chose <code>∨</code> - the
-<em>logical or</em> character.</p>
+  <h1 class="post-title">occur-dwim (Do What I Mean)</h1>
+  <span class="post-date">26 Jan 2015</span>
+  <p>I&#39;d like to share a little snippet that I like to use instead of a
+plain <kbd>M-s o</kbd> (<code>occur</code>).</p>
 
-<h2 id="the-code">The code</h2>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">fontify-glyph</span> <span class="p">(</span><span class="nv">item</span> <span class="nv">glyph</span><span class="p">)</span>
-  <span class="o">`</span><span class="p">((</span><span class="o">,</span><span class="nv">item</span>
-     <span class="p">(</span><span class="mi">0</span> <span class="nv">font-lock-keyword-face</span> <span class="no">t</span><span class="p">)</span>
-     <span class="p">(</span><span class="mi">0</span> <span class="p">(</span><span class="k">prog1</span>
-            <span class="p">(</span><span class="nv">compose-region</span> <span class="p">(</span><span class="nf">match-beginning</span> <span class="mi">0</span><span class="p">)</span>
-                            <span class="p">(</span><span class="nf">match-end</span> <span class="mi">0</span><span class="p">)</span>
-                            <span class="o">,</span><span class="nv">glyph</span><span class="p">)</span> <span class="no">nil</span><span class="p">)))))</span>
-
-<span class="p">(</span><span class="nv">font-lock-add-keywords</span> <span class="ss">&#39;emacs-lisp-mode</span>
-                        <span class="p">(</span><span class="nv">fontify-glyph</span> <span class="s">&quot;\\\\\\\\|&quot;</span> <span class="s">&quot;∨&quot;</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">font-lock-add-keywords</span> <span class="ss">&#39;emacs-lisp-mode</span>
-                        <span class="p">(</span><span class="nv">fontify-glyph</span> <span class="s">&quot;\\\\\\\\(&quot;</span> <span class="s">&quot;(&quot;</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">font-lock-add-keywords</span> <span class="ss">&#39;emacs-lisp-mode</span>
-                        <span class="p">(</span><span class="nv">fontify-glyph</span> <span class="s">&quot;\\\\\\\\)&quot;</span> <span class="s">&quot;)&quot;</span><span class="p">))</span>
+<h2 id="smarter-than-the-average-occur">smarter-than-the-average-occur</h2>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">occur-dwim</span> <span class="p">()</span>
+  <span class="s">&quot;Call `occur&#39; with a sane default.&quot;</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">push</span> <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">region-active-p</span><span class="p">)</span>
+            <span class="p">(</span><span class="nf">buffer-substring-no-properties</span>
+             <span class="p">(</span><span class="nf">region-beginning</span><span class="p">)</span>
+             <span class="p">(</span><span class="nf">region-end</span><span class="p">))</span>
+          <span class="p">(</span><span class="nv">thing-at-point</span> <span class="ss">&#39;symbol</span><span class="p">))</span>
+        <span class="nv">regexp-history</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">call-interactively</span> <span class="ss">&#39;occur</span><span class="p">))</span>
 </code></pre></div>
-<h2 id="how-it-looks-like">How it looks like</h2>
+<p>It will offer as the default candidate:</p>
 
-<p>At first, I wanted to just inline <a href="/download/elisp-regex.png">a picture</a>,
-but then I thought that <code>htmlize-buffer</code> would be able to handle it.
-It didn&#39;t, so I just edited a small snippet by hand:</p>
+<ul>
+<li>the current region, if it&#39;s active</li>
+<li>the current symbol, otherwise</li>
+</ul>
 
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">or</span> <span class="p">(</span><span class="nf">string-match</span> <span class="s">&quot;^<span class="nb">(</span>[^\n%|]*?<span class="nb">)</span>|<span class="nb">(</span>([^\n]*<span class="nb">)</span>?$&quot;</span> <span class="nv">str</span><span class="p">)</span>
-    <span class="p">(</span><span class="nf">string-match</span> <span class="s">&quot;^<span class="nb">(</span>[^\n%|]*?<span class="nb">)</span><span class="nb">(</span>%[^\n]*<span class="nb">)</span>?$&quot;</span> <span class="nv">str</span><span class="p">))</span>
+<p>It&#39;s pretty good, since I actually want the default candidate in 95%
+of the cases.  Some other functions, such as <code>rgrep</code> are smart like
+this out-of-the-box.</p>
+
+<h2 id="a-hydra-that-goes-nicely-with-occur">A Hydra that goes nicely with <code>occur</code></h2>
+
+<p>Since <code>occur</code>, like some other functions (<code>grep</code>, <code>rgrep</code>, <code>compile</code>),
+works with <code>next-error</code>, it&#39;s possible to use this
+<a href="https://github.com/abo-abo/hydra">Hydra</a> to navigate the <code>occur</code>
+matches:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">hydra-create</span> <span class="s">&quot;M-g&quot;</span>
+  <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;h&quot;</span> <span class="nv">first-error</span> <span class="s">&quot;first&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">next-error</span> <span class="s">&quot;next&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="s">&quot;k&quot;</span> <span class="nv">previous-error</span> <span class="s">&quot;prev&quot;</span><span class="p">)))</span>
 </code></pre></div>
+<p>Hydra was introduced in an
+<a href="/2015/01/20/introducing-hydra/">earlier post</a>,
+and is available in GNU ELPA.</p>
 
-<p>It&#39;s really satisfying to see those escape chars vanish as I type in
-a capture group in the regex, especially with the help of
-<a href="https://github.com/abo-abo/lispy">lispy-mode</a>.
-Here are some relevant tests for the regex support:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">should</span> <span class="p">(</span><span class="nv">string=</span> <span class="p">(</span><span class="nv">lispy-with</span> <span class="s">&quot;\&quot;a regex \\\\|\&quot;&quot;</span> <span class="s">&quot;(&quot;</span><span class="p">)</span>
-                 <span class="s">&quot;\&quot;a regex \\\\(|\\\\)\&quot;&quot;</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">should</span> <span class="p">(</span><span class="nv">string=</span> <span class="p">(</span><span class="nv">lispy-with</span> <span class="s">&quot;\&quot;\\\\(|foo\\\\)\&quot;&quot;</span> <span class="s">&quot;\C-?&quot;</span><span class="p">)</span>
-                 <span class="s">&quot;\&quot;|foo\&quot;&quot;</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">should</span> <span class="p">(</span><span class="nv">string=</span> <span class="p">(</span><span class="nv">lispy-with</span> <span class="s">&quot;\&quot;\\\\(foo\\\\)|\&quot;&quot;</span> <span class="s">&quot;\C-?&quot;</span><span class="p">)</span>
-                 <span class="s">&quot;\&quot;foo|\&quot;&quot;</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">should</span> <span class="p">(</span><span class="nv">string=</span> <span class="p">(</span><span class="nv">lispy-with</span> <span class="s">&quot;\&quot;|\\\\(foo\\\\)\&quot;&quot;</span> <span class="s">&quot;\C-d&quot;</span><span class="p">)</span>
-                 <span class="s">&quot;\&quot;|foo\&quot;&quot;</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">should</span> <span class="p">(</span><span class="nv">string=</span> <span class="p">(</span><span class="nv">lispy-with</span> <span class="s">&quot;\&quot;\\\\(foo|\\\\)\&quot;&quot;</span> <span class="s">&quot;\C-d&quot;</span><span class="p">)</span>
-                 <span class="s">&quot;\&quot;foo|\&quot;&quot;</span><span class="p">))</span>
-</code></pre></div>
+<h2 id="what-goes-around-comes-around">What goes around comes around</h2>
+
+<p>I usually do a quick internet search to see where I got the code that
+I&#39;m posting here, reason being that it&#39;s nice to list the source, as
+well as there could be more advanced stuff out there on the same
+topic.</p>
+
+<p>I saw a few results for <code>&quot;occur-dwim&quot;</code> so I thought that I just
+copy-pasted it from somewhere. Slight disappointment turned into a
+small sense of pride, when I found that the source of the copy-pastes
+was my old Stack Overflow answer:)</p>
+
 </div>
 
 <div class="twitter-share">
@@ -250,16 +256,6 @@ Here are some relevant tests for the regex support:</p>
     
       <li>
         <h3>
-          <!-- <a href="//2015/01/26/occur-dwim/"> -->
-          <a href="/2015/01/26/occur-dwim/">
-            occur-dwim (Do What I Mean)
-            <small>26 Jan 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
           <!-- <a href="//2015/01/25/exploring-emacs-packages/"> -->
           <a href="/2015/01/25/exploring-emacs-packages/">
             Exploring Emacs packages
@@ -274,6 +270,16 @@ Here are some relevant tests for the regex support:</p>
           <a href="/2015/01/24/after-select-window/">
             Do things after selecting window
             <small>24 Jan 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/01/23/eltex/"> -->
+          <a href="/2015/01/23/eltex/">
+            ElTeX - generate full LaTeX documents from Emacs Lisp
+            <small>23 Jan 2015</small>
           </a>
         </h3>
       </li>

@@ -4,13 +4,73 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-01-25T20:14:36+01:00</updated>
+ <updated>2015-01-26T15:37:15+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>occur-dwim (Do What I Mean)</title>
+   <link href="http://oremacs.com/2015/01/26/occur-dwim/"/>
+   <updated>2015-01-26T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/01/26/occur-dwim</id>
+   <content type="html">&lt;p&gt;I&amp;#39;d like to share a little snippet that I like to use instead of a
+plain &lt;kbd&gt;M-s o&lt;/kbd&gt; (&lt;code&gt;occur&lt;/code&gt;).&lt;/p&gt;
+
+&lt;h2 id=&quot;smarter-than-the-average-occur&quot;&gt;smarter-than-the-average-occur&lt;/h2&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;occur-dwim&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Call `occur&amp;#39; with a sane default.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;push&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;region-active-p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;buffer-substring-no-properties&lt;/span&gt;
+             &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;region-beginning&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+             &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;region-end&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;thing-at-point&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;symbol&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+        &lt;span class=&quot;nv&quot;&gt;regexp-history&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;call-interactively&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;occur&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;It will offer as the default candidate:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;the current region, if it&amp;#39;s active&lt;/li&gt;
+&lt;li&gt;the current symbol, otherwise&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;It&amp;#39;s pretty good, since I actually want the default candidate in 95%
+of the cases.  Some other functions, such as &lt;code&gt;rgrep&lt;/code&gt; are smart like
+this out-of-the-box.&lt;/p&gt;
+
+&lt;h2 id=&quot;a-hydra-that-goes-nicely-with-occur&quot;&gt;A Hydra that goes nicely with &lt;code&gt;occur&lt;/code&gt;&lt;/h2&gt;
+
+&lt;p&gt;Since &lt;code&gt;occur&lt;/code&gt;, like some other functions (&lt;code&gt;grep&lt;/code&gt;, &lt;code&gt;rgrep&lt;/code&gt;, &lt;code&gt;compile&lt;/code&gt;),
+works with &lt;code&gt;next-error&lt;/code&gt;, it&amp;#39;s possible to use this
+&lt;a href=&quot;https://github.com/abo-abo/hydra&quot;&gt;Hydra&lt;/a&gt; to navigate the &lt;code&gt;occur&lt;/code&gt;
+matches:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hydra-create&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;M-g&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;h&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;first-error&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;first&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;j&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;next-error&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;next&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;k&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;previous-error&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;prev&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Hydra was introduced in an
+&lt;a href=&quot;/2015/01/20/introducing-hydra/&quot;&gt;earlier post&lt;/a&gt;,
+and is available in GNU ELPA.&lt;/p&gt;
+
+&lt;h2 id=&quot;what-goes-around-comes-around&quot;&gt;What goes around comes around&lt;/h2&gt;
+
+&lt;p&gt;I usually do a quick internet search to see where I got the code that
+I&amp;#39;m posting here, reason being that it&amp;#39;s nice to list the source, as
+well as there could be more advanced stuff out there on the same
+topic.&lt;/p&gt;
+
+&lt;p&gt;I saw a few results for &lt;code&gt;&amp;quot;occur-dwim&amp;quot;&lt;/code&gt; so I thought that I just
+copy-pasted it from somewhere. Slight disappointment turned into a
+small sense of pride, when I found that the source of the copy-pastes
+was my old Stack Overflow answer:)&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Exploring Emacs packages</title>
