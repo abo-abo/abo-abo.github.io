@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      My "refactoring" workflow &middot; (or emacs
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="/public/css/octicons.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Scripts -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body class="layout-reverse theme-base-08">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <!-- <div class="sidebar-item"> -->
+  <!--   <p>unused</p> -->
+  <!-- </div> -->
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about/">About</a>
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/archive/">Archive</a>
+        
+      
+    
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+
+    <div id="github" class="sidebar-nav-item">
+      <button type="button"
+              class="btn btn-info"
+              data-toggle="collapse"
+              data-target="#github-projects">
+        <span class="octicon octicon-mark-github"></span> My Emacs Projects
+      </button>
+      <div id="github-projects" class="collapse">
+        <ul style="margin-bottom:0em;">
+          <li>
+            <a href="https://github.com/abo-abo/lispy">lispy</a>
+            <p>vi-like Paredit</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/worf">worf</a>
+            <p>vi-like bindings for org-mode</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-window">ace-window</a>
+            <p>switch windows with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-link">ace-link</a>
+            <p>follow links with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/function-args">function-args</a>
+            <p>enhance <code>CEDET</code> for C++</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/helm-make">helm-make</a>
+            <p>select a Makefile target with <code>helm</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/make-it-so">make-it-so</a>
+            <p>transform files with Makefile recipes</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/org-download">org-download</a>
+            <p>drag-and-drop images to <code>org-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo?tab=repositories">
+              <span class="octicon octicon-octoface"></span>
+              and more
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
+
+  <div class="sidebar-item">
+    <p>
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.0/">
+        <img alt="Creative Commons License"
+             style="border-width:0;opacity: 0.3;"
+             src="https://i.creativecommons.org/l/by-nc-sa/2.0/88x31.png"/>
+      </a>
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">(or emacs</a>
+            <small>irrelevant)</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">My "refactoring" workflow</h1>
+  <span class="post-date">27 Jan 2015</span>
+  <p>Well, &quot;refactoring&quot; is for the Java people, I simply rename things.
+Just today, I had to do a big rename operation related to the
+<a href="https://github.com/abo-abo/lispy/releases">release of lispy 0.22.0</a>.
+Below, I&#39;ll share some functions and packages that I used for that.</p>
+
+<h2 id="my-github-setup">My Github setup</h2>
+
+<p>Here&#39;s it (<code>tree -da -L 1</code>) is:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">.
+├── .cask
+├── gh-pages
+├── .git
+└── images
+</code></pre></div>
+<p>I&#39;ve cloned my <code>gh-pages</code> branch into its own git repository <em>inside</em>
+the original <code>lispy</code> repository. This way, I can rename functions in
+the code and the documentation simultaneously.</p>
+
+<h2 id="declaring-functions-obsolete-in-elisp">Declaring functions obsolete in Elisp</h2>
+
+<p>It can be done like this:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">define-obsolete-function-alias</span> <span class="ss">&#39;lispy-out-forward</span>
+    <span class="ss">&#39;lispy-right</span> <span class="s">&quot;0.21.0&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">define-obsolete-function-alias</span> <span class="ss">&#39;lispy-out-backward</span>
+    <span class="ss">&#39;lispy-left</span> <span class="s">&quot;0.21.0&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">define-obsolete-function-alias</span> <span class="ss">&#39;lispy-out-forward-nostring</span>
+    <span class="ss">&#39;lispy-right-nostring</span> <span class="s">&quot;0.21.0&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>After version <code>&quot;0.21.0&quot;</code> hits, any time you call <code>lispy-left</code> by its
+now obsolete alias <code>lispy-out-backward</code>, you&#39;ll get a message:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">`lispy-out-forward&#39; is an obsolete command (as of 0.21.0); use `lispy-right&#39; instead.
+</code></pre></div>
+<p>So now, since I&#39;m releasing version <code>&quot;0.22.0&quot;</code>, I can remove even the
+alias declarations. I gave people one week of warnings to adjust (just
+rename to the new name) any of their code that&#39;s calling the currently
+obsolete functions.</p>
+
+<h2 id="renaming-obsolete-functions-in-the-documentation">Renaming obsolete functions in the documentation</h2>
+
+<p>Taking advantage of the repository setup, I can:</p>
+
+<h3 id="step-1:-call-rgrep">Step 1: call <code>rgrep</code></h3>
+
+<p><code>rgrep</code> is a fine function, I wonder why it&#39;s not bound by default; I
+bind it to <kbd>C-&lt;</kbd>, taking advantage of my weird key
+mappings (I&#39;m actually pressing the <kbd>C-;-l</kbd> physical keys).</p>
+
+<p>It requires 3 inputs:</p>
+
+<ol>
+<li><strong>Symbol to search for</strong>: I call it with the point positioned on
+the symbol that I want to rename in the code, in the middle of the
+<code>define-obsolete-function-alias</code> tag, so <code>rgrep</code> picks up the
+symbol name as the default and I just type <kbd>RET</kbd> to select
+it.</li>
+<li><strong>File pattern</strong>: <code>*.el</code>, the current file extension is the
+default. I type <code>*</code> <kbd>RET</kbd>, since I want to match the <code>org</code> and <code>html</code>
+files as well.</li>
+<li><strong>Base directory</strong>: this directory will be will be recursively
+searched for files that match the file pattern; the default
+<code>~/git/lispy/</code> is fine here, <kbd>RET</kbd>.</li>
+</ol>
+
+<h3 id="step-2:-call-wgrep">Step 2: call <code>wgrep</code></h3>
+
+<p><a href="https://github.com/mhayashi1120/Emacs-wgrep">wgrep</a> is a fine
+package, I wonder why it&#39;s not more popular. Since it&#39;s so similar to
+<code>wdired</code> (one of the best things since sliced bread, btw), I like to bind
+the starter to  <kbd>C-x C-q</kbd> and the finisher to <kbd>C-c C-c</kbd>
+as well:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">eval-after-load</span> <span class="ss">&#39;grep</span>
+  <span class="o">&#39;</span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">grep-mode-map</span>
+    <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-x C-q&quot;</span><span class="p">)</span> <span class="ss">&#39;wgrep-change-to-wgrep-mode</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nv">eval-after-load</span> <span class="ss">&#39;wgrep</span>
+  <span class="o">&#39;</span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">grep-mode-map</span>
+    <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c C-c&quot;</span><span class="p">)</span> <span class="ss">&#39;wgrep-finish-edit</span><span class="p">))</span>
+</code></pre></div>
+<h3 id="step-3:-call-iedit">Step 3: call <code>iedit</code></h3>
+
+<p><a href="https://github.com/victorhge/iedit">iedit</a> is an amazing package, it&#39;s crazy-good.
+Here&#39;s how I bind it, since once <code>iedit-mode</code> is on, you can move to the next occurrence with <kbd>C-i</kbd>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-M-i&quot;</span><span class="p">)</span> <span class="ss">&#39;iedit-mode</span><span class="p">)</span>
+</code></pre></div>
+<p>In order to change <em>really</em> every occurrence in the buffer, I need to
+mark the thing that I want to change, before <kbd>C-M-i</kbd>.
+Otherwise, <code>iedit</code> will automatically add symbol bounds (a nice
+feature, actually), so that e.g. <code>=lispy-out-forward=</code> will not match
+<code>lispy-out-forward</code>.</p>
+
+<p>Finally, I interactively, char-by-char, rename e.g. <code>lispy-out-forward</code> to <code>lispy-right</code>.
+The experience is similar to the popular <a href="https://github.com/magnars/multiple-cursors.el">multiple-cursors</a>,
+which I also like to use, just for different purposes.</p>
+
+<h3 id="step-4:-exiting">Step 4: exiting</h3>
+
+<p>When I&#39;m done:</p>
+
+<ul>
+<li>I exit <code>iedit-mode</code> with <kbd>C-M-i</kbd>.</li>
+<li>I exit <code>wgrep</code> with <kbd>C-c C-c</kbd></li>
+<li>I save all affected files if I want, since they aren&#39;t saved yet and
+it&#39;s still possible to revert everything.</li>
+</ul>
+
+<h2 id="outro">Outro</h2>
+
+<blockquote>
+<p>Woah, that&#39;s a lot of steps!</p>
+</blockquote>
+
+<p>True, but do note that all three tools can be used on their own for
+various other tasks.  See for instance my other
+<a href="http://youtu.be/DFTXnC1scno?t=3m49s">&quot;refactoring&quot; demo</a>, that uses
+<code>iedit-mode</code> to unbind a <code>let</code>-bound variable in Elisp (should also
+work for Common Lisp, since the syntax is the same).</p>
+
+<p>There&#39;s beauty and utility in having such composable tools. A lot of
+the time, it&#39;s better than to just have one &quot;Rename&quot; button. For
+instance, when only one buffer is involved, the <code>rgrep</code>-<code>wgrep</code> step
+can be skipped and I can rename stuff with <code>iedit-mode</code> only.</p>
+
+<p>Or, when the playground for renaming is less than a buffer, I can:</p>
+
+<ol>
+<li><kbd>C-x nd</kbd> - <code>narrow-to-defun</code> or <kbd>C-x nn</kbd> -
+<code>narrow-to-region</code> (both are equivalent to <kbd>N</kbd> in <code>lispy</code>)</li>
+<li><code>iedit-mode</code></li>
+<li><kbd>C-x nw</kbd> - <code>widen</code> (<kbd>W</kbd> in <code>lispy</code>)</li>
+</ol>
+
+</div>
+
+<div class="twitter-share">
+  <a href="https://twitter.com/share"
+     class="twitter-share-button"
+     data-via="_abo_abo"
+     data-dnt="true">
+    Tweet
+  </a>
+</div>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/01/26/occur-dwim/"> -->
+          <a href="/2015/01/26/occur-dwim/">
+            occur-dwim (Do What I Mean)
+            <small>26 Jan 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/01/25/exploring-emacs-packages/"> -->
+          <a href="/2015/01/25/exploring-emacs-packages/">
+            Exploring Emacs packages
+            <small>25 Jan 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/01/24/after-select-window/"> -->
+          <a href="/2015/01/24/after-select-window/">
+            Do things after selecting window
+            <small>24 Jan 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'oremacs'; // required: replace example with your forum shortname
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+<script>
+  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+</script>
+<noscript>
+  Please enable JavaScript to view the
+  <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>

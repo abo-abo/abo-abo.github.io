@@ -4,13 +4,151 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-01-26T15:37:15+01:00</updated>
+ <updated>2015-01-27T19:36:43+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>My "refactoring" workflow</title>
+   <link href="http://oremacs.com/2015/01/27/my-refactoring-workflow/"/>
+   <updated>2015-01-27T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/01/27/my-refactoring-workflow</id>
+   <content type="html">&lt;p&gt;Well, &amp;quot;refactoring&amp;quot; is for the Java people, I simply rename things.
+Just today, I had to do a big rename operation related to the
+&lt;a href=&quot;https://github.com/abo-abo/lispy/releases&quot;&gt;release of lispy 0.22.0&lt;/a&gt;.
+Below, I&amp;#39;ll share some functions and packages that I used for that.&lt;/p&gt;
+
+&lt;h2 id=&quot;my-github-setup&quot;&gt;My Github setup&lt;/h2&gt;
+
+&lt;p&gt;Here&amp;#39;s it (&lt;code&gt;tree -da -L 1&lt;/code&gt;) is:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;.
+├── .cask
+├── gh-pages
+├── .git
+└── images
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;I&amp;#39;ve cloned my &lt;code&gt;gh-pages&lt;/code&gt; branch into its own git repository &lt;em&gt;inside&lt;/em&gt;
+the original &lt;code&gt;lispy&lt;/code&gt; repository. This way, I can rename functions in
+the code and the documentation simultaneously.&lt;/p&gt;
+
+&lt;h2 id=&quot;declaring-functions-obsolete-in-elisp&quot;&gt;Declaring functions obsolete in Elisp&lt;/h2&gt;
+
+&lt;p&gt;It can be done like this:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;define-obsolete-function-alias&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;lispy-out-forward&lt;/span&gt;
+    &lt;span class=&quot;ss&quot;&gt;&amp;#39;lispy-right&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;0.21.0&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;define-obsolete-function-alias&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;lispy-out-backward&lt;/span&gt;
+    &lt;span class=&quot;ss&quot;&gt;&amp;#39;lispy-left&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;0.21.0&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;define-obsolete-function-alias&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;lispy-out-forward-nostring&lt;/span&gt;
+    &lt;span class=&quot;ss&quot;&gt;&amp;#39;lispy-right-nostring&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;0.21.0&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;After version &lt;code&gt;&amp;quot;0.21.0&amp;quot;&lt;/code&gt; hits, any time you call &lt;code&gt;lispy-left&lt;/code&gt; by its
+now obsolete alias &lt;code&gt;lispy-out-backward&lt;/code&gt;, you&amp;#39;ll get a message:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;`lispy-out-forward&amp;#39; is an obsolete command (as of 0.21.0); use `lispy-right&amp;#39; instead.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;So now, since I&amp;#39;m releasing version &lt;code&gt;&amp;quot;0.22.0&amp;quot;&lt;/code&gt;, I can remove even the
+alias declarations. I gave people one week of warnings to adjust (just
+rename to the new name) any of their code that&amp;#39;s calling the currently
+obsolete functions.&lt;/p&gt;
+
+&lt;h2 id=&quot;renaming-obsolete-functions-in-the-documentation&quot;&gt;Renaming obsolete functions in the documentation&lt;/h2&gt;
+
+&lt;p&gt;Taking advantage of the repository setup, I can:&lt;/p&gt;
+
+&lt;h3 id=&quot;step-1:-call-rgrep&quot;&gt;Step 1: call &lt;code&gt;rgrep&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;rgrep&lt;/code&gt; is a fine function, I wonder why it&amp;#39;s not bound by default; I
+bind it to &lt;kbd&gt;C-&amp;lt;&lt;/kbd&gt;, taking advantage of my weird key
+mappings (I&amp;#39;m actually pressing the &lt;kbd&gt;C-;-l&lt;/kbd&gt; physical keys).&lt;/p&gt;
+
+&lt;p&gt;It requires 3 inputs:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Symbol to search for&lt;/strong&gt;: I call it with the point positioned on
+the symbol that I want to rename in the code, in the middle of the
+&lt;code&gt;define-obsolete-function-alias&lt;/code&gt; tag, so &lt;code&gt;rgrep&lt;/code&gt; picks up the
+symbol name as the default and I just type &lt;kbd&gt;RET&lt;/kbd&gt; to select
+it.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;File pattern&lt;/strong&gt;: &lt;code&gt;*.el&lt;/code&gt;, the current file extension is the
+default. I type &lt;code&gt;*&lt;/code&gt; &lt;kbd&gt;RET&lt;/kbd&gt;, since I want to match the &lt;code&gt;org&lt;/code&gt; and &lt;code&gt;html&lt;/code&gt;
+files as well.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Base directory&lt;/strong&gt;: this directory will be will be recursively
+searched for files that match the file pattern; the default
+&lt;code&gt;~/git/lispy/&lt;/code&gt; is fine here, &lt;kbd&gt;RET&lt;/kbd&gt;.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;step-2:-call-wgrep&quot;&gt;Step 2: call &lt;code&gt;wgrep&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/mhayashi1120/Emacs-wgrep&quot;&gt;wgrep&lt;/a&gt; is a fine
+package, I wonder why it&amp;#39;s not more popular. Since it&amp;#39;s so similar to
+&lt;code&gt;wdired&lt;/code&gt; (one of the best things since sliced bread, btw), I like to bind
+the starter to  &lt;kbd&gt;C-x C-q&lt;/kbd&gt; and the finisher to &lt;kbd&gt;C-c C-c&lt;/kbd&gt;
+as well:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;eval-after-load&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;grep&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;grep-mode-map&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-x C-q&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;wgrep-change-to-wgrep-mode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;eval-after-load&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;wgrep&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;grep-mode-map&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-c C-c&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;wgrep-finish-edit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;step-3:-call-iedit&quot;&gt;Step 3: call &lt;code&gt;iedit&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/victorhge/iedit&quot;&gt;iedit&lt;/a&gt; is an amazing package, it&amp;#39;s crazy-good.
+Here&amp;#39;s how I bind it, since once &lt;code&gt;iedit-mode&lt;/code&gt; is on, you can move to the next occurrence with &lt;kbd&gt;C-i&lt;/kbd&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-M-i&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;iedit-mode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;In order to change &lt;em&gt;really&lt;/em&gt; every occurrence in the buffer, I need to
+mark the thing that I want to change, before &lt;kbd&gt;C-M-i&lt;/kbd&gt;.
+Otherwise, &lt;code&gt;iedit&lt;/code&gt; will automatically add symbol bounds (a nice
+feature, actually), so that e.g. &lt;code&gt;=lispy-out-forward=&lt;/code&gt; will not match
+&lt;code&gt;lispy-out-forward&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Finally, I interactively, char-by-char, rename e.g. &lt;code&gt;lispy-out-forward&lt;/code&gt; to &lt;code&gt;lispy-right&lt;/code&gt;.
+The experience is similar to the popular &lt;a href=&quot;https://github.com/magnars/multiple-cursors.el&quot;&gt;multiple-cursors&lt;/a&gt;,
+which I also like to use, just for different purposes.&lt;/p&gt;
+
+&lt;h3 id=&quot;step-4:-exiting&quot;&gt;Step 4: exiting&lt;/h3&gt;
+
+&lt;p&gt;When I&amp;#39;m done:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;I exit &lt;code&gt;iedit-mode&lt;/code&gt; with &lt;kbd&gt;C-M-i&lt;/kbd&gt;.&lt;/li&gt;
+&lt;li&gt;I exit &lt;code&gt;wgrep&lt;/code&gt; with &lt;kbd&gt;C-c C-c&lt;/kbd&gt;&lt;/li&gt;
+&lt;li&gt;I save all affected files if I want, since they aren&amp;#39;t saved yet and
+it&amp;#39;s still possible to revert everything.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Woah, that&amp;#39;s a lot of steps!&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;True, but do note that all three tools can be used on their own for
+various other tasks.  See for instance my other
+&lt;a href=&quot;http://youtu.be/DFTXnC1scno?t=3m49s&quot;&gt;&amp;quot;refactoring&amp;quot; demo&lt;/a&gt;, that uses
+&lt;code&gt;iedit-mode&lt;/code&gt; to unbind a &lt;code&gt;let&lt;/code&gt;-bound variable in Elisp (should also
+work for Common Lisp, since the syntax is the same).&lt;/p&gt;
+
+&lt;p&gt;There&amp;#39;s beauty and utility in having such composable tools. A lot of
+the time, it&amp;#39;s better than to just have one &amp;quot;Rename&amp;quot; button. For
+instance, when only one buffer is involved, the &lt;code&gt;rgrep&lt;/code&gt;-&lt;code&gt;wgrep&lt;/code&gt; step
+can be skipped and I can rename stuff with &lt;code&gt;iedit-mode&lt;/code&gt; only.&lt;/p&gt;
+
+&lt;p&gt;Or, when the playground for renaming is less than a buffer, I can:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;kbd&gt;C-x nd&lt;/kbd&gt; - &lt;code&gt;narrow-to-defun&lt;/code&gt; or &lt;kbd&gt;C-x nn&lt;/kbd&gt; -
+&lt;code&gt;narrow-to-region&lt;/code&gt; (both are equivalent to &lt;kbd&gt;N&lt;/kbd&gt; in &lt;code&gt;lispy&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;iedit-mode&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;C-x nw&lt;/kbd&gt; - &lt;code&gt;widen&lt;/code&gt; (&lt;kbd&gt;W&lt;/kbd&gt; in &lt;code&gt;lispy&lt;/code&gt;)&lt;/li&gt;
+&lt;/ol&gt;
+</content>
+ </entry>
  
  <entry>
    <title>occur-dwim (Do What I Mean)</title>
