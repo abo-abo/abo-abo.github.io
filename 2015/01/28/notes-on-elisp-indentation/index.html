@@ -11,7 +11,7 @@
 
   <title>
     
-      File sizes in dired &middot; (or emacs
+      A few notes on Elisp indentation &middot; (or emacs
     
   </title>
 
@@ -184,49 +184,81 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">File sizes in dired</h1>
-  <span class="post-date">12 Jan 2015</span>
-  <p>Today, I&#39;ll continue with the trend of posting a small piece of my
-config when I don&#39;t have the time to post something more substantial.</p>
+  <h1 class="post-title">A few notes on Elisp indentation</h1>
+  <span class="post-date">28 Jan 2015</span>
+  <p>I sure do like to keep my Elisp code nice and indented.
+But sometimes the indentation engine just won&#39;t listen.</p>
 
-<h2 id="some-code">Some code</h2>
+<h2 id="lisp-indent-function">lisp-indent-function</h2>
 
-<p>This one looks nice, although it only works on systems with <code>/usr/bin/du</code>,
-which actually comprise 100% of the systems that I use:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">dired-get-size</span> <span class="p">()</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">files</span> <span class="p">(</span><span class="nv">dired-get-marked-files</span><span class="p">)))</span>
-    <span class="p">(</span><span class="nb">with-temp-buffer</span>
-      <span class="p">(</span><span class="nf">apply</span> <span class="ss">&#39;call-process</span> <span class="s">&quot;/usr/bin/du&quot;</span> <span class="no">nil</span> <span class="no">t</span> <span class="no">nil</span> <span class="s">&quot;-sch&quot;</span> <span class="nv">files</span><span class="p">)</span>
-      <span class="p">(</span><span class="nf">message</span>
-       <span class="s">&quot;Size of all marked files: %s&quot;</span>
-       <span class="p">(</span><span class="k">progn</span>
-         <span class="p">(</span><span class="nf">re-search-backward</span> <span class="s">&quot;\\(^[ 0-9.,]+[A-Za-z]+\\).*total$&quot;</span><span class="p">)</span>
-         <span class="p">(</span><span class="nv">match-string</span> <span class="mi">1</span><span class="p">))))))</span>
+<p>By default, the indentation is handled as if:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">lisp-indent-function</span> <span class="ss">&#39;lisp-indent-function</span><span class="p">)</span>
 </code></pre></div>
-<p>On doing a search, turns out that I got this code from
-<a href="http://www.emacswiki.org/emacs/DiredGetFileSize">the wiki</a> at some
-point.  I can confirm that, unlike some of the other code on the wiki,
-this one still works as advertised: you can use it on a directory or
-on a series of marked files and directories.</p>
-
-<h2 id="standard-dired-marking">Standard <code>dired</code> marking</h2>
-
-<p>In <code>dired</code>, you can:</p>
-
-<ul>
-<li>mark an item with <kbd>m</kbd></li>
-<li>unmark an item with <kbd>DEL</kbd></li>
-<li>inverse selection with <kbd>t</kbd></li>
-<li>unmark everything with <kbd>U</kbd></li>
-</ul>
-
-<p>Compared to this, the selection with the mouse and the control and
-shift keys that many file browsers use looks like kindergarten.</p>
-
-<p>This new action, getting the size of marked things, I&#39;ve bound to <kbd>z</kbd>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;z&quot;</span><span class="p">)</span> <span class="ss">&#39;dired-get-size</span><span class="p">)</span>
+<p>At least in one case, it looks horrible:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">cl-labels</span> <span class="p">((</span><span class="nv">square</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+                    <span class="p">(</span><span class="nf">*</span> <span class="nv">x</span> <span class="nv">x</span><span class="p">)))</span>
+  <span class="p">(</span><span class="nf">mapcar</span> <span class="nf">#&#39;</span><span class="nv">square</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">0</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">)))</span>
+<span class="c1">;; =&gt; (0 1 4 9 16 25)</span>
 </code></pre></div>
+<p>That&#39;s why I have:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">lisp-indent-function</span> <span class="ss">&#39;common-lisp-indent-function</span><span class="p">)</span>
+</code></pre></div>
+<p>which leads to this indentation:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">cl-labels</span> <span class="p">((</span><span class="nv">square</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+              <span class="p">(</span><span class="nf">*</span> <span class="nv">x</span> <span class="nv">x</span><span class="p">)))</span>
+  <span class="p">(</span><span class="nf">mapcar</span> <span class="nf">#&#39;</span><span class="nv">square</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">0</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">)))</span>
+<span class="c1">;; =&gt; (0 1 4 9 16 25)</span>
+</code></pre></div>
+<p>Ah, much better. The indentation does change a bit in other places as
+a result of this. To my experience, it can be fixed on a case-by-case
+basis by declaring the indent level for the offending function or
+macro.</p>
+
+<h2 id="declaring-indent-level">Declaring indent level</h2>
+
+<p>Here&#39;s how it looks like</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defmacro</span> <span class="nv">lispy-save-excursion</span> <span class="p">(</span><span class="kp">&amp;rest</span> <span class="nv">body</span><span class="p">)</span>
+  <span class="s">&quot;More intuitive (`save-excursion&#39; BODY).&quot;</span>
+  <span class="p">(</span><span class="nb">declare</span> <span class="p">(</span><span class="nv">indent</span> <span class="mi">0</span><span class="p">))</span>
+  <span class="o">`</span><span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">out</span> <span class="p">(</span><span class="k">save-excursion</span>
+                <span class="o">,@</span><span class="nv">body</span><span class="p">)))</span>
+     <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">bolp</span><span class="p">)</span>
+       <span class="p">(</span><span class="nv">back-to-indentation</span><span class="p">))</span>
+     <span class="nv">out</span><span class="p">))</span>
+</code></pre></div>
+<p>By default, functions behave as if their <code>indent</code> was declared to <code>nil</code>.
+Zero here means that we expect zero arguments on the same line, so that this indentation follows:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">lispy-save-excursion</span>
+  <span class="p">(</span><span class="nv">lispy--out-forward</span> <span class="nv">arg</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">backward-list</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">indent-sexp</span><span class="p">))</span>
+</code></pre></div>
+<p>The indentation above is just like the one that the original <code>save-excursion</code> has.
+Note that if I hadn&#39;t declared the indent, it would look like this:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">lispy-save-excursion</span>
+ <span class="p">(</span><span class="nv">lispy--out-forward</span> <span class="nv">arg</span><span class="p">)</span>
+ <span class="p">(</span><span class="nv">backward-list</span><span class="p">)</span>
+ <span class="p">(</span><span class="nv">indent-sexp</span><span class="p">))</span>
+</code></pre></div>
+<p>The impact is much larger for statements that require an <code>indent</code> of 1:</p>
+
+<p>Compare the proper thing:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">lispy-dotimes</span> <span class="nv">arg</span>
+  <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">point</span><span class="p">)</span> <span class="p">(</span><span class="nf">point-max</span><span class="p">))</span>
+    <span class="p">(</span><span class="ne">error</span> <span class="s">&quot;Reached end of buffer&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="nv">forward-list</span><span class="p">))</span>
+</code></pre></div>
+<p>to this horror:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">lispy-dotimes</span> <span class="nv">arg</span>
+               <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">point</span><span class="p">)</span> <span class="p">(</span><span class="nf">point-max</span><span class="p">))</span>
+                 <span class="p">(</span><span class="ne">error</span> <span class="s">&quot;Reached end of buffer&quot;</span><span class="p">))</span>
+               <span class="p">(</span><span class="nv">forward-list</span><span class="p">))</span>
+</code></pre></div>
+<h2 id="outro">Outro</h2>
+
+<p>I&#39;ve shown two things you can try if you find your Elisp indentation
+annoying. If you know of more, let me know.</p>
+
 </div>
 
 <div class="twitter-share">
@@ -244,16 +276,6 @@ shift keys that many file browsers use looks like kindergarten.</p>
     
       <li>
         <h3>
-          <!-- <a href="//2015/01/28/notes-on-elisp-indentation/"> -->
-          <a href="/2015/01/28/notes-on-elisp-indentation/">
-            A few notes on Elisp indentation
-            <small>28 Jan 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
           <!-- <a href="//2015/01/27/my-refactoring-workflow/"> -->
           <a href="/2015/01/27/my-refactoring-workflow/">
             My "refactoring" workflow
@@ -268,6 +290,16 @@ shift keys that many file browsers use looks like kindergarten.</p>
           <a href="/2015/01/26/occur-dwim/">
             occur-dwim (Do What I Mean)
             <small>26 Jan 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/01/25/exploring-emacs-packages/"> -->
+          <a href="/2015/01/25/exploring-emacs-packages/">
+            Exploring Emacs packages
+            <small>25 Jan 2015</small>
           </a>
         </h3>
       </li>
