@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Re-introducing auto-yasnippet &middot; (or emacs
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="/public/css/octicons.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Scripts -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body class="layout-reverse theme-base-08">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <!-- <div class="sidebar-item"> -->
+  <!--   <p>unused</p> -->
+  <!-- </div> -->
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about/">About</a>
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/archive/">Archive</a>
+        
+      
+    
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+
+    <div id="github" class="sidebar-nav-item">
+      <button type="button"
+              class="btn btn-info"
+              data-toggle="collapse"
+              data-target="#github-projects">
+        <span class="octicon octicon-mark-github"></span> My Emacs Projects
+      </button>
+      <div id="github-projects" class="collapse">
+        <ul style="margin-bottom:0em;">
+          <li>
+            <a href="https://github.com/abo-abo/lispy">lispy</a>
+            <p>vi-like Paredit</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/worf">worf</a>
+            <p>vi-like bindings for org-mode</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-window">ace-window</a>
+            <p>switch windows with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-link">ace-link</a>
+            <p>follow links with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/function-args">function-args</a>
+            <p>enhance <code>CEDET</code> for C++</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/helm-make">helm-make</a>
+            <p>select a Makefile target with <code>helm</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/make-it-so">make-it-so</a>
+            <p>transform files with Makefile recipes</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/org-download">org-download</a>
+            <p>drag-and-drop images to <code>org-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo?tab=repositories">
+              <span class="octicon octicon-octoface"></span>
+              and more
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
+
+  <div class="sidebar-item">
+    <p>
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.0/">
+        <img alt="Creative Commons License"
+             style="border-width:0;opacity: 0.3;"
+             src="https://i.creativecommons.org/l/by-nc-sa/2.0/88x31.png"/>
+      </a>
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">(or emacs</a>
+            <small>irrelevant)</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Re-introducing auto-yasnippet</h1>
+  <span class="post-date">30 Jan 2015</span>
+  <p>I wonder, when the code isn&#39;t touched in a long time, is it good (no
+need for changes) or bad (became obsolete)?  Let&#39;s find out. I&#39;ll
+explain here
+<a href="https://github.com/abo-abo/auto-yasnippet">auto-yasnippet</a>, my
+<em>second</em> package in MELPA out of more than a dozen currently that saw
+almost no changes since the initial commit two years ago, and see if
+you like it.</p>
+
+<h2 id="short-description-of-yasnippet">Short description of <code>yasnippet</code></h2>
+
+<blockquote>
+<p><a href="https://github.com/capitaomorte/yasnippet">YASnippet</a> is a template
+system for Emacs. It allows you to type an abbreviation and
+automatically expand it into function templates. Bundled language
+templates include: C, C++, C#, Perl, Python, Ruby, SQL, LaTeX, HTML,
+CSS and more.</p>
+</blockquote>
+
+<h3 id="snippet-step-by-step">Snippet step-by-step</h3>
+
+<p>Here&#39;s one of the snippets that I use for <code>emacs-lisp-mode</code>:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text"># -*- mode: snippet -*-
+# name: function
+# key: d
+# --
+(defun $1 ($2)
+$0)
+</code></pre></div>
+<ul>
+<li>The name of the snippet, <code>function</code> is more like a comment than
+anything else.</li>
+<li>On the other hand, <code>key</code> is very important: it&#39;s what I have to
+insert in the buffer to get the expansion with <kbd>M-x</kbd>
+<code>yas-expand</code>.</li>
+<li>Everything after <code># --</code> is the snippet body.</li>
+<li>This particular snippet has two fields, in places of <code>$1</code> and <code>$2</code>.</li>
+<li><code>$0</code> is where the point will be when the snippet expansion is finished</li>
+</ul>
+
+<p>As I expand, pressing <kbd>TAB</kbd> will move from field to field
+until the expansion is finished.</p>
+
+<h3 id="snippets-are-mode-local">Snippets are mode-local</h3>
+
+<p>Here&#39;s the corresponding snippet for <code>clojure-mode</code>:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text"># -*- mode: snippet -*-
+# name: defn
+# key: d
+# --
+(defn $1 [$2]
+$0)
+</code></pre></div>
+<p>As you see, the <code>key</code> here is the same; you&#39;re allowed to overload
+them based on the current <code>major-mode</code>.</p>
+
+<p>Even after <a href="/archive/">quite a few posts</a>, I still keep forgetting
+Jekyll&#39;s syntax for the post header. This is my reminder:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text"># -*- mode: snippet -*-
+# name: post
+# key: post
+# --
+---
+layout: post
+title: $0
+---
+</code></pre></div>
+<h3 id="mirrors-in-snippets">Mirrors in snippets</h3>
+
+<p>This simple snippet introduces a powerful concept, and an important
+<code>yasnippet</code> feature that <code>auto-yasnippet</code> uses:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text"># -*- mode: snippet -*-
+#name : class ... { ... }
+# --
+class $1$2
+{
+public:
+ $1($0)
+};
+</code></pre></div>
+<p>This is a snippet for a class declaration in <code>c++-mode</code>; <code>$1</code>, the
+name of the class, is mirrored in the name of the constructor. This
+way, you don&#39;t have to enter it twice.</p>
+
+<h2 id="what-auto-yasnippet-does">What <code>auto-yasnippet</code> does</h2>
+
+<p>All the snippets listed above are pre-configured, persistent and very
+rarely changed.  They are like <em>plain functions</em> in the source
+code. Each of them needs their own file and so on.</p>
+
+<p>What <code>auto-yasnippet</code> provides are <em>throw-away lambdas</em>, that don&#39;t
+need a file and aren&#39;t persistent.</p>
+
+<h3 id="basic-install-of-auto-yasnippet">Basic install of <code>auto-yasnippet</code></h3>
+
+<p>To get a usable install, you just need to bind <code>aya-create</code>, which is
+similar in spirit to <kbd>M-w</kbd> (<code>kill-ring-save</code>):</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;H-w&quot;</span><span class="p">)</span> <span class="ss">&#39;aya-create</span><span class="p">)</span>
+</code></pre></div>
+<p>and <code>aya-expand</code>, which is similar to <kbd>C-y</kbd> (<code>yank</code>):</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;H-y&quot;</span><span class="p">)</span> <span class="ss">&#39;aya-expand</span><span class="p">)</span>
+</code></pre></div>
+<p>I also like to bind:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-o&quot;</span><span class="p">)</span> <span class="ss">&#39;aya-open-line</span><span class="p">)</span>
+</code></pre></div>
+<p>I&#39;m using <kbd>C-o</kbd> to do all of these:</p>
+
+<ul>
+<li><code>expand-abbrev</code></li>
+<li><code>yas-expand</code> and <code>yas-next-field-or-maybe-expand</code></li>
+<li><code>open-line</code></li>
+</ul>
+
+<h3 id="example-1:-javascript">Example 1: JavaScript</h3>
+
+<p>Let&#39;s say that you have this code and want to generate more like it:</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">field1</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;field1&quot;</span><span class="p">);</span>
+</code></pre></div>
+<p>Let&#39;s even assume that you know how <code>auto-yasnippet</code> works and wrote down a slightly modified code beforehand:</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">field</span><span class="o">~</span><span class="mi">1</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;field~1&quot;</span><span class="p">);</span>
+</code></pre></div>
+<p>Here, <code>~</code> are meant to represent <code>yasnippet</code>&#39;s mirrors, they will be
+consistent across every expansion. Now you type <kbd>H-w</kbd> (<code>aya-create</code>), which works on the current
+line when there&#39;s no region. Your code becomes the initial one without <code>~</code>, and <code>aya-current</code> variable now holds:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="nv">aya-current</span>
+<span class="c1">;; =&gt; &quot;field$1 = document.getElementById(\&quot;field$1\&quot;);&quot;</span>
+</code></pre></div>
+<p>By typing e.g. <kbd>H-y 2 C-o RET</kbd>, <kbd>H-y 3 C-o RET</kbd>, <kbd>H-y Final C-o RET</kbd> you get:</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">field2</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;field2&quot;</span><span class="p">);</span>
+<span class="nx">field3</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;field3&quot;</span><span class="p">);</span>
+<span class="nx">fieldFinal</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;fieldFinal&quot;</span><span class="p">);</span>
+</code></pre></div>
+<p>Note again, that there would be little point to saving this snippet in
+a file, since the situation where you need to use it may not come up
+again.</p>
+
+<h3 id="example-2:-java">Example 2: Java</h3>
+
+<p>Here&#39;s the starting code, with fields and mirrors already in place
+(note one mirror named <code>~On</code>, one field named <code>~on</code> and one field
+named <code>~true</code>):</p>
+<div class="highlight"><pre><code class="language-Java" data-lang="Java"><span class="kd">class</span> <span class="nc">Light</span><span class="o">~</span><span class="n">On</span> <span class="kd">implements</span> <span class="n">Runnable</span> <span class="o">{</span>
+  <span class="kd">public</span> <span class="n">Light</span><span class="o">~</span><span class="n">On</span><span class="o">()</span> <span class="o">{}</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Turning ~on lights&quot;</span><span class="o">);</span>
+    <span class="n">light</span> <span class="o">=</span> <span class="o">~</span><span class="kc">true</span><span class="o">;</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>Since the code spans multiple lines, as is often the case with Java, you need to mark it
+with a region before <kbd>H-w</kbd>.</p>
+
+<p>Here&#39;s the final result:</p>
+<div class="highlight"><pre><code class="language-Java" data-lang="Java"><span class="kd">class</span> <span class="nc">LightOn</span> <span class="kd">implements</span> <span class="n">Runnable</span> <span class="o">{</span>
+  <span class="kd">public</span> <span class="nf">LightOn</span><span class="o">()</span> <span class="o">{}</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Turning on lights&quot;</span><span class="o">);</span>
+    <span class="n">light</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+<span class="kd">class</span> <span class="nc">LightOff</span> <span class="kd">implements</span> <span class="n">Runnable</span> <span class="o">{</span>
+  <span class="kd">public</span> <span class="nf">LightOff</span><span class="o">()</span> <span class="o">{}</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Turning off lights&quot;</span><span class="o">);</span>
+    <span class="n">light</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>No need for <code>AbstractLightFactoryAdapterProvider</code> when we can just
+copy-paste stuff with <code>auto-yasnippet</code>. In fact, I should probably
+emphasize that when describing <code>auto-yasnippet</code>: it&#39;s just an advanced
+copy-paste tool.</p>
+
+<h3 id="example-3:-c++">Example 3: C++</h3>
+
+<p>Suppose that I want to generate <code>curl</code> from the <code>grad</code>. I can start with this template:</p>
+<div class="highlight"><pre><code class="language-c++" data-lang="c++"><span class="k">const</span> <span class="n">Point</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">curl</span><span class="p">(</span><span class="n">grad</span><span class="p">[</span><span class="o">~</span><span class="mi">2</span><span class="p">][</span><span class="o">~</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">grad</span><span class="p">[</span><span class="o">~</span><span class="mi">1</span><span class="p">][</span><span class="o">~</span><span class="mi">2</span><span class="p">],</span>
+</code></pre></div>
+<p>Here, I need less than a line, so region needs to be marked again. The result:</p>
+<div class="highlight"><pre><code class="language-C++" data-lang="C++">    <span class="k">const</span> <span class="n">Point</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">curl</span><span class="p">(</span><span class="n">grad</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">grad</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span>
+                        <span class="n">grad</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">grad</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+                        <span class="n">grad</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">grad</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]);</span>
+</code></pre></div>
+<p>Note how annoying it would be to triple check that the indices match.
+This time, I just had to check the first line.</p>
+
+<h3 id="example-4:-taking-~-out-of-the-equation">Example 4: taking <code>~</code> out of the equation</h3>
+
+<p>This works only for one-line snippets with a single mirror parameter.
+In the JavaScript example, you can leave a <code>$</code> instead of each
+occurrence of <code>$1</code>, and with the point in place of the last occurrence
+you call <kbd>H-w</kbd> (<code>aya-create</code>).  Here, <code>|</code> represents the point:</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">field$</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;|&quot;</span><span class="p">);</span>
+</code></pre></div>
+<p>The final result is the same:</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">field1</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;field1&quot;</span><span class="p">);</span>
+<span class="nx">field2</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;field2&quot;</span><span class="p">);</span>
+<span class="nx">field3</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;field3&quot;</span><span class="p">);</span>
+<span class="nx">fieldFinal</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;fieldFinal&quot;</span><span class="p">);</span>
+</code></pre></div>
+<h2 id="outro">Outro</h2>
+
+<p>I hope that this package will lessen your suffering when dealing with
+verbose programming languages and repetitive text, and that a day will
+come when repetition is no longer needed and <code>auto-yasnippet</code> will
+become obsolete.</p>
+
+</div>
+
+<div class="twitter-share">
+  <a href="https://twitter.com/share"
+     class="twitter-share-button"
+     data-via="_abo_abo"
+     data-dnt="true">
+    Tweet
+  </a>
+</div>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/01/29/more-hydra-goodness/"> -->
+          <a href="/2015/01/29/more-hydra-goodness/">
+            Combining ace-window and windmove with hydra
+            <small>29 Jan 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/01/28/notes-on-elisp-indentation/"> -->
+          <a href="/2015/01/28/notes-on-elisp-indentation/">
+            A few notes on Elisp indentation
+            <small>28 Jan 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/01/27/my-refactoring-workflow/"> -->
+          <a href="/2015/01/27/my-refactoring-workflow/">
+            My "refactoring" workflow
+            <small>27 Jan 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'oremacs'; // required: replace example with your forum shortname
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+<script>
+  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+</script>
+<noscript>
+  Please enable JavaScript to view the
+  <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>
