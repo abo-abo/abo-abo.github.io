@@ -191,6 +191,65 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/01/16/compile-savely/">
+        Save before compile
+      </a>
+    </h1>
+
+    <span class="post-date">16 Jan 2015</span>
+
+    <p>Here&#39;s a very simplistic function that I was using for a while:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">save-and-compile</span> <span class="p">()</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">save-buffer</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">compile</span> <span class="s">&quot;make -j4&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">pop-to-buffer</span> <span class="nv">next-error-last-buffer</span><span class="p">))</span>
+</code></pre></div>
+<p>It will save the current buffer, run <code>compile</code> and switch to
+compilation buffer.</p>
+
+<h2 id="compilation-customization">Compilation customization</h2>
+
+<p>Turns out that there&#39;s no need to save, since I get away with this:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">(setq compilation-ask-about-save nil)
+</code></pre></div>
+<p>The documentation says:</p>
+
+<blockquote>
+<p>Non-nil means M-x <code>compile</code> asks which buffers to save before
+compiling.  Otherwise, it saves all modified buffers without asking.</p>
+</blockquote>
+
+<h2 id="select-compilation-target">Select compilation target</h2>
+
+<p>A year ago, I wrote a package that looks for a <code>Makefile</code> in the
+current directory, parses the available targets and allows you to
+choose one with <a href="https://github.com/emacs-helm/helm">helm</a>.  It&#39;s
+called <a href="https://github.com/abo-abo/helm-make">helm-make</a>.  It&#39;s almost
+the same as <kbd>M-x</kbd> <code>compile</code> (which also has completion for
+targets), and it wraps around <code>compile</code>, but I just find it to be more
+convenient.</p>
+
+<p>This package is as simple as it sounds, the only customization that
+you can do is to set <code>helm-make-do-save</code> to save all open buffers
+visiting the <code>Makefile</code>&#39;s directory. It also provides, in addition to
+the plain <code>helm-make</code> command, a <code>helm-make-projectile</code> command, which
+is almost the same, except the <code>Makefile</code> should come not from the
+current directory but from <code>projectile-project-root</code>.</p>
+
+<h2 id="some-error-navigation-to-go-with-your-compilation">Some error navigation to go with your compilation</h2>
+
+<p>I&#39;ve had these bindings for a very long time, just making sure
+that you&#39;re aware of these commands:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="nv">[f6]</span> <span class="ss">&#39;next-error</span><span class="p">)</span>
+<span class="p">(</span><span class="nv">global-set-key</span> <span class="nv">[C-f6]</span> <span class="ss">&#39;previous-error</span><span class="p">)</span>
+</code></pre></div>
+<p>These bindings work for <kbd>M-x</kbd> <code>occur</code> and <code>rgrep</code> as well.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/01/15/c++-smart-dot/">
         C++ - a dot inserts last var plus dot
       </a>
@@ -445,64 +504,6 @@ shift keys that many file browsers use looks like kindergarten.</p>
 
 <p>This new action, getting the size of marked things, I&#39;ve bound to <kbd>z</kbd>:</p>
 <div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;z&quot;</span><span class="p">)</span> <span class="ss">&#39;dired-get-size</span><span class="p">)</span>
-</code></pre></div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/01/11/pretty-elisp-regex/">
-        Making Elisp regex look nicer
-      </a>
-    </h1>
-
-    <span class="post-date">11 Jan 2015</span>
-
-    <p>This is just a small improvement to make e.g.  <code>\\(</code> show up in
-regular expressions without the escape chars, but instead fontified
-with <code>font-lock-keyword-face</code>. It doesn&#39;t affect the underlying code
-at all, just makes it look nicer. For the <code>\\|</code> I chose <code>∨</code> - the
-<em>logical or</em> character.</p>
-
-<h2 id="the-code">The code</h2>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">fontify-glyph</span> <span class="p">(</span><span class="nv">item</span> <span class="nv">glyph</span><span class="p">)</span>
-  <span class="o">`</span><span class="p">((</span><span class="o">,</span><span class="nv">item</span>
-     <span class="p">(</span><span class="mi">0</span> <span class="nv">font-lock-keyword-face</span> <span class="no">t</span><span class="p">)</span>
-     <span class="p">(</span><span class="mi">0</span> <span class="p">(</span><span class="k">prog1</span>
-            <span class="p">(</span><span class="nv">compose-region</span> <span class="p">(</span><span class="nf">match-beginning</span> <span class="mi">0</span><span class="p">)</span>
-                            <span class="p">(</span><span class="nf">match-end</span> <span class="mi">0</span><span class="p">)</span>
-                            <span class="o">,</span><span class="nv">glyph</span><span class="p">)</span> <span class="no">nil</span><span class="p">)))))</span>
-
-<span class="p">(</span><span class="nv">font-lock-add-keywords</span> <span class="ss">&#39;emacs-lisp-mode</span>
-                        <span class="p">(</span><span class="nv">fontify-glyph</span> <span class="s">&quot;\\\\\\\\|&quot;</span> <span class="s">&quot;∨&quot;</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">font-lock-add-keywords</span> <span class="ss">&#39;emacs-lisp-mode</span>
-                        <span class="p">(</span><span class="nv">fontify-glyph</span> <span class="s">&quot;\\\\\\\\(&quot;</span> <span class="s">&quot;(&quot;</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">font-lock-add-keywords</span> <span class="ss">&#39;emacs-lisp-mode</span>
-                        <span class="p">(</span><span class="nv">fontify-glyph</span> <span class="s">&quot;\\\\\\\\)&quot;</span> <span class="s">&quot;)&quot;</span><span class="p">))</span>
-</code></pre></div>
-<h2 id="how-it-looks-like">How it looks like</h2>
-
-<p>At first, I wanted to just inline <a href="/download/elisp-regex.png">a picture</a>,
-but then I thought that <code>htmlize-buffer</code> would be able to handle it.
-It didn&#39;t, so I just edited a small snippet by hand:</p>
-
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">or</span> <span class="p">(</span><span class="nf">string-match</span> <span class="s">&quot;^<span class="nb">(</span>[^\n%|]*?<span class="nb">)</span>|<span class="nb">(</span>([^\n]*<span class="nb">)</span>?$&quot;</span> <span class="nv">str</span><span class="p">)</span>
-    <span class="p">(</span><span class="nf">string-match</span> <span class="s">&quot;^<span class="nb">(</span>[^\n%|]*?<span class="nb">)</span><span class="nb">(</span>%[^\n]*<span class="nb">)</span>?$&quot;</span> <span class="nv">str</span><span class="p">))</span>
-</code></pre></div>
-
-<p>It&#39;s really satisfying to see those escape chars vanish as I type in
-a capture group in the regex, especially with the help of
-<a href="https://github.com/abo-abo/lispy">lispy-mode</a>.
-Here are some relevant tests for the regex support:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">should</span> <span class="p">(</span><span class="nv">string=</span> <span class="p">(</span><span class="nv">lispy-with</span> <span class="s">&quot;\&quot;a regex \\\\|\&quot;&quot;</span> <span class="s">&quot;(&quot;</span><span class="p">)</span>
-                 <span class="s">&quot;\&quot;a regex \\\\(|\\\\)\&quot;&quot;</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">should</span> <span class="p">(</span><span class="nv">string=</span> <span class="p">(</span><span class="nv">lispy-with</span> <span class="s">&quot;\&quot;\\\\(|foo\\\\)\&quot;&quot;</span> <span class="s">&quot;\C-?&quot;</span><span class="p">)</span>
-                 <span class="s">&quot;\&quot;|foo\&quot;&quot;</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">should</span> <span class="p">(</span><span class="nv">string=</span> <span class="p">(</span><span class="nv">lispy-with</span> <span class="s">&quot;\&quot;\\\\(foo\\\\)|\&quot;&quot;</span> <span class="s">&quot;\C-?&quot;</span><span class="p">)</span>
-                 <span class="s">&quot;\&quot;foo|\&quot;&quot;</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">should</span> <span class="p">(</span><span class="nv">string=</span> <span class="p">(</span><span class="nv">lispy-with</span> <span class="s">&quot;\&quot;|\\\\(foo\\\\)\&quot;&quot;</span> <span class="s">&quot;\C-d&quot;</span><span class="p">)</span>
-                 <span class="s">&quot;\&quot;|foo\&quot;&quot;</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">should</span> <span class="p">(</span><span class="nv">string=</span> <span class="p">(</span><span class="nv">lispy-with</span> <span class="s">&quot;\&quot;\\\\(foo|\\\\)\&quot;&quot;</span> <span class="s">&quot;\C-d&quot;</span><span class="p">)</span>
-                 <span class="s">&quot;\&quot;foo|\&quot;&quot;</span><span class="p">))</span>
 </code></pre></div>
   </div>
   

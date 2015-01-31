@@ -4,13 +4,177 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-01-30T16:08:02+01:00</updated>
+ <updated>2015-01-31T15:33:33+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>abel.el - abbrevs for Elisp</title>
+   <link href="http://oremacs.com/2015/01/31/abel/"/>
+   <updated>2015-01-31T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/01/31/abel</id>
+   <content type="html">&lt;p&gt;This is a follow-up to
+&lt;a href=&quot;/2014/12/28/trying-abbrevs/&quot;&gt;an older post about abbrevs&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;I did try to make Elisp abbrevs work, but after a few times of getting
+&lt;code&gt;is&lt;/code&gt; expanded to &lt;code&gt;indent-sexp&lt;/code&gt; in strings or comments, I just could
+take it no longer.&lt;/p&gt;
+
+&lt;p&gt;Luckily and timely, Artur Malabarba revealed his
+&lt;a href=&quot;https://github.com/Bruce-Connor/speed-of-thought-lisp&quot;&gt;speed-of-thought-lisp&lt;/a&gt;. This
+package does many things, but the main idea that I liked was that the
+abbrevs should only expand when in the function position, i.e. the
+abbrev is:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;right after opening parenthesis&lt;/li&gt;
+&lt;li&gt;not in a comment&lt;/li&gt;
+&lt;li&gt;not in a string&lt;/li&gt;
+&lt;li&gt;not in the arguments list&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;With that idea, I&amp;#39;ve &amp;quot;refactored&amp;quot; my old abbrevs into
+&lt;a href=&quot;https://github.com/abo-abo/abel&quot;&gt;Abel&lt;/a&gt;.  It&amp;#39;s a minor mode add-on for
+&lt;code&gt;abbrev-mode&lt;/code&gt;. When you activate it, around a hundred abbrevs are
+added to your abbrev list for &lt;code&gt;emacs-lisp-mode&lt;/code&gt;. When you deactivate
+it, these abbrevs are disabled, and your original abbrev list is
+restored. It even overrides the mode-line description to &lt;code&gt;Abbrev&lt;/code&gt; -&amp;gt;
+&lt;code&gt;Abel&lt;/code&gt; while it&amp;#39;s active, thanks to
+&lt;a href=&quot;https://github.com/emacsmirror/diminish&quot;&gt;diminish&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;So while you should try &lt;code&gt;sotl&lt;/code&gt;, which provides many other things, keep
+&lt;code&gt;abel&lt;/code&gt; in mind: it&amp;#39;s a simple upgrade to &lt;code&gt;abbrev-mode&lt;/code&gt; that binds no
+bindings and asks no questions.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;#39;s the current list:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defcustom&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;abel-abbrevs&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;;; basics&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;a&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;and&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;bp&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;boundp&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;c&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;concat&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;fp&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;fboundp&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;ii&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;interactive&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;i&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;insert&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;l&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;lambda&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;m&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;message&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;n&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;not&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;f&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;format&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;u&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;unless&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;up&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;unwind-protect&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;w&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;when&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;wl&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;while&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;r&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;require&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;ci&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;call-interactively&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;cc&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;condition-case&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;pg&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;plist-get&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;sa&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;save-excursion&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;sr&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;save-restriction&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;smd&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;save-match-data&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;;; defines&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;de&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;declare-function&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;df&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;defface&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;da&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;defmacro&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;du&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;defcustom&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;dv&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;defvar&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;;; everything with char&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;bc&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;backward-char&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;scb&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;skip-chars-backward&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;scf&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;skip-chars-forward&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;gc&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;goto-char&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;fc&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;forward-char&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;dc&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;delete-char&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;ca&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;char-after&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;;; everything with region&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;ra&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;region-active-p&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;rb&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;region-beginning&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;re&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;region-end&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;ntr&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;narrow-to-region&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;dr&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;delete-region&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;ir&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;indent-region&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;;; error related&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;ie&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;ignore-errors&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;e&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;error&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;;; regex match related&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;la&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;looking-at&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;lb&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;looking-back&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;mb&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;match-beginning&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;me&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;match-end&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;ms&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;match-string&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;msn&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;match-string-no-properties&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;rm&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;replace-match&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;ro&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;regexp-opt&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;rq&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;regexp-quote&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;rr&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;replace-regexp-in-string&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;rsb&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;re-search-backward&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;rsf&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;re-search-forward&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;sf&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;search-forward&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;sm&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;string-match&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;;; words&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;fw&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;forward-word&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;bw&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;backward-word&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;;; lines&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;eol&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;end-of-line&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;fl&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;forward-line&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;lbp&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;line-beginning-position&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;lep&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;line-end-position&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;nai&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;newline-and-indent&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;;; buffer&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;bfn&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;buffer-file-name&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;bn&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;buffer-name&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;bs&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;buffer-substring&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;bsn&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;buffer-substring-no-properties&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;cb&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;current-buffer&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;wcb&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;with-current-buffer&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;wtb&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;with-temp-buffer&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;efn&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;expand-file-name&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;ff&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;find-file&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;ffn&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;find-file-noselect&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;;; window&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;ow&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;other-window&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;sw&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;selected-window&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;;; string&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;ssn&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;substring-no-properties&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;ss&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;substring&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;si&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;split-string&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;se&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;string=&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;sl&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;string&amp;lt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;sp&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;stringp&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;;; point&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;pi&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;point-min&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;pa&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;point-max&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;p&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;point&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;;; key&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;gk&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;global-set-key&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;dk&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;define-key&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;;; rest&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;ah&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;add-hook&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;atl&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;add-to-list&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;bod&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;beginning-of-defun&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;bol&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;beginning-of-line&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;dm&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;deactivate-mark&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;fs&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;forward-sexp&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;jos&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;just-one-space&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;kn&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;kill-new&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;lp&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;load-path&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;mm&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;major-mode&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;sic&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;self-insert-command&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;sn&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;symbol-name&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;tap&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;thing-at-point&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;tc&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;this-command&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;ul&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;up-list&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;List of (ABBREV EXPANSION) used by `abel&amp;#39;.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;:set&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;symbol&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+         &lt;span class=&quot;s&quot;&gt;&amp;quot;Update abbrevs accoring to `abel-abbrevs&amp;#39;.&amp;quot;&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;symbol&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;mapc&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;#&amp;#39;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;abel-define&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;:group&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;abel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
+ </entry>
  
  <entry>
    <title>Re-introducing auto-yasnippet</title>
