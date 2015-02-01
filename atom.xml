@@ -4,13 +4,97 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-01-31T15:33:33+01:00</updated>
+ <updated>2015-02-01T13:11:29+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Blogging about blogging</title>
+   <link href="http://oremacs.com/2015/02/01/blogging-about-blogging/"/>
+   <updated>2015-02-01T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/02/01/blogging-about-blogging</id>
+   <content type="html">&lt;p&gt;In Emacs, of course. As I mentioned before, this blog is run using
+&lt;a href=&quot;http://jekyllrb.com/&quot;&gt;Jekyll&lt;/a&gt; and a fork of the
+&lt;a href=&quot;https://github.com/poole/lanyon&quot;&gt;lanyon&lt;/a&gt; theme.&lt;/p&gt;
+
+&lt;p&gt;It started out pretty convenient: thanks to &lt;code&gt;jekyll serve&lt;/code&gt; I would see
+the live updates at &lt;code&gt;http://localhost:4000/&lt;/code&gt; as I was editing the
+markdown. But after a few posts, I&amp;#39;ve experienced a drastic decrease
+in refresh time: it went from under a second to 15 seconds. Below, I&amp;#39;ll show how I&amp;#39;ve managed
+to speed it back up.&lt;/p&gt;
+
+&lt;h2 id=&quot;no-posts---no-problem&quot;&gt;No posts - no problem&lt;/h2&gt;
+
+&lt;p&gt;Thanks to &lt;code&gt;(require &amp;#39;dired-x)&lt;/code&gt; I can jump from the current post to the
+posts directory with &lt;kbd&gt;C-x C-j&lt;/kbd&gt;. It even puts the point on the current file. Now:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;m&lt;/kbd&gt; to mark to current file&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;t&lt;/kbd&gt; to invert the mark, making the current file unmarked and all others marked&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;D&lt;/kbd&gt; to delete all marked files. No need to worry, since
+they are all version-controlled (except the original one, which isn&amp;#39;t
+being deleted), &lt;code&gt;dired&lt;/code&gt; even asks you for confirmation, so I hit
+&lt;kbd&gt;y&lt;/kbd&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Now, that there is only one post in the whole blog, &lt;code&gt;jekyll serve&lt;/code&gt; is
+much faster at refreshing.&lt;/p&gt;
+
+&lt;h2 id=&quot;even-faster-jekyll-serve&quot;&gt;Even faster &lt;code&gt;jekyll serve&lt;/code&gt;&lt;/h2&gt;
+
+&lt;p&gt;Which brings me to the next point. Since I&amp;#39;m calling it so much, might
+as well wrap it in some Elisp. Elisp is like frosting - it makes everything better:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;jekyll-serve&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;default-directory&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;string-match&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;_posts/$&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;default-directory&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+              &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;directory-parent&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;default-directory&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;nv&quot;&gt;default-directory&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;buffer&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;get-buffer&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;*jekyll*&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;switch-to-buffer&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;*jekyll*&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ansi-term&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;/bin/bash&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;jekyll&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;proc&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;get-buffer-process&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;buffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;term-send-string&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;proc&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;jekyll serve\n&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;sit-for&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;browse-url&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;localhost:4000&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This function, when called from the current post or the current blog, will:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;open a new &lt;code&gt;ansi-term&lt;/code&gt; called &lt;code&gt;*jekyll*&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;issue a &lt;code&gt;jekyll serve&lt;/code&gt; command to it&lt;/li&gt;
+&lt;li&gt;wait for 3 seconds for Jekyll to start&lt;/li&gt;
+&lt;li&gt;open &lt;code&gt;localhost:4000&lt;/code&gt; in Firefox&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;one-post-isn&amp;#39;t-a-blog&quot;&gt;One post isn&amp;#39;t a blog&lt;/h2&gt;
+
+&lt;p&gt;Here&amp;#39;s how to quickly bring back the deleted posts.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Fire up &lt;a href=&quot;https://github.com/magit/magit&quot;&gt;magit&lt;/a&gt;; I have &lt;code&gt;magit-status&lt;/code&gt; bound to &lt;kbd&gt;μm&lt;/kbd&gt;.&lt;/li&gt;
+&lt;li&gt;Stage the current post with &lt;kbd&gt;s&lt;/kbd&gt; (&lt;code&gt;magit-stage-item&lt;/code&gt;).&lt;/li&gt;
+&lt;li&gt;Start the commit with &lt;kbd&gt;C&lt;/kbd&gt; (&lt;code&gt;magit-commit-add-log&lt;/code&gt;). I&amp;#39;m using my own modification of &lt;code&gt;magit-commit-add-log&lt;/code&gt;
+that arranges the whitespace in a nice way, when aimed at a file instead of a hunk.&lt;/li&gt;
+&lt;li&gt;I get &lt;code&gt;_posts/2015-02-01-blogging-about-blogging.md:&lt;/code&gt; string auto-generated by &lt;kbd&gt;C&lt;/kbd&gt;.&lt;/li&gt;
+&lt;li&gt;I just amend it to look like &lt;code&gt;_posts/2015-02-01-blogging-about-blogging.md: add&lt;/code&gt; and finalize the commit with
+&lt;kbd&gt;C-c C-c&lt;/kbd&gt; (&lt;code&gt;git-commit-commit&lt;/code&gt;).&lt;/li&gt;
+&lt;li&gt;Now I have around 40 files marked as deleted, but not staged. I create a stash with &lt;kbd&gt;zz&lt;/kbd&gt; and name it &lt;code&gt;foo&lt;/code&gt;
+or something. Then delete the stash with &lt;code&gt;magit-discard-item&lt;/code&gt;, which I like to bind to &lt;kbd&gt;d&lt;/kbd&gt; to be similar
+to &lt;code&gt;dired&lt;/code&gt;. Now it&amp;#39;s as if these files were never deleted.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Whoa, now that I look at it, it&amp;#39;s a lot of steps. But somehow &lt;code&gt;dired&lt;/code&gt;
+and &lt;code&gt;magit&lt;/code&gt; are very similar to
+&lt;a href=&quot;http://en.wikipedia.org/wiki/Super_Mario_Bros.&quot;&gt;Super Mario Bros&lt;/a&gt;: it
+takes long to explain what you&amp;#39;re doing, but as you play it, it&amp;#39;s very
+simple and natural.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>abel.el - abbrevs for Elisp</title>
