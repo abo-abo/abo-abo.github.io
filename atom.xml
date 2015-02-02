@@ -4,13 +4,184 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-02-01T13:11:29+01:00</updated>
+ <updated>2015-02-02T11:40:49+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Colorful Hydras</title>
+   <link href="http://oremacs.com/2015/02/02/colorful-hydrae/"/>
+   <updated>2015-02-02T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/02/02/colorful-hydrae</id>
+   <content type="html">&lt;p&gt;This post advertises the release of &lt;a href=&quot;https://github.com/abo-abo/hydra/releases/tag/0.5.0&quot;&gt;hydra.el 0.5.0&lt;/a&gt;.
+The package was introduced in &lt;a href=&quot;/2015/01/20/introducing-hydra/&quot;&gt;an earlier post&lt;/a&gt; and received some positive feedback.
+Currently, it&amp;#39;s available in both
+&lt;a href=&quot;https://elpa.gnu.org/packages/hydra.html&quot;&gt;GNU ELPA&lt;/a&gt; (slightly behind)
+and &lt;a href=&quot;http://melpa.org/#/hydra&quot;&gt;MELPA&lt;/a&gt; (always current).&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/Hydra-color.png&quot; alt=&quot;colorful-hydra&quot;&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;the-newfound-utility&quot;&gt;The newfound utility&lt;/h2&gt;
+
+&lt;p&gt;As I originally released the Hydra, I was asked if it was similar to
+&lt;a href=&quot;http://endlessparentheses.com/the-toggle-map-and-wizardry.html&quot;&gt;this approach&lt;/a&gt;
+described on &lt;a href=&quot;http://endlessparentheses.com/&quot;&gt;Endless Parentheses&lt;/a&gt;. I
+said that it&amp;#39;s not, since Hydra commands are meant to be repeatable
+instead of being called just once.&lt;/p&gt;
+
+&lt;p&gt;Now, after I&amp;#39;ve designated the repeatable heads with red color and the one-off heads with blue color,
+Hydra can reproduce the mentioned approach. Here&amp;#39;s how it looks like:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-c C-v&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-toggle&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;s&quot;&gt;&amp;quot;toggle&amp;quot;&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;a&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;abbrev-mode&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;abbrev&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;d&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;toggle-debug-on-error&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;debug&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;f&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;auto-fill-mode&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;fill&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;t&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;toggle-truncate-lines&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;truncate&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;w&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;whitespace-mode&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;whitespace&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;q&amp;quot;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;cancel&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And this is what I see in the echo area after pressing &lt;kbd&gt;C-c C-v&lt;/kbd&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/Hydra-toggle.png&quot; alt=&quot;hydra-toggle&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;At this point:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;q&lt;/kbd&gt; will cancel without doing anything. I think it&amp;#39;s more
+convenient than doing the equivalent &lt;kbd&gt;C-g&lt;/kbd&gt; with the
+&lt;code&gt;global-set-key&lt;/code&gt; approach.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;a&lt;/kbd&gt;, &lt;kbd&gt;d&lt;/kbd&gt;, &lt;kbd&gt;f&lt;/kbd&gt;, &lt;kbd&gt;t&lt;/kbd&gt;, and &lt;kbd&gt;a&lt;/kbd&gt; will call the appropriate function.
+The advantage of blue Hydra heads over &lt;code&gt;global-set-key&lt;/code&gt; is that you immediately get the hint: this can be useful
+for rarely used commands.&lt;/li&gt;
+&lt;li&gt;as with the old red Hydra heads, pressing anything other than
+&lt;kbd&gt;a&lt;/kbd&gt;, &lt;kbd&gt;d&lt;/kbd&gt;, &lt;kbd&gt;f&lt;/kbd&gt;, &lt;kbd&gt;t&lt;/kbd&gt;, &lt;kbd&gt;a&lt;/kbd&gt;,
+or &lt;kbd&gt;q&lt;/kbd&gt; will vanquish the Hydra &lt;em&gt;and&lt;/em&gt; call the key binding
+that you just pressed. This is different from the &lt;code&gt;global-set-key&lt;/code&gt;
+approach, which would e.g. error to your &lt;kbd&gt;C-c C-v C-n&lt;/kbd&gt; with
+&lt;code&gt;&amp;quot;C-c C-v C-n is undefined&amp;quot;&lt;/code&gt;, unlike the Hydra, which would call &lt;kbd&gt;C-n&lt;/kbd&gt;
+(&lt;code&gt;next-line&lt;/code&gt;).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;the-full-defhydra-syntax&quot;&gt;The full &lt;code&gt;defhydra&lt;/code&gt; syntax&lt;/h2&gt;
+
+&lt;p&gt;Note that &lt;code&gt;defhydra&lt;/code&gt; looks intentionally like a &lt;code&gt;defun&lt;/code&gt;, so that it&amp;#39;s
+easier to remember how it works.
+Here&amp;#39;s a more verbose Hydra that&amp;#39;s largely equivalent to the one above:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-toggle&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-c&amp;quot;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;red&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;s&quot;&gt;&amp;quot;toggle&amp;quot;&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;a&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;abbrev-mode&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;abbrev&amp;quot;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;d&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;toggle-debug-on-error&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;debug&amp;quot;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;f&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;auto-fill-mode&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;fill&amp;quot;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;t&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;toggle-truncate-lines&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;truncate&amp;quot;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;w&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;whitespace-mode&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;whitespace&amp;quot;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;v&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;recenter-top-bottom&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;recenter&amp;quot;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;red&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;q&amp;quot;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;cancel&amp;quot;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-c C-v&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;hydra-toggle/body&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;first-argument:-hydra-name&quot;&gt;First argument: Hydra name&lt;/h3&gt;
+
+&lt;p&gt;This argument decides the prefix to all the functions that will be generated.
+In this case the following functions will be generated:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;nv&quot;&gt;hydra-toggle/abbrev-mode&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;hydra-toggle/toggle-debug-on-error&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;hydra-toggle/auto-fill-mode&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;hydra-toggle/toggle-truncate-lines&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;hydra-toggle/whitespace-mode&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;hydra-toggle/recenter-top-bottom&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;hydra-toggle/nil&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;hydra-toggle/body&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The final function calls the Hydra&amp;#39;s body, displaying the hint in the echo area and setting
+the transient map. It&amp;#39;s the return result of &lt;code&gt;defhydra&lt;/code&gt;, that&amp;#39;s why it was possible to pass it
+to &lt;code&gt;global-set-key&lt;/code&gt; in the first example.&lt;/p&gt;
+
+&lt;h3 id=&quot;second-argument:-hydra-body&quot;&gt;Second argument: Hydra body&lt;/h3&gt;
+
+&lt;p&gt;The Hydra body consists of:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;a map used for binding, like &lt;code&gt;global-map&lt;/code&gt; or &lt;code&gt;c++-mode-map&lt;/code&gt; or &lt;code&gt;projectile-mode-map&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;the body prefix: it&amp;#39;s a string passable to &lt;code&gt;kbd&lt;/code&gt; that will be used
+in conjunction with heads&amp;#39; prefixes to bind the functions&lt;/li&gt;
+&lt;li&gt;an optional plist, which currently recognizes only the &lt;code&gt;:color&lt;/code&gt; key,
+which in turn can be either red (the old behavior) or blue.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;It&amp;#39;s possible to omit the map and the body prefix simultaneously (it
+doesn&amp;#39;t make sense to omit one but not the other), or just pass &lt;code&gt;()&lt;/code&gt;
+if you want to get a red Hydra body that you can bind yourself.&lt;/p&gt;
+
+&lt;h3 id=&quot;third-argument:-hydra-hint&quot;&gt;Third argument: Hydra hint&lt;/h3&gt;
+
+&lt;p&gt;This string will be used in the echo area to distinguish the current
+Hydra. This is optional, it case you don&amp;#39;t provide it, it will default
+to &lt;code&gt;&amp;quot;hydra&amp;quot;&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;fourth-argument:-hydra-heads&quot;&gt;Fourth argument: Hydra heads&lt;/h3&gt;
+
+&lt;p&gt;Each Hydra head is a list of:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;the key extension&lt;/li&gt;
+&lt;li&gt;the function&lt;/li&gt;
+&lt;li&gt;optional hint&lt;/li&gt;
+&lt;li&gt;optional plist.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Again, the plist recognizes only &lt;code&gt;:color&lt;/code&gt; currently. The color is inherited from the body, if
+you don&amp;#39;t specify it. In turn, the body color is red if you don&amp;#39;t specify it.&lt;/p&gt;
+
+&lt;p&gt;The code above:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;binds &lt;kbd&gt;C-c a&lt;/kbd&gt;, &lt;kbd&gt;C-c d&lt;/kbd&gt; etc with the usual &lt;code&gt;global-set-key&lt;/code&gt; approach.&lt;/li&gt;
+&lt;li&gt;binds &lt;kbd&gt;C-c C-v a&lt;/kbd&gt;, &lt;kbd&gt;C-c C-v d&lt;/kbd&gt; with the new
+approach, which shows you the hint right after &lt;kbd&gt;C-c C-v&lt;/kbd&gt; and
+allows you to cancel easier.&lt;/li&gt;
+&lt;li&gt;binds &lt;kbd&gt;C-c v&lt;/kbd&gt; to be repeatable, i.e. you can press &lt;kbd&gt;C-c v v v&lt;/kbd&gt;. Same with &lt;kbd&gt;C-c C-v v v v&lt;/kbd&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;some-more-ideas-for-blue-hydras&quot;&gt;Some more ideas for blue Hydras&lt;/h2&gt;
+
+&lt;p&gt;Here&amp;#39;s one for some &lt;code&gt;helm&lt;/code&gt;-related functions, don&amp;#39;t ask how
+&lt;code&gt;projectile-find-file&lt;/code&gt; ended up here:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt;
+ &lt;span class=&quot;s&quot;&gt;&amp;quot;κ&amp;quot;&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-helm&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;s&quot;&gt;&amp;quot;helm&amp;quot;&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;f&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;projectile-find-file&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;file&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;w&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;helm-org-wiki&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;wiki&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;r&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;helm-recentf&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;recent&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;s&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;helm-swoop&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;swoop&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;q&amp;quot;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;quit&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Here&amp;#39;s one more for &lt;code&gt;gnus&lt;/code&gt;; I&amp;#39;m just getting the hang of it, so some hints are useful:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-gnus-reply&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;reply&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;o&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;gnus-summary-reply-with-original&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;one&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;O&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;gnus-summary-reply&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;a&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;gnus-summary-wide-reply-with-original&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;all&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;A&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;gnus-summary-wide-reply&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;u&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;gnus-summary-very-wide-reply-with-original&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;universe&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;U&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;gnus-summary-very-wide-reply&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;q&amp;quot;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;quit&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;gnus-summary-mode-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;r&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;hydra-gnus-reply/body&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;I omit the hint for the commands that do the same as the previous one,
+just without citing.&lt;/p&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;I hope that you enjoy the update and let me know when you invent some
+efficient blue or red-and-blue Hydras. Happy hacking!&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Blogging about blogging</title>
