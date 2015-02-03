@@ -11,7 +11,7 @@
 
   <title>
     
-      Three ansi-term tips &middot; (or emacs
+      (or emacs &middot; irrelevant)
     
   </title>
 
@@ -191,108 +191,92 @@
       </div>
 
       <div class="container content">
-        <div class="post">
-  <h1 class="post-title">Three ansi-term tips</h1>
-  <span class="post-date">01 Jan 2015</span>
-  <h2 id="tip-#1">Tip #1</h2>
+        <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/2014/12/20/poyekhali!/">
+        Poyekhali!
+      </a>
+    </h1>
 
-<p>There&#39;s no reason not to have <code>/bin/bash</code> instead of <code>/bin/sh</code> as the
-default choice when you <kbd>M-x</kbd> <code>term</code>.</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">explicit-shell-file-name</span> <span class="s">&quot;/bin/bash&quot;</span><span class="p">)</span>
+    <span class="post-date">20 Dec 2014</span>
+
+    <p>Welcome to <b><code>(or emacs</code></b>!</p>
+
+<p>My name is Oleh and I&#39;ve been using Emacs for about 3 years now.  I
+think that it&#39;s an awesome editor, and I&#39;ve accumulated some know-how
+to make it even better (at least for me and people who think like me).
+Sharing is caring, so here we go.</p>
+
+<h2 id="ace-window-update"><code>ace-window</code> update</h2>
+
+<p>On this weekend I&#39;ve made a major update to my package
+<a href="https://github.com/abo-abo/ace-window">ace-window</a> that allows it to
+be used as a library. Luckily the change went smoothly, as there are
+no complaints in the github issues so far.  In case you don&#39;t know
+what the package does in the first place, a short blurb follows.</p>
+
+<h2 id="ace-window&#39;s-&quot;what-and-why&quot;"><code>ace-window</code>&#39;s &quot;what and why&quot;</h2>
+
+<p>I&#39;m sure you&#39;re aware of the <code>other-window</code> command. While it&#39;s great for
+two windows, it quickly loses its value when there are more windows:
+you need to call it many times, and since it&#39;s not easily predictable,
+you have to check each time if you&#39;re in the window that you wanted.</p>
+
+<p>Another approach is to use <code>windmove-left</code>, <code>windmove-up</code> etc.  These
+are fast and predictable. Their disadvantage is that they need 4 key
+bindings.  The default ones are shift+arrows, which are hard to reach.</p>
+
+<p>This package aims to take the speed and predictability of <code>windmove</code>
+and pack it into a single key binding, similar to <code>other-window</code>.  To
+achieve this, I&#39;m using the excellent
+<a href="https://github.com/winterTTr/ace-jump-mode">ace-jump-mode</a>.</p>
+
+<p>Here&#39;s how the package looks in action: <a href="/download/ace-window.gif">ace-window.gif</a></p>
+
+<p>Since switching windows is a frequently used operation, I recommend
+binding <code>ace-window</code> to something short, like <kbd>M-p</kbd>.</p>
+
+<p>By default, three actions are available:</p>
+
+<ul>
+<li><kbd>M-p</kbd> - select window</li>
+<li><kbd>C-u M-p</kbd> - swap the current window with the selected window</li>
+<li><kbd>C-u C-u M-p</kbd> - delete the selected window</li>
+</ul>
+
+<h2 id="finally,-the-library-part">finally, the library part</h2>
+
+<p>So now, what if you want to select a window to maximize with <code>ace-window</code>?
+After the change that I&#39;ve mentioned, the code to do this is dirt simple:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">ace-maximize-window</span> <span class="p">()</span>
+  <span class="s">&quot;Ace maximize window.&quot;</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">setq</span> <span class="nv">aw--current-op</span>
+        <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">aj</span><span class="p">)</span>
+          <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">wnd</span> <span class="p">(</span><span class="nv">aj-position-window</span> <span class="nv">aj</span><span class="p">)))</span>
+            <span class="p">(</span><span class="nf">select-window</span> <span class="nv">wnd</span><span class="p">)</span>
+            <span class="p">(</span><span class="nv">delete-other-windows</span><span class="p">))))</span>
+  <span class="p">(</span><span class="nv">aw--doit</span> <span class="s">&quot; Ace - Maximize Window&quot;</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-M-o&quot;</span><span class="p">)</span> <span class="ss">&#39;ace-maximize-window</span><span class="p">)</span>
 </code></pre></div>
-<h2 id="tip-#2">Tip #2</h2>
-
-<p>After you close the terminal, you get a useless buffer with no
-process. It&#39;s probably left there for you to have a history of what
-you did. I find it not useful, so here&#39;s a way to kill that buffer
-automatically:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">oleh-term-exec-hook</span> <span class="p">()</span>
-  <span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">buff</span> <span class="p">(</span><span class="nf">current-buffer</span><span class="p">))</span>
-         <span class="p">(</span><span class="nv">proc</span> <span class="p">(</span><span class="nf">get-buffer-process</span> <span class="nv">buff</span><span class="p">)))</span>
-    <span class="p">(</span><span class="nf">set-process-sentinel</span>
-     <span class="nv">proc</span>
-     <span class="o">`</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">process</span> <span class="nv">event</span><span class="p">)</span>
-        <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">string=</span> <span class="nv">event</span> <span class="s">&quot;finished\n&quot;</span><span class="p">)</span>
-            <span class="p">(</span><span class="nf">kill-buffer</span> <span class="o">,</span><span class="nv">buff</span><span class="p">))))))</span>
-
-<span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;term-exec-hook</span> <span class="ss">&#39;oleh-term-exec-hook</span><span class="p">)</span>
-</code></pre></div>
-<h2 id="tip-#3">Tip #3</h2>
-
-<p>By default, <kbd>C-y</kbd> calls term&#39;s own <code>yank</code>, which is different
-from Emacs&#39;s <code>yank</code>.  So, until recently, I was using
-<kbd>S-&lt;insert&gt;</kbd> to paste stuff into <code>*term*</code>. Here&#39;s a
-more ergonomic way:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">eval-after-load</span> <span class="s">&quot;term&quot;</span>
-  <span class="o">&#39;</span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">term-raw-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c C-y&quot;</span><span class="p">)</span> <span class="ss">&#39;term-paste</span><span class="p">))</span>
-</code></pre></div>
+  </div>
+  
 </div>
 
-<div class="twitter-share">
-  <a href="https://twitter.com/share"
-     class="twitter-share-button"
-     data-via="_abo_abo"
-     data-dnt="true">
-    Tweet
-  </a>
+<div class="pagination">
+  
+    <span class="pagination-item older">Older</span>
+  
+  
+    
+      <a class="pagination-item newer" href="/page9">Newer</a>
+    
+  
 </div>
 
-<div class="related">
-  <h2>Related Posts</h2>
-  <ul class="related-posts">
-    
-      <li>
-        <h3>
-          <!-- <a href="//2015/02/03/one-hydra-two-hydra/"> -->
-          <a href="/2015/02/03/one-hydra-two-hydra/">
-            One Hydra Two Hydra Red Hydra Blue Hydra
-            <small>03 Feb 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
-          <!-- <a href="//2015/02/02/colorful-hydrae/"> -->
-          <a href="/2015/02/02/colorful-hydrae/">
-            Colorful Hydras
-            <small>02 Feb 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
-          <!-- <a href="//2015/02/01/blogging-about-blogging/"> -->
-          <a href="/2015/02/01/blogging-about-blogging/">
-            Blogging about blogging
-            <small>01 Feb 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-  </ul>
-</div>
-
-<div id="disqus_thread"></div>
-<script type="text/javascript">
-  var disqus_shortname = 'oremacs'; // required: replace example with your forum shortname
-
-  /* * * DON'T EDIT BELOW THIS LINE * * */
-  (function() {
-  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-  })();
-</script>
-
-<script>
-  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
-</script>
-<noscript>
-  Please enable JavaScript to view the
-  <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
-</noscript>
 
       </div>
     </div>
