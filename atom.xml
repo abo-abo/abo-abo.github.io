@@ -4,13 +4,138 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-02-03T17:19:27+01:00</updated>
+ <updated>2015-02-04T17:27:10+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>New in Hydra - :pre and :post clauses</title>
+   <link href="http://oremacs.com/2015/02/04/pre-hydra-post/"/>
+   <updated>2015-02-04T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/02/04/pre-hydra-post</id>
+   <content type="html">&lt;p&gt;Only three commits happened since &lt;code&gt;0.6.1&lt;/code&gt;, but already &lt;a href=&quot;https://github.com/abo-abo/hydra/releases/tag/0.7.0&quot;&gt;0.7.0&lt;/a&gt; has to
+be released, since the behavior has changed slightly.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-ultimate-window-switching-setup,-revised&quot;&gt;The ultimate window switching setup, revised&lt;/h2&gt;
+
+&lt;p&gt;The code from the &lt;a href=&quot;/2015/02/03/one-hydra-two-hydra/&quot;&gt;last post&lt;/a&gt; had to be changed.
+Note that only &lt;code&gt;ace-window&lt;/code&gt;-related heads are affected, since &lt;code&gt;ace-window&lt;/code&gt; uses &lt;code&gt;set-transient-map&lt;/code&gt; as well.
+This was necessary to fix &lt;a href=&quot;https://github.com/abo-abo/hydra/issues/15&quot;&gt;issue #15&lt;/a&gt; (unable to use &lt;code&gt;goto-line&lt;/code&gt; in a Hydra, since it requires input).&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-M-o&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-window&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+   &lt;span class=&quot;s&quot;&gt;&amp;quot;window&amp;quot;&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;h&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;windmove-left&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;j&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;windmove-down&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;k&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;windmove-up&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;l&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;windmove-right&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;a&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ace-window&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;add-hook&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ace-window-end-once-hook&lt;/span&gt;
+                    &lt;span class=&quot;ss&quot;&gt;&amp;#39;hydra-window/body&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;throw&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;hydra-disable&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+        &lt;span class=&quot;s&quot;&gt;&amp;quot;ace&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;v&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;split-window-right&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;windmove-right&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+        &lt;span class=&quot;s&quot;&gt;&amp;quot;vert&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;x&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;split-window-below&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;windmove-down&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+        &lt;span class=&quot;s&quot;&gt;&amp;quot;horz&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;s&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ace-window&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;add-hook&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ace-window-end-once-hook&lt;/span&gt;
+                    &lt;span class=&quot;ss&quot;&gt;&amp;#39;hydra-window/body&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;throw&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;hydra-disable&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+        &lt;span class=&quot;s&quot;&gt;&amp;quot;swap&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;t&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;transpose-frame&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;#39;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;d&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ace-window&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;16&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;add-hook&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ace-window-end-once-hook&lt;/span&gt;
+                    &lt;span class=&quot;ss&quot;&gt;&amp;#39;hydra-window/body&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;throw&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;hydra-disable&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+        &lt;span class=&quot;s&quot;&gt;&amp;quot;del&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;o&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;delete-other-windows&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;one&amp;quot;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;i&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ace-maximize-window&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;ace-one&amp;quot;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;q&amp;quot;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;cancel&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;You can also see an awesome addition sneak in, with &lt;code&gt;transpose-frame&lt;/code&gt;
+on &lt;kbd&gt;&amp;#39;&lt;/kbd&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;technical-note&quot;&gt;Technical note&lt;/h3&gt;
+
+&lt;p&gt;If you look closely at the code, you&amp;#39;ll see the &lt;code&gt;ace-window&lt;/code&gt;-related
+lambdas throwing the &lt;code&gt;hydra-disable&lt;/code&gt; symbol. If the Hydra code catches
+that symbol, it will not call &lt;code&gt;set-transient-map&lt;/code&gt; again, effectively
+making the head that threw the symbol blue.  In this example, though,
+&lt;code&gt;ace-window&lt;/code&gt;-related functions are still red, since the Hydra is
+resumed by calling &lt;code&gt;hydra-window/body&lt;/code&gt; in &lt;code&gt;ace-window-end-once-hook&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;This is a trick that I have to play because of how &lt;code&gt;ace-jump-mode&lt;/code&gt;
+works.  Hopefully, it won&amp;#39;t be needed for other commands. But still,
+it&amp;#39;s a simple trick that you can use if you want to have a head quit
+conditionally, or something.&lt;/p&gt;
+
+&lt;h2 id=&quot;goto-line-ad-infinum&quot;&gt;&lt;code&gt;goto-line&lt;/code&gt; ad infinum&lt;/h2&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-test&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;M-g&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;g&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;goto-line&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;goto-line&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;With the Hydra above, it&amp;#39;s possible to:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;M-g g&lt;/kbd&gt; &lt;code&gt;10&lt;/code&gt; &lt;kbd&gt;RET&lt;/kbd&gt; to go to line &lt;code&gt;10&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;g&lt;/kbd&gt; &lt;code&gt;20&lt;/code&gt; &lt;kbd&gt;RET&lt;/kbd&gt; to go to line &lt;code&gt;20&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;g&lt;/kbd&gt; &lt;code&gt;50&lt;/code&gt; &lt;kbd&gt;RET&lt;/kbd&gt; to go to line &lt;code&gt;50&lt;/code&gt; etc.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;change-the-cursor-color-when-a-hydra-is-active&quot;&gt;Change the cursor color when a Hydra is active&lt;/h2&gt;
+
+&lt;p&gt;Here&amp;#39;s how the new &lt;code&gt;:pre&lt;/code&gt; and &lt;code&gt;:post&lt;/code&gt; statements work:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-z&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-vi&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:pre&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;set-cursor-color&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;#40e0d0&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;nb&quot;&gt;:post&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;set-cursor-color&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;#ffffff&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+   &lt;span class=&quot;s&quot;&gt;&amp;quot;vi&amp;quot;&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;l&amp;quot;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;forward-char&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;h&amp;quot;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;backward-char&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;j&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;next-line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;k&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;previous-line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;q&amp;quot;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;quit&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;In this example, the cursor color will change for the duration of the Hydra.
+Both &lt;code&gt;:pre&lt;/code&gt; and &lt;code&gt;:post&lt;/code&gt; should match to a single Elisp statement; you can use &lt;code&gt;progn&lt;/code&gt; to tie
+a bunch of statements together if you want.&lt;/p&gt;
+
+&lt;h2 id=&quot;a-more-evil-helm&quot;&gt;A more evil &lt;code&gt;helm&lt;/code&gt;&lt;/h2&gt;
+
+&lt;p&gt;Lit Wakefield has a nice &lt;a href=&quot;http://angelic-sedition.github.io/blog/2015/02/03/a-more-evil-helm/&quot;&gt;article&lt;/a&gt; on
+using &lt;code&gt;hydra&lt;/code&gt; and &lt;code&gt;helm&lt;/code&gt; together. Do check it out, I&amp;#39;ll certainly steal some of his code.&lt;/p&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;I hope that you don&amp;#39;t have an objection to Hydra being developed at a
+fast pace with many features popping up. I try my best to keep things
+backwards compatible, but I really want to quickly fix the areas where
+the code is lacking. Thanks to all the people contributing
+&lt;a href=&quot;https://github.com/abo-abo/hydra/issues&quot;&gt;issues&lt;/a&gt;, especially
+&lt;a href=&quot;https://github.com/atykhonov&quot;&gt;@atykhonov&lt;/a&gt; and
+&lt;a href=&quot;https://github.com/nandryshak&quot;&gt;@nandryshak&lt;/a&gt; for the last two, which are the core
+of this version bump.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>One Hydra Two Hydra Red Hydra Blue Hydra</title>
