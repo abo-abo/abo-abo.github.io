@@ -4,13 +4,83 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-02-04T17:27:10+01:00</updated>
+ <updated>2015-02-05T21:41:08+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Introducing amaranth Hydras</title>
+   <link href="http://oremacs.com/2015/02/05/amaranth-hydra/"/>
+   <updated>2015-02-05T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/02/05/amaranth-hydra</id>
+   <content type="html">&lt;blockquote&gt;
+&lt;p&gt;An &lt;font color=&quot;#e52b50&quot;&gt;amaranth&lt;/font&gt; planted in a garden near a &lt;font color=&quot;#FF007F&quot;&gt;Rose-Tree&lt;/font&gt;, thus addressed it:
+&amp;quot;What a lovely flower is the &lt;font color=&quot;#FF007F&quot;&gt;Rose&lt;/font&gt;, a favorite alike with Gods and
+with men. I envy you your beauty and your perfume.&amp;quot; The &lt;font color=&quot;#FF007F&quot;&gt;Rose&lt;/font&gt;
+replied, &amp;quot;I indeed, dear &lt;font color=&quot;#e52b50&quot;&gt;Amaranth&lt;/font&gt;, flourish but for a brief season!
+If no cruel hand pluck me from my stem, yet I must perish by an
+early doom. But thou art immortal and dost never fade, but bloomest
+for ever in renewed youth.&amp;quot;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Prompted by the &lt;a href=&quot;https://github.com/abo-abo/hydra/issues/17&quot;&gt;&amp;quot;Avoid exiting the hydra on hitting a wrong key&amp;quot;&lt;/a&gt; issue,
+I decided to add a new body color for Hydra. Turns out that there exists a color that represents
+immortality, and it&amp;#39;s called &lt;font color=&quot;#e52b50&quot;&gt;amaranth&lt;/font&gt;. It&amp;#39;s also very pretty.&lt;/p&gt;
+
+&lt;p&gt;So what &lt;font color=&quot;#e52b50&quot;&gt;amaranth&lt;/font&gt; Hydras do basically, is make it impossible to quit them.
+Of course, it would be totally lame if there wasn&amp;#39;t at least one way to quit them.
+And what better to utilize for this purpose,
+than the good-old quitters - the &lt;font color=&quot;#2A00FF&quot;&gt;blue&lt;/font&gt; Hydra heads.&lt;/p&gt;
+
+&lt;h2 id=&quot;an-example-code&quot;&gt;An Example code&lt;/h2&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-z&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-vi&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:pre&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;set-cursor-color&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;#e52b50&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;nb&quot;&gt;:post&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;set-cursor-color&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;#ffffff&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;amaranth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;s&quot;&gt;&amp;quot;vi&amp;quot;&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;l&amp;quot;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;forward-char&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;h&amp;quot;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;backward-char&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;j&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;next-line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;k&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;previous-line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;m&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;set-mark-command&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;mark&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;a&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;move-beginning-of-line&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;beg&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;e&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;move-end-of-line&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;end&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;d&amp;quot;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;delete-region&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;del&amp;quot;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;y&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;kill-ring-save&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;yank&amp;quot;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;q&amp;quot;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;quit&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This Hydra has only three exit points:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;q&lt;/kbd&gt;, which does nothing&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;y&lt;/kbd&gt;, which copies the active region&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;d&lt;/kbd&gt;, which deletes the active region&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;In addition to the usual arrows on &lt;kbd&gt;hjkl&lt;/kbd&gt;, &lt;kbd&gt;a&lt;/kbd&gt; and
+&lt;kbd&gt;e&lt;/kbd&gt; move to beginning and end of line respectively.&lt;/p&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;I hope that you like the new idea, also thanks to
+&lt;a href=&quot;https://github.com/vkazanov&quot;&gt;@vkazanov&lt;/a&gt; for the push in this
+direction. Things should be backwards-compatible, so this feature
+costs you nothing if you&amp;#39;re not using it. See the release notes for &lt;a href=&quot;https://github.com/abo-abo/hydra/releases/tag/0.8.0&quot;&gt;0.8.0&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;One more thanks goes to Sridhar Ratnakumar for &lt;a href=&quot;http://oremacs.com/2015/01/30/auto-yasnippet/#comment-1833552123&quot;&gt;this suggestion&lt;/a&gt;
+that lead to an improvement in &lt;a href=&quot;https://github.com/abo-abo/auto-yasnippet&quot;&gt;auto-yasnippet&lt;/a&gt;. Thanks to this improvement,
+I was able to quickly wrap words like this:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&amp;lt;font color=&amp;quot;#FF007F&amp;quot;&amp;gt;Rose&amp;lt;/font&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
+ </entry>
  
  <entry>
    <title>New in Hydra - :pre and :post clauses</title>
@@ -70,7 +140,7 @@ This was necessary to fix &lt;a href=&quot;https://github.com/abo-abo/hydra/issu
    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;q&amp;quot;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;cancel&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;You can also see an awesome addition sneak in, with &lt;code&gt;transpose-frame&lt;/code&gt;
-on &lt;kbd&gt;&amp;#39;&lt;/kbd&gt;.&lt;/p&gt;
+on &lt;kbd&gt;t&lt;/kbd&gt;.&lt;/p&gt;
 
 &lt;h3 id=&quot;technical-note&quot;&gt;Technical note&lt;/h3&gt;
 
