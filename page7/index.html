@@ -195,6 +195,94 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/01/07/org-protocol-1/">
+        My org-protocol setup, part 1.
+      </a>
+    </h1>
+
+    <span class="post-date">07 Jan 2015</span>
+
+    <p>I&#39;m quite busy with a project today, so I can&#39;t compose many words.
+However, pasting and explaining some code is fine.  The basic idea is
+creating TODO tasks in certain <code>org-mode</code> files by clicking a link in
+Firefox, thanks to
+<a href="https://addons.mozilla.org/en-US/firefox/addon/org-mode-capture/">org-mode capture</a>.</p>
+
+<h2 id="org-protocol-starter"><code>org-protocol</code> starter</h2>
+<div class="highlight"><pre><code class="language-emacs" data-lang="emacs"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;org-capture</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;org-protocol</span><span class="p">)</span>
+<span class="p">(</span><span class="k">setq</span> <span class="nv">org-protocol-default-template-key</span> <span class="s">&quot;l&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">push</span> <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="s">&quot;Link&quot;</span> <span class="nv">entry</span> <span class="p">(</span><span class="k">function</span> <span class="nv">org-handle-link</span><span class="p">)</span>
+        <span class="s">&quot;* TODO %(org-wash-link)\nAdded: %U\n%(org-link-hooks)\n%?&quot;</span><span class="p">)</span>
+        <span class="nv">org-capture-templates</span><span class="p">)</span>
+</code></pre></div>
+<ul>
+<li><code>org-wash-link</code> should clear up some redundancies in the TODO</li>
+<li><code>org-handle-link</code> should open the appropriate file and heading.</li>
+<li><code>org-link-hooks</code> should insert some extra information</li>
+</ul>
+
+<h2 id="org-wash-link"><code>org-wash-link</code></h2>
+
+<p>Basically, when I capture a question on
+<a href="http://stackoverflow.com/questions/tagged/emacs">Stack Overflow</a>, I
+don&#39;t want to see <code>- Stack Overflow -</code> as part of the TODO string,
+since the TODO itself is stored in <code>wiki/stack.org/* Questions</code>.</p>
+<div class="highlight"><pre><code class="language-emacs" data-lang="emacs"><span class="p">(</span><span class="nb">defun</span> <span class="nv">org-wash-link</span> <span class="p">()</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">link</span> <span class="p">(</span><span class="nv">caar</span> <span class="nv">org-stored-links</span><span class="p">))</span>
+        <span class="p">(</span><span class="nv">title</span> <span class="p">(</span><span class="nv">cadar</span> <span class="nv">org-stored-links</span><span class="p">)))</span>
+    <span class="p">(</span><span class="k">setq</span> <span class="nv">title</span> <span class="p">(</span><span class="nv">replace-regexp-in-string</span>
+                 <span class="s">&quot; - Stack Overflow&quot;</span> <span class="s">&quot;&quot;</span> <span class="nv">title</span><span class="p">))</span>
+    <span class="p">(</span><span class="nv">org-make-link-string</span> <span class="nv">link</span> <span class="nv">title</span><span class="p">)))</span>
+</code></pre></div>
+<h2 id="org-link-hooks"><code>org-link-hooks</code></h2>
+
+<p>This is just a hack for passing information around that
+functions from <code>org-handle-link</code> can use.</p>
+<div class="highlight"><pre><code class="language-emacs" data-lang="emacs"><span class="p">(</span><span class="k">defvar</span> <span class="nv">org-link-hook</span> <span class="no">nil</span><span class="p">)</span>
+
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">org-link-hooks</span> <span class="p">()</span>
+  <span class="p">(</span><span class="k">prog1</span>
+      <span class="p">(</span><span class="nf">mapconcat</span> <span class="nf">#&#39;funcall</span>
+                 <span class="nv">org-link-hook</span>
+                 <span class="s">&quot;\n&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="k">setq</span> <span class="nv">org-link-hook</span><span class="p">)))</span>
+</code></pre></div>
+<h2 id="org-handle-link"><code>org-handle-link</code></h2>
+
+<p>This is the heart of the setup.</p>
+<div class="highlight"><pre><code class="language-emacs" data-lang="emacs"><span class="p">(</span><span class="nb">defun</span> <span class="nv">org-handle-link</span> <span class="p">()</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">link</span> <span class="p">(</span><span class="nv">caar</span> <span class="nv">org-stored-links</span><span class="p">))</span>
+        <span class="nv">file</span><span class="p">)</span>
+    <span class="p">(</span><span class="k">cond</span> <span class="p">((</span><span class="nf">string-match</span> <span class="s">&quot;^https://www.youtube.com/&quot;</span> <span class="nv">link</span><span class="p">)</span>
+           <span class="p">(</span><span class="nv">org-handle-link-youtube</span> <span class="nv">link</span><span class="p">))</span>
+          <span class="p">((</span><span class="nf">string-match</span> <span class="p">(</span><span class="nf">regexp-quote</span>
+                          <span class="s">&quot;http://stackoverflow.com/&quot;</span><span class="p">)</span> <span class="nv">link</span><span class="p">)</span>
+           <span class="p">(</span><span class="nv">find-file</span> <span class="p">(</span><span class="nv">org-expand</span> <span class="s">&quot;wiki/stack.org&quot;</span><span class="p">))</span>
+           <span class="p">(</span><span class="nf">goto-char</span> <span class="p">(</span><span class="nf">point-min</span><span class="p">))</span>
+           <span class="p">(</span><span class="nf">re-search-forward</span> <span class="s">&quot;^\\*+ +Questions&quot;</span> <span class="no">nil</span> <span class="no">t</span><span class="p">))</span>
+          <span class="p">(</span><span class="no">t</span>
+           <span class="p">(</span><span class="nv">find-file</span> <span class="p">(</span><span class="nv">org-expand</span> <span class="s">&quot;ent.org&quot;</span><span class="p">))</span>
+           <span class="p">(</span><span class="nf">goto-char</span> <span class="p">(</span><span class="nf">point-min</span><span class="p">))</span>
+           <span class="p">(</span><span class="nf">re-search-forward</span> <span class="s">&quot;^\\*+ +Articles&quot;</span> <span class="no">nil</span> <span class="no">t</span><span class="p">)))))</span>
+</code></pre></div>
+<ul>
+<li>Youtube links will be handled with <code>org-handle-link-youtube</code></li>
+<li>Stack Overflow links will be stored in <code>wiki/stack.org/* Questions</code></li>
+<li>all other links will be stored in <code>ent.org/* Articles</code></li>
+</ul>
+
+<p>I&#39;ll write down <code>org-handle-link-youtube</code> in a later post, since I
+would still like to sort out a few kinks with it. The main issue is
+that I&#39;m sending two requests to Youtube: one to download the video,
+which is fine, since <code>async</code> handles it; and other to get the title of
+the video and put it in the heading. And this other request causes a
+perceptible delay when capturing.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/01/06/rushing-headlong/">
         Rushing headlong
       </a>
@@ -560,81 +648,6 @@ out more in the
 the
 <a href="http://www.gnu.org/software/emacs/manual/html_mono/calc.html#Tutorial">interactive tutorial</a>
 is absolutely excellent.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/01/02/wrap-with-latex/">
-        Wrap a region with a LaTeX environment
-      </a>
-    </h1>
-
-    <span class="post-date">02 Jan 2015</span>
-
-    <p>Prompted by <a href="http://stackoverflow.com/questions/27736102/wrap-text-around-a-selection-in-emacs">this StackOverflow question</a>,
-I wrote down a new package called <a href="https://github.com/abo-abo/latex-wrap">latex-wrap</a>.
-It&#39;s only a few hours old, but I like it a lot.
-I&#39;ve grepped the sources of AUCTeX, and it doesn&#39;t seem to have this functionality.</p>
-
-<h2 id="here&#39;s-how-it-works">Here&#39;s how it works</h2>
-
-<p>You start with an active region:</p>
-
-<pre><code><region>Homer
-Marge
-Bart
-Lisa
-Maggie<cursor> </cursor>
-</region></code></pre>
-
-<p>After calling <kbd>M-x</kbd> <code>latex-wrap-region</code> and selecting
-<em>enumerate</em> from the list of environments (others being <em>itemize</em>,
-<em>center</em> etc.), you get this:</p>
-
-<div class="highlight"><pre><code class="language-latex" data-lang="latex"><span class="k">\begin</span><span class="nb">{</span>enumerate<span class="nb">}</span>
-<span class="k">\item</span> Homer
-<span class="k">\item</span> Marge
-<span class="k">\item</span> Bart
-<span class="k">\item</span> Lisa
-<span class="k">\item</span> Maggie<cursor> </cursor>
-<span class="k">\end</span><span class="nb">{</span>enumerate<span class="nb">}</span>
-</code></pre></div>
-
-<p>Let&#39;s mark everything, <kbd>M-x</kbd> <code>latex-wrap-region</code>, and select
-<em>center</em>:</p>
-
-<div class="highlight"><pre><code class="language-latex" data-lang="latex"><span class="k">\begin</span><span class="nb">{</span>center<span class="nb">}</span>
-  <span class="k">\begin</span><span class="nb">{</span>enumerate<span class="nb">}</span>
-  <span class="k">\item</span> Homer
-  <span class="k">\item</span> Marge
-  <span class="k">\item</span> Bart
-  <span class="k">\item</span> Lisa
-  <span class="k">\item</span> Maggie
-  <span class="k">\end</span><span class="nb">{</span>enumerate<span class="nb">}</span><cursor> </cursor>
-<span class="k">\end</span><span class="nb">{</span>center<span class="nb">}</span>
-</code></pre></div>
-
-<p>As you can see, I want to make sure that it&#39;s possible to conveniently
-continue by always placing the point on the end of the last line of
-the inserted environment.</p>
-
-<h2 id="how-it-works-with-no-active-region">How it works with no active region</h2>
-
-<p>If <code>(looking-back &quot;^ *&quot;)</code> is true, the current line is used as if it was
-the region.  Otherwise, an empty environment is inserted after the
-current line.</p>
-
-<h2 id="using-the-code">Using the code</h2>
-
-<p>If you like the idea, you can check out the code at
-<a href="https://github.com/abo-abo/latex-wrap">github</a> and test it out.  If
-you know of another package that already does this, do let me know,
-otherwise I&#39;ll post the package on MELPA soon.  And if you have some
-ideas, or want to add a few environments that I forgot to mention to
-the list, just post
-<a href="https://github.com/abo-abo/latex-wrap/issues">an issue</a>, I don&#39;t
-bite.</p>
 
   </div>
   

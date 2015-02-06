@@ -4,13 +4,146 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-02-05T21:41:08+01:00</updated>
+ <updated>2015-02-06T14:13:34+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>The Elisp Synergy</title>
+   <link href="http://oremacs.com/2015/02/06/the-synergy/"/>
+   <updated>2015-02-06T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/02/06/the-synergy</id>
+   <content type="html">&lt;p&gt;After having written &lt;a href=&quot;https://github.com/abo-abo?tab=repositories&quot;&gt;a few Emacs packages&lt;/a&gt;, it happens
+sometimes when I&amp;#39;m reading questions on &lt;a href=&quot;http://emacs.stackexchange.com/questions&quot;&gt;Emacs Stack Exchange&lt;/a&gt;,
+I think to myself that either:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;I&amp;#39;ve done this before in package X&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;or:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;This feature would fit nicely in package Y&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;On very rare occasions it happens that a question matches two packages at once.
+Here is such a &lt;a href=&quot;http://emacs.stackexchange.com/questions/8006/&quot;&gt;question&lt;/a&gt;:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;h3 id=&quot;is-there-a-yasnippet-producing-a-prepopulated-doxygen-comment?&quot;&gt;Is there a yasnippet producing a prepopulated doxygen comment?&lt;/h3&gt;
+
+&lt;p&gt;For the following C++ function:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;bool importantStuff(double a, double b);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;It should output the following snippet, perhaps without the tags:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;/**
+* &amp;lt;Insert description of importantStuff&amp;gt;
+*
+* @param a &amp;lt;Insert description of a&amp;gt;
+* @param b &amp;lt;Insert description of b&amp;gt;
+* @return &amp;lt;Insert description of the return value&amp;gt;
+*/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;Well, I&amp;#39;ve got a package called &lt;a href=&quot;https://github.com/abo-abo/function-args&quot;&gt;function-args&lt;/a&gt;
+for C++ that uses CEDET to:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;display tool-tips with function arguments&lt;/li&gt;
+&lt;li&gt;jump to a semantic tag in current file&lt;/li&gt;
+&lt;li&gt;do a bit of completion&lt;/li&gt;
+&lt;li&gt;do a bit of generation (like inherited function signatures)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;And the expansion part can be handled by &lt;a href=&quot;https://github.com/abo-abo/auto-yasnippet&quot;&gt;auto-yasnippet&lt;/a&gt;, which
+I&amp;#39;ve covered in &lt;a href=&quot;/2015/01/30/auto-yasnippet/&quot;&gt;an earlier post&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-code&quot;&gt;The code&lt;/h2&gt;
+
+&lt;p&gt;I think it might be useful to look at the code, since it&amp;#39;s small and shows how to use &lt;code&gt;CEDET&lt;/code&gt;&amp;#39;s and
+&lt;code&gt;auto-yasnippet&lt;/code&gt;&amp;#39;s API:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;moo-doxygen&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Generate a doxygen yasnippet and expand it with `aya-expand&amp;#39;.&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;The point should be on the top-level function name.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;move-beginning-of-line&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;tag&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;semantic-current-tag&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;unless&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;semantic-tag-of-class-p&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tag&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ne&quot;&gt;error&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Expected function, got %S&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tag&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;semantic-tag-name&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tag&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+           &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;attrs&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;semantic-tag-attributes&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tag&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+           &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;args&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;plist-get&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;attrs&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:arguments&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+           &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ord&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;aya-current&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;format&lt;/span&gt;
+             &lt;span class=&quot;s&quot;&gt;&amp;quot;/**&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;* $1&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;*&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;%s&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;* @return $%d&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;*/&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;&amp;quot;&lt;/span&gt;
+             &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;mapconcat&lt;/span&gt;
+              &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;* @param %s $%d&amp;quot;&lt;/span&gt;
+                        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;car&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;incf&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ord&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+              &lt;span class=&quot;nv&quot;&gt;args&lt;/span&gt;
+              &lt;span class=&quot;s&quot;&gt;&amp;quot;\n&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+             &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;incf&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ord&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;aya-expand&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;the-bonus&quot;&gt;The bonus&lt;/h2&gt;
+
+&lt;p&gt;If you&amp;#39;re interested in &lt;a href=&quot;http://www.doxygen.org/&quot;&gt;Doxygen&lt;/a&gt;, here&amp;#39;s a
+bit of code that I found laying around. It will prettify
+e.g. &lt;code&gt;&amp;lt;tt&amp;gt;Numerical Recipies&amp;lt;/tt&amp;gt;&lt;/code&gt; to &lt;font color=&quot;#8b4513&quot;&gt;Numerical
+Recipies&lt;/font&gt; in the comments.
+This code uses a similar approach to the one used in my posts
+about &lt;a href=&quot;/2015/01/11/pretty-elisp-regex/&quot;&gt;prettifying Elisp regex&lt;/a&gt;,
+and &lt;a href=&quot;/2015/01/23/eltex/&quot;&gt;ElTeX&lt;/a&gt;.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defface&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;font-lock-doxygen-face&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:foreground&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;SaddleBrown&amp;quot;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:background&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;#f7f7f7&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;&amp;quot;Special face to highlight doxygen tags such as &amp;lt;tt&amp;gt;...&amp;lt;/tt&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;and &amp;lt;code&amp;gt;...&amp;lt;/code&amp;gt;.&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;:group&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;font-lock-highlighting-faces&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;font-lock-add-keywords&lt;/span&gt;
+ &lt;span class=&quot;ss&quot;&gt;&amp;#39;c++-mode&lt;/span&gt;
+ &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;\\(&amp;lt;\\(?:code\\|tt\\)&amp;gt;\&amp;quot;?\\)\\([^&amp;lt;]*?\\)\\(\&amp;quot;?&amp;lt;/\\(?:code\\|tt\\)&amp;gt;\\)&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;prog1&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;expr&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;match-string-no-properties&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;expr-len&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;length&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;expr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+           &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;eq&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;expr-len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+               &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;compose-region&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;match-beginning&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                               &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;match-end&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                               &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;aref&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;expr&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+             &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;compose-region&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;match-beginning&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                             &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;1+&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;match-end&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+                             &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;aref&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;expr&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+             &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;compose-region&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;1-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;match-beginning&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+                             &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;match-end&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                             &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;aref&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;expr&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;1-&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;expr-len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;font-lock-doxygen-face&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;I hope that the code listed here will be useful to someone other than
+me. It&amp;#39;s a nice highlight of how a language can be made &lt;em&gt;much&lt;/em&gt; cooler
+by just having a package manager that allows to quickly glue various
+things together.  I mean, what would happen to JavaScript without npm
+(besides stopping people requiring Angular just to use arrays)?&lt;/p&gt;
+
+&lt;p&gt;C++, on the other hand, is too cool to care about such things as
+package managers and modules and stuff.  But we&amp;#39;re stuck with it for
+performance reasons, so might as well try to make the experience more
+bearable by adding some niceties to &lt;code&gt;c++-mode&lt;/code&gt;.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Introducing amaranth Hydras</title>

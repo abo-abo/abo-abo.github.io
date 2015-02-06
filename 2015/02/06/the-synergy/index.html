@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      The Elisp Synergy &middot; (or emacs
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="/public/css/octicons.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Scripts -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body class="layout-reverse theme-base-08">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <!-- <div class="sidebar-item"> -->
+  <!--   <p>unused</p> -->
+  <!-- </div> -->
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about/">About</a>
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/archive/">Archive</a>
+        
+      
+    
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+
+    <div id="github" class="sidebar-nav-item">
+      <button type="button"
+              class="btn btn-info"
+              data-toggle="collapse"
+              data-target="#github-projects">
+        <span class="octicon octicon-mark-github"></span> My Emacs Projects
+      </button>
+      <div id="github-projects" class="collapse">
+        <ul style="margin-bottom:0em;">
+          <li>
+            <a href="https://github.com/abo-abo/lispy">lispy</a>
+            <p>vi-like Paredit</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/worf">worf</a>
+            <p>vi-like bindings for org-mode</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-window">ace-window</a>
+            <p>switch windows with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-link">ace-link</a>
+            <p>follow links with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/function-args">function-args</a>
+            <p>enhance <code>CEDET</code> for C++</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/helm-make">helm-make</a>
+            <p>select a Makefile target with <code>helm</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/make-it-so">make-it-so</a>
+            <p>transform files with Makefile recipes</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/org-download">org-download</a>
+            <p>drag-and-drop images to <code>org-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo?tab=repositories">
+              <span class="octicon octicon-octoface"></span>
+              and more
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
+
+  <div class="sidebar-item">
+    <p>
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.0/">
+        <img alt="Creative Commons License"
+             style="border-width:0;opacity: 0.3;"
+             src="https://i.creativecommons.org/l/by-nc-sa/2.0/88x31.png"/>
+      </a>
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">(or emacs</a>
+            <small>irrelevant)</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">The Elisp Synergy</h1>
+  <span class="post-date">06 Feb 2015</span>
+  <p>After having written <a href="https://github.com/abo-abo?tab=repositories">a few Emacs packages</a>, it happens
+sometimes when I&#39;m reading questions on <a href="http://emacs.stackexchange.com/questions">Emacs Stack Exchange</a>,
+I think to myself that either:</p>
+
+<blockquote>
+<p>I&#39;ve done this before in package X</p>
+</blockquote>
+
+<p>or:</p>
+
+<blockquote>
+<p>This feature would fit nicely in package Y</p>
+</blockquote>
+
+<p>On very rare occasions it happens that a question matches two packages at once.
+Here is such a <a href="http://emacs.stackexchange.com/questions/8006/">question</a>:</p>
+
+<blockquote>
+<h3 id="is-there-a-yasnippet-producing-a-prepopulated-doxygen-comment?">Is there a yasnippet producing a prepopulated doxygen comment?</h3>
+
+<p>For the following C++ function:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">bool importantStuff(double a, double b);
+</code></pre></div>
+<p>It should output the following snippet, perhaps without the tags:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">/**
+* &lt;Insert description of importantStuff&gt;
+*
+* @param a &lt;Insert description of a&gt;
+* @param b &lt;Insert description of b&gt;
+* @return &lt;Insert description of the return value&gt;
+*/
+</code></pre></div></blockquote>
+
+<p>Well, I&#39;ve got a package called <a href="https://github.com/abo-abo/function-args">function-args</a>
+for C++ that uses CEDET to:</p>
+
+<ul>
+<li>display tool-tips with function arguments</li>
+<li>jump to a semantic tag in current file</li>
+<li>do a bit of completion</li>
+<li>do a bit of generation (like inherited function signatures)</li>
+</ul>
+
+<p>And the expansion part can be handled by <a href="https://github.com/abo-abo/auto-yasnippet">auto-yasnippet</a>, which
+I&#39;ve covered in <a href="/2015/01/30/auto-yasnippet/">an earlier post</a>.</p>
+
+<h2 id="the-code">The code</h2>
+
+<p>I think it might be useful to look at the code, since it&#39;s small and shows how to use <code>CEDET</code>&#39;s and
+<code>auto-yasnippet</code>&#39;s API:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">moo-doxygen</span> <span class="p">()</span>
+  <span class="s">&quot;Generate a doxygen yasnippet and expand it with `aya-expand&#39;.</span>
+<span class="s">The point should be on the top-level function name.&quot;</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">move-beginning-of-line</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">tag</span> <span class="p">(</span><span class="nv">semantic-current-tag</span><span class="p">)))</span>
+    <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nv">semantic-tag-of-class-p</span> <span class="nv">tag</span> <span class="ss">&#39;function</span><span class="p">)</span>
+      <span class="p">(</span><span class="ne">error</span> <span class="s">&quot;Expected function, got %S&quot;</span> <span class="nv">tag</span><span class="p">))</span>
+    <span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">name</span> <span class="p">(</span><span class="nv">semantic-tag-name</span> <span class="nv">tag</span><span class="p">))</span>
+           <span class="p">(</span><span class="nv">attrs</span> <span class="p">(</span><span class="nv">semantic-tag-attributes</span> <span class="nv">tag</span><span class="p">))</span>
+           <span class="p">(</span><span class="nv">args</span> <span class="p">(</span><span class="nf">plist-get</span> <span class="nv">attrs</span> <span class="nb">:arguments</span><span class="p">))</span>
+           <span class="p">(</span><span class="nv">ord</span> <span class="mi">1</span><span class="p">))</span>
+      <span class="p">(</span><span class="k">setq</span> <span class="nv">aya-current</span>
+            <span class="p">(</span><span class="nf">format</span>
+             <span class="s">&quot;/**</span>
+<span class="s">* $1</span>
+<span class="s">*</span>
+<span class="s">%s</span>
+<span class="s">* @return $%d</span>
+<span class="s">*/</span>
+<span class="s">&quot;</span>
+             <span class="p">(</span><span class="nf">mapconcat</span>
+              <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+                <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;* @param %s $%d&quot;</span>
+                        <span class="p">(</span><span class="nf">car</span> <span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">incf</span> <span class="nv">ord</span><span class="p">)))</span>
+              <span class="nv">args</span>
+              <span class="s">&quot;\n&quot;</span><span class="p">)</span>
+             <span class="p">(</span><span class="nb">incf</span> <span class="nv">ord</span><span class="p">)))</span>
+      <span class="p">(</span><span class="nv">aya-expand</span><span class="p">))))</span>
+</code></pre></div>
+<h2 id="the-bonus">The bonus</h2>
+
+<p>If you&#39;re interested in <a href="http://www.doxygen.org/">Doxygen</a>, here&#39;s a
+bit of code that I found laying around. It will prettify
+e.g. <code>&lt;tt&gt;Numerical Recipies&lt;/tt&gt;</code> to <font color="#8b4513">Numerical
+Recipies</font> in the comments.
+This code uses a similar approach to the one used in my posts
+about <a href="/2015/01/11/pretty-elisp-regex/">prettifying Elisp regex</a>,
+and <a href="/2015/01/23/eltex/">ElTeX</a>.</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defface</span> <span class="nv">font-lock-doxygen-face</span>
+    <span class="o">&#39;</span><span class="p">((</span><span class="no">nil</span> <span class="p">(</span><span class="nb">:foreground</span> <span class="s">&quot;SaddleBrown&quot;</span> <span class="nb">:background</span> <span class="s">&quot;#f7f7f7&quot;</span><span class="p">)</span> <span class="p">))</span>
+    <span class="s">&quot;Special face to highlight doxygen tags such as &lt;tt&gt;...&lt;/tt&gt;</span>
+<span class="s">and &lt;code&gt;...&lt;/code&gt;.&quot;</span>
+    <span class="nb">:group</span> <span class="ss">&#39;font-lock-highlighting-faces</span><span class="p">)</span>
+
+<span class="p">(</span><span class="nv">font-lock-add-keywords</span>
+ <span class="ss">&#39;c++-mode</span>
+ <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;\\(&lt;\\(?:code\\|tt\\)&gt;\&quot;?\\)\\([^&lt;]*?\\)\\(\&quot;?&lt;/\\(?:code\\|tt\\)&gt;\\)&quot;</span>
+    <span class="p">(</span><span class="mi">0</span> <span class="p">(</span><span class="k">prog1</span> <span class="p">()</span>
+         <span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">expr</span> <span class="p">(</span><span class="nv">match-string-no-properties</span> <span class="mi">2</span><span class="p">))</span>
+                <span class="p">(</span><span class="nv">expr-len</span> <span class="p">(</span><span class="nf">length</span> <span class="nv">expr</span><span class="p">)))</span>
+           <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">eq</span> <span class="mi">1</span> <span class="nv">expr-len</span><span class="p">)</span>
+               <span class="p">(</span><span class="nv">compose-region</span> <span class="p">(</span><span class="nf">match-beginning</span> <span class="mi">0</span><span class="p">)</span>
+                               <span class="p">(</span><span class="nf">match-end</span> <span class="mi">0</span><span class="p">)</span>
+                               <span class="p">(</span><span class="nf">aref</span> <span class="nv">expr</span> <span class="mi">0</span><span class="p">))</span>
+             <span class="p">(</span><span class="nv">compose-region</span> <span class="p">(</span><span class="nf">match-beginning</span> <span class="mi">1</span><span class="p">)</span>
+                             <span class="p">(</span><span class="nf">1+</span> <span class="p">(</span><span class="nf">match-end</span> <span class="mi">1</span><span class="p">))</span>
+                             <span class="p">(</span><span class="nf">aref</span> <span class="nv">expr</span> <span class="mi">0</span><span class="p">))</span>
+             <span class="p">(</span><span class="nv">compose-region</span> <span class="p">(</span><span class="nf">1-</span> <span class="p">(</span><span class="nf">match-beginning</span> <span class="mi">3</span><span class="p">))</span>
+                             <span class="p">(</span><span class="nf">match-end</span> <span class="mi">3</span><span class="p">)</span>
+                             <span class="p">(</span><span class="nf">aref</span> <span class="nv">expr</span> <span class="p">(</span><span class="nf">1-</span> <span class="nv">expr-len</span><span class="p">)))))))</span>
+    <span class="p">(</span><span class="mi">0</span> <span class="ss">&#39;font-lock-doxygen-face</span> <span class="no">t</span><span class="p">))))</span>
+</code></pre></div>
+<h2 id="outro">Outro</h2>
+
+<p>I hope that the code listed here will be useful to someone other than
+me. It&#39;s a nice highlight of how a language can be made <em>much</em> cooler
+by just having a package manager that allows to quickly glue various
+things together.  I mean, what would happen to JavaScript without npm
+(besides stopping people requiring Angular just to use arrays)?</p>
+
+<p>C++, on the other hand, is too cool to care about such things as
+package managers and modules and stuff.  But we&#39;re stuck with it for
+performance reasons, so might as well try to make the experience more
+bearable by adding some niceties to <code>c++-mode</code>.</p>
+
+</div>
+
+<div class="twitter-share">
+  <a href="https://twitter.com/share"
+     class="twitter-share-button"
+     data-via="_abo_abo"
+     data-dnt="true">
+    Tweet
+  </a>
+</div>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/02/05/amaranth-hydra/"> -->
+          <a href="/2015/02/05/amaranth-hydra/">
+            Introducing amaranth Hydras
+            <small>05 Feb 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/02/04/pre-hydra-post/"> -->
+          <a href="/2015/02/04/pre-hydra-post/">
+            New in Hydra - :pre and :post clauses
+            <small>04 Feb 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/02/03/one-hydra-two-hydra/"> -->
+          <a href="/2015/02/03/one-hydra-two-hydra/">
+            One Hydra Two Hydra Red Hydra Blue Hydra
+            <small>03 Feb 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'oremacs'; // required: replace example with your forum shortname
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+<script>
+  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+</script>
+<noscript>
+  Please enable JavaScript to view the
+  <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>
