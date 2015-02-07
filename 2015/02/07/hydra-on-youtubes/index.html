@@ -11,7 +11,7 @@
 
   <title>
     
-      Mmm... minty &middot; (or emacs
+      A new Hydra demo on Youtube &middot; (or emacs
     
   </title>
 
@@ -192,50 +192,58 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Mmm... minty</h1>
-  <span class="post-date">27 Dec 2014</span>
-  <h2 id="the-backstory">The backstory</h2>
+  <h1 class="post-title">A new Hydra demo on Youtube</h1>
+  <span class="post-date">07 Feb 2015</span>
+  <p>This will be a short post sharing two pieces of information.</p>
 
-<p>In <a href="/2014/12/24/light-it-up/">one of the earlier posts</a>,
-I was discussing the implementation of an Emacs Lisp lexer for
-<a href="http://pygments.org/">Pygments</a>. Here, I&#39;ll show how to install the
-update and get nicely highlighted code in a pdf via the
-<a href="http://code.google.com/p/minted">minted</a> LaTeX package.</p>
+<h2 id="a-hydra-demo-is-on-youtube">A Hydra demo is on Youtube</h2>
 
-<h2 id="the-install">The install</h2>
-
-<p>Assuming that you are on a Debian-related system:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">sudo apt-get install mercurial
-mkdir ~/git &amp;&amp; cd ~/git
-hg clone https://bitbucket.org/abo-abo/pygments-main
-cd pygments-main
-make mapfiles
-sudo python setup.py install
+<p>Here is the <a href="https://www.youtube.com/watch?v=_qZliI1BKzI">link</a>, and here is the current window-switching code:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span>
+ <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-M-o&quot;</span><span class="p">)</span>
+ <span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-window</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">amaranth</span><span class="p">)</span>
+   <span class="s">&quot;window&quot;</span>
+   <span class="p">(</span><span class="s">&quot;h&quot;</span> <span class="nv">windmove-left</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">windmove-down</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;k&quot;</span> <span class="nv">windmove-up</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nv">windmove-right</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;v&quot;</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span>
+          <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">split-window-right</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">windmove-right</span><span class="p">))</span>
+        <span class="s">&quot;vert&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;x&quot;</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span>
+          <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">split-window-below</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">windmove-down</span><span class="p">))</span>
+        <span class="s">&quot;horz&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;t&quot;</span> <span class="nv">transpose-frame</span> <span class="s">&quot;&#39;&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;o&quot;</span> <span class="nv">delete-other-windows</span> <span class="s">&quot;one&quot;</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="nv">ace-window</span> <span class="s">&quot;ace&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;s&quot;</span> <span class="nv">ace-swap-window</span> <span class="s">&quot;swap&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;d&quot;</span> <span class="nv">ace-delete-window</span> <span class="s">&quot;del&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;i&quot;</span> <span class="nv">ace-maximize-window</span> <span class="s">&quot;ace-one&quot;</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;b&quot;</span> <span class="nv">ido-switch-buffer</span> <span class="s">&quot;buf&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;m&quot;</span> <span class="nv">headlong-bookmark-jump</span> <span class="s">&quot;bmk&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span> <span class="s">&quot;cancel&quot;</span><span class="p">)))</span>
 </code></pre></div>
-<p>And, of course, I&#39;m assuming that you already have TeX Live installed.
-I&#39;m not too sophisticated about it, so I just install everything:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">sudo apt-get install texlive-full
-</code></pre></div>
-<h2 id="the-result">The result</h2>
+<h2 id="ace-window-0.7.0-is-out"><code>ace-window 0.7.0</code> is out</h2>
 
-<p>So here I took some code from
-<a href="/2014/12/25/ode-to-toggle/">a previous post</a> and
-copy-pasted it into <a href="/download/minty.org">minty.org</a> file.
-And here&#39;s the result of the PDF export (<kbd>C-c C-e lo</kbd>):
-<a href="/download/minty.pdf">minty.pdf</a>.</p>
-
-<h2 id="the-red-tape">The red tape</h2>
-
-<p><code>org-mode</code> had trouble exporting on my laptop until I did this:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">cd /usr/bin/
-sudo ln -s /usr/local/texlive/2013/bin/x86_64-linux/pdflatex
+<p>You can see the release notes <a href="https://github.com/abo-abo/ace-window/releases/tag/0.7.0">here</a>.
+There&#39;s not a whole lot of user-visible changes, but a large portion of the code was re-written
+to facilitate the use of the API. I hope that no new bugs were introduced with this change,
+you can still fall back to <a href="https://github.com/abo-abo/ace-window/releases/tag/0.6.1">0.6.1</a> and send
+me <a href="https://github.com/abo-abo/ace-window/issues">an issue</a> if something broke. There&#39;s a benefit
+in the long run, just see how simple the code has become:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">ace-maximize-window</span> <span class="p">()</span>
+  <span class="s">&quot;Ace maximize window.&quot;</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">select-window</span>
+   <span class="p">(</span><span class="nv">aw-select</span> <span class="s">&quot; Ace - Maximize Window&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="nv">delete-other-windows</span><span class="p">))</span>
 </code></pre></div>
-<p>Also be mindful of the <code>-shell-escape</code> flag to <code>pdflatex</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">org-latex-pdf-process</span>
-      <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f&quot;</span>
-        <span class="s">&quot;pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f&quot;</span>
-        <span class="s">&quot;pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f&quot;</span><span class="p">))</span>
-</code></pre></div>
+<p>Here, <code>aw-select</code> just returns a selected window, and nothing else. Very easy to use.</p>
+
 </div>
 
 <div class="twitter-share">
@@ -253,16 +261,6 @@ sudo ln -s /usr/local/texlive/2013/bin/x86_64-linux/pdflatex
     
       <li>
         <h3>
-          <!-- <a href="//2015/02/07/hydra-on-youtubes/"> -->
-          <a href="/2015/02/07/hydra-on-youtubes/">
-            A new Hydra demo on Youtube
-            <small>07 Feb 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
           <!-- <a href="//2015/02/06/the-synergy/"> -->
           <a href="/2015/02/06/the-synergy/">
             The Elisp Synergy
@@ -277,6 +275,16 @@ sudo ln -s /usr/local/texlive/2013/bin/x86_64-linux/pdflatex
           <a href="/2015/02/05/amaranth-hydra/">
             Introducing amaranth Hydras
             <small>05 Feb 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/02/04/pre-hydra-post/"> -->
+          <a href="/2015/02/04/pre-hydra-post/">
+            New in Hydra - :pre and :post clauses
+            <small>04 Feb 2015</small>
           </a>
         </h3>
       </li>
