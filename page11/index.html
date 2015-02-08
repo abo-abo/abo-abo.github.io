@@ -11,7 +11,7 @@
 
   <title>
     
-      occur-dwim (Do What I Mean) &middot; (or emacs
+      (or emacs &middot; irrelevant)
     
   </title>
 
@@ -195,129 +195,92 @@
       </div>
 
       <div class="container content">
-        <div class="post">
-  <h1 class="post-title">occur-dwim (Do What I Mean)</h1>
-  <span class="post-date">26 Jan 2015</span>
-  <p>I&#39;d like to share a little snippet that I like to use instead of a
-plain <kbd>M-s o</kbd> (<code>occur</code>).</p>
+        <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/2014/12/20/poyekhali!/">
+        Poyekhali!
+      </a>
+    </h1>
 
-<h2 id="smarter-than-the-average-occur">smarter-than-the-average-occur</h2>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">occur-dwim</span> <span class="p">()</span>
-  <span class="s">&quot;Call `occur&#39; with a sane default.&quot;</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="nb">push</span> <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">region-active-p</span><span class="p">)</span>
-            <span class="p">(</span><span class="nf">buffer-substring-no-properties</span>
-             <span class="p">(</span><span class="nf">region-beginning</span><span class="p">)</span>
-             <span class="p">(</span><span class="nf">region-end</span><span class="p">))</span>
-          <span class="p">(</span><span class="nv">thing-at-point</span> <span class="ss">&#39;symbol</span><span class="p">))</span>
-        <span class="nv">regexp-history</span><span class="p">)</span>
-  <span class="p">(</span><span class="nf">call-interactively</span> <span class="ss">&#39;occur</span><span class="p">))</span>
-</code></pre></div>
-<p>It will offer as the default candidate:</p>
+    <span class="post-date">20 Dec 2014</span>
+
+    <p>Welcome to <b><code>(or emacs</code></b>!</p>
+
+<p>My name is Oleh and I&#39;ve been using Emacs for about 3 years now.  I
+think that it&#39;s an awesome editor, and I&#39;ve accumulated some know-how
+to make it even better (at least for me and people who think like me).
+Sharing is caring, so here we go.</p>
+
+<h2 id="ace-window-update"><code>ace-window</code> update</h2>
+
+<p>On this weekend I&#39;ve made a major update to my package
+<a href="https://github.com/abo-abo/ace-window">ace-window</a> that allows it to
+be used as a library. Luckily the change went smoothly, as there are
+no complaints in the github issues so far.  In case you don&#39;t know
+what the package does in the first place, a short blurb follows.</p>
+
+<h2 id="ace-window&#39;s-&quot;what-and-why&quot;"><code>ace-window</code>&#39;s &quot;what and why&quot;</h2>
+
+<p>I&#39;m sure you&#39;re aware of the <code>other-window</code> command. While it&#39;s great for
+two windows, it quickly loses its value when there are more windows:
+you need to call it many times, and since it&#39;s not easily predictable,
+you have to check each time if you&#39;re in the window that you wanted.</p>
+
+<p>Another approach is to use <code>windmove-left</code>, <code>windmove-up</code> etc.  These
+are fast and predictable. Their disadvantage is that they need 4 key
+bindings.  The default ones are shift+arrows, which are hard to reach.</p>
+
+<p>This package aims to take the speed and predictability of <code>windmove</code>
+and pack it into a single key binding, similar to <code>other-window</code>.  To
+achieve this, I&#39;m using the excellent
+<a href="https://github.com/winterTTr/ace-jump-mode">ace-jump-mode</a>.</p>
+
+<p>Here&#39;s how the package looks in action: <a href="/download/ace-window.gif">ace-window.gif</a></p>
+
+<p>Since switching windows is a frequently used operation, I recommend
+binding <code>ace-window</code> to something short, like <kbd>M-p</kbd>.</p>
+
+<p>By default, three actions are available:</p>
 
 <ul>
-<li>the current region, if it&#39;s active</li>
-<li>the current symbol, otherwise</li>
+<li><kbd>M-p</kbd> - select window</li>
+<li><kbd>C-u M-p</kbd> - swap the current window with the selected window</li>
+<li><kbd>C-u C-u M-p</kbd> - delete the selected window</li>
 </ul>
 
-<p>It&#39;s pretty good, since I actually want the default candidate in 95%
-of the cases.  Some other functions, such as <code>rgrep</code> are smart like
-this out-of-the-box.</p>
+<h2 id="finally,-the-library-part">finally, the library part</h2>
 
-<h2 id="a-hydra-that-goes-nicely-with-occur">A Hydra that goes nicely with <code>occur</code></h2>
+<p>So now, what if you want to select a window to maximize with <code>ace-window</code>?
+After the change that I&#39;ve mentioned, the code to do this is dirt simple:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">ace-maximize-window</span> <span class="p">()</span>
+  <span class="s">&quot;Ace maximize window.&quot;</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">setq</span> <span class="nv">aw--current-op</span>
+        <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">aj</span><span class="p">)</span>
+          <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">wnd</span> <span class="p">(</span><span class="nv">aj-position-window</span> <span class="nv">aj</span><span class="p">)))</span>
+            <span class="p">(</span><span class="nf">select-window</span> <span class="nv">wnd</span><span class="p">)</span>
+            <span class="p">(</span><span class="nv">delete-other-windows</span><span class="p">))))</span>
+  <span class="p">(</span><span class="nv">aw--doit</span> <span class="s">&quot; Ace - Maximize Window&quot;</span><span class="p">))</span>
 
-<p>Since <code>occur</code>, like some other functions (<code>grep</code>, <code>rgrep</code>, <code>compile</code>),
-works with <code>next-error</code>, it&#39;s possible to use this
-<a href="https://github.com/abo-abo/hydra">Hydra</a> to navigate the <code>occur</code>
-matches:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">hydra-create</span> <span class="s">&quot;M-g&quot;</span>
-  <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;h&quot;</span> <span class="nv">first-error</span> <span class="s">&quot;first&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">next-error</span> <span class="s">&quot;next&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;k&quot;</span> <span class="nv">previous-error</span> <span class="s">&quot;prev&quot;</span><span class="p">)))</span>
+<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-M-o&quot;</span><span class="p">)</span> <span class="ss">&#39;ace-maximize-window</span><span class="p">)</span>
 </code></pre></div>
-<p>Hydra was introduced in an
-<a href="/2015/01/20/introducing-hydra/">earlier post</a>,
-and is available in GNU ELPA.</p>
-
-<h2 id="what-goes-around-comes-around">What goes around comes around</h2>
-
-<p>I usually do a quick internet search to see where I got the code that
-I&#39;m posting here, reason being that it&#39;s nice to list the source, as
-well as there could be more advanced stuff out there on the same
-topic.</p>
-
-<p>I saw a few results for <code>&quot;occur-dwim&quot;</code> so I thought that I just
-copy-pasted it from somewhere. Slight disappointment turned into a
-small sense of pride, when I found that the source of the copy-pastes
-was my old Stack Overflow answer:)</p>
-
+  </div>
+  
 </div>
 
-<div class="twitter-share">
-  <a href="https://twitter.com/share"
-     class="twitter-share-button"
-     data-via="_abo_abo"
-     data-dnt="true">
-    Tweet
-  </a>
+<div class="pagination">
+  
+    <span class="pagination-item older">Older</span>
+  
+  
+    
+      <a class="pagination-item newer" href="/page10">Newer</a>
+    
+  
 </div>
 
-<div class="related">
-  <h2>Related Posts</h2>
-  <ul class="related-posts">
-    
-      <li>
-        <h3>
-          <!-- <a href="//2015/02/08/hydra-0.9.0/"> -->
-          <a href="/2015/02/08/hydra-0.9.0/">
-            Hydra 0.9.0 is out
-            <small>08 Feb 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
-          <!-- <a href="//2015/02/07/hydra-on-youtubes/"> -->
-          <a href="/2015/02/07/hydra-on-youtubes/">
-            A new Hydra demo on Youtube
-            <small>07 Feb 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
-          <!-- <a href="//2015/02/06/the-synergy/"> -->
-          <a href="/2015/02/06/the-synergy/">
-            The Elisp Synergy
-            <small>06 Feb 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-  </ul>
-</div>
-
-<div id="disqus_thread"></div>
-<script type="text/javascript">
-  var disqus_shortname = 'oremacs'; // required: replace example with your forum shortname
-
-  /* * * DON'T EDIT BELOW THIS LINE * * */
-  (function() {
-  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-  })();
-</script>
-
-<script>
-  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
-</script>
-<noscript>
-  Please enable JavaScript to view the
-  <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
-</noscript>
 
       </div>
     </div>

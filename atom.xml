@@ -4,13 +4,138 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-02-07T17:16:54+01:00</updated>
+ <updated>2015-02-08T15:58:36+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Hydra 0.9.0 is out</title>
+   <link href="http://oremacs.com/2015/02/08/hydra-0.9.0/"/>
+   <updated>2015-02-08T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/02/08/hydra-0.9.0</id>
+   <content type="html">&lt;p&gt;I&amp;#39;ll just list the new features from the &lt;a href=&quot;https://github.com/abo-abo/hydra/releases/tag/0.9.0&quot;&gt;release notes&lt;/a&gt; here.&lt;/p&gt;
+
+&lt;h2 id=&quot;keyboard-quit&quot;&gt;Keyboard quit&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;hydra-keyboard-quit&lt;/code&gt; set to &lt;code&gt;&amp;quot;C-g&amp;quot;&lt;/code&gt; means that it&amp;#39;s possible to quit an amaranth Hydra
+with &lt;kbd&gt;C-g&lt;/kbd&gt;. You can customize this variable.&lt;/p&gt;
+
+&lt;h2 id=&quot;:pre-and-:post-refinement&quot;&gt;&lt;code&gt;:pre&lt;/code&gt; and &lt;code&gt;:post&lt;/code&gt; refinement&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;:post&lt;/code&gt; and &lt;code&gt;:pre&lt;/code&gt; keys in the body &lt;code&gt;PLIST&lt;/code&gt; can be either a single
+sexp or a function name. The function doesn&amp;#39;t need to be interactive.&lt;/p&gt;
+
+&lt;h2 id=&quot;support-for-local-hydra-heads-via-:bind-property&quot;&gt;Support for local Hydra heads via &lt;code&gt;:bind&lt;/code&gt; property&lt;/h2&gt;
+
+&lt;p&gt;Example:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-next-error&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-x&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;next-error&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;`&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;next-error&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;next&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;j&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;next-error&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;next&amp;quot;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:bind&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;k&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;previous-error&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;previous&amp;quot;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:bind&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;What it does:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;binds &lt;kbd&gt;C-x &amp;#96;&lt;/kbd&gt; to &lt;code&gt;next-error&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;does not bind &lt;kbd&gt;C-x j&lt;/kbd&gt; and &lt;kbd&gt;C-x k&lt;/kbd&gt;&lt;/li&gt;
+&lt;li&gt;you can still do &lt;kbd&gt;C-x &amp;#96;jjkk&lt;/kbd&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Thanks, &lt;a href=&quot;https://github.com/ffevotte&quot;&gt;@ffevotte&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;support-for-:bind-property-in-hydra-body&quot;&gt;Support for &lt;code&gt;:bind&lt;/code&gt; property in Hydra body&lt;/h2&gt;
+
+&lt;p&gt;The body, like the heads will recognize the &lt;code&gt;:bind&lt;/code&gt; property in &lt;code&gt;PLIST&lt;/code&gt;.
+The heads will inherit it, just like they do with &lt;code&gt;:color&lt;/code&gt;.
+The &lt;code&gt;:bind&lt;/code&gt; property can be nil or a lambda of &lt;code&gt;global-set-key&lt;/code&gt; format.&lt;/p&gt;
+
+&lt;p&gt;Example:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-goto&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;M-g&amp;quot;&lt;/span&gt;
+                      &lt;span class=&quot;nb&quot;&gt;:bind&lt;/span&gt;
+                      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cmd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;bind-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cmd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;g&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;goto-line&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;goto-line&amp;quot;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:bind&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;c&amp;quot;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;goto-char&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;goto-char&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Here, &lt;code&gt;bind-key&lt;/code&gt; will be used to bind &lt;code&gt;goto-char&lt;/code&gt; to &lt;kbd&gt;M-g c&lt;/kbd&gt;,
+since &lt;kbd&gt;c&lt;/kbd&gt; head has inherited body&amp;#39;s &lt;code&gt;:bind&lt;/code&gt; property. Note
+that since &lt;code&gt;bind-key&lt;/code&gt; is a macro, it was necessary to wrap it in a
+lambda.&lt;/p&gt;
+
+&lt;p&gt;However, &lt;code&gt;global-set-key&lt;/code&gt; will be used to bind &lt;code&gt;goto-line&lt;/code&gt; to &lt;kbd&gt;M-g g&lt;/kbd&gt;, this &lt;code&gt;:bind&lt;/code&gt; property
+was overridden in the &lt;kbd&gt;g&lt;/kbd&gt; head.&lt;/p&gt;
+
+&lt;p&gt;Since this commit, it&amp;#39;s not possible to pass a lambda instead of the
+whole &lt;code&gt;BODY&lt;/code&gt; argument, as was advertised before. Just put it on
+&lt;code&gt;:bind&lt;/code&gt; now.&lt;/p&gt;
+
+&lt;h2 id=&quot;hydra/body-will-pass-the-initial-current-prefix-arg-along&quot;&gt;&lt;code&gt;hydra/body&lt;/code&gt; will pass the initial &lt;code&gt;current-prefix-arg&lt;/code&gt; along&lt;/h2&gt;
+
+&lt;p&gt;Example:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-z&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-vi&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+   &lt;span class=&quot;s&quot;&gt;&amp;quot;vi&amp;quot;&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;l&amp;quot;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;forward-char&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;q&amp;quot;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;quit&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now, &lt;kbd&gt;C-u C-z l&lt;/kbd&gt; will result in &lt;code&gt;(forward-char 4)&lt;/code&gt;. All the other &lt;kbd&gt;l&lt;/kbd&gt;
+will normally call &lt;code&gt;(forward-char 1)&lt;/code&gt;, unless an additional prefix is given.  The previous
+behavior allowed only for &lt;kbd&gt;C-z C-u l&lt;/kbd&gt; to get &lt;code&gt;(forward-char 4)&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;allow-a-sexp-as-head&amp;#39;s-cmd-parameter&quot;&gt;Allow a sexp as head&amp;#39;s CMD parameter&lt;/h2&gt;
+
+&lt;p&gt;Example:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-launcher&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;s&quot;&gt;&amp;quot;Launch&amp;quot;&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;h&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;man&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;man&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;r&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;browse-url&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;http://www.reddit.com/r/emacs/&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;reddit&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;w&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;browse-url&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;http://www.emacswiki.org/&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;emacswiki&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;s&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;shell&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;shell&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;q&amp;quot;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;cancel&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-c r&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;hydra-launcher/body&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Here, &lt;kbd&gt;r&lt;/kbd&gt; and &lt;kbd&gt;w&lt;/kbd&gt; heads are using this feature.
+Here&amp;#39;s what will be generated, if you&amp;#39;re interested:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-launcher/lambda-w&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Create a hydra with no body and the heads:&lt;/span&gt;
+
+&lt;span class=&quot;s&quot;&gt;\&amp;quot;h\&amp;quot;:    `man&amp;#39;,&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;\&amp;quot;r\&amp;quot;:    `(browse-url \&amp;quot;http://www.reddit.com/r/emacs/\&amp;quot;)&amp;#39;,&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;\&amp;quot;w\&amp;quot;:    `(browse-url \&amp;quot;http://www.emacswiki.org/\&amp;quot;)&amp;#39;,&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;\&amp;quot;s\&amp;quot;:    `shell&amp;#39;,&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;\&amp;quot;q\&amp;quot;:    `nil&amp;#39;&lt;/span&gt;
+
+&lt;span class=&quot;s&quot;&gt;The body can be accessed via `hydra-launcher/body&amp;#39;.&lt;/span&gt;
+
+&lt;span class=&quot;s&quot;&gt;Call the head: `(browse-url \&amp;quot;http://www.emacswiki.org/\&amp;quot;)&amp;#39;.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hydra-disable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;catch&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;quote&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-disable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;call-interactively&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;browse-url&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;http://www.emacswiki.org/&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;obsolete-declarations&quot;&gt;Obsolete declarations&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;hydra-create&lt;/code&gt; and all old examples in hydra-examples.el are now obsolete.
+You can still use them for a short while, but they will be removed soon.&lt;/p&gt;
+
+&lt;p&gt;You should take the time to switch from &lt;code&gt;hydra-create&lt;/code&gt; to &lt;code&gt;defhydra&lt;/code&gt;. All the old examples
+are provided in the new style in hydra-examples.el. However, they will not be evaluated
+through &lt;code&gt;(require &amp;#39;hydra-examples)&lt;/code&gt; unless you &lt;code&gt;(setq hydra-examples-verbatim t)&lt;/code&gt;
+beforehand.  This is because I have no idea what kind of bindings will work for you, you
+should decide yourself.  But I am providing you with a template. The number of examples
+has also grown to six.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>A new Hydra demo on Youtube</title>
