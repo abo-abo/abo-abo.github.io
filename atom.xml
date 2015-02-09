@@ -4,13 +4,78 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-02-08T15:58:36+01:00</updated>
+ <updated>2015-02-09T17:02:25+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>ido-vertical - like ido, but vertical!</title>
+   <link href="http://oremacs.com/2015/02/09/ido-vertical/"/>
+   <updated>2015-02-09T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/02/09/ido-vertical</id>
+   <content type="html">&lt;h2 id=&quot;intro&quot;&gt;Intro&lt;/h2&gt;
+
+&lt;p&gt;As I was releasing &lt;a href=&quot;https://github.com/abo-abo/lispy/releases/tag/0.23.0&quot;&gt;lispy 0.23.0&lt;/a&gt;, which added
+an option for methods of jumping to semantic tags other than &lt;code&gt;helm&lt;/code&gt;, I&amp;#39;ve discovered
+&lt;a href=&quot;https://github.com/gempesaw/ido-vertical-mode.el&quot;&gt;ido-vertical-mode&lt;/a&gt;. I also made some changes to
+it, so now it looks like this:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/lispy-ido-vertical.png&quot; alt=&quot;lispy-ido-vertical&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;The changes are:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;the current text is highlighted in all matches&lt;/li&gt;
+&lt;li&gt;the current number of total matches is displayed in the first line&lt;/li&gt;
+&lt;li&gt;I also customized the face for the first match and the only match (you can&amp;#39;t see that one here)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Helm is still the big gun when it comes to completing lists with hundreds of candidates,
+but with the above changes, &lt;code&gt;ido-vertical-mode&lt;/code&gt; comes close to what I need when jumping to tags.
+The only thing missing now is that the selected candidate is always on the first line,
+even when I press &lt;kbd&gt;C-n&lt;/kbd&gt;, which isn&amp;#39;t very intuitive.&lt;/p&gt;
+
+&lt;h2 id=&quot;stuff-related-to-lispy-release&quot;&gt;Stuff related to &lt;code&gt;lispy&lt;/code&gt; release&lt;/h2&gt;
+
+&lt;h3 id=&quot;other-completion-methods-available-in-lispy-goto&quot;&gt;Other completion methods available in &lt;code&gt;lispy-goto&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;Depending on the modes you have enabled, you can complete with:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;helm&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ido&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ido-vertical-mode&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;icomplete-mode&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;icy-mode&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;no mode, just plain completion&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;lispy-eval-other-window-now-uses-ace-window&quot;&gt;&lt;code&gt;lispy-eval-other-window&lt;/code&gt; now uses &lt;code&gt;ace-window&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;This function bound to &lt;kbd&gt;p&lt;/kbd&gt; is very convenient for debugging
+Elisp: it allows you to eval the current sexp in the context of other
+window. This is very powerful: you can run and debug your function as
+you write it, statement by statement. Previously, this setup was
+viable only in a two-window split, because using &lt;code&gt;other-window&lt;/code&gt;, it
+wasn&amp;#39;t predictable in which window the eval would take place.  Now, if
+there are more than two windows, &lt;code&gt;aw-select&lt;/code&gt; will select the window
+for the eval.  This selection will be remembered, so you don&amp;#39;t have to
+select for the following evals, unless the window configuration
+changes.&lt;/p&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;There are more changes that you can find in
+&lt;a href=&quot;https://github.com/abo-abo/lispy/releases/tag/0.23.0&quot;&gt;the release notes&lt;/a&gt;
+if you&amp;#39;re interested. You can find the new &lt;code&gt;ido-vertical&lt;/code&gt; stuff in
+&lt;a href=&quot;https://github.com/abo-abo/ido-vertical-mode.el&quot;&gt;my fork&lt;/a&gt;, until it
+gets merged.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Hydra 0.9.0 is out</title>

@@ -11,7 +11,7 @@
 
   <title>
     
-      Do things after selecting window &middot; (or emacs
+      ido-vertical - like ido, but vertical! &middot; (or emacs
     
   </title>
 
@@ -196,67 +196,65 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Do things after selecting window</h1>
-  <span class="post-date">24 Jan 2015</span>
-  <p>I saw this question today at Stack Overflow -
-<a href="http://stackoverflow.com/q/28124095/1350992">Emacs: How to enable toolbar mode and menubar mode only under a certain mode?</a>.
-Myself, I never use the menubar or the toolbar. But maybe it&#39;s just
-because it&#39;s useless in the modes to which I&#39;m used to. What if there
-was an option to have the menu bar <em>on</em> just for a few select
-modes?  For instance, if I decided that I want to learn Haskell
-tomorrow, I wouldn&#39;t mind to have the menu bar on for a while,
-especially if there was some useful stuff there in the menu.</p>
+  <h1 class="post-title">ido-vertical - like ido, but vertical!</h1>
+  <span class="post-date">09 Feb 2015</span>
+  <h2 id="intro">Intro</h2>
 
-<h2 id="the-code">The Code</h2>
+<p>As I was releasing <a href="https://github.com/abo-abo/lispy/releases/tag/0.23.0">lispy 0.23.0</a>, which added
+an option for methods of jumping to semantic tags other than <code>helm</code>, I&#39;ve discovered
+<a href="https://github.com/gempesaw/ido-vertical-mode.el">ido-vertical-mode</a>. I also made some changes to
+it, so now it looks like this:</p>
 
-<p>I&#39;m not aware of a convenient hook for this job; I tried
-<code>after-change-major-mode-hook</code>, and it doesn&#39;t work when switching
-windows. The universal <code>post-command-hook</code> would be totally lame for this task.</p>
+<p><img src="/download/lispy-ido-vertical.png" alt="lispy-ido-vertical"></p>
 
-<p>Then it occurred to me, that <code>select-window</code> <em>has</em> to be called
-eventually in most circumstances.  Even
-<a href="https://github.com/abo-abo/ace-window">ace-window</a> calls
-<code>select-window</code>.</p>
+<p>The changes are:</p>
 
-<p>This is what I came up with so far:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">defvar</span> <span class="nv">menubar-last</span>
-  <span class="p">(</span><span class="nv">make-ring</span> <span class="mi">20</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">ring-insert</span> <span class="nv">menubar-last</span> <span class="s">&quot;dummy&quot;</span><span class="p">)</span>
+<ul>
+<li>the current text is highlighted in all matches</li>
+<li>the current number of total matches is displayed in the first line</li>
+<li>I also customized the face for the first match and the only match (you can&#39;t see that one here)</li>
+</ul>
 
-<span class="p">(</span><span class="nb">defadvice</span> <span class="nf">select-window</span> <span class="p">(</span><span class="nv">after</span> <span class="nv">select-window-menubar</span> <span class="nv">activate</span><span class="p">)</span>
-  <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nf">equal</span> <span class="p">(</span><span class="nf">buffer-name</span><span class="p">)</span> <span class="p">(</span><span class="nv">ring-ref</span> <span class="nv">menubar-last</span> <span class="mi">0</span><span class="p">))</span>
-    <span class="p">(</span><span class="nv">ring-insert</span> <span class="nv">menubar-last</span> <span class="p">(</span><span class="nf">buffer-name</span><span class="p">))</span>
-    <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">yes-or-no</span>
-           <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">memq</span> <span class="nv">major-mode</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">r-mode</span> <span class="nv">lisp-interaction-mode</span><span class="p">))</span>
-               <span class="mi">1</span> <span class="mi">-1</span><span class="p">)))</span>
-      <span class="p">(</span><span class="nv">menu-bar-mode</span> <span class="nv">yes-or-no</span><span class="p">)</span>
-      <span class="p">(</span><span class="nv">tool-bar-mode</span> <span class="nv">yes-or-no</span><span class="p">))))</span>
-</code></pre></div>
-<h2 id="the-ring-trickery">The Ring trickery</h2>
+<p>Helm is still the big gun when it comes to completing lists with hundreds of candidates,
+but with the above changes, <code>ido-vertical-mode</code> comes close to what I need when jumping to tags.
+The only thing missing now is that the selected candidate is always on the first line,
+even when I press <kbd>C-n</kbd>, which isn&#39;t very intuitive.</p>
 
-<p>It&#39;s necessary at least for <code>magit</code>. Doing, for instance,
-<kbd>ll</kbd> operation switches windows many times.
-So I added a check that the current buffer isn&#39;t selected twice.</p>
+<h2 id="stuff-related-to-lispy-release">Stuff related to <code>lispy</code> release</h2>
 
-<p>In Emacs, a ring is like a stack with a limited length: you push onto
-the head, and if the stack becomes too large, the stuff gets removed
-from the tail. Perfect for debugging this code, since I don&#39;t care
-what happened 20 window switches ago, I&#39;m only interested in the most
-recent state. One small annoyance is that the following code will
-throw, if the ring is empty:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">ring-ref</span> <span class="nv">menubar-last</span> <span class="mi">0</span><span class="p">)</span>
-</code></pre></div>
-<p>I would prefer if it just returned <code>nil</code> instead. Hence the trick of
-initializing <code>menubar-last</code> with a dummy item.  Note that this
-annoyance propagates to other areas: <code>(current-kill 0)</code> will throw if
-you haven&#39;t yet copied text since Emacs started.</p>
+<h3 id="other-completion-methods-available-in-lispy-goto">Other completion methods available in <code>lispy-goto</code></h3>
+
+<p>Depending on the modes you have enabled, you can complete with:</p>
+
+<ul>
+<li><code>helm</code></li>
+<li><code>ido</code></li>
+<li><code>ido-vertical-mode</code></li>
+<li><code>icomplete-mode</code></li>
+<li><code>icy-mode</code></li>
+<li>no mode, just plain completion</li>
+</ul>
+
+<h3 id="lispy-eval-other-window-now-uses-ace-window"><code>lispy-eval-other-window</code> now uses <code>ace-window</code></h3>
+
+<p>This function bound to <kbd>p</kbd> is very convenient for debugging
+Elisp: it allows you to eval the current sexp in the context of other
+window. This is very powerful: you can run and debug your function as
+you write it, statement by statement. Previously, this setup was
+viable only in a two-window split, because using <code>other-window</code>, it
+wasn&#39;t predictable in which window the eval would take place.  Now, if
+there are more than two windows, <code>aw-select</code> will select the window
+for the eval.  This selection will be remembered, so you don&#39;t have to
+select for the following evals, unless the window configuration
+changes.</p>
 
 <h2 id="outro">Outro</h2>
 
-<p>I&#39;m not sure if this code is more annoying than useful, but, at least,
-I learned something new while writing it, and I hope you did too.  If
-you know of a better way to accomplish the original task, please do
-share.</p>
+<p>There are more changes that you can find in
+<a href="https://github.com/abo-abo/lispy/releases/tag/0.23.0">the release notes</a>
+if you&#39;re interested. You can find the new <code>ido-vertical</code> stuff in
+<a href="https://github.com/abo-abo/ido-vertical-mode.el">my fork</a>, until it
+gets merged.</p>
 
 </div>
 
@@ -275,16 +273,6 @@ share.</p>
     
       <li>
         <h3>
-          <!-- <a href="//2015/02/09/ido-vertical/"> -->
-          <a href="/2015/02/09/ido-vertical/">
-            ido-vertical - like ido, but vertical!
-            <small>09 Feb 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
           <!-- <a href="//2015/02/08/hydra-0.9.0/"> -->
           <a href="/2015/02/08/hydra-0.9.0/">
             Hydra 0.9.0 is out
@@ -299,6 +287,16 @@ share.</p>
           <a href="/2015/02/07/hydra-on-youtubes/">
             A new Hydra demo on Youtube
             <small>07 Feb 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/02/06/the-synergy/"> -->
+          <a href="/2015/02/06/the-synergy/">
+            The Elisp Synergy
+            <small>06 Feb 2015</small>
           </a>
         </h3>
       </li>
