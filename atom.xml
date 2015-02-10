@@ -4,13 +4,61 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-02-09T17:02:25+01:00</updated>
+ <updated>2015-02-10T19:07:23+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Easy ido improvement</title>
+   <link href="http://oremacs.com/2015/02/10/ido-backspace/"/>
+   <updated>2015-02-10T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/02/10/ido-backspace</id>
+   <content type="html">&lt;p&gt;Heh, I guess I was so busy at work that I missed the opportunity to
+make an especially good post for the 50-post landmark. At least
+according to &lt;kbd&gt;M-=&lt;/kbd&gt; (&lt;code&gt;count-words-region&lt;/code&gt;) in my &lt;strong&gt;_posts&lt;/strong&gt;&amp;#39;
+&lt;code&gt;dired&lt;/code&gt; buffer, this is the 53rd post.&lt;/p&gt;
+
+&lt;h2 id=&quot;ido-backspace&quot;&gt;&lt;code&gt;ido-backspace&lt;/code&gt;&lt;/h2&gt;
+
+&lt;p&gt;This echoes to my very second post,
+&lt;a href=&quot;/2014/12/21/helm-backspace/&quot;&gt;easy helm improvement&lt;/a&gt;,
+which was about implementing a similar function for &lt;code&gt;helm&lt;/code&gt;.
+So here it is:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ido-mode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;delsel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ido-backspace&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Forward to `backward-delete-char&amp;#39;.&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;On error (read-only), quit without selecting.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;condition-case&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;backward-delete-char&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ne&quot;&gt;error&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;minibuffer-keyboard-quit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ido-common-completion-map&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;DEL&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ido-backspace&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;With this setup, when e.g. calling &lt;code&gt;ido-switch-buffer&lt;/code&gt;, you can cancel
+with &lt;kbd&gt;DEL&lt;/kbd&gt;.  This, of course, will also work for
+&lt;a href=&quot;https://github.com/nonsequitur/smex&quot;&gt;smex&lt;/a&gt; and
+&lt;a href=&quot;https://github.com/magit/magit&quot;&gt;some&lt;/a&gt;
+&lt;a href=&quot;https://github.com/abo-abo/lispy&quot;&gt;other&lt;/a&gt; packages that allow for
+&lt;code&gt;ido&lt;/code&gt; completion:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;magit-completing-read-function&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;#&amp;#39;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;magit-ido-completing-read&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;lispy-completion-method&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ido&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Note that the &lt;code&gt;define-key&lt;/code&gt; part of the code takes an advantage of a
+recent patch to &lt;code&gt;ido&lt;/code&gt; that&amp;#39;s available in the trunk.  You can find the
+old way of binding keys for &lt;code&gt;ido&lt;/code&gt; in an earlier post,
+&lt;a href=&quot;/2015/01/09/ido-find-file-tilde/&quot;&gt;tilde in ido-find-file&lt;/a&gt;.
+That post actually played a small role in speeding up the patch, for
+which we should thank &lt;a href=&quot;https://github.com/tarsius&quot;&gt;@tarsius&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Note that this behavior will not affect &lt;code&gt;ido-find-file&lt;/code&gt;, since it has its own map.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>ido-vertical - like ido, but vertical!</title>

@@ -199,6 +199,70 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/01/26/occur-dwim/">
+        occur-dwim (Do What I Mean)
+      </a>
+    </h1>
+
+    <span class="post-date">26 Jan 2015</span>
+
+    <p>I&#39;d like to share a little snippet that I like to use instead of a
+plain <kbd>M-s o</kbd> (<code>occur</code>).</p>
+
+<h2 id="smarter-than-the-average-occur">smarter-than-the-average-occur</h2>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">occur-dwim</span> <span class="p">()</span>
+  <span class="s">&quot;Call `occur&#39; with a sane default.&quot;</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">push</span> <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">region-active-p</span><span class="p">)</span>
+            <span class="p">(</span><span class="nf">buffer-substring-no-properties</span>
+             <span class="p">(</span><span class="nf">region-beginning</span><span class="p">)</span>
+             <span class="p">(</span><span class="nf">region-end</span><span class="p">))</span>
+          <span class="p">(</span><span class="nv">thing-at-point</span> <span class="ss">&#39;symbol</span><span class="p">))</span>
+        <span class="nv">regexp-history</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">call-interactively</span> <span class="ss">&#39;occur</span><span class="p">))</span>
+</code></pre></div>
+<p>It will offer as the default candidate:</p>
+
+<ul>
+<li>the current region, if it&#39;s active</li>
+<li>the current symbol, otherwise</li>
+</ul>
+
+<p>It&#39;s pretty good, since I actually want the default candidate in 95%
+of the cases.  Some other functions, such as <code>rgrep</code> are smart like
+this out-of-the-box.</p>
+
+<h2 id="a-hydra-that-goes-nicely-with-occur">A Hydra that goes nicely with <code>occur</code></h2>
+
+<p>Since <code>occur</code>, like some other functions (<code>grep</code>, <code>rgrep</code>, <code>compile</code>),
+works with <code>next-error</code>, it&#39;s possible to use this
+<a href="https://github.com/abo-abo/hydra">Hydra</a> to navigate the <code>occur</code>
+matches:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">hydra-create</span> <span class="s">&quot;M-g&quot;</span>
+  <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;h&quot;</span> <span class="nv">first-error</span> <span class="s">&quot;first&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">next-error</span> <span class="s">&quot;next&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="s">&quot;k&quot;</span> <span class="nv">previous-error</span> <span class="s">&quot;prev&quot;</span><span class="p">)))</span>
+</code></pre></div>
+<p>Hydra was introduced in an
+<a href="/2015/01/20/introducing-hydra/">earlier post</a>,
+and is available in GNU ELPA.</p>
+
+<h2 id="what-goes-around-comes-around">What goes around comes around</h2>
+
+<p>I usually do a quick internet search to see where I got the code that
+I&#39;m posting here, reason being that it&#39;s nice to list the source, as
+well as there could be more advanced stuff out there on the same
+topic.</p>
+
+<p>I saw a few results for <code>&quot;occur-dwim&quot;</code> so I thought that I just
+copy-pasted it from somewhere. Slight disappointment turned into a
+small sense of pride, when I found that the source of the copy-pastes
+was my old Stack Overflow answer:)</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/01/25/exploring-emacs-packages/">
         Exploring Emacs packages
       </a>
@@ -524,86 +588,6 @@ people that protest against this change.  Let me know if you would
 like to have this option for your Elisp setups.  And remember that you
 can try out the patch if you&#39;re familiar with
 <a href="http://www.emacswiki.org/emacs/BuildingEmacs">building Emacs from source</a>.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/01/21/dired-shortcuts/">
-        Even more dired key bindings
-      </a>
-    </h1>
-
-    <span class="post-date">21 Jan 2015</span>
-
-    <p>I&#39;ve posted about <code>dired</code> quite a few times now.  Below, I&#39;ll do a
-short review of the old bindings and add a few remaining recipes from
-my <code>dired.el</code>.</p>
-
-<h2 id="old-stuff">Old stuff</h2>
-
-<ul>
-<li>Binding <kbd>r</kbd> to <code>dired-start-process</code> is covered <a href="/2015/01/04/dired-nohup/">here</a>.</li>
-<li>Binding <kbd>e</kbd> to <code>ediff-files</code> is mentioned <a href="/2015/01/17/setting-up-ediff/">here</a>.</li>
-<li>Binding <kbd>z</kbd> to <code>dired-get-size</code> is covered <a href="/2015/01/12/dired-file-size/">here</a>.</li>
-<li>Binding <kbd>&#96;</kbd> to <code>dired-open-term</code> is covered <a href="/2015/01/10/dired-ansi-term/">here</a>.</li>
-</ul>
-
-<h2 id="jump-to-a-file-with-ido">Jump to a file with <code>ido</code></h2>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="s">&quot;i&quot;</span> <span class="ss">&#39;ido-find-file</span><span class="p">)</span>
-</code></pre></div>
-<p>I use this one quite frequently: <kbd>i</kbd> is somehow mnemonic to
-<kbd>C-i</kbd>, which means completion.  Remember that you can select
-the current candidate with <kbd>C-m</kbd> and the current text
-(usually to create a new file) with <kbd>C-j</kbd>.</p>
-
-<h2 id="move-up-and-down">Move up and down</h2>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="s">&quot;j&quot;</span> <span class="ss">&#39;dired-next-line</span><span class="p">)</span>
-<span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="s">&quot;k&quot;</span> <span class="ss">&#39;dired-previous-line</span><span class="p">)</span>
-</code></pre></div>
-<p>As I&#39;ve mentioned before, this is my standard recipe for all modes
-that don&#39;t self-insert.</p>
-
-<h2 id="flag-garbage-files">Flag garbage files</h2>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;%^&quot;</span><span class="p">)</span> <span class="ss">&#39;dired-flag-garbage-files</span><span class="p">)</span>
-</code></pre></div>
-<p>Huh, I always thought this was the default binding. I have no idea
-where this came from, but I use this plus <kbd>x</kbd> to get rid of
-the garbage produced by a LaTeX run:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">dired-garbage-files-regexp</span>
-      <span class="s">&quot;\\.idx\\|\\.run\\.xml$\\|\\.bbl$\\|\\.bcf$\\|.blg$\\|-blx.bib$\\|.nav$\\|.snm$\\|.out$\\|.synctex.gz$\\|\\(?:\\.\\(?:aux\\|bak\\|dvi\\|log\\|orig\\|rej\\|toc\\|pyg\\)\\)\\&#39;&quot;</span><span class="p">)</span>
-</code></pre></div>
-<h2 id="emacs&#39;-adaptation-of-find">Emacs&#39; adaptation of <code>find</code></h2>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="s">&quot;F&quot;</span> <span class="ss">&#39;find-name-dired</span><span class="p">)</span>
-</code></pre></div>
-<p>This little function is essential if you want to do perform some
-operation on all files in the current directory and its sub
-directories that match a pattern. Basically the same thing that you
-would do with the UNIX <code>find</code>, just better.</p>
-
-<h2 id="ignore-unimportant-files">Ignore unimportant files</h2>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-o&quot;</span><span class="p">)</span> <span class="ss">&#39;dired-omit-mode</span><span class="p">)</span>
-</code></pre></div>
-<p>This will toggle the display of unimportant files, like:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">dired-omit-files</span> <span class="s">&quot;\\(?:.*\\.\\(?:aux\\|log\\|synctex\\.gz\\|run\\.xml\\|bcf\\|am\\|in\\)\\&#39;\\)\\|^\\.\\|-blx\\.bib&quot;</span><span class="p">)</span>
-</code></pre></div>
-<h2 id="move-to-the-parent-directory">Move to the parent directory</h2>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="s">&quot;a&quot;</span>
-    <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span>
-      <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-      <span class="p">(</span><span class="nv">find-alternate-file</span> <span class="s">&quot;..&quot;</span><span class="p">)))</span>
-</code></pre></div>
-<p>There probably is a default function that does this. I&#39;ve been using
-this one for years, probably because it reuses the current <code>dired</code>
-buffer of opening the parent directory.</p>
-
-<h2 id="outro">Outro</h2>
-
-<p>Phew, that&#39;s a lot of bindings. I don&#39;t necessarily encourage you to
-use the same bindings as me; I just want to bring your attention to
-some of these functions, so that you can work them into your workflow.
-If you notice that I&#39;m using some obsolete stuff, do let me know, I&#39;m
-always looking to improve.</p>
 
   </div>
   

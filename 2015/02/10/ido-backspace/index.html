@@ -11,7 +11,7 @@
 
   <title>
     
-      Monkeying around with JavaScript &middot; (or emacs
+      Easy ido improvement &middot; (or emacs
     
   </title>
 
@@ -196,70 +196,48 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Monkeying around with JavaScript</h1>
-  <span class="post-date">29 Dec 2014</span>
-  <h2 id="exciting-encounter">Exciting encounter</h2>
+  <h1 class="post-title">Easy ido improvement</h1>
+  <span class="post-date">10 Feb 2015</span>
+  <p>Heh, I guess I was so busy at work that I missed the opportunity to
+make an especially good post for the 50-post landmark. At least
+according to <kbd>M-=</kbd> (<code>count-words-region</code>) in my <strong>_posts</strong>&#39;
+<code>dired</code> buffer, this is the 53rd post.</p>
 
-<p>Recently, I happened upon a wonderful blog called
-<a href="http://axisofeval.blogspot.nl">The Axis of Eval</a>.  I knew that I&#39;d
-love it just when I read the name. <a href="/">(or emacs</a> pales in comparison,
-but I couldn&#39;t just sit on my hands for months or years while thinking
-up a perfect blog name. If you think of a blog name as awesome as &quot;The
-Axis of Eval&quot; and are willing to let me use it, I&#39;ll probably make the
-switch.</p>
+<h2 id="ido-backspace"><code>ido-backspace</code></h2>
 
-<p>The blog did not disappoint, featuring gems like this:</p>
-
-<blockquote>
-<p>In the Lisp world, new languages are built by combining large,
-battle-tested building blocks, and polishing or updating them when
-needed, instead of starting over from toothpicks and double-sided
-duct tape. A large Lisp like Common Lisp is like a toolchain of
-decades-old tools that have proven their worth, and have been
-codified in standards, folklore, and implementations.</p>
-</blockquote>
-
-<p>The only thing in the way of extracting information and enjoyment from
-this blog was the horrendous theme of black background, white
-foreground and magenta links. Plus the RSS was kind of quirky, and I
-couldn&#39;t just feed all of it into
-<a href="https://github.com/skeeto/elfeed">Elfeed</a>.</p>
-
-<h2 id="greasemonkey-to-the-rescue!">Greasemonkey to the rescue!</h2>
-
-<p>In the previous post I&#39;ve mentioned that, in addition to using
-<a href="http://www.gnu.org/software/emacs/">the best editor</a>, I&#39;m using
-<a href="https://www.mozilla.org/en-US/firefox/new/">the best browser</a>.  Well,
-this particular best browser has an extension called
-<a href="https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/">Greasemonkey</a>
-that allows you to automatically run your own JavaScript on certain
-websites.</p>
-
-<p>I&#39;m not very proficient in JavaScript, the following code I just found
-by searching around. The part to note is the <code>@include</code> - the pattern
-of website names for which this script should be run automatically.</p>
-<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="c1">// ==UserScript==</span>
-<span class="c1">// @name        background</span>
-<span class="c1">// @namespace   abo-abo</span>
-<span class="c1">// @include     http://axisofeval.blogspot.nl/*</span>
-<span class="c1">// @version     1</span>
-<span class="c1">// @grant       none</span>
-<span class="c1">// ==/UserScript==</span>
-<span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-    <span class="nb">document</span>
-        <span class="p">.</span><span class="nx">body</span>
-        <span class="p">.</span><span class="nx">setAttribute</span><span class="p">(</span><span class="s2">&quot;style&quot;</span><span class="p">,</span>
-                      <span class="s2">&quot;background-color: #ffffff; color:#000&quot;</span><span class="p">);</span>
-    <span class="kd">var</span> <span class="nx">nodesArray</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementsByTagName</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">);</span>
-    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">nodesArray</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">nodesArray</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">style</span><span class="p">.</span><span class="nx">color</span> <span class="o">=</span> <span class="s1">&#39;red&#39;</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">})();</span>
+<p>This echoes to my very second post,
+<a href="/2014/12/21/helm-backspace/">easy helm improvement</a>,
+which was about implementing a similar function for <code>helm</code>.
+So here it is:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">ido-mode</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;delsel</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">ido-backspace</span> <span class="p">()</span>
+  <span class="s">&quot;Forward to `backward-delete-char&#39;.</span>
+<span class="s">On error (read-only), quit without selecting.&quot;</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">condition-case</span> <span class="no">nil</span>
+      <span class="p">(</span><span class="nv">backward-delete-char</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="p">(</span><span class="ne">error</span>
+     <span class="p">(</span><span class="nv">minibuffer-keyboard-quit</span><span class="p">))))</span>
+<span class="p">(</span><span class="nf">define-key</span> <span class="nv">ido-common-completion-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;DEL&quot;</span><span class="p">)</span> <span class="ss">&#39;ido-backspace</span><span class="p">)</span>
 </code></pre></div>
-<p>I can barely stand to look at it. How could you take Scheme and turn
-it into this monstrosity? Such a shame. But it works, so I guess
-everyone should learn JavaScript. All hail the mighty
-<s>HypnoToad</s> JavaScript!</p>
+<p>With this setup, when e.g. calling <code>ido-switch-buffer</code>, you can cancel
+with <kbd>DEL</kbd>.  This, of course, will also work for
+<a href="https://github.com/nonsequitur/smex">smex</a> and
+<a href="https://github.com/magit/magit">some</a>
+<a href="https://github.com/abo-abo/lispy">other</a> packages that allow for
+<code>ido</code> completion:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">magit-completing-read-function</span> <span class="nf">#&#39;</span><span class="nv">magit-ido-completing-read</span><span class="p">)</span>
+<span class="p">(</span><span class="k">setq</span> <span class="nv">lispy-completion-method</span> <span class="ss">&#39;ido</span><span class="p">)</span>
+</code></pre></div>
+<p>Note that the <code>define-key</code> part of the code takes an advantage of a
+recent patch to <code>ido</code> that&#39;s available in the trunk.  You can find the
+old way of binding keys for <code>ido</code> in an earlier post,
+<a href="/2015/01/09/ido-find-file-tilde/">tilde in ido-find-file</a>.
+That post actually played a small role in speeding up the patch, for
+which we should thank <a href="https://github.com/tarsius">@tarsius</a>.</p>
+
+<p>Note that this behavior will not affect <code>ido-find-file</code>, since it has its own map.</p>
 
 </div>
 
@@ -278,16 +256,6 @@ everyone should learn JavaScript. All hail the mighty
     
       <li>
         <h3>
-          <!-- <a href="//2015/02/10/ido-backspace/"> -->
-          <a href="/2015/02/10/ido-backspace/">
-            Easy ido improvement
-            <small>10 Feb 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
           <!-- <a href="//2015/02/09/ido-vertical/"> -->
           <a href="/2015/02/09/ido-vertical/">
             ido-vertical - like ido, but vertical!
@@ -302,6 +270,16 @@ everyone should learn JavaScript. All hail the mighty
           <a href="/2015/02/08/hydra-0.9.0/">
             Hydra 0.9.0 is out
             <small>08 Feb 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/02/07/hydra-on-youtubes/"> -->
+          <a href="/2015/02/07/hydra-on-youtubes/">
+            A new Hydra demo on Youtube
+            <small>07 Feb 2015</small>
           </a>
         </h3>
       </li>
