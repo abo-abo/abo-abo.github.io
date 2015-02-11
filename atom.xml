@@ -4,13 +4,198 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-02-10T19:07:23+01:00</updated>
+ <updated>2015-02-11T20:52:54+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Elisp newbie-style</title>
+   <link href="http://oremacs.com/2015/02/11/elisp-newbie-style/"/>
+   <updated>2015-02-11T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/02/11/elisp-newbie-style</id>
+   <content type="html">&lt;p&gt;I&amp;#39;ve been cleaning up my .emacs lately, with the intention to put my
+whole config on Github. Today, I&amp;#39;ll show you a useful function for
+describing the current buffer&amp;#39;s key bindings. The function will
+generate something like this (with all letters, of course):&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;c1&quot;&gt;;; (global-set-key (kbd &amp;quot;a&amp;quot;) &amp;#39;self-insert-command)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;;; ...&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;;; (global-set-key (kbd &amp;quot;C-b&amp;quot;) &amp;#39;backward-char)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;;; ...&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;;; (global-set-key (kbd &amp;quot;M-c&amp;quot;) &amp;#39;subword-capitalize)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;;; ...&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;;; (global-set-key (kbd &amp;quot;C-M-d&amp;quot;) &amp;#39;down-list)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;;; ...&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;;; (global-set-key (kbd &amp;quot;η&amp;quot;) &amp;#39;save-and-switch-buffer)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;;; ...&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;;; (global-set-key (kbd &amp;quot;C-θ&amp;quot;) &amp;#39;ins-single-quotes)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;;; ...&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;;; (global-set-key (kbd &amp;quot;M-ι&amp;quot;) &amp;#39;nil)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;;; ...&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;;; (global-set-key (kbd &amp;quot;C-M-κ&amp;quot;) &amp;#39;nil)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;First, I&amp;#39;ll show you how I wrote it down as a newbie, and
+then today&amp;#39;s corrections with some remarks.&lt;/p&gt;
+
+&lt;h2 id=&quot;old-style&quot;&gt;Old style&lt;/h2&gt;
+
+&lt;p&gt;Please don&amp;#39;t try this at home:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;c1&quot;&gt;;;;###autoload&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;keys-latin&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;loop&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;?a&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;?z&lt;/span&gt;
+     &lt;span class=&quot;nv&quot;&gt;collect&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;;;;###autoload&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;keys-greek&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;loop&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;α&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;ω&lt;/span&gt;
+     &lt;span class=&quot;nv&quot;&gt;collect&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;dash&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;;;;###autoload&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;keys-describe-prefix&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;letters&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;prefix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;-&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;letters&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;mapcar&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;letter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;concat&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;prefix&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;letter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;mapcar&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+              &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;cons&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;key&lt;/span&gt;
+                    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;prin1-to-string&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;key-binding&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;mapcar&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;binding&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+              &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;concat&lt;/span&gt;
+               &lt;span class=&quot;s&quot;&gt;&amp;quot;;; (global-set-key (kbd \&amp;quot;&amp;quot;&lt;/span&gt;
+               &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;car&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;binding&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+               &lt;span class=&quot;s&quot;&gt;&amp;quot;\&amp;quot;) &amp;#39;&amp;quot;&lt;/span&gt;
+               &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;cdr&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;binding&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+               &lt;span class=&quot;s&quot;&gt;&amp;quot;)\n&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;apply&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;#&amp;#39;concat&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;;;;###autoload&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;keys-describe-prefixes&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;with-output-to-temp-buffer&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;*Bindings*&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;mapcar&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;f-letters&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;mapcar&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;prefix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;princ&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;keys-describe-prefix&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;f-letters&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;prefix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+                 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;princ&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;\n\n&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+               &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;M-&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-M-&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;list&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;keys-latin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;keys-greek&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;corrections&quot;&gt;Corrections&lt;/h2&gt;
+
+&lt;h3 id=&quot;redundant-autoloads&quot;&gt;Redundant autoloads&lt;/h3&gt;
+
+&lt;p&gt;Since the entry point of the whole thing is &lt;code&gt;keys-describe-prefixes&lt;/code&gt;, only it needs to be autoloaded.
+Once an autoloaded function is called, it will load the whole buffer. So if e.g. &lt;code&gt;keys-latin&lt;/code&gt; is
+not being used anywhere else outside this file, it doesn&amp;#39;t need an autoload.&lt;/p&gt;
+
+&lt;h3 id=&quot;redundant-functions&quot;&gt;Redundant functions&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;keys-latin&lt;/code&gt; and &lt;code&gt;keys-greek&lt;/code&gt; are actually very small and not used anywhere else. It might be better
+to just inline them into &lt;code&gt;keys-describe-prefixes&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;redundant-libraries&quot;&gt;Redundant libraries&lt;/h3&gt;
+
+&lt;p&gt;Here, &lt;code&gt;dash&lt;/code&gt; is required just for the &lt;code&gt;-&amp;gt;&amp;gt;&lt;/code&gt; macro, which can actually
+be obtained from a core library &lt;code&gt;subr-x&lt;/code&gt; as &lt;code&gt;thread-last&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;But even then, it&amp;#39;s just better to unwind the whole thing. After that, it becomes clear that
+the three consecutive &lt;code&gt;mapcar&lt;/code&gt;s could be folded into a single &lt;code&gt;mapcar&lt;/code&gt; with the help of a &lt;code&gt;let&lt;/code&gt; binding.&lt;/p&gt;
+
+&lt;p&gt;After the fold, it starts to look silly, since I&amp;#39;m &lt;code&gt;cons&lt;/code&gt;ing just to
+take a &lt;code&gt;car&lt;/code&gt; and &lt;code&gt;cdr&lt;/code&gt; later:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;keys-describe-prefix&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;letters&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;prefix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;apply&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;#&amp;#39;concat&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;mapcar&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;letter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;concat&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;prefix&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;letter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+                   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;binding&lt;/span&gt;
+                    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;cons&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;key&lt;/span&gt;
+                          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;prin1-to-string&lt;/span&gt;
+                           &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;key-binding&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))))&lt;/span&gt;
+              &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;concat&lt;/span&gt;
+               &lt;span class=&quot;s&quot;&gt;&amp;quot;;; (global-set-key (kbd \&amp;quot;&amp;quot;&lt;/span&gt;
+               &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;car&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;binding&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+               &lt;span class=&quot;s&quot;&gt;&amp;quot;\&amp;quot;) &amp;#39;&amp;quot;&lt;/span&gt;
+               &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;cdr&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;binding&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+               &lt;span class=&quot;s&quot;&gt;&amp;quot;)\n&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+          &lt;span class=&quot;nv&quot;&gt;letters&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Here&amp;#39;s a simplification, removing &lt;code&gt;binding&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;keys-describe-prefix&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;letters&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;prefix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;apply&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;#&amp;#39;concat&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;mapcar&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;letter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;concat&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;prefix&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;letter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+              &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;concat&lt;/span&gt;
+               &lt;span class=&quot;s&quot;&gt;&amp;quot;;; (global-set-key (kbd \&amp;quot;&amp;quot;&lt;/span&gt;
+               &lt;span class=&quot;nv&quot;&gt;key&lt;/span&gt;
+               &lt;span class=&quot;s&quot;&gt;&amp;quot;\&amp;quot;) &amp;#39;&amp;quot;&lt;/span&gt;
+               &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;prin1-to-string&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;key-binding&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+               &lt;span class=&quot;s&quot;&gt;&amp;quot;)\n&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+          &lt;span class=&quot;nv&quot;&gt;letters&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;I guess that I didn&amp;#39;t know about &lt;code&gt;format&lt;/code&gt; function back then, and the fact that &lt;code&gt;&amp;quot;%S&amp;quot;&lt;/code&gt; key is equivalent
+to &lt;code&gt;prin1-to-string&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;keys-describe-prefix&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;letters&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;prefix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;apply&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;#&amp;#39;concat&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;mapcar&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;letter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;concat&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;prefix&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;letter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+              &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;;; (global-set-key (kbd \&amp;quot;%s\&amp;quot;) &amp;#39;%S)\n&amp;quot;&lt;/span&gt;
+                      &lt;span class=&quot;nv&quot;&gt;key&lt;/span&gt;
+                      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;key-binding&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;
+          &lt;span class=&quot;nv&quot;&gt;letters&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Next, the combination &lt;code&gt;(apply #&amp;#39;concat (mapcar ...))&lt;/code&gt; is already implemented in C as &lt;code&gt;mapconcat&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;keys-describe-prefix&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;letters&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;prefix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;mapconcat&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;letter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;concat&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;prefix&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;letter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;;; (global-set-key (kbd \&amp;quot;%s\&amp;quot;) &amp;#39;%S)&amp;quot;&lt;/span&gt;
+               &lt;span class=&quot;nv&quot;&gt;key&lt;/span&gt;
+               &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;key-binding&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;
+   &lt;span class=&quot;nv&quot;&gt;letters&lt;/span&gt;
+   &lt;span class=&quot;s&quot;&gt;&amp;quot;\n&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;In the end, &lt;code&gt;keys-describe-prefix&lt;/code&gt; turned out to be so small that I could just inline it into
+&lt;code&gt;keys-describe-prefixes&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;final-version&quot;&gt;Final version&lt;/h2&gt;
+
+&lt;p&gt;Note that here I also replaced &lt;code&gt;mapcar&lt;/code&gt; with &lt;code&gt;dolist&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;c1&quot;&gt;;;;###autoload&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;keys-describe-prefixes&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;with-output-to-temp-buffer&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;*Bindings*&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;dolist&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;letter-group&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;list&lt;/span&gt;
+                           &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cl-loop&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;?a&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;?z&lt;/span&gt;
+                                    &lt;span class=&quot;nv&quot;&gt;collect&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+                           &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cl-loop&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;α&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;ω&lt;/span&gt;
+                                    &lt;span class=&quot;nv&quot;&gt;collect&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;dolist&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;prefix&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;M-&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-M-&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;princ&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;mapconcat&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;letter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;concat&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;prefix&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;letter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+                    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;;; (global-set-key (kbd \&amp;quot;%s\&amp;quot;) &amp;#39;%S)&amp;quot;&lt;/span&gt;
+                            &lt;span class=&quot;nv&quot;&gt;key&lt;/span&gt;
+                            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;key-binding&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;
+                &lt;span class=&quot;nv&quot;&gt;letter-group&lt;/span&gt;
+                &lt;span class=&quot;s&quot;&gt;&amp;quot;\n&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;princ&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;\n\n&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;I hope that this sort of analysis can be useful for people starting to
+learn Elisp.  And if you have corrections for the final version, do
+let me know, I don&amp;#39;t mind being schooled, as long as I get better in
+the end.&lt;/p&gt;
+
+&lt;p&gt;The output of &lt;code&gt;keys-describe-prefixes&lt;/code&gt; can be used to learn some
+bindings that you didn&amp;#39;t know about, and also as a template to
+redefine some bindings that you don&amp;#39;t need.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Easy ido improvement</title>
