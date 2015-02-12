@@ -4,13 +4,84 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-02-11T20:52:54+01:00</updated>
+ <updated>2015-02-12T16:23:43+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Occasionally ido</title>
+   <link href="http://oremacs.com/2015/02/12/ido-occasional/"/>
+   <updated>2015-02-12T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/02/12/ido-occasional</id>
+   <content type="html">&lt;p&gt;As I was refactoring my &lt;code&gt;.emacs&lt;/code&gt;, I found a silly wrapper around
+&lt;code&gt;describe-function&lt;/code&gt; that uses &lt;code&gt;ido-completing-read&lt;/code&gt;.  I think I was
+aware at the time that
+&lt;a href=&quot;https://github.com/DarwinAwardWinner/ido-ubiquitous&quot;&gt;ido-ubiquitous&lt;/a&gt;
+could simply make &lt;code&gt;describe-function&lt;/code&gt; use &lt;code&gt;ido-completing-read&lt;/code&gt;. The
+problem was that it also affected the &lt;code&gt;completing-read&lt;/code&gt; in functions
+that became &lt;code&gt;headlong-bookmark-jump&lt;/code&gt; from
+&lt;a href=&quot;https://github.com/abo-abo/headlong&quot;&gt;headlong&lt;/a&gt;
+(see &lt;a href=&quot;/2015/01/06/rushing-headlong/&quot;&gt;the corresponding post&lt;/a&gt;
+if you missed it).&lt;/p&gt;
+
+&lt;h2 id=&quot;a-bit-of-code-to-make-things-right&quot;&gt;A bit of code to make things right&lt;/h2&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ido-occasional-completing-read&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;prompt&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;collection&lt;/span&gt;
+     &lt;span class=&quot;kp&quot;&gt;&amp;amp;optional&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;predicate&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;require-match&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;initial-input&lt;/span&gt;
+       &lt;span class=&quot;nv&quot;&gt;hist&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;inherit-input-method&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Use `ido-completing-read&amp;#39; if the collection isn&amp;#39;t too large.&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;Fall back to `completing-read&amp;#39; otherwise.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;filtered-collection&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;all-completions&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;collection&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;predicate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;&amp;lt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;length&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;filtered-collection&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;30000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ido-completing-read&lt;/span&gt;
+         &lt;span class=&quot;nv&quot;&gt;prompt&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;filtered-collection&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;
+         &lt;span class=&quot;nv&quot;&gt;require-match&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;initial-input&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hist&lt;/span&gt;
+         &lt;span class=&quot;nv&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;completing-read&lt;/span&gt;
+       &lt;span class=&quot;nv&quot;&gt;prompt&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;collection&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;predicate&lt;/span&gt;
+       &lt;span class=&quot;nv&quot;&gt;require-match&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;initial-input&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hist&lt;/span&gt;
+       &lt;span class=&quot;nv&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;inherit-input-method&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;;;;###autoload&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defmacro&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;with-ido-completion&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;fun&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Wrap FUN in another interactive function with ido completion.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;intern&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;concat&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;symbol-name&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fun&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;/with-ido&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+     &lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Forward to `%S&amp;#39; with ido completion.&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fun&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;completing-read-function&lt;/span&gt;
+            &lt;span class=&quot;ss&quot;&gt;&amp;#39;ido-occasional-completing-read&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;call-interactively&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;#&amp;#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;fun&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The only thing that &lt;code&gt;ido-occasional-completing-read&lt;/code&gt; does is to
+pre-filter &lt;code&gt;collection&lt;/code&gt; with &lt;code&gt;predicate&lt;/code&gt; and pass it on to
+&lt;code&gt;ido-completing-read&lt;/code&gt;. And &lt;code&gt;with-ido-completion&lt;/code&gt; is just a convenience wrapper.&lt;/p&gt;
+
+&lt;h2 id=&quot;example&quot;&gt;Example&lt;/h2&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;f1&amp;gt; f&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;with-ido-completion&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;describe-function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;f1&amp;gt; v&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;with-ido-completion&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;describe-variable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;f2&amp;gt; i&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;with-ido-completion&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;info-lookup-symbol&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Here, &lt;code&gt;with-ido-completion&lt;/code&gt; will generate
+e.g. &lt;code&gt;describe-function/with-ido&lt;/code&gt;, which will subsequently be bound to
+&lt;kbd&gt;&amp;lt;f1&amp;gt; f&lt;/kbd&gt;. The good-old &lt;code&gt;describe-function&lt;/code&gt; is left unaffected.&lt;/p&gt;
+
+&lt;p&gt;Note, that if I turn on &lt;code&gt;helm-mode&lt;/code&gt; at this point, it will override
+&lt;code&gt;describe-function&lt;/code&gt; with its own completion, but it will not touch
+&lt;code&gt;describe-function/with-ido&lt;/code&gt; which I bound. This can be useful e.g. if
+I want to use &lt;code&gt;helm-mode&lt;/code&gt; (or &lt;code&gt;icy-mode&lt;/code&gt; or &lt;code&gt;icomplete-mode&lt;/code&gt;) for some
+completion, but not all.&lt;/p&gt;
+
+&lt;p&gt;You can find the package at &lt;a href=&quot;https://github.com/abo-abo/ido-occasional&quot;&gt;ido-occasional&lt;/a&gt;.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Elisp newbie-style</title>
