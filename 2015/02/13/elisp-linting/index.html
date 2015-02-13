@@ -11,7 +11,7 @@
 
   <title>
     
-      Blogging about blogging &middot; (or emacs
+      Elisp linting options &middot; (or emacs
     
   </title>
 
@@ -200,85 +200,68 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Blogging about blogging</h1>
-  <span class="post-date">01 Feb 2015</span>
-  <p>In Emacs, of course. As I mentioned before, this blog is run using
-<a href="http://jekyllrb.com/">Jekyll</a> and a fork of the
-<a href="https://github.com/poole/lanyon">lanyon</a> theme.</p>
+  <h1 class="post-title">Elisp linting options</h1>
+  <span class="post-date">13 Feb 2015</span>
+  <p>I discovered today that I was using <code>declare-function</code> in a wrong way.
+So I&#39;ll share how to use it properly.</p>
 
-<p>It started out pretty convenient: thanks to <code>jekyll serve</code> I would see
-the live updates at <code>http://localhost:4000/</code> as I was editing the
-markdown. But after a few posts, I&#39;ve experienced a drastic decrease
-in refresh time: it went from under a second to 15 seconds. Below, I&#39;ll show how I&#39;ve managed
-to speed it back up.</p>
+<h2 id="declare-function"><code>declare-function</code></h2>
 
-<h2 id="no-posts---no-problem">No posts - no problem</h2>
+<p>I was just using it to shut up the byte compiler&#39;s <code>&quot;not known to be
+defined&quot;</code> warning.  Turns out that it can also be used to check if the
+functions actually exist in the file to which they point to. You can
+use <code>check-declare-file</code> to check one file, or
+<code>check-declare-directory</code> to recursively check the whole directory.</p>
 
-<p>Thanks to <code>(require &#39;dired-x)</code> I can jump from the current post to the
-posts directory with <kbd>C-x C-j</kbd>. It even puts the point on the current file. Now:</p>
-
-<ul>
-<li><kbd>m</kbd> to mark to current file</li>
-<li><kbd>t</kbd> to invert the mark, making the current file unmarked and all others marked</li>
-<li><kbd>D</kbd> to delete all marked files. No need to worry, since
-they are all version-controlled (except the original one, which isn&#39;t
-being deleted), <code>dired</code> even asks you for confirmation, so I hit
-<kbd>y</kbd>.</li>
-</ul>
-
-<p>Now, that there is only one post in the whole blog, <code>jekyll serve</code> is
-much faster at refreshing.</p>
-
-<h2 id="even-faster-jekyll-serve">Even faster <code>jekyll serve</code></h2>
-
-<p>Which brings me to the next point. Since I&#39;m calling it so much, might
-as well wrap it in some Elisp. Elisp is like frosting - it makes everything better:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">jekyll-serve</span> <span class="p">()</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">default-directory</span>
-          <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">string-match</span> <span class="s">&quot;_posts/$&quot;</span> <span class="nv">default-directory</span><span class="p">)</span>
-              <span class="p">(</span><span class="nv">directory-parent</span> <span class="nv">default-directory</span><span class="p">)</span>
-            <span class="nv">default-directory</span><span class="p">))</span>
-         <span class="p">(</span><span class="nv">buffer</span> <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">get-buffer</span> <span class="s">&quot;*jekyll*&quot;</span><span class="p">)</span>
-                     <span class="p">(</span><span class="nv">switch-to-buffer</span> <span class="s">&quot;*jekyll*&quot;</span><span class="p">)</span>
-                   <span class="p">(</span><span class="nv">ansi-term</span> <span class="s">&quot;/bin/bash&quot;</span> <span class="s">&quot;jekyll&quot;</span><span class="p">)))</span>
-         <span class="p">(</span><span class="nv">proc</span> <span class="p">(</span><span class="nf">get-buffer-process</span> <span class="nv">buffer</span><span class="p">)))</span>
-    <span class="p">(</span><span class="nv">term-send-string</span> <span class="nv">proc</span> <span class="s">&quot;jekyll serve\n&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">sit-for</span> <span class="mi">3</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">browse-url</span> <span class="s">&quot;localhost:4000&quot;</span><span class="p">)))</span>
+<p>Here&#39;s an example output:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">Warning (check-declare): helm-info.el said `Info-goto-node&#39; was defined in info.el.gz: arglist mismatch
+Warning (check-declare): helm-info.el said `Info-find-node&#39; was defined in info.el.gz: arglist mismatch
+Warning (check-declare): helm-plugin.el said `Info-goto-node&#39; was defined in info.el.gz: arglist mismatch
+Warning (check-declare): helm-plugin.el said `Info-find-node&#39; was defined in info.el.gz: arglist mismatch
+Warning (check-declare): helm-emms.el said `with-current-emms-playlist&#39; was defined in emms.el: function not found
+Warning (check-declare): projectile.el said `ggtags-ensure-project&#39; was defined in ggtags.el: file not found
+Warning (check-declare): projectile.el said `ggtags-update-tags&#39; was defined in ggtags.el: file not found
+Warning (check-declare): async-bytecomp.el said `package-desc-reqs&#39; was defined in package.el.gz: function not found
 </code></pre></div>
-<p>This function, when called from the current post or the current blog, will:</p>
+<p>My mistake was assuming that the <code>FILE</code> argument of <code>declare-function</code>
+was somehow related to <code>require</code>.  But of course it had to be simply
+the name of the file that contains the said function. If the referenced file is in an external package,
+e.g. <code>(declare-function cider-repl-return &quot;ext:cider-repl&quot;)</code> can be used.</p>
+
+<h2 id="checkdoc"><code>checkdoc</code></h2>
+
+<p>This one is actually very useful once you embrace it.  It will
+<em>tsk-tsk</em> you until all your functions are documented. And since
+you&#39;re already writing a docstring, might as well make it
+good. Sometimes this leads me to removing a function that&#39;s called
+only once, just so that I don&#39;t have to document it.</p>
+
+<h2 id="byte-compile-file"><code>byte-compile-file</code></h2>
+
+<p>Leaving the obvious for last. This will speed up the code in addition to checking for errors.
+In <code>dired</code> you can use:</p>
 
 <ul>
-<li>open a new <code>ansi-term</code> called <code>*jekyll*</code></li>
-<li>issue a <code>jekyll serve</code> command to it</li>
-<li>wait for 3 seconds for Jekyll to start</li>
-<li>open <code>localhost:4000</code> in Firefox</li>
+<li>several <kbd>m</kbd> (<code>dired-mark</code>) followed by <kbd>B</kbd> (<code>dired-do-byte-compile</code>).</li>
+<li>a single <kbd>*%</kbd> (<code>dired-mark-files-regexp</code>) <code>el$</code> followed by <kbd>B</kbd>.</li>
 </ul>
 
-<h2 id="one-post-isn&#39;t-a-blog">One post isn&#39;t a blog</h2>
-
-<p>Here&#39;s how to quickly bring back the deleted posts.</p>
-
-<ul>
-<li>Fire up <a href="https://github.com/magit/magit">magit</a>; I have <code>magit-status</code> bound to <kbd>μm</kbd>.</li>
-<li>Stage the current post with <kbd>s</kbd> (<code>magit-stage-item</code>).</li>
-<li>Start the commit with <kbd>C</kbd> (<code>magit-commit-add-log</code>). I&#39;m using my own modification of <code>magit-commit-add-log</code>
-that arranges the whitespace in a nice way, when aimed at a file instead of a hunk.</li>
-<li>I get <code>_posts/2015-02-01-blogging-about-blogging.md:</code> string auto-generated by <kbd>C</kbd>.</li>
-<li>I just amend it to look like <code>_posts/2015-02-01-blogging-about-blogging.md: add</code> and finalize the commit with
-<kbd>C-c C-c</kbd> (<code>git-commit-commit</code>).</li>
-<li>Now I have around 40 files marked as deleted, but not staged. I create a stash with <kbd>zz</kbd> and name it <code>foo</code>
-or something. Then delete the stash with <code>magit-discard-item</code>, which I like to bind to <kbd>d</kbd> to be similar
-to <code>dired</code>. Now it&#39;s as if these files were never deleted.</li>
-</ul>
-
-<p>Whoa, now that I look at it, it&#39;s a lot of steps. But somehow <code>dired</code>
-and <code>magit</code> are very similar to
-<a href="http://en.wikipedia.org/wiki/Super_Mario_Bros.">Super Mario Bros</a>: it
-takes long to explain what you&#39;re doing, but as you play it, it&#39;s very
-simple and natural.</p>
-
+<p>I even have a <code>compile</code> target in <code>lispy</code>&#39;s <a href="https://github.com/abo-abo/lispy/blob/master/Makefile">Makefile</a>:</p>
+<div class="highlight"><pre><code class="language-Makefile" data-lang="Makefile"><span class="nf">compile</span><span class="o">:</span>
+    <span class="k">$(</span>CASK<span class="k">)</span> <span class="nb">exec</span> <span class="k">$(</span>EMACS<span class="k">)</span> -batch <span class="k">$(</span>LOAD<span class="k">)</span> -l lispy-test.el -l compile.elt
+</code></pre></div>
+<p>Here are the contents of compile.elt:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;check-declare</span><span class="p">)</span>
+<span class="p">(</span><span class="k">setq</span> <span class="nv">check-declare-ext-errors</span> <span class="no">t</span><span class="p">)</span>
+<span class="p">(</span><span class="k">setq</span> <span class="nv">files</span> <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;lispy.el&quot;</span>
+              <span class="s">&quot;lispy-inline.el&quot;</span>
+              <span class="s">&quot;le-clojure.el&quot;</span>
+              <span class="s">&quot;le-scheme.el&quot;</span>
+              <span class="s">&quot;le-lisp.el&quot;</span><span class="p">))</span>
+<span class="p">(</span><span class="nf">mapc</span> <span class="nf">#&#39;</span><span class="nv">byte-compile-file</span> <span class="nv">files</span><span class="p">)</span>
+<span class="p">(</span><span class="nv">ert</span> <span class="no">t</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">apply</span> <span class="nf">#&#39;</span><span class="nv">check-declare-files</span> <span class="nv">files</span><span class="p">)</span>
+</code></pre></div>
 </div>
 
 <div class="twitter-share">
@@ -296,16 +279,6 @@ simple and natural.</p>
     
       <li>
         <h3>
-          <!-- <a href="//2015/02/13/elisp-linting/"> -->
-          <a href="/2015/02/13/elisp-linting/">
-            Elisp linting options
-            <small>13 Feb 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
           <!-- <a href="//2015/02/12/ido-occasional/"> -->
           <a href="/2015/02/12/ido-occasional/">
             Occasionally ido
@@ -320,6 +293,16 @@ simple and natural.</p>
           <a href="/2015/02/11/elisp-newbie-style/">
             Elisp newbie-style
             <small>11 Feb 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/02/10/ido-backspace/"> -->
+          <a href="/2015/02/10/ido-backspace/">
+            Easy ido improvement
+            <small>10 Feb 2015</small>
           </a>
         </h3>
       </li>
