@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Semimap - .Xmodmap with semicolon as an additional modifier &middot; (or emacs
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="/public/css/octicons.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Scripts -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body class="layout-reverse theme-base-08">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <!-- <div class="sidebar-item"> -->
+  <!--   <p>unused</p> -->
+  <!-- </div> -->
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about/">About</a>
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/archive/">Archive</a>
+        
+      
+    
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+
+    <div id="github" class="sidebar-nav-item">
+      <button type="button"
+              class="btn btn-info"
+              data-toggle="collapse"
+              data-target="#github-projects">
+        <span class="octicon octicon-mark-github"></span> My Emacs Projects
+      </button>
+      <div id="github-projects" class="collapse">
+        <ul style="margin-bottom:0em;">
+          <li>
+            <a href="https://github.com/abo-abo/lispy">lispy</a>
+            <p>vi-like Paredit</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/worf">worf</a>
+            <p>vi-like bindings for org-mode</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-window">ace-window</a>
+            <p>switch windows with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-link">ace-link</a>
+            <p>follow links with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/function-args">function-args</a>
+            <p>enhance <code>CEDET</code> for C++</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/helm-make">helm-make</a>
+            <p>select a Makefile target with <code>helm</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/make-it-so">make-it-so</a>
+            <p>transform files with Makefile recipes</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/org-download">org-download</a>
+            <p>drag-and-drop images to <code>org-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo?tab=repositories">
+              <span class="octicon octicon-octoface"></span>
+              and more
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
+
+  <div class="sidebar-item">
+    <p>
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.0/">
+        <img alt="Creative Commons License"
+             style="border-width:0;opacity: 0.3;"
+             src="https://i.creativecommons.org/l/by-nc-sa/2.0/88x31.png"/>
+      </a>
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">(or emacs</a>
+            <small>irrelevant)</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Semimap - .Xmodmap with semicolon as an additional modifier</h1>
+  <span class="post-date">14 Feb 2015</span>
+  <p>Today, I&#39;ll share my keyboard layout, based on QWERTY, that
+facilitates all tech-related activities, especially Emacs.  I&#39;ve been
+using a version of this for about three years now, and only a single
+key has been changed in the last two years. Without further ado,
+<a href="https://github.com/abo-abo/semimap">here it is</a>:</p>
+
+<p><img src="/download/semi-qwerty.png" alt="semimap"></p>
+
+<h2 id="the-most-visible-change">The most visible change</h2>
+
+<p>I&#39;ve made <kbd>;</kbd> stop inserting <code>;</code> and instead act as
+<code>Mode_switch</code>: a modifier similar to control or meta.</p>
+
+<ul>
+<li>I&#39;m pressing <kbd>;-j</kbd> to enter <kbd>;</kbd></li>
+<li>I&#39;m pressing <kbd>;-d</kbd> to enter <kbd>:</kbd></li>
+</ul>
+
+<p>So I&#39;m giving up the ability to press <kbd>;</kbd> with a single key,
+and remapping <kbd>:</kbd> from one two-key combination to another
+two-key combination.</p>
+
+<p>In return, I&#39;m getting a QWERTY with all these wonderful shortcuts.</p>
+
+<h2 id="the-rsi-savers">The RSI-savers</h2>
+
+<p>The general ones are:</p>
+
+<ul>
+<li><kbd>RET</kbd> on <kbd>;-v</kbd> (symmetric with <kbd>C-m</kbd>)</li>
+<li><kbd>DEL</kbd> on <kbd>;-o</kbd></li>
+</ul>
+
+<p>If you&#39;re writing a bunch of C++, <kbd>_</kbd> on <kbd>;-s</kbd> is very good.</p>
+
+<p>Likewise, <kbd>-</kbd> on <kbd>;-a</kbd> is great for LISP.</p>
+
+<p>For LaTeX, <kbd>&#92;</kbd> on <kbd>;-w</kbd> is good since I switched from
+a keyboard that had it near <kbd>z</kbd> to a keyboard that has it near <kbd>RET</kbd>.</p>
+
+<p>I&#39;m guessing <kbd>~</kbd> on <kbd>;-t</kbd> isn&#39;t bad for shell, but I don&#39;t use it that much.</p>
+
+<h2 id="the-basic-remaps">The basic remaps</h2>
+
+<p>These are just char-for-char remaps. They are composable, for instance
+I have <code>dired-jump</code> on <kbd>C-:</kbd>, which means that I&#39;m pressing
+<kbd>C-;-d</kbd>.</p>
+
+<p>Some math symbols are mnemonic: <kbd>e</kbd>-equal,
+<kbd>l</kbd>-lesser, <kbd>g</kbd>-greater.
+If you&#39;re using <a href="https://github.com/abo-abo/lispy">lispy</a>, it might become more clear for you
+why I&#39;ve put <code>lispy-slurp</code> on <kbd>&gt;</kbd> and <code>lispy-barf</code> on <kbd>&lt;</kbd>. Although
+pressing these keys with a shift isn&#39;t the worst thing, having them on the home row is pretty cool.</p>
+
+<h2 id="the-pairs">The pairs</h2>
+
+<p>Here are the translations meant for pairs:
+<kbd>q</kbd> - <kbd>θ</kbd>,
+<kbd>f</kbd> - <kbd>φ</kbd>,
+<kbd>r</kbd> - <kbd>ρ</kbd>,
+<kbd>c</kbd> - <kbd>σ</kbd>.
+These are meant for Emacs and <code>.inputrc</code>. In both cases, e.g. <kbd>φ</kbd> should insert <code>()</code> and
+go backward one char. Here&#39;s my <code>.inputrc</code>:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">set input-meta on
+set output-meta on
+set convert-meta off
+&quot;θ&quot;:&quot;&quot;\C-b&quot;&quot;
+&quot;ω&quot;:&quot;&#39;\C-b&#39;&quot;
+&quot;\e\C-l&quot;:&quot;\C-e | less\C-m&quot;
+&quot;υ&quot;:&quot;&gt;\C-b&lt;&quot;
+&quot;σ&quot;:&quot;}\C-b{&quot;
+&quot;φ&quot;:&quot;)\C-b(&quot;
+&quot;ρ&quot;:&quot;]\C-b[&quot;
+
+set completion-ignore-case on
+</code></pre></div>
+<p>With this <code>.inputrc</code>, it&#39;s like I have some kind of electric mode in my bash.
+In Emacs, the pairs are bound in a straightforward way:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">ins-brackets</span> <span class="p">()</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">cond</span> <span class="p">((</span><span class="nf">eq</span> <span class="nv">major-mode</span> <span class="ss">&#39;term-mode</span><span class="p">)</span>
+         <span class="p">(</span><span class="nv">term-send-raw-string</span> <span class="s">&quot;[]&quot;</span><span class="p">)</span>
+         <span class="p">(</span><span class="nv">term-send-raw-string</span> <span class="s">&quot;^B&quot;</span><span class="p">))</span>
+        <span class="p">((</span><span class="nv">region-active-p</span><span class="p">)</span>
+         <span class="p">(</span><span class="nv">lispy--surround-region</span> <span class="s">&quot;[&quot;</span> <span class="s">&quot;]&quot;</span><span class="p">))</span>
+        <span class="p">(</span><span class="no">t</span>
+         <span class="p">(</span><span class="nf">insert</span> <span class="s">&quot;[]&quot;</span><span class="p">)</span>
+         <span class="p">(</span><span class="nf">backward-char</span><span class="p">))))</span>
+<span class="p">(</span><span class="nv">global-set-key</span> <span class="s">&quot;ρ&quot;</span> <span class="ss">&#39;ins-brackets</span><span class="p">)</span>
+</code></pre></div>
+<p>For LISP, I use <code>lispy</code>-specific bindings:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">lispy-mode-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;φ&quot;</span><span class="p">)</span> <span class="ss">&#39;lispy-parens</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">define-key</span> <span class="nv">lispy-mode-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;σ&quot;</span><span class="p">)</span> <span class="ss">&#39;lispy-braces</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">define-key</span> <span class="nv">lispy-mode-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;ρ&quot;</span><span class="p">)</span> <span class="ss">&#39;lispy-brackets</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">define-key</span> <span class="nv">lispy-mode-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;θ&quot;</span><span class="p">)</span> <span class="ss">&#39;lispy-quotes</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">define-key</span> <span class="nv">lispy-mode-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;χ&quot;</span><span class="p">)</span> <span class="ss">&#39;lispy-right</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="the-rest-of-the-greek-chars">The rest of the Greek chars</h2>
+
+<p>These are bound to various Emacs functions. In fact, I initially started with all Greek chars, and
+bound e.g.:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;ε&quot;</span><span class="p">)</span> <span class="s">&quot;=&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>When these remap-type bindings became mature, I&#39;ve put them directly
+into <code>.Xmodmap</code>, which gave the advantage of being able to compose the
+keys.</p>
+
+<p>These bindings are as good and usable as the control plus lower case
+chars. Use them wisely and you can get a very ergonomic setup. Some
+ideas:</p>
+
+<ul>
+<li>switching buffers on <kbd>;-h</kbd></li>
+<li>switching windows on <kbd>;-n</kbd></li>
+<li>jumping to bookmarks on <kbd>;-m</kbd></li>
+</ul>
+
+<h2 id="the-shifted-digits">The shifted digits</h2>
+
+<p>I find it much easier to press e.g. <kbd>;-4</kbd> to insert <code>$</code>,
+rather than <kbd>S-4</kbd>. I also restored the justice of <code>0</code> coming <strong>before</strong> <code>1</code> by mapping
+<kbd>;-&#96;</kbd> to <code>0</code>.</p>
+
+<h2 id="outro">Outro</h2>
+
+<p>I hope that you&#39;ll find some use and enjoyment in these ramappings, if
+you&#39;re not afraid to experiment a little.  The cost of losing the
+semicolon is pretty minor, the bigger issue is in finding the
+unmodified QWERTY extremely sluggish after using this approach.</p>
+
+</div>
+
+<div class="twitter-share">
+  <a href="https://twitter.com/share"
+     class="twitter-share-button"
+     data-via="_abo_abo"
+     data-dnt="true">
+    Tweet
+  </a>
+</div>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/02/13/elisp-linting/"> -->
+          <a href="/2015/02/13/elisp-linting/">
+            Elisp linting options
+            <small>13 Feb 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/02/12/ido-occasional/"> -->
+          <a href="/2015/02/12/ido-occasional/">
+            Occasionally ido
+            <small>12 Feb 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/02/11/elisp-newbie-style/"> -->
+          <a href="/2015/02/11/elisp-newbie-style/">
+            Elisp newbie-style
+            <small>11 Feb 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'oremacs'; // required: replace example with your forum shortname
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+<script>
+  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+</script>
+<noscript>
+  Please enable JavaScript to view the
+  <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>

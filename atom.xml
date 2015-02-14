@@ -4,13 +4,150 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-02-13T15:41:08+01:00</updated>
+ <updated>2015-02-14T18:01:57+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Semimap - .Xmodmap with semicolon as an additional modifier</title>
+   <link href="http://oremacs.com/2015/02/14/semi-xmodmap/"/>
+   <updated>2015-02-14T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/02/14/semi-xmodmap</id>
+   <content type="html">&lt;p&gt;Today, I&amp;#39;ll share my keyboard layout, based on QWERTY, that
+facilitates all tech-related activities, especially Emacs.  I&amp;#39;ve been
+using a version of this for about three years now, and only a single
+key has been changed in the last two years. Without further ado,
+&lt;a href=&quot;https://github.com/abo-abo/semimap&quot;&gt;here it is&lt;/a&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/semi-qwerty.png&quot; alt=&quot;semimap&quot;&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;the-most-visible-change&quot;&gt;The most visible change&lt;/h2&gt;
+
+&lt;p&gt;I&amp;#39;ve made &lt;kbd&gt;;&lt;/kbd&gt; stop inserting &lt;code&gt;;&lt;/code&gt; and instead act as
+&lt;code&gt;Mode_switch&lt;/code&gt;: a modifier similar to control or meta.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;I&amp;#39;m pressing &lt;kbd&gt;;-j&lt;/kbd&gt; to enter &lt;kbd&gt;;&lt;/kbd&gt;&lt;/li&gt;
+&lt;li&gt;I&amp;#39;m pressing &lt;kbd&gt;;-d&lt;/kbd&gt; to enter &lt;kbd&gt;:&lt;/kbd&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;So I&amp;#39;m giving up the ability to press &lt;kbd&gt;;&lt;/kbd&gt; with a single key,
+and remapping &lt;kbd&gt;:&lt;/kbd&gt; from one two-key combination to another
+two-key combination.&lt;/p&gt;
+
+&lt;p&gt;In return, I&amp;#39;m getting a QWERTY with all these wonderful shortcuts.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-rsi-savers&quot;&gt;The RSI-savers&lt;/h2&gt;
+
+&lt;p&gt;The general ones are:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;RET&lt;/kbd&gt; on &lt;kbd&gt;;-v&lt;/kbd&gt; (symmetric with &lt;kbd&gt;C-m&lt;/kbd&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;DEL&lt;/kbd&gt; on &lt;kbd&gt;;-o&lt;/kbd&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;If you&amp;#39;re writing a bunch of C++, &lt;kbd&gt;_&lt;/kbd&gt; on &lt;kbd&gt;;-s&lt;/kbd&gt; is very good.&lt;/p&gt;
+
+&lt;p&gt;Likewise, &lt;kbd&gt;-&lt;/kbd&gt; on &lt;kbd&gt;;-a&lt;/kbd&gt; is great for LISP.&lt;/p&gt;
+
+&lt;p&gt;For LaTeX, &lt;kbd&gt;&amp;#92;&lt;/kbd&gt; on &lt;kbd&gt;;-w&lt;/kbd&gt; is good since I switched from
+a keyboard that had it near &lt;kbd&gt;z&lt;/kbd&gt; to a keyboard that has it near &lt;kbd&gt;RET&lt;/kbd&gt;.&lt;/p&gt;
+
+&lt;p&gt;I&amp;#39;m guessing &lt;kbd&gt;~&lt;/kbd&gt; on &lt;kbd&gt;;-t&lt;/kbd&gt; isn&amp;#39;t bad for shell, but I don&amp;#39;t use it that much.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-basic-remaps&quot;&gt;The basic remaps&lt;/h2&gt;
+
+&lt;p&gt;These are just char-for-char remaps. They are composable, for instance
+I have &lt;code&gt;dired-jump&lt;/code&gt; on &lt;kbd&gt;C-:&lt;/kbd&gt;, which means that I&amp;#39;m pressing
+&lt;kbd&gt;C-;-d&lt;/kbd&gt;.&lt;/p&gt;
+
+&lt;p&gt;Some math symbols are mnemonic: &lt;kbd&gt;e&lt;/kbd&gt;-equal,
+&lt;kbd&gt;l&lt;/kbd&gt;-lesser, &lt;kbd&gt;g&lt;/kbd&gt;-greater.
+If you&amp;#39;re using &lt;a href=&quot;https://github.com/abo-abo/lispy&quot;&gt;lispy&lt;/a&gt;, it might become more clear for you
+why I&amp;#39;ve put &lt;code&gt;lispy-slurp&lt;/code&gt; on &lt;kbd&gt;&amp;gt;&lt;/kbd&gt; and &lt;code&gt;lispy-barf&lt;/code&gt; on &lt;kbd&gt;&amp;lt;&lt;/kbd&gt;. Although
+pressing these keys with a shift isn&amp;#39;t the worst thing, having them on the home row is pretty cool.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-pairs&quot;&gt;The pairs&lt;/h2&gt;
+
+&lt;p&gt;Here are the translations meant for pairs:
+&lt;kbd&gt;q&lt;/kbd&gt; - &lt;kbd&gt;θ&lt;/kbd&gt;,
+&lt;kbd&gt;f&lt;/kbd&gt; - &lt;kbd&gt;φ&lt;/kbd&gt;,
+&lt;kbd&gt;r&lt;/kbd&gt; - &lt;kbd&gt;ρ&lt;/kbd&gt;,
+&lt;kbd&gt;c&lt;/kbd&gt; - &lt;kbd&gt;σ&lt;/kbd&gt;.
+These are meant for Emacs and &lt;code&gt;.inputrc&lt;/code&gt;. In both cases, e.g. &lt;kbd&gt;φ&lt;/kbd&gt; should insert &lt;code&gt;()&lt;/code&gt; and
+go backward one char. Here&amp;#39;s my &lt;code&gt;.inputrc&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;set input-meta on
+set output-meta on
+set convert-meta off
+&amp;quot;θ&amp;quot;:&amp;quot;&amp;quot;\C-b&amp;quot;&amp;quot;
+&amp;quot;ω&amp;quot;:&amp;quot;&amp;#39;\C-b&amp;#39;&amp;quot;
+&amp;quot;\e\C-l&amp;quot;:&amp;quot;\C-e | less\C-m&amp;quot;
+&amp;quot;υ&amp;quot;:&amp;quot;&amp;gt;\C-b&amp;lt;&amp;quot;
+&amp;quot;σ&amp;quot;:&amp;quot;}\C-b{&amp;quot;
+&amp;quot;φ&amp;quot;:&amp;quot;)\C-b(&amp;quot;
+&amp;quot;ρ&amp;quot;:&amp;quot;]\C-b[&amp;quot;
+
+set completion-ignore-case on
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;With this &lt;code&gt;.inputrc&lt;/code&gt;, it&amp;#39;s like I have some kind of electric mode in my bash.
+In Emacs, the pairs are bound in a straightforward way:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ins-brackets&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;cond&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;eq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;major-mode&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;term-mode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;term-send-raw-string&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;[]&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;term-send-raw-string&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;^B&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;region-active-p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;lispy--surround-region&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;[&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;]&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;insert&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;[]&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;backward-char&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;ρ&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ins-brackets&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;For LISP, I use &lt;code&gt;lispy&lt;/code&gt;-specific bindings:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;lispy-mode-map&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;φ&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;lispy-parens&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;lispy-mode-map&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;σ&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;lispy-braces&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;lispy-mode-map&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;ρ&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;lispy-brackets&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;lispy-mode-map&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;θ&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;lispy-quotes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;lispy-mode-map&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;χ&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;lispy-right&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;the-rest-of-the-greek-chars&quot;&gt;The rest of the Greek chars&lt;/h2&gt;
+
+&lt;p&gt;These are bound to various Emacs functions. In fact, I initially started with all Greek chars, and
+bound e.g.:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;ε&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;=&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;When these remap-type bindings became mature, I&amp;#39;ve put them directly
+into &lt;code&gt;.Xmodmap&lt;/code&gt;, which gave the advantage of being able to compose the
+keys.&lt;/p&gt;
+
+&lt;p&gt;These bindings are as good and usable as the control plus lower case
+chars. Use them wisely and you can get a very ergonomic setup. Some
+ideas:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;switching buffers on &lt;kbd&gt;;-h&lt;/kbd&gt;&lt;/li&gt;
+&lt;li&gt;switching windows on &lt;kbd&gt;;-n&lt;/kbd&gt;&lt;/li&gt;
+&lt;li&gt;jumping to bookmarks on &lt;kbd&gt;;-m&lt;/kbd&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;the-shifted-digits&quot;&gt;The shifted digits&lt;/h2&gt;
+
+&lt;p&gt;I find it much easier to press e.g. &lt;kbd&gt;;-4&lt;/kbd&gt; to insert &lt;code&gt;$&lt;/code&gt;,
+rather than &lt;kbd&gt;S-4&lt;/kbd&gt;. I also restored the justice of &lt;code&gt;0&lt;/code&gt; coming &lt;strong&gt;before&lt;/strong&gt; &lt;code&gt;1&lt;/code&gt; by mapping
+&lt;kbd&gt;;-&amp;#96;&lt;/kbd&gt; to &lt;code&gt;0&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;I hope that you&amp;#39;ll find some use and enjoyment in these ramappings, if
+you&amp;#39;re not afraid to experiment a little.  The cost of losing the
+semicolon is pretty minor, the bigger issue is in finding the
+unmodified QWERTY extremely sluggish after using this approach.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Elisp linting options</title>
