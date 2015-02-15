@@ -4,13 +4,66 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-02-14T18:01:57+01:00</updated>
+ <updated>2015-02-15T14:10:39+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Doing sudo stuff with tramp</title>
+   <link href="http://oremacs.com/2015/02/15/sudo-stuffs/"/>
+   <updated>2015-02-15T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/02/15/sudo-stuffs</id>
+   <content type="html">&lt;p&gt;Somehow, I accumulated a few files owned by root that should have been
+owned by me. Below, I&amp;#39;ll describe a solution to get rid of them based
+on &lt;code&gt;dired&lt;/code&gt; and &lt;code&gt;tramp&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;step-one:-open-the-directory-with-sudo-privileges&quot;&gt;Step one: open the directory with sudo privileges&lt;/h2&gt;
+
+&lt;p&gt;I&amp;#39;ll obviously need the sudo privilege to change the owner of a file owned
+by root. Might as well start with that.&lt;/p&gt;
+
+&lt;p&gt;Thankfully, I do have a shortcut:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;sudired&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;tramp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;dir&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;expand-file-name&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;default-directory&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;string-match&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;^/sudo:&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ne&quot;&gt;user-error&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Already in sudo&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;dired&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;concat&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;/sudo::&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dired-mode-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;!&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;sudired&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The function above will open the current directory in sudo mode. I
+decided to bind it to &lt;kbd&gt;!&lt;/kbd&gt;, since the default &lt;kbd&gt;&amp;amp;&lt;/kbd&gt;
+seems strictly better than &lt;kbd&gt;!&lt;/kbd&gt;. The function will ask you for
+the password once.  Afterwards, you can open other directories without
+having to enter the password.&lt;/p&gt;
+
+&lt;h2 id=&quot;step-two:-find-dired&quot;&gt;Step two: &lt;code&gt;find-dired&lt;/code&gt;&lt;/h2&gt;
+
+&lt;p&gt;So now, while in sudo mode of the directory in question:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Call &lt;kbd&gt;M-x&lt;/kbd&gt; &lt;code&gt;find-dired&lt;/code&gt;. It&amp;#39;s not bound by default, and I
+don&amp;#39;t bind it myself since it&amp;#39;s quite situational (I do bind
+&lt;code&gt;find-name-dired&lt;/code&gt; to &lt;kbd&gt;F&lt;/kbd&gt; in &lt;code&gt;dired-mode&lt;/code&gt; though).&lt;/li&gt;
+&lt;li&gt;It prompts you for the directory. I just press &lt;kbd&gt;RET&lt;/kbd&gt;, since the default one is what I need.&lt;/li&gt;
+&lt;li&gt;Next, it prompts for &lt;code&gt;find&lt;/code&gt; args. These are the arguments to the
+UNIX command &lt;code&gt;find&lt;/code&gt;. Here, I need to pass &lt;code&gt;-user root&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;The command has finished and I can see the results. I can select
+some of them by pressing &lt;kbd&gt;m&lt;/kbd&gt; (&lt;code&gt;dired-mark&lt;/code&gt;) a few times, or
+mark them all at once with &lt;kbd&gt;t&lt;/kbd&gt; (&lt;code&gt;dired-toggle-marks&lt;/code&gt;).&lt;/li&gt;
+&lt;li&gt;Finally, call &lt;kbd&gt;O&lt;/kbd&gt; (&lt;code&gt;dired-do-chown&lt;/code&gt;) on the marked files and enter &lt;code&gt;oleh&lt;/code&gt;.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Done. I&amp;#39;m sure that the admin types can cook up some &lt;code&gt;find&lt;/code&gt;-&lt;code&gt;exec&lt;/code&gt;-&lt;code&gt;chown&lt;/code&gt; combo to do the same thing,
+but the &lt;code&gt;find-dired&lt;/code&gt; approach is both simpler and more flexible, since I can confirm and edit the list
+of files being changed.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Semimap - .Xmodmap with semicolon as an additional modifier</title>

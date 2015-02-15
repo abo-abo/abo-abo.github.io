@@ -11,7 +11,7 @@
 
   <title>
     
-      Three ansi-term tips &middot; (or emacs
+      Doing sudo stuff with tramp &middot; (or emacs
     
   </title>
 
@@ -200,40 +200,54 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Three ansi-term tips</h1>
-  <span class="post-date">01 Jan 2015</span>
-  <h2 id="tip-#1">Tip #1</h2>
+  <h1 class="post-title">Doing sudo stuff with tramp</h1>
+  <span class="post-date">15 Feb 2015</span>
+  <p>Somehow, I accumulated a few files owned by root that should have been
+owned by me. Below, I&#39;ll describe a solution to get rid of them based
+on <code>dired</code> and <code>tramp</code>.</p>
 
-<p>There&#39;s no reason not to have <code>/bin/bash</code> instead of <code>/bin/sh</code> as the
-default choice when you <kbd>M-x</kbd> <code>term</code>.</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">explicit-shell-file-name</span> <span class="s">&quot;/bin/bash&quot;</span><span class="p">)</span>
+<h2 id="step-one:-open-the-directory-with-sudo-privileges">Step one: open the directory with sudo privileges</h2>
+
+<p>I&#39;ll obviously need the sudo privilege to change the owner of a file owned
+by root. Might as well start with that.</p>
+
+<p>Thankfully, I do have a shortcut:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">sudired</span> <span class="p">()</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;tramp</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">dir</span> <span class="p">(</span><span class="nf">expand-file-name</span> <span class="nv">default-directory</span><span class="p">)))</span>
+    <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">string-match</span> <span class="s">&quot;^/sudo:&quot;</span> <span class="nv">dir</span><span class="p">)</span>
+        <span class="p">(</span><span class="ne">user-error</span> <span class="s">&quot;Already in sudo&quot;</span><span class="p">)</span>
+      <span class="p">(</span><span class="nv">dired</span> <span class="p">(</span><span class="nf">concat</span> <span class="s">&quot;/sudo::&quot;</span> <span class="nv">dir</span><span class="p">)))))</span>
+<span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="s">&quot;!&quot;</span> <span class="ss">&#39;sudired</span><span class="p">)</span>
 </code></pre></div>
-<h2 id="tip-#2">Tip #2</h2>
+<p>The function above will open the current directory in sudo mode. I
+decided to bind it to <kbd>!</kbd>, since the default <kbd>&amp;</kbd>
+seems strictly better than <kbd>!</kbd>. The function will ask you for
+the password once.  Afterwards, you can open other directories without
+having to enter the password.</p>
 
-<p>After you close the terminal, you get a useless buffer with no
-process. It&#39;s probably left there for you to have a history of what
-you did. I find it not useful, so here&#39;s a way to kill that buffer
-automatically:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">oleh-term-exec-hook</span> <span class="p">()</span>
-  <span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">buff</span> <span class="p">(</span><span class="nf">current-buffer</span><span class="p">))</span>
-         <span class="p">(</span><span class="nv">proc</span> <span class="p">(</span><span class="nf">get-buffer-process</span> <span class="nv">buff</span><span class="p">)))</span>
-    <span class="p">(</span><span class="nf">set-process-sentinel</span>
-     <span class="nv">proc</span>
-     <span class="o">`</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">process</span> <span class="nv">event</span><span class="p">)</span>
-        <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">string=</span> <span class="nv">event</span> <span class="s">&quot;finished\n&quot;</span><span class="p">)</span>
-            <span class="p">(</span><span class="nf">kill-buffer</span> <span class="o">,</span><span class="nv">buff</span><span class="p">))))))</span>
+<h2 id="step-two:-find-dired">Step two: <code>find-dired</code></h2>
 
-<span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;term-exec-hook</span> <span class="ss">&#39;oleh-term-exec-hook</span><span class="p">)</span>
-</code></pre></div>
-<h2 id="tip-#3">Tip #3</h2>
+<p>So now, while in sudo mode of the directory in question:</p>
 
-<p>By default, <kbd>C-y</kbd> calls term&#39;s own <code>yank</code>, which is different
-from Emacs&#39;s <code>yank</code>.  So, until recently, I was using
-<kbd>S-&lt;insert&gt;</kbd> to paste stuff into <code>*term*</code>. Here&#39;s a
-more ergonomic way:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">eval-after-load</span> <span class="s">&quot;term&quot;</span>
-  <span class="o">&#39;</span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">term-raw-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c C-y&quot;</span><span class="p">)</span> <span class="ss">&#39;term-paste</span><span class="p">))</span>
-</code></pre></div>
+<ol>
+<li>Call <kbd>M-x</kbd> <code>find-dired</code>. It&#39;s not bound by default, and I
+don&#39;t bind it myself since it&#39;s quite situational (I do bind
+<code>find-name-dired</code> to <kbd>F</kbd> in <code>dired-mode</code> though).</li>
+<li>It prompts you for the directory. I just press <kbd>RET</kbd>, since the default one is what I need.</li>
+<li>Next, it prompts for <code>find</code> args. These are the arguments to the
+UNIX command <code>find</code>. Here, I need to pass <code>-user root</code>.</li>
+<li>The command has finished and I can see the results. I can select
+some of them by pressing <kbd>m</kbd> (<code>dired-mark</code>) a few times, or
+mark them all at once with <kbd>t</kbd> (<code>dired-toggle-marks</code>).</li>
+<li>Finally, call <kbd>O</kbd> (<code>dired-do-chown</code>) on the marked files and enter <code>oleh</code>.</li>
+</ol>
+
+<p>Done. I&#39;m sure that the admin types can cook up some <code>find</code>-<code>exec</code>-<code>chown</code> combo to do the same thing,
+but the <code>find-dired</code> approach is both simpler and more flexible, since I can confirm and edit the list
+of files being changed.</p>
+
 </div>
 
 <div class="twitter-share">
@@ -251,16 +265,6 @@ more ergonomic way:</p>
     
       <li>
         <h3>
-          <!-- <a href="//2015/02/15/sudo-stuffs/"> -->
-          <a href="/2015/02/15/sudo-stuffs/">
-            Doing sudo stuff with tramp
-            <small>15 Feb 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
           <!-- <a href="//2015/02/14/semi-xmodmap/"> -->
           <a href="/2015/02/14/semi-xmodmap/">
             Semimap - .Xmodmap with semicolon as an additional modifier
@@ -275,6 +279,16 @@ more ergonomic way:</p>
           <a href="/2015/02/13/elisp-linting/">
             Elisp linting options
             <small>13 Feb 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/02/12/ido-occasional/"> -->
+          <a href="/2015/02/12/ido-occasional/">
+            Occasionally ido
+            <small>12 Feb 2015</small>
           </a>
         </h3>
       </li>

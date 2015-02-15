@@ -203,6 +203,64 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/01/11/pretty-elisp-regex/">
+        Making Elisp regex look nicer
+      </a>
+    </h1>
+
+    <span class="post-date">11 Jan 2015</span>
+
+    <p>This is just a small improvement to make e.g.  <code>\\(</code> show up in
+regular expressions without the escape chars, but instead fontified
+with <code>font-lock-keyword-face</code>. It doesn&#39;t affect the underlying code
+at all, just makes it look nicer. For the <code>\\|</code> I chose <code>∨</code> - the
+<em>logical or</em> character.</p>
+
+<h2 id="the-code">The code</h2>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">fontify-glyph</span> <span class="p">(</span><span class="nv">item</span> <span class="nv">glyph</span><span class="p">)</span>
+  <span class="o">`</span><span class="p">((</span><span class="o">,</span><span class="nv">item</span>
+     <span class="p">(</span><span class="mi">0</span> <span class="nv">font-lock-keyword-face</span> <span class="no">t</span><span class="p">)</span>
+     <span class="p">(</span><span class="mi">0</span> <span class="p">(</span><span class="k">prog1</span>
+            <span class="p">(</span><span class="nv">compose-region</span> <span class="p">(</span><span class="nf">match-beginning</span> <span class="mi">0</span><span class="p">)</span>
+                            <span class="p">(</span><span class="nf">match-end</span> <span class="mi">0</span><span class="p">)</span>
+                            <span class="o">,</span><span class="nv">glyph</span><span class="p">)</span> <span class="no">nil</span><span class="p">)))))</span>
+
+<span class="p">(</span><span class="nv">font-lock-add-keywords</span> <span class="ss">&#39;emacs-lisp-mode</span>
+                        <span class="p">(</span><span class="nv">fontify-glyph</span> <span class="s">&quot;\\\\\\\\|&quot;</span> <span class="s">&quot;∨&quot;</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">font-lock-add-keywords</span> <span class="ss">&#39;emacs-lisp-mode</span>
+                        <span class="p">(</span><span class="nv">fontify-glyph</span> <span class="s">&quot;\\\\\\\\(&quot;</span> <span class="s">&quot;(&quot;</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">font-lock-add-keywords</span> <span class="ss">&#39;emacs-lisp-mode</span>
+                        <span class="p">(</span><span class="nv">fontify-glyph</span> <span class="s">&quot;\\\\\\\\)&quot;</span> <span class="s">&quot;)&quot;</span><span class="p">))</span>
+</code></pre></div>
+<h2 id="how-it-looks-like">How it looks like</h2>
+
+<p>At first, I wanted to just inline <a href="/download/elisp-regex.png">a picture</a>,
+but then I thought that <code>htmlize-buffer</code> would be able to handle it.
+It didn&#39;t, so I just edited a small snippet by hand:</p>
+
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">or</span> <span class="p">(</span><span class="nf">string-match</span> <span class="s">&quot;^<span class="nb">(</span>[^\n%|]*?<span class="nb">)</span>|<span class="nb">(</span>([^\n]*<span class="nb">)</span>?$&quot;</span> <span class="nv">str</span><span class="p">)</span>
+    <span class="p">(</span><span class="nf">string-match</span> <span class="s">&quot;^<span class="nb">(</span>[^\n%|]*?<span class="nb">)</span><span class="nb">(</span>%[^\n]*<span class="nb">)</span>?$&quot;</span> <span class="nv">str</span><span class="p">))</span>
+</code></pre></div>
+
+<p>It&#39;s really satisfying to see those escape chars vanish as I type in
+a capture group in the regex, especially with the help of
+<a href="https://github.com/abo-abo/lispy">lispy-mode</a>.
+Here are some relevant tests for the regex support:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">should</span> <span class="p">(</span><span class="nv">string=</span> <span class="p">(</span><span class="nv">lispy-with</span> <span class="s">&quot;\&quot;a regex \\\\|\&quot;&quot;</span> <span class="s">&quot;(&quot;</span><span class="p">)</span>
+                 <span class="s">&quot;\&quot;a regex \\\\(|\\\\)\&quot;&quot;</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">should</span> <span class="p">(</span><span class="nv">string=</span> <span class="p">(</span><span class="nv">lispy-with</span> <span class="s">&quot;\&quot;\\\\(|foo\\\\)\&quot;&quot;</span> <span class="s">&quot;\C-?&quot;</span><span class="p">)</span>
+                 <span class="s">&quot;\&quot;|foo\&quot;&quot;</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">should</span> <span class="p">(</span><span class="nv">string=</span> <span class="p">(</span><span class="nv">lispy-with</span> <span class="s">&quot;\&quot;\\\\(foo\\\\)|\&quot;&quot;</span> <span class="s">&quot;\C-?&quot;</span><span class="p">)</span>
+                 <span class="s">&quot;\&quot;foo|\&quot;&quot;</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">should</span> <span class="p">(</span><span class="nv">string=</span> <span class="p">(</span><span class="nv">lispy-with</span> <span class="s">&quot;\&quot;|\\\\(foo\\\\)\&quot;&quot;</span> <span class="s">&quot;\C-d&quot;</span><span class="p">)</span>
+                 <span class="s">&quot;\&quot;|foo\&quot;&quot;</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">should</span> <span class="p">(</span><span class="nv">string=</span> <span class="p">(</span><span class="nv">lispy-with</span> <span class="s">&quot;\&quot;\\\\(foo|\\\\)\&quot;&quot;</span> <span class="s">&quot;\C-d&quot;</span><span class="p">)</span>
+                 <span class="s">&quot;\&quot;foo|\&quot;&quot;</span><span class="p">))</span>
+</code></pre></div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/01/10/dired-ansi-term/">
         dired and ansi-term&#58; BFF
       </a>
@@ -590,91 +648,6 @@ that I&#39;m sending two requests to Youtube: one to download the video,
 which is fine, since <code>async</code> handles it; and other to get the title of
 the video and put it in the heading. And this other request causes a
 perceptible delay when capturing.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/01/06/rushing-headlong/">
-        Rushing headlong
-      </a>
-    </h1>
-
-    <span class="post-date">06 Jan 2015</span>
-
-    <blockquote>
-<p>And you&#39;re rushing headlong out of control...</p>
-
-<p>-- <cite>Brian May</cite></p>
-</blockquote>
-
-<p>I&#39;ve finally wrapped a piece of config that I was using for a while in
-a package called <a href="https://github.com/abo-abo/headlong">headlong</a>.</p>
-
-<h2 id="what-does-it-do?">What does it do?</h2>
-
-<p>It provides a macro called <code>headlong-with</code> that modifies minibuffer
-completion for the forms within it, making it faster in some
-situations.  For instance:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">headlong-with</span>
- <span class="p">(</span><span class="nf">completing-read</span> <span class="s">&quot;Jump to bookmark: &quot;</span>
-                  <span class="nv">bookmark-alist</span> <span class="no">nil</span> <span class="no">t</span><span class="p">))</span>
-</code></pre></div>
-<p>or:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">headlong-with</span> <span class="p">(</span><span class="nv">read-extended-command</span><span class="p">))</span>
-</code></pre></div>
-<p>But more importantly, it provides two commands that can use it
-efficiently: <code>headlong-bookmark-jump</code> and
-<code>headlong-bookmark-jump-other</code>. The second one is basically the same
-as the first one, except it opens the bookmark with <code>pop-to-buffer</code>,
-i.e. in other window.</p>
-
-<h2 id="how-does-this-completion-work?">How does this completion work?</h2>
-
-<p>It&#39;s nothing fancy, you will just exit the minibuffer automatically as
-soon as there is only one completion candidate left.
-So it saves you <strong>one</strong> keystroke, namely <kbd>RET</kbd>.
-How much is <em>one</em> keystroke worth? It depends.</p>
-
-<p>If you arrange your bookmarks in a way that I do, with each one
-starting with a different letter, it saves you 33% of the total
-keystrokes.  For example, suppose I have:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-p&quot;</span><span class="p">)</span> <span class="ss">&#39;bookmark-jump</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-o&quot;</span><span class="p">)</span> <span class="ss">&#39;headlong-bookmark-jump</span><span class="p">)</span>
-</code></pre></div>
-<p>Then I can jump to my bookmarked directory named <code>&quot;s: sources&quot;</code> with
-two methods:</p>
-
-<ul>
-<li><kbd>M-p</kbd><kbd>s</kbd><kbd>RET</kbd> </li>
-<li><kbd>M-o</kbd><kbd>s</kbd></li>
-</ul>
-
-<p>The second method looks like it&#39;s 33% shorter, but it feels like it&#39;s
-even more, since pressing <kbd>RET</kbd> is harder than it should be
-on most keyboards.</p>
-
-<h2 id="why-is-this-cool?">Why is this cool?</h2>
-
-<p>This is cool because you can implement your bookmarks as efficiently
-as you would with just wrapping stuff with a <code>lambda</code> and using
-<code>global-set-key</code>, except that you can view and edit the bindings with
-<code>bookmark-bmenu-list</code>, and quickly the update bookmark positions with
-<code>bookmark-set</code>.</p>
-
-<p>Here&#39;s what I get when I call <kbd>M-x</kbd> <code>bookmark-bmenu-list</code>:</p>
-
-<p><img src="/download/bookmarks.png" alt="bookmarks"></p>
-
-<p>In the list above:</p>
-
-<ul>
-<li>black bookmarks are files</li>
-<li>blue bookmarks are directories</li>
-<li>pink bookmarks are functions (you need <code>bookmark+</code> for them)</li>
-</ul>
-
-<p>The package should be available in MELPA soon.</p>
 
   </div>
   
