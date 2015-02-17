@@ -11,7 +11,7 @@
 
   <title>
     
-      Easy helm improvement &middot; (or emacs
+      Hydra 0.10.0 is out &middot; (or emacs
     
   </title>
 
@@ -200,31 +200,72 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Easy helm improvement</h1>
-  <span class="post-date">21 Dec 2014</span>
-  <p>When you press <kbd>DEL</kbd> (also known as backspace) in a <code>helm</code>
-buffer, and there isn&#39;t any input to delete, it only errors at you
-with:</p>
+  <h1 class="post-title">Hydra 0.10.0 is out</h1>
+  <span class="post-date">17 Feb 2015</span>
+  <p>As usual, I&#39;ll just re-state the
+<a href="https://github.com/abo-abo/hydra/releases/tag/0.10.0">release notes</a>,
+while maybe adding a bit of flavor.</p>
 
-<blockquote>
-<p>Text is read only</p>
-</blockquote>
+<h2 id="new-features">New features</h2>
 
-<p>Why not make it do something useful instead, for instance close <code>helm</code>?</p>
+<h3 id="define-hydra-heads-that-don&#39;t-show-up-in-the-hint-at-all">Define Hydra heads that don&#39;t show up in the hint at all</h3>
 
-<p>Easy:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;helm</span><span class="p">)</span>
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">helm-backspace</span> <span class="p">()</span>
-  <span class="s">&quot;Forward to `backward-delete-char&#39;.</span>
-<span class="s">On error (read-only), quit without selecting.&quot;</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">condition-case</span> <span class="no">nil</span>
-      <span class="p">(</span><span class="nv">backward-delete-char</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="p">(</span><span class="ne">error</span>
-     <span class="p">(</span><span class="nv">helm-keyboard-quit</span><span class="p">))))</span>
+<p>This can be done by setting the head&#39;s hint explicitly to <code>nil</code>, instead of the usual string. For
+instance, if you always tend to bind the arrows to <kbd>hjkl</kbd>, there&#39;s no point to show a hint
+for them.</p>
 
-<span class="p">(</span><span class="nf">define-key</span> <span class="nv">helm-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;DEL&quot;</span><span class="p">)</span> <span class="ss">&#39;helm-backspace</span><span class="p">)</span>
+<h3 id="use-a-dedicated-window-for-hydra-hints">Use a dedicated window for Hydra hints</h3>
+
+<p>Since version <code>0.10.0</code>, setting <code>hydra-lv</code> to <code>t</code> (the default setting) will make it use a dedicated
+window right above the Echo Area for hints. This has the advantage that you can immediately see any
+<code>message</code> output from the functions that you call, since Hydra no longer uses <code>message</code> to display
+the hint. You can still have the old behavior by setting <code>hydra-lv</code> to <code>nil</code>.</p>
+
+<p>How it looks like:</p>
+
+<p><img src="/download/hydra-lv.png" alt="hydra-lv"></p>
+
+<p>Here, an error was triggered by <code>previous-line</code> and the message is displayed without interrupting
+the hint.</p>
+
+<h3 id="allow-duplicate-functions-in-heads">Allow duplicate functions in heads</h3>
+
+<p>Duplicate functions will be concatenated in the hint.
+This was already covered in <a href="/2015/02/16/hydra-multi/">yesterday&#39;s post</a></p>
+
+<h3 id="add-option-to-font-lock-defhydra">Add option to font-lock <code>defhydra</code></h3>
+
+<p>If you want to nicely font-lock your <code>defhydra</code> statements, just add this to your config:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;hydra</span><span class="p">)</span>
+<span class="p">(</span><span class="nv">hydra-add-font-lock</span><span class="p">)</span>
 </code></pre></div>
+<p>Additionally, <code>defhydra</code> is now to be indented as a <code>defun</code>, so it will be indented like this:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-goto-line</span> <span class="p">(</span><span class="nv">global-map</span> <span class="s">&quot;M-g&quot;</span>
+                           <span class="nb">:pre</span> <span class="p">(</span><span class="nv">linum-mode</span> <span class="mi">1</span><span class="p">)</span>
+                           <span class="nb">:post</span> <span class="p">(</span><span class="nv">linum-mode</span> <span class="mi">-1</span><span class="p">)</span>
+                           <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;g&quot;</span> <span class="nv">goto-line</span> <span class="s">&quot;line&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;c&quot;</span> <span class="nf">goto-char</span> <span class="s">&quot;char&quot;</span><span class="p">))</span>
+</code></pre></div>
+<p>Note that the indentation of the body argument is as if it was data
+and not code, i.e. the proper one. As you see, I even added <code>defhydra</code>
+to the blog&#39;s Pygments list for Elisp.</p>
+
+<h2 id="incompatible-changes">Incompatible changes</h2>
+
+<p>The macro <code>hydra-create</code>, as well as the variables that were supposed
+to be used with it (<code>hydra-example-text-scale</code>,
+<code>hydra-example-move-window-splitter</code>, <code>hydra-example-goto-error</code>,
+<code>hydra-example-windmove</code>) were removed. All the functionality is still
+there in hydra-examples.el with the better <code>defhydra</code> macro.</p>
+
+<h2 id="outro">Outro</h2>
+
+<p>I hope that you like the new changes. And if you&#39;re byte-compiling
+your code that uses <code>defhydra</code>, don&#39;t forget to re-compile. Also, the
+latest version of <code>ace-window</code> will ignore <code>*LV*</code> buffer while
+switching, as it did for <code>*Calc Trail*</code> before.</p>
+
 </div>
 
 <div class="twitter-share">
@@ -242,16 +283,6 @@ with:</p>
     
       <li>
         <h3>
-          <!-- <a href="//2015/02/17/hydra-0.10.0/"> -->
-          <a href="/2015/02/17/hydra-0.10.0/">
-            Hydra 0.10.0 is out
-            <small>17 Feb 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
           <!-- <a href="//2015/02/16/hydra-multi/"> -->
           <a href="/2015/02/16/hydra-multi/">
             Binding one function multiple times in Hydra
@@ -266,6 +297,16 @@ with:</p>
           <a href="/2015/02/15/sudo-stuffs/">
             Doing sudo stuff with tramp
             <small>15 Feb 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/02/14/semi-xmodmap/"> -->
+          <a href="/2015/02/14/semi-xmodmap/">
+            Semimap - .Xmodmap with semicolon as an additional modifier
+            <small>14 Feb 2015</small>
           </a>
         </h3>
       </li>

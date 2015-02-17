@@ -222,7 +222,7 @@ instead of being called just once.</p>
 Hydra can reproduce the mentioned approach. Here&#39;s how it looks like:</p>
 <div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span>
  <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c C-v&quot;</span><span class="p">)</span>
- <span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-toggle</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
+ <span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-toggle</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
    <span class="s">&quot;toggle&quot;</span>
    <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="nv">abbrev-mode</span> <span class="s">&quot;abbrev&quot;</span><span class="p">)</span>
    <span class="p">(</span><span class="s">&quot;d&quot;</span> <span class="nv">toggle-debug-on-error</span> <span class="s">&quot;debug&quot;</span><span class="p">)</span>
@@ -258,7 +258,7 @@ approach, which would e.g. error to your <kbd>C-c C-v C-n</kbd> with
 <p>Note that <code>defhydra</code> looks intentionally like a <code>defun</code>, so that it&#39;s
 easier to remember how it works.
 Here&#39;s a more verbose Hydra that&#39;s largely equivalent to the one above:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-toggle</span> <span class="p">(</span><span class="nv">global-map</span> <span class="s">&quot;C-c&quot;</span> <span class="nb">:color</span> <span class="nv">red</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-toggle</span> <span class="p">(</span><span class="nv">global-map</span> <span class="s">&quot;C-c&quot;</span> <span class="nb">:color</span> <span class="nv">red</span><span class="p">)</span>
    <span class="s">&quot;toggle&quot;</span>
    <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="nv">abbrev-mode</span> <span class="s">&quot;abbrev&quot;</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
    <span class="p">(</span><span class="s">&quot;d&quot;</span> <span class="nv">toggle-debug-on-error</span> <span class="s">&quot;debug&quot;</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
@@ -338,7 +338,7 @@ allows you to cancel easier.</li>
 <code>projectile-find-file</code> ended up here:</p>
 <div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span>
  <span class="s">&quot;κ&quot;</span>
- <span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-helm</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
+ <span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-helm</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
    <span class="s">&quot;helm&quot;</span>
    <span class="p">(</span><span class="s">&quot;f&quot;</span> <span class="nv">projectile-find-file</span> <span class="s">&quot;file&quot;</span><span class="p">)</span>
    <span class="p">(</span><span class="s">&quot;w&quot;</span> <span class="nv">helm-org-wiki</span> <span class="s">&quot;wiki&quot;</span><span class="p">)</span>
@@ -347,7 +347,7 @@ allows you to cancel easier.</li>
    <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span> <span class="s">&quot;quit&quot;</span><span class="p">)))</span>
 </code></pre></div>
 <p>Here&#39;s one more for <code>gnus</code>; I&#39;m just getting the hang of it, so some hints are useful:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-gnus-reply</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-gnus-reply</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
   <span class="s">&quot;reply&quot;</span>
   <span class="p">(</span><span class="s">&quot;o&quot;</span> <span class="nv">gnus-summary-reply-with-original</span> <span class="s">&quot;one&quot;</span><span class="p">)</span>
   <span class="p">(</span><span class="s">&quot;O&quot;</span> <span class="nv">gnus-summary-reply</span><span class="p">)</span>
@@ -383,6 +383,16 @@ efficient blue or red-and-blue Hydras. Happy hacking!</p>
     
       <li>
         <h3>
+          <!-- <a href="//2015/02/17/hydra-0.10.0/"> -->
+          <a href="/2015/02/17/hydra-0.10.0/">
+            Hydra 0.10.0 is out
+            <small>17 Feb 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
           <!-- <a href="//2015/02/16/hydra-multi/"> -->
           <a href="/2015/02/16/hydra-multi/">
             Binding one function multiple times in Hydra
@@ -397,16 +407,6 @@ efficient blue or red-and-blue Hydras. Happy hacking!</p>
           <a href="/2015/02/15/sudo-stuffs/">
             Doing sudo stuff with tramp
             <small>15 Feb 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
-          <!-- <a href="//2015/02/14/semi-xmodmap/"> -->
-          <a href="/2015/02/14/semi-xmodmap/">
-            Semimap - .Xmodmap with semicolon as an additional modifier
-            <small>14 Feb 2015</small>
           </a>
         </h3>
       </li>

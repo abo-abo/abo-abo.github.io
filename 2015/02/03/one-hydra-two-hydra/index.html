@@ -213,7 +213,7 @@ This version adds prefix arguments to all Hydras.</p>
 <p>Now it&#39;s possible to write this:</p>
 <div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span>
  <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-z&quot;</span><span class="p">)</span>
- <span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-vi</span> <span class="p">()</span>
+ <span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-vi</span> <span class="p">()</span>
    <span class="s">&quot;vi&quot;</span>
    <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nf">forward-char</span><span class="p">)</span>
    <span class="p">(</span><span class="s">&quot;h&quot;</span> <span class="nf">backward-char</span><span class="p">)</span>
@@ -230,7 +230,7 @@ argument by 4 each time.</p>
 <h3 id="the-good-old-zoom">The good-old zoom</h3>
 
 <p>If you remember, this was the original Hydra:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-zoom</span> <span class="p">(</span><span class="nv">global-map</span> <span class="s">&quot;&lt;f2&gt;&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-zoom</span> <span class="p">(</span><span class="nv">global-map</span> <span class="s">&quot;&lt;f2&gt;&quot;</span><span class="p">)</span>
   <span class="s">&quot;zoom&quot;</span>
   <span class="p">(</span><span class="s">&quot;g&quot;</span> <span class="nv">text-scale-increase</span> <span class="s">&quot;in&quot;</span><span class="p">)</span>
   <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nv">text-scale-decrease</span> <span class="s">&quot;out&quot;</span><span class="p">))</span>
@@ -239,7 +239,7 @@ argument by 4 each time.</p>
 times for a total of +3 zoom.</p>
 
 <h3 id="the-good-old-move-splitter">The good-old move-splitter</h3>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-splitter</span> <span class="p">(</span><span class="nv">global-map</span> <span class="s">&quot;C-M-s&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-splitter</span> <span class="p">(</span><span class="nv">global-map</span> <span class="s">&quot;C-M-s&quot;</span><span class="p">)</span>
   <span class="s">&quot;splitter&quot;</span>
   <span class="p">(</span><span class="s">&quot;h&quot;</span> <span class="nv">hydra-move-splitter-left</span><span class="p">)</span>
   <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">hydra-move-splitter-down</span><span class="p">)</span>
@@ -252,7 +252,7 @@ times for a total of +3 zoom.</p>
 <p>If I wanted to type <kbd>C-M-s 40 l</kbd>, I would have to use this definition instead:</p>
 <div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span>
  <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-M-s&quot;</span><span class="p">)</span>
- <span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-splitter</span> <span class="p">()</span>
+ <span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-splitter</span> <span class="p">()</span>
    <span class="s">&quot;splitter&quot;</span>
    <span class="p">(</span><span class="s">&quot;h&quot;</span> <span class="nv">hydra-move-splitter-left</span><span class="p">)</span>
    <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">hydra-move-splitter-down</span><span class="p">)</span>
@@ -269,7 +269,7 @@ So you can pick the method that you prefer, the choice is there.</p>
 <h2 id="the-ultimate-window-switching-setup">The ultimate window switching setup</h2>
 <div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span>
  <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-M-o&quot;</span><span class="p">)</span>
- <span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-window</span> <span class="p">()</span>
+ <span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-window</span> <span class="p">()</span>
    <span class="s">&quot;window&quot;</span>
    <span class="p">(</span><span class="s">&quot;h&quot;</span> <span class="nv">windmove-left</span><span class="p">)</span>
    <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">windmove-down</span><span class="p">)</span>
@@ -341,6 +341,16 @@ a</kbd> is the same as <kbd>d</kbd> (delete).</p>
     
       <li>
         <h3>
+          <!-- <a href="//2015/02/17/hydra-0.10.0/"> -->
+          <a href="/2015/02/17/hydra-0.10.0/">
+            Hydra 0.10.0 is out
+            <small>17 Feb 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
           <!-- <a href="//2015/02/16/hydra-multi/"> -->
           <a href="/2015/02/16/hydra-multi/">
             Binding one function multiple times in Hydra
@@ -355,16 +365,6 @@ a</kbd> is the same as <kbd>d</kbd> (delete).</p>
           <a href="/2015/02/15/sudo-stuffs/">
             Doing sudo stuff with tramp
             <small>15 Feb 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
-          <!-- <a href="//2015/02/14/semi-xmodmap/"> -->
-          <a href="/2015/02/14/semi-xmodmap/">
-            Semimap - .Xmodmap with semicolon as an additional modifier
-            <small>14 Feb 2015</small>
           </a>
         </h3>
       </li>

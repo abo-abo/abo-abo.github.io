@@ -4,7 +4,7 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-02-16T20:05:20+01:00</updated>
+ <updated>2015-02-17T18:38:22+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
@@ -13,12 +13,83 @@
 
  
  <entry>
+   <title>Hydra 0.10.0 is out</title>
+   <link href="http://oremacs.com/2015/02/17/hydra-0.10.0/"/>
+   <updated>2015-02-17T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/02/17/hydra-0.10.0</id>
+   <content type="html">&lt;p&gt;As usual, I&amp;#39;ll just re-state the
+&lt;a href=&quot;https://github.com/abo-abo/hydra/releases/tag/0.10.0&quot;&gt;release notes&lt;/a&gt;,
+while maybe adding a bit of flavor.&lt;/p&gt;
+
+&lt;h2 id=&quot;new-features&quot;&gt;New features&lt;/h2&gt;
+
+&lt;h3 id=&quot;define-hydra-heads-that-don&amp;#39;t-show-up-in-the-hint-at-all&quot;&gt;Define Hydra heads that don&amp;#39;t show up in the hint at all&lt;/h3&gt;
+
+&lt;p&gt;This can be done by setting the head&amp;#39;s hint explicitly to &lt;code&gt;nil&lt;/code&gt;, instead of the usual string. For
+instance, if you always tend to bind the arrows to &lt;kbd&gt;hjkl&lt;/kbd&gt;, there&amp;#39;s no point to show a hint
+for them.&lt;/p&gt;
+
+&lt;h3 id=&quot;use-a-dedicated-window-for-hydra-hints&quot;&gt;Use a dedicated window for Hydra hints&lt;/h3&gt;
+
+&lt;p&gt;Since version &lt;code&gt;0.10.0&lt;/code&gt;, setting &lt;code&gt;hydra-lv&lt;/code&gt; to &lt;code&gt;t&lt;/code&gt; (the default setting) will make it use a dedicated
+window right above the Echo Area for hints. This has the advantage that you can immediately see any
+&lt;code&gt;message&lt;/code&gt; output from the functions that you call, since Hydra no longer uses &lt;code&gt;message&lt;/code&gt; to display
+the hint. You can still have the old behavior by setting &lt;code&gt;hydra-lv&lt;/code&gt; to &lt;code&gt;nil&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;How it looks like:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/hydra-lv.png&quot; alt=&quot;hydra-lv&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Here, an error was triggered by &lt;code&gt;previous-line&lt;/code&gt; and the message is displayed without interrupting
+the hint.&lt;/p&gt;
+
+&lt;h3 id=&quot;allow-duplicate-functions-in-heads&quot;&gt;Allow duplicate functions in heads&lt;/h3&gt;
+
+&lt;p&gt;Duplicate functions will be concatenated in the hint.
+This was already covered in &lt;a href=&quot;/2015/02/16/hydra-multi/&quot;&gt;yesterday&amp;#39;s post&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;add-option-to-font-lock-defhydra&quot;&gt;Add option to font-lock &lt;code&gt;defhydra&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;If you want to nicely font-lock your &lt;code&gt;defhydra&lt;/code&gt; statements, just add this to your config:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;hydra&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hydra-add-font-lock&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Additionally, &lt;code&gt;defhydra&lt;/code&gt; is now to be indented as a &lt;code&gt;defun&lt;/code&gt;, so it will be indented like this:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-goto-line&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;M-g&amp;quot;&lt;/span&gt;
+                           &lt;span class=&quot;nb&quot;&gt;:pre&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;linum-mode&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                           &lt;span class=&quot;nb&quot;&gt;:post&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;linum-mode&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;-1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                           &lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;g&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;goto-line&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;line&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;c&amp;quot;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;goto-char&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;char&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Note that the indentation of the body argument is as if it was data
+and not code, i.e. the proper one. As you see, I even added &lt;code&gt;defhydra&lt;/code&gt;
+to the blog&amp;#39;s Pygments list for Elisp.&lt;/p&gt;
+
+&lt;h2 id=&quot;incompatible-changes&quot;&gt;Incompatible changes&lt;/h2&gt;
+
+&lt;p&gt;The macro &lt;code&gt;hydra-create&lt;/code&gt;, as well as the variables that were supposed
+to be used with it (&lt;code&gt;hydra-example-text-scale&lt;/code&gt;,
+&lt;code&gt;hydra-example-move-window-splitter&lt;/code&gt;, &lt;code&gt;hydra-example-goto-error&lt;/code&gt;,
+&lt;code&gt;hydra-example-windmove&lt;/code&gt;) were removed. All the functionality is still
+there in hydra-examples.el with the better &lt;code&gt;defhydra&lt;/code&gt; macro.&lt;/p&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;I hope that you like the new changes. And if you&amp;#39;re byte-compiling
+your code that uses &lt;code&gt;defhydra&lt;/code&gt;, don&amp;#39;t forget to re-compile. Also, the
+latest version of &lt;code&gt;ace-window&lt;/code&gt; will ignore &lt;code&gt;*LV*&lt;/code&gt; buffer while
+switching, as it did for &lt;code&gt;*Calc Trail*&lt;/code&gt; before.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
    <title>Binding one function multiple times in Hydra</title>
    <link href="http://oremacs.com/2015/02/16/hydra-multi/"/>
    <updated>2015-02-16T00:00:00+01:00</updated>
    <id>http://oremacs.com/2015/02/16/hydra-multi</id>
    <content type="html">&lt;p&gt;Here&amp;#39;s a recent feature that&amp;#39;s now available in &lt;a href=&quot;https://github.com/abo-abo/hydra&quot;&gt;hydra&lt;/a&gt;:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-zoom&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;f2&amp;gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-zoom&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;f2&amp;gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
   &lt;span class=&quot;s&quot;&gt;&amp;quot;zoom&amp;quot;&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;g&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;text-scale-increase&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;in&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;l&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;text-scale-decrease&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;out&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
@@ -685,7 +756,7 @@ sexp or a function name. The function doesn&amp;#39;t need to be interactive.&lt
 &lt;h2 id=&quot;support-for-local-hydra-heads-via-:bind-property&quot;&gt;Support for local Hydra heads via &lt;code&gt;:bind&lt;/code&gt; property&lt;/h2&gt;
 
 &lt;p&gt;Example:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-next-error&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-x&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-next-error&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-x&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
   &lt;span class=&quot;s&quot;&gt;&amp;quot;next-error&amp;quot;&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;`&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;next-error&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;next&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;j&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;next-error&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;next&amp;quot;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:bind&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
@@ -708,7 +779,7 @@ The heads will inherit it, just like they do with &lt;code&gt;:color&lt;/code&gt
 The &lt;code&gt;:bind&lt;/code&gt; property can be nil or a lambda of &lt;code&gt;global-set-key&lt;/code&gt; format.&lt;/p&gt;
 
 &lt;p&gt;Example:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-goto&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;M-g&amp;quot;&lt;/span&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-goto&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;M-g&amp;quot;&lt;/span&gt;
                       &lt;span class=&quot;nb&quot;&gt;:bind&lt;/span&gt;
                       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cmd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
                         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;bind-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cmd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
@@ -732,7 +803,7 @@ whole &lt;code&gt;BODY&lt;/code&gt; argument, as was advertised before. Just put
 &lt;p&gt;Example:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt;
  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-z&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
- &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-vi&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-vi&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
    &lt;span class=&quot;s&quot;&gt;&amp;quot;vi&amp;quot;&lt;/span&gt;
    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;l&amp;quot;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;forward-char&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;q&amp;quot;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;quit&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
@@ -744,7 +815,7 @@ behavior allowed only for &lt;kbd&gt;C-z C-u l&lt;/kbd&gt; to get &lt;code&gt;(f
 &lt;h2 id=&quot;allow-a-sexp-as-head&amp;#39;s-cmd-parameter&quot;&gt;Allow a sexp as head&amp;#39;s CMD parameter&lt;/h2&gt;
 
 &lt;p&gt;Example:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-launcher&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-launcher&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
    &lt;span class=&quot;s&quot;&gt;&amp;quot;Launch&amp;quot;&lt;/span&gt;
    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;h&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;man&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;man&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;r&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;browse-url&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;http://www.reddit.com/r/emacs/&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;reddit&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
@@ -802,7 +873,7 @@ has also grown to six.&lt;/p&gt;
 &lt;p&gt;Here is the &lt;a href=&quot;https://www.youtube.com/watch?v=_qZliI1BKzI&quot;&gt;link&lt;/a&gt;, and here is the current window-switching code:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt;
  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-M-o&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
- &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-window&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;amaranth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-window&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;amaranth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
    &lt;span class=&quot;s&quot;&gt;&amp;quot;window&amp;quot;&lt;/span&gt;
    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;h&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;windmove-left&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;j&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;windmove-down&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
@@ -1007,7 +1078,7 @@ than the good-old quitters - the &lt;font color=&quot;#2A00FF&quot;&gt;blue&lt;/
 &lt;h2 id=&quot;an-example-code&quot;&gt;An Example code&lt;/h2&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt;
  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-z&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
- &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-vi&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-vi&lt;/span&gt;
      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:pre&lt;/span&gt;
       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;set-cursor-color&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;#e52b50&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
       &lt;span class=&quot;nb&quot;&gt;:post&lt;/span&gt;
@@ -1065,7 +1136,7 @@ Note that only &lt;code&gt;ace-window&lt;/code&gt;-related heads are affected, s
 This was necessary to fix &lt;a href=&quot;https://github.com/abo-abo/hydra/issues/15&quot;&gt;issue #15&lt;/a&gt; (unable to use &lt;code&gt;goto-line&lt;/code&gt; in a Hydra, since it requires input).&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt;
  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-M-o&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
- &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-window&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-window&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
    &lt;span class=&quot;s&quot;&gt;&amp;quot;window&amp;quot;&lt;/span&gt;
    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;h&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;windmove-left&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;j&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;windmove-down&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
@@ -1125,7 +1196,7 @@ it&amp;#39;s a simple trick that you can use if you want to have a head quit
 conditionally, or something.&lt;/p&gt;
 
 &lt;h2 id=&quot;goto-line-ad-infinum&quot;&gt;&lt;code&gt;goto-line&lt;/code&gt; ad infinum&lt;/h2&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-test&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;M-g&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-test&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;M-g&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;g&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;goto-line&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;goto-line&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;With the Hydra above, it&amp;#39;s possible to:&lt;/p&gt;
@@ -1141,7 +1212,7 @@ conditionally, or something.&lt;/p&gt;
 &lt;p&gt;Here&amp;#39;s how the new &lt;code&gt;:pre&lt;/code&gt; and &lt;code&gt;:post&lt;/code&gt; statements work:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt;
  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-z&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
- &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-vi&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-vi&lt;/span&gt;
      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:pre&lt;/span&gt;
       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;set-cursor-color&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;#40e0d0&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
       &lt;span class=&quot;nb&quot;&gt;:post&lt;/span&gt;
@@ -1191,7 +1262,7 @@ This version adds prefix arguments to all Hydras.&lt;/p&gt;
 &lt;p&gt;Now it&amp;#39;s possible to write this:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt;
  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-z&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
- &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-vi&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-vi&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
    &lt;span class=&quot;s&quot;&gt;&amp;quot;vi&amp;quot;&lt;/span&gt;
    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;l&amp;quot;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;forward-char&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;h&amp;quot;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;backward-char&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
@@ -1208,7 +1279,7 @@ argument by 4 each time.&lt;/p&gt;
 &lt;h3 id=&quot;the-good-old-zoom&quot;&gt;The good-old zoom&lt;/h3&gt;
 
 &lt;p&gt;If you remember, this was the original Hydra:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-zoom&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;f2&amp;gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-zoom&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;f2&amp;gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
   &lt;span class=&quot;s&quot;&gt;&amp;quot;zoom&amp;quot;&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;g&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;text-scale-increase&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;in&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;l&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;text-scale-decrease&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;out&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
@@ -1217,7 +1288,7 @@ argument by 4 each time.&lt;/p&gt;
 times for a total of +3 zoom.&lt;/p&gt;
 
 &lt;h3 id=&quot;the-good-old-move-splitter&quot;&gt;The good-old move-splitter&lt;/h3&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-splitter&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-M-s&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-splitter&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-M-s&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
   &lt;span class=&quot;s&quot;&gt;&amp;quot;splitter&amp;quot;&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;h&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-move-splitter-left&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;j&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-move-splitter-down&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
@@ -1230,7 +1301,7 @@ times for a total of +3 zoom.&lt;/p&gt;
 &lt;p&gt;If I wanted to type &lt;kbd&gt;C-M-s 40 l&lt;/kbd&gt;, I would have to use this definition instead:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt;
  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-M-s&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
- &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-splitter&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-splitter&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
    &lt;span class=&quot;s&quot;&gt;&amp;quot;splitter&amp;quot;&lt;/span&gt;
    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;h&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-move-splitter-left&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;j&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-move-splitter-down&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
@@ -1247,7 +1318,7 @@ So you can pick the method that you prefer, the choice is there.&lt;/p&gt;
 &lt;h2 id=&quot;the-ultimate-window-switching-setup&quot;&gt;The ultimate window switching setup&lt;/h2&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt;
  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-M-o&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
- &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-window&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-window&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
    &lt;span class=&quot;s&quot;&gt;&amp;quot;window&amp;quot;&lt;/span&gt;
    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;h&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;windmove-left&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;j&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;windmove-down&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
@@ -1329,7 +1400,7 @@ instead of being called just once.&lt;/p&gt;
 Hydra can reproduce the mentioned approach. Here&amp;#39;s how it looks like:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt;
  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-c C-v&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
- &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-toggle&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-toggle&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
    &lt;span class=&quot;s&quot;&gt;&amp;quot;toggle&amp;quot;&lt;/span&gt;
    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;a&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;abbrev-mode&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;abbrev&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;d&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;toggle-debug-on-error&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;debug&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
@@ -1365,7 +1436,7 @@ approach, which would e.g. error to your &lt;kbd&gt;C-c C-v C-n&lt;/kbd&gt; with
 &lt;p&gt;Note that &lt;code&gt;defhydra&lt;/code&gt; looks intentionally like a &lt;code&gt;defun&lt;/code&gt;, so that it&amp;#39;s
 easier to remember how it works.
 Here&amp;#39;s a more verbose Hydra that&amp;#39;s largely equivalent to the one above:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-toggle&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-c&amp;quot;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;red&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-toggle&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-c&amp;quot;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;red&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
    &lt;span class=&quot;s&quot;&gt;&amp;quot;toggle&amp;quot;&lt;/span&gt;
    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;a&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;abbrev-mode&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;abbrev&amp;quot;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;d&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;toggle-debug-on-error&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;debug&amp;quot;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
@@ -1445,7 +1516,7 @@ allows you to cancel easier.&lt;/li&gt;
 &lt;code&gt;projectile-find-file&lt;/code&gt; ended up here:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt;
  &lt;span class=&quot;s&quot;&gt;&amp;quot;κ&amp;quot;&lt;/span&gt;
- &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-helm&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-helm&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
    &lt;span class=&quot;s&quot;&gt;&amp;quot;helm&amp;quot;&lt;/span&gt;
    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;f&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;projectile-find-file&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;file&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;w&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;helm-org-wiki&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;wiki&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
@@ -1454,7 +1525,7 @@ allows you to cancel easier.&lt;/li&gt;
    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;q&amp;quot;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;quit&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Here&amp;#39;s one more for &lt;code&gt;gnus&lt;/code&gt;; I&amp;#39;m just getting the hang of it, so some hints are useful:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-gnus-reply&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-gnus-reply&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
   &lt;span class=&quot;s&quot;&gt;&amp;quot;reply&amp;quot;&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;o&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;gnus-summary-reply-with-original&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;one&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;O&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;gnus-summary-reply&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
@@ -1973,7 +2044,7 @@ So I wrote down an update to Hydra in order to get a similar setup.&lt;/p&gt;
                          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;list&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;-4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
                        &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;
 
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-window&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-M-o&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-window&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-M-o&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
   &lt;span class=&quot;s&quot;&gt;&amp;quot;window&amp;quot;&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;h&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;windmove-left&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;left&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;j&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;windmove-down&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;down&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
