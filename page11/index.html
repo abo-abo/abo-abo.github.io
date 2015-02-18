@@ -120,6 +120,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -200,6 +204,117 @@
 
       <div class="container content">
         <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/2014/12/30/ace-link-eww/">
+        Emacs Web Wowser (EWW) got ace-link
+      </a>
+    </h1>
+
+    <span class="post-date">30 Dec 2014</span>
+
+    <h2 id="emacs-goodness-incoming">Emacs goodness incoming</h2>
+
+<p>I&#39;ve discovered a nice Emacs-related blog -
+<a href="http://mbork.pl/Content_AND_Presentation">Content AND Presentation</a>.
+Unlike <a href="http://axisofeval.blogspot.nl">The Axis of Eval</a>, the blog
+that I mentioned yesterday, this one is pretty self-contained, i.e. it
+doesn&#39;t link to many external information sources.  So I thought that
+it&#39;s perfect for trying EWW to read it.</p>
+
+<h2 id="not-so-fast!-configure-first.">Not so fast! Configure first.</h2>
+
+<p>For modes that don&#39;t require to self-insert (and even for some that
+do), I like to navigate with
+<kbd>h</kbd>/<kbd>j</kbd>/<kbd>k</kbd>/<kbd>l</kbd> as arrows.  These
+arrows are on the home row, so navigation becomes a pleasant and
+relaxed experience.  But for EWW I decided to add a little twist: if
+the point is in the first column, <kbd>j</kbd>/<kbd>k</kbd> will move
+down/up not by one line, but by one paragraph.  This is great for
+concentration: I navigate to a paragraph, read it, navigate to the
+next one. The point shows me the paragraph that I&#39;m reading,
+everything before the point I&#39;ve already read.  So every time I press
+<kbd>j</kbd>, I get a tiny warm feeling of accomplishment.
+I can also pair this with <kbd>v</kbd>, which I bind to recenter the
+current line to the top.</p>
+
+<p>So here&#39;s what my key setup currently looks like:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">oleh-eww-hook</span> <span class="p">()</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;j&quot;</span> <span class="ss">&#39;oww-down</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;k&quot;</span> <span class="ss">&#39;oww-up</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;l&quot;</span> <span class="ss">&#39;forward-char</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;L&quot;</span> <span class="ss">&#39;eww-back-url</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;h&quot;</span> <span class="ss">&#39;backward-char</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;v&quot;</span> <span class="ss">&#39;recenter-top-bottom</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;V&quot;</span> <span class="ss">&#39;eww-view-source</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;m&quot;</span> <span class="ss">&#39;eww-follow-link</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;a&quot;</span> <span class="ss">&#39;move-beginning-of-line</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;e&quot;</span> <span class="ss">&#39;move-end-of-line</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;o&quot;</span> <span class="ss">&#39;ace-link-eww</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;y&quot;</span> <span class="ss">&#39;eww</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;eww-mode-hook</span> <span class="ss">&#39;oleh-eww-hook</span><span class="p">)</span>
+</code></pre></div>
+<p>As you see, I was careful to re-assign <code>eww-back-url</code> and
+<code>eww-view-source</code> - the commands that I&#39;ve displaced from <kbd>l</kbd>
+and <kbd>v</kbd>.  And here&#39;s the implementation of the arrows:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">oww-down</span> <span class="p">(</span><span class="nv">arg</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">interactive</span> <span class="s">&quot;p&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">bolp</span><span class="p">)</span>
+      <span class="p">(</span><span class="k">progn</span>
+        <span class="p">(</span><span class="nv">forward-paragraph</span> <span class="nv">arg</span><span class="p">)</span>
+        <span class="p">(</span><span class="nf">forward-line</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="p">(</span><span class="nv">line-move</span> <span class="nv">arg</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">oww-up</span> <span class="p">(</span><span class="nv">arg</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">interactive</span> <span class="s">&quot;p&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">bolp</span><span class="p">)</span>
+      <span class="p">(</span><span class="k">progn</span>
+        <span class="p">(</span><span class="nf">forward-line</span> <span class="mi">-1</span><span class="p">)</span>
+        <span class="p">(</span><span class="nv">backward-paragraph</span> <span class="nv">arg</span><span class="p">)</span>
+        <span class="p">(</span><span class="nf">forward-line</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="p">(</span><span class="nv">line-move</span> <span class="p">(</span><span class="nf">-</span> <span class="nv">arg</span><span class="p">))))</span>
+</code></pre></div>
+<h2 id="cherry-on-the-top">Cherry on the top</h2>
+
+<p>And while I was at it, I&#39;ve added <a href="https://github.com/abo-abo/ace-link">ace-link</a> support for EWW.  It was
+pretty easy, basically the same routine as for <code>help-mode</code> and
+<code>info-mode</code>. The only hard part was to figure out what part of the
+code keeps binding <code>shr-save-contents</code> to <kbd>o</kbd>, my preferred
+binding for <code>ace-link</code>. Turns out it was <code>eww-link-keymap</code>, and not
+<code>shr-map</code>. So here&#39;s the new key binding code:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">ace-link-setup-default</span> <span class="p">()</span>
+  <span class="s">&quot;Setup the defualt shortcuts.&quot;</span>
+  <span class="p">(</span><span class="nv">eval-after-load</span> <span class="s">&quot;info&quot;</span>
+    <span class="o">&#39;</span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">Info-mode-map</span> <span class="s">&quot;o&quot;</span> <span class="ss">&#39;ace-link-info</span><span class="p">))</span>
+  <span class="p">(</span><span class="nv">eval-after-load</span> <span class="s">&quot;help-mode&quot;</span>
+    <span class="o">&#39;</span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">help-mode-map</span> <span class="s">&quot;o&quot;</span> <span class="ss">&#39;ace-link-help</span><span class="p">))</span>
+  <span class="p">(</span><span class="nv">eval-after-load</span> <span class="s">&quot;eww&quot;</span>
+    <span class="o">&#39;</span><span class="p">(</span><span class="k">progn</span>
+      <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-link-keymap</span> <span class="s">&quot;o&quot;</span> <span class="ss">&#39;ace-link-eww</span><span class="p">)</span>
+      <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;o&quot;</span> <span class="ss">&#39;ace-link-eww</span><span class="p">))))</span>
+</code></pre></div>
+<p>If you haven&#39;t tried <a href="https://github.com/abo-abo/ace-link">ace-link</a>
+before, you can get it from MELPA.  The minimal configuration that you
+need is this:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">ace-link-setup-default</span><span class="p">)</span>
+</code></pre></div>
+<p>Here&#39;s the setup that I&#39;m actually using:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">use-package</span> <span class="nv">ace-link</span>
+    <span class="nb">:load-path</span> <span class="s">&quot;~/git/ace-link&quot;</span>
+    <span class="nb">:init</span> <span class="p">(</span><span class="nv">ace-link-setup-default</span><span class="p">))</span>
+</code></pre></div>
+<p>I&#39;m using it from my git folder since when I want to edit a project, I
+like to use <a href="https://github.com/nonsequitur/smex">smex</a>&#39;s
+jump-to-definition.</p>
+
+<p>And <a href="https://github.com/jwiegley/use-package">use-package</a> is useful
+for the cases when my <code>~/git/</code> happens not to contain <code>ace-link</code>.  In
+that case, instead of getting a debugger error on starting Emacs, I
+get only a polite &quot;Could not load package ace-link&quot; in my <code>*Messages*</code>
+buffer.</p>
+
+  </div>
   
   <div class="post">
     <h1 class="post-title">
@@ -820,121 +935,6 @@ implementing only one snippet that can be used in a variety of ways.</p>
 <blockquote>
 <p>tiny is not yasnippet</p>
 </blockquote>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2014/12/25/ode-to-toggle/">
-        Ode to the toggle
-      </a>
-    </h1>
-
-    <span class="post-date">25 Dec 2014</span>
-
-    <p>Man, I just love toggles: the light switches, the
-<kbd>f</kbd> - full-screen key in <code>vlc</code>, and the clicky pens (ooh, those
-are the best). So I try to model some of my Emacs key bindings as
-toggles.</p>
-
-<p>Let me just quantify the two features that make a good toggle:</p>
-
-<ul>
-<li>only two states: <em>on</em> and <em>off</em></li>
-<li>the state is visible at a glance</li>
-</ul>
-
-<p>One could argue that with <code>undo</code> most editing commands become toggles.
-But they&#39;re not, since each time you call <code>undo</code>, you mess with
-Emacs&#39;s undo state. And the undo state isn&#39;t visible at a glance, so
-both requirements for a good toggle aren&#39;t fulfilled.</p>
-
-<p>I&#39;ll demonstrate the two editing commands that I use every day,
-<code>capitalize-word-toggle</code> and <code>upcase-word-toggle</code>, that are good
-toggles.</p>
-
-<h2 id="capitalize-word-toggle"><code>capitalize-word-toggle</code></h2>
-
-<blockquote>
-<p>Talk is cheap. Show me the code.</p>
-</blockquote>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">char-upcasep</span> <span class="p">(</span><span class="nv">letter</span><span class="p">)</span>
-  <span class="p">(</span><span class="nf">eq</span> <span class="nv">letter</span> <span class="p">(</span><span class="nf">upcase</span> <span class="nv">letter</span><span class="p">)))</span>
-
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">capitalize-word-toggle</span> <span class="p">()</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">start</span>
-         <span class="p">(</span><span class="nf">car</span>
-          <span class="p">(</span><span class="k">save-excursion</span>
-            <span class="p">(</span><span class="nv">backward-word</span><span class="p">)</span>
-            <span class="p">(</span><span class="nv">bounds-of-thing-at-point</span> <span class="ss">&#39;symbol</span><span class="p">)))))</span>
-    <span class="p">(</span><span class="k">if</span> <span class="nv">start</span>
-        <span class="p">(</span><span class="k">save-excursion</span>
-          <span class="p">(</span><span class="nf">goto-char</span> <span class="nv">start</span><span class="p">)</span>
-          <span class="p">(</span><span class="nf">funcall</span>
-           <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">char-upcasep</span> <span class="p">(</span><span class="nf">char-after</span><span class="p">))</span>
-               <span class="ss">&#39;downcase-region</span>
-             <span class="ss">&#39;upcase-region</span><span class="p">)</span>
-           <span class="nv">start</span> <span class="p">(</span><span class="nf">1+</span> <span class="nv">start</span><span class="p">)))</span>
-      <span class="p">(</span><span class="nf">capitalize-word</span> <span class="mi">-1</span><span class="p">))))</span>
-<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-z&quot;</span><span class="p">)</span> <span class="ss">&#39;capitalize-word-toggle</span><span class="p">)</span>
-</code></pre></div>
-<p>I may not have mentioned this before, but you should for the most part
-ignore the key bindings mentioned on this blog. I&#39;m actually using
-them, they work for me because of my non-standard layout, but you
-should assign what works for you.</p>
-
-<p>Anyway, <code>capitalize-word-toggle</code> clearly has a state that&#39;s visible at
-a glance: the first char of the current symbol. Also, there are only
-two possible states: the char can either be upper-case or lower-case.
-Hence, I can toggle this state with <kbd>C-z</kbd> for fun and profit.</p>
-
-<p>Maybe some background on how this command is useful for me. I write a bunch of C++,
-and the code features a lot of lines like this:</p>
-<div class="highlight"><pre><code class="language-c++" data-lang="c++"><span class="n">Triangulation</span> <span class="n">triangulation</span><span class="p">;</span> <span class="c1">// duh</span>
-</code></pre></div>
-<p>So when I&#39;m using <code>auto-complete</code>, it often eagerly expands to
-<code>Triangulation</code> when I want <code>triangulation</code>, and the other way around.
-So <code>capitalize-word-toggle</code> is super-useful there.</p>
-
-<h2 id="upcase-word-toggle"><code>upcase-word-toggle</code></h2>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">upcase-word-toggle</span> <span class="p">()</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">bounds</span> <span class="p">(</span><span class="nv">bounds-of-thing-at-point</span> <span class="ss">&#39;symbol</span><span class="p">))</span>
-        <span class="nv">beg</span> <span class="nv">end</span>
-        <span class="p">(</span><span class="nv">regionp</span>
-         <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">eq</span> <span class="nv">this-command</span> <span class="nv">last-command</span><span class="p">)</span>
-             <span class="p">(</span><span class="nf">get</span> <span class="nv">this-command</span> <span class="ss">&#39;regionp</span><span class="p">)</span>
-           <span class="p">(</span><span class="nf">put</span> <span class="nv">this-command</span> <span class="ss">&#39;regionp</span> <span class="no">nil</span><span class="p">))))</span>
-    <span class="p">(</span><span class="k">cond</span>
-      <span class="p">((</span><span class="k">or</span> <span class="p">(</span><span class="nv">region-active-p</span><span class="p">)</span> <span class="nv">regionp</span><span class="p">)</span>
-       <span class="p">(</span><span class="k">setq</span> <span class="nv">beg</span> <span class="p">(</span><span class="nf">region-beginning</span><span class="p">)</span>
-             <span class="nv">end</span> <span class="p">(</span><span class="nf">region-end</span><span class="p">))</span>
-       <span class="p">(</span><span class="nf">put</span> <span class="nv">this-command</span> <span class="ss">&#39;regionp</span> <span class="no">t</span><span class="p">))</span>
-      <span class="p">(</span><span class="nv">bounds</span>
-       <span class="p">(</span><span class="k">setq</span> <span class="nv">beg</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">bounds</span><span class="p">)</span>
-             <span class="nv">end</span> <span class="p">(</span><span class="nf">cdr</span> <span class="nv">bounds</span><span class="p">)))</span>
-      <span class="p">(</span><span class="no">t</span>
-       <span class="p">(</span><span class="k">setq</span> <span class="nv">beg</span> <span class="p">(</span><span class="nf">point</span><span class="p">)</span>
-             <span class="nv">end</span> <span class="p">(</span><span class="nf">1+</span> <span class="nv">beg</span><span class="p">))))</span>
-    <span class="p">(</span><span class="k">save-excursion</span>
-      <span class="p">(</span><span class="nf">goto-char</span> <span class="p">(</span><span class="nf">1-</span> <span class="nv">beg</span><span class="p">))</span>
-      <span class="p">(</span><span class="k">and</span> <span class="p">(</span><span class="nf">re-search-forward</span> <span class="s">&quot;[A-Za-z]&quot;</span> <span class="nv">end</span> <span class="no">t</span><span class="p">)</span>
-           <span class="p">(</span><span class="nf">funcall</span> <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">char-upcasep</span> <span class="p">(</span><span class="nf">char-before</span><span class="p">))</span>
-                        <span class="ss">&#39;downcase-region</span>
-                      <span class="ss">&#39;upcase-region</span><span class="p">)</span>
-                    <span class="nv">beg</span> <span class="nv">end</span><span class="p">)))))</span>
-<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-&gt;&quot;</span><span class="p">)</span> <span class="ss">&#39;upcase-word-toggle</span><span class="p">)</span>
-</code></pre></div>
-<p><code>upcase-word-toggle</code>&#39;s state becomes binary after you call it once,
-since initially the thing at point could have mixed case.
-But afterwards, it&#39;s either all lowercase or all uppercase.
-So again, a clearly visible binary state is a good thing.</p>
-
-<p>This command works either on <code>(bounds-of-thing-at-point &#39;symbol)</code> or
-on the active region. Since <code>region-active-p</code> is deactivated after you
-call the command once, there&#39;s some machinery to remember the state
-and to toggle when called again.</p>
 
   </div>
   

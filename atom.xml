@@ -4,13 +4,100 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-02-17T18:38:22+01:00</updated>
+ <updated>2015-02-18T17:15:41+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Reverting nonsense</title>
+   <link href="http://oremacs.com/2015/02/18/undo-nonsense/"/>
+   <updated>2015-02-18T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/02/18/undo-nonsense</id>
+   <content type="html">&lt;p&gt;It happens to me frequently when making a demo, or just experimenting
+around that I want to revert the buffer to the last saved
+state. Obviously such a command exists in Emacs, and it&amp;#39;s
+unsurprisingly called &lt;code&gt;revert-buffer&lt;/code&gt;:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Replace current buffer text with the text of the visited file on disk.
+This undoes all changes since the file was visited or saved.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;But the poor old &lt;code&gt;revert-buffer&lt;/code&gt; isn&amp;#39;t bound by default in Emacs. The perfect binding for it is &lt;kbd&gt;C-x C-r&lt;/kbd&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-x C-r&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;revert-buffer&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;I believe the lambda is used to get the &amp;quot;no questions asked&amp;quot;
+treatment.  Anyway, by default Emacs binds &lt;kbd&gt;C-x C-r&lt;/kbd&gt; to
+&lt;code&gt;find-file-read-only&lt;/code&gt;, which really is a trash-tier command.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Why is &lt;code&gt;find-file-read-only&lt;/code&gt; useless?&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Because &lt;kbd&gt;C-x C-q&lt;/kbd&gt; is bound to &lt;code&gt;read-only-mode&lt;/code&gt; - a really
+good command (made even better with &lt;code&gt;wdired&lt;/code&gt; and &lt;code&gt;wgrep&lt;/code&gt;).  So
+&lt;code&gt;find-file-read-only&lt;/code&gt; is just &lt;kbd&gt;C-x C-f C-x C-q&lt;/kbd&gt;. And I don&amp;#39;t
+ever recall needing to use that, since &lt;kbd&gt;v&lt;/kbd&gt;
+(&lt;code&gt;dired-view-file&lt;/code&gt;) is almost equivalent if not better.&lt;/p&gt;
+
+&lt;p&gt;As a bonus, &lt;kbd&gt;C-x C-r&lt;/kbd&gt; is mnemonic for &amp;quot;revert&amp;quot;.&lt;/p&gt;
+
+&lt;h2 id=&quot;auto-reverting&quot;&gt;Auto-reverting&lt;/h2&gt;
+
+&lt;p&gt;While on the topic, let me mention &lt;code&gt;auto-revert-mode&lt;/code&gt;. I have this in my config:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-auto-revert-mode&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This way, if any opened and saved file was modified outside of Emacs, it will be updated
+in a short while. I was able to use this to a great advantage when writing the SVG picture
+for the &lt;a href=&quot;/2015/02/14/semi-xmodmap/&quot;&gt;Xmodmap post&lt;/a&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;I opened the SVG in the default image mode in one Emacs instance&lt;/li&gt;
+&lt;li&gt;and opened the same document in XML mode in another (mode is toggled with &lt;kbd&gt;C-c C-c&lt;/kbd&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;With that setup, I was able to see the picture update as I was inputting the XML.
+Here&amp;#39;s some Elisp for XML generation, if you&amp;#39;re interested&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;make-row&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;row-str&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ix&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;iy&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fill&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;mapconcat&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;format&lt;/span&gt;
+      &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;g&amp;gt;&amp;lt;text x=\&amp;quot;%d\&amp;quot; y=\&amp;quot;%d\&amp;quot; style=\&amp;quot;font-size:10px;fill:%s;font-family:Deja Vu Sans Mono\&amp;quot;&amp;gt;%s&amp;lt;/text&amp;gt;&amp;lt;/g&amp;gt;&amp;quot;&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ix&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;30&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+      &lt;span class=&quot;nv&quot;&gt;iy&lt;/span&gt;
+      &lt;span class=&quot;nv&quot;&gt;fill&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;elt&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;row-str&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;stringp&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;nv&quot;&gt;y&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;make-string&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;number-sequence&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;1-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;length&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;row-str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+   &lt;span class=&quot;s&quot;&gt;&amp;quot;\n&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;make-row&lt;/span&gt;
+ &lt;span class=&quot;s&quot;&gt;&amp;quot;QWERTYUIOP&amp;quot;&lt;/span&gt;
+ &lt;span class=&quot;mi&quot;&gt;95&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;140&lt;/span&gt;
+ &lt;span class=&quot;s&quot;&gt;&amp;quot;#2b2828&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;;; =&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The last statement would generate:
+&lt;g&gt;&lt;text x=&quot;95&quot; y=&quot;140&quot; style=&quot;font-size:10px;fill:#2b2828;font-family:Deja Vu Sans Mono&quot;&gt;Q&lt;/text&gt;&lt;/g&gt;
+&lt;g&gt;&lt;text x=&quot;125&quot; y=&quot;140&quot; style=&quot;font-size:10px;fill:#2b2828;font-family:Deja Vu Sans Mono&quot;&gt;W&lt;/text&gt;&lt;/g&gt;
+&lt;g&gt;&lt;text x=&quot;155&quot; y=&quot;140&quot; style=&quot;font-size:10px;fill:#2b2828;font-family:Deja Vu Sans Mono&quot;&gt;E&lt;/text&gt;&lt;/g&gt;
+&lt;g&gt;&lt;text x=&quot;185&quot; y=&quot;140&quot; style=&quot;font-size:10px;fill:#2b2828;font-family:Deja Vu Sans Mono&quot;&gt;R&lt;/text&gt;&lt;/g&gt;
+&lt;g&gt;&lt;text x=&quot;215&quot; y=&quot;140&quot; style=&quot;font-size:10px;fill:#2b2828;font-family:Deja Vu Sans Mono&quot;&gt;T&lt;/text&gt;&lt;/g&gt;
+&lt;g&gt;&lt;text x=&quot;245&quot; y=&quot;140&quot; style=&quot;font-size:10px;fill:#2b2828;font-family:Deja Vu Sans Mono&quot;&gt;Y&lt;/text&gt;&lt;/g&gt;
+&lt;g&gt;&lt;text x=&quot;275&quot; y=&quot;140&quot; style=&quot;font-size:10px;fill:#2b2828;font-family:Deja Vu Sans Mono&quot;&gt;U&lt;/text&gt;&lt;/g&gt;
+&lt;g&gt;&lt;text x=&quot;305&quot; y=&quot;140&quot; style=&quot;font-size:10px;fill:#2b2828;font-family:Deja Vu Sans Mono&quot;&gt;I&lt;/text&gt;&lt;/g&gt;
+&lt;g&gt;&lt;text x=&quot;335&quot; y=&quot;140&quot; style=&quot;font-size:10px;fill:#2b2828;font-family:Deja Vu Sans Mono&quot;&gt;O&lt;/text&gt;&lt;/g&gt;
+&lt;g&gt;&lt;text x=&quot;365&quot; y=&quot;140&quot; style=&quot;font-size:10px;fill:#2b2828;font-family:Deja Vu Sans Mono&quot;&gt;P&lt;/text&gt;&lt;/g&gt;.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Hydra 0.10.0 is out</title>

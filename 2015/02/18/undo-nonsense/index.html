@@ -11,7 +11,7 @@
 
   <title>
     
-      Behold The Mighty Hydra! &middot; (or emacs
+      Reverting nonsense &middot; (or emacs
     
   </title>
 
@@ -204,114 +204,87 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Behold The Mighty Hydra!</h1>
-  <span class="post-date">20 Jan 2015</span>
-  <p>I managed to spike a lot of interest for sticky key bindings in my earlier post,
-<a href="/2015/01/14/repeatable-commands/">Zoom in/out with style</a>.
-So now, I&#39;ve refactored this method into a convenient library
-<a href="https://github.com/abo-abo/hydra">hydra.el</a>.</p>
-
-<p><img src="/download/Hydra.png" alt="hydra"></p>
-
-<h2 id="the-concept">The Concept</h2>
-
-<p>This package can be used to tie related functions into a family of
-short bindings with a common prefix - a Hydra.</p>
-
-<p>Once you summon the Hydra through the prefixed binding (the body + any
-one head), all heads can be called in succession with only a short
-extension.</p>
-
-<p>The Hydra is vanquished once Hercules, any binding that isn&#39;t the
-Hydra&#39;s head, arrives.  Note that Hercules, besides vanquishing the
-Hydra, will still serve his orignal purpose, calling his proper
-command.  This makes the Hydra very seamless, it&#39;s like a minor mode
-that disables itself auto-magically.</p>
-
-<h2 id="an-example">An Example</h2>
-
-<p>This code will accomplish the task of the previous post:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;hydra</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">hydra-create</span> <span class="s">&quot;&lt;f2&gt;&quot;</span>
-  <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;g&quot;</span> <span class="nv">text-scale-increase</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nv">text-scale-decrease</span><span class="p">)))</span>
-</code></pre></div>
-<p>Now, <kbd>&lt;f2&gt;</kbd> is the Hydra&#39;s body: you need to press it
-only once, together with one of the heads (<kbd>g</kbd> or
-<kbd>l</kbd>), to summon the Hydra.</p>
-
-<p>Afterwards, you can call the heads in succession without the body
-prefix, i.e. <kbd>&lt;f2&gt; g g g l</kbd> will work.  To vanquish the
-Hydra, just call up Hercules: <strong>any</strong> key binding that&#39;s not
-<kbd>g</kbd> or <kbd>l</kbd>, e.g. <kbd>C-f</kbd> or whatever you
-wanted to do.</p>
-
-<p>Note that you can still assign an unrelated binding to
-e.g. <kbd>&lt;f2&gt; f</kbd>: the Hydra <em>does not</em> take over
-<kbd>&lt;f2&gt;</kbd>, only over <kbd>&lt;f2&gt; l</kbd> and
-<kbd>&lt;f2&gt; g</kbd>.</p>
-
-<h2 id="the-infrastructure">The Infrastructure</h2>
-
-<p><code>hydra-create</code> will create new interactive functions for you with the proper docstrings:</p>
+  <h1 class="post-title">Reverting nonsense</h1>
+  <span class="post-date">18 Feb 2015</span>
+  <p>It happens to me frequently when making a demo, or just experimenting
+around that I want to revert the buffer to the last saved
+state. Obviously such a command exists in Emacs, and it&#39;s
+unsurprisingly called <code>revert-buffer</code>:</p>
 
 <blockquote>
-<p>hydra-&lt;f2&gt;-text-scale-increase is an interactive Lisp function.</p>
-
-<p>It is bound to &lt;f2&gt; g.</p>
-
-<p>(hydra-&lt;f2&gt;-text-scale-increase)</p>
-
-<p>Create a hydra with a &quot;&lt;f2&gt;&quot; body and the heads:</p>
-
-<p>&quot;g&quot;:    <code>text-scale-increase</code>,</p>
-&quot;l&quot;:    <code>text-scale-decrease</code>.</p>
-
-<p>Call the head: <code>text-scale-increase</code>.</p>
+<p>Replace current buffer text with the text of the visited file on disk.
+This undoes all changes since the file was visited or saved.</p>
 </blockquote>
 
-<h2 id="an-exciting-new-hydra:-move-window-splitter">An exciting new Hydra: move window splitter</h2>
-
-<p>Zooming is old news, Hydra bundles a new application:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;hydra-examples</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">hydra-create</span> <span class="s">&quot;C-M-o&quot;</span> <span class="nv">hydra-example-move-window-splitter</span><span class="p">)</span>
+<p>But the poor old <code>revert-buffer</code> isn&#39;t bound by default in Emacs. The perfect binding for it is <kbd>C-x C-r</kbd>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span>
+ <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-x C-r&quot;</span><span class="p">)</span>
+ <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span> <span class="p">(</span><span class="k">interactive</span><span class="p">)</span> <span class="p">(</span><span class="nv">revert-buffer</span> <span class="no">nil</span> <span class="no">t</span><span class="p">)))</span>
 </code></pre></div>
-<p>or in the expanded form (equivalent):</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">hydra-create</span> <span class="s">&quot;C-M-o&quot;</span>
-  <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;h&quot;</span> <span class="nv">hydra-move-splitter-left</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">hydra-move-splitter-down</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;k&quot;</span> <span class="nv">hydra-move-splitter-up</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nv">hydra-move-splitter-right</span><span class="p">)))</span>
-</code></pre></div>
-<p>This will allow you to move the window splitter, after you issue
-<kbd>C-x 2</kbd> or <kbd>C-x 3</kbd> one or more times, with
-e.g. <kbd>C-M-o</kbd> <kbd>h h j k j l k l h</kbd>.  You can, of
-course, customize both the body and the heads of this Hydra to your
-preferences.</p>
-
-<p>The docstrings for this Hydra look more impressive, too:</p>
+<p>I believe the lambda is used to get the &quot;no questions asked&quot;
+treatment.  Anyway, by default Emacs binds <kbd>C-x C-r</kbd> to
+<code>find-file-read-only</code>, which really is a trash-tier command.</p>
 
 <blockquote>
-<p>hydra-C-M-o-move-splitter-up is an interactive Lisp function.</p>
-
-<p>It is bound to C-M-o k.</p>
-
-<p>(hydra-C-M-o-move-splitter-up)</p>
-
-<p>Create a hydra with a &quot;C-M-o&quot; body and the heads:</p>
-
-<p>&quot;h&quot;:    <code>hydra-move-splitter-left</code>,</p>
-&quot;j&quot;:    <code>hydra-move-splitter-down</code>,</p>
-&quot;k&quot;:    <code>hydra-move-splitter-up</code>,</p>
-&quot;l&quot;:    <code>hydra-move-splitter-right</code>.</p>
-
-<p>Call the head: <code>hydra-move-splitter-up</code>.</p>
+<p>Why is <code>find-file-read-only</code> useless?</p>
 </blockquote>
 
-<h2 id="outro">Outro</h2>
+<p>Because <kbd>C-x C-q</kbd> is bound to <code>read-only-mode</code> - a really
+good command (made even better with <code>wdired</code> and <code>wgrep</code>).  So
+<code>find-file-read-only</code> is just <kbd>C-x C-f C-x C-q</kbd>. And I don&#39;t
+ever recall needing to use that, since <kbd>v</kbd>
+(<code>dired-view-file</code>) is almost equivalent if not better.</p>
 
-<p>I hope that you enjoy the new library and let me know when you invent
-some novel and efficient Hydras. Happy hacking!</p>
+<p>As a bonus, <kbd>C-x C-r</kbd> is mnemonic for &quot;revert&quot;.</p>
+
+<h2 id="auto-reverting">Auto-reverting</h2>
+
+<p>While on the topic, let me mention <code>auto-revert-mode</code>. I have this in my config:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-auto-revert-mode</span> <span class="mi">1</span><span class="p">)</span>
+</code></pre></div>
+<p>This way, if any opened and saved file was modified outside of Emacs, it will be updated
+in a short while. I was able to use this to a great advantage when writing the SVG picture
+for the <a href="/2015/02/14/semi-xmodmap/">Xmodmap post</a>:</p>
+
+<ul>
+<li>I opened the SVG in the default image mode in one Emacs instance</li>
+<li>and opened the same document in XML mode in another (mode is toggled with <kbd>C-c C-c</kbd>)</li>
+</ul>
+
+<p>With that setup, I was able to see the picture update as I was inputting the XML.
+Here&#39;s some Elisp for XML generation, if you&#39;re interested</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">make-row</span> <span class="p">(</span><span class="nv">row-str</span> <span class="nv">ix</span> <span class="nv">iy</span> <span class="nv">fill</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">mapconcat</span>
+   <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+     <span class="p">(</span><span class="nf">format</span>
+      <span class="s">&quot;&lt;g&gt;&lt;text x=\&quot;%d\&quot; y=\&quot;%d\&quot; style=\&quot;font-size:10px;fill:%s;font-family:Deja Vu Sans Mono\&quot;&gt;%s&lt;/text&gt;&lt;/g&gt;&quot;</span>
+      <span class="p">(</span><span class="nf">+</span> <span class="nv">ix</span> <span class="p">(</span><span class="nf">*</span> <span class="nv">x</span> <span class="mi">30</span><span class="p">))</span>
+      <span class="nv">iy</span>
+      <span class="nv">fill</span>
+      <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">y</span> <span class="p">(</span><span class="nf">elt</span> <span class="nv">row-str</span> <span class="nv">x</span><span class="p">)))</span>
+        <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">stringp</span> <span class="nv">y</span><span class="p">)</span>
+            <span class="nv">y</span>
+          <span class="p">(</span><span class="nf">make-string</span> <span class="mi">1</span> <span class="nv">y</span><span class="p">)))))</span>
+   <span class="p">(</span><span class="nv">number-sequence</span> <span class="mi">0</span> <span class="p">(</span><span class="nf">1-</span> <span class="p">(</span><span class="nf">length</span> <span class="nv">row-str</span><span class="p">)))</span>
+   <span class="s">&quot;\n&quot;</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nv">make-row</span>
+ <span class="s">&quot;QWERTYUIOP&quot;</span>
+ <span class="mi">95</span> <span class="mi">140</span>
+ <span class="s">&quot;#2b2828&quot;</span><span class="p">)</span>
+<span class="c1">;; =&gt;</span>
+</code></pre></div>
+<p>The last statement would generate:
+<g><text x="95" y="140" style="font-size:10px;fill:#2b2828;font-family:Deja Vu Sans Mono">Q</text></g>
+<g><text x="125" y="140" style="font-size:10px;fill:#2b2828;font-family:Deja Vu Sans Mono">W</text></g>
+<g><text x="155" y="140" style="font-size:10px;fill:#2b2828;font-family:Deja Vu Sans Mono">E</text></g>
+<g><text x="185" y="140" style="font-size:10px;fill:#2b2828;font-family:Deja Vu Sans Mono">R</text></g>
+<g><text x="215" y="140" style="font-size:10px;fill:#2b2828;font-family:Deja Vu Sans Mono">T</text></g>
+<g><text x="245" y="140" style="font-size:10px;fill:#2b2828;font-family:Deja Vu Sans Mono">Y</text></g>
+<g><text x="275" y="140" style="font-size:10px;fill:#2b2828;font-family:Deja Vu Sans Mono">U</text></g>
+<g><text x="305" y="140" style="font-size:10px;fill:#2b2828;font-family:Deja Vu Sans Mono">I</text></g>
+<g><text x="335" y="140" style="font-size:10px;fill:#2b2828;font-family:Deja Vu Sans Mono">O</text></g>
+<g><text x="365" y="140" style="font-size:10px;fill:#2b2828;font-family:Deja Vu Sans Mono">P</text></g>.</p>
 
 </div>
 
@@ -330,16 +303,6 @@ some novel and efficient Hydras. Happy hacking!</p>
     
       <li>
         <h3>
-          <!-- <a href="//2015/02/18/undo-nonsense/"> -->
-          <a href="/2015/02/18/undo-nonsense/">
-            Reverting nonsense
-            <small>18 Feb 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
           <!-- <a href="//2015/02/17/hydra-0.10.0/"> -->
           <a href="/2015/02/17/hydra-0.10.0/">
             Hydra 0.10.0 is out
@@ -354,6 +317,16 @@ some novel and efficient Hydras. Happy hacking!</p>
           <a href="/2015/02/16/hydra-multi/">
             Binding one function multiple times in Hydra
             <small>16 Feb 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/02/15/sudo-stuffs/"> -->
+          <a href="/2015/02/15/sudo-stuffs/">
+            Doing sudo stuff with tramp
+            <small>15 Feb 2015</small>
           </a>
         </h3>
       </li>
