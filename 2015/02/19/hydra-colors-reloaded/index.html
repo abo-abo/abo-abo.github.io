@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Two new Hydra colors - pink and teal &middot; (or emacs
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="/public/css/octicons.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Scripts -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body class="layout-reverse theme-base-08">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <!-- <div class="sidebar-item"> -->
+  <!--   <p>unused</p> -->
+  <!-- </div> -->
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about/">About</a>
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/archive/">Archive</a>
+        
+      
+    
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+
+    <div id="github" class="sidebar-nav-item">
+      <button type="button"
+              class="btn btn-info"
+              data-toggle="collapse"
+              data-target="#github-projects">
+        <span class="octicon octicon-mark-github"></span> My Emacs Projects
+      </button>
+      <div id="github-projects" class="collapse">
+        <ul style="margin-bottom:0em;">
+          <li>
+            <a href="https://github.com/abo-abo/lispy">lispy</a>
+            <p>vi-like Paredit</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/worf">worf</a>
+            <p>vi-like bindings for org-mode</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-window">ace-window</a>
+            <p>switch windows with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-link">ace-link</a>
+            <p>follow links with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/function-args">function-args</a>
+            <p>enhance <code>CEDET</code> for C++</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/helm-make">helm-make</a>
+            <p>select a Makefile target with <code>helm</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/make-it-so">make-it-so</a>
+            <p>transform files with Makefile recipes</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/org-download">org-download</a>
+            <p>drag-and-drop images to <code>org-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo?tab=repositories">
+              <span class="octicon octicon-octoface"></span>
+              and more
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
+
+  <div class="sidebar-item">
+    <p>
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.0/">
+        <img alt="Creative Commons License"
+             style="border-width:0;opacity: 0.3;"
+             src="https://i.creativecommons.org/l/by-nc-sa/2.0/88x31.png"/>
+      </a>
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">(or emacs</a>
+            <small>irrelevant)</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Two new Hydra colors - pink and teal</h1>
+  <span class="post-date">19 Feb 2015</span>
+  <p>Two new colors are being added up to a total of five: red, blue,
+amaranth, pink and teal.
+I should carefully restate what they do to avoid confusion.</p>
+
+<h2 id="the-three-rules-of-hydratics">The three rules of Hydratics</h2>
+
+<p><strike>1. A hydra may not injure a human being or, through inaction, allow a human being to come to harm.</strike></p>
+
+<p>Seriously though, see below.</p>
+
+<h3 id="rule-1:-hydra-heads-are-either-red-or-blue">Rule 1: Hydra heads are either red or blue</h3>
+
+<p>Once you&#39;re in a Hydra state:</p>
+
+<ul>
+<li>calling a red head will call the command and continue the state</li>
+<li>calling a blue head will call the command and stop the state</li>
+</ul>
+
+<p>They may have a reddish or a bluish face that isn&#39;t exactly red or
+blue, but that&#39;s what they are underneath. I hope you get what I mean.</p>
+
+<h3 id="rule-2:-red-or-blue-is-inherited-from-the-body-color">Rule 2: red or blue is inherited from the body color</h3>
+
+<p>This is merely a convenience, you can still explicitly override each
+head to be blue or red:</p>
+
+<ul>
+<li>if the body is red, amaranth or pink, the heads inherit red</li>
+<li>if the body is blue or teal, the heads inherit blue</li>
+</ul>
+
+<h3 id="rule-3:">Rule 3:</h3>
+
+<p>When you call a binding which isn&#39;t a head:</p>
+
+<ul>
+<li>amaranth, teal and pink Hydras will intercept it</li>
+<li>red and blue Hydras will quit and let Emacs execute your binding</li>
+</ul>
+
+<p>Finally, on intercepting a non-head, amaranth and teal will issue a
+warning and do nothing without quitting. And pink will try to call the
+intercepted command without quitting. Currently only non-prefix
+bindings can be called, since I haven&#39;t figured out how to do it for prefixes.</p>
+
+<h3 id="a-nice-table-to-sum-things-up">A nice table to sum things up</h3>
+
+<p>Thanks to <a href="https://github.com/kaushalmodi">@kaushalmodi</a> for pointing me in this direction:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">|----------+-----------+-----------------------+-----------------|
+| Body     | Head      | Executing NON-HEADS   | Executing HEADS |
+| Color    | Inherited |                       |                 |
+|          | Color     |                       |                 |
+|----------+-----------+-----------------------+-----------------|
+| amaranth | red       | Disallow and Continue | Continue        |
+| teal     | blue      | Disallow and Continue | Quit            |
+| pink     | red       | Allow and Continue    | Continue        |
+| red      | red       | Allow and Quit        | Continue        |
+| blue     | blue      | Allow and Quit        | Quit            |
+|----------+-----------+-----------------------+-----------------|
+</code></pre></div>
+<h2 id="the-extra-awesome-ruby-style-hydra-docstrings">The extra-awesome Ruby-style Hydra docstrings</h2>
+
+<p>Turns out learning Ruby wasn&#39;t a complete waste of time, at least I
+learned about string interpolation. And now I&#39;m sticking it into Elisp
+packages, first <a href="https://github.com/abo-abo/tiny">tiny</a>, and now
+<a href="https://github.com/abo-abo/hydra">hydra</a>.</p>
+
+<p>How it works:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-toggle</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">pink</span><span class="p">)</span>
+  <span class="s">&quot;</span>
+<span class="s">_a_ abbrev-mode:       %`abbrev-mode</span>
+<span class="s">_d_ debug-on-error:    %`debug-on-error</span>
+<span class="s">_f_ auto-fill-mode:    %`auto-fill-function</span>
+<span class="s">_g_ golden-ratio-mode: %`golden-ratio-mode</span>
+<span class="s">_t_ truncate-lines:    %`truncate-lines</span>
+<span class="s">_w_ whitespace-mode:   %`whitespace-mode</span>
+
+<span class="s">&quot;</span>
+  <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="nv">abbrev-mode</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;d&quot;</span> <span class="nv">toggle-debug-on-error</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;f&quot;</span> <span class="nv">auto-fill-mode</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;g&quot;</span> <span class="nv">golden-ratio-mode</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;t&quot;</span> <span class="nv">toggle-truncate-lines</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;w&quot;</span> <span class="nv">whitespace-mode</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span> <span class="s">&quot;cancel&quot;</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c C-v&quot;</span><span class="p">)</span> <span class="ss">&#39;hydra-toggle/body</span><span class="p">)</span>
+</code></pre></div>
+<p>Here, using e.g. <code>&quot;_a_&quot;</code> translates to <code>&quot;a&quot;</code> with proper face.  More
+interestingly, e.g.</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="s">&quot;foobar %`abbrev-mode&quot;</span>
+</code></pre></div>
+<p>translates roughly to</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">format</span> <span class="s">&quot;foobar %S&quot;</span> <span class="nv">abbrev-mode</span><span class="p">)</span>
+</code></pre></div>
+<p>This means that you actually see the state of the mode that you&#39;re
+changing.  The escape syntax was chosen with another intent in mind:
+because of the backquote, if you have <code>company-mode</code> on, you can
+complete the symbols while in string.</p>
+
+<p>See how it looks like in action:</p>
+
+<p><img src="/download/hydra-toggle-pink.png" alt="hydra-toggle-pink"></p>
+
+<h2 id="small-note-on-pink-hydras">Small note on pink Hydras</h2>
+
+<p>It&#39;s useful for instance it the above example, when I don&#39;t care about
+self-inserting, but I still want to do navigation. Basically pink
+Hydra is the closest thing to an actual minor mode. Thanks to
+<a href="https://github.com/angelic-sedition">@angelic-sedition</a> for the idea.</p>
+
+<h2 id="small-note-on-teal-hydras">Small note on teal Hydras</h2>
+
+<p>It provides an interface similar to <code>magit</code> dispatch: pressing
+appropriate keys does things and pressing the wrong keys issues a
+warning. The only difference between teal and amaranth is the color
+inheritance, otherwise they behave exactly the same.  This means that
+if you want a non-quitting Hydra that will end up with more blue
+heads, start with teal, otherwise, start with amaranth.
+Thanks to <a href="https://github.com/ffevotte">@ffevotte</a> for the idea.</p>
+
+<h2 id="outro">Outro</h2>
+
+<p>It feels like things are finally falling into place with this package.
+I hope that you like the new changes and find new cool uses for the added abilities.
+Happy hacking!</p>
+
+</div>
+
+<div class="twitter-share">
+  <a href="https://twitter.com/share"
+     class="twitter-share-button"
+     data-via="_abo_abo"
+     data-dnt="true">
+    Tweet
+  </a>
+</div>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/02/18/undo-nonsense/"> -->
+          <a href="/2015/02/18/undo-nonsense/">
+            Reverting nonsense
+            <small>18 Feb 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/02/17/hydra-0.10.0/"> -->
+          <a href="/2015/02/17/hydra-0.10.0/">
+            Hydra 0.10.0 is out
+            <small>17 Feb 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/02/16/hydra-multi/"> -->
+          <a href="/2015/02/16/hydra-multi/">
+            Binding one function multiple times in Hydra
+            <small>16 Feb 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'oremacs'; // required: replace example with your forum shortname
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+<script>
+  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+</script>
+<noscript>
+  Please enable JavaScript to view the
+  <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>

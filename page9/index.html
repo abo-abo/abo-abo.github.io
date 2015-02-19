@@ -207,6 +207,115 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/01/10/dired-ansi-term/">
+        dired and ansi-term&#58; BFF
+      </a>
+    </h1>
+
+    <span class="post-date">10 Jan 2015</span>
+
+    <p>In the comments to
+<a href="/2015/01/01/three-ansi-term-tips/">my previous post on ansi-term</a>, I discovered
+<a href="https://github.com/adamrt/sane-term">sane-term</a> - a package that
+cycles though your terminals in Emacs, as well as implements some of
+the tips that I gave. While it&#39;s nice and all, and you should check it
+out if you&#39;re looking for something like that, it&#39;s not really for
+me. I will describe the system that I&#39;m currently using below.</p>
+
+<h2 id="what-is-the-best-list-length-for-cycling?">What is the best list length for cycling?</h2>
+
+<p>In my opinion, it&#39;s one or two. If it&#39;s one, you&#39;re not really
+cycling, if it&#39;s two, it&#39;s fine. Anything more than that causes
+stress, since you have to check each time if the outcome of the cycle
+ended up being the one that you wanted.</p>
+
+<p>That&#39;s why I usually have only one <code>*ansi-term*</code> active in my Emacs
+session at all times.  Here&#39;s how it looks like:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">terminal</span> <span class="p">()</span>
+  <span class="s">&quot;Switch to terminal. Launch if nonexistent.&quot;</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">get-buffer</span> <span class="s">&quot;*ansi-term*&quot;</span><span class="p">)</span>
+      <span class="p">(</span><span class="nv">switch-to-buffer</span> <span class="s">&quot;*ansi-term*&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">ansi-term</span> <span class="s">&quot;/bin/bash&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="nf">get-buffer-process</span> <span class="s">&quot;*ansi-term*&quot;</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nb">defalias</span> <span class="ss">&#39;tt</span> <span class="ss">&#39;terminal</span><span class="p">)</span>
+</code></pre></div>
+<p>At one point, I had <code>terminal</code> bound to <kbd>C-t</kbd>, until I found
+a command even better suited for that binding, which was
+<a href="https://github.com/nonsequitur/smex/">smex</a>. The actual <code>terminal</code>
+command isn&#39;t bound right now, I just launch it from <code>smex</code> on very
+rare occasions.</p>
+
+<h2 id="how-i-launch-terminal-95%-of-the-time">How I launch terminal 95% of the time</h2>
+
+<p>From <code>dired</code> of course. The shell&#39;s natural way of switching the
+directory with <code>cd</code> is extremely inefficient compared to <code>dired</code>.  So
+any time I want to have a shell in a specific directory, I first
+navigate there with <code>dired</code>, sometimes combined with
+<code>ido-find-file</code>. Then I get my current <code>*ansi-term*</code> and tell it to
+switch to the current <code>dired</code> buffer&#39;s directory with <kbd>`</kbd>
+binding:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;`&quot;</span><span class="p">)</span> <span class="ss">&#39;dired-open-term</span><span class="p">)</span>
+
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">dired-open-term</span> <span class="p">()</span>
+  <span class="s">&quot;Open an `ansi-term&#39; that corresponds to current directory.&quot;</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">current-dir</span> <span class="p">(</span><span class="nv">dired-current-directory</span><span class="p">)))</span>
+    <span class="p">(</span><span class="nv">term-send-string</span>
+     <span class="p">(</span><span class="nv">terminal</span><span class="p">)</span>
+     <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">file-remote-p</span> <span class="nv">current-dir</span><span class="p">)</span>
+         <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">v</span> <span class="p">(</span><span class="nv">tramp-dissect-file-name</span> <span class="nv">current-dir</span> <span class="no">t</span><span class="p">)))</span>
+           <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;ssh %s@%s\n&quot;</span>
+                   <span class="p">(</span><span class="nf">aref</span> <span class="nv">v</span> <span class="mi">1</span><span class="p">)</span> <span class="p">(</span><span class="nf">aref</span> <span class="nv">v</span> <span class="mi">2</span><span class="p">)))</span>
+       <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;cd &#39;%s&#39;\n&quot;</span> <span class="nv">current-dir</span><span class="p">)))))</span>
+</code></pre></div>
+<p>I also have a similar <code>eshell</code> setup, although I have yet to
+comprehend why <code>eshell</code> is great and am using <code>*ansi-term*</code> most of the
+time instead.</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;&#39;&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span>
+    <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">eshell-cmd</span>
+     <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;cd %s&quot;</span>
+             <span class="p">(</span><span class="nf">expand-file-name</span>
+              <span class="nv">default-directory</span><span class="p">)))))</span>
+</code></pre></div>
+<h2 id="how-i-launch-dired-100%-of-the-time">How I launch <code>dired</code> 100% of the time</h2>
+
+<p>With <code>dired-jump</code>, of course. This command will examine your current
+buffer&#39;s <code>default-directory</code> and open a <code>dired</code> buffer there. All you
+need is:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;dired-x</span><span class="p">)</span>
+</code></pre></div>
+<p>The <code>dired-jump</code> command will be bound automatically to <kbd>C-x
+C-j</kbd>.  I have it also bound to <kbd>C-:</kbd>, since that&#39;s more
+convenient to press with my keyboard layout.</p>
+
+<p>It&#39;s also better in the common situation when I want to jump to a
+<code>dired</code> buffer from <code>*ansi-term*</code>. In that situation, <kbd>C-x
+C-j</kbd> will not work by default, and will call <code>term-line-mode</code>
+instead. But it will work once you are in <code>term-line-mode</code>.  You can
+go back to the default <code>term-char-mode</code> with <kbd>C-x C-k</kbd>.  To
+avoid this nonsense, just bind <code>dired-jump</code> to some binding that&#39;s
+convenient for you and works from <code>*ansi-term*</code>.</p>
+
+<h2 id="what-i-do-when-i-need-more-than-one-terminal">What I do when I need more than one terminal</h2>
+
+<p>Then I just name one: since the default one is supposed to be named
+<code>*ansi-term*</code>, if I create one named e.g. <code>*jekyll*</code>, it will be
+ignored by <code>dired-open-term</code>. This is exactly what I want, since I just
+create named terminals for long running processes like <code>jekyll serve</code>.
+And I can switch to the named terminals with just <code>ido-switch-buffer</code>.
+Here is the very simple code:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">named-term</span> <span class="p">(</span><span class="nv">name</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">interactive</span> <span class="s">&quot;sName: &quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">ansi-term</span> <span class="s">&quot;/bin/bash&quot;</span> <span class="nv">name</span><span class="p">))</span>
+</code></pre></div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/01/09/ido-find-file-tilde/">
         tilde in ido-find-file
       </a>
@@ -570,108 +679,6 @@ as you would with just wrapping stuff with a <code>lambda</code> and using
 </ul>
 
 <p>The package should be available in MELPA soon.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/01/05/youtube-dl/">
-        Yet another youtube-dl interface for Emacs
-      </a>
-    </h1>
-
-    <span class="post-date">05 Jan 2015</span>
-
-    <p>If you haven&#39;t been living under a rock, you already know what
-<a href="https://www.youtube.com/">Youtube</a> is.  It&#39;s a repository with videos of
-varying degree of usefulness with a terrible media player tacked on.
-Instead, I like to watch my videos in
-<a href="http://www.videolan.org/vlc/index.html">VLC</a>, which comes closest to
-providing an Emacs-like experience among video players.</p>
-
-<h2 id="useful-vlc-shortcuts">Useful VLC shortcuts</h2>
-
-<p>Here is a list of shortcuts that really make me stick with VLC:</p>
-
-<ul>
-<li><kbd>f</kbd> - toggle full-screen</li>
-<li><kbd>b</kbd> - toggle audio track</li>
-<li><kbd>n</kbd> - toggle subtitle track</li>
-<li><kbd>&#93;</kbd> - speed up play by <code>0.1</code></li>
-<li><kbd>&#91;</kbd> - slow down play by <code>0.1</code></li>
-<li><kbd>M-right</kbd> - forward by 15 seconds</li>
-<li><kbd>M-left</kbd> - backward by 15 seconds</li>
-<li><kbd>C-right</kbd> - forward by 60 seconds</li>
-<li><kbd>C-left</kbd> - backward by 60 seconds</li>
-<li><kbd>M-1</kbd> - quarter of video size</li>
-<li><kbd>M-2</kbd> - half of video size</li>
-<li><kbd>M-3</kbd> - full video size</li>
-<li><kbd>M-4</kbd> - double video size</li>
-<li><kbd>C-h</kbd> - toggle mouse buttons</li>
-</ul>
-
-<p>So if you&#39;re not watching instructional videos at <code>1.6</code> speed,
-or skipping the Simpsons intro sequence with <kbd>M-right</kbd>, you&#39;re missing out.</p>
-
-<h2 id="from-youtube-to-vlc">From Youtube to VLC</h2>
-
-<p><a href="https://github.com/rg3/youtube-dl/">youtube-dl</a> is an excellent command-line tool
-for saving the videos from Youtube. It downloads the highest resolution at a usually
-higher speed than Youtube&#39;s player buffers. I&#39;ve discovered it when I had to download
-a bunch of lecture videos from <a href="https://www.edx.org/">edX</a>.
-You can install it with:</p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">sudo pip install youtube-dl
-</code></pre></div>
-<h2 id="one-emacs-script-to-rule-them-all">One Emacs script to rule them all</h2>
-
-<p>I quickly tired of opening a shell, setting the directory, entering
-the command, and pasting the link. So I wrote some Elisp code that does it for me.
-It&#39;s nothing too sophisticated, but I&#39;ve been using this version for a couple months:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">youtube-dl</span> <span class="p">()</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">str</span> <span class="p">(</span><span class="nv">current-kill</span> <span class="mi">0</span><span class="p">))</span>
-         <span class="p">(</span><span class="nv">default-directory</span> <span class="s">&quot;~/Downloads&quot;</span><span class="p">)</span>
-         <span class="p">(</span><span class="nv">proc</span> <span class="p">(</span><span class="nf">get-buffer-process</span> <span class="p">(</span><span class="nv">ansi-term</span> <span class="s">&quot;/bin/bash&quot;</span><span class="p">))))</span>
-    <span class="p">(</span><span class="nv">term-send-string</span>
-     <span class="nv">proc</span>
-     <span class="p">(</span><span class="nf">concat</span> <span class="s">&quot;cd ~/Downloads &amp;&amp; youtube-dl &quot;</span> <span class="nv">str</span> <span class="s">&quot;\n&quot;</span><span class="p">))))</span>
-</code></pre></div>
-<p>How it works:</p>
-
-<ol>
-<li>Copy the link in Firefox</li>
-<li><kbd>M-x</kbd> <code>youtube-dl</code>.</li>
-</ol>
-
-<p>That&#39;s it. A new <code>*ansi-term*</code> will open with the task of downloading the video from the link
-in the clipboard to <code>~/Downloads</code>.
-I don&#39;t have to wait for the download to finish and can immediately open the video from <code>dired</code>.
-See <a href="/2015/01/04/dired-nohup/">the previous post</a> for the description of
-<code>dired</code> process-starting setup. I can stack up multiple downloads at once if I wish in different
-<code>*ansi-term*</code>s.</p>
-
-<blockquote>
-<p>This is my script. There are many like it, but this one is mine.</p>
-</blockquote>
-
-<p>I did an internet search before writing this post. Apparently many
-others had the same idea of integrating <code>youtube-dl</code> into Emacs.  You
-can use mine or any other code to generate a setup that works for you.
-For instance, for a while, instead of copy-pasting the URL and calling
-<code>youtube-dl</code> I used to just click the
-<a href="https://addons.mozilla.org/en-US/firefox/addon/org-mode-capture/">org-mode capture</a>
-button in Firefox, and it would automatically create a <code>TODO</code> item,
-download the video, and put the link to the downloaded video in the
-<code>TODO</code>.</p>
-
-<p>I&#39;ve dropped this workflow when
-<a href="http://debbugs.gnu.org/cgi/bugreport.cgi?bug=16737">the yank bug</a>
-surfaced. I don&#39;t yet have enough experience of working with Emacs&#39;s C
-code to fix it.  Although, according to this
-<a href="https://plus.google.com/u/0/+JorgenSch%C3%A4fer/posts/ZaZcunihGqc">excellent rant</a>,
-fixing the bug is only half of the problem: getting it merged is hard.
-I&#39;ll see how it goes with <a href="http://debbugs.gnu.org/cgi/bugreport.cgi?bug=19493">my latest tiny patch</a>.
-So far it has been ignored, but it is only two days old as of now.</p>
 
   </div>
   

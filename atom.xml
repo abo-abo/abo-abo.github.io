@@ -4,13 +4,148 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-02-18T17:15:41+01:00</updated>
+ <updated>2015-02-19T18:20:46+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Two new Hydra colors - pink and teal</title>
+   <link href="http://oremacs.com/2015/02/19/hydra-colors-reloaded/"/>
+   <updated>2015-02-19T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/02/19/hydra-colors-reloaded</id>
+   <content type="html">&lt;p&gt;Two new colors are being added up to a total of five: red, blue,
+amaranth, pink and teal.
+I should carefully restate what they do to avoid confusion.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-three-rules-of-hydratics&quot;&gt;The three rules of Hydratics&lt;/h2&gt;
+
+&lt;p&gt;&lt;strike&gt;1. A hydra may not injure a human being or, through inaction, allow a human being to come to harm.&lt;/strike&gt;&lt;/p&gt;
+
+&lt;p&gt;Seriously though, see below.&lt;/p&gt;
+
+&lt;h3 id=&quot;rule-1:-hydra-heads-are-either-red-or-blue&quot;&gt;Rule 1: Hydra heads are either red or blue&lt;/h3&gt;
+
+&lt;p&gt;Once you&amp;#39;re in a Hydra state:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;calling a red head will call the command and continue the state&lt;/li&gt;
+&lt;li&gt;calling a blue head will call the command and stop the state&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;They may have a reddish or a bluish face that isn&amp;#39;t exactly red or
+blue, but that&amp;#39;s what they are underneath. I hope you get what I mean.&lt;/p&gt;
+
+&lt;h3 id=&quot;rule-2:-red-or-blue-is-inherited-from-the-body-color&quot;&gt;Rule 2: red or blue is inherited from the body color&lt;/h3&gt;
+
+&lt;p&gt;This is merely a convenience, you can still explicitly override each
+head to be blue or red:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;if the body is red, amaranth or pink, the heads inherit red&lt;/li&gt;
+&lt;li&gt;if the body is blue or teal, the heads inherit blue&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;rule-3:&quot;&gt;Rule 3:&lt;/h3&gt;
+
+&lt;p&gt;When you call a binding which isn&amp;#39;t a head:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;amaranth, teal and pink Hydras will intercept it&lt;/li&gt;
+&lt;li&gt;red and blue Hydras will quit and let Emacs execute your binding&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Finally, on intercepting a non-head, amaranth and teal will issue a
+warning and do nothing without quitting. And pink will try to call the
+intercepted command without quitting. Currently only non-prefix
+bindings can be called, since I haven&amp;#39;t figured out how to do it for prefixes.&lt;/p&gt;
+
+&lt;h3 id=&quot;a-nice-table-to-sum-things-up&quot;&gt;A nice table to sum things up&lt;/h3&gt;
+
+&lt;p&gt;Thanks to &lt;a href=&quot;https://github.com/kaushalmodi&quot;&gt;@kaushalmodi&lt;/a&gt; for pointing me in this direction:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;|----------+-----------+-----------------------+-----------------|
+| Body     | Head      | Executing NON-HEADS   | Executing HEADS |
+| Color    | Inherited |                       |                 |
+|          | Color     |                       |                 |
+|----------+-----------+-----------------------+-----------------|
+| amaranth | red       | Disallow and Continue | Continue        |
+| teal     | blue      | Disallow and Continue | Quit            |
+| pink     | red       | Allow and Continue    | Continue        |
+| red      | red       | Allow and Quit        | Continue        |
+| blue     | blue      | Allow and Quit        | Quit            |
+|----------+-----------+-----------------------+-----------------|
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;the-extra-awesome-ruby-style-hydra-docstrings&quot;&gt;The extra-awesome Ruby-style Hydra docstrings&lt;/h2&gt;
+
+&lt;p&gt;Turns out learning Ruby wasn&amp;#39;t a complete waste of time, at least I
+learned about string interpolation. And now I&amp;#39;m sticking it into Elisp
+packages, first &lt;a href=&quot;https://github.com/abo-abo/tiny&quot;&gt;tiny&lt;/a&gt;, and now
+&lt;a href=&quot;https://github.com/abo-abo/hydra&quot;&gt;hydra&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;How it works:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-toggle&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;pink&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;_a_ abbrev-mode:       %`abbrev-mode&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;_d_ debug-on-error:    %`debug-on-error&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;_f_ auto-fill-mode:    %`auto-fill-function&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;_g_ golden-ratio-mode: %`golden-ratio-mode&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;_t_ truncate-lines:    %`truncate-lines&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;_w_ whitespace-mode:   %`whitespace-mode&lt;/span&gt;
+
+&lt;span class=&quot;s&quot;&gt;&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;a&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;abbrev-mode&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;d&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;toggle-debug-on-error&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;f&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;auto-fill-mode&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;g&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;golden-ratio-mode&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;t&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;toggle-truncate-lines&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;w&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;whitespace-mode&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;q&amp;quot;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;cancel&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-c C-v&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;hydra-toggle/body&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Here, using e.g. &lt;code&gt;&amp;quot;_a_&amp;quot;&lt;/code&gt; translates to &lt;code&gt;&amp;quot;a&amp;quot;&lt;/code&gt; with proper face.  More
+interestingly, e.g.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;foobar %`abbrev-mode&amp;quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;translates roughly to&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;foobar %S&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;abbrev-mode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This means that you actually see the state of the mode that you&amp;#39;re
+changing.  The escape syntax was chosen with another intent in mind:
+because of the backquote, if you have &lt;code&gt;company-mode&lt;/code&gt; on, you can
+complete the symbols while in string.&lt;/p&gt;
+
+&lt;p&gt;See how it looks like in action:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/hydra-toggle-pink.png&quot; alt=&quot;hydra-toggle-pink&quot;&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;small-note-on-pink-hydras&quot;&gt;Small note on pink Hydras&lt;/h2&gt;
+
+&lt;p&gt;It&amp;#39;s useful for instance it the above example, when I don&amp;#39;t care about
+self-inserting, but I still want to do navigation. Basically pink
+Hydra is the closest thing to an actual minor mode. Thanks to
+&lt;a href=&quot;https://github.com/angelic-sedition&quot;&gt;@angelic-sedition&lt;/a&gt; for the idea.&lt;/p&gt;
+
+&lt;h2 id=&quot;small-note-on-teal-hydras&quot;&gt;Small note on teal Hydras&lt;/h2&gt;
+
+&lt;p&gt;It provides an interface similar to &lt;code&gt;magit&lt;/code&gt; dispatch: pressing
+appropriate keys does things and pressing the wrong keys issues a
+warning. The only difference between teal and amaranth is the color
+inheritance, otherwise they behave exactly the same.  This means that
+if you want a non-quitting Hydra that will end up with more blue
+heads, start with teal, otherwise, start with amaranth.
+Thanks to &lt;a href=&quot;https://github.com/ffevotte&quot;&gt;@ffevotte&lt;/a&gt; for the idea.&lt;/p&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;It feels like things are finally falling into place with this package.
+I hope that you like the new changes and find new cool uses for the added abilities.
+Happy hacking!&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Reverting nonsense</title>
