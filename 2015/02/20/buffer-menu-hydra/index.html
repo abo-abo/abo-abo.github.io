@@ -11,7 +11,7 @@
 
   <title>
     
-      Sprucing up org-download &middot; (or emacs
+      Hydra for Buffer-menu &middot; (or emacs
     
   </title>
 
@@ -204,79 +204,63 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Sprucing up org-download</h1>
-  <span class="post-date">18 Jan 2015</span>
-  <p>My interest in <a href="https://github.com/abo-abo/org-download">org-download</a>
-was renewed today with
-<a href="http://thread.gmane.org/gmane.emacs.orgmode/93964">this thread</a> on
-<code>org-mode</code>&#39;s mailing list.</p>
+  <h1 class="post-title">Hydra for Buffer-menu</h1>
+  <span class="post-date">20 Feb 2015</span>
+  <p>Here&#39;s a little code I&#39;ve made today for <code>Buffer-menu-mode</code>:</p>
 
-<p><code>org-download</code> allows you to drag-and-drop an image from e.g. Firefox
-or your own file system to an <code>org-mode</code> buffer. When I originally
-wrote it, I was taking a Chemistry course on
-<a href="https://www.edx.org/">edX</a>, which included homework and exams with a
-lot of images. Doing the homework in a literate style with <code>org-mode</code>,
-I wanted the problems to be completely self-contained, and for that I
-needed to save all the images from the website, preferably quickly, to
-an <code>org-mode</code> buffer. With a few hacks and some advice and
-contributions from more experienced hackers, <code>org-download</code> came to
-be.</p>
+<div class="highlight"><pre><small><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-buffer-menu</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">pink</span><span class="p">)</span>
+  <span class="s">&quot;</span>
+<span class="s">  Mark               Unmark             Actions            Search</span>
+<span class="s">-------------------------------------------------------------------------</span>
+<span class="s">_m_: mark          _u_: unmark        _x_: execute       _R_: re-isearch</span>
+<span class="s">_s_: save          _U_: unmark up     _b_: bury          _I_: isearch</span>
+<span class="s">_d_: delete                           _g_: refresh       _O_: multi-occur</span>
+<span class="s">_D_: delete up                        _T_: files only: %`Buffer-menu-files-only</span>
+<span class="s">_~_: modified</span>
+<span class="s">&quot;</span>
+  <span class="p">(</span><span class="s">&quot;m&quot;</span> <span class="nv">Buffer-menu-mark</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;u&quot;</span> <span class="nv">Buffer-menu-unmark</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;U&quot;</span> <span class="nv">Buffer-menu-backup-unmark</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;d&quot;</span> <span class="nv">Buffer-menu-delete</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;D&quot;</span> <span class="nv">Buffer-menu-delete-backwards</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;s&quot;</span> <span class="nv">Buffer-menu-save</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;~&quot;</span> <span class="nv">Buffer-menu-not-modified</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;x&quot;</span> <span class="nv">Buffer-menu-execute</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;b&quot;</span> <span class="nv">Buffer-menu-bury</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;g&quot;</span> <span class="nv">revert-buffer</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;T&quot;</span> <span class="nv">Buffer-menu-toggle-files-only</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;O&quot;</span> <span class="nv">Buffer-menu-multi-occur</span> <span class="no">nil</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;I&quot;</span> <span class="nv">Buffer-menu-isearch-buffers</span> <span class="no">nil</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;R&quot;</span> <span class="nv">Buffer-menu-isearch-buffers-regexp</span> <span class="no">nil</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;c&quot;</span> <span class="no">nil</span> <span class="s">&quot;cancel&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;v&quot;</span> <span class="nv">Buffer-menu-select</span> <span class="s">&quot;select&quot;</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;o&quot;</span> <span class="nv">Buffer-menu-other-window</span> <span class="s">&quot;other-window&quot;</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="nv">quit-window</span> <span class="s">&quot;quit&quot;</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">))</span>
 
-<h2 id="today&#39;s-commits">Today&#39;s commits</h2>
+<span class="p">(</span><span class="nf">define-key</span> <span class="nv">Buffer-menu-mode-map</span> <span class="s">&quot;.&quot;</span> <span class="ss">&#39;hydra-buffer-menu/body</span><span class="p">)</span>
+</code></small></pre></div>
 
-<p>The main contribution from today&#39;s commits was adding the code that
-un-aliases images that point to HTML. I see a lot of these from the
-people that I&#39;m following on my Twitter,
-<a href="https://twitter.com/_abo_abo">@&#95;abo&#95;abo</a>. Here&#39;s the code:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defcustom</span> <span class="nv">org-download-img-regex-list</span>
-  <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;&lt;img +src=\&quot;&quot;</span> <span class="s">&quot;&lt;img +\\(class=\&quot;[^\&quot;]+\&quot;\\)? *src=\&quot;&quot;</span><span class="p">)</span>
-  <span class="s">&quot;This regex is used to unalias links that look like images.</span>
-<span class="s">The html to which the links points will be searched for these</span>
-<span class="s">regexes, one by one, until one succeeds.  The found image address</span>
-<span class="s">will be used.&quot;</span>
-  <span class="nb">:group</span> <span class="ss">&#39;org-download</span><span class="p">)</span>
+<p>You can change the color on the top to your taste: either red or pink or amaranth will work.
+For extensive Hydras I tend to pick pink, since I don&#39;t want to quit by accident, while still keeping
+the non-head bindings. For small ones, red is better.
+Here&#39;s how the result looks like:
+<img src="/download/hydra-buffer-menu.png" alt="hydra-buffer-menu"></p>
+
+<p>You can install the cow with:</p>
+<div class="highlight"><pre><code class="language-sh" data-lang="sh">apt-get moo
 </code></pre></div>
-<p>and in <code>(org-download-image link)</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nv">image-type-from-file-name</span> <span class="nv">link</span><span class="p">)</span>
-    <span class="p">(</span><span class="nb">with-current-buffer</span>
-        <span class="p">(</span><span class="nv">url-retrieve-synchronously</span> <span class="nv">link</span> <span class="no">t</span><span class="p">)</span>
-      <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">regexes</span> <span class="nv">org-download-img-regex-list</span><span class="p">)</span>
-            <span class="nv">lnk</span><span class="p">)</span>
-        <span class="p">(</span><span class="k">while</span> <span class="p">(</span><span class="k">and</span> <span class="p">(</span><span class="nv">not</span> <span class="nv">lnk</span><span class="p">)</span> <span class="nv">regexes</span><span class="p">)</span>
-          <span class="p">(</span><span class="nf">goto-char</span> <span class="p">(</span><span class="nf">point-min</span><span class="p">))</span>
-          <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">re-search-forward</span> <span class="p">(</span><span class="nb">pop</span> <span class="nv">regexes</span><span class="p">)</span> <span class="no">nil</span> <span class="no">t</span><span class="p">)</span>
-            <span class="p">(</span><span class="nf">backward-char</span><span class="p">)</span>
-            <span class="p">(</span><span class="k">setq</span> <span class="nv">lnk</span> <span class="p">(</span><span class="nf">read</span> <span class="p">(</span><span class="nf">current-buffer</span><span class="p">)))))</span>
-        <span class="p">(</span><span class="k">if</span> <span class="nv">lnk</span>
-            <span class="p">(</span><span class="k">setq</span> <span class="nv">link</span> <span class="nv">lnk</span><span class="p">)</span>
-          <span class="p">(</span><span class="ne">error</span> <span class="s">&quot;link %s does not point to an image&quot;</span> <span class="nv">link</span><span class="p">)))))</span>
+<p>I didn&#39;t list it in the source, since Jekyll would wrap the long lines. The source is already in <a href="https://github.com/abo-abo/hydra/blob/master/hydra-examples.el#L191">hydra-examples.el</a>.
+You only have to:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;hydra-examples</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">define-key</span> <span class="nv">Buffer-menu-mode-map</span> <span class="s">&quot;.&quot;</span> <span class="ss">&#39;hydra-buffer-menu/body</span><span class="p">)</span>
 </code></pre></div>
-<p>Here, <code>image-type-from-file-name</code> is a built-in from <code>image.el</code> that
-decides if <code>link</code> looks like an image file or not.</p>
+<p>I&#39;ve been hearing some opinions lately that the growing number of
+Hydra options makes it intimidating or unclear. I hope that&#39;s not the
+majority&#39;s feeling and that the gentle repetitiveness of this example
+proves otherwise.</p>
 
-<p>As you can see, since I intend to use <code>link</code> right after to be
-transformed right now, I&#39;m using <code>url-retrieve-synchronously</code>, instead
-of the asynchronous <code>url-retrieve</code>. The other one is used by default
-to download the actual image.</p>
-
-<p>Note the use of the <code>while</code> / <code>pop</code> combination for traversing a list.
-I&#39;ve seen it used in some places in the Emacs core, and I think it&#39;s
-pretty neat.</p>
-
-<p>Arranging the regular expressions into a list is necessary to give
-priority to some regexes. For instance, the first element of
-<code>org-download-img-regex-list</code> should match e.g. an actual referred
-image on Twitter, while the second element will match at least a
-profile picture in the case when there is no referred image.</p>
-
-<h2 id="visual-demo">Visual demo</h2>
-
-<p>I think that I might have over-engineered the custom options of
-<code>org-download</code> a bit. Just to keep you motivated enough to figure them
-out, here&#39;s a link to
-<a href="https://www.youtube.com/watch?v=dAojpHR-6Uo">a Youtube demo</a> of the
-fast clickety-clicking (the mouse usage), that comes after some
-clackety-clacking (the customization).</p>
+<p>On the other hand, I&#39;ve started reading &quot;The Reasoned Schemer&quot; this
+week. Now that&#39;s intimidating.</p>
 
 </div>
 
@@ -295,16 +279,6 @@ clackety-clacking (the customization).</p>
     
       <li>
         <h3>
-          <!-- <a href="//2015/02/20/buffer-menu-hydra/"> -->
-          <a href="/2015/02/20/buffer-menu-hydra/">
-            Hydra for Buffer-menu
-            <small>20 Feb 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
           <!-- <a href="//2015/02/19/hydra-colors-reloaded/"> -->
           <a href="/2015/02/19/hydra-colors-reloaded/">
             Two new Hydra colors - pink and teal
@@ -319,6 +293,16 @@ clackety-clacking (the customization).</p>
           <a href="/2015/02/18/undo-nonsense/">
             Reverting nonsense
             <small>18 Feb 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/02/17/hydra-0.10.0/"> -->
+          <a href="/2015/02/17/hydra-0.10.0/">
+            Hydra 0.10.0 is out
+            <small>17 Feb 2015</small>
           </a>
         </h3>
       </li>
