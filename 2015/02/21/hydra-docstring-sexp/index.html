@@ -11,7 +11,7 @@
 
   <title>
     
-      ido-vertical - like ido, but vertical! &middot; (or emacs
+      Embedding sexps in Hydra docstrings &middot; (or emacs
     
   </title>
 
@@ -204,65 +204,32 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">ido-vertical - like ido, but vertical!</h1>
-  <span class="post-date">09 Feb 2015</span>
-  <h2 id="intro">Intro</h2>
+  <h1 class="post-title">Embedding sexps in Hydra docstrings</h1>
+  <span class="post-date">21 Feb 2015</span>
+  <p>In <a href="/2015/02/20/buffer-menu-hydra/">yesterday&#39;s post</a>
+I showed how to embed variable values into the docstring, among other
+things. Today, I&#39;ve extended this approach to work with s-expressions.
+Here&#39;s how it looks like:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-marked-items</span> <span class="p">(</span><span class="nv">dired-mode-map</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
+      <span class="s">&quot;</span>
+<span class="s">Number of marked items: %(length (dired-get-marked-files))</span>
+<span class="s">&quot;</span>
+      <span class="p">(</span><span class="s">&quot;m&quot;</span> <span class="nv">dired-mark</span> <span class="s">&quot;mark&quot;</span><span class="p">))</span>
+</code></pre></div>
+<p>This piece of code will remind you how many files you&#39;ve marked so far each
+time you press <kbd>m</kbd>.
+By the way, this is the 64th post on the blog; I found out by pressing
+<kbd>tm</kbd> in <code>dired</code> buffer or the <code>_posts</code> directory.
+Also, I don&#39;t think that I&#39;ve showed passing <code>&quot;&quot;</code> as the keyboard prefix parameter
+before. Apparently, it works and just translates to this:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span>
+    <span class="s">&quot;m&quot;</span> <span class="ss">&#39;hydra-marked-items/dired-mark</span><span class="p">)</span>
+</code></pre></div>
+<p>Here&#39;s how it looks like:
+<img src="/download/hydra-docstring-sexp.png" alt="hydra-docstring-sexp"></p>
 
-<p>As I was releasing <a href="https://github.com/abo-abo/lispy/releases/tag/0.23.0">lispy 0.23.0</a>, which added
-an option for methods of jumping to semantic tags other than <code>helm</code>, I&#39;ve discovered
-<a href="https://github.com/gempesaw/ido-vertical-mode.el">ido-vertical-mode</a>. I also made some changes to
-it, so now it looks like this:</p>
-
-<p><img src="/download/lispy-ido-vertical.png" alt="lispy-ido-vertical"></p>
-
-<p>The changes are:</p>
-
-<ul>
-<li>the current text is highlighted in all matches</li>
-<li>the current number of total matches is displayed in the first line</li>
-<li>I also customized the face for the first match and the only match (you can&#39;t see that one here)</li>
-</ul>
-
-<p>Helm is still the big gun when it comes to completing lists with hundreds of candidates,
-but with the above changes, <code>ido-vertical-mode</code> comes close to what I need when jumping to tags.
-The only thing missing now is that the selected candidate is always on the first line,
-even when I press <kbd>C-n</kbd>, which isn&#39;t very intuitive.</p>
-
-<h2 id="stuff-related-to-lispy-release">Stuff related to <code>lispy</code> release</h2>
-
-<h3 id="other-completion-methods-available-in-lispy-goto">Other completion methods available in <code>lispy-goto</code></h3>
-
-<p>Depending on the modes you have enabled, you can complete with:</p>
-
-<ul>
-<li><code>helm</code></li>
-<li><code>ido</code></li>
-<li><code>ido-vertical-mode</code></li>
-<li><code>icomplete-mode</code></li>
-<li><code>icy-mode</code></li>
-<li>no mode, just plain completion</li>
-</ul>
-
-<h3 id="lispy-eval-other-window-now-uses-ace-window"><code>lispy-eval-other-window</code> now uses <code>ace-window</code></h3>
-
-<p>This function bound to <kbd>p</kbd> is very convenient for debugging
-Elisp: it allows you to eval the current sexp in the context of other
-window. This is very powerful: you can run and debug your function as
-you write it, statement by statement. Previously, this setup was
-viable only in a two-window split, because using <code>other-window</code>, it
-wasn&#39;t predictable in which window the eval would take place.  Now, if
-there are more than two windows, <code>aw-select</code> will select the window
-for the eval.  This selection will be remembered, so you don&#39;t have to
-select for the following evals, unless the window configuration
-changes.</p>
-
-<h2 id="outro">Outro</h2>
-
-<p>There are more changes that you can find in
-<a href="https://github.com/abo-abo/lispy/releases/tag/0.23.0">the release notes</a>
-if you&#39;re interested. You can find the new <code>ido-vertical</code> stuff in
-<a href="https://github.com/abo-abo/ido-vertical-mode.el">my fork</a>, until it
-gets merged.</p>
+<p>There&#39;s no need for a quitting key, it will auto-vanish when you press
+anything other than <kbd>m</kbd>.</p>
 
 </div>
 
@@ -281,16 +248,6 @@ gets merged.</p>
     
       <li>
         <h3>
-          <!-- <a href="//2015/02/21/hydra-docstring-sexp/"> -->
-          <a href="/2015/02/21/hydra-docstring-sexp/">
-            Embedding sexps in Hydra docstrings
-            <small>21 Feb 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
           <!-- <a href="//2015/02/20/buffer-menu-hydra/"> -->
           <a href="/2015/02/20/buffer-menu-hydra/">
             Hydra for Buffer-menu
@@ -305,6 +262,16 @@ gets merged.</p>
           <a href="/2015/02/19/hydra-colors-reloaded/">
             Two new Hydra colors - pink and teal
             <small>19 Feb 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/02/18/undo-nonsense/"> -->
+          <a href="/2015/02/18/undo-nonsense/">
+            Reverting nonsense
+            <small>18 Feb 2015</small>
           </a>
         </h3>
       </li>

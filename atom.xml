@@ -4,13 +4,45 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-02-20T14:26:15+01:00</updated>
+ <updated>2015-02-21T17:16:26+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Embedding sexps in Hydra docstrings</title>
+   <link href="http://oremacs.com/2015/02/21/hydra-docstring-sexp/"/>
+   <updated>2015-02-21T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/02/21/hydra-docstring-sexp</id>
+   <content type="html">&lt;p&gt;In &lt;a href=&quot;/2015/02/20/buffer-menu-hydra/&quot;&gt;yesterday&amp;#39;s post&lt;/a&gt;
+I showed how to embed variable values into the docstring, among other
+things. Today, I&amp;#39;ve extended this approach to work with s-expressions.
+Here&amp;#39;s how it looks like:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-marked-items&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;dired-mode-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;s&quot;&gt;&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;Number of marked items: %(length (dired-get-marked-files))&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;&amp;quot;&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;m&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dired-mark&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;mark&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This piece of code will remind you how many files you&amp;#39;ve marked so far each
+time you press &lt;kbd&gt;m&lt;/kbd&gt;.
+By the way, this is the 64th post on the blog; I found out by pressing
+&lt;kbd&gt;tm&lt;/kbd&gt; in &lt;code&gt;dired&lt;/code&gt; buffer or the &lt;code&gt;_posts&lt;/code&gt; directory.
+Also, I don&amp;#39;t think that I&amp;#39;ve showed passing &lt;code&gt;&amp;quot;&amp;quot;&lt;/code&gt; as the keyboard prefix parameter
+before. Apparently, it works and just translates to this:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dired-mode-map&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;&amp;quot;m&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;hydra-marked-items/dired-mark&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Here&amp;#39;s how it looks like:
+&lt;img src=&quot;/download/hydra-docstring-sexp.png&quot; alt=&quot;hydra-docstring-sexp&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;There&amp;#39;s no need for a quitting key, it will auto-vanish when you press
+anything other than &lt;kbd&gt;m&lt;/kbd&gt;.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Hydra for Buffer-menu</title>
