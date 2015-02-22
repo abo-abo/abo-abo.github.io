@@ -11,7 +11,7 @@
 
   <title>
     
-      Time flies &middot; (or emacs
+      Saving match data in-between Elisp evals &middot; (or emacs
     
   </title>
 
@@ -204,76 +204,41 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Time flies</h1>
-  <span class="post-date">03 Jan 2015</span>
-  <p>This is the 15th post on this blog. Thankfully, no heart attacks after
-the 13th one or anything.  So I&#39;ll commemorate it with a post on
-dealing with dates in <code>calc</code>.</p>
+  <h1 class="post-title">Saving match data in-between Elisp evals</h1>
+  <span class="post-date">22 Feb 2015</span>
+  <p>This is a new feature I&#39;ve added recently to <a href="https://github.com/abo-abo/lispy">lispy</a>
+that&#39;s useful when debugging regex-related code.</p>
 
-<h2 id="how-much-time-has-passed-since-i-started-this-blog?">How much time has passed since I started this blog?</h2>
+<p>The gist of it is that the match data is a single global object in Emacs.
+So if you call <code>string-match</code> with your <kbd>C-x C-e</kbd>, there&#39;s no
+guarantee that e.g. <code>match-beginning</code> will return the proper thing with another <kbd>C-x C-e</kbd>,
+since any package running in your Emacs could mess with the match data (packages that use timers
+or post-command hooks etc.).</p>
 
-<ol>
-<li><p>Open <code>calc</code> with <kbd>C-x **</kbd>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">--- Emacs Calculator Mode ---
-    .
-</code></pre></div></li>
-<li><p>Enter <code>20 Dec 2014</code> with <kbd>&#39;&lt;12 20 14</kbd><kbd>RET</kbd>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">--- Emacs Calculator Mode ---
-1:  &lt;Sat Dec 20, 2014&gt;
-    .
-</code></pre></div></li>
-<li><p>Enter current time with <kbd>tN</kbd>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">--- Emacs Calculator Mode ---
-2:  &lt;Sat Dec 20, 2014&gt;
-1:  &lt;11:56:27am Sat Jan 3, 2015&gt;
-    .
-</code></pre></div></li>
-<li><p>Subtract with <kbd>-</kbd>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">--- Emacs Calculator Mode ---
-1:  -14.498044
-    .
-</code></pre></div></li>
-</ol>
+<p>After getting annoyed by this a few times, I&#39;ve finally added a
+fail-safe to <kbd>e</kbd> (<code>lispy-eval</code>) and <kbd>p</kbd>
+(<code>lispy-eval-other-window</code>). Here&#39;s how it looks like:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">defvar</span> <span class="nv">lispy-eval-match-data</span> <span class="no">nil</span><span class="p">)</span>
 
-<p>This means that, if I want to maintain my one-post-per-day streak, I
-still have half of a day to post this. Unfortunately, I have only an
-old version of the blog repository on this machine, and the current
-one is on a laptop at home. So I&#39;ll post this in the evening.</p>
-
-<h2 id="did-you-know-what-2015-looks-like-in-binary?">Did you know what 2015 looks like in binary?</h2>
-
-<p>In your current <code>calc</code> session,</p>
-
-<ol>
-<li><p>Enter <kbd>2015</kbd> <kbd>SPC</kbd>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">--- Emacs Calculator Mode ---
-2:  -14.498044
-1:  2015
-    .
-</code></pre></div></li>
-<li><p>Switch to binary with <kbd>d2</kbd>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">--- Emacs Calculator Mode ---
-2:  -2#1110.011111110111111111001111110001
-1:  2#11111011111
-.
-</code></pre></div></li>
-<li><p>Wow, a palindrome. It&#39;s too spooky, switch back to decimal with <kbd>d0</kbd>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">--- Emacs Calculator Mode ---
-2:  -14.498044
-1:  2015
-    .
-</code></pre></div></li>
-</ol>
-
-<p>If you&#39;re new to <code>calc</code>, you&#39;ll probably wonder why you can&#39;t enter
-negative numbers with <kbd>-</kbd>. It can be done with <kbd>_</kbd>,
-just like in
-<a href="http://www.jsoftware.com/help/primer/negative_number.htm">J</a>. Find
-out more in the
-<a href="http://www.gnu.org/software/emacs/manual/html_mono/calc.html">info</a>;
-the
-<a href="http://www.gnu.org/software/emacs/manual/html_mono/calc.html#Tutorial">interactive tutorial</a>
-is absolutely excellent.</p>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">lispy--eval-elisp-form</span> <span class="p">(</span><span class="nv">form</span> <span class="nv">lexical</span><span class="p">)</span>
+  <span class="s">&quot;Eval FORM and return its value.</span>
+<span class="s">If LEXICAL is t, evaluate using lexical scoping.</span>
+<span class="s">Restore and save `lispy-eval-match-data&#39; appropriately,</span>
+<span class="s">so that no other packages disturb the match data.&quot;</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">val</span><span class="p">)</span>
+    <span class="p">(</span><span class="nf">fset</span> <span class="ss">&#39;\,</span> <span class="nf">#&#39;identity</span><span class="p">)</span>
+    <span class="p">(</span><span class="nf">set-match-data</span> <span class="nv">lispy-eval-match-data</span><span class="p">)</span>
+    <span class="p">(</span><span class="k">setq</span> <span class="nv">val</span> <span class="p">(</span><span class="nf">eval</span> <span class="nv">form</span> <span class="nv">lexical</span><span class="p">))</span>
+    <span class="p">(</span><span class="k">setq</span> <span class="nv">lispy-eval-match-data</span> <span class="p">(</span><span class="nf">match-data</span><span class="p">))</span>
+    <span class="p">(</span><span class="nf">fset</span> <span class="ss">&#39;\,</span> <span class="no">nil</span><span class="p">)</span>
+    <span class="nv">val</span><span class="p">))</span>
+</code></pre></div>
+<p>There&#39;s also a little dance of ignoring comma operators in the rare
+case when I want to eval <em>inside</em> a backquoted list.  The two
+functions that you can take away from this exercise are <code>match-data</code>
+and <code>set-match-data</code> which appropriately return and store a list of
+integers. Keeping the string separate from the regex match is a neat
+way to improve performance.</p>
 
 </div>
 
@@ -292,16 +257,6 @@ is absolutely excellent.</p>
     
       <li>
         <h3>
-          <!-- <a href="//2015/02/22/saving-match-data/"> -->
-          <a href="/2015/02/22/saving-match-data/">
-            Saving match data in-between Elisp evals
-            <small>22 Feb 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
           <!-- <a href="//2015/02/21/hydra-docstring-sexp/"> -->
           <a href="/2015/02/21/hydra-docstring-sexp/">
             Embedding sexps in Hydra docstrings
@@ -316,6 +271,16 @@ is absolutely excellent.</p>
           <a href="/2015/02/20/buffer-menu-hydra/">
             Hydra for Buffer-menu
             <small>20 Feb 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/02/19/hydra-colors-reloaded/"> -->
+          <a href="/2015/02/19/hydra-colors-reloaded/">
+            Two new Hydra colors - pink and teal
+            <small>19 Feb 2015</small>
           </a>
         </h3>
       </li>

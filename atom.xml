@@ -4,13 +4,54 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-02-21T17:16:26+01:00</updated>
+ <updated>2015-02-22T13:23:18+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Saving match data in-between Elisp evals</title>
+   <link href="http://oremacs.com/2015/02/22/saving-match-data/"/>
+   <updated>2015-02-22T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/02/22/saving-match-data</id>
+   <content type="html">&lt;p&gt;This is a new feature I&amp;#39;ve added recently to &lt;a href=&quot;https://github.com/abo-abo/lispy&quot;&gt;lispy&lt;/a&gt;
+that&amp;#39;s useful when debugging regex-related code.&lt;/p&gt;
+
+&lt;p&gt;The gist of it is that the match data is a single global object in Emacs.
+So if you call &lt;code&gt;string-match&lt;/code&gt; with your &lt;kbd&gt;C-x C-e&lt;/kbd&gt;, there&amp;#39;s no
+guarantee that e.g. &lt;code&gt;match-beginning&lt;/code&gt; will return the proper thing with another &lt;kbd&gt;C-x C-e&lt;/kbd&gt;,
+since any package running in your Emacs could mess with the match data (packages that use timers
+or post-command hooks etc.).&lt;/p&gt;
+
+&lt;p&gt;After getting annoyed by this a few times, I&amp;#39;ve finally added a
+fail-safe to &lt;kbd&gt;e&lt;/kbd&gt; (&lt;code&gt;lispy-eval&lt;/code&gt;) and &lt;kbd&gt;p&lt;/kbd&gt;
+(&lt;code&gt;lispy-eval-other-window&lt;/code&gt;). Here&amp;#39;s how it looks like:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defvar&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;lispy-eval-match-data&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;lispy--eval-elisp-form&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;form&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;lexical&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Eval FORM and return its value.&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;If LEXICAL is t, evaluate using lexical scoping.&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;Restore and save `lispy-eval-match-data&amp;#39; appropriately,&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;so that no other packages disturb the match data.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;fset&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;\,&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;#&amp;#39;identity&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;set-match-data&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;lispy-eval-match-data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;eval&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;form&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;lexical&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;lispy-eval-match-data&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;match-data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;fset&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;\,&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;There&amp;#39;s also a little dance of ignoring comma operators in the rare
+case when I want to eval &lt;em&gt;inside&lt;/em&gt; a backquoted list.  The two
+functions that you can take away from this exercise are &lt;code&gt;match-data&lt;/code&gt;
+and &lt;code&gt;set-match-data&lt;/code&gt; which appropriately return and store a list of
+integers. Keeping the string separate from the regex match is a neat
+way to improve performance.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Embedding sexps in Hydra docstrings</title>
