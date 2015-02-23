@@ -4,13 +4,203 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-02-22T13:23:18+01:00</updated>
+ <updated>2015-02-23T19:20:49+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Hydra 0.11.0 is out</title>
+   <link href="http://oremacs.com/2015/02/23/hydra-0.11.0/"/>
+   <updated>2015-02-23T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/02/23/hydra-0.11.0</id>
+   <content type="html">&lt;p&gt;As usual, I&amp;#39;ll just re-state the
+&lt;a href=&quot;https://github.com/abo-abo/hydra/releases/tag/0.10.0&quot;&gt;release notes&lt;/a&gt;
+and add some more notes in the end.&lt;/p&gt;
+
+&lt;h2 id=&quot;fixes&quot;&gt;Fixes&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Emacs 24.3 (and maybe earlier versions) compatibility added&lt;/li&gt;
+&lt;li&gt;(hydra-cleanup): Should not delete buffer first when window is dedicated.&lt;/li&gt;
+&lt;li&gt;(lv-message): Should not deactivate mark.&lt;/li&gt;
+&lt;li&gt;quit signals are intercepted, so that proper clean-up is done.&lt;/li&gt;
+&lt;li&gt;no defuns with the same name will be generated in case some heads&amp;#39; cmd parts coincide&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;new-features&quot;&gt;New Features&lt;/h2&gt;
+
+&lt;h3 id=&quot;pink-body-color&quot;&gt;Pink body color&lt;/h3&gt;
+
+&lt;p&gt;When body color is pink, and hydra intercepts a binding which isn&amp;#39;t a head, instead of quitting the
+hydra and executing the binding (default red behavior), it will execute the binding and &lt;strong&gt;not quit&lt;/strong&gt;
+the hydra. This type of hydra is very similar to &lt;code&gt;define-minor-mode&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;So now, pink and amaranth are body colors that are a flavor of the default red that, instead of
+quitting when a non-head binding is intercepted, respectively run the binding or issue a warning.&lt;/p&gt;
+
+&lt;h3 id=&quot;teal-body-color&quot;&gt;Teal body color&lt;/h3&gt;
+
+&lt;p&gt;Teal color behaves similarly to amaranth (issues a warning when intercepting foreign bindings),
+but the default behavior for each head is to quit.&lt;/p&gt;
+
+&lt;p&gt;The following evaluates to true:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;equal&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;macroexpand&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-test&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;amaranth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;a&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fun-a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;b&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fun-b&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;c&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fun-c&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;d&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fun-d&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;e&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fun-e&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;f&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fun-f&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;macroexpand&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-test&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;teal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;a&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fun-a&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;red&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;b&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fun-b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;c&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fun-c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;d&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fun-d&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;e&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fun-e&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;f&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fun-f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;So if you want to write less, use teal color in this case.&lt;/p&gt;
+
+&lt;h3 id=&quot;alternative-color-less-syntax&quot;&gt;Alternative color-less syntax&lt;/h3&gt;
+
+&lt;p&gt;The color syntax is working quite well, since I was able to keep an almost full backward-compatibility:
+once you pinpoint a color it will have that behavior, all the new behaviors will be released under a new color.&lt;/p&gt;
+
+&lt;p&gt;Some might prefer an alternative set of switches rather than colors. New compat switches are:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;- &amp;quot;:exit nil&amp;quot; for &amp;quot;:color red&amp;quot;; You don&amp;#39;t have to specify either
+  option in the body, since they are the default behavior that was
+  available on Hydra release
+- &amp;quot;:exit t&amp;quot; for &amp;quot;:color blue&amp;quot;
+- &amp;quot;:foreign-keys warn&amp;quot; for &amp;quot;:color amaranth&amp;quot;
+- &amp;quot;:foreign-keys warn :exit t&amp;quot; for &amp;quot;:color teal&amp;quot;
+- &amp;quot;:foreign-keys run&amp;quot; for &amp;quot;:color pink&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The property &lt;code&gt;:exit&lt;/code&gt; can be inherited and overridden in the same way as &lt;code&gt;:color&lt;/code&gt; red or blue.&lt;/p&gt;
+
+&lt;p&gt;The following evaluates to true:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;equal&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;macroexpand&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-test&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;a&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fun-a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;b&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fun-b&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;c&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fun-c&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;d&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fun-d&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;e&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fun-e&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;f&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fun-f&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;macroexpand&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-test&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;a&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fun-a&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;red&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;b&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fun-b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;c&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fun-c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;d&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fun-d&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;e&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fun-e&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;f&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fun-f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The following two are exactly the same as the two above:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;equal&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;macroexpand&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-test&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;a&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fun-a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;b&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fun-b&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:exit&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;c&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fun-c&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:exit&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;d&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fun-d&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:exit&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;e&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fun-e&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:exit&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;f&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fun-f&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:exit&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;macroexpand&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-test&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:exit&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;a&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fun-a&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:exit&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;b&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fun-b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;c&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fun-c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;d&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fun-d&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;e&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fun-e&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;f&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fun-f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;ruby-style-string-interpolation-in-docstrings&quot;&gt;Ruby-style string interpolation in docstrings&lt;/h3&gt;
+
+&lt;p&gt;Here&amp;#39;s an example:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-marked-items&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;dired-mode-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;Number of marked items: %(length (dired-get-marked-files))&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;Auto-revert mode is:    %`auto-revert-mode&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;&amp;quot;&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;m&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dired-mark&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;mark&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;To enable this behavior, the docstring has to start with a newline (which will be stripped).  This
+makes sense, since you usually want to align extensive docstrings, like I did this one.  The escape
+syntax for variables is such that you can auto-complete them with &lt;code&gt;company-mode&lt;/code&gt;.  Both variables
+and sexps can use &lt;code&gt;format&lt;/code&gt; style width specifiers. See the documentation of &lt;code&gt;format&lt;/code&gt; for more
+details.&lt;/p&gt;
+
+&lt;h3 id=&quot;examples-7-9-added-to-hydra-examples.el&quot;&gt;Examples 7-9 added to hydra-examples.el&lt;/h3&gt;
+
+&lt;p&gt;These examples explain Ruby-style interpolation.&lt;/p&gt;
+
+&lt;h3 id=&quot;updated-faces&quot;&gt;Updated faces&lt;/h3&gt;
+
+&lt;p&gt;I&amp;#39;ve updated each face to match their color by default. Remember, that you can customize each
+face interactively with &lt;kbd&gt;M-x&lt;/kbd&gt; &lt;code&gt;customize-group&lt;/code&gt; &lt;code&gt;hydra&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;alternative-grey-scale-or-custom-faces&quot;&gt;Alternative grey-scale or custom faces&lt;/h3&gt;
+
+&lt;p&gt;If you don&amp;#39;t want colors for some reason, you can customize &lt;code&gt;hydra-fontify-head-function&lt;/code&gt; to your
+taste.&lt;/p&gt;
+
+&lt;p&gt;As an example:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-fontify-head-function&lt;/span&gt;
+      &lt;span class=&quot;nf&quot;&gt;#&amp;#39;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hydra-fontify-head-greyscale&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This function is already defined in hydra.el, but you could define a similar one on your own:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-fontify-head-greyscale&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;head&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;body&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Produce a pretty string from HEAD and BODY.&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;HEAD&amp;#39;s binding is returned as a string wrapped with [] or {}.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;color&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hydra--head-color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;head&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;body&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;format&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;eq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;color&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+         &lt;span class=&quot;s&quot;&gt;&amp;quot;[%s]&amp;quot;&lt;/span&gt;
+       &lt;span class=&quot;s&quot;&gt;&amp;quot;(%s)&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;car&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;new-switch-:body-pre&quot;&gt;New switch :body-pre&lt;/h3&gt;
+
+&lt;p&gt;This sexp or function will be prepended to the prefix/body function.
+Here&amp;#39;s an example of use:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defvar&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-vi/init-pos&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-vi&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:body-pre&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-vi/init-pos&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;point&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+                    &lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;pink&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;vi&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;;; arrows&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;h&amp;quot;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;backward-char&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;j&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;next-line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;k&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;previous-line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;l&amp;quot;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;forward-char&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;;; exit points&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;q&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;goto-char&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-vi/init-pos&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;ins&amp;quot;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:exit&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;C-n&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;forward-line&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:exit&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;C-p&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;forward-line&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;-1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:exit&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Here, upon entering the hydra, the point position will be saved. And upon quitting, it will be
+restored.&lt;/p&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;I hope that you&amp;#39;re enjoying the new updates as much as I do.
+Since the last release, there are two new blog posts about using hydra that I&amp;#39;m aware of:
+by &lt;a href=&quot;http://howardism.org/Technical/Emacs/lists-and-key-sequences.html&quot;&gt;Howard Abrams&lt;/a&gt; and
+&lt;a href=&quot;http://kitchingroup.cheme.cmu.edu/blog/2015/02/22/org-mode-links-meet-hydra/&quot;&gt;John Kitchin&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Additionally, &lt;a href=&quot;https://github.com/hura&quot;&gt;@hura&lt;/a&gt;,
+&lt;a href=&quot;https://github.com/kaushalmodi&quot;&gt;@kaushalmodi&lt;/a&gt;, and
+&lt;a href=&quot;https://github.com/glucas&quot;&gt;@glucas&lt;/a&gt; have made some additions to the
+&lt;a href=&quot;https://github.com/abo-abo/hydra/wiki&quot;&gt;Hydra wiki&lt;/a&gt;. Anyone is welcome
+to share their useful hydras there. Thanks a lot and happy hacking!&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Saving match data in-between Elisp evals</title>

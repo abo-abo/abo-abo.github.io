@@ -11,7 +11,7 @@
 
   <title>
     
-      (or emacs &middot; irrelevant)
+      Hydra 0.11.0 is out &middot; (or emacs
     
   </title>
 
@@ -48,7 +48,7 @@
   <!-- </div> -->
 
   <nav class="sidebar-nav">
-    <a class="sidebar-nav-item active" href="/">Home</a>
+    <a class="sidebar-nav-item" href="/">Home</a>
 
     
 
@@ -207,18 +207,10 @@
       </div>
 
       <div class="container content">
-        <div class="posts">
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/02/23/hydra-0.11.0/">
-        Hydra 0.11.0 is out
-      </a>
-    </h1>
-
-    <span class="post-date">23 Feb 2015</span>
-
-    <p>As usual, I&#39;ll just re-state the
+        <div class="post">
+  <h1 class="post-title">Hydra 0.11.0 is out</h1>
+  <span class="post-date">23 Feb 2015</span>
+  <p>As usual, I&#39;ll just re-state the
 <a href="https://github.com/abo-abo/hydra/releases/tag/0.10.0">release notes</a>
 and add some more notes in the end.</p>
 
@@ -401,306 +393,73 @@ by <a href="http://howardism.org/Technical/Emacs/lists-and-key-sequences.html">H
 <a href="https://github.com/abo-abo/hydra/wiki">Hydra wiki</a>. Anyone is welcome
 to share their useful hydras there. Thanks a lot and happy hacking!</p>
 
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/02/22/saving-match-data/">
-        Saving match data in-between Elisp evals
-      </a>
-    </h1>
-
-    <span class="post-date">22 Feb 2015</span>
-
-    <p>This is a new feature I&#39;ve added recently to <a href="https://github.com/abo-abo/lispy">lispy</a>
-that&#39;s useful when debugging regex-related code.</p>
-
-<p>The gist of it is that the match data is a single global object in Emacs.
-So if you call <code>string-match</code> with your <kbd>C-x C-e</kbd>, there&#39;s no
-guarantee that e.g. <code>match-beginning</code> will return the proper thing with another <kbd>C-x C-e</kbd>,
-since any package running in your Emacs could mess with the match data (packages that use timers
-or post-command hooks etc.).</p>
-
-<p>After getting annoyed by this a few times, I&#39;ve finally added a
-fail-safe to <kbd>e</kbd> (<code>lispy-eval</code>) and <kbd>p</kbd>
-(<code>lispy-eval-other-window</code>). Here&#39;s how it looks like:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">defvar</span> <span class="nv">lispy-eval-match-data</span> <span class="no">nil</span><span class="p">)</span>
-
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">lispy--eval-elisp-form</span> <span class="p">(</span><span class="nv">form</span> <span class="nv">lexical</span><span class="p">)</span>
-  <span class="s">&quot;Eval FORM and return its value.</span>
-<span class="s">If LEXICAL is t, evaluate using lexical scoping.</span>
-<span class="s">Restore and save `lispy-eval-match-data&#39; appropriately,</span>
-<span class="s">so that no other packages disturb the match data.&quot;</span>
-  <span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">val</span><span class="p">)</span>
-    <span class="p">(</span><span class="nf">fset</span> <span class="ss">&#39;\,</span> <span class="nf">#&#39;identity</span><span class="p">)</span>
-    <span class="p">(</span><span class="nf">set-match-data</span> <span class="nv">lispy-eval-match-data</span><span class="p">)</span>
-    <span class="p">(</span><span class="k">setq</span> <span class="nv">val</span> <span class="p">(</span><span class="nf">eval</span> <span class="nv">form</span> <span class="nv">lexical</span><span class="p">))</span>
-    <span class="p">(</span><span class="k">setq</span> <span class="nv">lispy-eval-match-data</span> <span class="p">(</span><span class="nf">match-data</span><span class="p">))</span>
-    <span class="p">(</span><span class="nf">fset</span> <span class="ss">&#39;\,</span> <span class="no">nil</span><span class="p">)</span>
-    <span class="nv">val</span><span class="p">))</span>
-</code></pre></div>
-<p>There&#39;s also a little dance of ignoring comma operators in the rare
-case when I want to eval <em>inside</em> a backquoted list.  The two
-functions that you can take away from this exercise are <code>match-data</code>
-and <code>set-match-data</code> which appropriately return and store a list of
-integers. Keeping the string separate from the regex match is a neat
-way to improve performance.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/02/21/hydra-docstring-sexp/">
-        Embedding sexps in Hydra docstrings
-      </a>
-    </h1>
-
-    <span class="post-date">21 Feb 2015</span>
-
-    <p>In <a href="/2015/02/20/buffer-menu-hydra/">yesterday&#39;s post</a>
-I showed how to embed variable values into the docstring, among other
-things. Today, I&#39;ve extended this approach to work with s-expressions.
-Here&#39;s how it looks like:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-marked-items</span> <span class="p">(</span><span class="nv">dired-mode-map</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
-      <span class="s">&quot;</span>
-<span class="s">Number of marked items: %(length (dired-get-marked-files))</span>
-<span class="s">&quot;</span>
-      <span class="p">(</span><span class="s">&quot;m&quot;</span> <span class="nv">dired-mark</span> <span class="s">&quot;mark&quot;</span><span class="p">))</span>
-</code></pre></div>
-<p>This piece of code will remind you how many files you&#39;ve marked so far each
-time you press <kbd>m</kbd>.
-By the way, this is the 64th post on the blog; I found out by pressing
-<kbd>tm</kbd> in <code>dired</code> buffer or the <code>_posts</code> directory.
-Also, I don&#39;t think that I&#39;ve showed passing <code>&quot;&quot;</code> as the keyboard prefix parameter
-before. Apparently, it works and just translates to this:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span>
-    <span class="s">&quot;m&quot;</span> <span class="ss">&#39;hydra-marked-items/dired-mark</span><span class="p">)</span>
-</code></pre></div>
-<p>Here&#39;s how it looks like:
-<img src="/download/hydra-docstring-sexp.png" alt="hydra-docstring-sexp"></p>
-
-<p>There&#39;s no need for a quitting key, it will auto-vanish when you press
-anything other than <kbd>m</kbd>.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/02/20/buffer-menu-hydra/">
-        Hydra for Buffer-menu
-      </a>
-    </h1>
-
-    <span class="post-date">20 Feb 2015</span>
-
-    <p>Here&#39;s a little code I&#39;ve made today for <code>Buffer-menu-mode</code>:</p>
-
-<div class="highlight"><pre><small><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-buffer-menu</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">pink</span><span class="p">)</span>
-  <span class="s">&quot;</span>
-<span class="s">  Mark               Unmark             Actions            Search</span>
-<span class="s">-------------------------------------------------------------------------</span>
-<span class="s">_m_: mark          _u_: unmark        _x_: execute       _R_: re-isearch</span>
-<span class="s">_s_: save          _U_: unmark up     _b_: bury          _I_: isearch</span>
-<span class="s">_d_: delete                           _g_: refresh       _O_: multi-occur</span>
-<span class="s">_D_: delete up                        _T_: files only: %`Buffer-menu-files-only</span>
-<span class="s">_~_: modified</span>
-<span class="s">&quot;</span>
-  <span class="p">(</span><span class="s">&quot;m&quot;</span> <span class="nv">Buffer-menu-mark</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;u&quot;</span> <span class="nv">Buffer-menu-unmark</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;U&quot;</span> <span class="nv">Buffer-menu-backup-unmark</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;d&quot;</span> <span class="nv">Buffer-menu-delete</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;D&quot;</span> <span class="nv">Buffer-menu-delete-backwards</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;s&quot;</span> <span class="nv">Buffer-menu-save</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;~&quot;</span> <span class="nv">Buffer-menu-not-modified</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;x&quot;</span> <span class="nv">Buffer-menu-execute</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;b&quot;</span> <span class="nv">Buffer-menu-bury</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;g&quot;</span> <span class="nv">revert-buffer</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;T&quot;</span> <span class="nv">Buffer-menu-toggle-files-only</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;O&quot;</span> <span class="nv">Buffer-menu-multi-occur</span> <span class="no">nil</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;I&quot;</span> <span class="nv">Buffer-menu-isearch-buffers</span> <span class="no">nil</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;R&quot;</span> <span class="nv">Buffer-menu-isearch-buffers-regexp</span> <span class="no">nil</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;c&quot;</span> <span class="no">nil</span> <span class="s">&quot;cancel&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;v&quot;</span> <span class="nv">Buffer-menu-select</span> <span class="s">&quot;select&quot;</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;o&quot;</span> <span class="nv">Buffer-menu-other-window</span> <span class="s">&quot;other-window&quot;</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="nv">quit-window</span> <span class="s">&quot;quit&quot;</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">))</span>
-
-<span class="p">(</span><span class="nf">define-key</span> <span class="nv">Buffer-menu-mode-map</span> <span class="s">&quot;.&quot;</span> <span class="ss">&#39;hydra-buffer-menu/body</span><span class="p">)</span>
-</code></small></pre></div>
-
-<p>You can change the color on the top to your taste: either red or pink or amaranth will work.
-For extensive Hydras I tend to pick pink, since I don&#39;t want to quit by accident, while still keeping
-the non-head bindings. For small ones, red is better.
-Here&#39;s how the result looks like:
-<img src="/download/hydra-buffer-menu.png" alt="hydra-buffer-menu"></p>
-
-<p>You can install the cow with:</p>
-<div class="highlight"><pre><code class="language-sh" data-lang="sh">apt-get moo
-</code></pre></div>
-<p>I didn&#39;t list it in the source, since Jekyll would wrap the long lines. The source is already in <a href="https://github.com/abo-abo/hydra/blob/master/hydra-examples.el#L191">hydra-examples.el</a>.
-You only have to:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;hydra-examples</span><span class="p">)</span>
-<span class="p">(</span><span class="nf">define-key</span> <span class="nv">Buffer-menu-mode-map</span> <span class="s">&quot;.&quot;</span> <span class="ss">&#39;hydra-buffer-menu/body</span><span class="p">)</span>
-</code></pre></div>
-<p>I&#39;ve been hearing some opinions lately that the growing number of
-Hydra options makes it intimidating or unclear. I hope that&#39;s not the
-majority&#39;s feeling and that the gentle repetitiveness of this example
-proves otherwise.</p>
-
-<p>On the other hand, I&#39;ve started reading &quot;The Reasoned Schemer&quot; this
-week. Now that&#39;s intimidating.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/02/19/hydra-colors-reloaded/">
-        Two new Hydra colors - pink and teal
-      </a>
-    </h1>
-
-    <span class="post-date">19 Feb 2015</span>
-
-    <p>Two new colors are being added up to a total of five: red, blue,
-amaranth, pink and teal.
-I should carefully restate what they do to avoid confusion.</p>
-
-<h2 id="the-three-rules-of-hydratics">The three rules of Hydratics</h2>
-
-<p><strike>1. A hydra may not injure a human being or, through inaction, allow a human being to come to harm.</strike></p>
-
-<p>Seriously though, see below.</p>
-
-<h3 id="rule-1:-hydra-heads-are-either-red-or-blue">Rule 1: Hydra heads are either red or blue</h3>
-
-<p>Once you&#39;re in a Hydra state:</p>
-
-<ul>
-<li>calling a red head will call the command and continue the state</li>
-<li>calling a blue head will call the command and stop the state</li>
-</ul>
-
-<p>They may have a reddish or a bluish face that isn&#39;t exactly red or
-blue, but that&#39;s what they are underneath. I hope you get what I mean.</p>
-
-<h3 id="rule-2:-red-or-blue-is-inherited-from-the-body-color">Rule 2: red or blue is inherited from the body color</h3>
-
-<p>This is merely a convenience, you can still explicitly override each
-head to be blue or red:</p>
-
-<ul>
-<li>if the body is red, amaranth or pink, the heads inherit red</li>
-<li>if the body is blue or teal, the heads inherit blue</li>
-</ul>
-
-<h3 id="rule-3:">Rule 3:</h3>
-
-<p>When you call a binding which isn&#39;t a head:</p>
-
-<ul>
-<li>amaranth, teal and pink Hydras will intercept it</li>
-<li>red and blue Hydras will quit and let Emacs execute your binding</li>
-</ul>
-
-<p>Finally, on intercepting a non-head, amaranth and teal will issue a
-warning and do nothing without quitting. And pink will try to call the
-intercepted command without quitting. Currently only non-prefix
-bindings can be called, since I haven&#39;t figured out how to do it for prefixes.</p>
-
-<h3 id="a-nice-table-to-sum-things-up">A nice table to sum things up</h3>
-
-<p>Thanks to <a href="https://github.com/kaushalmodi">@kaushalmodi</a> for pointing me in this direction:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">|----------+-----------+-----------------------+-----------------|
-| Body     | Head      | Executing NON-HEADS   | Executing HEADS |
-| Color    | Inherited |                       |                 |
-|          | Color     |                       |                 |
-|----------+-----------+-----------------------+-----------------|
-| amaranth | red       | Disallow and Continue | Continue        |
-| teal     | blue      | Disallow and Continue | Quit            |
-| pink     | red       | Allow and Continue    | Continue        |
-| red      | red       | Allow and Quit        | Continue        |
-| blue     | blue      | Allow and Quit        | Quit            |
-|----------+-----------+-----------------------+-----------------|
-</code></pre></div>
-<h2 id="the-extra-awesome-ruby-style-hydra-docstrings">The extra-awesome Ruby-style Hydra docstrings</h2>
-
-<p>Turns out learning Ruby wasn&#39;t a complete waste of time, at least I
-learned about string interpolation. And now I&#39;m sticking it into Elisp
-packages, first <a href="https://github.com/abo-abo/tiny">tiny</a>, and now
-<a href="https://github.com/abo-abo/hydra">hydra</a>.</p>
-
-<p>How it works:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-toggle</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">pink</span><span class="p">)</span>
-  <span class="s">&quot;</span>
-<span class="s">_a_ abbrev-mode:       %`abbrev-mode</span>
-<span class="s">_d_ debug-on-error:    %`debug-on-error</span>
-<span class="s">_f_ auto-fill-mode:    %`auto-fill-function</span>
-<span class="s">_g_ golden-ratio-mode: %`golden-ratio-mode</span>
-<span class="s">_t_ truncate-lines:    %`truncate-lines</span>
-<span class="s">_w_ whitespace-mode:   %`whitespace-mode</span>
-
-<span class="s">&quot;</span>
-  <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="nv">abbrev-mode</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;d&quot;</span> <span class="nv">toggle-debug-on-error</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;f&quot;</span> <span class="nv">auto-fill-mode</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;g&quot;</span> <span class="nv">golden-ratio-mode</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;t&quot;</span> <span class="nv">toggle-truncate-lines</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;w&quot;</span> <span class="nv">whitespace-mode</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span> <span class="s">&quot;cancel&quot;</span><span class="p">))</span>
-
-<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c C-v&quot;</span><span class="p">)</span> <span class="ss">&#39;hydra-toggle/body</span><span class="p">)</span>
-</code></pre></div>
-<p>Here, using e.g. <code>&quot;_a_&quot;</code> translates to <code>&quot;a&quot;</code> with proper face.  More
-interestingly, e.g.</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="s">&quot;foobar %`abbrev-mode&quot;</span>
-</code></pre></div>
-<p>translates roughly to</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">format</span> <span class="s">&quot;foobar %S&quot;</span> <span class="nv">abbrev-mode</span><span class="p">)</span>
-</code></pre></div>
-<p>This means that you actually see the state of the mode that you&#39;re
-changing.  The escape syntax was chosen with another intent in mind:
-because of the backquote, if you have <code>company-mode</code> on, you can
-complete the symbols while in string.</p>
-
-<p>See how it looks like in action:</p>
-
-<p><img src="/download/hydra-toggle-pink.png" alt="hydra-toggle-pink"></p>
-
-<h2 id="small-note-on-pink-hydras">Small note on pink Hydras</h2>
-
-<p>It&#39;s useful for instance it the above example, when I don&#39;t care about
-self-inserting, but I still want to do navigation. Basically pink
-Hydra is the closest thing to an actual minor mode. Thanks to
-<a href="https://github.com/angelic-sedition">@angelic-sedition</a> for the idea.</p>
-
-<h2 id="small-note-on-teal-hydras">Small note on teal Hydras</h2>
-
-<p>It provides an interface similar to <code>magit</code> dispatch: pressing
-appropriate keys does things and pressing the wrong keys issues a
-warning. The only difference between teal and amaranth is the color
-inheritance, otherwise they behave exactly the same.  This means that
-if you want a non-quitting Hydra that will end up with more blue
-heads, start with teal, otherwise, start with amaranth.
-Thanks to <a href="https://github.com/ffevotte">@ffevotte</a> for the idea.</p>
-
-<h2 id="outro">Outro</h2>
-
-<p>It feels like things are finally falling into place with this package.
-I hope that you like the new changes and find new cool uses for the added abilities.
-Happy hacking!</p>
-
-  </div>
-  
 </div>
 
-<div class="pagination">
-  
-    <a class="pagination-item older" href="/page2">Older</a>
-  
-  
-    <span class="pagination-item newer">Newer</span>
-  
+<div class="twitter-share">
+  <a href="https://twitter.com/share"
+     class="twitter-share-button"
+     data-via="_abo_abo"
+     data-dnt="true">
+    Tweet
+  </a>
 </div>
 
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/02/22/saving-match-data/"> -->
+          <a href="/2015/02/22/saving-match-data/">
+            Saving match data in-between Elisp evals
+            <small>22 Feb 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/02/21/hydra-docstring-sexp/"> -->
+          <a href="/2015/02/21/hydra-docstring-sexp/">
+            Embedding sexps in Hydra docstrings
+            <small>21 Feb 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/02/20/buffer-menu-hydra/"> -->
+          <a href="/2015/02/20/buffer-menu-hydra/">
+            Hydra for Buffer-menu
+            <small>20 Feb 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'oremacs'; // required: replace example with your forum shortname
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+<script>
+  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+</script>
+<noscript>
+  Please enable JavaScript to view the
+  <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
 
       </div>
     </div>
