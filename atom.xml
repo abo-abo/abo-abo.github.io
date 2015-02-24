@@ -4,7 +4,7 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-02-23T19:20:49+01:00</updated>
+ <updated>2015-02-24T22:28:53+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
@@ -13,12 +13,116 @@
 
  
  <entry>
+   <title>Profile your Emacs start-up time</title>
+   <link href="http://oremacs.com/2015/02/24/emacs-speed-test/"/>
+   <updated>2015-02-24T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/02/24/emacs-speed-test</id>
+   <content type="html">&lt;p&gt;I bet I could compete for the shortest &lt;code&gt;~/.emacs&lt;/code&gt; ever:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;(load &amp;quot;~/Dropbox/source/site-lisp/init&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;However, it being one line doesn&amp;#39;t make it start up any faster.
+Here&amp;#39;s what I have in my Makefile beside &lt;code&gt;init.el&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-Makefile&quot; data-lang=&quot;Makefile&quot;&gt;&lt;span class=&quot;nf&quot;&gt;profile&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;
+    emacs -Q -l git/profile-dotemacs/profile-dotemacs.el &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    --eval &lt;span class=&quot;s2&quot;&gt;&amp;quot;(setq profile-dotemacs-file \&lt;/span&gt;
+&lt;span class=&quot;s2&quot;&gt;        (setq load-file-name \&amp;quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;abspath init.el&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;\&amp;quot;))&amp;quot;&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    -f profile-dotemacs
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The package that I&amp;#39;m using,
+&lt;a href=&quot;http://randomsample.de/profile-dotemacs.el&quot;&gt;profile-dotemacs.el&lt;/a&gt;
+comes from David Engster, one of the major contributors to CEDET, so
+you know it&amp;#39;s got to be good.  Once you launch it as I showed above,
+it will give you the times that various sections took to load in an
+overlay.&lt;/p&gt;
+
+&lt;p&gt;On very sunny days I can almost get Emacs to start under one second,
+although when I checked just now, it turned out to be &lt;code&gt;1.20s&lt;/code&gt;.  I
+value short start up time very highly, since due to my messing with
+Elisp, the Emacs global state can become so messed up that it&amp;#39;s a lot
+faster to just restart it, rather than spend 10 minutes surgically
+restoring the state. And, of course, it&amp;#39;s a bonus for using Emacs on a
+laptop, which I do at home.&lt;/p&gt;
+
+&lt;p&gt;I&amp;#39;ve used two methods to shorten the boot time, I&amp;#39;ll describe them below.&lt;/p&gt;
+
+&lt;h2 id=&quot;use-package-:idle-option&quot;&gt;&lt;code&gt;use-package&lt;/code&gt; &lt;code&gt;:idle&lt;/code&gt; option&lt;/h2&gt;
+
+&lt;p&gt;This one is a big time saver, since &lt;code&gt;org-mode&lt;/code&gt; just takes so long to load:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;use-package&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;:defer&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;:idle&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;oleh/org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;I&amp;#39;m cautious not to abuse &lt;code&gt;:idle&lt;/code&gt;, since if it happens that I start
+Emacs and start frantically typing all over the place, Emacs will
+never get to be idle and the &lt;code&gt;:idle&lt;/code&gt; statements won&amp;#39;t load.  So I only
+use it for &lt;code&gt;org&lt;/code&gt; and one or two other things.&lt;/p&gt;
+
+&lt;h2 id=&quot;autoloading-stuff&quot;&gt;autoloading stuff&lt;/h2&gt;
+
+&lt;p&gt;Here&amp;#39;s some helper code for this:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;update-all-autoloads&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;cd&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;emacs-d&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;generated-autoload-file&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;expand-file-name&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;loaddefs.el&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;not&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;file-exists-p&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;generated-autoload-file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;with-current-buffer&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;find-file-noselect&lt;/span&gt;
+                            &lt;span class=&quot;nv&quot;&gt;generated-autoload-file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;insert&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;;;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;save-buffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;mapcar&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;#&amp;#39;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;update-directory-autoloads&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;oleh&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;oleh/modes&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Here, &lt;code&gt;emacs-d&lt;/code&gt; is the directory of my &lt;code&gt;init.el&lt;/code&gt;.
+The directory &lt;code&gt;modes&lt;/code&gt; contains 44 Elisp files for each major mode or package that I customize.&lt;/p&gt;
+
+&lt;p&gt;For instance, here are the contents of &lt;code&gt;Info.el&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Info-mode-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;j&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ora-para-down&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Info-mode-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;k&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ora-para-up&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Info-mode-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;v&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;recenter-top-bottom&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Info-mode-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;h&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;backward-char&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Info-mode-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;l&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;forward-char&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Info-mode-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;w&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;forward-word&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Info-mode-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;b&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;backward-word&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Info-mode-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;a&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;beginning-of-line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Info-mode-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;e&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;end-of-line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Info-mode-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;A&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;beginning-of-buffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Info-mode-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;E&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;end-of-buffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;;;;###autoload&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;oleh-Info-hook&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;())&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This is one of the simpler ones, I think it would take around a week
+of posts to cover what I have in &lt;code&gt;magit.el&lt;/code&gt;. The file &lt;code&gt;Info.el&lt;/code&gt; never
+gets loaded until I open a buffer in &lt;code&gt;Info-mode&lt;/code&gt;.
+Here&amp;#39;s what gets loaded every time:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;load&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;concat&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;emacs-d&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;loaddefs.el&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;;; ...&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;add-hook&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;Info-mode-hook&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;oleh-Info-hook&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;My &lt;code&gt;loaddefs.el&lt;/code&gt; is just over 1000 lines and is automatically
+generated by &lt;code&gt;update-all-autoloads&lt;/code&gt;. And here are the lines in
+&lt;code&gt;loaddefs.el&lt;/code&gt; responsible for loading &lt;code&gt;Info.el&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;autoload&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;oleh-Info-hook&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;oleh/modes/Info&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;\&lt;/span&gt;
+
+
+&lt;span class=&quot;s&quot;&gt;\(fn)&amp;quot;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;So the statements above are cheap to load.  Actually, the largest
+chunk of my start up time, 28 percent, is taken by:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;eclipse-theme&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;I don&amp;#39;t know why it takes so long to call &lt;code&gt;custom-theme-set-faces&lt;/code&gt;, it&amp;#39;s a mystery.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
    <title>Hydra 0.11.0 is out</title>
    <link href="http://oremacs.com/2015/02/23/hydra-0.11.0/"/>
    <updated>2015-02-23T00:00:00+01:00</updated>
    <id>http://oremacs.com/2015/02/23/hydra-0.11.0</id>
    <content type="html">&lt;p&gt;As usual, I&amp;#39;ll just re-state the
-&lt;a href=&quot;https://github.com/abo-abo/hydra/releases/tag/0.10.0&quot;&gt;release notes&lt;/a&gt;
+&lt;a href=&quot;https://github.com/abo-abo/hydra/releases/tag/0.11.0&quot;&gt;release notes&lt;/a&gt;
 and add some more notes in the end.&lt;/p&gt;
 
 &lt;h2 id=&quot;fixes&quot;&gt;Fixes&lt;/h2&gt;
