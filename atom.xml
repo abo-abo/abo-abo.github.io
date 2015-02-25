@@ -4,13 +4,93 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-02-24T22:28:53+01:00</updated>
+ <updated>2015-02-25T17:07:08+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Rectangle-mode Hydra</title>
+   <link href="http://oremacs.com/2015/02/25/rectangle-hydra/"/>
+   <updated>2015-02-25T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/02/25/rectangle-hydra</id>
+   <content type="html">&lt;p&gt;Today, I&amp;#39;ll show a very useful hydra that I found yesterday on the
+&lt;a href=&quot;https://github.com/abo-abo/hydra/wiki/Rectangle-Operations&quot;&gt;hydra wiki&lt;/a&gt;.
+The idea is by &lt;a href=&quot;https://github.com/zhaojiangbin&quot;&gt;@zhaojiangbin&lt;/a&gt;, I&amp;#39;ve
+made some minor changes to get the arrows to work the way that I like,
+and made all keys into plain letters.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-code&quot;&gt;The code&lt;/h2&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ora-ex-point-mark&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;rectangle-mark-mode&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;exchange-point-and-mark&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;mk&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;mark&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;rectangle-mark-mode&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;goto-char&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;mk&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-rectangle&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:body-pre&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;rectangle-mark-mode&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                           &lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;pink&lt;/span&gt;
+                           &lt;span class=&quot;nb&quot;&gt;:post&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;deactivate-mark&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;  ^_k_^     _d_elete    _s_tring     |\\     _,,,--,,_&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;_h_   _l_   _o_k        _y_ank       /,`.-&amp;#39;`&amp;#39;   ._  \-;;,_&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;  ^_j_^     _n_ew-copy  _r_eset     |,4-  ) )_   .;.(  `&amp;#39;-&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;^^^^        _e_xchange  _u_ndo     &amp;#39;---&amp;#39;&amp;#39;(_/._)-&amp;#39;(_\_)&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;^^^^        ^ ^         _p_aste&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;h&amp;quot;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;backward-char&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;l&amp;quot;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;forward-char&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;k&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;previous-line&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;j&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;next-line&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;e&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ora-ex-point-mark&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;n&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;copy-rectangle-as-kill&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;d&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;delete-rectangle&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;r&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;region-active-p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+           &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;deactivate-mark&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;rectangle-mark-mode&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;y&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;yank-rectangle&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;u&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;undo&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;s&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;string-rectangle&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;p&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;kill-rectangle&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;o&amp;quot;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-x SPC&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;hydra-rectangle/body&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;There was a lot of screen estate left over, so I added some ASCII-art. I wanted something
+related to syrup, or at least pancakes, but instead I found a cat. Apparently, it&amp;#39;s very
+easy to find pictures of cats on the internet. Who knew.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;#39;s how it looks like in-action:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/hydra-rectangle.png&quot; alt=&quot;hydra-rectangle&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;The pink variation is pretty useful here, since it doesn&amp;#39;t get in the
+way of e.g. &lt;kbd&gt;DEL&lt;/kbd&gt; or &lt;kbd&gt;C-n&lt;/kbd&gt; or &lt;kbd&gt;C-e&lt;/kbd&gt; or inserting spaces.&lt;/p&gt;
+
+&lt;p&gt;I&amp;#39;ve been using it today for editing some table data in &lt;code&gt;org-mode&lt;/code&gt;,
+and it feels pretty efficient.&lt;/p&gt;
+
+&lt;h2 id=&quot;some-explanations&quot;&gt;Some explanations&lt;/h2&gt;
+
+&lt;p&gt;What does what:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;d&lt;/kbd&gt; deletes rectangle; it&amp;#39;s similar to &lt;kbd&gt;C-d&lt;/kbd&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;n&lt;/kbd&gt; copies rectangle; it&amp;#39;s similar to &lt;kbd&gt;M-w&lt;/kbd&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;o&lt;/kbd&gt; exits; it&amp;#39;s very easy to press.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;e&lt;/kbd&gt; exchanges the point and mark; it&amp;#39;s also quite useful to re-activate the region
+if you disabled it with &lt;kbd&gt;n&lt;/kbd&gt; or &lt;kbd&gt;r&lt;/kbd&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;s&lt;/kbd&gt; fills the selected rectangle with a string.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;y&lt;/kbd&gt; yanks the rectangle that you saved before with &lt;kbd&gt;n&lt;/kbd&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;r&lt;/kbd&gt; deactivates or activates the rectangle at point.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;u&lt;/kbd&gt; calls &lt;code&gt;undo&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;p&lt;/kbd&gt; kills the rectangle; it&amp;#39;s similar to &lt;kbd&gt;C-w&lt;/kbd&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Profile your Emacs start-up time</title>

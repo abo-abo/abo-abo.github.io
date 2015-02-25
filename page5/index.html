@@ -211,6 +211,80 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/02/05/amaranth-hydra/">
+        Introducing amaranth Hydras
+      </a>
+    </h1>
+
+    <span class="post-date">05 Feb 2015</span>
+
+    <blockquote>
+<p>An <font color="#e52b50">amaranth</font> planted in a garden near a <font color="#FF007F">Rose-Tree</font>, thus addressed it:
+&quot;What a lovely flower is the <font color="#FF007F">Rose</font>, a favorite alike with Gods and
+with men. I envy you your beauty and your perfume.&quot; The <font color="#FF007F">Rose</font>
+replied, &quot;I indeed, dear <font color="#e52b50">Amaranth</font>, flourish but for a brief season!
+If no cruel hand pluck me from my stem, yet I must perish by an
+early doom. But thou art immortal and dost never fade, but bloomest
+for ever in renewed youth.&quot;</p>
+</blockquote>
+
+<p>Prompted by the <a href="https://github.com/abo-abo/hydra/issues/17">&quot;Avoid exiting the hydra on hitting a wrong key&quot;</a> issue,
+I decided to add a new body color for Hydra. Turns out that there exists a color that represents
+immortality, and it&#39;s called <font color="#e52b50">amaranth</font>. It&#39;s also very pretty.</p>
+
+<p>So what <font color="#e52b50">amaranth</font> Hydras do basically, is make it impossible to quit them.
+Of course, it would be totally lame if there wasn&#39;t at least one way to quit them.
+And what better to utilize for this purpose,
+than the good-old quitters - the <font color="#2A00FF">blue</font> Hydra heads.</p>
+
+<h2 id="an-example-code">An Example code</h2>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span>
+ <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-z&quot;</span><span class="p">)</span>
+ <span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-vi</span>
+     <span class="p">(</span><span class="nb">:pre</span>
+      <span class="p">(</span><span class="nv">set-cursor-color</span> <span class="s">&quot;#e52b50&quot;</span><span class="p">)</span>
+      <span class="nb">:post</span>
+      <span class="p">(</span><span class="nv">set-cursor-color</span> <span class="s">&quot;#ffffff&quot;</span><span class="p">)</span>
+      <span class="nb">:color</span> <span class="nv">amaranth</span><span class="p">)</span>
+   <span class="s">&quot;vi&quot;</span>
+   <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nf">forward-char</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;h&quot;</span> <span class="nf">backward-char</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">next-line</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;k&quot;</span> <span class="nv">previous-line</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;m&quot;</span> <span class="nv">set-mark-command</span> <span class="s">&quot;mark&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="nv">move-beginning-of-line</span> <span class="s">&quot;beg&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;e&quot;</span> <span class="nv">move-end-of-line</span> <span class="s">&quot;end&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;d&quot;</span> <span class="nf">delete-region</span> <span class="s">&quot;del&quot;</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;y&quot;</span> <span class="nv">kill-ring-save</span> <span class="s">&quot;yank&quot;</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span> <span class="s">&quot;quit&quot;</span><span class="p">)))</span>
+</code></pre></div>
+<p>This Hydra has only three exit points:</p>
+
+<ul>
+<li><kbd>q</kbd>, which does nothing</li>
+<li><kbd>y</kbd>, which copies the active region</li>
+<li><kbd>d</kbd>, which deletes the active region</li>
+</ul>
+
+<p>In addition to the usual arrows on <kbd>hjkl</kbd>, <kbd>a</kbd> and
+<kbd>e</kbd> move to beginning and end of line respectively.</p>
+
+<h2 id="outro">Outro</h2>
+
+<p>I hope that you like the new idea, also thanks to
+<a href="https://github.com/vkazanov">@vkazanov</a> for the push in this
+direction. Things should be backwards-compatible, so this feature
+costs you nothing if you&#39;re not using it. See the release notes for <a href="https://github.com/abo-abo/hydra/releases/tag/0.8.0">0.8.0</a>.</p>
+
+<p>One more thanks goes to Sridhar Ratnakumar for <a href="http://oremacs.com/2015/01/30/auto-yasnippet/#comment-1833552123">this suggestion</a>
+that lead to an improvement in <a href="https://github.com/abo-abo/auto-yasnippet">auto-yasnippet</a>. Thanks to this improvement,
+I was able to quickly wrap words like this:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">&lt;font color=&quot;#FF007F&quot;&gt;Rose&lt;/font&gt;
+</code></pre></div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/02/04/pre-hydra-post/">
         New in Hydra - :pre and :post clauses
       </a>
@@ -732,174 +806,6 @@ and <code>magit</code> are very similar to
 takes long to explain what you&#39;re doing, but as you play it, it&#39;s very
 simple and natural.</p>
 
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/01/31/abel/">
-        abel.el - abbrevs for Elisp
-      </a>
-    </h1>
-
-    <span class="post-date">31 Jan 2015</span>
-
-    <p>This is a follow-up to
-<a href="/2014/12/28/trying-abbrevs/">an older post about abbrevs</a>.</p>
-
-<p>I did try to make Elisp abbrevs work, but after a few times of getting
-<code>is</code> expanded to <code>indent-sexp</code> in strings or comments, I just could
-take it no longer.</p>
-
-<p>Luckily and timely, Artur Malabarba revealed his
-<a href="https://github.com/Bruce-Connor/speed-of-thought-lisp">speed-of-thought-lisp</a>. This
-package does many things, but the main idea that I liked was that the
-abbrevs should only expand when in the function position, i.e. the
-abbrev is:</p>
-
-<ul>
-<li>right after opening parenthesis</li>
-<li>not in a comment</li>
-<li>not in a string</li>
-<li>not in the arguments list</li>
-</ul>
-
-<p>With that idea, I&#39;ve &quot;refactored&quot; my old abbrevs into
-<a href="https://github.com/abo-abo/abel">Abel</a>.  It&#39;s a minor mode add-on for
-<code>abbrev-mode</code>. When you activate it, around a hundred abbrevs are
-added to your abbrev list for <code>emacs-lisp-mode</code>. When you deactivate
-it, these abbrevs are disabled, and your original abbrev list is
-restored. It even overrides the mode-line description to <code>Abbrev</code> -&gt;
-<code>Abel</code> while it&#39;s active, thanks to
-<a href="https://github.com/emacsmirror/diminish">diminish</a>.</p>
-
-<p>So while you should try <code>sotl</code>, which provides many other things, keep
-<code>abel</code> in mind: it&#39;s a simple upgrade to <code>abbrev-mode</code> that binds no
-bindings and asks no questions.</p>
-
-<p>Here&#39;s the current list:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defcustom</span> <span class="nv">abel-abbrevs</span>
-  <span class="o">&#39;</span><span class="p">(</span>
-    <span class="c1">;; basics</span>
-    <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="s">&quot;and&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;bp&quot;</span> <span class="s">&quot;boundp&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;c&quot;</span> <span class="s">&quot;concat&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;fp&quot;</span> <span class="s">&quot;fboundp&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;ii&quot;</span> <span class="s">&quot;interactive&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;i&quot;</span> <span class="s">&quot;insert&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="s">&quot;lambda&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;m&quot;</span> <span class="s">&quot;message&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;n&quot;</span> <span class="s">&quot;not&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;f&quot;</span> <span class="s">&quot;format&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;u&quot;</span> <span class="s">&quot;unless&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;up&quot;</span> <span class="s">&quot;unwind-protect&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;w&quot;</span> <span class="s">&quot;when&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;wl&quot;</span> <span class="s">&quot;while&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;r&quot;</span> <span class="s">&quot;require&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;ci&quot;</span> <span class="s">&quot;call-interactively&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;cc&quot;</span> <span class="s">&quot;condition-case&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;pg&quot;</span> <span class="s">&quot;plist-get&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;sa&quot;</span> <span class="s">&quot;save-excursion&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;sr&quot;</span> <span class="s">&quot;save-restriction&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;smd&quot;</span> <span class="s">&quot;save-match-data&quot;</span><span class="p">)</span>
-    <span class="c1">;; defines</span>
-    <span class="p">(</span><span class="s">&quot;de&quot;</span> <span class="s">&quot;declare-function&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;df&quot;</span> <span class="s">&quot;defface&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;da&quot;</span> <span class="s">&quot;defmacro&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;du&quot;</span> <span class="s">&quot;defcustom&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;dv&quot;</span> <span class="s">&quot;defvar&quot;</span><span class="p">)</span>
-    <span class="c1">;; everything with char</span>
-    <span class="p">(</span><span class="s">&quot;bc&quot;</span> <span class="s">&quot;backward-char&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;scb&quot;</span> <span class="s">&quot;skip-chars-backward&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;scf&quot;</span> <span class="s">&quot;skip-chars-forward&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;gc&quot;</span> <span class="s">&quot;goto-char&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;fc&quot;</span> <span class="s">&quot;forward-char&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;dc&quot;</span> <span class="s">&quot;delete-char&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;ca&quot;</span> <span class="s">&quot;char-after&quot;</span><span class="p">)</span>
-    <span class="c1">;; everything with region</span>
-    <span class="p">(</span><span class="s">&quot;ra&quot;</span> <span class="s">&quot;region-active-p&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;rb&quot;</span> <span class="s">&quot;region-beginning&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;re&quot;</span> <span class="s">&quot;region-end&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;ntr&quot;</span> <span class="s">&quot;narrow-to-region&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;dr&quot;</span> <span class="s">&quot;delete-region&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;ir&quot;</span> <span class="s">&quot;indent-region&quot;</span><span class="p">)</span>
-    <span class="c1">;; error related</span>
-    <span class="p">(</span><span class="s">&quot;ie&quot;</span> <span class="s">&quot;ignore-errors&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;e&quot;</span> <span class="s">&quot;error&quot;</span><span class="p">)</span>
-    <span class="c1">;; regex match related</span>
-    <span class="p">(</span><span class="s">&quot;la&quot;</span> <span class="s">&quot;looking-at&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;lb&quot;</span> <span class="s">&quot;looking-back&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;mb&quot;</span> <span class="s">&quot;match-beginning&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;me&quot;</span> <span class="s">&quot;match-end&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;ms&quot;</span> <span class="s">&quot;match-string&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;msn&quot;</span> <span class="s">&quot;match-string-no-properties&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;rm&quot;</span> <span class="s">&quot;replace-match&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;ro&quot;</span> <span class="s">&quot;regexp-opt&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;rq&quot;</span> <span class="s">&quot;regexp-quote&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;rr&quot;</span> <span class="s">&quot;replace-regexp-in-string&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;rsb&quot;</span> <span class="s">&quot;re-search-backward&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;rsf&quot;</span> <span class="s">&quot;re-search-forward&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;sf&quot;</span> <span class="s">&quot;search-forward&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;sm&quot;</span> <span class="s">&quot;string-match&quot;</span><span class="p">)</span>
-    <span class="c1">;; words</span>
-    <span class="p">(</span><span class="s">&quot;fw&quot;</span> <span class="s">&quot;forward-word&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;bw&quot;</span> <span class="s">&quot;backward-word&quot;</span><span class="p">)</span>
-    <span class="c1">;; lines</span>
-    <span class="p">(</span><span class="s">&quot;eol&quot;</span> <span class="s">&quot;end-of-line&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;fl&quot;</span> <span class="s">&quot;forward-line&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;lbp&quot;</span> <span class="s">&quot;line-beginning-position&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;lep&quot;</span> <span class="s">&quot;line-end-position&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;nai&quot;</span> <span class="s">&quot;newline-and-indent&quot;</span><span class="p">)</span>
-    <span class="c1">;; buffer</span>
-    <span class="p">(</span><span class="s">&quot;bfn&quot;</span> <span class="s">&quot;buffer-file-name&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;bn&quot;</span> <span class="s">&quot;buffer-name&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;bs&quot;</span> <span class="s">&quot;buffer-substring&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;bsn&quot;</span> <span class="s">&quot;buffer-substring-no-properties&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;cb&quot;</span> <span class="s">&quot;current-buffer&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;wcb&quot;</span> <span class="s">&quot;with-current-buffer&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;wtb&quot;</span> <span class="s">&quot;with-temp-buffer&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;efn&quot;</span> <span class="s">&quot;expand-file-name&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;ff&quot;</span> <span class="s">&quot;find-file&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;ffn&quot;</span> <span class="s">&quot;find-file-noselect&quot;</span><span class="p">)</span>
-    <span class="c1">;; window</span>
-    <span class="p">(</span><span class="s">&quot;ow&quot;</span> <span class="s">&quot;other-window&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;sw&quot;</span> <span class="s">&quot;selected-window&quot;</span><span class="p">)</span>
-    <span class="c1">;; string</span>
-    <span class="p">(</span><span class="s">&quot;ssn&quot;</span> <span class="s">&quot;substring-no-properties&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;ss&quot;</span> <span class="s">&quot;substring&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;si&quot;</span> <span class="s">&quot;split-string&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;se&quot;</span> <span class="s">&quot;string=&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;sl&quot;</span> <span class="s">&quot;string&lt;&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;sp&quot;</span> <span class="s">&quot;stringp&quot;</span><span class="p">)</span>
-    <span class="c1">;; point</span>
-    <span class="p">(</span><span class="s">&quot;pi&quot;</span> <span class="s">&quot;point-min&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;pa&quot;</span> <span class="s">&quot;point-max&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;p&quot;</span> <span class="s">&quot;point&quot;</span><span class="p">)</span>
-    <span class="c1">;; key</span>
-    <span class="p">(</span><span class="s">&quot;gk&quot;</span> <span class="s">&quot;global-set-key&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;dk&quot;</span> <span class="s">&quot;define-key&quot;</span><span class="p">)</span>
-    <span class="c1">;; rest</span>
-    <span class="p">(</span><span class="s">&quot;ah&quot;</span> <span class="s">&quot;add-hook&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;atl&quot;</span> <span class="s">&quot;add-to-list&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;bod&quot;</span> <span class="s">&quot;beginning-of-defun&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;bol&quot;</span> <span class="s">&quot;beginning-of-line&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;dm&quot;</span> <span class="s">&quot;deactivate-mark&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;fs&quot;</span> <span class="s">&quot;forward-sexp&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;jos&quot;</span> <span class="s">&quot;just-one-space&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;kn&quot;</span> <span class="s">&quot;kill-new&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;lp&quot;</span> <span class="s">&quot;load-path&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;mm&quot;</span> <span class="s">&quot;major-mode&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;sic&quot;</span> <span class="s">&quot;self-insert-command&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;sn&quot;</span> <span class="s">&quot;symbol-name&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;tap&quot;</span> <span class="s">&quot;thing-at-point&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;tc&quot;</span> <span class="s">&quot;this-command&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;ul&quot;</span> <span class="s">&quot;up-list&quot;</span><span class="p">))</span>
-  <span class="s">&quot;List of (ABBREV EXPANSION) used by `abel&#39;.&quot;</span>
-  <span class="nb">:set</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">symbol</span> <span class="nv">value</span><span class="p">)</span>
-         <span class="s">&quot;Update abbrevs accoring to `abel-abbrevs&#39;.&quot;</span>
-         <span class="p">(</span><span class="nf">set</span> <span class="nv">symbol</span> <span class="nv">value</span><span class="p">)</span>
-         <span class="p">(</span><span class="nf">mapc</span> <span class="nf">#&#39;</span><span class="nv">abel-define</span> <span class="nv">value</span><span class="p">))</span>
-  <span class="nb">:group</span> <span class="ss">&#39;abel</span><span class="p">)</span>
-</code></pre></div>
   </div>
   
 </div>
