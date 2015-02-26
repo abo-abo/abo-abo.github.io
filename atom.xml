@@ -4,13 +4,70 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-02-25T17:07:08+01:00</updated>
+ <updated>2015-02-26T17:23:51+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Compilation-style check-declare-file</title>
+   <link href="http://oremacs.com/2015/02/26/compilation-check-declare/"/>
+   <updated>2015-02-26T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/02/26/compilation-check-declare</id>
+   <content type="html">&lt;p&gt;As a follow-up to my older post on &lt;a href=&quot;/2015/02/13/elisp-linting/&quot;&gt;Elisp linting options&lt;/a&gt;,
+I&amp;#39;ve made &lt;code&gt;check-declare-file&lt;/code&gt; and &lt;code&gt;check-declare-directory&lt;/code&gt; give out warnings similar to those
+that e.g. &lt;code&gt;byte-compile-file&lt;/code&gt; gives:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;each warning now has a location in a file-line-column format&lt;/li&gt;
+&lt;li&gt;you can click on the link to jump to the warning location&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;first-error&lt;/code&gt; / &lt;code&gt;next-error&lt;/code&gt; / &lt;code&gt;previous-error&lt;/code&gt; work as well&lt;/li&gt;
+&lt;li&gt;the warning line blinks momentarily with each jump&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Here&amp;#39;s how it looks like:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/check-declare.png&quot; alt=&quot;check-declare&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;You can already use this feature if you&amp;#39;re on Emacs trunk, otherwise
+you&amp;#39;ll have to wait for 25.1 to come out.&lt;/p&gt;
+
+&lt;p&gt;There&amp;#39;s also a new custom variable that you can set to get a more strict check:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;check-declare-ext-errors&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Unless you set it, the standard behavior is to issue a &lt;code&gt;&amp;quot;skipping
+external file&amp;quot;&lt;/code&gt; message when checking a statement like the one above.
+The reason is that the external package might not be loaded or
+something.  As long as I&amp;#39;m checking, I prefer to check everything, so
+there&amp;#39;s no reason not to have &lt;code&gt;check-declare-ext-errors&lt;/code&gt; always true.&lt;/p&gt;
+
+&lt;h2 id=&quot;a-trick-to-actually-load-slime-repl&quot;&gt;A trick to actually load &lt;code&gt;slime-repl&lt;/code&gt;&lt;/h2&gt;
+
+&lt;p&gt;Here&amp;#39;s the Makefile target for &lt;code&gt;check-declare&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-Makefile&quot; data-lang=&quot;Makefile&quot;&gt;&lt;span class=&quot;nf&quot;&gt;check-declare&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;CASKEMACS&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt; -batch &lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;LOAD&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt; -l check-declare.elt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And here are the contents of check-declare.elt:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;check-declare-ext-errors&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;files&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;lispy.el&amp;quot;&lt;/span&gt;
+              &lt;span class=&quot;s&quot;&gt;&amp;quot;lispy-inline.el&amp;quot;&lt;/span&gt;
+              &lt;span class=&quot;s&quot;&gt;&amp;quot;le-clojure.el&amp;quot;&lt;/span&gt;
+              &lt;span class=&quot;s&quot;&gt;&amp;quot;le-scheme.el&amp;quot;&lt;/span&gt;
+              &lt;span class=&quot;s&quot;&gt;&amp;quot;le-lisp.el&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;add-to-list&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;load-path&lt;/span&gt;
+             &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;concat&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;file-name-directory&lt;/span&gt;
+                      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;locate-library&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;slime&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+                     &lt;span class=&quot;s&quot;&gt;&amp;quot;contrib/&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;slime-repl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;apply&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;#&amp;#39;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;check-declare-files&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;files&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;As you see, I first find where slime.el is located using &lt;code&gt;locate-library&lt;/code&gt;, and then add the
+contrib sub-directory to the &lt;code&gt;load-path&lt;/code&gt;. After this, it&amp;#39;s finally possible to &lt;code&gt;(require &amp;#39;slime-repl)&lt;/code&gt;.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Rectangle-mode Hydra</title>
