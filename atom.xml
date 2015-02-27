@@ -4,13 +4,42 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-02-26T17:23:51+01:00</updated>
+ <updated>2015-02-27T13:37:15+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Customizing ace-window leading char</title>
+   <link href="http://oremacs.com/2015/02/27/ace-window-leading-char/"/>
+   <updated>2015-02-27T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/02/27/ace-window-leading-char</id>
+   <content type="html">&lt;p&gt;With a recent change, it&amp;#39;s now possible to customize
+&lt;a href=&quot;https://github.com/abo-abo/ace-window&quot;&gt;ace-window&lt;/a&gt; like this:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;custom-set-faces&lt;/span&gt;
+ &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;aw-leading-char-face&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:inherit&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ace-jump-face-foreground&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:height&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;3.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Here&amp;#39;s how it will look like:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/ace-window-lead.png&quot; alt=&quot;ace-window-lead.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;It&amp;#39;s slightly annoying that the buffer contents have to shift to
+accommodate for a larger character, but there&amp;#39;s no way around it.
+Besides, you can customize the face features other than height, like
+foreground and background colors etc.&lt;/p&gt;
+
+&lt;p&gt;Note that in the screenshot, I&amp;#39;m using my usual &lt;code&gt;ace-window&lt;/code&gt; setup,
+i.e. home row keys and no background:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;use-package&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ace-window&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;:init&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;aw-keys&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;?a&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;?s&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;?d&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;?f&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;?g&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;?h&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;?j&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;?k&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;?l&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;aw-background&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
+ </entry>
  
  <entry>
    <title>Compilation-style check-declare-file</title>
