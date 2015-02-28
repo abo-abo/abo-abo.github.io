@@ -128,6 +128,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -208,6 +212,77 @@
 
       <div class="container content">
         <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/2015/02/13/elisp-linting/">
+        Elisp linting options
+      </a>
+    </h1>
+
+    <span class="post-date">13 Feb 2015</span>
+
+    <p>I discovered today that I was using <code>declare-function</code> in a wrong way.
+So I&#39;ll share how to use it properly.</p>
+
+<h2 id="declare-function"><code>declare-function</code></h2>
+
+<p>I was just using it to shut up the byte compiler&#39;s <code>&quot;not known to be
+defined&quot;</code> warning.  Turns out that it can also be used to check if the
+functions actually exist in the file to which they point to. You can
+use <code>check-declare-file</code> to check one file, or
+<code>check-declare-directory</code> to recursively check the whole directory.</p>
+
+<p>Here&#39;s an example output:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">Warning (check-declare): helm-info.el said `Info-goto-node&#39; was defined in info.el.gz: arglist mismatch
+Warning (check-declare): helm-info.el said `Info-find-node&#39; was defined in info.el.gz: arglist mismatch
+Warning (check-declare): helm-plugin.el said `Info-goto-node&#39; was defined in info.el.gz: arglist mismatch
+Warning (check-declare): helm-plugin.el said `Info-find-node&#39; was defined in info.el.gz: arglist mismatch
+Warning (check-declare): helm-emms.el said `with-current-emms-playlist&#39; was defined in emms.el: function not found
+Warning (check-declare): projectile.el said `ggtags-ensure-project&#39; was defined in ggtags.el: file not found
+Warning (check-declare): projectile.el said `ggtags-update-tags&#39; was defined in ggtags.el: file not found
+Warning (check-declare): async-bytecomp.el said `package-desc-reqs&#39; was defined in package.el.gz: function not found
+</code></pre></div>
+<p>My mistake was assuming that the <code>FILE</code> argument of <code>declare-function</code>
+was somehow related to <code>require</code>.  But of course it had to be simply
+the name of the file that contains the said function. If the referenced file is in an external package,
+e.g. <code>(declare-function cider-repl-return &quot;ext:cider-repl&quot;)</code> can be used.</p>
+
+<h2 id="checkdoc"><code>checkdoc</code></h2>
+
+<p>This one is actually very useful once you embrace it.  It will
+<em>tsk-tsk</em> you until all your functions are documented. And since
+you&#39;re already writing a docstring, might as well make it
+good. Sometimes this leads me to removing a function that&#39;s called
+only once, just so that I don&#39;t have to document it.</p>
+
+<h2 id="byte-compile-file"><code>byte-compile-file</code></h2>
+
+<p>Leaving the obvious for last. This will speed up the code in addition to checking for errors.
+In <code>dired</code> you can use:</p>
+
+<ul>
+<li>several <kbd>m</kbd> (<code>dired-mark</code>) followed by <kbd>B</kbd> (<code>dired-do-byte-compile</code>).</li>
+<li>a single <kbd>*%</kbd> (<code>dired-mark-files-regexp</code>) <code>el$</code> followed by <kbd>B</kbd>.</li>
+</ul>
+
+<p>I even have a <code>compile</code> target in <code>lispy</code>&#39;s <a href="https://github.com/abo-abo/lispy/blob/master/Makefile">Makefile</a>:</p>
+<div class="highlight"><pre><code class="language-Makefile" data-lang="Makefile"><span class="nf">compile</span><span class="o">:</span>
+    <span class="k">$(</span>CASK<span class="k">)</span> <span class="nb">exec</span> <span class="k">$(</span>EMACS<span class="k">)</span> -batch <span class="k">$(</span>LOAD<span class="k">)</span> -l lispy-test.el -l compile.elt
+</code></pre></div>
+<p>Here are the contents of compile.elt:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;check-declare</span><span class="p">)</span>
+<span class="p">(</span><span class="k">setq</span> <span class="nv">check-declare-ext-errors</span> <span class="no">t</span><span class="p">)</span>
+<span class="p">(</span><span class="k">setq</span> <span class="nv">files</span> <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;lispy.el&quot;</span>
+              <span class="s">&quot;lispy-inline.el&quot;</span>
+              <span class="s">&quot;le-clojure.el&quot;</span>
+              <span class="s">&quot;le-scheme.el&quot;</span>
+              <span class="s">&quot;le-lisp.el&quot;</span><span class="p">))</span>
+<span class="p">(</span><span class="nf">mapc</span> <span class="nf">#&#39;</span><span class="nv">byte-compile-file</span> <span class="nv">files</span><span class="p">)</span>
+<span class="p">(</span><span class="nv">ert</span> <span class="no">t</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">apply</span> <span class="nf">#&#39;</span><span class="nv">check-declare-files</span> <span class="nv">files</span><span class="p">)</span>
+</code></pre></div>
+  </div>
   
   <div class="post">
     <h1 class="post-title">
@@ -591,135 +666,6 @@ changes.</p>
 if you&#39;re interested. You can find the new <code>ido-vertical</code> stuff in
 <a href="https://github.com/abo-abo/ido-vertical-mode.el">my fork</a>, until it
 gets merged.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/02/08/hydra-0.9.0/">
-        Hydra 0.9.0 is out
-      </a>
-    </h1>
-
-    <span class="post-date">08 Feb 2015</span>
-
-    <p>I&#39;ll just list the new features from the <a href="https://github.com/abo-abo/hydra/releases/tag/0.9.0">release notes</a> here.</p>
-
-<h2 id="keyboard-quit">Keyboard quit</h2>
-
-<p><code>hydra-keyboard-quit</code> set to <code>&quot;C-g&quot;</code> means that it&#39;s possible to quit an amaranth Hydra
-with <kbd>C-g</kbd>. You can customize this variable.</p>
-
-<h2 id=":pre-and-:post-refinement"><code>:pre</code> and <code>:post</code> refinement</h2>
-
-<p><code>:post</code> and <code>:pre</code> keys in the body <code>PLIST</code> can be either a single
-sexp or a function name. The function doesn&#39;t need to be interactive.</p>
-
-<h2 id="support-for-local-hydra-heads-via-:bind-property">Support for local Hydra heads via <code>:bind</code> property</h2>
-
-<p>Example:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-next-error</span> <span class="p">(</span><span class="nv">global-map</span> <span class="s">&quot;C-x&quot;</span><span class="p">)</span>
-  <span class="s">&quot;next-error&quot;</span>
-  <span class="p">(</span><span class="s">&quot;`&quot;</span> <span class="nv">next-error</span> <span class="s">&quot;next&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">next-error</span> <span class="s">&quot;next&quot;</span> <span class="nb">:bind</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;k&quot;</span> <span class="nv">previous-error</span> <span class="s">&quot;previous&quot;</span> <span class="nb">:bind</span> <span class="no">nil</span><span class="p">))</span>
-</code></pre></div>
-<p>What it does:</p>
-
-<ul>
-<li>binds <kbd>C-x &#96;</kbd> to <code>next-error</code>.</li>
-<li>does not bind <kbd>C-x j</kbd> and <kbd>C-x k</kbd></li>
-<li>you can still do <kbd>C-x &#96;jjkk</kbd></li>
-</ul>
-
-<p>Thanks, <a href="https://github.com/ffevotte">@ffevotte</a>.</p>
-
-<h2 id="support-for-:bind-property-in-hydra-body">Support for <code>:bind</code> property in Hydra body</h2>
-
-<p>The body, like the heads will recognize the <code>:bind</code> property in <code>PLIST</code>.
-The heads will inherit it, just like they do with <code>:color</code>.
-The <code>:bind</code> property can be nil or a lambda of <code>global-set-key</code> format.</p>
-
-<p>Example:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-goto</span> <span class="p">(</span><span class="nv">global-map</span> <span class="s">&quot;M-g&quot;</span>
-                      <span class="nb">:bind</span>
-                      <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">key</span> <span class="nv">cmd</span><span class="p">)</span>
-                        <span class="p">(</span><span class="nv">bind-key</span> <span class="nv">key</span> <span class="nv">cmd</span><span class="p">)))</span>
-  <span class="p">(</span><span class="s">&quot;g&quot;</span> <span class="nv">goto-line</span> <span class="s">&quot;goto-line&quot;</span> <span class="nb">:bind</span> <span class="nv">global-set-key</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;c&quot;</span> <span class="nf">goto-char</span> <span class="s">&quot;goto-char&quot;</span><span class="p">))</span>
-</code></pre></div>
-<p>Here, <code>bind-key</code> will be used to bind <code>goto-char</code> to <kbd>M-g c</kbd>,
-since <kbd>c</kbd> head has inherited body&#39;s <code>:bind</code> property. Note
-that since <code>bind-key</code> is a macro, it was necessary to wrap it in a
-lambda.</p>
-
-<p>However, <code>global-set-key</code> will be used to bind <code>goto-line</code> to <kbd>M-g g</kbd>, this <code>:bind</code> property
-was overridden in the <kbd>g</kbd> head.</p>
-
-<p>Since this commit, it&#39;s not possible to pass a lambda instead of the
-whole <code>BODY</code> argument, as was advertised before. Just put it on
-<code>:bind</code> now.</p>
-
-<h2 id="hydra/body-will-pass-the-initial-current-prefix-arg-along"><code>hydra/body</code> will pass the initial <code>current-prefix-arg</code> along</h2>
-
-<p>Example:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span>
- <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-z&quot;</span><span class="p">)</span>
- <span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-vi</span> <span class="p">()</span>
-   <span class="s">&quot;vi&quot;</span>
-   <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nf">forward-char</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span> <span class="s">&quot;quit&quot;</span><span class="p">)))</span>
-</code></pre></div>
-<p>Now, <kbd>C-u C-z l</kbd> will result in <code>(forward-char 4)</code>. All the other <kbd>l</kbd>
-will normally call <code>(forward-char 1)</code>, unless an additional prefix is given.  The previous
-behavior allowed only for <kbd>C-z C-u l</kbd> to get <code>(forward-char 4)</code>.</p>
-
-<h2 id="allow-a-sexp-as-head&#39;s-cmd-parameter">Allow a sexp as head&#39;s CMD parameter</h2>
-
-<p>Example:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-launcher</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
-   <span class="s">&quot;Launch&quot;</span>
-   <span class="p">(</span><span class="s">&quot;h&quot;</span> <span class="nv">man</span> <span class="s">&quot;man&quot;</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;r&quot;</span> <span class="p">(</span><span class="nv">browse-url</span> <span class="s">&quot;http://www.reddit.com/r/emacs/&quot;</span><span class="p">)</span> <span class="s">&quot;reddit&quot;</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;w&quot;</span> <span class="p">(</span><span class="nv">browse-url</span> <span class="s">&quot;http://www.emacswiki.org/&quot;</span><span class="p">)</span> <span class="s">&quot;emacswiki&quot;</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;s&quot;</span> <span class="nv">shell</span> <span class="s">&quot;shell&quot;</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span> <span class="s">&quot;cancel&quot;</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c r&quot;</span><span class="p">)</span> <span class="ss">&#39;hydra-launcher/body</span><span class="p">)</span>
-</code></pre></div>
-<p>Here, <kbd>r</kbd> and <kbd>w</kbd> heads are using this feature.
-Here&#39;s what will be generated, if you&#39;re interested:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">hydra-launcher/lambda-w</span> <span class="no">nil</span>
-  <span class="s">&quot;Create a hydra with no body and the heads:</span>
-
-<span class="s">\&quot;h\&quot;:    `man&#39;,</span>
-<span class="s">\&quot;r\&quot;:    `(browse-url \&quot;http://www.reddit.com/r/emacs/\&quot;)&#39;,</span>
-<span class="s">\&quot;w\&quot;:    `(browse-url \&quot;http://www.emacswiki.org/\&quot;)&#39;,</span>
-<span class="s">\&quot;s\&quot;:    `shell&#39;,</span>
-<span class="s">\&quot;q\&quot;:    `nil&#39;</span>
-
-<span class="s">The body can be accessed via `hydra-launcher/body&#39;.</span>
-
-<span class="s">Call the head: `(browse-url \&quot;http://www.emacswiki.org/\&quot;)&#39;.&quot;</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">hydra-disable</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">catch</span> <span class="p">(</span><span class="k">quote</span> <span class="nv">hydra-disable</span><span class="p">)</span>
-    <span class="p">(</span><span class="nf">call-interactively</span>
-     <span class="p">(</span><span class="k">function</span>
-      <span class="p">(</span><span class="nb">lambda</span> <span class="no">nil</span>
-       <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-       <span class="p">(</span><span class="nv">browse-url</span> <span class="s">&quot;http://www.emacswiki.org/&quot;</span><span class="p">))))))</span>
-</code></pre></div>
-<h2 id="obsolete-declarations">Obsolete declarations</h2>
-
-<p><code>hydra-create</code> and all old examples in hydra-examples.el are now obsolete.
-You can still use them for a short while, but they will be removed soon.</p>
-
-<p>You should take the time to switch from <code>hydra-create</code> to <code>defhydra</code>. All the old examples
-are provided in the new style in hydra-examples.el. However, they will not be evaluated
-through <code>(require &#39;hydra-examples)</code> unless you <code>(setq hydra-examples-verbatim t)</code>
-beforehand.  This is because I have no idea what kind of bindings will work for you, you
-should decide yourself.  But I am providing you with a template. The number of examples
-has also grown to six.</p>
 
   </div>
   

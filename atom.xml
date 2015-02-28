@@ -4,13 +4,53 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-02-27T13:37:15+01:00</updated>
+ <updated>2015-02-28T17:14:39+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Hydra-repeat</title>
+   <link href="http://oremacs.com/2015/02/28/hydra-repeat/"/>
+   <updated>2015-02-28T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/02/28/hydra-repeat</id>
+   <content type="html">&lt;p&gt;Did you know that you can repeat the most recent Emacs command with &lt;code&gt;repeat&lt;/code&gt;:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Repeat most recently executed command.
+If REPEAT-ARG is non-nil (interactively, with a prefix argument),
+supply a prefix argument to that command.  Otherwise, give the
+command the same prefix argument it was given before, if any.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;The default binding to repeat is &lt;kbd&gt;C-x z&lt;/kbd&gt;. You can then
+continue with just &lt;kbd&gt;z&lt;/kbd&gt;: &lt;kbd&gt;C-x zzzzzzzz&lt;/kbd&gt;.&lt;/p&gt;
+
+&lt;p&gt;Unfortunately, since &lt;code&gt;defhydra&lt;/code&gt; defines new command names based on the
+ones that you give it, passing &lt;code&gt;repeat&lt;/code&gt; as one of the heads will not
+work. So I&amp;#39;ve added &lt;code&gt;hydra-repeat&lt;/code&gt; that&amp;#39;s supposed to work in the same way.&lt;/p&gt;
+
+&lt;p&gt;So now, I can define a Hydra like this:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-vi&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;vi&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;h&amp;quot;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;backward-char&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;j&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;next-line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;k&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;previous-line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;l&amp;quot;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;forward-char&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;.&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-repeat&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-v&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;hydra-vi/body&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And if I press &lt;kbd&gt;C-v 4l..&lt;/kbd&gt;, it will result in movement forward (&lt;code&gt;forward-char&lt;/code&gt;) by 4 chars 3 times:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;first time from &lt;kbd&gt;4l&lt;/kbd&gt;&lt;/li&gt;
+&lt;li&gt;other two times, with the same prefix 4, from &lt;kbd&gt;..&lt;/kbd&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Customizing ace-window leading char</title>

@@ -11,7 +11,7 @@
 
   <title>
     
-      Introducing amaranth Hydras &middot; (or emacs
+      Hydra-repeat &middot; (or emacs
     
   </title>
 
@@ -212,71 +212,41 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Introducing amaranth Hydras</h1>
-  <span class="post-date">05 Feb 2015</span>
-  <blockquote>
-<p>An <font color="#e52b50">amaranth</font> planted in a garden near a <font color="#FF007F">Rose-Tree</font>, thus addressed it:
-&quot;What a lovely flower is the <font color="#FF007F">Rose</font>, a favorite alike with Gods and
-with men. I envy you your beauty and your perfume.&quot; The <font color="#FF007F">Rose</font>
-replied, &quot;I indeed, dear <font color="#e52b50">Amaranth</font>, flourish but for a brief season!
-If no cruel hand pluck me from my stem, yet I must perish by an
-early doom. But thou art immortal and dost never fade, but bloomest
-for ever in renewed youth.&quot;</p>
+  <h1 class="post-title">Hydra-repeat</h1>
+  <span class="post-date">28 Feb 2015</span>
+  <p>Did you know that you can repeat the most recent Emacs command with <code>repeat</code>:</p>
+
+<blockquote>
+<p>Repeat most recently executed command.
+If REPEAT-ARG is non-nil (interactively, with a prefix argument),
+supply a prefix argument to that command.  Otherwise, give the
+command the same prefix argument it was given before, if any.</p>
 </blockquote>
 
-<p>Prompted by the <a href="https://github.com/abo-abo/hydra/issues/17">&quot;Avoid exiting the hydra on hitting a wrong key&quot;</a> issue,
-I decided to add a new body color for Hydra. Turns out that there exists a color that represents
-immortality, and it&#39;s called <font color="#e52b50">amaranth</font>. It&#39;s also very pretty.</p>
+<p>The default binding to repeat is <kbd>C-x z</kbd>. You can then
+continue with just <kbd>z</kbd>: <kbd>C-x zzzzzzzz</kbd>.</p>
 
-<p>So what <font color="#e52b50">amaranth</font> Hydras do basically, is make it impossible to quit them.
-Of course, it would be totally lame if there wasn&#39;t at least one way to quit them.
-And what better to utilize for this purpose,
-than the good-old quitters - the <font color="#2A00FF">blue</font> Hydra heads.</p>
+<p>Unfortunately, since <code>defhydra</code> defines new command names based on the
+ones that you give it, passing <code>repeat</code> as one of the heads will not
+work. So I&#39;ve added <code>hydra-repeat</code> that&#39;s supposed to work in the same way.</p>
 
-<h2 id="an-example-code">An Example code</h2>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span>
- <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-z&quot;</span><span class="p">)</span>
- <span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-vi</span>
-     <span class="p">(</span><span class="nb">:pre</span>
-      <span class="p">(</span><span class="nv">set-cursor-color</span> <span class="s">&quot;#e52b50&quot;</span><span class="p">)</span>
-      <span class="nb">:post</span>
-      <span class="p">(</span><span class="nv">set-cursor-color</span> <span class="s">&quot;#ffffff&quot;</span><span class="p">)</span>
-      <span class="nb">:color</span> <span class="nv">amaranth</span><span class="p">)</span>
-   <span class="s">&quot;vi&quot;</span>
-   <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nf">forward-char</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;h&quot;</span> <span class="nf">backward-char</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">next-line</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;k&quot;</span> <span class="nv">previous-line</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;m&quot;</span> <span class="nv">set-mark-command</span> <span class="s">&quot;mark&quot;</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="nv">move-beginning-of-line</span> <span class="s">&quot;beg&quot;</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;e&quot;</span> <span class="nv">move-end-of-line</span> <span class="s">&quot;end&quot;</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;d&quot;</span> <span class="nf">delete-region</span> <span class="s">&quot;del&quot;</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;y&quot;</span> <span class="nv">kill-ring-save</span> <span class="s">&quot;yank&quot;</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span> <span class="s">&quot;quit&quot;</span><span class="p">)))</span>
+<p>So now, I can define a Hydra like this:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-vi</span> <span class="p">()</span>
+  <span class="s">&quot;vi&quot;</span>
+  <span class="p">(</span><span class="s">&quot;h&quot;</span> <span class="nf">backward-char</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">next-line</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;k&quot;</span> <span class="nv">previous-line</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nf">forward-char</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;.&quot;</span> <span class="nv">hydra-repeat</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-v&quot;</span><span class="p">)</span> <span class="ss">&#39;hydra-vi/body</span><span class="p">)</span>
 </code></pre></div>
-<p>This Hydra has only three exit points:</p>
+<p>And if I press <kbd>C-v 4l..</kbd>, it will result in movement forward (<code>forward-char</code>) by 4 chars 3 times:</p>
 
 <ul>
-<li><kbd>q</kbd>, which does nothing</li>
-<li><kbd>y</kbd>, which copies the active region</li>
-<li><kbd>d</kbd>, which deletes the active region</li>
+<li>first time from <kbd>4l</kbd></li>
+<li>other two times, with the same prefix 4, from <kbd>..</kbd></li>
 </ul>
 
-<p>In addition to the usual arrows on <kbd>hjkl</kbd>, <kbd>a</kbd> and
-<kbd>e</kbd> move to beginning and end of line respectively.</p>
-
-<h2 id="outro">Outro</h2>
-
-<p>I hope that you like the new idea, also thanks to
-<a href="https://github.com/vkazanov">@vkazanov</a> for the push in this
-direction. Things should be backwards-compatible, so this feature
-costs you nothing if you&#39;re not using it. See the release notes for <a href="https://github.com/abo-abo/hydra/releases/tag/0.8.0">0.8.0</a>.</p>
-
-<p>One more thanks goes to Sridhar Ratnakumar for <a href="http://oremacs.com/2015/01/30/auto-yasnippet/#comment-1833552123">this suggestion</a>
-that lead to an improvement in <a href="https://github.com/abo-abo/auto-yasnippet">auto-yasnippet</a>. Thanks to this improvement,
-I was able to quickly wrap words like this:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">&lt;font color=&quot;#FF007F&quot;&gt;Rose&lt;/font&gt;
-</code></pre></div>
 </div>
 
 <div class="twitter-share">
@@ -294,16 +264,6 @@ I was able to quickly wrap words like this:</p>
     
       <li>
         <h3>
-          <!-- <a href="//2015/02/28/hydra-repeat/"> -->
-          <a href="/2015/02/28/hydra-repeat/">
-            Hydra-repeat
-            <small>28 Feb 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
           <!-- <a href="//2015/02/27/ace-window-leading-char/"> -->
           <a href="/2015/02/27/ace-window-leading-char/">
             Customizing ace-window leading char
@@ -318,6 +278,16 @@ I was able to quickly wrap words like this:</p>
           <a href="/2015/02/26/compilation-check-declare/">
             Compilation-style check-declare-file
             <small>26 Feb 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/02/25/rectangle-hydra/"> -->
+          <a href="/2015/02/25/rectangle-hydra/">
+            Rectangle-mode Hydra
+            <small>25 Feb 2015</small>
           </a>
         </h3>
       </li>
