@@ -4,7 +4,7 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-02-28T17:14:39+01:00</updated>
+ <updated>2015-03-02T08:40:19+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
@@ -3198,7 +3198,9 @@ plain &lt;kbd&gt;M-s o&lt;/kbd&gt; (&lt;code&gt;occur&lt;/code&gt;).&lt;/p&gt;
             &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;buffer-substring-no-properties&lt;/span&gt;
              &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;region-beginning&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
              &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;region-end&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;thing-at-point&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;symbol&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;sym&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;thing-at-point&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;symbol&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;stringp&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;sym&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+              &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;regexp-quote&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;sym&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
         &lt;span class=&quot;nv&quot;&gt;regexp-history&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;call-interactively&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;occur&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;

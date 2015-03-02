@@ -225,7 +225,9 @@ plain <kbd>M-s o</kbd> (<code>occur</code>).</p>
             <span class="p">(</span><span class="nf">buffer-substring-no-properties</span>
              <span class="p">(</span><span class="nf">region-beginning</span><span class="p">)</span>
              <span class="p">(</span><span class="nf">region-end</span><span class="p">))</span>
-          <span class="p">(</span><span class="nv">thing-at-point</span> <span class="ss">&#39;symbol</span><span class="p">))</span>
+          <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">sym</span> <span class="p">(</span><span class="nv">thing-at-point</span> <span class="ss">&#39;symbol</span><span class="p">)))</span>
+            <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">stringp</span> <span class="nv">sym</span><span class="p">)</span>
+              <span class="p">(</span><span class="nf">regexp-quote</span> <span class="nv">sym</span><span class="p">))))</span>
         <span class="nv">regexp-history</span><span class="p">)</span>
   <span class="p">(</span><span class="nf">call-interactively</span> <span class="ss">&#39;occur</span><span class="p">))</span>
 </code></pre></div>
