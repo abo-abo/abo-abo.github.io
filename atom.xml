@@ -4,13 +4,130 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-03-02T16:51:50+01:00</updated>
+ <updated>2015-03-03T22:17:23+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>ace-window full path</title>
+   <link href="http://oremacs.com/2015/03/03/ace-window-full-path/"/>
+   <updated>2015-03-03T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/03/03/ace-window-full-path</id>
+   <content type="html">&lt;p&gt;I just closed a really helpful
+&lt;a href=&quot;https://github.com/abo-abo/ace-window/issues/21&quot;&gt;issue&lt;/a&gt; for
+&lt;code&gt;ace-window&lt;/code&gt;.  Turns out that there&amp;#39;s a plugin for vim called
+Easymotion that&amp;#39;s very similar to &lt;code&gt;ace-jump-mode&lt;/code&gt;.  And that plugin
+doesn&amp;#39;t highlight the leading chars one by one, but instead gives them
+all at once.  Which is a pretty good idea, since it&amp;#39;s more convenient
+to read the whole path at once and type it in at once rather than:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;read one char &lt;/li&gt;
+&lt;li&gt;type one char&lt;/li&gt;
+&lt;li&gt;read one more char &lt;/li&gt;
+&lt;li&gt;type one more char&lt;/li&gt;
+&lt;li&gt;... (maybe more steps)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;To turn on the new behavior:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;aw-leading-char-style&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Although this will only have an effect once you have more than 10 windows.
+But this method really improves the functions from avy-jump.el.
+I&amp;#39;ve added some more commands and renamed the old ones since yesterday.&lt;/p&gt;
+
+&lt;h2 id=&quot;avy-jump-demos&quot;&gt;avy-jump demos&lt;/h2&gt;
+
+&lt;h3 id=&quot;avi-goto-char-2&quot;&gt;&lt;code&gt;avi-goto-char-2&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;Here&amp;#39;s how I like to bind &lt;code&gt;avi-goto-char-2&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-&amp;#39;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;avi-goto-char-2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And here&amp;#39;s the result of &lt;kbd&gt;C-&amp;#39; bu&lt;/kbd&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/avi-goto-char-2.png&quot; alt=&quot;avi-goto-char-2&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;As you can see, nothing is overwritten by the overlay - it&amp;#39;s appended
+after the search chars. In the screenshot above, I have &lt;code&gt;avi-background&lt;/code&gt; at nil; you can set it to
+t if you want a gray background.&lt;/p&gt;
+
+&lt;h3 id=&quot;avi-goto-char&quot;&gt;&lt;code&gt;avi-goto-char&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;After binding &lt;code&gt;avi-goto-char&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;π&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;avi-goto-char&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Here&amp;#39;s the result of &lt;kbd&gt;π b&lt;/kbd&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/avi-goto-char.png&quot; alt=&quot;avi-goto-char&quot;&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;avi-goto-line&quot;&gt;&lt;code&gt;avi-goto-line&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;After binding &lt;code&gt;avi-goto-line&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;M-g f&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;avi-goto-line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Here&amp;#39;s the result of &lt;kbd&gt;M-g f&lt;/kbd&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/avi-goto-line.png&quot; alt=&quot;avi-goto-line&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;I&amp;#39;ve also added:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;avi-copy-line&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;avi-move-line&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;avi-copy-region&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;These functions use the method of &lt;code&gt;avi-goto-line&lt;/code&gt; to copy/move stuff.
+It might be useful for line-based text.&lt;/p&gt;
+
+&lt;h3 id=&quot;avy-goto-word-0&quot;&gt;&lt;code&gt;avy-goto-word-0&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;Here&amp;#39;s the simple definition and the binding:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;avi-goto-word-0&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Jump to a word start in current window.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;avi-keys&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;number-sequence&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;?a&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;?z&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;candidates&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;avi--regex-candidates&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;\\b\\sw&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;avi--goto&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;avi--process&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;candidates&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;#&amp;#39;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;avi--overlay-pre&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;M-g e&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;avi-goto-word-0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;There might be quite a lot of candidates for this one, but there&amp;#39;s no call to &lt;code&gt;read-char&lt;/code&gt;.
+Here&amp;#39;s what happens after &lt;kbd&gt;M-g e&lt;/kbd&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/avi-goto-word-0.png&quot; alt=&quot;avi-goto-word-0&quot;&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;avy-goto-word-1&quot;&gt;&lt;code&gt;avy-goto-word-1&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;Here&amp;#39;s a version of it that reads one char:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;avi-goto-word-1&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Jump to a word start in current window.&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;Read one char with which the word should start.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;candidates&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;avi--regex-candidates&lt;/span&gt;
+                     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;concat&lt;/span&gt;
+                      &lt;span class=&quot;s&quot;&gt;&amp;quot;\\b&amp;quot;&lt;/span&gt;
+                      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;read-char&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;char: &amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;avi--goto&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;avi--process&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;candidates&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;#&amp;#39;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;avi--overlay-pre&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;M-g w&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;avi-goto-word-1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Here&amp;#39;s what happens after &lt;kbd&gt;M-g w b&lt;/kbd&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/avi-goto-word-1.png&quot; alt=&quot;avi-goto-word-1&quot;&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;Give the new functions a go and see if you like them. New ideas are
+welcome, especially pertaining to ripping off vim plugins. I did the
+vimtutor once, but I have no idea how vim plugins work. But it turns
+out that I like Easymotion.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>ace-window without ace</title>
