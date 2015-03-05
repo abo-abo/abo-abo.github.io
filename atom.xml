@@ -4,13 +4,70 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-03-04T16:43:31+01:00</updated>
+ <updated>2015-03-05T19:50:06+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Testing your .emacs sanity</title>
+   <link href="http://oremacs.com/2015/03/05/testing-init-sanity/"/>
+   <updated>2015-03-05T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/03/05/testing-init-sanity</id>
+   <content type="html">&lt;p&gt;Here&amp;#39;s a little snippet that came up as a Stack Overflow answer once:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ora-test-emacs&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;async&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;async-start&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;shell-command-to-string&lt;/span&gt;
+          &lt;span class=&quot;s&quot;&gt;&amp;quot;emacs --batch --eval \&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;(condition-case e&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;    (progn&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;      (load \\\&amp;quot;~/.emacs\\\&amp;quot;)&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;      (message \\\&amp;quot;-OK-\\\&amp;quot;))&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;  (error&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;   (message \\\&amp;quot;ERROR!\\\&amp;quot;)&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;   (signal (car e) (cdr e))))\&amp;quot;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+   &lt;span class=&quot;o&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;output&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;string-match&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;-OK-&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;output&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;called-interactively-p&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;any&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;message&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;All is well&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;switch-to-buffer-other-window&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;*startup error*&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;delete-region&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;point-min&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;point-max&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;insert&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;output&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;search-backward&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;ERROR!&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This function will quietly run a batch Emacs with your current config
+to see if it errors out or not.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;in case that there were no start up errors, it will echo &amp;quot;All is well&amp;quot;&lt;/li&gt;
+&lt;li&gt;when there&amp;#39;s an error, it will pop to a &lt;code&gt;*startup error*&lt;/code&gt; buffer with the error description&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The nice thing about this is that in case of an error you have a
+functional Emacs to fix that error, since fixing errors with &lt;code&gt;emacs
+-Q&lt;/code&gt; is quite painful.&lt;/p&gt;
+
+&lt;p&gt;Another approach could be to just start a new Emacs instance, and
+close the window in case there isn&amp;#39;t an error.  So all that the code
+above does is automate closing the window (sort of, since the window
+never opens). Still, I think it&amp;#39;s pretty cool. And you could attach it
+to the &lt;code&gt;after-save-hook&lt;/code&gt; of your .emacs, or a timer.&lt;/p&gt;
+
+&lt;p&gt;You could even configure Emacs to send you an email in case it notices
+that there will be an error on the next start up. Or add the test to
+&lt;code&gt;before-save-hook&lt;/code&gt; and abort the save in case it results in an
+error. That&amp;#39;s some HAL 9000 level stuff right there:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;I&amp;#39;m sorry Dave, I&amp;#39;m afraid I can&amp;#39;t do that.&lt;/p&gt;
+&lt;/blockquote&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Eclipse theme</title>

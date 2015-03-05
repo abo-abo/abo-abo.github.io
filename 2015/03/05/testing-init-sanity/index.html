@@ -11,7 +11,7 @@
 
   <title>
     
-      Time flies &middot; (or emacs
+      Testing your .emacs sanity &middot; (or emacs
     
   </title>
 
@@ -212,76 +212,57 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Time flies</h1>
-  <span class="post-date">03 Jan 2015</span>
-  <p>This is the 15th post on this blog. Thankfully, no heart attacks after
-the 13th one or anything.  So I&#39;ll commemorate it with a post on
-dealing with dates in <code>calc</code>.</p>
+  <h1 class="post-title">Testing your .emacs sanity</h1>
+  <span class="post-date">05 Mar 2015</span>
+  <p>Here&#39;s a little snippet that came up as a Stack Overflow answer once:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">ora-test-emacs</span> <span class="p">()</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;async</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">async-start</span>
+   <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span> <span class="p">(</span><span class="nv">shell-command-to-string</span>
+          <span class="s">&quot;emacs --batch --eval \&quot;</span>
+<span class="s">(condition-case e</span>
+<span class="s">    (progn</span>
+<span class="s">      (load \\\&quot;~/.emacs\\\&quot;)</span>
+<span class="s">      (message \\\&quot;-OK-\\\&quot;))</span>
+<span class="s">  (error</span>
+<span class="s">   (message \\\&quot;ERROR!\\\&quot;)</span>
+<span class="s">   (signal (car e) (cdr e))))\&quot;&quot;</span><span class="p">))</span>
+   <span class="o">`</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">output</span><span class="p">)</span>
+      <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">string-match</span> <span class="s">&quot;-OK-&quot;</span> <span class="nv">output</span><span class="p">)</span>
+          <span class="p">(</span><span class="nb">when</span> <span class="o">,</span><span class="p">(</span><span class="nv">called-interactively-p</span> <span class="ss">&#39;any</span><span class="p">)</span>
+            <span class="p">(</span><span class="nf">message</span> <span class="s">&quot;All is well&quot;</span><span class="p">))</span>
+        <span class="p">(</span><span class="nv">switch-to-buffer-other-window</span> <span class="s">&quot;*startup error*&quot;</span><span class="p">)</span>
+        <span class="p">(</span><span class="nf">delete-region</span> <span class="p">(</span><span class="nf">point-min</span><span class="p">)</span> <span class="p">(</span><span class="nf">point-max</span><span class="p">))</span>
+        <span class="p">(</span><span class="nf">insert</span> <span class="nv">output</span><span class="p">)</span>
+        <span class="p">(</span><span class="nf">search-backward</span> <span class="s">&quot;ERROR!&quot;</span><span class="p">)))))</span>
+</code></pre></div>
+<p>This function will quietly run a batch Emacs with your current config
+to see if it errors out or not.</p>
 
-<h2 id="how-much-time-has-passed-since-i-started-this-blog?">How much time has passed since I started this blog?</h2>
+<ul>
+<li>in case that there were no start up errors, it will echo &quot;All is well&quot;</li>
+<li>when there&#39;s an error, it will pop to a <code>*startup error*</code> buffer with the error description</li>
+</ul>
 
-<ol>
-<li><p>Open <code>calc</code> with <kbd>C-x **</kbd>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">--- Emacs Calculator Mode ---
-    .
-</code></pre></div></li>
-<li><p>Enter <code>20 Dec 2014</code> with <kbd>&#39;&lt;12 20 14</kbd><kbd>RET</kbd>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">--- Emacs Calculator Mode ---
-1:  &lt;Sat Dec 20, 2014&gt;
-    .
-</code></pre></div></li>
-<li><p>Enter current time with <kbd>tN</kbd>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">--- Emacs Calculator Mode ---
-2:  &lt;Sat Dec 20, 2014&gt;
-1:  &lt;11:56:27am Sat Jan 3, 2015&gt;
-    .
-</code></pre></div></li>
-<li><p>Subtract with <kbd>-</kbd>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">--- Emacs Calculator Mode ---
-1:  -14.498044
-    .
-</code></pre></div></li>
-</ol>
+<p>The nice thing about this is that in case of an error you have a
+functional Emacs to fix that error, since fixing errors with <code>emacs
+-Q</code> is quite painful.</p>
 
-<p>This means that, if I want to maintain my one-post-per-day streak, I
-still have half of a day to post this. Unfortunately, I have only an
-old version of the blog repository on this machine, and the current
-one is on a laptop at home. So I&#39;ll post this in the evening.</p>
+<p>Another approach could be to just start a new Emacs instance, and
+close the window in case there isn&#39;t an error.  So all that the code
+above does is automate closing the window (sort of, since the window
+never opens). Still, I think it&#39;s pretty cool. And you could attach it
+to the <code>after-save-hook</code> of your .emacs, or a timer.</p>
 
-<h2 id="did-you-know-what-2015-looks-like-in-binary?">Did you know what 2015 looks like in binary?</h2>
+<p>You could even configure Emacs to send you an email in case it notices
+that there will be an error on the next start up. Or add the test to
+<code>before-save-hook</code> and abort the save in case it results in an
+error. That&#39;s some HAL 9000 level stuff right there:</p>
 
-<p>In your current <code>calc</code> session,</p>
-
-<ol>
-<li><p>Enter <kbd>2015</kbd> <kbd>SPC</kbd>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">--- Emacs Calculator Mode ---
-2:  -14.498044
-1:  2015
-    .
-</code></pre></div></li>
-<li><p>Switch to binary with <kbd>d2</kbd>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">--- Emacs Calculator Mode ---
-2:  -2#1110.011111110111111111001111110001
-1:  2#11111011111
-.
-</code></pre></div></li>
-<li><p>Wow, a palindrome. It&#39;s too spooky, switch back to decimal with <kbd>d0</kbd>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">--- Emacs Calculator Mode ---
-2:  -14.498044
-1:  2015
-    .
-</code></pre></div></li>
-</ol>
-
-<p>If you&#39;re new to <code>calc</code>, you&#39;ll probably wonder why you can&#39;t enter
-negative numbers with <kbd>-</kbd>. It can be done with <kbd>_</kbd>,
-just like in
-<a href="http://www.jsoftware.com/help/primer/negative_number.htm">J</a>. Find
-out more in the
-<a href="http://www.gnu.org/software/emacs/manual/html_mono/calc.html">info</a>;
-the
-<a href="http://www.gnu.org/software/emacs/manual/html_mono/calc.html#Tutorial">interactive tutorial</a>
-is absolutely excellent.</p>
+<blockquote>
+<p>I&#39;m sorry Dave, I&#39;m afraid I can&#39;t do that.</p>
+</blockquote>
 
 </div>
 
@@ -300,16 +281,6 @@ is absolutely excellent.</p>
     
       <li>
         <h3>
-          <!-- <a href="//2015/03/05/testing-init-sanity/"> -->
-          <a href="/2015/03/05/testing-init-sanity/">
-            Testing your .emacs sanity
-            <small>05 Mar 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
           <!-- <a href="//2015/03/04/eclipse-theme/"> -->
           <a href="/2015/03/04/eclipse-theme/">
             Eclipse theme
@@ -324,6 +295,16 @@ is absolutely excellent.</p>
           <a href="/2015/03/03/ace-window-full-path/">
             ace-window full path
             <small>03 Mar 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/03/02/ace-window-without-ace/"> -->
+          <a href="/2015/03/02/ace-window-without-ace/">
+            ace-window without ace
+            <small>02 Mar 2015</small>
           </a>
         </h3>
       </li>
