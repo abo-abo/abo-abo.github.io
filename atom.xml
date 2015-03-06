@@ -4,13 +4,97 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-03-05T19:50:06+01:00</updated>
+ <updated>2015-03-06T16:08:39+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Select the previous window with ace-window</title>
+   <link href="http://oremacs.com/2015/03/06/ace-window-toggle/"/>
+   <updated>2015-03-06T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/03/06/ace-window-toggle</id>
+   <content type="html">&lt;p&gt;It&amp;#39;s strange that I haven&amp;#39;t implemented this feature before, as it&amp;#39;s
+quite a common usage pattern:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;You select a window with &lt;code&gt;ace-window&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;You do some stuff there.&lt;/li&gt;
+&lt;li&gt;You want to return the previous window.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;aw-flip-window&quot;&gt;&lt;code&gt;aw-flip-window&lt;/code&gt;&lt;/h2&gt;
+
+&lt;p&gt;In the step 3, you have to go though the whole &lt;code&gt;aw-keys&lt;/code&gt; dispatch,
+only to select a window which can be pre-determined. Not any more, if
+you call &lt;code&gt;aw-flip-window&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;aw-flip-window&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Switch to the window you were previously in.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;aw-switch-to-window&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;aw--pop-window&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;So now, you could have a grid of 10 windows, select one of them with
+&lt;code&gt;ace-window&lt;/code&gt;, and switch indefinitely between it and the previous
+window with &lt;code&gt;ace-flip-window&lt;/code&gt;, while ignoring the other 8.&lt;/p&gt;
+
+&lt;h2 id=&quot;aw-ignored-buffers&quot;&gt;&lt;code&gt;aw-ignored-buffers&lt;/code&gt;&lt;/h2&gt;
+
+&lt;p&gt;Remember that if you have some window that you never want to switch to
+with &lt;code&gt;ace-window&lt;/code&gt;, you can add it to &lt;code&gt;aw-ignored-buffers&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defcustom&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;aw-ignored-buffers&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;*Calc Trail*&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;*LV*&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;List of buffers to ignore when selecting window.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;:type&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;repeat&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;It&amp;#39;s not a big deal, but it&amp;#39;s convenient at least for this scenario:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;I start with one active window.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;M-x&lt;/kbd&gt; &lt;code&gt;calc&lt;/code&gt;; now I have three windows.&lt;/li&gt;
+&lt;li&gt;I can toggle back and forth between &lt;code&gt;calc&lt;/code&gt; and the main window with
+&lt;code&gt;ace-window&lt;/code&gt; without having to type &lt;code&gt;aw-keys&lt;/code&gt;, since &lt;code&gt;*Calc Trail*&lt;/code&gt; is
+ignored, so that makes only two total windows.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;selecting-last-window-during-the-ace-window-dispatch&quot;&gt;Selecting last window during the &lt;code&gt;ace-window&lt;/code&gt; dispatch&lt;/h2&gt;
+
+&lt;p&gt;This is a really cool feature, in my opinion: for all three actions -
+&lt;code&gt;aw-select-window&lt;/code&gt;, &lt;code&gt;aw-swap-window&lt;/code&gt;, and &lt;code&gt;aw-delete-window&lt;/code&gt;, you can
+select the previous window as a target with the same key &lt;kbd&gt;n&lt;/kbd&gt;.
+This is, of course, customizable:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defcustom&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;aw-flip-keys&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;n&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Keys which should select the last window.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;:set&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;sym&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;sym&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;aw--flip-keys&lt;/span&gt;
+               &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;mapcar&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;aref&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;So you could have a whole list of bindings that select the previous
+window during the &lt;code&gt;aw-keys&lt;/code&gt; dispatch. This is cool because there&amp;#39;s no
+visual feedback necessary, so this binding can be easily added to the
+muscle memory. The bindings don&amp;#39;t necessarily need to be single keys,
+anything with one chord, e.g. &lt;kbd&gt;C-f&lt;/kbd&gt;, is acceptable.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;#39;s how I&amp;#39;ve set it up for myself:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;ν&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ace-window&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;csetq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;aw-flip-keys&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;n&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;ν&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This means that:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;I can select the previous window with &lt;kbd&gt;νν&lt;/kbd&gt; - a double call to &lt;code&gt;ace-window&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;I can swap with the previous window with &lt;kbd&gt;ψνν&lt;/kbd&gt;, &lt;kbd&gt;ψ&lt;/kbd&gt; calls &lt;code&gt;universal-argument&lt;/code&gt; for me.&lt;/li&gt;
+&lt;li&gt;I can delete the previous window with &lt;kbd&gt;ψψνν&lt;/kbd&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;Thanks to &lt;a href=&quot;https://github.com/luciferasm&quot;&gt;@luciferasm&lt;/a&gt; for the idea, I
+hope you&amp;#39;ll enjoy the new feature.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Testing your .emacs sanity</title>
