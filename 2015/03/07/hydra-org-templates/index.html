@@ -11,7 +11,7 @@
 
   <title>
     
-      Making Elisp regex look nicer &middot; (or emacs
+      org-mode block templates in Hydra &middot; (or emacs
     
   </title>
 
@@ -216,55 +216,85 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Making Elisp regex look nicer</h1>
-  <span class="post-date">11 Jan 2015</span>
-  <p>This is just a small improvement to make e.g.  <code>\\(</code> show up in
-regular expressions without the escape chars, but instead fontified
-with <code>font-lock-keyword-face</code>. It doesn&#39;t affect the underlying code
-at all, just makes it look nicer. For the <code>\\|</code> I chose <code>∨</code> - the
-<em>logical or</em> character.</p>
+  <h1 class="post-title">org-mode block templates in Hydra</h1>
+  <span class="post-date">07 Mar 2015</span>
+  <p>Here&#39;s a new Hydra for you:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-org-template</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">blue</span> <span class="nb">:hint</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="s">&quot;</span>
+<span class="s">_c_enter  _q_uote    _L_aTeX:</span>
+<span class="s">_l_atex   _e_xample  _i_ndex:</span>
+<span class="s">_a_scii   _v_erse    _I_NCLUDE:</span>
+<span class="s">_s_rc     ^ ^        _H_TML:</span>
+<span class="s">_h_tml    ^ ^        _A_SCII:</span>
+<span class="s">&quot;</span>
+  <span class="p">(</span><span class="s">&quot;s&quot;</span> <span class="p">(</span><span class="nv">hot-expand</span> <span class="s">&quot;&lt;s&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="s">&quot;e&quot;</span> <span class="p">(</span><span class="nv">hot-expand</span> <span class="s">&quot;&lt;e&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="p">(</span><span class="nv">hot-expand</span> <span class="s">&quot;&lt;q&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="s">&quot;v&quot;</span> <span class="p">(</span><span class="nv">hot-expand</span> <span class="s">&quot;&lt;v&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="s">&quot;c&quot;</span> <span class="p">(</span><span class="nv">hot-expand</span> <span class="s">&quot;&lt;c&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="p">(</span><span class="nv">hot-expand</span> <span class="s">&quot;&lt;l&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="s">&quot;h&quot;</span> <span class="p">(</span><span class="nv">hot-expand</span> <span class="s">&quot;&lt;h&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="p">(</span><span class="nv">hot-expand</span> <span class="s">&quot;&lt;a&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="s">&quot;L&quot;</span> <span class="p">(</span><span class="nv">hot-expand</span> <span class="s">&quot;&lt;L&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="s">&quot;i&quot;</span> <span class="p">(</span><span class="nv">hot-expand</span> <span class="s">&quot;&lt;i&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="s">&quot;I&quot;</span> <span class="p">(</span><span class="nv">hot-expand</span> <span class="s">&quot;&lt;I&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="s">&quot;H&quot;</span> <span class="p">(</span><span class="nv">hot-expand</span> <span class="s">&quot;&lt;H&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="s">&quot;A&quot;</span> <span class="p">(</span><span class="nv">hot-expand</span> <span class="s">&quot;&lt;A&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="s">&quot;&lt;&quot;</span> <span class="nf">self-insert-command</span> <span class="s">&quot;ins&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;o&quot;</span> <span class="no">nil</span> <span class="s">&quot;quit&quot;</span><span class="p">))</span>
 
-<h2 id="the-code">The code</h2>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">fontify-glyph</span> <span class="p">(</span><span class="nv">item</span> <span class="nv">glyph</span><span class="p">)</span>
-  <span class="o">`</span><span class="p">((</span><span class="o">,</span><span class="nv">item</span>
-     <span class="p">(</span><span class="mi">0</span> <span class="nv">font-lock-keyword-face</span> <span class="no">t</span><span class="p">)</span>
-     <span class="p">(</span><span class="mi">0</span> <span class="p">(</span><span class="k">prog1</span>
-            <span class="p">(</span><span class="nv">compose-region</span> <span class="p">(</span><span class="nf">match-beginning</span> <span class="mi">0</span><span class="p">)</span>
-                            <span class="p">(</span><span class="nf">match-end</span> <span class="mi">0</span><span class="p">)</span>
-                            <span class="o">,</span><span class="nv">glyph</span><span class="p">)</span> <span class="no">nil</span><span class="p">)))))</span>
-
-<span class="p">(</span><span class="nv">font-lock-add-keywords</span> <span class="ss">&#39;emacs-lisp-mode</span>
-                        <span class="p">(</span><span class="nv">fontify-glyph</span> <span class="s">&quot;\\\\\\\\|&quot;</span> <span class="s">&quot;∨&quot;</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">font-lock-add-keywords</span> <span class="ss">&#39;emacs-lisp-mode</span>
-                        <span class="p">(</span><span class="nv">fontify-glyph</span> <span class="s">&quot;\\\\\\\\(&quot;</span> <span class="s">&quot;(&quot;</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">font-lock-add-keywords</span> <span class="ss">&#39;emacs-lisp-mode</span>
-                        <span class="p">(</span><span class="nv">fontify-glyph</span> <span class="s">&quot;\\\\\\\\)&quot;</span> <span class="s">&quot;)&quot;</span><span class="p">))</span>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">hot-expand</span> <span class="p">(</span><span class="nv">str</span><span class="p">)</span>
+  <span class="s">&quot;Expand org template.&quot;</span>
+  <span class="p">(</span><span class="nf">insert</span> <span class="nv">str</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">org-try-structure-completion</span><span class="p">))</span>
 </code></pre></div>
-<h2 id="how-it-looks-like">How it looks like</h2>
-
-<p>At first, I wanted to just inline <a href="/download/elisp-regex.png">a picture</a>,
-but then I thought that <code>htmlize-buffer</code> would be able to handle it.
-It didn&#39;t, so I just edited a small snippet by hand:</p>
-
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">or</span> <span class="p">(</span><span class="nf">string-match</span> <span class="s">&quot;^<span class="nb">(</span>[^\n%|]*?<span class="nb">)</span>|<span class="nb">(</span>([^\n]*<span class="nb">)</span>?$&quot;</span> <span class="nv">str</span><span class="p">)</span>
-    <span class="p">(</span><span class="nf">string-match</span> <span class="s">&quot;^<span class="nb">(</span>[^\n%|]*?<span class="nb">)</span><span class="nb">(</span>%[^\n]*<span class="nb">)</span>?$&quot;</span> <span class="nv">str</span><span class="p">))</span>
+<p>I bind it for myself like this:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">org-mode-map</span> <span class="s">&quot;&lt;&quot;</span>
+  <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span> <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+     <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">looking-back</span> <span class="s">&quot;^&quot;</span><span class="p">)</span>
+         <span class="p">(</span><span class="nv">hydra-org-template/body</span><span class="p">)</span>
+       <span class="p">(</span><span class="nf">self-insert-command</span> <span class="mi">1</span><span class="p">))))</span>
 </code></pre></div>
+<p>This means that when I press <kbd>&lt;</kbd> from the start of the
+line, a Hydra will be called instead of inserting <code>&lt;</code>, otherwise <code>&lt;</code>
+will be inserted.</p>
 
-<p>It&#39;s really satisfying to see those escape chars vanish as I type in
-a capture group in the regex, especially with the help of
-<a href="https://github.com/abo-abo/lispy">lispy-mode</a>.
-Here are some relevant tests for the regex support:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">should</span> <span class="p">(</span><span class="nv">string=</span> <span class="p">(</span><span class="nv">lispy-with</span> <span class="s">&quot;\&quot;a regex \\\\|\&quot;&quot;</span> <span class="s">&quot;(&quot;</span><span class="p">)</span>
-                 <span class="s">&quot;\&quot;a regex \\\\(|\\\\)\&quot;&quot;</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">should</span> <span class="p">(</span><span class="nv">string=</span> <span class="p">(</span><span class="nv">lispy-with</span> <span class="s">&quot;\&quot;\\\\(|foo\\\\)\&quot;&quot;</span> <span class="s">&quot;\C-?&quot;</span><span class="p">)</span>
-                 <span class="s">&quot;\&quot;|foo\&quot;&quot;</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">should</span> <span class="p">(</span><span class="nv">string=</span> <span class="p">(</span><span class="nv">lispy-with</span> <span class="s">&quot;\&quot;\\\\(foo\\\\)|\&quot;&quot;</span> <span class="s">&quot;\C-?&quot;</span><span class="p">)</span>
-                 <span class="s">&quot;\&quot;foo|\&quot;&quot;</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">should</span> <span class="p">(</span><span class="nv">string=</span> <span class="p">(</span><span class="nv">lispy-with</span> <span class="s">&quot;\&quot;|\\\\(foo\\\\)\&quot;&quot;</span> <span class="s">&quot;\C-d&quot;</span><span class="p">)</span>
-                 <span class="s">&quot;\&quot;|foo\&quot;&quot;</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">should</span> <span class="p">(</span><span class="nv">string=</span> <span class="p">(</span><span class="nv">lispy-with</span> <span class="s">&quot;\&quot;\\\\(foo|\\\\)\&quot;&quot;</span> <span class="s">&quot;\C-d&quot;</span><span class="p">)</span>
-                 <span class="s">&quot;\&quot;foo|\&quot;&quot;</span><span class="p">))</span>
-</code></pre></div>
+<p>As the default insert method for <code>org-mode</code> blocks is already pretty
+convenient, this Hydra is more of an illustration than anything,
+especially of the new <code>:hint nil</code> feature.</p>
+
+<p>Just to remind you, each head has four placeholders:</p>
+
+<ul>
+<li>key binding</li>
+<li>body</li>
+<li>hint</li>
+<li>plist</li>
+</ul>
+
+<p>When a Hydra is active, it will show its doc in the echo area in the
+bottom of the frame.  This doc is composed of two parts: the body doc
+and the heads&#39; doc.  The body doc you specify yourself, the heads&#39; doc
+is built by concatenating the key binding and the hint for each head
+into a (single) line.</p>
+
+<p>If you don&#39;t specify a hint for a head, it&#39;s assumed to be <code>&quot;&quot;</code>; this
+head&#39;s binding will still be in the heads&#39; doc. If you don&#39;t want a
+head&#39;s binding to be in the heads&#39; doc, set the hint to nil.  This is
+commonly done because a head is already documented in the body doc.
+It can sometimes become tedious to set all the hints to nil, for
+instance in the Hydra above, I would need to do it 13 times. Hence
+the <code>:hint nil</code> shortcut.</p>
+
+<p>Here&#39;s how it looks like:</p>
+
+<p><img src="/download/hydra-org-template.png" alt="hydra-org-template.png"></p>
+
+<p>I&#39;m not a Scrabble pro: <code>clash</code> for word score 10 is my result, although
+a longer word would break the nice column layout.
+The first two columns contain <code>begin</code>/<code>end</code> templates, while the
+third one contains the one-line templates.</p>
+
 </div>
 
 <div class="twitter-share">
@@ -282,16 +312,6 @@ Here are some relevant tests for the regex support:</p>
     
       <li>
         <h3>
-          <!-- <a href="//2015/03/07/hydra-org-templates/"> -->
-          <a href="/2015/03/07/hydra-org-templates/">
-            org-mode block templates in Hydra
-            <small>07 Mar 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
           <!-- <a href="//2015/03/06/ace-window-toggle/"> -->
           <a href="/2015/03/06/ace-window-toggle/">
             Select the previous window with ace-window
@@ -306,6 +326,16 @@ Here are some relevant tests for the regex support:</p>
           <a href="/2015/03/05/testing-init-sanity/">
             Testing your .emacs sanity
             <small>05 Mar 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/03/04/eclipse-theme/"> -->
+          <a href="/2015/03/04/eclipse-theme/">
+            Eclipse theme
+            <small>04 Mar 2015</small>
           </a>
         </h3>
       </li>

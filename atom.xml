@@ -4,13 +4,97 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-03-06T16:08:39+01:00</updated>
+ <updated>2015-03-07T18:05:06+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>org-mode block templates in Hydra</title>
+   <link href="http://oremacs.com/2015/03/07/hydra-org-templates/"/>
+   <updated>2015-03-07T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/03/07/hydra-org-templates</id>
+   <content type="html">&lt;p&gt;Here&amp;#39;s a new Hydra for you:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-org-template&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;blue&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:hint&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;_c_enter  _q_uote    _L_aTeX:&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;_l_atex   _e_xample  _i_ndex:&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;_a_scii   _v_erse    _I_NCLUDE:&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;_s_rc     ^ ^        _H_TML:&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;_h_tml    ^ ^        _A_SCII:&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;s&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hot-expand&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;s&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;e&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hot-expand&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;e&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;q&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hot-expand&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;q&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;v&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hot-expand&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;v&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;c&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hot-expand&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;c&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;l&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hot-expand&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;l&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;h&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hot-expand&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;h&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;a&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hot-expand&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;a&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;L&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hot-expand&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;L&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;i&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hot-expand&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;i&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;I&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hot-expand&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;I&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;H&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hot-expand&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;H&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;A&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hot-expand&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;A&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;&amp;quot;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;self-insert-command&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;ins&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;o&amp;quot;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;quit&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hot-expand&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Expand org template.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;insert&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;org-try-structure-completion&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;I bind it for myself like this:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-mode-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;looking-back&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;^&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hydra-org-template/body&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;self-insert-command&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This means that when I press &lt;kbd&gt;&amp;lt;&lt;/kbd&gt; from the start of the
+line, a Hydra will be called instead of inserting &lt;code&gt;&amp;lt;&lt;/code&gt;, otherwise &lt;code&gt;&amp;lt;&lt;/code&gt;
+will be inserted.&lt;/p&gt;
+
+&lt;p&gt;As the default insert method for &lt;code&gt;org-mode&lt;/code&gt; blocks is already pretty
+convenient, this Hydra is more of an illustration than anything,
+especially of the new &lt;code&gt;:hint nil&lt;/code&gt; feature.&lt;/p&gt;
+
+&lt;p&gt;Just to remind you, each head has four placeholders:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;key binding&lt;/li&gt;
+&lt;li&gt;body&lt;/li&gt;
+&lt;li&gt;hint&lt;/li&gt;
+&lt;li&gt;plist&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;When a Hydra is active, it will show its doc in the echo area in the
+bottom of the frame.  This doc is composed of two parts: the body doc
+and the heads&amp;#39; doc.  The body doc you specify yourself, the heads&amp;#39; doc
+is built by concatenating the key binding and the hint for each head
+into a (single) line.&lt;/p&gt;
+
+&lt;p&gt;If you don&amp;#39;t specify a hint for a head, it&amp;#39;s assumed to be &lt;code&gt;&amp;quot;&amp;quot;&lt;/code&gt;; this
+head&amp;#39;s binding will still be in the heads&amp;#39; doc. If you don&amp;#39;t want a
+head&amp;#39;s binding to be in the heads&amp;#39; doc, set the hint to nil.  This is
+commonly done because a head is already documented in the body doc.
+It can sometimes become tedious to set all the hints to nil, for
+instance in the Hydra above, I would need to do it 13 times. Hence
+the &lt;code&gt;:hint nil&lt;/code&gt; shortcut.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;#39;s how it looks like:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/hydra-org-template.png&quot; alt=&quot;hydra-org-template.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;I&amp;#39;m not a Scrabble pro: &lt;code&gt;clash&lt;/code&gt; for word score 10 is my result, although
+a longer word would break the nice column layout.
+The first two columns contain &lt;code&gt;begin&lt;/code&gt;/&lt;code&gt;end&lt;/code&gt; templates, while the
+third one contains the one-line templates.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Select the previous window with ace-window</title>

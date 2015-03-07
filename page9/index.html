@@ -219,6 +219,92 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/01/25/exploring-emacs-packages/">
+        Exploring Emacs packages
+      </a>
+    </h1>
+
+    <span class="post-date">25 Jan 2015</span>
+
+    <p>Currently, <a href="http://melpa.org/">MELPA</a> hosts over <code>2250</code> packages. That&#39;s
+quite a large number, although it&#39;s still feasible to try most of the
+popular ones. In comparison,</p>
+<div class="highlight"><pre><code class="language-sh" data-lang="sh">apt-cache pkgnames <span class="p">|</span> wc
+</code></pre></div>
+<p>gives me the number <code>50250</code>. I don&#39;t recall calling <code>apt-cache
+pkgnames</code> ever before, while I call <code>package-list-packages</code> all the
+time. I suppose that this will have to change when the number of
+packages grows further.</p>
+
+<p>I usually explore packages just as they show up as new in <code>package-list-packages</code>.
+I&#39;ll share the two tools that I use for exploring them.</p>
+
+<h2 id="smex">Smex</h2>
+
+<p><a href="https://github.com/nonsequitur/smex">Smex</a> is an <kbd>M-x</kbd> enhancement for Emacs.
+In addition to executing commands faster, it gives you an option to jump to the current command&#39;s definition
+with <kbd>M-.</kbd>.</p>
+
+<p>Here&#39;s how I bind <code>smex</code>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;smex</span><span class="p">)</span>
+<span class="p">(</span><span class="nv">global-set-key</span> <span class="s">&quot;\C-t&quot;</span> <span class="ss">&#39;smex</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">smex-prepare-ido-bindings</span> <span class="p">()</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">ido-completion-map</span>
+      <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-,&quot;</span><span class="p">)</span> <span class="ss">&#39;smex-describe-function</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">ido-completion-map</span>
+      <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-w&quot;</span><span class="p">)</span> <span class="ss">&#39;smex-where-is</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">ido-completion-map</span>
+      <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-.&quot;</span><span class="p">)</span> <span class="ss">&#39;smex-find-function</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">ido-completion-map</span>
+      <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-a&quot;</span><span class="p">)</span> <span class="ss">&#39;move-beginning-of-line</span><span class="p">)</span>
+  <span class="c1">;; (define-key ido-completion-map &quot;\C-i&quot; &#39;smex-helm)</span>
+  <span class="c1">;; (define-key ido-completion-map &quot; &quot; &#39;smex-helm)</span>
+  <span class="p">)</span>
+</code></pre></div>
+<p>I don&#39;t feel bad at all for unbinding <code>transpose-chars</code>,
+<kbd>C-t</kbd> is such a prime binding, that only the best commands
+can deserve it. And since I touch-type, it&#39;s easier for me to hit
+<kbd>M-DEL</kbd> and retype the word when I notice a mistake, than to
+carefully navigate to the mistake location and call <code>transpose-chars</code>
+with surgical precision. On the other hand, the number of Emacs
+packages is only going to grow, so it becomes less and less feasible
+to bind everything. Instead, seldom used stuff can be called though
+<code>smex</code>. For instance, I don&#39;t bind
+<a href="https://github.com/ardumont/markdown-toc">markdown-toc</a> or
+<a href="https://github.com/hagleitn/speed-type">speed-type</a> and call them via
+<kbd>C-t</kbd> instead.</p>
+
+<p>Back to the point, <kbd>C-t</kbd> ... <kbd>C-.</kbd>
+(<code>smex-find-function</code>) allows me to quickly jump to the source of the
+package that I want to explore.</p>
+
+<h2 id="semantic-tags">Semantic tags</h2>
+
+<p>Once I&#39;m in the source code, I can quickly get an overview with
+<kbd>g</kbd> (<code>lispy-goto</code>) from
+<a href="https://github.com/abo-abo/lispy">lispy</a>. It uses CEDET&#39;s semantic
+module to get a list of tags in current directory with
+<a href="https://github.com/emacs-helm/helm">helm</a> for completion.  In my
+opinion, it&#39;s much prettier than <code>helm</code>&#39;s own <code>helm-semantic</code>. It also
+explores more tags for Emacs Lisp, for instance it will capture
+<code>use-package</code> and <code>global-set-key</code> tags.</p>
+
+<p>A new cute feature that I added recently is a different background for
+user-visible functions, i.e.  the ones that are callable by
+<kbd>M-x</kbd> or <code>smex</code>.  Here&#39;s how it looks like, for the
+<code>speed-type</code> package (interactive functions have a purple background):</p>
+
+<p><img src="/download/lispy-goto.png" alt="lispy-goto"></p>
+
+<p>If the image text looks too small, you can right click / view image in
+your browser. Here, I can see at a glance, that there are three
+commands that I can call.  I can also see a few variables, two of them
+don&#39;t include <code>--</code>, so they&#39;re probably customizable.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/01/24/after-select-window/">
         Do things after selecting window
       </a>
@@ -538,124 +624,6 @@ use the same bindings as me; I just want to bring your attention to
 some of these functions, so that you can work them into your workflow.
 If you notice that I&#39;m using some obsolete stuff, do let me know, I&#39;m
 always looking to improve.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/01/20/introducing-hydra/">
-        Behold The Mighty Hydra!
-      </a>
-    </h1>
-
-    <span class="post-date">20 Jan 2015</span>
-
-    <p>I managed to spike a lot of interest for sticky key bindings in my earlier post,
-<a href="/2015/01/14/repeatable-commands/">Zoom in/out with style</a>.
-So now, I&#39;ve refactored this method into a convenient library
-<a href="https://github.com/abo-abo/hydra">hydra.el</a>.</p>
-
-<p><img src="/download/Hydra.png" alt="hydra"></p>
-
-<h2 id="the-concept">The Concept</h2>
-
-<p>This package can be used to tie related functions into a family of
-short bindings with a common prefix - a Hydra.</p>
-
-<p>Once you summon the Hydra through the prefixed binding (the body + any
-one head), all heads can be called in succession with only a short
-extension.</p>
-
-<p>The Hydra is vanquished once Hercules, any binding that isn&#39;t the
-Hydra&#39;s head, arrives.  Note that Hercules, besides vanquishing the
-Hydra, will still serve his orignal purpose, calling his proper
-command.  This makes the Hydra very seamless, it&#39;s like a minor mode
-that disables itself auto-magically.</p>
-
-<h2 id="an-example">An Example</h2>
-
-<p>This code will accomplish the task of the previous post:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;hydra</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">hydra-create</span> <span class="s">&quot;&lt;f2&gt;&quot;</span>
-  <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;g&quot;</span> <span class="nv">text-scale-increase</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nv">text-scale-decrease</span><span class="p">)))</span>
-</code></pre></div>
-<p>Now, <kbd>&lt;f2&gt;</kbd> is the Hydra&#39;s body: you need to press it
-only once, together with one of the heads (<kbd>g</kbd> or
-<kbd>l</kbd>), to summon the Hydra.</p>
-
-<p>Afterwards, you can call the heads in succession without the body
-prefix, i.e. <kbd>&lt;f2&gt; g g g l</kbd> will work.  To vanquish the
-Hydra, just call up Hercules: <strong>any</strong> key binding that&#39;s not
-<kbd>g</kbd> or <kbd>l</kbd>, e.g. <kbd>C-f</kbd> or whatever you
-wanted to do.</p>
-
-<p>Note that you can still assign an unrelated binding to
-e.g. <kbd>&lt;f2&gt; f</kbd>: the Hydra <em>does not</em> take over
-<kbd>&lt;f2&gt;</kbd>, only over <kbd>&lt;f2&gt; l</kbd> and
-<kbd>&lt;f2&gt; g</kbd>.</p>
-
-<h2 id="the-infrastructure">The Infrastructure</h2>
-
-<p><code>hydra-create</code> will create new interactive functions for you with the proper docstrings:</p>
-
-<blockquote>
-<p>hydra-&lt;f2&gt;-text-scale-increase is an interactive Lisp function.</p>
-
-<p>It is bound to &lt;f2&gt; g.</p>
-
-<p>(hydra-&lt;f2&gt;-text-scale-increase)</p>
-
-<p>Create a hydra with a &quot;&lt;f2&gt;&quot; body and the heads:</p>
-
-<p>&quot;g&quot;:    <code>text-scale-increase</code>,</p>
-&quot;l&quot;:    <code>text-scale-decrease</code>.</p>
-
-<p>Call the head: <code>text-scale-increase</code>.</p>
-</blockquote>
-
-<h2 id="an-exciting-new-hydra:-move-window-splitter">An exciting new Hydra: move window splitter</h2>
-
-<p>Zooming is old news, Hydra bundles a new application:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;hydra-examples</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">hydra-create</span> <span class="s">&quot;C-M-o&quot;</span> <span class="nv">hydra-example-move-window-splitter</span><span class="p">)</span>
-</code></pre></div>
-<p>or in the expanded form (equivalent):</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">hydra-create</span> <span class="s">&quot;C-M-o&quot;</span>
-  <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;h&quot;</span> <span class="nv">hydra-move-splitter-left</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">hydra-move-splitter-down</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;k&quot;</span> <span class="nv">hydra-move-splitter-up</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nv">hydra-move-splitter-right</span><span class="p">)))</span>
-</code></pre></div>
-<p>This will allow you to move the window splitter, after you issue
-<kbd>C-x 2</kbd> or <kbd>C-x 3</kbd> one or more times, with
-e.g. <kbd>C-M-o</kbd> <kbd>h h j k j l k l h</kbd>.  You can, of
-course, customize both the body and the heads of this Hydra to your
-preferences.</p>
-
-<p>The docstrings for this Hydra look more impressive, too:</p>
-
-<blockquote>
-<p>hydra-C-M-o-move-splitter-up is an interactive Lisp function.</p>
-
-<p>It is bound to C-M-o k.</p>
-
-<p>(hydra-C-M-o-move-splitter-up)</p>
-
-<p>Create a hydra with a &quot;C-M-o&quot; body and the heads:</p>
-
-<p>&quot;h&quot;:    <code>hydra-move-splitter-left</code>,</p>
-&quot;j&quot;:    <code>hydra-move-splitter-down</code>,</p>
-&quot;k&quot;:    <code>hydra-move-splitter-up</code>,</p>
-&quot;l&quot;:    <code>hydra-move-splitter-right</code>.</p>
-
-<p>Call the head: <code>hydra-move-splitter-up</code>.</p>
-</blockquote>
-
-<h2 id="outro">Outro</h2>
-
-<p>I hope that you enjoy the new library and let me know when you invent
-some novel and efficient Hydras. Happy hacking!</p>
 
   </div>
   
