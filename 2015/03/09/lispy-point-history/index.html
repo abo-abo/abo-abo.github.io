@@ -11,7 +11,7 @@
 
   <title>
     
-      Customizing ace-window leading char &middot; (or emacs
+      lispy point history &middot; (or emacs
     
   </title>
 
@@ -216,30 +216,86 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Customizing ace-window leading char</h1>
-  <span class="post-date">27 Feb 2015</span>
-  <p>With a recent change, it&#39;s now possible to customize
-<a href="https://github.com/abo-abo/ace-window">ace-window</a> like this:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">custom-set-faces</span>
- <span class="o">&#39;</span><span class="p">(</span><span class="nv">aw-leading-char-face</span>
-   <span class="p">((</span><span class="no">t</span> <span class="p">(</span><span class="nb">:inherit</span> <span class="nv">ace-jump-face-foreground</span> <span class="nb">:height</span> <span class="mf">3.0</span><span class="p">)))))</span>
+  <h1 class="post-title">lispy point history</h1>
+  <span class="post-date">09 Mar 2015</span>
+  <p>It was kind of disappointing to summarize in 
+<a href="/2015/03/08/lispy.0.24.0-is-out/">the last post</a>
+that there weren&#39;t many new features for
+<a href="https://github.com/abo-abo/lispy">lispy 0.24.0</a>. So I thought long and hard and came up with something
+quite obvious: since <code>lispy</code> offers commands to quickly manipulate point and mark, it should offer one
+to quickly restore them.</p>
+
+<p>Here&#39;s the bulk of the new code:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">defvar</span> <span class="nv">lispy-pos-ring</span> <span class="p">(</span><span class="nv">make-ring</span> <span class="mi">200</span><span class="p">)</span>
+  <span class="s">&quot;Ring for point and mark position history.&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="nv">ring-insert</span> <span class="nv">lispy-pos-ring</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">lispy--remember</span> <span class="p">()</span>
+  <span class="s">&quot;Store the current point and mark in history.&quot;</span>
+  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">region-active-p</span><span class="p">)</span>
+      <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">bnd</span> <span class="p">(</span><span class="nv">lispy--bounds-dwim</span><span class="p">)))</span>
+        <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nf">equal</span> <span class="nv">bnd</span> <span class="p">(</span><span class="nv">ring-ref</span> <span class="nv">lispy-pos-ring</span> <span class="mi">0</span><span class="p">))</span>
+          <span class="p">(</span><span class="nv">ring-insert</span> <span class="nv">lispy-pos-ring</span> <span class="nv">bnd</span><span class="p">)))</span>
+    <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nf">eq</span> <span class="p">(</span><span class="nf">point</span><span class="p">)</span> <span class="p">(</span><span class="nv">ring-ref</span> <span class="nv">lispy-pos-ring</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="p">(</span><span class="nv">ring-insert</span> <span class="nv">lispy-pos-ring</span> <span class="p">(</span><span class="nf">point</span><span class="p">)))))</span>
+
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">lispy-back</span> <span class="p">()</span>
+  <span class="s">&quot;Move point to a previous position&quot;</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">zerop</span> <span class="p">(</span><span class="nv">ring-length</span> <span class="nv">lispy-pos-ring</span><span class="p">))</span>
+      <span class="p">(</span><span class="ne">user-error</span> <span class="s">&quot;At beginning of point history&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">pt</span> <span class="p">(</span><span class="nv">ring-remove</span> <span class="nv">lispy-pos-ring</span> <span class="mi">0</span><span class="p">)))</span>
+      <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">consp</span> <span class="nv">pt</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">lispy--mark</span> <span class="nv">pt</span><span class="p">)</span>
+        <span class="p">(</span><span class="nv">deactivate-mark</span><span class="p">)</span>
+        <span class="p">(</span><span class="nf">goto-char</span> <span class="nv">pt</span><span class="p">)))))</span>
 </code></pre></div>
-<p>Here&#39;s how it will look like:</p>
+<p>Here, I&#39;m using <code>lispy-pos-ring</code> made with <code>make-ring</code> to store the
+last 200 point and mark positions. In Elisp, a ring is basically a stack backed by a vector.
+When the vector space overflows, the older stuff is overwritten.</p>
 
-<p><img src="/download/ace-window-lead.png" alt="ace-window-lead.png"></p>
+<p>In this ring I store each time either the point, or a cons of the
+point and mark if the region is active. This way possible to restore
+the region even if it was deactivated several movement commands ago.</p>
 
-<p>It&#39;s slightly annoying that the buffer contents have to shift to
-accommodate for a larger character, but there&#39;s no way around it.
-Besides, you can customize the face features other than height, like
-foreground and background colors etc.</p>
+<p>I&#39;ve put <code>lispy--remember</code> into the most used navigation commands:</p>
 
-<p>Note that in the screenshot, I&#39;m using my usual <code>ace-window</code> setup,
-i.e. home row keys and no background:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">use-package</span> <span class="nv">ace-window</span>
-    <span class="nb">:init</span>
-    <span class="p">(</span><span class="k">setq</span> <span class="nv">aw-keys</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">?a</span> <span class="nv">?s</span> <span class="nv">?d</span> <span class="nv">?f</span> <span class="nv">?g</span> <span class="nv">?h</span> <span class="nv">?j</span> <span class="nv">?k</span> <span class="nv">?l</span><span class="p">))</span>
-    <span class="p">(</span><span class="k">setq</span> <span class="nv">aw-background</span> <span class="no">nil</span><span class="p">))</span>
-</code></pre></div>
+<ul>
+<li><kbd>j</kbd> - <code>lispy-down</code></li>
+<li><kbd>k</kbd> - <code>lispy-up</code></li>
+<li><kbd>h</kbd> - <code>lispy-left</code></li>
+<li><kbd>l</kbd> - <code>lispy-right</code></li>
+<li><kbd>f</kbd> - <code>lispy-flow</code></li>
+<li><kbd>i</kbd> - <code>lispy-mark-car</code> (when the region is active)</li>
+<li><kbd>a</kbd> - <code>lispy-ace-paren</code></li>
+</ul>
+
+<p>And <code>lispy-back</code> is now bound to <kbd>b</kbd>. The previous binding of
+<kbd>b</kbd> - <code>lispy-store-region-and-buffer</code> is now bound to
+<kbd>xB</kbd> (quite close to <kbd>B</kbd> - the binding for
+<code>lispy-ediff-regions</code>).</p>
+
+<p>I really like the new command, it&#39;s especially useful to reverse
+<kbd>h</kbd> and <kbd>l</kbd>.  Previously, they could be reversed
+with <kbd>f</kbd>, but that can get annoying if you have to press it
+many times. This results in a much more relaxed editing - I know that
+whatever I press, I can restore the point position quickly if needed.</p>
+
+<p>This feature is added to the already present list of safeguards:</p>
+
+<ul>
+<li><kbd>j</kbd> and <kbd>k</kbd> are guaranteed not to exit the parent list.</li>
+<li><kbd>&gt;</kbd> and <kbd>&lt;</kbd> are guaranteed not to exit the parent list.</li>
+<li><kbd>C</kbd> reverses itself.</li>
+</ul>
+
+<p>Here&#39;s a recipe to copy the third item of the current list and move
+the point back: <kbd>4mnb</kbd>. You can use it to copy a function&#39;s
+docstring if you&#39;re in Elisp.  You&#39;ll need <kbd>3mnb</kbd> for
+Clojure, since it weirdly has the docstring <em>before</em> the arguments.  I
+think it&#39;s pretty cool: by typing <kbd>3mnb</kbd> I&#39;m basically
+calling <code>(kill-new (caddr (current-sexp)))</code> on my own code.</p>
+
 </div>
 
 <div class="twitter-share">
@@ -257,16 +313,6 @@ i.e. home row keys and no background:</p>
     
       <li>
         <h3>
-          <!-- <a href="//2015/03/09/lispy-point-history/"> -->
-          <a href="/2015/03/09/lispy-point-history/">
-            lispy point history
-            <small>09 Mar 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
           <!-- <a href="//2015/03/08/lispy.0.24.0-is-out/"> -->
           <a href="/2015/03/08/lispy.0.24.0-is-out/">
             lispy 0.24.0 is out
@@ -281,6 +327,16 @@ i.e. home row keys and no background:</p>
           <a href="/2015/03/07/hydra-org-templates/">
             org-mode block templates in Hydra
             <small>07 Mar 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/03/06/ace-window-toggle/"> -->
+          <a href="/2015/03/06/ace-window-toggle/">
+            Select the previous window with ace-window
+            <small>06 Mar 2015</small>
           </a>
         </h3>
       </li>
