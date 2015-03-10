@@ -4,7 +4,7 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-03-09T20:10:36+01:00</updated>
+ <updated>2015-03-11T12:06:46+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
@@ -13,11 +13,67 @@
 
  
  <entry>
+   <title>Introducing Swiper</title>
+   <link href="http://oremacs.com/2015/03/10/no-swiping/"/>
+   <updated>2015-03-10T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/03/10/no-swiping</id>
+   <content type="html">&lt;p&gt;I like the idea of
+&lt;a href=&quot;https://github.com/ShingoFukuyama/helm-swoop&quot;&gt;helm-swoop&lt;/a&gt;, but it
+somehow has minor annoyances that stop me from using it, like
+automatic &lt;code&gt;helm-input&lt;/code&gt;, and especially the circular candidates. Or maybe it&amp;#39;s just NIH talking.
+Anyway, I&amp;#39;m rolling my own, and it&amp;#39;s called &lt;a href=&quot;https://github.com/abo-abo/swiper&quot;&gt;swiper&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/swiper.png&quot; alt=&quot;swiper.png&quot;&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;swiper-in-action&quot;&gt;Swiper in action&lt;/h2&gt;
+
+&lt;p&gt;Here&amp;#39;s how it looks like:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/swiper-1.png&quot; alt=&quot;swiper-1.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;As you can see, the search string &lt;code&gt;&amp;quot;dec fun pro&amp;quot;&lt;/code&gt; is transformed into
+a regex &lt;code&gt;&amp;quot;\\(dec\\).*\\(fun\\).*\\(pro\\)&amp;quot;&lt;/code&gt;, and each group in the
+matches is highlighted with a different face.  This is quite similar
+to the way &lt;code&gt;re-builder&lt;/code&gt; does it. In fact it&amp;#39;s possible to use &lt;code&gt;swiper&lt;/code&gt;
+as a poor man&amp;#39;s &lt;code&gt;re-builder&lt;/code&gt; (since it matches only single lines).&lt;/p&gt;
+
+&lt;p&gt;I&amp;#39;m doing my own matching this time, as the part-swapping behavior of
+&lt;code&gt;helm-match-plugin&lt;/code&gt; is more annoying than useful.&lt;/p&gt;
+
+&lt;p&gt;Also note that:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The whole &lt;code&gt;*swiper*&lt;/code&gt; buffer is fully syntax highlighted.&lt;/li&gt;
+&lt;li&gt;The appropriate parts of the matches are highlighted as well.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;swiper-in-a-dired-buffer&quot;&gt;Swiper in a &lt;code&gt;dired&lt;/code&gt; buffer&lt;/h2&gt;
+
+&lt;p&gt;Here&amp;#39;s another screenshot:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/swiper-2.png&quot; alt=&quot;swiper-2.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;It appears that &lt;code&gt;helm&lt;/code&gt; is ignoring the display of file attributes, since they have
+a sort of &lt;code&gt;invisible&lt;/code&gt; property set. I kind of like this behavior.&lt;/p&gt;
+
+&lt;h2 id=&quot;see-how-the-faces-are-recycled&quot;&gt;See how the faces are recycled&lt;/h2&gt;
+
+&lt;p&gt;I&amp;#39;ve defined only 4 faces currently (foxes aren&amp;#39;t unicorns, the
+palette is quite limited), so they loop about if you have many groups:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/swiper-3.png&quot; alt=&quot;swiper-3.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Yup, the technology is there. Although a &lt;code&gt;powerline&lt;/code&gt; theme for the
+&lt;code&gt;helm&lt;/code&gt; mode line is still missing.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
    <title>lispy point history</title>
    <link href="http://oremacs.com/2015/03/09/lispy-point-history/"/>
    <updated>2015-03-09T00:00:00+01:00</updated>
    <id>http://oremacs.com/2015/03/09/lispy-point-history</id>
-   <content type="html">&lt;p&gt;It was kind of disappointing to summarize in 
+   <content type="html">&lt;p&gt;It was kind of disappointing to summarize in
 &lt;a href=&quot;/2015/03/08/lispy.0.24.0-is-out/&quot;&gt;the last post&lt;/a&gt;
 that there weren&amp;#39;t many new features for
 &lt;a href=&quot;https://github.com/abo-abo/lispy&quot;&gt;lispy 0.24.0&lt;/a&gt;. So I thought long and hard and came up with something

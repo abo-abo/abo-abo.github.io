@@ -11,7 +11,7 @@
 
   <title>
     
-      upcase-word, you so silly &middot; (or emacs
+      Introducing Swiper &middot; (or emacs
     
   </title>
 
@@ -216,70 +216,56 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">upcase-word, you so silly</h1>
-  <span class="post-date">23 Dec 2014</span>
-  <p>Do you know what the
-<a href="http://ergoemacs.org/emacs/command-frequency.html">most frequently used</a>
-Emacs commands are? I can confirm by my own experience that they are
-<code>next-line</code> and <code>previous-line</code> (in that order).
-So why do <kbd>M-u</kbd> - <code>upcase-word</code>, <kbd>M-l</kbd> - <code>downcase-word</code>, and
-<kbd>M-c</kbd> - <code>capitalize-word</code> have such terrible synergy with Emacs&#39;s best commands?</p>
+  <h1 class="post-title">Introducing Swiper</h1>
+  <span class="post-date">10 Mar 2015</span>
+  <p>I like the idea of
+<a href="https://github.com/ShingoFukuyama/helm-swoop">helm-swoop</a>, but it
+somehow has minor annoyances that stop me from using it, like
+automatic <code>helm-input</code>, and especially the circular candidates. Or maybe it&#39;s just NIH talking.
+Anyway, I&#39;m rolling my own, and it&#39;s called <a href="https://github.com/abo-abo/swiper">swiper</a>.</p>
 
-<p>No, <code>upcase-word</code>, this is not what I had in mind:</p>
+<p><img src="/download/swiper.png" alt="swiper.png"></p>
 
-<table><tbody><tr><td>
-<pre style="font-size: 0.6em">
-Learn basic key<cursor>s</cursor>troke commands
-Overview of Emacs features at gnu.org
-</pre>
-</td><td>
-<kbd>M-u</kbd>
-</td><td>
-<pre style="font-size: 0.6em">
-Learn basic keySTROKE<cursor> </cursor>commands
-Overview of Emacs features at gnu.org
-</pre>
-</td></tr></tbody></table>
+<h2 id="swiper-in-action">Swiper in action</h2>
 
-<p>If you say:</p>
+<p>Here&#39;s how it looks like:</p>
 
-<blockquote>
-<p>But how did you get the cursor in such a crazy position in the first
-place? You should have used <kbd>M-b</kbd>/<kbd>M-f</kbd>.</p>
-</blockquote>
+<p><img src="/download/swiper-1.png" alt="swiper-1.png"></p>
 
-<p>Well, I got there with <code>previous-line</code> - one of the best Emacs commands!</p>
+<p>As you can see, the search string <code>&quot;dec fun pro&quot;</code> is transformed into
+a regex <code>&quot;\\(dec\\).*\\(fun\\).*\\(pro\\)&quot;</code>, and each group in the
+matches is highlighted with a different face.  This is quite similar
+to the way <code>re-builder</code> does it. In fact it&#39;s possible to use <code>swiper</code>
+as a poor man&#39;s <code>re-builder</code> (since it matches only single lines).</p>
 
-<h2 id="resolve-the-*-word-malarkey-with-defadvice">Resolve the <code>*-word</code> malarkey with <code>defadvice</code></h2>
+<p>I&#39;m doing my own matching this time, as the part-swapping behavior of
+<code>helm-match-plugin</code> is more annoying than useful.</p>
 
-<p>Here are some simple advice commands that I&#39;ve just rolled:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defadvice</span> <span class="nf">upcase-word</span> <span class="p">(</span><span class="nv">before</span> <span class="nv">upcase-word-advice</span> <span class="nv">activate</span><span class="p">)</span>
-  <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nv">looking-back</span> <span class="s">&quot;\\b&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">backward-word</span><span class="p">)))</span>
+<p>Also note that:</p>
 
-<span class="p">(</span><span class="nb">defadvice</span> <span class="nf">downcase-word</span> <span class="p">(</span><span class="nv">before</span> <span class="nv">downcase-word-advice</span> <span class="nv">activate</span><span class="p">)</span>
-  <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nv">looking-back</span> <span class="s">&quot;\\b&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">backward-word</span><span class="p">)))</span>
+<ul>
+<li>The whole <code>*swiper*</code> buffer is fully syntax highlighted.</li>
+<li>The appropriate parts of the matches are highlighted as well.</li>
+</ul>
 
-<span class="p">(</span><span class="nb">defadvice</span> <span class="nf">capitalize-word</span> <span class="p">(</span><span class="nv">before</span> <span class="nv">capitalize-word-advice</span> <span class="nv">activate</span><span class="p">)</span>
-  <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nv">looking-back</span> <span class="s">&quot;\\b&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">backward-word</span><span class="p">)))</span>
-</code></pre></div>
-<p>Small explanation to the Elisp novices:</p>
+<h2 id="swiper-in-a-dired-buffer">Swiper in a <code>dired</code> buffer</h2>
 
-<ol>
-<li>before <code>upcase-word</code> is called, execute the body of <code>upcase-word-advice</code></li>
-<li><code>unless</code> we are at the beginning of the word</li>
-<li><code>backward-word</code> once to move to the beginning of the word</li>
-</ol>
+<p>Here&#39;s another screenshot:</p>
 
-<p>I&#39;m intentionally not using the newest advice system here, since not everyone
-has yet upgraded to Emacs 24.4.
-In fact, I saw this gem today at Stack Overflow:</p>
+<p><img src="/download/swiper-2.png" alt="swiper-2.png"></p>
 
-<blockquote>
-<p>I am using Emacs 23 and cedet 1.0.1 ...</p>
-</blockquote>
+<p>It appears that <code>helm</code> is ignoring the display of file attributes, since they have
+a sort of <code>invisible</code> property set. I kind of like this behavior.</p>
+
+<h2 id="see-how-the-faces-are-recycled">See how the faces are recycled</h2>
+
+<p>I&#39;ve defined only 4 faces currently (foxes aren&#39;t unicorns, the
+palette is quite limited), so they loop about if you have many groups:</p>
+
+<p><img src="/download/swiper-3.png" alt="swiper-3.png"></p>
+
+<p>Yup, the technology is there. Although a <code>powerline</code> theme for the
+<code>helm</code> mode line is still missing.</p>
 
 </div>
 
@@ -298,16 +284,6 @@ In fact, I saw this gem today at Stack Overflow:</p>
     
       <li>
         <h3>
-          <!-- <a href="//2015/03/10/no-swiping/"> -->
-          <a href="/2015/03/10/no-swiping/">
-            Introducing Swiper
-            <small>10 Mar 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
           <!-- <a href="//2015/03/09/lispy-point-history/"> -->
           <a href="/2015/03/09/lispy-point-history/">
             lispy point history
@@ -322,6 +298,16 @@ In fact, I saw this gem today at Stack Overflow:</p>
           <a href="/2015/03/08/lispy.0.24.0-is-out/">
             lispy 0.24.0 is out
             <small>08 Mar 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/03/07/hydra-org-templates/"> -->
+          <a href="/2015/03/07/hydra-org-templates/">
+            org-mode block templates in Hydra
+            <small>07 Mar 2015</small>
           </a>
         </h3>
       </li>
