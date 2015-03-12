@@ -4,13 +4,128 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-03-11T18:43:08+01:00</updated>
+ <updated>2015-03-12T18:29:45+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>ace-window display mode</title>
+   <link href="http://oremacs.com/2015/03/12/ace-window-display-mode/"/>
+   <updated>2015-03-12T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/03/12/ace-window-display-mode</id>
+   <content type="html">&lt;h2 id=&quot;intro&quot;&gt;Intro&lt;/h2&gt;
+
+&lt;p&gt;Today, I&amp;#39;ll describe a quite recent addition to &lt;a href=&quot;https://github.com/abo-abo/ace-window&quot;&gt;ace-window&lt;/a&gt;,
+which comes from the idea by &lt;a href=&quot;https://github.com/deftsp&quot;&gt;@deftsp&lt;/a&gt;:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Why not show the &lt;code&gt;ace-window&lt;/code&gt; dispatch keys in the mode line all the time?&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Certainly, there&amp;#39;s no reason not to have this option, and it actually makes the whole interface
+better, since it becomes less feedback-based:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;You glance at a window that you want.&lt;/li&gt;
+&lt;li&gt;You know which key you have to press &lt;em&gt;before&lt;/em&gt; you call &lt;code&gt;ace-window&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;You make a single-step call instead of:
+
+&lt;ul&gt;
+&lt;li&gt;press &lt;code&gt;ace-window&lt;/code&gt; shortcut,&lt;/li&gt;
+&lt;li&gt;read the dispatch char,&lt;/li&gt;
+&lt;li&gt;press the dispatch char.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The feature is implemented as &lt;code&gt;ace-window-display-mode&lt;/code&gt; - a minor mode that you can toggle on or
+off whenever you feel like it.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;#39;s how it looks like:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/ace-window-display-mode.png&quot; alt=&quot;ace-window-display-mode.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;As you can see, I&amp;#39;ve made &lt;code&gt;aw-keys&lt;/code&gt; list short on purpose, just to show you that the full path
+will be displayed. See, for instance, the &lt;code&gt;*scratch*&lt;/code&gt; window: its path is &lt;code&gt;gf&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;implementation&quot;&gt;Implementation&lt;/h2&gt;
+
+&lt;p&gt;Since the implementation is quite short, I&amp;#39;ll post it here and go over a few things that might
+interest people who write Elisp (on some level, please don&amp;#39;t mock me for being obvious).&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;c1&quot;&gt;;;;###autoload&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;define-minor-mode&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ace-window-display-mode&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Minor mode for showing the ace window key in the mode line.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;:global&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ace-window-display-mode&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;progn&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;aw-update&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;set-default&lt;/span&gt;
+         &lt;span class=&quot;ss&quot;&gt;&amp;#39;mode-line-format&lt;/span&gt;
+         &lt;span class=&quot;o&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ace-window-display-mode&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:eval&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;window-parameter&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;selected-window&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                                     &lt;span class=&quot;ss&quot;&gt;&amp;#39;ace-window-path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+           &lt;span class=&quot;o&quot;&gt;,@&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;default-value&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;mode-line-format&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;force-mode-line-update&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;add-hook&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;window-configuration-change-hook&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;aw-update&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;set-default&lt;/span&gt;
+     &lt;span class=&quot;ss&quot;&gt;&amp;#39;mode-line-format&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;assq-delete-all&lt;/span&gt;
+      &lt;span class=&quot;ss&quot;&gt;&amp;#39;ace-window-display-mode&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;default-value&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;mode-line-format&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;remove-hook&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;window-configuration-change-hook&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;aw-update&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;aw-update&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Update ace-window-path window parameter for all windows.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;avy-traverse&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;avy-tree&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;aw-window-list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;aw-keys&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;path&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;leaf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;set-window-parameter&lt;/span&gt;
+      &lt;span class=&quot;nv&quot;&gt;leaf&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ace-window-path&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;propertize&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;apply&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;#&amp;#39;string&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;reverse&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+       &lt;span class=&quot;ss&quot;&gt;&amp;#39;face&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;aw-mode-line-face&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;I&amp;#39;ll start with the obvious. Since I&amp;#39;m writing something that modifies Emacs behavior when it&amp;#39;s
+enabled, I first try to implement it as a minor mode. And since this minor mode isn&amp;#39;t tied to a
+particular buffer, I declare it as global.&lt;/p&gt;
+
+&lt;p&gt;An interesting quirk is that I have to put &lt;em&gt;something&lt;/em&gt; between the docstring and the body, otherwise
+it won&amp;#39;t work. In this case, I put &lt;code&gt;:global t&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Next, follows that standard dispatch on the variable symbol of the mode - &lt;code&gt;ace-window-display-mode&lt;/code&gt;.
+The &lt;code&gt;define-minor-mode&lt;/code&gt; macro will make both variable and function definition for the symbol it&amp;#39;s
+given:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;the variable is used to check if the mode is on.&lt;/li&gt;
+&lt;li&gt;the function is used to turn the mode on / off.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Note the use of &lt;code&gt;assq-delete-all&lt;/code&gt;: this is for when some other package modifies the
+&lt;code&gt;mode-line-format&lt;/code&gt; after &lt;code&gt;ace-window&lt;/code&gt; does. In that case, &lt;code&gt;ace-window&lt;/code&gt;&amp;#39;s entry wouldn&amp;#39;t be the first
+one any more.&lt;/p&gt;
+
+&lt;p&gt;Since &lt;code&gt;mode-line-format&lt;/code&gt; is a buffer-local variable, I set it with &lt;code&gt;set-default&lt;/code&gt;, in order for the
+change to not just happen in the current buffer.&lt;/p&gt;
+
+&lt;p&gt;Each time a window is created or deleted, Emacs will run the &lt;code&gt;window-configuration-change-hook&lt;/code&gt; -
+exactly what I need to update &lt;code&gt;mode-line-format&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;One final trick is to use &lt;code&gt;set-window-parameter&lt;/code&gt; to store a variable for each window.  Buffer local
+variables would not work here, since one buffer can be displayed in multiple windows, and those
+would need a different key each.&lt;/p&gt;
+
+&lt;p&gt;I really like how the &lt;code&gt;avy-tree&lt;/code&gt; / &lt;code&gt;avy-traverse&lt;/code&gt; interface ended up as: the same functions are used
+for selecting window and setting &lt;code&gt;mode-line-format&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;I hope that you enjoy the update, and keep those interesting ideas coming!&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Some git / magit / github tricks</title>
