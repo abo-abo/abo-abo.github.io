@@ -223,6 +223,73 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/02/20/buffer-menu-hydra/">
+        Hydra for Buffer-menu
+      </a>
+    </h1>
+
+    <span class="post-date">20 Feb 2015</span>
+
+    <p>Here&#39;s a little code I&#39;ve made today for <code>Buffer-menu-mode</code>:</p>
+
+<div class="highlight"><pre><small><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-buffer-menu</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">pink</span><span class="p">)</span>
+  <span class="s">&quot;</span>
+<span class="s">  Mark               Unmark             Actions            Search</span>
+<span class="s">-------------------------------------------------------------------------</span>
+<span class="s">_m_: mark          _u_: unmark        _x_: execute       _R_: re-isearch</span>
+<span class="s">_s_: save          _U_: unmark up     _b_: bury          _I_: isearch</span>
+<span class="s">_d_: delete                           _g_: refresh       _O_: multi-occur</span>
+<span class="s">_D_: delete up                        _T_: files only: %`Buffer-menu-files-only</span>
+<span class="s">_~_: modified</span>
+<span class="s">&quot;</span>
+  <span class="p">(</span><span class="s">&quot;m&quot;</span> <span class="nv">Buffer-menu-mark</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;u&quot;</span> <span class="nv">Buffer-menu-unmark</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;U&quot;</span> <span class="nv">Buffer-menu-backup-unmark</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;d&quot;</span> <span class="nv">Buffer-menu-delete</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;D&quot;</span> <span class="nv">Buffer-menu-delete-backwards</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;s&quot;</span> <span class="nv">Buffer-menu-save</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;~&quot;</span> <span class="nv">Buffer-menu-not-modified</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;x&quot;</span> <span class="nv">Buffer-menu-execute</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;b&quot;</span> <span class="nv">Buffer-menu-bury</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;g&quot;</span> <span class="nv">revert-buffer</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;T&quot;</span> <span class="nv">Buffer-menu-toggle-files-only</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;O&quot;</span> <span class="nv">Buffer-menu-multi-occur</span> <span class="no">nil</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;I&quot;</span> <span class="nv">Buffer-menu-isearch-buffers</span> <span class="no">nil</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;R&quot;</span> <span class="nv">Buffer-menu-isearch-buffers-regexp</span> <span class="no">nil</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;c&quot;</span> <span class="no">nil</span> <span class="s">&quot;cancel&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;v&quot;</span> <span class="nv">Buffer-menu-select</span> <span class="s">&quot;select&quot;</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;o&quot;</span> <span class="nv">Buffer-menu-other-window</span> <span class="s">&quot;other-window&quot;</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="nv">quit-window</span> <span class="s">&quot;quit&quot;</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nf">define-key</span> <span class="nv">Buffer-menu-mode-map</span> <span class="s">&quot;.&quot;</span> <span class="ss">&#39;hydra-buffer-menu/body</span><span class="p">)</span>
+</code></small></pre></div>
+
+<p>You can change the color on the top to your taste: either red or pink or amaranth will work.
+For extensive Hydras I tend to pick pink, since I don&#39;t want to quit by accident, while still keeping
+the non-head bindings. For small ones, red is better.
+Here&#39;s how the result looks like:
+<img src="/download/hydra-buffer-menu.png" alt="hydra-buffer-menu"></p>
+
+<p>You can install the cow with:</p>
+<div class="highlight"><pre><code class="language-sh" data-lang="sh">apt-get moo
+</code></pre></div>
+<p>I didn&#39;t list it in the source, since Jekyll would wrap the long lines. The source is already in <a href="https://github.com/abo-abo/hydra/blob/master/hydra-examples.el#L191">hydra-examples.el</a>.
+You only have to:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;hydra-examples</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">define-key</span> <span class="nv">Buffer-menu-mode-map</span> <span class="s">&quot;.&quot;</span> <span class="ss">&#39;hydra-buffer-menu/body</span><span class="p">)</span>
+</code></pre></div>
+<p>I&#39;ve been hearing some opinions lately that the growing number of
+Hydra options makes it intimidating or unclear. I hope that&#39;s not the
+majority&#39;s feeling and that the gentle repetitiveness of this example
+proves otherwise.</p>
+
+<p>On the other hand, I&#39;ve started reading &quot;The Reasoned Schemer&quot; this
+week. Now that&#39;s intimidating.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/02/19/hydra-colors-reloaded/">
         Two new Hydra colors - pink and teal
       </a>
@@ -554,63 +621,6 @@ You can also have the same function in both red and blue versions. Here&#39;s ho
 
 <p>If you remember, <code>(text-scale-set 0)</code> uses a sexp syntax for a Hydra
 head: it will be wrapped in <code>(lambda () (interactive) ...)</code> automatically.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/02/15/sudo-stuffs/">
-        Doing sudo stuff with tramp
-      </a>
-    </h1>
-
-    <span class="post-date">15 Feb 2015</span>
-
-    <p>Somehow, I accumulated a few files owned by root that should have been
-owned by me. Below, I&#39;ll describe a solution to get rid of them based
-on <code>dired</code> and <code>tramp</code>.</p>
-
-<h2 id="step-one:-open-the-directory-with-sudo-privileges">Step one: open the directory with sudo privileges</h2>
-
-<p>I&#39;ll obviously need the sudo privilege to change the owner of a file owned
-by root. Might as well start with that.</p>
-
-<p>Thankfully, I do have a shortcut:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">sudired</span> <span class="p">()</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;tramp</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">dir</span> <span class="p">(</span><span class="nf">expand-file-name</span> <span class="nv">default-directory</span><span class="p">)))</span>
-    <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">string-match</span> <span class="s">&quot;^/sudo:&quot;</span> <span class="nv">dir</span><span class="p">)</span>
-        <span class="p">(</span><span class="ne">user-error</span> <span class="s">&quot;Already in sudo&quot;</span><span class="p">)</span>
-      <span class="p">(</span><span class="nv">dired</span> <span class="p">(</span><span class="nf">concat</span> <span class="s">&quot;/sudo::&quot;</span> <span class="nv">dir</span><span class="p">)))))</span>
-<span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="s">&quot;!&quot;</span> <span class="ss">&#39;sudired</span><span class="p">)</span>
-</code></pre></div>
-<p>The function above will open the current directory in sudo mode. I
-decided to bind it to <kbd>!</kbd>, since the default <kbd>&amp;</kbd>
-seems strictly better than <kbd>!</kbd>. The function will ask you for
-the password once.  Afterwards, you can open other directories without
-having to enter the password.</p>
-
-<h2 id="step-two:-find-dired">Step two: <code>find-dired</code></h2>
-
-<p>So now, while in sudo mode of the directory in question:</p>
-
-<ol>
-<li>Call <kbd>M-x</kbd> <code>find-dired</code>. It&#39;s not bound by default, and I
-don&#39;t bind it myself since it&#39;s quite situational (I do bind
-<code>find-name-dired</code> to <kbd>F</kbd> in <code>dired-mode</code> though).</li>
-<li>It prompts you for the directory. I just press <kbd>RET</kbd>, since the default one is what I need.</li>
-<li>Next, it prompts for <code>find</code> args. These are the arguments to the
-UNIX command <code>find</code>. Here, I need to pass <code>-user root</code>.</li>
-<li>The command has finished and I can see the results. I can select
-some of them by pressing <kbd>m</kbd> (<code>dired-mark</code>) a few times, or
-mark them all at once with <kbd>t</kbd> (<code>dired-toggle-marks</code>).</li>
-<li>Finally, call <kbd>O</kbd> (<code>dired-do-chown</code>) on the marked files and enter <code>oleh</code>.</li>
-</ol>
-
-<p>Done. I&#39;m sure that the admin types can cook up some <code>find</code>-<code>exec</code>-<code>chown</code> combo to do the same thing,
-but the <code>find-dired</code> approach is both simpler and more flexible, since I can confirm and edit the list
-of files being changed.</p>
 
   </div>
   

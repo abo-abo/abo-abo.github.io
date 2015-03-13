@@ -11,7 +11,7 @@
 
   <title>
     
-      Rushing headlong &middot; (or emacs
+      Swiper now has an ivy back end &middot; (or emacs
     
   </title>
 
@@ -220,81 +220,65 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Rushing headlong</h1>
-  <span class="post-date">06 Jan 2015</span>
-  <blockquote>
-<p>And you&#39;re rushing headlong out of control...</p>
+  <h1 class="post-title">Swiper now has an ivy back end</h1>
+  <span class="post-date">13 Mar 2015</span>
+  <h2 id="intro">Intro</h2>
 
-<p>-- <cite>Brian May</cite></p>
-</blockquote>
+<p>Just three days ago, I wrote <code>swiper</code> and introduced it in
+<a href="http://oremacs.com/2015/03/10/no-swiping/">a post</a>.
+And while <code>swiper</code> solved the problem of <a href="https://github.com/ShingoFukuyama/helm-swoop">helm-swoop</a>
+being awkward for me to use, <code>swiper</code>&#39;s code itself is pretty awkward, since even after using <code>helm</code>
+a dozen times in my packages, I&#39;m still not well-versed in its internals.</p>
 
-<p>I&#39;ve finally wrapped a piece of config that I was using for a while in
-a package called <a href="https://github.com/abo-abo/headlong">headlong</a>.</p>
+<p>And, apparently, there are people who don&#39;t like <code>helm</code> because it updates a lot.  I don&#39;t know if
+it counts as a viable complaint, but I do agree that the <code>helm</code> update time is quite long.  So I
+wrote down an alternative completion back end for <code>swiper</code>. It looks quite similar to
+<code>ido-vertical-mode</code>, although it is completely unrelated to <code>ido</code>. In fact, the matching algorithm
+currently is similar to <code>helm-match-plugin</code>: <code>&quot;for example&quot;</code> is transformed into
+<code>&quot;\\(for\\).*\\(example\\)&quot;</code>.</p>
 
-<h2 id="what-does-it-do?">What does it do?</h2>
+<p><img src="/download/swiper-ivy.png" alt="swiper-ivy.png"></p>
 
-<p>It provides a macro called <code>headlong-with</code> that modifies minibuffer
-completion for the forms within it, making it faster in some
-situations.  For instance:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">headlong-with</span>
- <span class="p">(</span><span class="nf">completing-read</span> <span class="s">&quot;Jump to bookmark: &quot;</span>
-                  <span class="nv">bookmark-alist</span> <span class="no">nil</span> <span class="no">t</span><span class="p">))</span>
+<h2 id="the-details">The Details</h2>
+
+<p>Currently, in the <code>ivy</code> version of <code>swiper</code> only the anchoring algorithm is missing.  Anchoring is
+what I call the process of selecting a close candidate when the number of candidates changes.  It
+seems that <code>helm</code> doesn&#39;t implement an anchoring algorithm, so both <code>helm-swoop</code> and <code>swiper</code>
+implement their own. I don&#39;t know how easy it would be to write down the proper generic thing, my
+current implementation for the <code>helm</code> version of <code>swiper</code> is quite hacky.</p>
+
+<p>Just to explain to you what needs to be done. Suppose there&#39;s an input &quot;ab&quot; that matches 50
+candidates, and the candidate number 42 is the current one. Now, if the user types one char to make
+the input into &quot;abc&quot;, the number of candidates has changed to 10, and the candidate that was current
+previously doesn&#39;t match any more. It is up to the matcher code to decide which of the 10 candidates
+has to be current now. Usually it doesn&#39;t matter much, but in the case of <code>swiper</code> it matters since
+the point will be moved to the current candidate in the original window.</p>
+
+<p>In any case, there&#39;s still a lot of things that have to be done for <code>ivy</code>, but I think that
+it&#39;s quite usable now. Actually, I&#39;ve already added it to my bindings:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="s">&quot;\C-s&quot;</span> <span class="ss">&#39;swiper</span><span class="p">)</span>
 </code></pre></div>
-<p>or:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">headlong-with</span> <span class="p">(</span><span class="nv">read-extended-command</span><span class="p">))</span>
+<p>Here&#39;s how it looks like:</p>
+
+<p><img src="/download/ivy-swiper-1.png" alt="ivy-swiper-1.png"></p>
+
+<p>And here&#39;s an example of completion in <code>dired</code>:</p>
+
+<p><img src="/download/ivy-swiper-2.png" alt="ivy-swiper-2.png"></p>
+
+<p>You need to have Emacs 24.4 in order to get a nicer highlight in the minibuffer that uses
+<code>add-face-text-property</code> instead of the old <code>propertize</code>.</p>
+
+<p>There&#39;s a custom variable that decides the height of the minibuffer window, you can set it as you
+like:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defcustom</span> <span class="nv">ivy-height</span> <span class="mi">10</span>
+  <span class="s">&quot;Number of lines for the minibuffer window.&quot;</span>
+  <span class="nb">:type</span> <span class="ss">&#39;integer</span><span class="p">)</span>
 </code></pre></div>
-<p>But more importantly, it provides two commands that can use it
-efficiently: <code>headlong-bookmark-jump</code> and
-<code>headlong-bookmark-jump-other</code>. The second one is basically the same
-as the first one, except it opens the bookmark with <code>pop-to-buffer</code>,
-i.e. in other window.</p>
+<h2 id="outro">Outro</h2>
 
-<h2 id="how-does-this-completion-work?">How does this completion work?</h2>
-
-<p>It&#39;s nothing fancy, you will just exit the minibuffer automatically as
-soon as there is only one completion candidate left.
-So it saves you <strong>one</strong> keystroke, namely <kbd>RET</kbd>.
-How much is <em>one</em> keystroke worth? It depends.</p>
-
-<p>If you arrange your bookmarks in a way that I do, with each one
-starting with a different letter, it saves you 33% of the total
-keystrokes.  For example, suppose I have:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-p&quot;</span><span class="p">)</span> <span class="ss">&#39;bookmark-jump</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-o&quot;</span><span class="p">)</span> <span class="ss">&#39;headlong-bookmark-jump</span><span class="p">)</span>
-</code></pre></div>
-<p>Then I can jump to my bookmarked directory named <code>&quot;s: sources&quot;</code> with
-two methods:</p>
-
-<ul>
-<li><kbd>M-p</kbd><kbd>s</kbd><kbd>RET</kbd> </li>
-<li><kbd>M-o</kbd><kbd>s</kbd></li>
-</ul>
-
-<p>The second method looks like it&#39;s 33% shorter, but it feels like it&#39;s
-even more, since pressing <kbd>RET</kbd> is harder than it should be
-on most keyboards.</p>
-
-<h2 id="why-is-this-cool?">Why is this cool?</h2>
-
-<p>This is cool because you can implement your bookmarks as efficiently
-as you would with just wrapping stuff with a <code>lambda</code> and using
-<code>global-set-key</code>, except that you can view and edit the bindings with
-<code>bookmark-bmenu-list</code>, and quickly the update bookmark positions with
-<code>bookmark-set</code>.</p>
-
-<p>Here&#39;s what I get when I call <kbd>M-x</kbd> <code>bookmark-bmenu-list</code>:</p>
-
-<p><img src="/download/bookmarks.png" alt="bookmarks"></p>
-
-<p>In the list above:</p>
-
-<ul>
-<li>black bookmarks are files</li>
-<li>blue bookmarks are directories</li>
-<li>pink bookmarks are functions (you need <code>bookmark+</code> for them)</li>
-</ul>
-
-<p>The package should be available in MELPA soon.</p>
+<p>Give the new back end <a href="https://github.com/abo-abo/swiper">a go</a>, see if you like it. It looks quite pretty and minimalist to me, but I&#39;m
+biased since I made it.</p>
 
 </div>
 
@@ -313,16 +297,6 @@ as you would with just wrapping stuff with a <code>lambda</code> and using
     
       <li>
         <h3>
-          <!-- <a href="//2015/03/13/introducing-ivy/"> -->
-          <a href="/2015/03/13/introducing-ivy/">
-            Swiper now has an ivy back end
-            <small>13 Mar 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
           <!-- <a href="//2015/03/12/ace-window-display-mode/"> -->
           <a href="/2015/03/12/ace-window-display-mode/">
             ace-window display mode
@@ -337,6 +311,16 @@ as you would with just wrapping stuff with a <code>lambda</code> and using
           <a href="/2015/03/11/git-tricks/">
             Some git / magit / github tricks
             <small>11 Mar 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/03/10/no-swiping/"> -->
+          <a href="/2015/03/10/no-swiping/">
+            Introducing Swiper
+            <small>10 Mar 2015</small>
           </a>
         </h3>
       </li>

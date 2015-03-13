@@ -223,6 +223,117 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/03/08/lispy.0.24.0-is-out/">
+        lispy 0.24.0 is out
+      </a>
+    </h1>
+
+    <span class="post-date">08 Mar 2015</span>
+
+    <p>The last release was a month ago, and there have been 70 commits to
+master since then.  If you&#39;re not familiar with <code>lispy</code>, see
+<a href="/2015/01/19/lispy.0.21.0-is-out/">my intro post for version 0.21.0</a>.
+I&#39;ll just copy <a href="https://github.com/abo-abo/lispy/releases/tag/0.24.0">the release notes</a> here,
+while adding a few things.</p>
+
+<h2 id="fixes">Fixes</h2>
+
+<ul>
+<li><kbd>DEL</kbd> behaves properly after a string and one space.</li>
+<li><kbd>C-k</kbd> works better for expressions preceded with &quot;#&quot;.</li>
+<li><kbd>3 </kbd> should not add a space when there is one already.</li>
+<li><kbd>#</kbd> will not add a space after a comma.</li>
+<li><kbd>C-j</kbd> works better in comments after a quote.</li>
+<li><code>lispy--eval-elisp-form</code> first arg is now named <code>lispy-form</code> instead of <code>form</code>. It was impossible
+to evaluate an unrelated <code>form</code> variable with the previous behavior.</li>
+<li><kbd>F</kbd> again works properly when jumping to a jar (e.g. to <code>defn</code>) from Clojure source.</li>
+<li><kbd>C-k</kbd> won&#39;t call <code>delete-region</code> in some obscure branches.</li>
+</ul>
+
+<h2 id="enhancements">Enhancements</h2>
+
+<ul>
+<li><kbd>P</kbd> (<code>lispy-paste</code>) will add a newline when called from start of line.  This way,
+<kbd>nP</kbd> becomes equivalent to <kbd>c</kbd> (<code>lispy-clone</code>). Of course, it&#39;s more flexible: you
+can do e.g. <kbd>nkP</kbd>.</li>
+<li><kbd>xb</kbd> (<code>lispy-bind-variable</code>) now works on regions as well. Use it to bind the current
+sexp or region as a let-bound variable: it will put you in <code>iedit</code>. When you&#39;re done with <code>iedit</code>, press
+<kbd>M-m</kbd> (<code>lispy-mark-symbol</code>) to exit <code>iedit</code>. If you need to move the let binding around, use
+a combination of <kbd>C</kbd> (<code>lispy-convolute</code>) and <kbd>h</kbd> (<code>lispy-left</code>).</li>
+<li><kbd>g</kbd> will ignore <code>loaddefs.el</code> for Elisp.</li>
+<li><kbd>M-m</kbd> works better in unbalanced buffers, which should be an rare thing.</li>
+<li>add <code>defhydra</code> to <code>lispy-tag-arity</code>: now <kbd>g</kbd> will recognize <code>defhydra</code> statements.</li>
+<li>The tag logic was improved to do less parsing.</li>
+<li><code>lispy-outline</code> was updated to match the standard <code>^;;;</code> outline regex. Try pressing <kbd>I</kbd>
+in e.g. org.el, it&#39;s quite beautiful.</li>
+<li>All <code>lispy-eval</code> functions will preserve the match data.</li>
+<li><kbd>&gt;</kbd> will delete the extra whitespace while slurping.</li>
+<li>Added <code>undercover</code>/Coveralls test coverage report.</li>
+<li><kbd>H</kbd> (<code>lispy-ace-symbol-replace</code>) is now a Hydra: type <kbd>h</kbd> to delete more, type
+<kbd>u</kbd> to undo.</li>
+<li><kbd>Q</kbd> (<code>lispy-ace-char</code>) now uses <code>avy</code> to jump. This change allows to cover this
+function with a test.</li>
+</ul>
+
+<h2 id="new-features">New features</h2>
+
+<h3 id="p-can-now-iterate-dolist-variables-in-elisp."><kbd>p</kbd> can now iterate <code>dolist</code> variables in Elisp.</h3>
+<div class="highlight"><pre><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nb">defun</span> <span class="nv">range</span> <span class="p">(</span><span class="nv">a</span> <span class="nv">b</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">message</span> <span class="s">&quot;called range&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">number-sequence</span> <span class="nv">a</span> <span class="nv">b</span><span class="p">))</span>
+<span class="p">(</span><span class="nb">dolist</span> <span class="err">|</span><span class="p">(</span><span class="nv">i</span> <span class="p">(</span><span class="nv">range</span> <span class="mi">1</span> <span class="mi">3</span><span class="p">))</span>
+  <span class="p">(</span><span class="nv">message</span> <span class="s">&quot;i=%d&quot;</span> <span class="nv">i</span><span class="p">))</span>
+</code></pre></div>
+<p>Pressing <kbd>p</kbd> with point where <code>|</code> is, will</p>
+
+<ul>
+<li>call <code>range</code> and set <code>i</code> to 1</li>
+<li>set <code>i</code> to 2</li>
+<li>set <code>i</code> to 3</li>
+<li>set <code>i</code> to nil</li>
+<li>call <code>range</code> and set <code>i</code> to 1</li>
+</ul>
+
+<p>This is another step toward <code>edebug</code>-less debugging, adding to special behavior for <code>let</code>, <code>cond</code>
+and <code>labels</code>. Remember that you can drop out of <code>edebug</code> with <kbd>Z</kbd> (<code>lispy-edebug-stop</code>).
+This function will take the current function arguments that <code>edebug</code> provides, store them in
+top-level, and exit <code>edebug</code>.
+This is really cool for setting up entry conditions for a function that you want to debug,
+or even a function with an empty body that you want to write. Why am I so eager to exit <code>edebug</code>?
+Because it puts the code in read-only mode, which is quite restrictive.</p>
+
+<h2 id="incompatible-changes">Incompatible changes</h2>
+
+<ul>
+<li><code>lispy-helm-columns</code> is now a list <code>&#39;(60 80)</code>. The first number is
+the width of the tag name column, the second number is the width of
+both tag name and tag file. The tag name column is left-aligned, while the file column is right-aligned.</li>
+<li><kbd>j</kbd> and <kbd>k</kbd> should now move to outline when at
+beginning of comment. The previous behavior was to look for the first
+sexp in the direction. You can still do that with <kbd>f</kbd>.</li>
+<li><kbd>I</kbd> (<code>lispy-shiftab</code>) is now a two-way cycle, instead of
+three-way, like <code>org-mode</code>.  The contents can be obtained with
+<kbd>C-u I</kbd> or <kbd>C-u C-TAB</kbd>.</li>
+</ul>
+
+<h2 id="outro">Outro</h2>
+
+<p>It seems that <code>lispy</code> is winding down feature-wise, which is a good
+thing, because I&#39;m almost out of keys - there&#39;s only <kbd>Y</kbd> and
+<kbd>U</kbd> left.</p>
+
+<p>Possible next steps would be to improve the test coverage (currently
+48%) and the documentation.  Perhaps I&#39;ll try to implement some
+automation for generating
+<a href="http://oremacs.com/lispy/">the function reference</a>, or learn some
+texinfo and write an actual manual, see how <code>ox-texinfo</code> holds up.</p>
+
+<p>I hope that you&#39;ll grow to enjoy <code>lispy</code> as much as I do. Happy hacking!</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/03/07/hydra-org-templates/">
         org-mode block templates in Hydra
       </a>
@@ -489,127 +600,6 @@ very easy to understand/modify.</p>
 <p>Eclipse theme should be on MELPA soon, I hope you&#39;ll enjoy it. I&#39;ve
 tried probably 30 themes on MELPA, but I just can&#39;t part with
 <code>eclipse-theme</code>. I&#39;m guessing that it&#39;s a feeling that most theme creators share.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/03/03/ace-window-full-path/">
-        ace-window full path
-      </a>
-    </h1>
-
-    <span class="post-date">03 Mar 2015</span>
-
-    <p>I just closed a really helpful
-<a href="https://github.com/abo-abo/ace-window/issues/21">issue</a> for
-<code>ace-window</code>.  Turns out that there&#39;s a plugin for vim called
-Easymotion that&#39;s very similar to <code>ace-jump-mode</code>.  And that plugin
-doesn&#39;t highlight the leading chars one by one, but instead gives them
-all at once.  Which is a pretty good idea, since it&#39;s more convenient
-to read the whole path at once and type it in at once rather than:</p>
-
-<ul>
-<li>read one char</li>
-<li>type one char</li>
-<li>read one more char</li>
-<li>type one more char</li>
-<li>... (maybe more steps)</li>
-</ul>
-
-<p>To turn on the new behavior:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">aw-leading-char-style</span> <span class="ss">&#39;path</span><span class="p">)</span>
-</code></pre></div>
-<p>Although this will only have an effect once you have more than 10 windows.
-But this method really improves the functions from avy-jump.el.
-I&#39;ve added some more commands and renamed the old ones since yesterday.</p>
-
-<h2 id="avy-jump-demos">avy-jump demos</h2>
-
-<h3 id="avi-goto-char-2"><code>avi-goto-char-2</code></h3>
-
-<p>Here&#39;s how I like to bind <code>avi-goto-char-2</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-&#39;&quot;</span><span class="p">)</span> <span class="ss">&#39;avi-goto-char-2</span><span class="p">)</span>
-</code></pre></div>
-<p>And here&#39;s the result of <kbd>C-&#39; bu</kbd>:</p>
-
-<p><img src="/download/avi-goto-char-2.png" alt="avi-goto-char-2"></p>
-
-<p>As you can see, nothing is overwritten by the overlay - it&#39;s appended
-after the search chars. In the screenshot above, I have <code>avi-background</code> at nil; you can set it to
-t if you want a gray background.</p>
-
-<h3 id="avi-goto-char"><code>avi-goto-char</code></h3>
-
-<p>After binding <code>avi-goto-char</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;π&quot;</span><span class="p">)</span> <span class="ss">&#39;avi-goto-char</span><span class="p">)</span>
-</code></pre></div>
-<p>Here&#39;s the result of <kbd>π b</kbd>:</p>
-
-<p><img src="/download/avi-goto-char.png" alt="avi-goto-char"></p>
-
-<h3 id="avi-goto-line"><code>avi-goto-line</code></h3>
-
-<p>After binding <code>avi-goto-line</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-g f&quot;</span><span class="p">)</span> <span class="ss">&#39;avi-goto-line</span><span class="p">)</span>
-</code></pre></div>
-<p>Here&#39;s the result of <kbd>M-g f</kbd>:</p>
-
-<p><img src="/download/avi-goto-line.png" alt="avi-goto-line"></p>
-
-<p>I&#39;ve also added:</p>
-
-<ul>
-<li><code>avi-copy-line</code></li>
-<li><code>avi-move-line</code></li>
-<li><code>avi-copy-region</code></li>
-</ul>
-
-<p>These functions use the method of <code>avi-goto-line</code> to copy/move stuff.
-It might be useful for line-based text.</p>
-
-<h3 id="avi-goto-word-0"><code>avi-goto-word-0</code></h3>
-
-<p>Here&#39;s the simple definition and the binding:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">avi-goto-word-0</span> <span class="p">()</span>
-  <span class="s">&quot;Jump to a word start in current window.&quot;</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">avi-keys</span> <span class="p">(</span><span class="nv">number-sequence</span> <span class="nv">?a</span> <span class="nv">?z</span><span class="p">))</span>
-         <span class="p">(</span><span class="nv">candidates</span> <span class="p">(</span><span class="nv">avi--regex-candidates</span> <span class="s">&quot;\\b\\sw&quot;</span><span class="p">)))</span>
-    <span class="p">(</span><span class="nv">avi--goto</span>
-     <span class="p">(</span><span class="nv">avi--process</span> <span class="nv">candidates</span> <span class="nf">#&#39;</span><span class="nv">avi--overlay-pre</span><span class="p">))))</span>
-<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-g e&quot;</span><span class="p">)</span> <span class="ss">&#39;avi-goto-word-0</span><span class="p">)</span>
-</code></pre></div>
-<p>There might be quite a lot of candidates for this one, but there&#39;s no call to <code>read-char</code>.
-Here&#39;s what happens after <kbd>M-g e</kbd>:</p>
-
-<p><img src="/download/avi-goto-word-0.png" alt="avi-goto-word-0"></p>
-
-<h3 id="avi-goto-word-1"><code>avi-goto-word-1</code></h3>
-
-<p>Here&#39;s a version of it that reads one char:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">avi-goto-word-1</span> <span class="p">()</span>
-  <span class="s">&quot;Jump to a word start in current window.</span>
-<span class="s">Read one char with which the word should start.&quot;</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">candidates</span> <span class="p">(</span><span class="nv">avi--regex-candidates</span>
-                     <span class="p">(</span><span class="nf">concat</span>
-                      <span class="s">&quot;\\b&quot;</span>
-                      <span class="p">(</span><span class="nf">string</span> <span class="p">(</span><span class="nf">read-char</span> <span class="s">&quot;char: &quot;</span><span class="p">))))))</span>
-    <span class="p">(</span><span class="nv">avi--goto</span>
-     <span class="p">(</span><span class="nv">avi--process</span> <span class="nv">candidates</span> <span class="nf">#&#39;</span><span class="nv">avi--overlay-pre</span><span class="p">))))</span>
-<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-g w&quot;</span><span class="p">)</span> <span class="ss">&#39;avi-goto-word-1</span><span class="p">)</span>
-</code></pre></div>
-<p>Here&#39;s what happens after <kbd>M-g w b</kbd>:</p>
-
-<p><img src="/download/avi-goto-word-1.png" alt="avi-goto-word-1"></p>
-
-<h2 id="outro">Outro</h2>
-
-<p>Give the new functions a go and see if you like them. New ideas are
-welcome, especially pertaining to ripping off vim plugins. I did the
-vimtutor once, but I have no idea how vim plugins work. But it turns
-out that I like Easymotion.</p>
 
   </div>
   

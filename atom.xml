@@ -4,13 +4,78 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-03-12T18:29:45+01:00</updated>
+ <updated>2015-03-13T18:45:14+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Swiper now has an ivy back end</title>
+   <link href="http://oremacs.com/2015/03/13/introducing-ivy/"/>
+   <updated>2015-03-13T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/03/13/introducing-ivy</id>
+   <content type="html">&lt;h2 id=&quot;intro&quot;&gt;Intro&lt;/h2&gt;
+
+&lt;p&gt;Just three days ago, I wrote &lt;code&gt;swiper&lt;/code&gt; and introduced it in
+&lt;a href=&quot;http://oremacs.com/2015/03/10/no-swiping/&quot;&gt;a post&lt;/a&gt;.
+And while &lt;code&gt;swiper&lt;/code&gt; solved the problem of &lt;a href=&quot;https://github.com/ShingoFukuyama/helm-swoop&quot;&gt;helm-swoop&lt;/a&gt;
+being awkward for me to use, &lt;code&gt;swiper&lt;/code&gt;&amp;#39;s code itself is pretty awkward, since even after using &lt;code&gt;helm&lt;/code&gt;
+a dozen times in my packages, I&amp;#39;m still not well-versed in its internals.&lt;/p&gt;
+
+&lt;p&gt;And, apparently, there are people who don&amp;#39;t like &lt;code&gt;helm&lt;/code&gt; because it updates a lot.  I don&amp;#39;t know if
+it counts as a viable complaint, but I do agree that the &lt;code&gt;helm&lt;/code&gt; update time is quite long.  So I
+wrote down an alternative completion back end for &lt;code&gt;swiper&lt;/code&gt;. It looks quite similar to
+&lt;code&gt;ido-vertical-mode&lt;/code&gt;, although it is completely unrelated to &lt;code&gt;ido&lt;/code&gt;. In fact, the matching algorithm
+currently is similar to &lt;code&gt;helm-match-plugin&lt;/code&gt;: &lt;code&gt;&amp;quot;for example&amp;quot;&lt;/code&gt; is transformed into
+&lt;code&gt;&amp;quot;\\(for\\).*\\(example\\)&amp;quot;&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/swiper-ivy.png&quot; alt=&quot;swiper-ivy.png&quot;&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;the-details&quot;&gt;The Details&lt;/h2&gt;
+
+&lt;p&gt;Currently, in the &lt;code&gt;ivy&lt;/code&gt; version of &lt;code&gt;swiper&lt;/code&gt; only the anchoring algorithm is missing.  Anchoring is
+what I call the process of selecting a close candidate when the number of candidates changes.  It
+seems that &lt;code&gt;helm&lt;/code&gt; doesn&amp;#39;t implement an anchoring algorithm, so both &lt;code&gt;helm-swoop&lt;/code&gt; and &lt;code&gt;swiper&lt;/code&gt;
+implement their own. I don&amp;#39;t know how easy it would be to write down the proper generic thing, my
+current implementation for the &lt;code&gt;helm&lt;/code&gt; version of &lt;code&gt;swiper&lt;/code&gt; is quite hacky.&lt;/p&gt;
+
+&lt;p&gt;Just to explain to you what needs to be done. Suppose there&amp;#39;s an input &amp;quot;ab&amp;quot; that matches 50
+candidates, and the candidate number 42 is the current one. Now, if the user types one char to make
+the input into &amp;quot;abc&amp;quot;, the number of candidates has changed to 10, and the candidate that was current
+previously doesn&amp;#39;t match any more. It is up to the matcher code to decide which of the 10 candidates
+has to be current now. Usually it doesn&amp;#39;t matter much, but in the case of &lt;code&gt;swiper&lt;/code&gt; it matters since
+the point will be moved to the current candidate in the original window.&lt;/p&gt;
+
+&lt;p&gt;In any case, there&amp;#39;s still a lot of things that have to be done for &lt;code&gt;ivy&lt;/code&gt;, but I think that
+it&amp;#39;s quite usable now. Actually, I&amp;#39;ve already added it to my bindings:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;\C-s&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;swiper&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Here&amp;#39;s how it looks like:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/ivy-swiper-1.png&quot; alt=&quot;ivy-swiper-1.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;And here&amp;#39;s an example of completion in &lt;code&gt;dired&lt;/code&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/ivy-swiper-2.png&quot; alt=&quot;ivy-swiper-2.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;You need to have Emacs 24.4 in order to get a nicer highlight in the minibuffer that uses
+&lt;code&gt;add-face-text-property&lt;/code&gt; instead of the old &lt;code&gt;propertize&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;There&amp;#39;s a custom variable that decides the height of the minibuffer window, you can set it as you
+like:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defcustom&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ivy-height&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Number of lines for the minibuffer window.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;:type&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;integer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;Give the new back end &lt;a href=&quot;https://github.com/abo-abo/swiper&quot;&gt;a go&lt;/a&gt;, see if you like it. It looks quite pretty and minimalist to me, but I&amp;#39;m
+biased since I made it.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>ace-window display mode</title>

@@ -223,6 +223,49 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/01/01/three-ansi-term-tips/">
+        Three ansi-term tips
+      </a>
+    </h1>
+
+    <span class="post-date">01 Jan 2015</span>
+
+    <h2 id="tip-#1">Tip #1</h2>
+
+<p>There&#39;s no reason not to have <code>/bin/bash</code> instead of <code>/bin/sh</code> as the
+default choice when you <kbd>M-x</kbd> <code>term</code>.</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">explicit-shell-file-name</span> <span class="s">&quot;/bin/bash&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="tip-#2">Tip #2</h2>
+
+<p>After you close the terminal, you get a useless buffer with no
+process. It&#39;s probably left there for you to have a history of what
+you did. I find it not useful, so here&#39;s a way to kill that buffer
+automatically:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">oleh-term-exec-hook</span> <span class="p">()</span>
+  <span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">buff</span> <span class="p">(</span><span class="nf">current-buffer</span><span class="p">))</span>
+         <span class="p">(</span><span class="nv">proc</span> <span class="p">(</span><span class="nf">get-buffer-process</span> <span class="nv">buff</span><span class="p">)))</span>
+    <span class="p">(</span><span class="nf">set-process-sentinel</span>
+     <span class="nv">proc</span>
+     <span class="o">`</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">process</span> <span class="nv">event</span><span class="p">)</span>
+        <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">string=</span> <span class="nv">event</span> <span class="s">&quot;finished\n&quot;</span><span class="p">)</span>
+            <span class="p">(</span><span class="nf">kill-buffer</span> <span class="o">,</span><span class="nv">buff</span><span class="p">))))))</span>
+
+<span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;term-exec-hook</span> <span class="ss">&#39;oleh-term-exec-hook</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="tip-#3">Tip #3</h2>
+
+<p>By default, <kbd>C-y</kbd> calls term&#39;s own <code>yank</code>, which is different
+from Emacs&#39;s <code>yank</code>.  So, until recently, I was using
+<kbd>S-&lt;insert&gt;</kbd> to paste stuff into <code>*term*</code>. Here&#39;s a
+more ergonomic way:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">eval-after-load</span> <span class="s">&quot;term&quot;</span>
+  <span class="o">&#39;</span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">term-raw-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c C-y&quot;</span><span class="p">)</span> <span class="ss">&#39;term-paste</span><span class="p">))</span>
+</code></pre></div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2014/12/31/keymap-arms-race/">
         The keymap arms race
       </a>
@@ -698,59 +741,6 @@ delete. In the end, there were only 56 abbrevs left out of 1600.</p>
       <span class="p">(</span><span class="s">&quot;eol&quot;</span> <span class="s">&quot;end-of-line&quot;</span><span class="p">)</span> <span class="p">(</span><span class="s">&quot;me&quot;</span> <span class="s">&quot;match-end&quot;</span><span class="p">)</span>
       <span class="p">(</span><span class="s">&quot;nai&quot;</span> <span class="s">&quot;newline-and-indent&quot;</span><span class="p">)</span> <span class="p">(</span><span class="s">&quot;cb&quot;</span> <span class="s">&quot;current-buffer&quot;</span><span class="p">)</span>
       <span class="p">(</span><span class="s">&quot;atl&quot;</span> <span class="s">&quot;add-to-list&quot;</span><span class="p">)</span> <span class="p">(</span><span class="s">&quot;rris&quot;</span> <span class="s">&quot;replace-regexp-in-string&quot;</span><span class="p">)))</span>
-</code></pre></div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2014/12/27/mmm-minty/">
-        Mmm... minty
-      </a>
-    </h1>
-
-    <span class="post-date">27 Dec 2014</span>
-
-    <h2 id="the-backstory">The backstory</h2>
-
-<p>In <a href="/2014/12/24/light-it-up/">one of the earlier posts</a>,
-I was discussing the implementation of an Emacs Lisp lexer for
-<a href="http://pygments.org/">Pygments</a>. Here, I&#39;ll show how to install the
-update and get nicely highlighted code in a pdf via the
-<a href="http://code.google.com/p/minted">minted</a> LaTeX package.</p>
-
-<h2 id="the-install">The install</h2>
-
-<p>Assuming that you are on a Debian-related system:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">sudo apt-get install mercurial
-mkdir ~/git &amp;&amp; cd ~/git
-hg clone https://bitbucket.org/abo-abo/pygments-main
-cd pygments-main
-make mapfiles
-sudo python setup.py install
-</code></pre></div>
-<p>And, of course, I&#39;m assuming that you already have TeX Live installed.
-I&#39;m not too sophisticated about it, so I just install everything:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">sudo apt-get install texlive-full
-</code></pre></div>
-<h2 id="the-result">The result</h2>
-
-<p>So here I took some code from
-<a href="/2014/12/25/ode-to-toggle/">a previous post</a> and
-copy-pasted it into <a href="/download/minty.org">minty.org</a> file.
-And here&#39;s the result of the PDF export (<kbd>C-c C-e lo</kbd>):
-<a href="/download/minty.pdf">minty.pdf</a>.</p>
-
-<h2 id="the-red-tape">The red tape</h2>
-
-<p><code>org-mode</code> had trouble exporting on my laptop until I did this:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">cd /usr/bin/
-sudo ln -s /usr/local/texlive/2013/bin/x86_64-linux/pdflatex
-</code></pre></div>
-<p>Also be mindful of the <code>-shell-escape</code> flag to <code>pdflatex</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">org-latex-pdf-process</span>
-      <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f&quot;</span>
-        <span class="s">&quot;pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f&quot;</span>
-        <span class="s">&quot;pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f&quot;</span><span class="p">))</span>
 </code></pre></div>
   </div>
   
