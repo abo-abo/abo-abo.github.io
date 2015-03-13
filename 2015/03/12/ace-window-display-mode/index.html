@@ -260,13 +260,32 @@ will be displayed. See, for instance, the <code>*scratch*</code> window: its pat
 
 <p>Since the implementation is quite short, I&#39;ll post it here and go over a few things that might
 interest people who write Elisp (on some level, please don&#39;t mock me for being obvious).</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="c1">;;;###autoload</span>
+
+<p>As per request of a curious reader, I&#39;ve updated the code with the comments from below.  Don&#39;t try
+this at home, excessive commenting is bad style.</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="c1">;; Something that modifies the Emacs behavior should</span>
+<span class="c1">;; preferrably be implemented as a minor mode.</span>
+<span class="c1">;;;###autoload</span>
 <span class="p">(</span><span class="nb">define-minor-mode</span> <span class="nv">ace-window-display-mode</span>
-  <span class="s">&quot;Minor mode for showing the ace window key in the mode line.&quot;</span>
+    <span class="s">&quot;Minor mode for showing the ace window key in the mode line.&quot;</span>
+  <span class="c1">;; And since this minor mode isn&#39;t tied to a particular</span>
+  <span class="c1">;; buffer, I declare it as global.</span>
+  <span class="c1">;;</span>
+  <span class="c1">;; An interesting quirk is that I have to put *something*</span>
+  <span class="c1">;; between the docstring and the body, otherwise it won&#39;t</span>
+  <span class="c1">;; work.</span>
   <span class="nb">:global</span> <span class="no">t</span>
+  <span class="c1">;; Dispatch on the variable symbol of the mode -</span>
+  <span class="c1">;; `ace-window-display-mode`.  `define-minor-mode&#39; will</span>
+  <span class="c1">;; define both a variable and function symbol.</span>
   <span class="p">(</span><span class="k">if</span> <span class="nv">ace-window-display-mode</span>
       <span class="p">(</span><span class="k">progn</span>
+        <span class="c1">;; Update the window parameters</span>
         <span class="p">(</span><span class="nv">aw-update</span><span class="p">)</span>
+        <span class="c1">;; Since `mode-line-format&#39; is a buffer-local</span>
+        <span class="c1">;; variable, I set it with `set-default&#39;, in order</span>
+        <span class="c1">;; for the change to not just happen in the current</span>
+        <span class="c1">;; buffer.</span>
         <span class="p">(</span><span class="nf">set-default</span>
          <span class="ss">&#39;mode-line-format</span>
          <span class="o">`</span><span class="p">((</span><span class="nv">ace-window-display-mode</span>
@@ -274,6 +293,9 @@ interest people who write Elisp (on some level, please don&#39;t mock me for bei
                                      <span class="ss">&#39;ace-window-path</span><span class="p">)))</span>
            <span class="o">,@</span><span class="p">(</span><span class="nf">default-value</span> <span class="ss">&#39;mode-line-format</span><span class="p">)))</span>
         <span class="p">(</span><span class="nf">force-mode-line-update</span> <span class="no">t</span><span class="p">)</span>
+        <span class="c1">;; Each time a window is created or deleted, Emacs</span>
+        <span class="c1">;; will run the `window-configuration-change-hook&#39; -</span>
+        <span class="c1">;; exactly what I need to update `mode-line-format&#39;.</span>
         <span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;window-configuration-change-hook</span> <span class="ss">&#39;aw-update</span><span class="p">))</span>
     <span class="p">(</span><span class="nf">set-default</span>
      <span class="ss">&#39;mode-line-format</span>
@@ -287,15 +309,19 @@ interest people who write Elisp (on some level, please don&#39;t mock me for bei
   <span class="p">(</span><span class="nv">avy-traverse</span>
    <span class="p">(</span><span class="nv">avy-tree</span> <span class="p">(</span><span class="nv">aw-window-list</span><span class="p">)</span> <span class="nv">aw-keys</span><span class="p">)</span>
    <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">path</span> <span class="nv">leaf</span><span class="p">)</span>
+     <span class="c1">;; Use `set-window-parameter&#39; to store a variable for</span>
+     <span class="c1">;; each window.  Buffer local variables would not work</span>
+     <span class="c1">;; here, since one buffer can be displayed in multiple</span>
+     <span class="c1">;; windows, and those would need a different key each.</span>
      <span class="p">(</span><span class="nf">set-window-parameter</span>
       <span class="nv">leaf</span> <span class="ss">&#39;ace-window-path</span>
       <span class="p">(</span><span class="nf">propertize</span>
        <span class="p">(</span><span class="nf">apply</span> <span class="nf">#&#39;string</span> <span class="p">(</span><span class="nf">reverse</span> <span class="nv">path</span><span class="p">))</span>
        <span class="ss">&#39;face</span> <span class="ss">&#39;aw-mode-line-face</span><span class="p">)))))</span>
 </code></pre></div>
-<p>I&#39;ll start with the obvious. Since I&#39;m writing something that modifies Emacs behavior when it&#39;s
-enabled, I first try to implement it as a minor mode. And since this minor mode isn&#39;t tied to a
-particular buffer, I declare it as global.</p>
+<p>Since I&#39;m writing something that modifies Emacs behavior when it&#39;s enabled, I first try to implement
+it as a minor mode. And since this minor mode isn&#39;t tied to a particular buffer, I declare it as
+global.</p>
 
 <p>An interesting quirk is that I have to put <em>something</em> between the docstring and the body, otherwise
 it won&#39;t work. In this case, I put <code>:global t</code>.</p>

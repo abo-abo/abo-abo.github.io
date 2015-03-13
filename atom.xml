@@ -4,7 +4,7 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-03-13T18:45:14+01:00</updated>
+ <updated>2015-03-13T20:53:32+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
@@ -120,13 +120,32 @@ will be displayed. See, for instance, the &lt;code&gt;*scratch*&lt;/code&gt; win
 
 &lt;p&gt;Since the implementation is quite short, I&amp;#39;ll post it here and go over a few things that might
 interest people who write Elisp (on some level, please don&amp;#39;t mock me for being obvious).&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;c1&quot;&gt;;;;###autoload&lt;/span&gt;
+
+&lt;p&gt;As per request of a curious reader, I&amp;#39;ve updated the code with the comments from below.  Don&amp;#39;t try
+this at home, excessive commenting is bad style.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;c1&quot;&gt;;; Something that modifies the Emacs behavior should&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;;; preferrably be implemented as a minor mode.&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;;;;###autoload&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;define-minor-mode&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ace-window-display-mode&lt;/span&gt;
-  &lt;span class=&quot;s&quot;&gt;&amp;quot;Minor mode for showing the ace window key in the mode line.&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;&amp;quot;Minor mode for showing the ace window key in the mode line.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;;; And since this minor mode isn&amp;#39;t tied to a particular&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;;; buffer, I declare it as global.&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;;;&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;;; An interesting quirk is that I have to put *something*&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;;; between the docstring and the body, otherwise it won&amp;#39;t&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;;; work.&lt;/span&gt;
   &lt;span class=&quot;nb&quot;&gt;:global&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;;; Dispatch on the variable symbol of the mode -&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;;; `ace-window-display-mode`.  `define-minor-mode&amp;#39; will&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;;; define both a variable and function symbol.&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ace-window-display-mode&lt;/span&gt;
       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;progn&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;;; Update the window parameters&lt;/span&gt;
         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;aw-update&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;;; Since `mode-line-format&amp;#39; is a buffer-local&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;;; variable, I set it with `set-default&amp;#39;, in order&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;;; for the change to not just happen in the current&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;;; buffer.&lt;/span&gt;
         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;set-default&lt;/span&gt;
          &lt;span class=&quot;ss&quot;&gt;&amp;#39;mode-line-format&lt;/span&gt;
          &lt;span class=&quot;o&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ace-window-display-mode&lt;/span&gt;
@@ -134,6 +153,9 @@ interest people who write Elisp (on some level, please don&amp;#39;t mock me for
                                      &lt;span class=&quot;ss&quot;&gt;&amp;#39;ace-window-path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
            &lt;span class=&quot;o&quot;&gt;,@&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;default-value&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;mode-line-format&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;force-mode-line-update&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;;; Each time a window is created or deleted, Emacs&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;;; will run the `window-configuration-change-hook&amp;#39; -&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;;; exactly what I need to update `mode-line-format&amp;#39;.&lt;/span&gt;
         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;add-hook&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;window-configuration-change-hook&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;aw-update&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;set-default&lt;/span&gt;
      &lt;span class=&quot;ss&quot;&gt;&amp;#39;mode-line-format&lt;/span&gt;
@@ -147,15 +169,19 @@ interest people who write Elisp (on some level, please don&amp;#39;t mock me for
   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;avy-traverse&lt;/span&gt;
    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;avy-tree&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;aw-window-list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;aw-keys&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;path&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;leaf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+     &lt;span class=&quot;c1&quot;&gt;;; Use `set-window-parameter&amp;#39; to store a variable for&lt;/span&gt;
+     &lt;span class=&quot;c1&quot;&gt;;; each window.  Buffer local variables would not work&lt;/span&gt;
+     &lt;span class=&quot;c1&quot;&gt;;; here, since one buffer can be displayed in multiple&lt;/span&gt;
+     &lt;span class=&quot;c1&quot;&gt;;; windows, and those would need a different key each.&lt;/span&gt;
      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;set-window-parameter&lt;/span&gt;
       &lt;span class=&quot;nv&quot;&gt;leaf&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ace-window-path&lt;/span&gt;
       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;propertize&lt;/span&gt;
        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;apply&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;#&amp;#39;string&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;reverse&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
        &lt;span class=&quot;ss&quot;&gt;&amp;#39;face&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;aw-mode-line-face&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;I&amp;#39;ll start with the obvious. Since I&amp;#39;m writing something that modifies Emacs behavior when it&amp;#39;s
-enabled, I first try to implement it as a minor mode. And since this minor mode isn&amp;#39;t tied to a
-particular buffer, I declare it as global.&lt;/p&gt;
+&lt;p&gt;Since I&amp;#39;m writing something that modifies Emacs behavior when it&amp;#39;s enabled, I first try to implement
+it as a minor mode. And since this minor mode isn&amp;#39;t tied to a particular buffer, I declare it as
+global.&lt;/p&gt;
 
 &lt;p&gt;An interesting quirk is that I have to put &lt;em&gt;something&lt;/em&gt; between the docstring and the body, otherwise
 it won&amp;#39;t work. In this case, I put &lt;code&gt;:global t&lt;/code&gt;.&lt;/p&gt;
