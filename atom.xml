@@ -4,13 +4,69 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-03-13T20:53:32+01:00</updated>
+ <updated>2015-03-14T15:19:11+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>More on swiper and ivy</title>
+   <link href="http://oremacs.com/2015/03/14/more-swiper-ivy-stuff/"/>
+   <updated>2015-03-14T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/03/14/more-swiper-ivy-stuff</id>
+   <content type="html">&lt;p&gt;I&amp;#39;ll describe two new things in &lt;a href=&quot;https://github.com/abo-abo/swiper&quot;&gt;swiper&lt;/a&gt; and &lt;code&gt;ivy&lt;/code&gt; that happened
+within the day. Although you can install them separately from MELPA, they still live in a single git
+repository.&lt;/p&gt;
+
+&lt;h2 id=&quot;swiper-/-ivy-faces-now-inherit-the-standard-ones&quot;&gt;&lt;code&gt;swiper&lt;/code&gt; / &lt;code&gt;ivy&lt;/code&gt; faces now inherit the standard ones&lt;/h2&gt;
+
+&lt;p&gt;It&amp;#39;s a good idea by &lt;a href=&quot;https://github.com/purcell&quot;&gt;@purcell&lt;/a&gt;, and I tend to agree. So now, there are
+six faces that inherit &lt;code&gt;highlight&lt;/code&gt;, &lt;code&gt;isearch-lazy-highlight-face&lt;/code&gt;, &lt;code&gt;isearch&lt;/code&gt; and &lt;code&gt;match&lt;/code&gt; faces
+between them.  The advantage is that most themes re-define the above four faces as they see fit, so
+the swiper faces will fit in better without customization.&lt;/p&gt;
+
+&lt;p&gt;Still, I really enjoy the previous faces that were derived from the Swiper sprite. You can have them
+as part of &lt;a href=&quot;https://github.com/abo-abo/eclipse-theme&quot;&gt;eclipse-theme&lt;/a&gt;. The theme creators can just
+copy them verbatim to a light theme if they so choose.&lt;/p&gt;
+
+&lt;p&gt;By the way, it seems that not all Emacs users are aware that you can customize faces.  You can do so
+interactively for most popular packages. For example, after &lt;kbd&gt;M-x&lt;/kbd&gt; &lt;code&gt;customize-group&lt;/code&gt;
+&lt;code&gt;swiper&lt;/code&gt;, you get a GUI for selecting most configurable things for &lt;code&gt;swiper&lt;/code&gt;, including the faces.&lt;/p&gt;
+
+&lt;p&gt;The GUI will generate the code that looks something like this:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;custom-set-faces&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ivy-current-match&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:background&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;#e5b7c0&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;elisp-completion-with-ivy&quot;&gt;Elisp completion with &lt;code&gt;ivy&lt;/code&gt;&lt;/h2&gt;
+
+&lt;p&gt;The code to complete Elisp code at point is very simple:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;counsel&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Elisp completion at point.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;bnd&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;bounds-of-thing-at-point&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;symbol&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;str&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;buffer-substring-no-properties&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;car&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;bnd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;cdr&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;bnd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;candidates&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;all-completions&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;str&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;obarray&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ivy-height&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;7&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;res&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ivy-read&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;pattern (%s): &amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                        &lt;span class=&quot;nv&quot;&gt;candidates&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;stringp&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;delete-region&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;car&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;bnd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;cdr&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;bnd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;insert&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The only function above that isn&amp;#39;t one of the familiar primitives is &lt;code&gt;ivy-read&lt;/code&gt;.  But even that one
+has a similar interface to that of &lt;code&gt;completing-read&lt;/code&gt; or &lt;code&gt;ido-completing-read&lt;/code&gt;.  I was using
+&lt;code&gt;helm-lisp-completion-at-point&lt;/code&gt; before, but &lt;code&gt;counsel&lt;/code&gt; is much less obtrusive, while offering
+comparable speed and convenience:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/counsel-1.png&quot; alt=&quot;counsel-1.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;The default minibuffer height for &lt;code&gt;ivy&lt;/code&gt; is set to 10 via &lt;code&gt;ivy-height&lt;/code&gt;.  It&amp;#39;s quite reasonable all-around, but
+for &lt;code&gt;counsel&lt;/code&gt; I&amp;#39;ve set it to 7 via a let binding.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Swiper now has an ivy back end</title>

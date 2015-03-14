@@ -11,7 +11,7 @@
 
   <title>
     
-      Rushing headlong &middot; (or emacs
+      More on swiper and ivy &middot; (or emacs
     
   </title>
 
@@ -220,81 +220,56 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Rushing headlong</h1>
-  <span class="post-date">06 Jan 2015</span>
-  <blockquote>
-<p>And you&#39;re rushing headlong out of control...</p>
+  <h1 class="post-title">More on swiper and ivy</h1>
+  <span class="post-date">14 Mar 2015</span>
+  <p>I&#39;ll describe two new things in <a href="https://github.com/abo-abo/swiper">swiper</a> and <code>ivy</code> that happened
+within the day. Although you can install them separately from MELPA, they still live in a single git
+repository.</p>
 
-<p>-- <cite>Brian May</cite></p>
-</blockquote>
+<h2 id="swiper-/-ivy-faces-now-inherit-the-standard-ones"><code>swiper</code> / <code>ivy</code> faces now inherit the standard ones</h2>
 
-<p>I&#39;ve finally wrapped a piece of config that I was using for a while in
-a package called <a href="https://github.com/abo-abo/headlong">headlong</a>.</p>
+<p>It&#39;s a good idea by <a href="https://github.com/purcell">@purcell</a>, and I tend to agree. So now, there are
+six faces that inherit <code>highlight</code>, <code>isearch-lazy-highlight-face</code>, <code>isearch</code> and <code>match</code> faces
+between them.  The advantage is that most themes re-define the above four faces as they see fit, so
+the swiper faces will fit in better without customization.</p>
 
-<h2 id="what-does-it-do?">What does it do?</h2>
+<p>Still, I really enjoy the previous faces that were derived from the Swiper sprite. You can have them
+as part of <a href="https://github.com/abo-abo/eclipse-theme">eclipse-theme</a>. The theme creators can just
+copy them verbatim to a light theme if they so choose.</p>
 
-<p>It provides a macro called <code>headlong-with</code> that modifies minibuffer
-completion for the forms within it, making it faster in some
-situations.  For instance:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">headlong-with</span>
- <span class="p">(</span><span class="nf">completing-read</span> <span class="s">&quot;Jump to bookmark: &quot;</span>
-                  <span class="nv">bookmark-alist</span> <span class="no">nil</span> <span class="no">t</span><span class="p">))</span>
+<p>By the way, it seems that not all Emacs users are aware that you can customize faces.  You can do so
+interactively for most popular packages. For example, after <kbd>M-x</kbd> <code>customize-group</code>
+<code>swiper</code>, you get a GUI for selecting most configurable things for <code>swiper</code>, including the faces.</p>
+
+<p>The GUI will generate the code that looks something like this:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">custom-set-faces</span>
+  <span class="o">&#39;</span><span class="p">(</span><span class="nv">ivy-current-match</span> <span class="p">((</span><span class="no">t</span> <span class="p">(</span><span class="nb">:background</span> <span class="s">&quot;#e5b7c0&quot;</span><span class="p">)))))</span>
 </code></pre></div>
-<p>or:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">headlong-with</span> <span class="p">(</span><span class="nv">read-extended-command</span><span class="p">))</span>
+<h2 id="elisp-completion-with-ivy">Elisp completion with <code>ivy</code></h2>
+
+<p>The code to complete Elisp code at point is very simple:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel</span> <span class="p">()</span>
+  <span class="s">&quot;Elisp completion at point.&quot;</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">bnd</span> <span class="p">(</span><span class="nv">bounds-of-thing-at-point</span> <span class="ss">&#39;symbol</span><span class="p">))</span>
+         <span class="p">(</span><span class="nv">str</span> <span class="p">(</span><span class="nf">buffer-substring-no-properties</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">bnd</span><span class="p">)</span> <span class="p">(</span><span class="nf">cdr</span> <span class="nv">bnd</span><span class="p">)))</span>
+         <span class="p">(</span><span class="nv">candidates</span> <span class="p">(</span><span class="nf">all-completions</span> <span class="nv">str</span> <span class="nv">obarray</span><span class="p">))</span>
+         <span class="p">(</span><span class="nv">ivy-height</span> <span class="mi">7</span><span class="p">)</span>
+         <span class="p">(</span><span class="nv">res</span> <span class="p">(</span><span class="nv">ivy-read</span> <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;pattern (%s): &quot;</span> <span class="nv">str</span><span class="p">)</span>
+                        <span class="nv">candidates</span><span class="p">)))</span>
+    <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">stringp</span> <span class="nv">res</span><span class="p">)</span>
+      <span class="p">(</span><span class="nf">delete-region</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">bnd</span><span class="p">)</span> <span class="p">(</span><span class="nf">cdr</span> <span class="nv">bnd</span><span class="p">))</span>
+      <span class="p">(</span><span class="nf">insert</span> <span class="nv">res</span><span class="p">))))</span>
 </code></pre></div>
-<p>But more importantly, it provides two commands that can use it
-efficiently: <code>headlong-bookmark-jump</code> and
-<code>headlong-bookmark-jump-other</code>. The second one is basically the same
-as the first one, except it opens the bookmark with <code>pop-to-buffer</code>,
-i.e. in other window.</p>
+<p>The only function above that isn&#39;t one of the familiar primitives is <code>ivy-read</code>.  But even that one
+has a similar interface to that of <code>completing-read</code> or <code>ido-completing-read</code>.  I was using
+<code>helm-lisp-completion-at-point</code> before, but <code>counsel</code> is much less obtrusive, while offering
+comparable speed and convenience:</p>
 
-<h2 id="how-does-this-completion-work?">How does this completion work?</h2>
+<p><img src="/download/counsel-1.png" alt="counsel-1.png"></p>
 
-<p>It&#39;s nothing fancy, you will just exit the minibuffer automatically as
-soon as there is only one completion candidate left.
-So it saves you <strong>one</strong> keystroke, namely <kbd>RET</kbd>.
-How much is <em>one</em> keystroke worth? It depends.</p>
-
-<p>If you arrange your bookmarks in a way that I do, with each one
-starting with a different letter, it saves you 33% of the total
-keystrokes.  For example, suppose I have:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-p&quot;</span><span class="p">)</span> <span class="ss">&#39;bookmark-jump</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-o&quot;</span><span class="p">)</span> <span class="ss">&#39;headlong-bookmark-jump</span><span class="p">)</span>
-</code></pre></div>
-<p>Then I can jump to my bookmarked directory named <code>&quot;s: sources&quot;</code> with
-two methods:</p>
-
-<ul>
-<li><kbd>M-p</kbd><kbd>s</kbd><kbd>RET</kbd> </li>
-<li><kbd>M-o</kbd><kbd>s</kbd></li>
-</ul>
-
-<p>The second method looks like it&#39;s 33% shorter, but it feels like it&#39;s
-even more, since pressing <kbd>RET</kbd> is harder than it should be
-on most keyboards.</p>
-
-<h2 id="why-is-this-cool?">Why is this cool?</h2>
-
-<p>This is cool because you can implement your bookmarks as efficiently
-as you would with just wrapping stuff with a <code>lambda</code> and using
-<code>global-set-key</code>, except that you can view and edit the bindings with
-<code>bookmark-bmenu-list</code>, and quickly the update bookmark positions with
-<code>bookmark-set</code>.</p>
-
-<p>Here&#39;s what I get when I call <kbd>M-x</kbd> <code>bookmark-bmenu-list</code>:</p>
-
-<p><img src="/download/bookmarks.png" alt="bookmarks"></p>
-
-<p>In the list above:</p>
-
-<ul>
-<li>black bookmarks are files</li>
-<li>blue bookmarks are directories</li>
-<li>pink bookmarks are functions (you need <code>bookmark+</code> for them)</li>
-</ul>
-
-<p>The package should be available in MELPA soon.</p>
+<p>The default minibuffer height for <code>ivy</code> is set to 10 via <code>ivy-height</code>.  It&#39;s quite reasonable all-around, but
+for <code>counsel</code> I&#39;ve set it to 7 via a let binding.</p>
 
 </div>
 
@@ -313,16 +288,6 @@ as you would with just wrapping stuff with a <code>lambda</code> and using
     
       <li>
         <h3>
-          <!-- <a href="//2015/03/14/more-swiper-ivy-stuff/"> -->
-          <a href="/2015/03/14/more-swiper-ivy-stuff/">
-            More on swiper and ivy
-            <small>14 Mar 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
           <!-- <a href="//2015/03/13/introducing-ivy/"> -->
           <a href="/2015/03/13/introducing-ivy/">
             Swiper now has an ivy back end
@@ -337,6 +302,16 @@ as you would with just wrapping stuff with a <code>lambda</code> and using
           <a href="/2015/03/12/ace-window-display-mode/">
             ace-window display mode
             <small>12 Mar 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/03/11/git-tricks/"> -->
+          <a href="/2015/03/11/git-tricks/">
+            Some git / magit / github tricks
+            <small>11 Mar 2015</small>
           </a>
         </h3>
       </li>
