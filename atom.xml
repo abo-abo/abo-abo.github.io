@@ -4,13 +4,66 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-03-14T15:19:11+01:00</updated>
+ <updated>2015-03-15T18:48:17+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Search for things with apropos</title>
+   <link href="http://oremacs.com/2015/03/15/search-with-apropos/"/>
+   <updated>2015-03-15T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/03/15/search-with-apropos</id>
+   <content type="html">&lt;p&gt;Until recently, I didn&amp;#39;t even know that &lt;code&gt;apropos&lt;/code&gt; was an actual word. I thought that it was just
+some gibberish that Emacs hackers invented to name a command. Turns out, it actually has a very
+appropriate meaning:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;apropos&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;preposition&lt;/em&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;with reference to; concerning.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;an-apropos-hydra&quot;&gt;An apropos Hydra&lt;/h2&gt;
+
+&lt;p&gt;I&amp;#39;ve just added this one to &lt;a href=&quot;https://github.com/abo-abo/hydra/blob/master/hydra-examples.el&quot;&gt;hydra-examples.el&lt;/a&gt;.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-apropos&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;blue&lt;/span&gt;
+                         &lt;span class=&quot;nb&quot;&gt;:hint&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;_a_propos        _c_ommand&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;_d_ocumentation  _l_ibrary&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;_v_ariable       _u_ser-option&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;^ ^          valu_e_&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;a&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;apropos&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;d&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;apropos-documentation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;v&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;apropos-variable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;c&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;apropos-command&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;l&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;apropos-library&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;u&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;apropos-user-option&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;e&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;apropos-value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;I recommend to bind it like this:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-c h&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;hydra-apropos/body&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Customary screenshot:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/hydra-apropos.png&quot; alt=&quot;hydra-apropos.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;As you can see, there are a total of 7 apropos functions available.  The most useful ones are
+&lt;code&gt;apropos&lt;/code&gt;, &lt;code&gt;apropos-command&lt;/code&gt; and &lt;code&gt;apropos-variable&lt;/code&gt;.  But &lt;code&gt;apropos-value&lt;/code&gt; is very interesting as
+well: it will not match an object name with the input, but instead search for all objects whose
+contents match input. So, for instance, if you see something like &lt;code&gt;&amp;quot;error 42&amp;quot;&lt;/code&gt; come up, and you
+don&amp;#39;t know where it&amp;#39;s coming from, it&amp;#39;s likely that some variable holds the value &lt;code&gt;42&lt;/code&gt;.  And that&amp;#39;s
+when you use &lt;code&gt;apropos-variable&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Apropos is like old-school googling, and I find it highly useful in finding the Emacs information
+that I need. I hope that you will find it useful as well. Happy hacking!&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>More on swiper and ivy</title>

@@ -11,7 +11,7 @@
 
   <title>
     
-      Embedding sexps in Hydra docstrings &middot; (or emacs
+      Search for things with apropos &middot; (or emacs
     
   </title>
 
@@ -220,32 +220,53 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Embedding sexps in Hydra docstrings</h1>
-  <span class="post-date">21 Feb 2015</span>
-  <p>In <a href="/2015/02/20/buffer-menu-hydra/">yesterday&#39;s post</a>
-I showed how to embed variable values into the docstring, among other
-things. Today, I&#39;ve extended this approach to work with s-expressions.
-Here&#39;s how it looks like:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-marked-items</span> <span class="p">(</span><span class="nv">dired-mode-map</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
-      <span class="s">&quot;</span>
-<span class="s">Number of marked items: %(length (dired-get-marked-files))</span>
-<span class="s">&quot;</span>
-      <span class="p">(</span><span class="s">&quot;m&quot;</span> <span class="nv">dired-mark</span> <span class="s">&quot;mark&quot;</span><span class="p">))</span>
-</code></pre></div>
-<p>This piece of code will remind you how many files you&#39;ve marked so far each
-time you press <kbd>m</kbd>.
-By the way, this is the 64th post on the blog; I found out by pressing
-<kbd>tm</kbd> in <code>dired</code> buffer or the <code>_posts</code> directory.
-Also, I don&#39;t think that I&#39;ve showed passing <code>&quot;&quot;</code> as the keyboard prefix parameter
-before. Apparently, it works and just translates to this:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span>
-    <span class="s">&quot;m&quot;</span> <span class="ss">&#39;hydra-marked-items/dired-mark</span><span class="p">)</span>
-</code></pre></div>
-<p>Here&#39;s how it looks like:
-<img src="/download/hydra-docstring-sexp.png" alt="hydra-docstring-sexp"></p>
+  <h1 class="post-title">Search for things with apropos</h1>
+  <span class="post-date">15 Mar 2015</span>
+  <p>Until recently, I didn&#39;t even know that <code>apropos</code> was an actual word. I thought that it was just
+some gibberish that Emacs hackers invented to name a command. Turns out, it actually has a very
+appropriate meaning:</p>
 
-<p>There&#39;s no need for a quitting key, it will auto-vanish when you press
-anything other than <kbd>m</kbd>.</p>
+<blockquote>
+<p><strong>apropos</strong></p>
+
+<p><em>preposition</em></p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">with reference to; concerning.
+</code></pre></div></blockquote>
+
+<h2 id="an-apropos-hydra">An apropos Hydra</h2>
+
+<p>I&#39;ve just added this one to <a href="https://github.com/abo-abo/hydra/blob/master/hydra-examples.el">hydra-examples.el</a>.</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-apropos</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">blue</span>
+                         <span class="nb">:hint</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="s">&quot;</span>
+<span class="s">_a_propos        _c_ommand</span>
+<span class="s">_d_ocumentation  _l_ibrary</span>
+<span class="s">_v_ariable       _u_ser-option</span>
+<span class="s">^ ^          valu_e_&quot;</span>
+  <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="nv">apropos</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;d&quot;</span> <span class="nv">apropos-documentation</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;v&quot;</span> <span class="nv">apropos-variable</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;c&quot;</span> <span class="nv">apropos-command</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nv">apropos-library</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;u&quot;</span> <span class="nv">apropos-user-option</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;e&quot;</span> <span class="nv">apropos-value</span><span class="p">))</span>
+</code></pre></div>
+<p>I recommend to bind it like this:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c h&quot;</span><span class="p">)</span> <span class="ss">&#39;hydra-apropos/body</span><span class="p">)</span>
+</code></pre></div>
+<p>Customary screenshot:</p>
+
+<p><img src="/download/hydra-apropos.png" alt="hydra-apropos.png"></p>
+
+<p>As you can see, there are a total of 7 apropos functions available.  The most useful ones are
+<code>apropos</code>, <code>apropos-command</code> and <code>apropos-variable</code>.  But <code>apropos-value</code> is very interesting as
+well: it will not match an object name with the input, but instead search for all objects whose
+contents match input. So, for instance, if you see something like <code>&quot;error 42&quot;</code> come up, and you
+don&#39;t know where it&#39;s coming from, it&#39;s likely that some variable holds the value <code>42</code>.  And that&#39;s
+when you use <code>apropos-variable</code>.</p>
+
+<p>Apropos is like old-school googling, and I find it highly useful in finding the Emacs information
+that I need. I hope that you will find it useful as well. Happy hacking!</p>
 
 </div>
 
@@ -264,16 +285,6 @@ anything other than <kbd>m</kbd>.</p>
     
       <li>
         <h3>
-          <!-- <a href="//2015/03/15/search-with-apropos/"> -->
-          <a href="/2015/03/15/search-with-apropos/">
-            Search for things with apropos
-            <small>15 Mar 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
           <!-- <a href="//2015/03/14/more-swiper-ivy-stuff/"> -->
           <a href="/2015/03/14/more-swiper-ivy-stuff/">
             More on swiper and ivy
@@ -288,6 +299,16 @@ anything other than <kbd>m</kbd>.</p>
           <a href="/2015/03/13/introducing-ivy/">
             Swiper now has an ivy back end
             <small>13 Mar 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/03/12/ace-window-display-mode/"> -->
+          <a href="/2015/03/12/ace-window-display-mode/">
+            ace-window display mode
+            <small>12 Mar 2015</small>
           </a>
         </h3>
       </li>

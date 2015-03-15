@@ -223,6 +223,63 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/03/15/search-with-apropos/">
+        Search for things with apropos
+      </a>
+    </h1>
+
+    <span class="post-date">15 Mar 2015</span>
+
+    <p>Until recently, I didn&#39;t even know that <code>apropos</code> was an actual word. I thought that it was just
+some gibberish that Emacs hackers invented to name a command. Turns out, it actually has a very
+appropriate meaning:</p>
+
+<blockquote>
+<p><strong>apropos</strong></p>
+
+<p><em>preposition</em></p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">with reference to; concerning.
+</code></pre></div></blockquote>
+
+<h2 id="an-apropos-hydra">An apropos Hydra</h2>
+
+<p>I&#39;ve just added this one to <a href="https://github.com/abo-abo/hydra/blob/master/hydra-examples.el">hydra-examples.el</a>.</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-apropos</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">blue</span>
+                         <span class="nb">:hint</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="s">&quot;</span>
+<span class="s">_a_propos        _c_ommand</span>
+<span class="s">_d_ocumentation  _l_ibrary</span>
+<span class="s">_v_ariable       _u_ser-option</span>
+<span class="s">^ ^          valu_e_&quot;</span>
+  <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="nv">apropos</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;d&quot;</span> <span class="nv">apropos-documentation</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;v&quot;</span> <span class="nv">apropos-variable</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;c&quot;</span> <span class="nv">apropos-command</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nv">apropos-library</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;u&quot;</span> <span class="nv">apropos-user-option</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;e&quot;</span> <span class="nv">apropos-value</span><span class="p">))</span>
+</code></pre></div>
+<p>I recommend to bind it like this:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c h&quot;</span><span class="p">)</span> <span class="ss">&#39;hydra-apropos/body</span><span class="p">)</span>
+</code></pre></div>
+<p>Customary screenshot:</p>
+
+<p><img src="/download/hydra-apropos.png" alt="hydra-apropos.png"></p>
+
+<p>As you can see, there are a total of 7 apropos functions available.  The most useful ones are
+<code>apropos</code>, <code>apropos-command</code> and <code>apropos-variable</code>.  But <code>apropos-value</code> is very interesting as
+well: it will not match an object name with the input, but instead search for all objects whose
+contents match input. So, for instance, if you see something like <code>&quot;error 42&quot;</code> come up, and you
+don&#39;t know where it&#39;s coming from, it&#39;s likely that some variable holds the value <code>42</code>.  And that&#39;s
+when you use <code>apropos-variable</code>.</p>
+
+<p>Apropos is like old-school googling, and I find it highly useful in finding the Emacs information
+that I need. I hope that you will find it useful as well. Happy hacking!</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/03/14/more-swiper-ivy-stuff/">
         More on swiper and ivy
       </a>
@@ -600,66 +657,6 @@ them in <code>README.md</code>.</p>
 <h2 id="outro">Outro</h2>
 
 <p>I hope that you find these illusions useful to make you a better Emacs magician. Happy hacking!</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/03/10/no-swiping/">
-        Introducing Swiper
-      </a>
-    </h1>
-
-    <span class="post-date">10 Mar 2015</span>
-
-    <p>I like the idea of
-<a href="https://github.com/ShingoFukuyama/helm-swoop">helm-swoop</a>, but it
-somehow has minor annoyances that stop me from using it, like
-automatic <code>helm-input</code>, and especially the circular candidates. Or maybe it&#39;s just NIH talking.
-Anyway, I&#39;m rolling my own, and it&#39;s called <a href="https://github.com/abo-abo/swiper">swiper</a>.</p>
-
-<p><img src="/download/swiper.png" alt="swiper.png"></p>
-
-<h2 id="swiper-in-action">Swiper in action</h2>
-
-<p>Here&#39;s how it looks like:</p>
-
-<p><img src="/download/swiper-1.png" alt="swiper-1.png"></p>
-
-<p>As you can see, the search string <code>&quot;dec fun pro&quot;</code> is transformed into
-a regex <code>&quot;\\(dec\\).*\\(fun\\).*\\(pro\\)&quot;</code>, and each group in the
-matches is highlighted with a different face.  This is quite similar
-to the way <code>re-builder</code> does it. In fact it&#39;s possible to use <code>swiper</code>
-as a poor man&#39;s <code>re-builder</code> (since it matches only single lines).</p>
-
-<p>I&#39;m doing my own matching this time, as the part-swapping behavior of
-<code>helm-match-plugin</code> is more annoying than useful.</p>
-
-<p>Also note that:</p>
-
-<ul>
-<li>The whole <code>*swiper*</code> buffer is fully syntax highlighted.</li>
-<li>The appropriate parts of the matches are highlighted as well.</li>
-</ul>
-
-<h2 id="swiper-in-a-dired-buffer">Swiper in a <code>dired</code> buffer</h2>
-
-<p>Here&#39;s another screenshot:</p>
-
-<p><img src="/download/swiper-2.png" alt="swiper-2.png"></p>
-
-<p>It appears that <code>helm</code> is ignoring the display of file attributes, since they have
-a sort of <code>invisible</code> property set. I kind of like this behavior.</p>
-
-<h2 id="see-how-the-faces-are-recycled">See how the faces are recycled</h2>
-
-<p>I&#39;ve defined only 4 faces currently (foxes aren&#39;t unicorns, the
-palette is quite limited), so they loop about if you have many groups:</p>
-
-<p><img src="/download/swiper-3.png" alt="swiper-3.png"></p>
-
-<p>Yup, the technology is there. Although a <code>powerline</code> theme for the
-<code>helm</code> mode line is still missing.</p>
 
   </div>
   
