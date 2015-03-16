@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Try J &middot; (or emacs
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="/public/css/octicons.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Scripts -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body class="layout-reverse theme-base-08">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <!-- <div class="sidebar-item"> -->
+  <!--   <p>unused</p> -->
+  <!-- </div> -->
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about/">About</a>
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/archive/">Archive</a>
+        
+      
+    
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+
+    <div id="github" class="sidebar-nav-item">
+      <button type="button"
+              class="btn btn-info"
+              data-toggle="collapse"
+              data-target="#github-projects">
+        <span class="octicon octicon-mark-github"></span> My Emacs Projects
+      </button>
+      <div id="github-projects" class="collapse">
+        <ul style="margin-bottom:0em;">
+          <li>
+            <a href="https://github.com/abo-abo/lispy">lispy</a>
+            <p>vi-like Paredit</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/worf">worf</a>
+            <p>vi-like bindings for org-mode</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-window">ace-window</a>
+            <p>switch windows with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-link">ace-link</a>
+            <p>follow links with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/function-args">function-args</a>
+            <p>enhance <code>CEDET</code> for C++</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/helm-make">helm-make</a>
+            <p>select a Makefile target with <code>helm</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/make-it-so">make-it-so</a>
+            <p>transform files with Makefile recipes</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/org-download">org-download</a>
+            <p>drag-and-drop images to <code>org-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo?tab=repositories">
+              <span class="octicon octicon-octoface"></span>
+              and more
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
+
+  <div class="sidebar-item">
+    <p>
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.0/">
+        <img alt="Creative Commons License"
+             style="border-width:0;opacity: 0.3;"
+             src="https://i.creativecommons.org/l/by-nc-sa/2.0/88x31.png"/>
+      </a>
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">(or emacs</a>
+            <small>irrelevant)</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Try J</h1>
+  <span class="post-date">16 Mar 2015</span>
+  <h2 id="intro">Intro</h2>
+
+<p>I imagine that if you&#39;re reading this blog, you like to tinker with Emacs.  And people who like to
+tinker with stuff probably also like to learn new programming languages, just for fun.  In that
+case, if you ever want to learn a non-mainstream language, I highly recommend J.</p>
+
+<p>From its homepage:</p>
+
+<blockquote>
+<p>J is a modern, high-level, general-purpose, high-performance programming language. J is portable
+and runs on Windows, Unix, Mac, both as a GUI and in a console. J systems can be installed and
+distributed for free.</p>
+</blockquote>
+
+<h2 id="the-appetizer">The Appetizer</h2>
+
+<p>Things J has going for it that are high on my list:</p>
+
+<ul>
+<li><a href="http://www.jsoftware.com/download/j701_b_source.tar.gz">GPL licensed source</a>
+(although it&#39;s gibberish to read)</li>
+<li>a REPL</li>
+<li>short code</li>
+<li>high performance</li>
+</ul>
+
+<p>What attracted me to J in the first place is that it consistently has the shortest solutions (and
+fast-running) on <a href="https://projecteuler.net/">Project Euler</a>.  What kept me going after the initial
+wow-effect, was the extremely elegant standard functions implementation dividing things into
+<a href="http://www.jsoftware.com/docs/help701/dictionary/partsofspeech.htm">verbs, adverbs, and conjunctions</a>.</p>
+
+<h3 id="something-impressive:-a-sudoku-solver">Something impressive: a Sudoku solver</h3>
+
+<p>This code is taken from the <a href="http://orgmode.org/worg/org-contrib/babel/languages/ob-doc-J.html">ob-J</a> page that I wrote some
+time ago (you can find a lot of additional info there):</p>
+
+<pre>
+<span class="org-block-begin-line">#+begin_src J :exports both
+</span><span class="variable-name">i</span> <span class="j-other">=:</span> <span class="j-verb">,</span>((<span class="j-verb">,|:</span>)<span class="j-verb">i.</span>9 9)<span class="j-verb">,,.</span><span class="j-adverb">/</span><span class="j-verb">,.</span><span class="j-adverb">/</span><span class="j-verb">i.</span>4<span class="j-verb">$</span>3
+<span class="variable-name">c</span> <span class="j-other">=:</span> (<span class="j-verb">#=[:#~.</span>)<span class="j-conjunction">@</span><span class="j-verb">-.</span><span class="j-conjunction">&amp;</span>0
+<span class="variable-name">t</span> <span class="j-other">=:</span> <span class="j-verb">[:</span>((<span class="j-verb">[:*</span><span class="j-adverb">/</span><span class="j-verb">_9:</span>c<span class="j-adverb">\</span><span class="j-verb">]</span>)<span class="j-conjunction">"</span>1<span class="j-verb">#]</span>)i<span class="j-conjunction">&amp;</span><span class="j-verb">{+</span><span class="j-conjunction">"</span>1 1(<span class="j-verb">&gt;:i.</span>9)<span class="j-verb">*</span><span class="j-adverb">/</span><span class="j-verb">[:</span>i<span class="j-conjunction">&amp;</span><span class="j-verb">=i.</span><span class="j-conjunction">&amp;</span>0
+<span class="variable-name">r</span> <span class="j-other">=:</span> <span class="j-verb">[:,</span><span class="j-conjunction">`</span><span class="j-verb">$:</span><span class="j-conjunction">@.</span>(0<span class="j-verb">:e.,</span>)<span class="j-verb">[:;</span>(<span class="j-verb">&lt;</span><span class="j-conjunction">@</span>t)<span class="j-conjunction">"</span>1
+<span class="variable-name">s</span> <span class="j-other">=:</span> 9 9<span class="j-conjunction">&amp;</span><span class="j-verb">$</span><span class="j-conjunction">@</span>r<span class="j-conjunction">@</span><span class="j-verb">,</span>
+<span class="j-verb">]</span><span class="variable-name">m</span> <span class="j-other">=:</span> 9 9 <span class="j-verb">$".</span><span class="j-conjunction">"</span>0<span class="string">'200370009009200007001004002050000800008000900006000040900100500800007600400089001'</span>
+s m
+<span class="org-block-end-line">#+end_src
+</span>
+<span class="org-meta-line">#+RESULTS:</span>
+<span class="org-block-begin-line">#+begin_example
+</span><span class="org-block">2 0 0 3 7 0 0 0 9
+0 0 9 2 0 0 0 0 7
+0 0 1 0 0 4 0 0 2
+0 5 0 0 0 0 8 0 0
+0 0 8 0 0 0 9 0 0
+0 0 6 0 0 0 0 4 0
+9 0 0 1 0 0 5 0 0
+8 0 0 0 0 7 6 0 0
+4 0 0 0 8 9 0 0 1
+
+2 8 4 3 7 5 1 6 9
+6 3 9 2 1 8 4 5 7
+5 7 1 9 6 4 3 8 2
+1 5 2 4 9 6 8 7 3
+3 4 8 7 5 2 9 1 6
+7 9 6 8 3 1 2 4 5
+9 6 7 1 4 3 5 2 8
+8 1 3 5 2 7 6 9 4
+4 2 5 6 8 9 7 3 1
+</span><span class="org-block-end-line">#+end_example
+</span>
+</pre>
+
+<p>It&#39;s pretty amazing that the whole implementation, not counting the example input matrix, takes only
+169 characters. You can also see how functional the language is.</p>
+
+<h3 id="something-simpler:-a-factorial">Something simpler: a factorial</h3>
+
+<p>To have a more simple example, here&#39;s how to write down incrementally the factorial of 20:</p>
+
+<pre>
+<span class="org-block-begin-line">#+begin_src J
+</span><span class="j-verb">i.</span>20
+<span class="org-block-end-line">#+end_src
+</span>
+<span class="org-meta-line">#+RESULTS:</span>
+<span class="org-code">: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
+</span>
+<span class="org-block-begin-line">#+begin_src J
+</span>1 <span class="j-verb">+</span> <span class="j-verb">i.</span>20
+<span class="org-block-end-line">#+end_src
+</span>
+<span class="org-meta-line">#+RESULTS:</span>
+<span class="org-code">: 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20
+</span>
+<span class="org-block-begin-line">#+begin_src J
+</span><span class="j-verb">*</span><span class="j-adverb">/</span> 1 <span class="j-verb">+</span> <span class="j-verb">i.</span>20
+<span class="org-block-end-line">#+end_src
+</span>
+<span class="org-meta-line">#+RESULTS:</span>
+<span class="org-code">: 2432902008176640000
+</span>
+</pre>
+
+<p>The spaces are optional, I&#39;ve only included them to make the code more clear.</p>
+
+<h3 id="something-visual:-a-sine-plot">Something visual: a sine plot</h3>
+
+<pre>
+<span class="org-block-begin-line">#+begin_src J
+</span>load <span class="string">'plot'</span>
+plot 1 <span class="j-verb">o.</span> 0<span class="j-adverb">.</span>1 <span class="j-verb">*</span> <span class="j-verb">i.</span>200
+<span class="org-block-end-line">#+end_src
+</span>
+</pre>
+
+<p>By simply pressing <kbd>C-c C-c</kbd> on this source block you get this image generated and opened in your browser:</p>
+
+<p><img src="/download/ob-J-sine.png" alt="ob-J-sine.png"></p>
+
+<h2 id="the-emacs-tooling">The Emacs Tooling</h2>
+
+<p>As mentioned above, there&#39;s <code>org-mode</code> babel support for J, including session interaction.  More
+importantly, there is <a href="https://github.com/zellio/j-mode">j-mode</a>.  The same package also provides a
+REPL via <code>jconsole</code>.</p>
+
+<p>Additionally, I wrote down a learning/assisting tool
+<a href="https://github.com/abo-abo/helm-j-cheatsheet">helm-j-cheatsheet</a>.
+Here&#39;s one of the screenshots:</p>
+
+<p><img src="https://camo.githubusercontent.com/f3da93fe7c2fb30ffa9b1a4106dd41a6d8ee88a0/68747470733a2f2f7261772e6769746875622e636f6d2f61626f2d61626f2f68656c6d2d6a2d636865617473686565742f6d61737465722f646f632f73637265656e73686f742d322e706e67" alt="helm-j-cheatsheet"></p>
+
+<p>It allows to:</p>
+
+<ul>
+<li>insert a function by English name</li>
+<li>look up the English name of the function by symbol</li>
+<li>open the <a href="http://www.jsoftware.com/docs/help701/dictionary/d010.htm">J documentation</a> for a function</li>
+</ul>
+
+<h2 id="outro">Outro</h2>
+
+<p>J is a very cool language to try and I hope you give it a go. I haven&#39;t yet managed to find a nice
+use for it, but you could say that, just as learning LISP, learning J can make you better at other
+languages.</p>
+
+</div>
+
+<div class="twitter-share">
+  <a href="https://twitter.com/share"
+     class="twitter-share-button"
+     data-via="_abo_abo"
+     data-dnt="true">
+    Tweet
+  </a>
+</div>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/03/15/search-with-apropos/"> -->
+          <a href="/2015/03/15/search-with-apropos/">
+            Search for things with apropos
+            <small>15 Mar 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/03/14/more-swiper-ivy-stuff/"> -->
+          <a href="/2015/03/14/more-swiper-ivy-stuff/">
+            More on swiper and ivy
+            <small>14 Mar 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/03/13/introducing-ivy/"> -->
+          <a href="/2015/03/13/introducing-ivy/">
+            Swiper now has an ivy back end
+            <small>13 Mar 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'oremacs'; // required: replace example with your forum shortname
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+<script>
+  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+</script>
+<noscript>
+  Please enable JavaScript to view the
+  <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>
