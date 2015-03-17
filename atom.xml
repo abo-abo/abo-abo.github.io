@@ -4,13 +4,70 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-03-16T17:54:15+01:00</updated>
+ <updated>2015-03-17T20:00:52+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>More Info</title>
+   <link href="http://oremacs.com/2015/03/17/more-info/"/>
+   <updated>2015-03-17T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/03/17/more-info</id>
+   <content type="html">&lt;p&gt;I really liked Marcin Borkowski&amp;#39;s post on &lt;a href=&quot;http://mbork.pl/2014-12-27_Info_dispatch&quot;&gt;Info dispatch&lt;/a&gt;,
+where he describes how to open several &lt;code&gt;*info*&lt;/code&gt; buffers for the most commonly used manuals.
+However, as I tried to call one of these functions today, I forgot the key binding.&lt;/p&gt;
+
+&lt;h2 id=&quot;hydra-to-the-rescue!&quot;&gt;Hydra to the rescue!&lt;/h2&gt;
+
+&lt;p&gt;Here&amp;#39;s what I&amp;#39;ve come up with:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ora-open-info&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;topic&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;bname&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Open info on TOPIC in BNAME.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;get-buffer&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;bname&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;progn&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;switch-to-buffer&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;bname&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;unless&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;string-match&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;topic&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Info-current-file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;Info-goto-node&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;(%s)&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;topic&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;info&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;topic&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;bname&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-info-to&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:hint&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;teal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;_o_rg e_l_isp _e_macs _h_yperspec&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;o&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ora-open-info&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;org&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;*org info*&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;l&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ora-open-info&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;elisp&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;*elisp info*&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;e&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ora-open-info&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;emacs&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;*emacs info*&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;h&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ora-open-info&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;gcl&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;*hyperspec*&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Info-mode-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;t&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;hydra-info-to/body&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;the-plan&quot;&gt;The Plan&lt;/h3&gt;
+
+&lt;p&gt;I already have the &lt;kbd&gt;&amp;lt;f1&amp;gt; i&lt;/kbd&gt; key binding hard wired to my fingers. So after I&amp;#39;m in
+&lt;em&gt;any&lt;/em&gt; Info buffer, I plan to press &lt;kbd&gt;t&lt;/kbd&gt; and get this dispatch:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/hydra-info-dispatch.png&quot; alt=&quot;hydra-info-dispatch.png&quot;&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;getting-the-hyperspec&quot;&gt;Getting the Hyperspec&lt;/h2&gt;
+
+&lt;p&gt;I&amp;#39;ve heard people lauding HTML while dumping on Info.
+I&amp;#39;d suggest them to compare the &lt;a href=&quot;http://www.lispworks.com/documentation/HyperSpec/Front/index.htm&quot;&gt;Common Lisp Hyperspec&lt;/a&gt; web site
+to this &lt;a href=&quot;http://ftp.gnu.org/gnu/gcl/gcl.info.tgz&quot;&gt;info file&lt;/a&gt; extracted from there.
+Their contents are identical, but it&amp;#39;s easier and more pleasant to use Info.&lt;/p&gt;
+
+&lt;p&gt;After I downloaded the file, I extracted it to &lt;code&gt;./etc/info/gcl.info&lt;/code&gt;, where &lt;code&gt;.&lt;/code&gt; is my &lt;code&gt;emacs-d&lt;/code&gt;.
+Then I just added this directory to the Info path:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Info-additional-directory-list&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;list&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;expand-file-name&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;etc/info/&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;emacs-d&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;Reading Info is pleasant and educational. In case you&amp;#39;re new to Info, there&amp;#39;s Info for Info. In Info
+format! Just press &lt;kbd&gt;&amp;lt;f1&amp;gt; i h&lt;/kbd&gt;.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Try J</title>
