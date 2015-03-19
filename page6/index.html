@@ -227,6 +227,42 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/02/21/hydra-docstring-sexp/">
+        Embedding sexps in Hydra docstrings
+      </a>
+    </h1>
+
+    <span class="post-date">21 Feb 2015</span>
+
+    <p>In <a href="/2015/02/20/buffer-menu-hydra/">yesterday&#39;s post</a>
+I showed how to embed variable values into the docstring, among other
+things. Today, I&#39;ve extended this approach to work with s-expressions.
+Here&#39;s how it looks like:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-marked-items</span> <span class="p">(</span><span class="nv">dired-mode-map</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
+      <span class="s">&quot;</span>
+<span class="s">Number of marked items: %(length (dired-get-marked-files))</span>
+<span class="s">&quot;</span>
+      <span class="p">(</span><span class="s">&quot;m&quot;</span> <span class="nv">dired-mark</span> <span class="s">&quot;mark&quot;</span><span class="p">))</span>
+</code></pre></div>
+<p>This piece of code will remind you how many files you&#39;ve marked so far each
+time you press <kbd>m</kbd>.
+By the way, this is the 64th post on the blog; I found out by pressing
+<kbd>tm</kbd> in <code>dired</code> buffer or the <code>_posts</code> directory.
+Also, I don&#39;t think that I&#39;ve showed passing <code>&quot;&quot;</code> as the keyboard prefix parameter
+before. Apparently, it works and just translates to this:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span>
+    <span class="s">&quot;m&quot;</span> <span class="ss">&#39;hydra-marked-items/dired-mark</span><span class="p">)</span>
+</code></pre></div>
+<p>Here&#39;s how it looks like:
+<img src="/download/hydra-docstring-sexp.png" alt="hydra-docstring-sexp"></p>
+
+<p>There&#39;s no need for a quitting key, it will auto-vanish when you press
+anything other than <kbd>m</kbd>.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/02/20/buffer-menu-hydra/">
         Hydra for Buffer-menu
       </a>
@@ -594,37 +630,6 @@ there in hydra-examples.el with the better <code>defhydra</code> macro.</p>
 your code that uses <code>defhydra</code>, don&#39;t forget to re-compile. Also, the
 latest version of <code>ace-window</code> will ignore <code>*LV*</code> buffer while
 switching, as it did for <code>*Calc Trail*</code> before.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/02/16/hydra-multi/">
-        Binding one function multiple times in Hydra
-      </a>
-    </h1>
-
-    <span class="post-date">16 Feb 2015</span>
-
-    <p>Here&#39;s a recent feature that&#39;s now available in <a href="https://github.com/abo-abo/hydra">hydra</a>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-zoom</span> <span class="p">(</span><span class="nv">global-map</span> <span class="s">&quot;&lt;f2&gt;&quot;</span><span class="p">)</span>
-  <span class="s">&quot;zoom&quot;</span>
-  <span class="p">(</span><span class="s">&quot;g&quot;</span> <span class="nv">text-scale-increase</span> <span class="s">&quot;in&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nv">text-scale-decrease</span> <span class="s">&quot;out&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;0&quot;</span> <span class="p">(</span><span class="nv">text-scale-set</span> <span class="mi">0</span><span class="p">)</span> <span class="s">&quot;reset&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;1&quot;</span> <span class="p">(</span><span class="nv">text-scale-set</span> <span class="mi">0</span><span class="p">)</span> <span class="nb">:bind</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;2&quot;</span> <span class="p">(</span><span class="nv">text-scale-set</span> <span class="mi">0</span><span class="p">)</span> <span class="nb">:bind</span> <span class="no">nil</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">))</span>
-</code></pre></div>
-<p>Here, the entry points are <kbd>&lt;f2&gt; g</kbd>, <kbd>&lt;f2&gt; l</kbd>, and <kbd>&lt;f2&gt; 0</kbd>, the
-others aren&#39;t bound in the global map.
-You can also have the same function in both red and blue versions. Here&#39;s how the hint will look like:</p>
-
-<p><img src="/download/hydra-multi.png" alt="hydra-multi"></p>
-
-<p>The multiply-defined functions will be neatly grouped together.</p>
-
-<p>If you remember, <code>(text-scale-set 0)</code> uses a sexp syntax for a Hydra
-head: it will be wrapped in <code>(lambda () (interactive) ...)</code> automatically.</p>
 
   </div>
   
