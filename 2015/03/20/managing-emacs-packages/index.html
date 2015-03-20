@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Emacs package management &middot; (or emacs
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="/public/css/octicons.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Scripts -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body class="layout-reverse theme-base-08">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <!-- <div class="sidebar-item"> -->
+  <!--   <p>unused</p> -->
+  <!-- </div> -->
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about/">About</a>
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/archive/">Archive</a>
+        
+      
+    
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+
+    <div id="github" class="sidebar-nav-item">
+      <button type="button"
+              class="btn btn-info"
+              data-toggle="collapse"
+              data-target="#github-projects">
+        <span class="octicon octicon-mark-github"></span> My Emacs Projects
+      </button>
+      <div id="github-projects" class="collapse">
+        <ul style="margin-bottom:0em;">
+          <li>
+            <a href="https://github.com/abo-abo/lispy">lispy</a>
+            <p>vi-like Paredit</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/worf">worf</a>
+            <p>vi-like bindings for org-mode</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-window">ace-window</a>
+            <p>switch windows with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-link">ace-link</a>
+            <p>follow links with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/function-args">function-args</a>
+            <p>enhance <code>CEDET</code> for C++</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/helm-make">helm-make</a>
+            <p>select a Makefile target with <code>helm</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/make-it-so">make-it-so</a>
+            <p>transform files with Makefile recipes</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/org-download">org-download</a>
+            <p>drag-and-drop images to <code>org-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo?tab=repositories">
+              <span class="octicon octicon-octoface"></span>
+              and more
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
+
+  <div class="sidebar-item">
+    <p>
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.0/">
+        <img alt="Creative Commons License"
+             style="border-width:0;opacity: 0.3;"
+             src="https://i.creativecommons.org/l/by-nc-sa/2.0/88x31.png"/>
+      </a>
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">(or emacs</a>
+            <small>irrelevant)</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Emacs package management</h1>
+  <span class="post-date">20 Mar 2015</span>
+  <p>Lately, I&#39;ve been spending some time to automate and publish my Emacs config.  Being able to quickly
+reproduce your config has many advantages, the main one being that you no longer have to spend time
+to make your config reproducible.</p>
+
+<p>Happily, most of my config is already published in many packages, I only have to figure out a nice
+layer to glue them together. Below, I&#39;ll show some automation for the packages managed by
+<code>package.el</code>.</p>
+
+<h2 id="step-1:-get-the-main-directory">Step 1: get the main directory</h2>
+
+<p>This is an important step that many other peoples&#39; configs miss, even the ones that are designed to
+be distributed. You can&#39;t just assume that the config will be located in <code>~/.emacs.d</code> and rely on
+Emacs defaults. Instead, it&#39;s nice to be able to clone the config into a random directory and launch
+an Emacs from there, without messing with the currently installed Emacs.</p>
+
+<p>It&#39;s also useful for having multiple repositories for different versions of Emacs. ELPA packages are
+byte-compiled, and the byte code can be incompatible between versions (for instance, 24.3 and 24.4).
+Having two independent checkouts with ELPA directory auto-generated really helps in that case.</p>
+
+<p>So here is the code to get the main directory and define an ELPA directory with respect to that:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">defconst</span> <span class="nv">emacs-d</span>
+  <span class="p">(</span><span class="nf">file-name-directory</span>
+   <span class="p">(</span><span class="nv">file-chase-links</span> <span class="nv">load-file-name</span><span class="p">))</span>
+  <span class="s">&quot;The giant turtle on which the world rests.&quot;</span><span class="p">)</span>
+
+<span class="p">(</span><span class="k">setq</span> <span class="nv">package-user-dir</span>
+      <span class="p">(</span><span class="nf">expand-file-name</span> <span class="s">&quot;elpa&quot;</span> <span class="nv">emacs-d</span><span class="p">))</span>
+</code></pre></div>
+<h2 id="step-2:-decide-what-you-like">Step 2: decide what you like</h2>
+
+<p>Next, I initialize the package and define some of the packages that I like, omitting the
+dependencies that they bring. Note that the code of the whole post is stored in a separate file
+<code>packages.el</code> that is not intended to be loaded on start up, so it&#39;s fine to call
+<code>package-refresh-contents</code> here:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">package-initialize</span><span class="p">)</span>
+<span class="p">(</span><span class="k">setq</span> <span class="nv">package-archives</span>
+      <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;melpa&quot;</span> <span class="o">.</span> <span class="s">&quot;http://melpa.milkbox.net/packages/&quot;</span><span class="p">)</span>
+        <span class="p">(</span><span class="s">&quot;gnu&quot;</span> <span class="o">.</span> <span class="s">&quot;http://elpa.gnu.org/packages/&quot;</span><span class="p">)))</span>
+<span class="p">(</span><span class="nv">package-refresh-contents</span><span class="p">)</span>
+
+<span class="p">(</span><span class="k">defconst</span> <span class="nv">ora-packages</span>
+  <span class="o">&#39;</span><span class="p">(</span><span class="nv">auto-compile</span> <span class="nv">auto-yasnippet</span> <span class="nv">ace-link</span> <span class="nv">ace-window</span>
+    <span class="nv">company</span> <span class="nv">eclipse-theme</span> <span class="nv">flx-ido</span> <span class="nv">function-args</span>
+    <span class="nv">headlong</span> <span class="nv">ido-occasional</span> <span class="nv">ido-vertical-mode</span> <span class="nv">lispy</span>
+    <span class="nv">magit</span> <span class="nv">smex</span> <span class="nv">swiper</span> <span class="nb">use-package</span> <span class="nv">guide-key</span>
+    <span class="nv">powerline</span> <span class="nv">projectile</span> <span class="nv">slime</span> <span class="nv">cider</span> <span class="nv">worf</span>
+    <span class="nv">org-download</span> <span class="nv">make-it-so</span> <span class="nv">ukrainian-holidays</span>
+    <span class="nv">netherlands-holidays</span> <span class="nv">j-mode</span><span class="p">)</span>
+  <span class="s">&quot;List of packages that I like.&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="step-3:-install-and-upgrade">Step 3: install and upgrade</h2>
+
+<p>The install step is pretty straightforward: install a package unless it&#39;s already installed.
+I tried to do something fancier for the upgrade, but in the end it was much more simple to
+just call the interactive interface. The last two lines are basically equivalent to pressing
+<kbd>Uxy</kbd> interactively:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="c1">;; install required</span>
+<span class="p">(</span><span class="nb">dolist</span> <span class="p">(</span><span class="nv">package</span> <span class="nv">ora-packages</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nv">package-installed-p</span> <span class="nv">package</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">package-install</span> <span class="nv">package</span><span class="p">)))</span>
+
+<span class="c1">;; upgrade installed</span>
+<span class="p">(</span><span class="nb">save-window-excursion</span>
+  <span class="p">(</span><span class="nv">package-list-packages</span> <span class="no">t</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">package-menu-mark-upgrades</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">package-menu-execute</span> <span class="no">t</span><span class="p">))</span>
+</code></pre></div>
+<h2 id="step-4:-make-it-callable">Step 4: make it callable</h2>
+
+<p>Finally, I just create a Makefile with the following contents:</p>
+<div class="highlight"><pre><code class="language-Makefile" data-lang="Makefile"><span class="nv">emacs</span> <span class="o">?=</span> emacs
+<span class="nf">upgrade</span><span class="o">:</span>
+    <span class="k">$(</span>emacs<span class="k">)</span> -batch -l packages.el
+
+<span class="nf">run</span><span class="o">:</span>
+    <span class="k">$(</span>emacs<span class="k">)</span> -Q -l init.el
+
+<span class="nf">up</span><span class="o">:</span> <span class="n">upgrade</span> <span class="n">run</span>
+</code></pre></div>
+<p>Thanks to the first line, I can issue stuff like this on the shell:</p>
+<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span class="nv">emacs</span><span class="o">=</span>emacs24 make up
+</code></pre></div>
+<p>This will use the <code>emacs24</code> executable, instead of whatever <code>emacs</code> points to.  Since the <code>up</code>
+target depends on <code>upgrade</code> and <code>run</code> targets, they will be executed in that order:</p>
+
+<ul>
+<li>the <code>upgrade</code> will install / upgrade all packages in a non-interactive Emacs</li>
+<li>the <code>run</code> target will start an interactive Emacs with already updated packages</li>
+</ul>
+
+<p>I really like putting stuff in Makefiles, since they are very flexible, yet so easy to call.  In the
+very same Makefile, I have a <code>profile</code> target from
+<a href="http://oremacs.com/2015/02/24/emacs-speed-test/">the post on profiling Emacs start up</a>.  I also
+wrote two packages related to Makefiles: <a href="https://github.com/abo-abo/helm-make">helm-make</a> and
+<a href="https://github.com/abo-abo/make-it-so">make-it-so</a>. The latter one is actually very interesting and
+deserves its own post, I should maybe just clean it up a bit.</p>
+
+<h2 id="outro">Outro</h2>
+
+<p>I&#39;ll just cite Gall&#39;s law here:</p>
+
+<blockquote>
+<p>A complex system that works is invariably found to have evolved from a simple system that
+worked. A complex system designed from scratch never works and cannot be patched up to make it
+work. You have to start over with a working simple system.</p>
+</blockquote>
+
+<p>I think it applies from both sides w.r.t. my Emacs config: it kind of works, but I really wish it
+was reproducible from the start, before making it complex.</p>
+
+</div>
+
+<div class="twitter-share">
+  <a href="https://twitter.com/share"
+     class="twitter-share-button"
+     data-via="_abo_abo"
+     data-dnt="true">
+    Tweet
+  </a>
+</div>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/03/19/swiper-on-youtubes/"> -->
+          <a href="/2015/03/19/swiper-on-youtubes/">
+            A new Swiper demo on Youtube
+            <small>19 Mar 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/03/18/ivy-git/"> -->
+          <a href="/2015/03/18/ivy-git/">
+            Find file in a Git repo with ivy
+            <small>18 Mar 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/03/17/more-info/"> -->
+          <a href="/2015/03/17/more-info/">
+            More Info
+            <small>17 Mar 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'oremacs'; // required: replace example with your forum shortname
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+<script>
+  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+</script>
+<noscript>
+  Please enable JavaScript to view the
+  <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>

@@ -4,13 +4,130 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-03-19T20:59:41+01:00</updated>
+ <updated>2015-03-20T21:57:22+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Emacs package management</title>
+   <link href="http://oremacs.com/2015/03/20/managing-emacs-packages/"/>
+   <updated>2015-03-20T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/03/20/managing-emacs-packages</id>
+   <content type="html">&lt;p&gt;Lately, I&amp;#39;ve been spending some time to automate and publish my Emacs config.  Being able to quickly
+reproduce your config has many advantages, the main one being that you no longer have to spend time
+to make your config reproducible.&lt;/p&gt;
+
+&lt;p&gt;Happily, most of my config is already published in many packages, I only have to figure out a nice
+layer to glue them together. Below, I&amp;#39;ll show some automation for the packages managed by
+&lt;code&gt;package.el&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;step-1:-get-the-main-directory&quot;&gt;Step 1: get the main directory&lt;/h2&gt;
+
+&lt;p&gt;This is an important step that many other peoples&amp;#39; configs miss, even the ones that are designed to
+be distributed. You can&amp;#39;t just assume that the config will be located in &lt;code&gt;~/.emacs.d&lt;/code&gt; and rely on
+Emacs defaults. Instead, it&amp;#39;s nice to be able to clone the config into a random directory and launch
+an Emacs from there, without messing with the currently installed Emacs.&lt;/p&gt;
+
+&lt;p&gt;It&amp;#39;s also useful for having multiple repositories for different versions of Emacs. ELPA packages are
+byte-compiled, and the byte code can be incompatible between versions (for instance, 24.3 and 24.4).
+Having two independent checkouts with ELPA directory auto-generated really helps in that case.&lt;/p&gt;
+
+&lt;p&gt;So here is the code to get the main directory and define an ELPA directory with respect to that:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defconst&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;emacs-d&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;file-name-directory&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;file-chase-links&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;load-file-name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;The giant turtle on which the world rests.&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;package-user-dir&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;expand-file-name&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;elpa&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;emacs-d&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;step-2:-decide-what-you-like&quot;&gt;Step 2: decide what you like&lt;/h2&gt;
+
+&lt;p&gt;Next, I initialize the package and define some of the packages that I like, omitting the
+dependencies that they bring. Note that the code of the whole post is stored in a separate file
+&lt;code&gt;packages.el&lt;/code&gt; that is not intended to be loaded on start up, so it&amp;#39;s fine to call
+&lt;code&gt;package-refresh-contents&lt;/code&gt; here:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;package-initialize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;package-archives&lt;/span&gt;
+      &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;melpa&amp;quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;http://melpa.milkbox.net/packages/&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;gnu&amp;quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;http://elpa.gnu.org/packages/&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;package-refresh-contents&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defconst&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ora-packages&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;auto-compile&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;auto-yasnippet&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ace-link&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ace-window&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;company&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;eclipse-theme&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;flx-ido&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;function-args&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;headlong&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ido-occasional&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ido-vertical-mode&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;lispy&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;magit&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;smex&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;swiper&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;use-package&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;guide-key&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;powerline&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;projectile&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;slime&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cider&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;worf&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;org-download&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;make-it-so&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ukrainian-holidays&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;netherlands-holidays&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;j-mode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;List of packages that I like.&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;step-3:-install-and-upgrade&quot;&gt;Step 3: install and upgrade&lt;/h2&gt;
+
+&lt;p&gt;The install step is pretty straightforward: install a package unless it&amp;#39;s already installed.
+I tried to do something fancier for the upgrade, but in the end it was much more simple to
+just call the interactive interface. The last two lines are basically equivalent to pressing
+&lt;kbd&gt;Uxy&lt;/kbd&gt; interactively:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;c1&quot;&gt;;; install required&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;dolist&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;package&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ora-packages&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;unless&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;package-installed-p&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;package&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;package-install&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;package&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;;; upgrade installed&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;save-window-excursion&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;package-list-packages&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;package-menu-mark-upgrades&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;package-menu-execute&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;step-4:-make-it-callable&quot;&gt;Step 4: make it callable&lt;/h2&gt;
+
+&lt;p&gt;Finally, I just create a Makefile with the following contents:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-Makefile&quot; data-lang=&quot;Makefile&quot;&gt;&lt;span class=&quot;nv&quot;&gt;emacs&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;?=&lt;/span&gt; emacs
+&lt;span class=&quot;nf&quot;&gt;upgrade&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;emacs&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt; -batch -l packages.el
+
+&lt;span class=&quot;nf&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;emacs&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt; -Q -l init.el
+
+&lt;span class=&quot;nf&quot;&gt;up&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;upgrade&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;run&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Thanks to the first line, I can issue stuff like this on the shell:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span class=&quot;nv&quot;&gt;emacs&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;emacs24 make up
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This will use the &lt;code&gt;emacs24&lt;/code&gt; executable, instead of whatever &lt;code&gt;emacs&lt;/code&gt; points to.  Since the &lt;code&gt;up&lt;/code&gt;
+target depends on &lt;code&gt;upgrade&lt;/code&gt; and &lt;code&gt;run&lt;/code&gt; targets, they will be executed in that order:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;the &lt;code&gt;upgrade&lt;/code&gt; will install / upgrade all packages in a non-interactive Emacs&lt;/li&gt;
+&lt;li&gt;the &lt;code&gt;run&lt;/code&gt; target will start an interactive Emacs with already updated packages&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I really like putting stuff in Makefiles, since they are very flexible, yet so easy to call.  In the
+very same Makefile, I have a &lt;code&gt;profile&lt;/code&gt; target from
+&lt;a href=&quot;http://oremacs.com/2015/02/24/emacs-speed-test/&quot;&gt;the post on profiling Emacs start up&lt;/a&gt;.  I also
+wrote two packages related to Makefiles: &lt;a href=&quot;https://github.com/abo-abo/helm-make&quot;&gt;helm-make&lt;/a&gt; and
+&lt;a href=&quot;https://github.com/abo-abo/make-it-so&quot;&gt;make-it-so&lt;/a&gt;. The latter one is actually very interesting and
+deserves its own post, I should maybe just clean it up a bit.&lt;/p&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;I&amp;#39;ll just cite Gall&amp;#39;s law here:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;A complex system that works is invariably found to have evolved from a simple system that
+worked. A complex system designed from scratch never works and cannot be patched up to make it
+work. You have to start over with a working simple system.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;I think it applies from both sides w.r.t. my Emacs config: it kind of works, but I really wish it
+was reproducible from the start, before making it complex.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>A new Swiper demo on Youtube</title>
