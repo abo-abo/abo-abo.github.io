@@ -4,13 +4,140 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-03-20T21:57:22+01:00</updated>
+ <updated>2015-03-21T19:57:06+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Some fun with Hydra</title>
+   <link href="http://oremacs.com/2015/03/21/some-fun-with-hydra/"/>
+   <updated>2015-03-21T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/03/21/some-fun-with-hydra</id>
+   <content type="html">&lt;p&gt;The code from this post has very little application. But it&amp;#39;s kind of fun, so I&amp;#39;ll post it.  Star
+Trek: TNG is one of my favorite shows, so I&amp;#39;ve added some TNG characters to one of the Hydra
+features that I&amp;#39;m testing.&lt;/p&gt;
+
+&lt;h2 id=&quot;defhydradio-statement&quot;&gt;&lt;code&gt;defhydradio&lt;/code&gt; statement&lt;/h2&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;hydra&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;defhydradio&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-tng&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;picard&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;_p_ Captain Jean Luc Picard:&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;riker&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;_r_ Commander William Riker:&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;data&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;_d_ Lieutenant Commander Data:&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;worf&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;_w_ Worf:&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;la-forge&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;_f_ Geordi La Forge:&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;troi&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;_t_ Deanna Troi:&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;dr-crusher&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;_c_ Doctor Beverly Crusher:&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;phaser&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;_h_ Set phasers to &amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;[stun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;kill]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The &lt;code&gt;defhydradio&lt;/code&gt; macro is akin to a namespace construct that defines multiple variables that can
+assume only certain values (either &lt;code&gt;t&lt;/code&gt; or &lt;code&gt;nil&lt;/code&gt; by default), and functions to cycle those values.&lt;/p&gt;
+
+&lt;h2 id=&quot;defhydradio-implementation&quot;&gt;&lt;code&gt;defhydradio&lt;/code&gt; implementation&lt;/h2&gt;
+
+&lt;p&gt;Here&amp;#39;s what you may see after a &lt;code&gt;macroexpand&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;progn&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defvar&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-tng/picard&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;&amp;quot;_p_ Captain Jean Luc Picard:&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;put&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;quote&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-tng/picard&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;quote&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+       &lt;span class=&quot;nv&quot;&gt;[nil&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;t]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-tng/picard&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hydra--cycle-radio&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;quote&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-tng/picard&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defvar&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-tng/riker&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;&amp;quot;_r_ Commander William Riker:&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;put&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;quote&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-tng/riker&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;quote&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+       &lt;span class=&quot;nv&quot;&gt;[nil&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;t]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-tng/riker&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hydra--cycle-radio&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;quote&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-tng/riker&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;;; ...&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defvar&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-tng/names&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hydra-tng/picard&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-tng/riker&lt;/span&gt;
+      &lt;span class=&quot;nv&quot;&gt;hydra-tng/data&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-tng/worf&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-tng/la-forge&lt;/span&gt;
+      &lt;span class=&quot;nv&quot;&gt;hydra-tng/troi&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-tng/dr-crusher&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-tng/phaser&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;As you can see, each list passed to &lt;code&gt;defhydradio&lt;/code&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;gets a prefixed variable definition&lt;/li&gt;
+&lt;li&gt;gets a &lt;code&gt;range&lt;/code&gt; property for the prefixed symbol&lt;/li&gt;
+&lt;li&gt;gets a prefixed function definition that cycles the variable value based on the &lt;code&gt;range&lt;/code&gt; property&lt;/li&gt;
+&lt;li&gt;gets added to &lt;code&gt;hydra-tng/names&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;defhydra-statement&quot;&gt;&lt;code&gt;defhydra&lt;/code&gt; statement&lt;/h2&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-tng&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:foreign-keys&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;run&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:hint&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;concat&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hydra--table&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-tng/names&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;7&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;
+                        &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;  % -30s %% -3`%s&amp;quot;&lt;/span&gt;
+                          &lt;span class=&quot;s&quot;&gt;&amp;quot;%s %%`%s&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+          &lt;span class=&quot;s&quot;&gt;&amp;quot;\n\n&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;p&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hydra-tng/picard&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;r&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hydra-tng/riker&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;d&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hydra-tng/data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;w&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hydra-tng/worf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;f&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hydra-tng/la-forge&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;t&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hydra-tng/troi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;c&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hydra-tng/dr-crusher&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;h&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hydra-tng/phaser&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;b&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;beam-down&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;beam down&amp;quot;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:exit&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;o&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hydra-reset-radios&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-tng/names&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;reset&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;q&amp;quot;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;cancel&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The interesting statement in place of the docstring will actually evaluate to this docstring:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;  _p_ Captain Jean Luc Picard:   % -3`hydra-tng/picard^^^^    _h_ Set phasers to  %`hydra-tng/phaser&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;  _r_ Commander William Riker:   % -3`hydra-tng/riker^^^^^&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;  _d_ Lieutenant Commander Data: % -3`hydra-tng/data^^^^^^&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;  _w_ Worf:                      % -3`hydra-tng/worf^^^^^^&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;  _f_ Geordi La Forge:           % -3`hydra-tng/la-forge^^&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;  _t_ Deanna Troi:               % -3`hydra-tng/troi^^^^^^&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;  _c_ Doctor Beverly Crusher:    % -3`hydra-tng/dr-crusher&lt;/span&gt;
+
+&lt;span class=&quot;s&quot;&gt;&amp;quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The first line overflows a bit, but it&amp;#39;s clear what it is. There&amp;#39;s some flexibility in using
+&lt;code&gt;hydra--table&lt;/code&gt;, since you can:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;redefine the row-column format (e.g. from 7x2 to 5x3)&lt;/li&gt;
+&lt;li&gt;add more variables to &lt;code&gt;hydra-tng/names&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Note also, that since &lt;code&gt;hydra-tng/names&lt;/code&gt; holds all the names, and all the names know their default
+values through &lt;code&gt;range&lt;/code&gt;, it&amp;#39;s possible to reset them all at once with &lt;code&gt;hydra-reset-radios&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Finally, here&amp;#39;s a simple implementation of &lt;code&gt;beam-down&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;beam-down&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;message&lt;/span&gt;
+   &lt;span class=&quot;s&quot;&gt;&amp;quot;Beaming down: %s.&amp;quot;&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;mapconcat&lt;/span&gt;
+    &lt;span class=&quot;nf&quot;&gt;#&amp;#39;identity&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;delq&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;mapcar&lt;/span&gt;
+           &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;symbol-value&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;substring&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;symbol-name&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+           &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hydra-tng/picard&lt;/span&gt;
+             &lt;span class=&quot;nv&quot;&gt;hydra-tng/riker&lt;/span&gt;
+             &lt;span class=&quot;nv&quot;&gt;hydra-tng/data&lt;/span&gt;
+             &lt;span class=&quot;nv&quot;&gt;hydra-tng/worf&lt;/span&gt;
+             &lt;span class=&quot;nv&quot;&gt;hydra-tng/la-forge&lt;/span&gt;
+             &lt;span class=&quot;nv&quot;&gt;hydra-tng/troi&lt;/span&gt;
+             &lt;span class=&quot;nv&quot;&gt;hydra-tng/dr-crusher&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;&amp;quot;, and &amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-c C-,&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;hydra-tng/body&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;And that&amp;#39;s it. There actually is an application of &lt;code&gt;defhydradio&lt;/code&gt; in
+&lt;a href=&quot;https://github.com/abo-abo/hydra/blob/master/hydra-ox.el&quot;&gt;hydra-ox.el&lt;/a&gt;.  It&amp;#39;s not fully finished,
+but you can already try it as an alternative to &lt;code&gt;org-mode&lt;/code&gt; export dispatch widget, most things are
+working.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Emacs package management</title>

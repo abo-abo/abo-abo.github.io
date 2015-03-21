@@ -11,7 +11,7 @@
 
   <title>
     
-      Introducing Swiper &middot; (or emacs
+      (or emacs &middot; irrelevant)
     
   </title>
 
@@ -227,125 +227,92 @@
       </div>
 
       <div class="container content">
-        <div class="post">
-  <h1 class="post-title">Introducing Swiper</h1>
-  <span class="post-date">10 Mar 2015</span>
-  <p>I like the idea of
-<a href="https://github.com/ShingoFukuyama/helm-swoop">helm-swoop</a>, but it
-somehow has minor annoyances that stop me from using it, like
-automatic <code>helm-input</code>, and especially the circular candidates. Or maybe it&#39;s just NIH talking.
-Anyway, I&#39;m rolling my own, and it&#39;s called <a href="https://github.com/abo-abo/swiper">swiper</a>.</p>
+        <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/2014/12/20/poyekhali!/">
+        Poyekhali!
+      </a>
+    </h1>
 
-<p><img src="/download/swiper.png" alt="swiper.png"></p>
+    <span class="post-date">20 Dec 2014</span>
 
-<h2 id="swiper-in-action">Swiper in action</h2>
+    <p>Welcome to <b><code>(or emacs</code></b>!</p>
 
-<p>Here&#39;s how it looks like:</p>
+<p>My name is Oleh and I&#39;ve been using Emacs for about 3 years now.  I
+think that it&#39;s an awesome editor, and I&#39;ve accumulated some know-how
+to make it even better (at least for me and people who think like me).
+Sharing is caring, so here we go.</p>
 
-<p><img src="/download/swiper-1.png" alt="swiper-1.png"></p>
+<h2 id="ace-window-update"><code>ace-window</code> update</h2>
 
-<p>As you can see, the search string <code>&quot;dec fun pro&quot;</code> is transformed into
-a regex <code>&quot;\\(dec\\).*\\(fun\\).*\\(pro\\)&quot;</code>, and each group in the
-matches is highlighted with a different face.  This is quite similar
-to the way <code>re-builder</code> does it. In fact it&#39;s possible to use <code>swiper</code>
-as a poor man&#39;s <code>re-builder</code> (since it matches only single lines).</p>
+<p>On this weekend I&#39;ve made a major update to my package
+<a href="https://github.com/abo-abo/ace-window">ace-window</a> that allows it to
+be used as a library. Luckily the change went smoothly, as there are
+no complaints in the github issues so far.  In case you don&#39;t know
+what the package does in the first place, a short blurb follows.</p>
 
-<p>I&#39;m doing my own matching this time, as the part-swapping behavior of
-<code>helm-match-plugin</code> is more annoying than useful.</p>
+<h2 id="ace-window&#39;s-&quot;what-and-why&quot;"><code>ace-window</code>&#39;s &quot;what and why&quot;</h2>
 
-<p>Also note that:</p>
+<p>I&#39;m sure you&#39;re aware of the <code>other-window</code> command. While it&#39;s great for
+two windows, it quickly loses its value when there are more windows:
+you need to call it many times, and since it&#39;s not easily predictable,
+you have to check each time if you&#39;re in the window that you wanted.</p>
+
+<p>Another approach is to use <code>windmove-left</code>, <code>windmove-up</code> etc.  These
+are fast and predictable. Their disadvantage is that they need 4 key
+bindings.  The default ones are shift+arrows, which are hard to reach.</p>
+
+<p>This package aims to take the speed and predictability of <code>windmove</code>
+and pack it into a single key binding, similar to <code>other-window</code>.  To
+achieve this, I&#39;m using the excellent
+<a href="https://github.com/winterTTr/ace-jump-mode">ace-jump-mode</a>.</p>
+
+<p>Here&#39;s how the package looks in action: <a href="/download/ace-window.gif">ace-window.gif</a></p>
+
+<p>Since switching windows is a frequently used operation, I recommend
+binding <code>ace-window</code> to something short, like <kbd>M-p</kbd>.</p>
+
+<p>By default, three actions are available:</p>
 
 <ul>
-<li>The whole <code>*swiper*</code> buffer is fully syntax highlighted.</li>
-<li>The appropriate parts of the matches are highlighted as well.</li>
+<li><kbd>M-p</kbd> - select window</li>
+<li><kbd>C-u M-p</kbd> - swap the current window with the selected window</li>
+<li><kbd>C-u C-u M-p</kbd> - delete the selected window</li>
 </ul>
 
-<h2 id="swiper-in-a-dired-buffer">Swiper in a <code>dired</code> buffer</h2>
+<h2 id="finally,-the-library-part">finally, the library part</h2>
 
-<p>Here&#39;s another screenshot:</p>
+<p>So now, what if you want to select a window to maximize with <code>ace-window</code>?
+After the change that I&#39;ve mentioned, the code to do this is dirt simple:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">ace-maximize-window</span> <span class="p">()</span>
+  <span class="s">&quot;Ace maximize window.&quot;</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">setq</span> <span class="nv">aw--current-op</span>
+        <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">aj</span><span class="p">)</span>
+          <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">wnd</span> <span class="p">(</span><span class="nv">aj-position-window</span> <span class="nv">aj</span><span class="p">)))</span>
+            <span class="p">(</span><span class="nf">select-window</span> <span class="nv">wnd</span><span class="p">)</span>
+            <span class="p">(</span><span class="nv">delete-other-windows</span><span class="p">))))</span>
+  <span class="p">(</span><span class="nv">aw--doit</span> <span class="s">&quot; Ace - Maximize Window&quot;</span><span class="p">))</span>
 
-<p><img src="/download/swiper-2.png" alt="swiper-2.png"></p>
-
-<p>It appears that <code>helm</code> is ignoring the display of file attributes, since they have
-a sort of <code>invisible</code> property set. I kind of like this behavior.</p>
-
-<h2 id="see-how-the-faces-are-recycled">See how the faces are recycled</h2>
-
-<p>I&#39;ve defined only 4 faces currently (foxes aren&#39;t unicorns, the
-palette is quite limited), so they loop about if you have many groups:</p>
-
-<p><img src="/download/swiper-3.png" alt="swiper-3.png"></p>
-
-<p>Yup, the technology is there. Although a <code>powerline</code> theme for the
-<code>helm</code> mode line is still missing.</p>
-
+<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-M-o&quot;</span><span class="p">)</span> <span class="ss">&#39;ace-maximize-window</span><span class="p">)</span>
+</code></pre></div>
+  </div>
+  
 </div>
 
-<div class="twitter-share">
-  <a href="https://twitter.com/share"
-     class="twitter-share-button"
-     data-via="_abo_abo"
-     data-dnt="true">
-    Tweet
-  </a>
+<div class="pagination">
+  
+    <span class="pagination-item older">Older</span>
+  
+  
+    
+      <a class="pagination-item newer" href="/page18">Newer</a>
+    
+  
 </div>
 
-<div class="related">
-  <h2>Related Posts</h2>
-  <ul class="related-posts">
-    
-      <li>
-        <h3>
-          <!-- <a href="//2015/03/21/some-fun-with-hydra/"> -->
-          <a href="/2015/03/21/some-fun-with-hydra/">
-            Some fun with Hydra
-            <small>21 Mar 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
-          <!-- <a href="//2015/03/20/managing-emacs-packages/"> -->
-          <a href="/2015/03/20/managing-emacs-packages/">
-            Emacs package management
-            <small>20 Mar 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
-          <!-- <a href="//2015/03/19/swiper-on-youtubes/"> -->
-          <a href="/2015/03/19/swiper-on-youtubes/">
-            A new Swiper demo on Youtube
-            <small>19 Mar 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-  </ul>
-</div>
-
-<div id="disqus_thread"></div>
-<script type="text/javascript">
-  var disqus_shortname = 'oremacs'; // required: replace example with your forum shortname
-
-  /* * * DON'T EDIT BELOW THIS LINE * * */
-  (function() {
-  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-  })();
-</script>
-
-<script>
-  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
-</script>
-<noscript>
-  Please enable JavaScript to view the
-  <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
-</noscript>
 
       </div>
     </div>

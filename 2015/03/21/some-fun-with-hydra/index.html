@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Some fun with Hydra &middot; (or emacs
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="/public/css/octicons.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Scripts -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body class="layout-reverse theme-base-08">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <!-- <div class="sidebar-item"> -->
+  <!--   <p>unused</p> -->
+  <!-- </div> -->
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about/">About</a>
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/archive/">Archive</a>
+        
+      
+    
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+
+    <div id="github" class="sidebar-nav-item">
+      <button type="button"
+              class="btn btn-info"
+              data-toggle="collapse"
+              data-target="#github-projects">
+        <span class="octicon octicon-mark-github"></span> My Emacs Projects
+      </button>
+      <div id="github-projects" class="collapse">
+        <ul style="margin-bottom:0em;">
+          <li>
+            <a href="https://github.com/abo-abo/lispy">lispy</a>
+            <p>vi-like Paredit</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/worf">worf</a>
+            <p>vi-like bindings for org-mode</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-window">ace-window</a>
+            <p>switch windows with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-link">ace-link</a>
+            <p>follow links with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/function-args">function-args</a>
+            <p>enhance <code>CEDET</code> for C++</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/helm-make">helm-make</a>
+            <p>select a Makefile target with <code>helm</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/make-it-so">make-it-so</a>
+            <p>transform files with Makefile recipes</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/org-download">org-download</a>
+            <p>drag-and-drop images to <code>org-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo?tab=repositories">
+              <span class="octicon octicon-octoface"></span>
+              and more
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
+
+  <div class="sidebar-item">
+    <p>
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.0/">
+        <img alt="Creative Commons License"
+             style="border-width:0;opacity: 0.3;"
+             src="https://i.creativecommons.org/l/by-nc-sa/2.0/88x31.png"/>
+      </a>
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">(or emacs</a>
+            <small>irrelevant)</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Some fun with Hydra</h1>
+  <span class="post-date">21 Mar 2015</span>
+  <p>The code from this post has very little application. But it&#39;s kind of fun, so I&#39;ll post it.  Star
+Trek: TNG is one of my favorite shows, so I&#39;ve added some TNG characters to one of the Hydra
+features that I&#39;m testing.</p>
+
+<h2 id="defhydradio-statement"><code>defhydradio</code> statement</h2>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;hydra</span><span class="p">)</span>
+<span class="p">(</span><span class="nv">defhydradio</span> <span class="nv">hydra-tng</span> <span class="p">()</span>
+  <span class="p">(</span><span class="nv">picard</span> <span class="s">&quot;_p_ Captain Jean Luc Picard:&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">riker</span> <span class="s">&quot;_r_ Commander William Riker:&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">data</span> <span class="s">&quot;_d_ Lieutenant Commander Data:&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">worf</span> <span class="s">&quot;_w_ Worf:&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">la-forge</span> <span class="s">&quot;_f_ Geordi La Forge:&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">troi</span> <span class="s">&quot;_t_ Deanna Troi:&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">dr-crusher</span> <span class="s">&quot;_c_ Doctor Beverly Crusher:&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">phaser</span> <span class="s">&quot;_h_ Set phasers to &quot;</span> <span class="nv">[stun</span> <span class="nv">kill]</span><span class="p">))</span>
+</code></pre></div>
+<p>The <code>defhydradio</code> macro is akin to a namespace construct that defines multiple variables that can
+assume only certain values (either <code>t</code> or <code>nil</code> by default), and functions to cycle those values.</p>
+
+<h2 id="defhydradio-implementation"><code>defhydradio</code> implementation</h2>
+
+<p>Here&#39;s what you may see after a <code>macroexpand</code>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">progn</span>
+  <span class="p">(</span><span class="k">defvar</span> <span class="nv">hydra-tng/picard</span> <span class="no">nil</span>
+    <span class="s">&quot;_p_ Captain Jean Luc Picard:&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">put</span> <span class="p">(</span><span class="k">quote</span> <span class="nv">hydra-tng/picard</span><span class="p">)</span>
+       <span class="p">(</span><span class="k">quote</span> <span class="nv">range</span><span class="p">)</span>
+       <span class="nv">[nil</span> <span class="nv">t]</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">defun</span> <span class="nv">hydra-tng/picard</span> <span class="no">nil</span>
+    <span class="p">(</span><span class="nv">hydra--cycle-radio</span> <span class="p">(</span><span class="k">quote</span> <span class="nv">hydra-tng/picard</span><span class="p">)))</span>
+  <span class="p">(</span><span class="k">defvar</span> <span class="nv">hydra-tng/riker</span> <span class="no">nil</span>
+    <span class="s">&quot;_r_ Commander William Riker:&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">put</span> <span class="p">(</span><span class="k">quote</span> <span class="nv">hydra-tng/riker</span><span class="p">)</span>
+       <span class="p">(</span><span class="k">quote</span> <span class="nv">range</span><span class="p">)</span>
+       <span class="nv">[nil</span> <span class="nv">t]</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">defun</span> <span class="nv">hydra-tng/riker</span> <span class="no">nil</span> <span class="p">(</span><span class="nv">hydra--cycle-radio</span> <span class="p">(</span><span class="k">quote</span> <span class="nv">hydra-tng/riker</span><span class="p">)))</span>
+  <span class="c1">;; ...</span>
+  <span class="p">(</span><span class="k">defvar</span> <span class="nv">hydra-tng/names</span>
+    <span class="o">&#39;</span><span class="p">(</span><span class="nv">hydra-tng/picard</span> <span class="nv">hydra-tng/riker</span>
+      <span class="nv">hydra-tng/data</span> <span class="nv">hydra-tng/worf</span> <span class="nv">hydra-tng/la-forge</span>
+      <span class="nv">hydra-tng/troi</span> <span class="nv">hydra-tng/dr-crusher</span> <span class="nv">hydra-tng/phaser</span><span class="p">)))</span>
+</code></pre></div>
+<p>As you can see, each list passed to <code>defhydradio</code>:</p>
+
+<ul>
+<li>gets a prefixed variable definition</li>
+<li>gets a <code>range</code> property for the prefixed symbol</li>
+<li>gets a prefixed function definition that cycles the variable value based on the <code>range</code> property</li>
+<li>gets added to <code>hydra-tng/names</code></li>
+</ul>
+
+<h2 id="defhydra-statement"><code>defhydra</code> statement</h2>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-tng</span> <span class="p">(</span><span class="nb">:foreign-keys</span> <span class="nv">run</span> <span class="nb">:hint</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">concat</span> <span class="p">(</span><span class="nv">hydra--table</span> <span class="nv">hydra-tng/names</span> <span class="mi">7</span> <span class="mi">2</span>
+                        <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;  % -30s %% -3`%s&quot;</span>
+                          <span class="s">&quot;%s %%`%s&quot;</span><span class="p">))</span>
+          <span class="s">&quot;\n\n&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;p&quot;</span> <span class="p">(</span><span class="nv">hydra-tng/picard</span><span class="p">))</span>
+  <span class="p">(</span><span class="s">&quot;r&quot;</span> <span class="p">(</span><span class="nv">hydra-tng/riker</span><span class="p">))</span>
+  <span class="p">(</span><span class="s">&quot;d&quot;</span> <span class="p">(</span><span class="nv">hydra-tng/data</span><span class="p">))</span>
+  <span class="p">(</span><span class="s">&quot;w&quot;</span> <span class="p">(</span><span class="nv">hydra-tng/worf</span><span class="p">))</span>
+  <span class="p">(</span><span class="s">&quot;f&quot;</span> <span class="p">(</span><span class="nv">hydra-tng/la-forge</span><span class="p">))</span>
+  <span class="p">(</span><span class="s">&quot;t&quot;</span> <span class="p">(</span><span class="nv">hydra-tng/troi</span><span class="p">))</span>
+  <span class="p">(</span><span class="s">&quot;c&quot;</span> <span class="p">(</span><span class="nv">hydra-tng/dr-crusher</span><span class="p">))</span>
+  <span class="p">(</span><span class="s">&quot;h&quot;</span> <span class="p">(</span><span class="nv">hydra-tng/phaser</span><span class="p">))</span>
+  <span class="p">(</span><span class="s">&quot;b&quot;</span> <span class="nv">beam-down</span> <span class="s">&quot;beam down&quot;</span> <span class="nb">:exit</span> <span class="no">t</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;o&quot;</span> <span class="p">(</span><span class="nv">hydra-reset-radios</span> <span class="nv">hydra-tng/names</span><span class="p">)</span> <span class="s">&quot;reset&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span> <span class="s">&quot;cancel&quot;</span><span class="p">))</span>
+</code></pre></div>
+<p>The interesting statement in place of the docstring will actually evaluate to this docstring:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="s">&quot;  _p_ Captain Jean Luc Picard:   % -3`hydra-tng/picard^^^^    _h_ Set phasers to  %`hydra-tng/phaser</span>
+<span class="s">  _r_ Commander William Riker:   % -3`hydra-tng/riker^^^^^</span>
+<span class="s">  _d_ Lieutenant Commander Data: % -3`hydra-tng/data^^^^^^</span>
+<span class="s">  _w_ Worf:                      % -3`hydra-tng/worf^^^^^^</span>
+<span class="s">  _f_ Geordi La Forge:           % -3`hydra-tng/la-forge^^</span>
+<span class="s">  _t_ Deanna Troi:               % -3`hydra-tng/troi^^^^^^</span>
+<span class="s">  _c_ Doctor Beverly Crusher:    % -3`hydra-tng/dr-crusher</span>
+
+<span class="s">&quot;</span>
+</code></pre></div>
+<p>The first line overflows a bit, but it&#39;s clear what it is. There&#39;s some flexibility in using
+<code>hydra--table</code>, since you can:</p>
+
+<ul>
+<li>redefine the row-column format (e.g. from 7x2 to 5x3)</li>
+<li>add more variables to <code>hydra-tng/names</code></li>
+</ul>
+
+<p>Note also, that since <code>hydra-tng/names</code> holds all the names, and all the names know their default
+values through <code>range</code>, it&#39;s possible to reset them all at once with <code>hydra-reset-radios</code>.</p>
+
+<p>Finally, here&#39;s a simple implementation of <code>beam-down</code>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">beam-down</span> <span class="p">()</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">message</span>
+   <span class="s">&quot;Beaming down: %s.&quot;</span>
+   <span class="p">(</span><span class="nf">mapconcat</span>
+    <span class="nf">#&#39;identity</span>
+    <span class="p">(</span><span class="nf">delq</span> <span class="no">nil</span>
+          <span class="p">(</span><span class="nf">mapcar</span>
+           <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">p</span><span class="p">)</span> <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">symbol-value</span> <span class="nv">p</span><span class="p">)</span>
+                    <span class="p">(</span><span class="nf">substring</span> <span class="p">(</span><span class="nf">symbol-name</span> <span class="nv">p</span><span class="p">)</span> <span class="mi">10</span><span class="p">)))</span>
+           <span class="o">&#39;</span><span class="p">(</span><span class="nv">hydra-tng/picard</span>
+             <span class="nv">hydra-tng/riker</span>
+             <span class="nv">hydra-tng/data</span>
+             <span class="nv">hydra-tng/worf</span>
+             <span class="nv">hydra-tng/la-forge</span>
+             <span class="nv">hydra-tng/troi</span>
+             <span class="nv">hydra-tng/dr-crusher</span><span class="p">)))</span>
+    <span class="s">&quot;, and &quot;</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c C-,&quot;</span><span class="p">)</span> <span class="ss">&#39;hydra-tng/body</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="outro">Outro</h2>
+
+<p>And that&#39;s it. There actually is an application of <code>defhydradio</code> in
+<a href="https://github.com/abo-abo/hydra/blob/master/hydra-ox.el">hydra-ox.el</a>.  It&#39;s not fully finished,
+but you can already try it as an alternative to <code>org-mode</code> export dispatch widget, most things are
+working.</p>
+
+</div>
+
+<div class="twitter-share">
+  <a href="https://twitter.com/share"
+     class="twitter-share-button"
+     data-via="_abo_abo"
+     data-dnt="true">
+    Tweet
+  </a>
+</div>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/03/20/managing-emacs-packages/"> -->
+          <a href="/2015/03/20/managing-emacs-packages/">
+            Emacs package management
+            <small>20 Mar 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/03/19/swiper-on-youtubes/"> -->
+          <a href="/2015/03/19/swiper-on-youtubes/">
+            A new Swiper demo on Youtube
+            <small>19 Mar 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/03/18/ivy-git/"> -->
+          <a href="/2015/03/18/ivy-git/">
+            Find file in a Git repo with ivy
+            <small>18 Mar 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'oremacs'; // required: replace example with your forum shortname
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+<script>
+  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+</script>
+<noscript>
+  Please enable JavaScript to view the
+  <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>
