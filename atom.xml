@@ -4,13 +4,110 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-03-21T19:57:06+01:00</updated>
+ <updated>2015-03-22T18:17:00+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Hydra 0.12.0 is out</title>
+   <link href="http://oremacs.com/2015/03/22/hydra-0.12.0/"/>
+   <updated>2015-03-22T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/03/22/hydra-0.12.0</id>
+   <content type="html">&lt;p&gt;With a month&amp;#39;s time and almost 50 commits since that last one, a new version of Hydra has emerged.
+As usual, I&amp;#39;ll just re-state the
+&lt;a href=&quot;https://github.com/abo-abo/hydra/releases/tag/0.12.0&quot;&gt;release notes&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;fixes&quot;&gt;Fixes&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Handling of heads with duplicate &lt;code&gt;cmd&lt;/code&gt; was improved.&lt;/li&gt;
+&lt;li&gt;Don&amp;#39;t bind &lt;code&gt;nil&lt;/code&gt; in outside keymaps.&lt;/li&gt;
+&lt;li&gt;Work-around &lt;code&gt;golden-ratio-mode&lt;/code&gt; in &lt;code&gt;lv-window&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;C-g&lt;/kbd&gt; (&lt;code&gt;hydra-keyboard-quit&lt;/code&gt;) should run &lt;code&gt;:post&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Bind &lt;code&gt;[switch-frame]&lt;/code&gt; to &lt;code&gt;hydra-keyboard-quit&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;:post&lt;/code&gt; is called for &lt;code&gt;:timeout&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;new-features&quot;&gt;New Features&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;hydra-key-format-spec&lt;/code&gt; is a new defcustom for the keys format in the docstring. It&amp;#39;s &lt;code&gt;&amp;quot;%s&amp;quot;&lt;/code&gt; by
+default, but you can set it to e.g. &lt;code&gt;&amp;quot;%-4s&amp;quot;&lt;/code&gt; if you like.&lt;/li&gt;
+&lt;li&gt;The key regex was extended to include most common key binding characters.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;hydra-repeat&lt;/code&gt; is a hydra-specific &lt;code&gt;repeat&lt;/code&gt; function. It behaves as you would expect &lt;code&gt;repeat&lt;/code&gt; to behave.&lt;/li&gt;
+&lt;li&gt;New body option - &lt;code&gt;:timeout&lt;/code&gt;. Use e.g. &lt;code&gt;:timeout 2.0&lt;/code&gt; to set the timer. After the first head is called,
+a timer is started to disable the hydra. Each new head call resets this timer, so the hydra won&amp;#39;t disappear as long as you keep typing.&lt;/li&gt;
+&lt;li&gt;Lines are truncated in &lt;code&gt;lv-message&lt;/code&gt;. This is useful for large docstring not to become misaligned when the window
+becomes too small.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;allow-for-a-%s(test)-spec-in-the-docstring&quot;&gt;Allow for a &lt;code&gt;%s(test)&lt;/code&gt; spec in the docstring&lt;/h3&gt;
+
+&lt;p&gt;The spec that&amp;#39;s used for e.g. &lt;code&gt;(test)&lt;/code&gt; is &lt;code&gt;%S&lt;/code&gt;. So if &lt;code&gt;(test)&lt;/code&gt; returns a string, it will be quoted.
+This may not be desired, hence the new feature.
+Example:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-marked-items&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;dired-mode-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;Number of marked items: %(length (dired-get-marked-files))&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;Directory size: %s(shell-command-to-string \&amp;quot;du -hs\&amp;quot;)&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;m&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dired-mark&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;mark&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;the-pink/amaranth-override-is-set-recursively&quot;&gt;The pink/amaranth override is set recursively&lt;/h3&gt;
+
+&lt;p&gt;This fixes the issue in this hydra:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-test&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;amaranth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;foo&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;fo&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;message&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;yay&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;q&amp;quot;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Before, pressing e.g. &lt;kbd&gt;fp&lt;/kbd&gt; would not issue a warning, since &lt;kbd&gt;f&lt;/kbd&gt; started its own
+keymap. This is now fixed.&lt;/p&gt;
+
+&lt;h3 id=&quot;an-option-to-specify-the-hint-for-all-heads-in-body&quot;&gt;An option to specify the hint for all heads in body&lt;/h3&gt;
+
+&lt;p&gt;When you write a large docstring, you usually pass &lt;code&gt;nil&lt;/code&gt; as the hint for most heads.
+Now you can omit it, if you set &lt;code&gt;:hint nil&lt;/code&gt; in body.
+Example:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-org-template&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;blue&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:hint&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;_c_enter  _q_uote    _L_aTeX:&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;_l_atex   _e_xample  _i_ndex:&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;_a_scii   _v_erse    _I_NCLUDE:&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;_s_rc     ^ ^        _H_TML:&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;_h_tml    ^ ^        _A_SCII:&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;s&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hot-expand&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;s&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;e&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hot-expand&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;e&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;q&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hot-expand&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;q&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;v&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hot-expand&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;v&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;c&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hot-expand&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;c&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;l&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hot-expand&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;l&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;h&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hot-expand&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;h&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;a&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hot-expand&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;a&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;L&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hot-expand&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;L&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;i&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hot-expand&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;i&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;I&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hot-expand&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;I&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;H&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hot-expand&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;H&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;A&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hot-expand&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;A&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;&amp;quot;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;self-insert-command&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;ins&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;o&amp;quot;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;quit&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;emulate-org-mode-export-dispatch-with-hydra-ox&quot;&gt;Emulate org-mode export dispatch with hydra-ox&lt;/h3&gt;
+
+&lt;p&gt;You can also look at that code to see how nested hydras work.  Several other examples were added to
+hydra-examples.el.&lt;/p&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;I hope that you enjoy all the new features/fixes, and thanks to all the people that contributed to
+them. Happy hacking!&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Some fun with Hydra</title>
