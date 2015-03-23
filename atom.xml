@@ -4,13 +4,39 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-03-22T18:17:00+01:00</updated>
+ <updated>2015-03-23T19:22:14+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Transform region into ASCII art</title>
+   <link href="http://oremacs.com/2015/03/23/region-to-toilet/"/>
+   <updated>2015-03-23T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/03/23/region-to-toilet</id>
+   <content type="html">&lt;p&gt;Here&amp;#39;s a command that I&amp;#39;ve found laying around my config that you might find interesting:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ora-figlet-region&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;&amp;amp;optional&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;r&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;shell-command-on-region&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;e&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;toilet&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;current-buffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;You can install the &lt;code&gt;toilet&lt;/code&gt; shell utility from your package manager.
+Here&amp;#39;s an example result:&lt;/p&gt;
+
+&lt;pre&gt;
+    #&quot;
+   m&quot;    mmm    m mm          mmm   mmmmm   mmm    mmm    mmm
+   #    #&quot; &quot;#   #&quot;  &quot;        #&quot;  #  # # #  &quot;   #  #&quot;  &quot;  #   &quot;
+   #    #   #   #            #&quot;&quot;&quot;&quot;  # # #  m&quot;&quot;&quot;#  #       &quot;&quot;&quot;m
+    #   &quot;#m#&quot;   #            &quot;#mm&quot;  # # #  &quot;mm&quot;#  &quot;#mm&quot;  &quot;mmm&quot;
+     &quot;
+&lt;/pre&gt;
+
+&lt;p&gt;If you don&amp;#39;t mind the strange name, the output looks quite nice.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Hydra 0.12.0 is out</title>

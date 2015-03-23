@@ -11,7 +11,7 @@
 
   <title>
     
-      More Info &middot; (or emacs
+      Transform region into ASCII art &middot; (or emacs
     
   </title>
 
@@ -228,57 +228,26 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">More Info</h1>
-  <span class="post-date">17 Mar 2015</span>
-  <p>I really liked Marcin Borkowski&#39;s post on <a href="http://mbork.pl/2014-12-27_Info_dispatch">Info dispatch</a>,
-where he describes how to open several <code>*info*</code> buffers for the most commonly used manuals.
-However, as I tried to call one of these functions today, I forgot the key binding.</p>
-
-<h2 id="hydra-to-the-rescue!">Hydra to the rescue!</h2>
-
-<p>Here&#39;s what I&#39;ve come up with:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">ora-open-info</span> <span class="p">(</span><span class="nv">topic</span> <span class="nv">bname</span><span class="p">)</span>
-  <span class="s">&quot;Open info on TOPIC in BNAME.&quot;</span>
-  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">get-buffer</span> <span class="nv">bname</span><span class="p">)</span>
-      <span class="p">(</span><span class="k">progn</span>
-        <span class="p">(</span><span class="nv">switch-to-buffer</span> <span class="nv">bname</span><span class="p">)</span>
-        <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nf">string-match</span> <span class="nv">topic</span> <span class="nv">Info-current-file</span><span class="p">)</span>
-          <span class="p">(</span><span class="nv">Info-goto-node</span> <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;(%s)&quot;</span> <span class="nv">topic</span><span class="p">))))</span>
-    <span class="p">(</span><span class="nv">info</span> <span class="nv">topic</span> <span class="nv">bname</span><span class="p">)))</span>
-
-<span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-info-to</span> <span class="p">(</span><span class="nb">:hint</span> <span class="no">nil</span> <span class="nb">:color</span> <span class="nv">teal</span><span class="p">)</span>
-  <span class="s">&quot;</span>
-<span class="s">_o_rg e_l_isp _e_macs _h_yperspec&quot;</span>
-  <span class="p">(</span><span class="s">&quot;o&quot;</span> <span class="p">(</span><span class="nv">ora-open-info</span> <span class="s">&quot;org&quot;</span> <span class="s">&quot;*org info*&quot;</span><span class="p">))</span>
-  <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="p">(</span><span class="nv">ora-open-info</span> <span class="s">&quot;elisp&quot;</span> <span class="s">&quot;*elisp info*&quot;</span><span class="p">))</span>
-  <span class="p">(</span><span class="s">&quot;e&quot;</span> <span class="p">(</span><span class="nv">ora-open-info</span> <span class="s">&quot;emacs&quot;</span> <span class="s">&quot;*emacs info*&quot;</span><span class="p">))</span>
-  <span class="p">(</span><span class="s">&quot;h&quot;</span> <span class="p">(</span><span class="nv">ora-open-info</span> <span class="s">&quot;gcl&quot;</span> <span class="s">&quot;*hyperspec*&quot;</span><span class="p">)))</span>
-
-<span class="p">(</span><span class="nf">define-key</span> <span class="nv">Info-mode-map</span> <span class="s">&quot;t&quot;</span> <span class="ss">&#39;hydra-info-to/body</span><span class="p">)</span>
+  <h1 class="post-title">Transform region into ASCII art</h1>
+  <span class="post-date">23 Mar 2015</span>
+  <p>Here&#39;s a command that I&#39;ve found laying around my config that you might find interesting:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">ora-figlet-region</span> <span class="p">(</span><span class="kp">&amp;optional</span> <span class="nv">b</span> <span class="nv">e</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">interactive</span> <span class="s">&quot;r&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">shell-command-on-region</span> <span class="nv">b</span> <span class="nv">e</span> <span class="s">&quot;toilet&quot;</span> <span class="p">(</span><span class="nf">current-buffer</span><span class="p">)</span> <span class="no">t</span><span class="p">))</span>
 </code></pre></div>
-<h3 id="the-plan">The Plan</h3>
+<p>You can install the <code>toilet</code> shell utility from your package manager.
+Here&#39;s an example result:</p>
 
-<p>I already have the <kbd>&lt;f1&gt; i</kbd> key binding hard wired to my fingers. So after I&#39;m in
-<em>any</em> Info buffer, I plan to press <kbd>t</kbd> and get this dispatch:</p>
+<pre>
+    #"
+   m"    mmm    m mm          mmm   mmmmm   mmm    mmm    mmm
+   #    #" "#   #"  "        #"  #  # # #  "   #  #"  "  #   "
+   #    #   #   #            #""""  # # #  m"""#  #       """m
+    #   "#m#"   #            "#mm"  # # #  "mm"#  "#mm"  "mmm"
+     "
+</pre>
 
-<p><img src="/download/hydra-info-dispatch.png" alt="hydra-info-dispatch.png"></p>
-
-<h2 id="getting-the-hyperspec">Getting the Hyperspec</h2>
-
-<p>I&#39;ve heard people lauding HTML while dumping on Info.
-I&#39;d suggest them to compare the <a href="http://www.lispworks.com/documentation/HyperSpec/Front/index.htm">Common Lisp Hyperspec</a> web site
-to this <a href="http://ftp.gnu.org/gnu/gcl/gcl.info.tgz">info file</a> extracted from there.
-Their contents are identical, but it&#39;s easier and more pleasant to use Info.</p>
-
-<p>After I downloaded the file, I extracted it to <code>./etc/info/gcl.info</code>, where <code>.</code> is my <code>emacs-d</code>.
-Then I just added this directory to the Info path:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">Info-additional-directory-list</span>
-      <span class="p">(</span><span class="nf">list</span> <span class="p">(</span><span class="nf">expand-file-name</span> <span class="s">&quot;etc/info/&quot;</span> <span class="nv">emacs-d</span><span class="p">)))</span>
-</code></pre></div>
-<h2 id="outro">Outro</h2>
-
-<p>Reading Info is pleasant and educational. In case you&#39;re new to Info, there&#39;s Info for Info. In Info
-format! Just press <kbd>&lt;f1&gt; i h</kbd>.</p>
+<p>If you don&#39;t mind the strange name, the output looks quite nice.</p>
 
 </div>
 
@@ -297,16 +266,6 @@ format! Just press <kbd>&lt;f1&gt; i h</kbd>.</p>
     
       <li>
         <h3>
-          <!-- <a href="//2015/03/23/region-to-toilet/"> -->
-          <a href="/2015/03/23/region-to-toilet/">
-            Transform region into ASCII art
-            <small>23 Mar 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
           <!-- <a href="//2015/03/22/hydra-0.12.0/"> -->
           <a href="/2015/03/22/hydra-0.12.0/">
             Hydra 0.12.0 is out
@@ -321,6 +280,16 @@ format! Just press <kbd>&lt;f1&gt; i h</kbd>.</p>
           <a href="/2015/03/21/some-fun-with-hydra/">
             Some fun with Hydra
             <small>21 Mar 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/03/20/managing-emacs-packages/"> -->
+          <a href="/2015/03/20/managing-emacs-packages/">
+            Emacs package management
+            <small>20 Mar 2015</small>
           </a>
         </h3>
       </li>
