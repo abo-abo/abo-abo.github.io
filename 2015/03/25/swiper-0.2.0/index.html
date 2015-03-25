@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Swiper 0.2.0 is out &middot; (or emacs
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="/public/css/octicons.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Scripts -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body class="layout-reverse theme-base-08">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <!-- <div class="sidebar-item"> -->
+  <!--   <p>unused</p> -->
+  <!-- </div> -->
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about/">About</a>
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/archive/">Archive</a>
+        
+      
+    
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+
+    <div id="github" class="sidebar-nav-item">
+      <button type="button"
+              class="btn btn-info"
+              data-toggle="collapse"
+              data-target="#github-projects">
+        <span class="octicon octicon-mark-github"></span> My Emacs Projects
+      </button>
+      <div id="github-projects" class="collapse">
+        <ul style="margin-bottom:0em;">
+          <li>
+            <a href="https://github.com/abo-abo/lispy">lispy</a>
+            <p>vi-like Paredit</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/worf">worf</a>
+            <p>vi-like bindings for org-mode</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-window">ace-window</a>
+            <p>switch windows with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-link">ace-link</a>
+            <p>follow links with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/function-args">function-args</a>
+            <p>enhance <code>CEDET</code> for C++</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/helm-make">helm-make</a>
+            <p>select a Makefile target with <code>helm</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/make-it-so">make-it-so</a>
+            <p>transform files with Makefile recipes</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/org-download">org-download</a>
+            <p>drag-and-drop images to <code>org-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo?tab=repositories">
+              <span class="octicon octicon-octoface"></span>
+              and more
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
+
+  <div class="sidebar-item">
+    <p>
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.0/">
+        <img alt="Creative Commons License"
+             style="border-width:0;opacity: 0.3;"
+             src="https://i.creativecommons.org/l/by-nc-sa/2.0/88x31.png"/>
+      </a>
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">(or emacs</a>
+            <small>irrelevant)</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Swiper 0.2.0 is out</h1>
+  <span class="post-date">25 Mar 2015</span>
+  <p>I forgot to mark the <code>0.1.0</code> release, so I&#39;m giving an overview of all the fixes and new features
+since the first commit in <a href="https://github.com/abo-abo/swiper/releases/0.2.0">the release notes</a>.</p>
+
+<h2 id="fixes">Fixes</h2>
+
+<h3 id="fix-font-locking-in-certain-modes">Fix font locking in certain modes</h3>
+
+<p>Some major modes try to optimize the font locking (highlighting text with various faces) by only
+doing it for the visible portion of the text. But since <code>swiper</code> needs to access all lines at once,
+it&#39;s necessary to font lock the whole buffer. This is done in <code>swiper-font-lock-ensure</code>. For some
+modes, the buffer becomes discolored after calling <code>swiper-font-lock-ensure</code>. In theory, this should
+not happen. As a work-around, I exclude these modes from ensuring font lock:</p>
+
+<ul>
+<li><code>package-menu-mode</code></li>
+<li><code>gnus-summary-mode</code></li>
+<li><code>gnus-article-mode</code></li>
+<li><code>gnus-group-mode</code></li>
+<li><code>emms-playlist-mode</code></li>
+<li><code>erc-mode</code></li>
+</ul>
+
+<p>If you see a discoloration in one of your favorite major modes while using <code>swiper</code>, just let me
+know and I&#39;ll add it to the list.</p>
+
+<h3 id="fix-face-changes-in-the-minibuffer-propagating-to-the-main-buffer">Fix face changes in the minibuffer propagating to the main buffer</h3>
+
+<p>This was a quite interesting <a href="https://github.com/abo-abo/swiper/issues/22">bug</a>. At that moment, I was using <code>add-face-text-property</code> to add faces to the copies of strings in the minibuffer. However, this function destructively modifies the properties, so the change to the properties of a string copy (obtained with <code>concat</code> or <code>copy-sequence</code>) was propagated to the properties of the original string. This was fixed by using <code>font-lock-append-text-property</code> instead of <code>add-face-text-property</code>.</p>
+
+<h3 id="ivy-read-returns-immediately-for-0-1-candidates"><code>ivy-read</code> returns immediately for 0-1 candidates</h3>
+
+<p>An obvious improvement.</p>
+
+<h3 id="clean-up-overlays-better-for-c-g">Clean up overlays better for <kbd>C-g</kbd></h3>
+
+<p>The hidden overlays revealed during the search will be re-hidden if you cancel the search with
+<kbd>C-g</kbd>.</p>
+
+<h3 id="ensure-that-candidates-don&#39;t-have-read-only-property">Ensure that candidates don&#39;t have read-only property</h3>
+
+<p>This issue was causing a bug while using <code>swiper</code> in <code>erc-mode</code>, since it marks all of the buffer
+content to <code>read-only</code>. So once a string with <code>read-only</code> property is inserted into the minibuffer,
+you can&#39;t delete it unless you set <code>inhibit-read-only</code>.</p>
+
+<h2 id="new-features">New Features</h2>
+
+<h3 id="optional-initial-input">Optional initial input</h3>
+
+<p>If you call <code>(swiper &quot;fix&quot;)</code>, you&#39;ll start searching with initial input <code>&quot;fix&quot;</code>.</p>
+
+<h3 id="restore-the-initial-point-on-canceling">Restore the initial point on canceling</h3>
+
+<p>If you cancel the search with e.g. <kbd>C-g</kbd> (or <kbd>DEL</kbd> when there&#39;s no input), the
+initial point will be restored.</p>
+
+<h3 id="inherit-standard-faces">Inherit standard faces</h3>
+
+<p>To give a more standard default appearance, <code>swiper</code> faces inherit the default faces:</p>
+
+<ul>
+<li><code>isearch-lazy-highlight-face</code></li>
+<li><code>isearch</code></li>
+<li><code>match</code></li>
+<li><code>isearch</code> again</li>
+<li><code>highlight</code></li>
+</ul>
+
+<p>Most themes customize these faces, so by re-using them <code>swiper</code> blends in better.
+If you want the cool (my opinion) original faces, have a look at <a href="https://github.com/abo-abo/eclipse-theme">eclipse-theme</a>.</p>
+
+<h3 id="reveal-invisible-overlays">Reveal invisible overlays</h3>
+
+<p>This is quite important for searches in <code>org-mode</code> buffers. I tried to make it as close as possible
+to what <code>isearch</code> is doing.</p>
+
+<h3 id="mark-is-saved-for-successful-searches">Mark is saved for successful searches</h3>
+
+<p>This is the behavior of <code>isearch</code>. After you complete a search, you can go back to the search start with
+<kbd>C-x C-SPC</kbd> (<code>pop-global-mark</code>).</p>
+
+<h3 id="the-current-candidate-is-anchored-to-the-current-position">The current candidate is anchored to the current position</h3>
+
+<p>This means that if many candidates are matching the current input, the one which is closest to the
+current line (going forwards) is selected. This is important for not losing the context of what
+you&#39;re searching.</p>
+
+<h3 id="don&#39;t-recenter-unless-necessary">Don&#39;t recenter unless necessary</h3>
+
+<p>This is similar to the behavior of <code>isearch</code>: a scroll is performed only if the candidate is out of
+the window bounds. An alternate strategy of keeping the current candidate always centered in the
+window is more distracting.</p>
+
+<h3 id="decouple-helm-back-end">Decouple helm back end</h3>
+
+<p><code>swiper</code> command uses only <code>ivy</code> now. If you want to use <code>helm</code>, have a look at
+<a href="https://github.com/abo-abo/swiper-helm">swiper-helm</a>.</p>
+
+<h3 id="add-history-handling">Add history handling</h3>
+
+<p><kbd>M-n</kbd> will select the next history element, and <kbd>M-p</kbd> will select the previous
+history element.</p>
+
+<p>When there is no input, both <kbd>C-s</kbd> and <kbd>C-r</kbd> will select the last history element.
+This is to make it similar to <code>isearch</code>.</p>
+
+<p>When there is no input, and only once during the search, <kbd>M-n</kbd> will select symbol-at-point
+as the current input.</p>
+
+<h3 id="truncate-candidates-to-window-width-in-the-minibuffer">Truncate candidates to window width in the minibuffer</h3>
+
+<p>If a candidate is longer than the window width, it will be appropriately truncated with <code>...</code>.
+You can still match the invisible parts.</p>
+
+<h3 id="warn-for-empty-buffer">Warn for empty buffer</h3>
+
+<p>Obviously there&#39;s nothing to search for in an empty buffer.</p>
+
+<h3 id="bring-the-last-history-candidate-to-front">Bring the last history candidate to front</h3>
+
+<p>In case of a successful search, the current input will be removed from history, and then re-added to
+the front.</p>
+
+<h3 id="make-c-n-and-c-p-differ-from-c-s-and-c-r">Make <kbd>C-n</kbd> and <kbd>C-p</kbd> differ from <kbd>C-s</kbd> and <kbd>C-r</kbd></h3>
+
+<p>The arrows will not recall the last history element in case the input is empty.
+Otherwise, <kbd>C-n</kbd> matches to <kbd>C-s</kbd> and <kbd>C-p</kbd> matches to <kbd>C-r</kbd>.</p>
+
+<h3 id="ivy-read-now-displays-the-number-of-candidates-in-the-prompt"><code>ivy-read</code> now displays the number of candidates in the prompt</h3>
+
+<p>The prompt argument can hold a <code>format</code>-style expression, e.g. <code>&quot; [% 3d] pattern:&quot;</code>, and the integer
+parameter will be updated with the current amount of matches.
+You can also customize <code>ivy-count-format</code>, that defaults to <code>&quot;%-4d &quot;</code>.</p>
+
+<h3 id="custom-amount-of-chars-to-start-highlighting">Custom amount of chars to start highlighting</h3>
+
+<p>Customize <code>swiper-min-highlight</code> for this. It defaults to 2, which means that the current buffer
+will be highlighted when the input has 2 chars or more. You can set it to <code>1</code> if you want, I found
+it slightly distracting, since there will be a lot of highlights for just one char input.
+Or you can set it to a larger value if you want the highlights to appear later.</p>
+
+<h3 id="customize-wrapping-for-c-n-and-c-p">Customize wrapping for <kbd>C-n</kbd> and <kbd>C-p</kbd></h3>
+
+<p>This feature being on by default in <code>helm-swoop</code> was very distracting for me, and one of the reasons
+that I wrote <code>swiper</code>. So it&#39;s off by default, but you can set it if you want. Calling
+<kbd>C-p</kbd> on line number 0 will cycle to the last candidate etc.</p>
+
+<h3 id="update-copyright">Update Copyright</h3>
+
+<p>Since <code>swiper</code> was added to <a href="https://elpa.gnu.org/packages/">GNU ELPA</a>, I had to assign the
+Copyright to the FSF. This also means that you also need an FSF Copyright assignment for Emacs in
+order to contribute more than total of 15 lines to the <code>swiper</code> code. It&#39;s really easy to get and is
+already necessary to contribute to any package that is part of Emacs.</p>
+
+<h3 id="add-swiper-query-replace">Add <code>swiper-query-replace</code></h3>
+
+<p>You can start a query replace operation starting with the current candidate with <kbd>M-q</kbd>.  If
+you want to query replace in whole buffer, just do <kbd>M-&lt; M-q</kbd>. And remember that
+<kbd>!</kbd> will auto-replace all matches for the current query.</p>
+
+<p>The default binding of <kbd>M-q</kbd> is <code>fill-paragraph</code>. This function is useless in the minibuffer,
+so I chose that binding for query-replace, which is normally bound to sub-optimal <kbd>M-%</kbd>.
+Although there are worse bindings than <kbd>M-%</kbd> (hold three keys at once), for instance, there&#39;s
+<kbd>C-M-%</kbd> (hold <strong>four</strong> keys at once) that calls <code>query-replace-regexp</code>.</p>
+
+<h2 id="outro">Outro</h2>
+
+<p>Enjoy the new features, and a big thanks to all who contributed!</p>
+
+</div>
+
+<div class="twitter-share">
+  <a href="https://twitter.com/share"
+     class="twitter-share-button"
+     data-via="_abo_abo"
+     data-dnt="true">
+    Tweet
+  </a>
+</div>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/03/23/region-to-toilet/"> -->
+          <a href="/2015/03/23/region-to-toilet/">
+            Transform region into ASCII art
+            <small>23 Mar 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/03/22/hydra-0.12.0/"> -->
+          <a href="/2015/03/22/hydra-0.12.0/">
+            Hydra 0.12.0 is out
+            <small>22 Mar 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/03/21/some-fun-with-hydra/"> -->
+          <a href="/2015/03/21/some-fun-with-hydra/">
+            Some fun with Hydra
+            <small>21 Mar 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'oremacs'; // required: replace example with your forum shortname
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+<script>
+  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+</script>
+<noscript>
+  Please enable JavaScript to view the
+  <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>

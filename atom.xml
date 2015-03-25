@@ -4,13 +4,188 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-03-23T19:22:14+01:00</updated>
+ <updated>2015-03-26T14:31:46+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Swiper 0.2.0 is out</title>
+   <link href="http://oremacs.com/2015/03/25/swiper-0.2.0/"/>
+   <updated>2015-03-25T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/03/25/swiper-0.2.0</id>
+   <content type="html">&lt;p&gt;I forgot to mark the &lt;code&gt;0.1.0&lt;/code&gt; release, so I&amp;#39;m giving an overview of all the fixes and new features
+since the first commit in &lt;a href=&quot;https://github.com/abo-abo/swiper/releases/0.2.0&quot;&gt;the release notes&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;fixes&quot;&gt;Fixes&lt;/h2&gt;
+
+&lt;h3 id=&quot;fix-font-locking-in-certain-modes&quot;&gt;Fix font locking in certain modes&lt;/h3&gt;
+
+&lt;p&gt;Some major modes try to optimize the font locking (highlighting text with various faces) by only
+doing it for the visible portion of the text. But since &lt;code&gt;swiper&lt;/code&gt; needs to access all lines at once,
+it&amp;#39;s necessary to font lock the whole buffer. This is done in &lt;code&gt;swiper-font-lock-ensure&lt;/code&gt;. For some
+modes, the buffer becomes discolored after calling &lt;code&gt;swiper-font-lock-ensure&lt;/code&gt;. In theory, this should
+not happen. As a work-around, I exclude these modes from ensuring font lock:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;package-menu-mode&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;gnus-summary-mode&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;gnus-article-mode&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;gnus-group-mode&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;emms-playlist-mode&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;erc-mode&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;If you see a discoloration in one of your favorite major modes while using &lt;code&gt;swiper&lt;/code&gt;, just let me
+know and I&amp;#39;ll add it to the list.&lt;/p&gt;
+
+&lt;h3 id=&quot;fix-face-changes-in-the-minibuffer-propagating-to-the-main-buffer&quot;&gt;Fix face changes in the minibuffer propagating to the main buffer&lt;/h3&gt;
+
+&lt;p&gt;This was a quite interesting &lt;a href=&quot;https://github.com/abo-abo/swiper/issues/22&quot;&gt;bug&lt;/a&gt;. At that moment, I was using &lt;code&gt;add-face-text-property&lt;/code&gt; to add faces to the copies of strings in the minibuffer. However, this function destructively modifies the properties, so the change to the properties of a string copy (obtained with &lt;code&gt;concat&lt;/code&gt; or &lt;code&gt;copy-sequence&lt;/code&gt;) was propagated to the properties of the original string. This was fixed by using &lt;code&gt;font-lock-append-text-property&lt;/code&gt; instead of &lt;code&gt;add-face-text-property&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;ivy-read-returns-immediately-for-0-1-candidates&quot;&gt;&lt;code&gt;ivy-read&lt;/code&gt; returns immediately for 0-1 candidates&lt;/h3&gt;
+
+&lt;p&gt;An obvious improvement.&lt;/p&gt;
+
+&lt;h3 id=&quot;clean-up-overlays-better-for-c-g&quot;&gt;Clean up overlays better for &lt;kbd&gt;C-g&lt;/kbd&gt;&lt;/h3&gt;
+
+&lt;p&gt;The hidden overlays revealed during the search will be re-hidden if you cancel the search with
+&lt;kbd&gt;C-g&lt;/kbd&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;ensure-that-candidates-don&amp;#39;t-have-read-only-property&quot;&gt;Ensure that candidates don&amp;#39;t have read-only property&lt;/h3&gt;
+
+&lt;p&gt;This issue was causing a bug while using &lt;code&gt;swiper&lt;/code&gt; in &lt;code&gt;erc-mode&lt;/code&gt;, since it marks all of the buffer
+content to &lt;code&gt;read-only&lt;/code&gt;. So once a string with &lt;code&gt;read-only&lt;/code&gt; property is inserted into the minibuffer,
+you can&amp;#39;t delete it unless you set &lt;code&gt;inhibit-read-only&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;new-features&quot;&gt;New Features&lt;/h2&gt;
+
+&lt;h3 id=&quot;optional-initial-input&quot;&gt;Optional initial input&lt;/h3&gt;
+
+&lt;p&gt;If you call &lt;code&gt;(swiper &amp;quot;fix&amp;quot;)&lt;/code&gt;, you&amp;#39;ll start searching with initial input &lt;code&gt;&amp;quot;fix&amp;quot;&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;restore-the-initial-point-on-canceling&quot;&gt;Restore the initial point on canceling&lt;/h3&gt;
+
+&lt;p&gt;If you cancel the search with e.g. &lt;kbd&gt;C-g&lt;/kbd&gt; (or &lt;kbd&gt;DEL&lt;/kbd&gt; when there&amp;#39;s no input), the
+initial point will be restored.&lt;/p&gt;
+
+&lt;h3 id=&quot;inherit-standard-faces&quot;&gt;Inherit standard faces&lt;/h3&gt;
+
+&lt;p&gt;To give a more standard default appearance, &lt;code&gt;swiper&lt;/code&gt; faces inherit the default faces:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;isearch-lazy-highlight-face&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;isearch&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;match&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;isearch&lt;/code&gt; again&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;highlight&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Most themes customize these faces, so by re-using them &lt;code&gt;swiper&lt;/code&gt; blends in better.
+If you want the cool (my opinion) original faces, have a look at &lt;a href=&quot;https://github.com/abo-abo/eclipse-theme&quot;&gt;eclipse-theme&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;reveal-invisible-overlays&quot;&gt;Reveal invisible overlays&lt;/h3&gt;
+
+&lt;p&gt;This is quite important for searches in &lt;code&gt;org-mode&lt;/code&gt; buffers. I tried to make it as close as possible
+to what &lt;code&gt;isearch&lt;/code&gt; is doing.&lt;/p&gt;
+
+&lt;h3 id=&quot;mark-is-saved-for-successful-searches&quot;&gt;Mark is saved for successful searches&lt;/h3&gt;
+
+&lt;p&gt;This is the behavior of &lt;code&gt;isearch&lt;/code&gt;. After you complete a search, you can go back to the search start with
+&lt;kbd&gt;C-x C-SPC&lt;/kbd&gt; (&lt;code&gt;pop-global-mark&lt;/code&gt;).&lt;/p&gt;
+
+&lt;h3 id=&quot;the-current-candidate-is-anchored-to-the-current-position&quot;&gt;The current candidate is anchored to the current position&lt;/h3&gt;
+
+&lt;p&gt;This means that if many candidates are matching the current input, the one which is closest to the
+current line (going forwards) is selected. This is important for not losing the context of what
+you&amp;#39;re searching.&lt;/p&gt;
+
+&lt;h3 id=&quot;don&amp;#39;t-recenter-unless-necessary&quot;&gt;Don&amp;#39;t recenter unless necessary&lt;/h3&gt;
+
+&lt;p&gt;This is similar to the behavior of &lt;code&gt;isearch&lt;/code&gt;: a scroll is performed only if the candidate is out of
+the window bounds. An alternate strategy of keeping the current candidate always centered in the
+window is more distracting.&lt;/p&gt;
+
+&lt;h3 id=&quot;decouple-helm-back-end&quot;&gt;Decouple helm back end&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;swiper&lt;/code&gt; command uses only &lt;code&gt;ivy&lt;/code&gt; now. If you want to use &lt;code&gt;helm&lt;/code&gt;, have a look at
+&lt;a href=&quot;https://github.com/abo-abo/swiper-helm&quot;&gt;swiper-helm&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;add-history-handling&quot;&gt;Add history handling&lt;/h3&gt;
+
+&lt;p&gt;&lt;kbd&gt;M-n&lt;/kbd&gt; will select the next history element, and &lt;kbd&gt;M-p&lt;/kbd&gt; will select the previous
+history element.&lt;/p&gt;
+
+&lt;p&gt;When there is no input, both &lt;kbd&gt;C-s&lt;/kbd&gt; and &lt;kbd&gt;C-r&lt;/kbd&gt; will select the last history element.
+This is to make it similar to &lt;code&gt;isearch&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;When there is no input, and only once during the search, &lt;kbd&gt;M-n&lt;/kbd&gt; will select symbol-at-point
+as the current input.&lt;/p&gt;
+
+&lt;h3 id=&quot;truncate-candidates-to-window-width-in-the-minibuffer&quot;&gt;Truncate candidates to window width in the minibuffer&lt;/h3&gt;
+
+&lt;p&gt;If a candidate is longer than the window width, it will be appropriately truncated with &lt;code&gt;...&lt;/code&gt;.
+You can still match the invisible parts.&lt;/p&gt;
+
+&lt;h3 id=&quot;warn-for-empty-buffer&quot;&gt;Warn for empty buffer&lt;/h3&gt;
+
+&lt;p&gt;Obviously there&amp;#39;s nothing to search for in an empty buffer.&lt;/p&gt;
+
+&lt;h3 id=&quot;bring-the-last-history-candidate-to-front&quot;&gt;Bring the last history candidate to front&lt;/h3&gt;
+
+&lt;p&gt;In case of a successful search, the current input will be removed from history, and then re-added to
+the front.&lt;/p&gt;
+
+&lt;h3 id=&quot;make-c-n-and-c-p-differ-from-c-s-and-c-r&quot;&gt;Make &lt;kbd&gt;C-n&lt;/kbd&gt; and &lt;kbd&gt;C-p&lt;/kbd&gt; differ from &lt;kbd&gt;C-s&lt;/kbd&gt; and &lt;kbd&gt;C-r&lt;/kbd&gt;&lt;/h3&gt;
+
+&lt;p&gt;The arrows will not recall the last history element in case the input is empty.
+Otherwise, &lt;kbd&gt;C-n&lt;/kbd&gt; matches to &lt;kbd&gt;C-s&lt;/kbd&gt; and &lt;kbd&gt;C-p&lt;/kbd&gt; matches to &lt;kbd&gt;C-r&lt;/kbd&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;ivy-read-now-displays-the-number-of-candidates-in-the-prompt&quot;&gt;&lt;code&gt;ivy-read&lt;/code&gt; now displays the number of candidates in the prompt&lt;/h3&gt;
+
+&lt;p&gt;The prompt argument can hold a &lt;code&gt;format&lt;/code&gt;-style expression, e.g. &lt;code&gt;&amp;quot; [% 3d] pattern:&amp;quot;&lt;/code&gt;, and the integer
+parameter will be updated with the current amount of matches.
+You can also customize &lt;code&gt;ivy-count-format&lt;/code&gt;, that defaults to &lt;code&gt;&amp;quot;%-4d &amp;quot;&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;custom-amount-of-chars-to-start-highlighting&quot;&gt;Custom amount of chars to start highlighting&lt;/h3&gt;
+
+&lt;p&gt;Customize &lt;code&gt;swiper-min-highlight&lt;/code&gt; for this. It defaults to 2, which means that the current buffer
+will be highlighted when the input has 2 chars or more. You can set it to &lt;code&gt;1&lt;/code&gt; if you want, I found
+it slightly distracting, since there will be a lot of highlights for just one char input.
+Or you can set it to a larger value if you want the highlights to appear later.&lt;/p&gt;
+
+&lt;h3 id=&quot;customize-wrapping-for-c-n-and-c-p&quot;&gt;Customize wrapping for &lt;kbd&gt;C-n&lt;/kbd&gt; and &lt;kbd&gt;C-p&lt;/kbd&gt;&lt;/h3&gt;
+
+&lt;p&gt;This feature being on by default in &lt;code&gt;helm-swoop&lt;/code&gt; was very distracting for me, and one of the reasons
+that I wrote &lt;code&gt;swiper&lt;/code&gt;. So it&amp;#39;s off by default, but you can set it if you want. Calling
+&lt;kbd&gt;C-p&lt;/kbd&gt; on line number 0 will cycle to the last candidate etc.&lt;/p&gt;
+
+&lt;h3 id=&quot;update-copyright&quot;&gt;Update Copyright&lt;/h3&gt;
+
+&lt;p&gt;Since &lt;code&gt;swiper&lt;/code&gt; was added to &lt;a href=&quot;https://elpa.gnu.org/packages/&quot;&gt;GNU ELPA&lt;/a&gt;, I had to assign the
+Copyright to the FSF. This also means that you also need an FSF Copyright assignment for Emacs in
+order to contribute more than total of 15 lines to the &lt;code&gt;swiper&lt;/code&gt; code. It&amp;#39;s really easy to get and is
+already necessary to contribute to any package that is part of Emacs.&lt;/p&gt;
+
+&lt;h3 id=&quot;add-swiper-query-replace&quot;&gt;Add &lt;code&gt;swiper-query-replace&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;You can start a query replace operation starting with the current candidate with &lt;kbd&gt;M-q&lt;/kbd&gt;.  If
+you want to query replace in whole buffer, just do &lt;kbd&gt;M-&amp;lt; M-q&lt;/kbd&gt;. And remember that
+&lt;kbd&gt;!&lt;/kbd&gt; will auto-replace all matches for the current query.&lt;/p&gt;
+
+&lt;p&gt;The default binding of &lt;kbd&gt;M-q&lt;/kbd&gt; is &lt;code&gt;fill-paragraph&lt;/code&gt;. This function is useless in the minibuffer,
+so I chose that binding for query-replace, which is normally bound to sub-optimal &lt;kbd&gt;M-%&lt;/kbd&gt;.
+Although there are worse bindings than &lt;kbd&gt;M-%&lt;/kbd&gt; (hold three keys at once), for instance, there&amp;#39;s
+&lt;kbd&gt;C-M-%&lt;/kbd&gt; (hold &lt;strong&gt;four&lt;/strong&gt; keys at once) that calls &lt;code&gt;query-replace-regexp&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;Enjoy the new features, and a big thanks to all who contributed!&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Transform region into ASCII art</title>
