@@ -231,6 +231,67 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/02/07/hydra-on-youtubes/">
+        A new Hydra demo on Youtube
+      </a>
+    </h1>
+
+    <span class="post-date">07 Feb 2015</span>
+
+    <p>This will be a short post sharing two pieces of information.</p>
+
+<h2 id="a-hydra-demo-is-on-youtube">A Hydra demo is on Youtube</h2>
+
+<p>Here is the <a href="https://www.youtube.com/watch?v=_qZliI1BKzI">link</a>, and here is the current window-switching code:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span>
+ <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-M-o&quot;</span><span class="p">)</span>
+ <span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-window</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">amaranth</span><span class="p">)</span>
+   <span class="s">&quot;window&quot;</span>
+   <span class="p">(</span><span class="s">&quot;h&quot;</span> <span class="nv">windmove-left</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">windmove-down</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;k&quot;</span> <span class="nv">windmove-up</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nv">windmove-right</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;v&quot;</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span>
+          <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">split-window-right</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">windmove-right</span><span class="p">))</span>
+        <span class="s">&quot;vert&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;x&quot;</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span>
+          <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">split-window-below</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">windmove-down</span><span class="p">))</span>
+        <span class="s">&quot;horz&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;t&quot;</span> <span class="nv">transpose-frame</span> <span class="s">&quot;&#39;&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;o&quot;</span> <span class="nv">delete-other-windows</span> <span class="s">&quot;one&quot;</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="nv">ace-window</span> <span class="s">&quot;ace&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;s&quot;</span> <span class="nv">ace-swap-window</span> <span class="s">&quot;swap&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;d&quot;</span> <span class="nv">ace-delete-window</span> <span class="s">&quot;del&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;i&quot;</span> <span class="nv">ace-maximize-window</span> <span class="s">&quot;ace-one&quot;</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;b&quot;</span> <span class="nv">ido-switch-buffer</span> <span class="s">&quot;buf&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;m&quot;</span> <span class="nv">headlong-bookmark-jump</span> <span class="s">&quot;bmk&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span> <span class="s">&quot;cancel&quot;</span><span class="p">)))</span>
+</code></pre></div>
+<h2 id="ace-window-0.7.0-is-out"><code>ace-window 0.7.0</code> is out</h2>
+
+<p>You can see the release notes <a href="https://github.com/abo-abo/ace-window/releases/tag/0.7.0">here</a>.
+There&#39;s not a whole lot of user-visible changes, but a large portion of the code was re-written
+to facilitate the use of the API. I hope that no new bugs were introduced with this change,
+you can still fall back to <a href="https://github.com/abo-abo/ace-window/releases/tag/0.6.1">0.6.1</a> and send
+me <a href="https://github.com/abo-abo/ace-window/issues">an issue</a> if something broke. There&#39;s a benefit
+in the long run, just see how simple the code has become:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">ace-maximize-window</span> <span class="p">()</span>
+  <span class="s">&quot;Ace maximize window.&quot;</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">select-window</span>
+   <span class="p">(</span><span class="nv">aw-select</span> <span class="s">&quot; Ace - Maximize Window&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="nv">delete-other-windows</span><span class="p">))</span>
+</code></pre></div>
+<p>Here, <code>aw-select</code> just returns a selected window, and nothing else. Very easy to use.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/02/06/the-synergy/">
         The Elisp Synergy
       </a>
@@ -699,181 +760,6 @@ maximizing the current one.</p>
 <p>Note that, since numerical arguments are working now, <kbd>4a</kbd> is
 the same as <kbd>s</kbd> (swap) and <kbd>16a</kbd> or <kbd>C-u C-u
 a</kbd> is the same as <kbd>d</kbd> (delete).</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/02/02/colorful-hydrae/">
-        Colorful Hydras
-      </a>
-    </h1>
-
-    <span class="post-date">02 Feb 2015</span>
-
-    <p>This post advertises the release of <a href="https://github.com/abo-abo/hydra/releases/tag/0.5.0">hydra.el 0.5.0</a>.
-The package was introduced in <a href="/2015/01/20/introducing-hydra/">an earlier post</a> and received some positive feedback.
-Currently, it&#39;s available in both
-<a href="https://elpa.gnu.org/packages/hydra.html">GNU ELPA</a> (slightly behind)
-and <a href="http://melpa.org/#/hydra">MELPA</a> (always current).</p>
-
-<p><img src="/download/Hydra-color.png" alt="colorful-hydra"></p>
-
-<h2 id="the-newfound-utility">The newfound utility</h2>
-
-<p>As I originally released the Hydra, I was asked if it was similar to
-<a href="http://endlessparentheses.com/the-toggle-map-and-wizardry.html">this approach</a>
-described on <a href="http://endlessparentheses.com/">Endless Parentheses</a>. I
-said that it&#39;s not, since Hydra commands are meant to be repeatable
-instead of being called just once.</p>
-
-<p>Now, after I&#39;ve designated the repeatable heads with red color and the one-off heads with blue color,
-Hydra can reproduce the mentioned approach. Here&#39;s how it looks like:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span>
- <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c C-v&quot;</span><span class="p">)</span>
- <span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-toggle</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
-   <span class="s">&quot;toggle&quot;</span>
-   <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="nv">abbrev-mode</span> <span class="s">&quot;abbrev&quot;</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;d&quot;</span> <span class="nv">toggle-debug-on-error</span> <span class="s">&quot;debug&quot;</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;f&quot;</span> <span class="nv">auto-fill-mode</span> <span class="s">&quot;fill&quot;</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;t&quot;</span> <span class="nv">toggle-truncate-lines</span> <span class="s">&quot;truncate&quot;</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;w&quot;</span> <span class="nv">whitespace-mode</span> <span class="s">&quot;whitespace&quot;</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span> <span class="s">&quot;cancel&quot;</span><span class="p">)))</span>
-</code></pre></div>
-<p>And this is what I see in the echo area after pressing <kbd>C-c C-v</kbd>:</p>
-
-<p><img src="/download/Hydra-toggle.png" alt="hydra-toggle"></p>
-
-<p>At this point:</p>
-
-<ul>
-<li><kbd>q</kbd> will cancel without doing anything. I think it&#39;s more
-convenient than doing the equivalent <kbd>C-g</kbd> with the
-<code>global-set-key</code> approach.</li>
-<li><kbd>a</kbd>, <kbd>d</kbd>, <kbd>f</kbd>, <kbd>t</kbd>, and <kbd>a</kbd> will call the appropriate function.
-The advantage of blue Hydra heads over <code>global-set-key</code> is that you immediately get the hint: this can be useful
-for rarely used commands.</li>
-<li>as with the old red Hydra heads, pressing anything other than
-<kbd>a</kbd>, <kbd>d</kbd>, <kbd>f</kbd>, <kbd>t</kbd>, <kbd>a</kbd>,
-or <kbd>q</kbd> will vanquish the Hydra <em>and</em> call the key binding
-that you just pressed. This is different from the <code>global-set-key</code>
-approach, which would e.g. error to your <kbd>C-c C-v C-n</kbd> with
-<code>&quot;C-c C-v C-n is undefined&quot;</code>, unlike the Hydra, which would call <kbd>C-n</kbd>
-(<code>next-line</code>).</li>
-</ul>
-
-<h2 id="the-full-defhydra-syntax">The full <code>defhydra</code> syntax</h2>
-
-<p>Note that <code>defhydra</code> looks intentionally like a <code>defun</code>, so that it&#39;s
-easier to remember how it works.
-Here&#39;s a more verbose Hydra that&#39;s largely equivalent to the one above:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-toggle</span> <span class="p">(</span><span class="nv">global-map</span> <span class="s">&quot;C-c&quot;</span> <span class="nb">:color</span> <span class="nv">red</span><span class="p">)</span>
-   <span class="s">&quot;toggle&quot;</span>
-   <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="nv">abbrev-mode</span> <span class="s">&quot;abbrev&quot;</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;d&quot;</span> <span class="nv">toggle-debug-on-error</span> <span class="s">&quot;debug&quot;</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;f&quot;</span> <span class="nv">auto-fill-mode</span> <span class="s">&quot;fill&quot;</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;t&quot;</span> <span class="nv">toggle-truncate-lines</span> <span class="s">&quot;truncate&quot;</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;w&quot;</span> <span class="nv">whitespace-mode</span> <span class="s">&quot;whitespace&quot;</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;v&quot;</span> <span class="nv">recenter-top-bottom</span> <span class="s">&quot;recenter&quot;</span> <span class="nb">:color</span> <span class="nv">red</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span> <span class="s">&quot;cancel&quot;</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c C-v&quot;</span><span class="p">)</span> <span class="ss">&#39;hydra-toggle/body</span><span class="p">)</span>
-</code></pre></div>
-<h3 id="first-argument:-hydra-name">First argument: Hydra name</h3>
-
-<p>This argument decides the prefix to all the functions that will be generated.
-In this case the following functions will be generated:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="nv">hydra-toggle/abbrev-mode</span>
-<span class="nv">hydra-toggle/toggle-debug-on-error</span>
-<span class="nv">hydra-toggle/auto-fill-mode</span>
-<span class="nv">hydra-toggle/toggle-truncate-lines</span>
-<span class="nv">hydra-toggle/whitespace-mode</span>
-<span class="nv">hydra-toggle/recenter-top-bottom</span>
-<span class="nv">hydra-toggle/nil</span>
-<span class="nv">hydra-toggle/body</span>
-</code></pre></div>
-<p>The final function calls the Hydra&#39;s body, displaying the hint in the echo area and setting
-the transient map. It&#39;s the return result of <code>defhydra</code>, that&#39;s why it was possible to pass it
-to <code>global-set-key</code> in the first example.</p>
-
-<h3 id="second-argument:-hydra-body">Second argument: Hydra body</h3>
-
-<p>The Hydra body consists of:</p>
-
-<ul>
-<li>a map used for binding, like <code>global-map</code> or <code>c++-mode-map</code> or <code>projectile-mode-map</code></li>
-<li>the body prefix: it&#39;s a string passable to <code>kbd</code> that will be used
-in conjunction with heads&#39; prefixes to bind the functions</li>
-<li>an optional plist, which currently recognizes only the <code>:color</code> key,
-which in turn can be either red (the old behavior) or blue.</li>
-</ul>
-
-<p>It&#39;s possible to omit the map and the body prefix simultaneously (it
-doesn&#39;t make sense to omit one but not the other), or just pass <code>()</code>
-if you want to get a red Hydra body that you can bind yourself.</p>
-
-<h3 id="third-argument:-hydra-hint">Third argument: Hydra hint</h3>
-
-<p>This string will be used in the echo area to distinguish the current
-Hydra. This is optional, it case you don&#39;t provide it, it will default
-to <code>&quot;hydra&quot;</code>.</p>
-
-<h3 id="fourth-argument:-hydra-heads">Fourth argument: Hydra heads</h3>
-
-<p>Each Hydra head is a list of:</p>
-
-<ul>
-<li>the key extension</li>
-<li>the function</li>
-<li>optional hint</li>
-<li>optional plist.</li>
-</ul>
-
-<p>Again, the plist recognizes only <code>:color</code> currently. The color is inherited from the body, if
-you don&#39;t specify it. In turn, the body color is red if you don&#39;t specify it.</p>
-
-<p>The code above:</p>
-
-<ul>
-<li>binds <kbd>C-c a</kbd>, <kbd>C-c d</kbd> etc with the usual <code>global-set-key</code> approach.</li>
-<li>binds <kbd>C-c C-v a</kbd>, <kbd>C-c C-v d</kbd> with the new
-approach, which shows you the hint right after <kbd>C-c C-v</kbd> and
-allows you to cancel easier.</li>
-<li>binds <kbd>C-c v</kbd> to be repeatable, i.e. you can press <kbd>C-c v v v</kbd>. Same with <kbd>C-c C-v v v v</kbd>.</li>
-</ul>
-
-<h2 id="some-more-ideas-for-blue-hydras">Some more ideas for blue Hydras</h2>
-
-<p>Here&#39;s one for some <code>helm</code>-related functions, don&#39;t ask how
-<code>projectile-find-file</code> ended up here:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span>
- <span class="s">&quot;κ&quot;</span>
- <span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-helm</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
-   <span class="s">&quot;helm&quot;</span>
-   <span class="p">(</span><span class="s">&quot;f&quot;</span> <span class="nv">projectile-find-file</span> <span class="s">&quot;file&quot;</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;w&quot;</span> <span class="nv">helm-org-wiki</span> <span class="s">&quot;wiki&quot;</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;r&quot;</span> <span class="nv">helm-recentf</span> <span class="s">&quot;recent&quot;</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;s&quot;</span> <span class="nv">helm-swoop</span> <span class="s">&quot;swoop&quot;</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span> <span class="s">&quot;quit&quot;</span><span class="p">)))</span>
-</code></pre></div>
-<p>Here&#39;s one more for <code>gnus</code>; I&#39;m just getting the hang of it, so some hints are useful:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-gnus-reply</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
-  <span class="s">&quot;reply&quot;</span>
-  <span class="p">(</span><span class="s">&quot;o&quot;</span> <span class="nv">gnus-summary-reply-with-original</span> <span class="s">&quot;one&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;O&quot;</span> <span class="nv">gnus-summary-reply</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="nv">gnus-summary-wide-reply-with-original</span> <span class="s">&quot;all&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;A&quot;</span> <span class="nv">gnus-summary-wide-reply</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;u&quot;</span> <span class="nv">gnus-summary-very-wide-reply-with-original</span> <span class="s">&quot;universe&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;U&quot;</span> <span class="nv">gnus-summary-very-wide-reply</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span> <span class="s">&quot;quit&quot;</span><span class="p">))</span>
-<span class="p">(</span><span class="nf">define-key</span> <span class="nv">gnus-summary-mode-map</span> <span class="s">&quot;r&quot;</span> <span class="ss">&#39;hydra-gnus-reply/body</span><span class="p">)</span>
-</code></pre></div>
-<p>I omit the hint for the commands that do the same as the previous one,
-just without citing.</p>
-
-<h2 id="outro">Outro</h2>
-
-<p>I hope that you enjoy the update and let me know when you invent some
-efficient blue or red-and-blue Hydras. Happy hacking!</p>
 
   </div>
   
