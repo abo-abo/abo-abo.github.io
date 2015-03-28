@@ -11,7 +11,7 @@
 
   <title>
     
-      Zoom in / out with style &middot; (or emacs
+      recenter-positions, that's not how gravity works! &middot; (or emacs
     
   </title>
 
@@ -232,54 +232,31 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Zoom in / out with style</h1>
-  <span class="post-date">14 Jan 2015</span>
-  <p>I don&#39;t usually zoom a lot, typically I do it to size up other
-people&#39;s functions. Then, I zoom-out a couple times in a row until the
-function fits on the screen. Sometimes, I overshoot the zoom-out, and
-I have to zoom-in instead. I have <code>text-scale-increase</code> bound to
-<kbd>&lt;f2&gt; g</kbd> and <code>text-scale-decrease</code> bound to
-<kbd>&lt;f2&gt; l</kbd>.</p>
-
-<p>Below, I&#39;ll demonstrate how to call those two commands interchangeably
-with e.g. <kbd>&lt;f2&gt; g g g l g g l</kbd>, i.e. omitting the
-<kbd>&lt;f2&gt;</kbd> prefix.</p>
-
-<h2 id="define-repeatable-command">Define repeatable command</h2>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">def-rep-command</span> <span class="p">(</span><span class="nv">alist</span><span class="p">)</span>
-  <span class="s">&quot;Return a lambda that calls the first function of ALIST.</span>
-<span class="s">It sets the transient map to all functions of ALIST.&quot;</span>
-  <span class="p">(</span><span class="nb">lexical-let</span> <span class="p">((</span><span class="nv">keymap</span> <span class="p">(</span><span class="nf">make-sparse-keymap</span><span class="p">))</span>
-                <span class="p">(</span><span class="nv">func</span> <span class="p">(</span><span class="nv">cdar</span> <span class="nv">alist</span><span class="p">)))</span>
-    <span class="p">(</span><span class="nf">mapc</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
-            <span class="p">(</span><span class="nf">define-key</span> <span class="nv">keymap</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nf">cdr</span> <span class="nv">x</span><span class="p">)))</span>
-          <span class="nv">alist</span><span class="p">)</span>
-    <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">arg</span><span class="p">)</span>
-      <span class="p">(</span><span class="k">interactive</span> <span class="s">&quot;p&quot;</span><span class="p">)</span>
-      <span class="p">(</span><span class="nf">funcall</span> <span class="nv">func</span> <span class="nv">arg</span><span class="p">)</span>
-      <span class="p">(</span><span class="nv">set-transient-map</span> <span class="nv">keymap</span> <span class="no">t</span><span class="p">))))</span>
+  <h1 class="post-title">recenter-positions, that's not how gravity works!</h1>
+  <span class="post-date">28 Mar 2015</span>
+  <p>Yesterday, I&#39;ve added a new binding to <code>swiper-map</code>: <kbd>C-l</kbd> will now call
+<code>swiper-recenter-top-bottom</code>.
+The implementation is really easy, almost nothing to write home about:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">swiper-recenter-top-bottom</span> <span class="p">(</span><span class="kp">&amp;optional</span> <span class="nv">arg</span><span class="p">)</span>
+  <span class="s">&quot;Call (`recenter-top-bottom&#39; ARG) in `swiper--window&#39;.&quot;</span>
+  <span class="p">(</span><span class="k">interactive</span> <span class="s">&quot;P&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">with-selected-window</span> <span class="nv">swiper--window</span>
+    <span class="p">(</span><span class="nv">recenter-top-bottom</span> <span class="nv">arg</span><span class="p">)))</span>
 </code></pre></div>
-<p>This is a pretty simple function that takes an alist of keys and
-commands, and returns a lambda that calls the first command and sets
-the transient map to call the first and other commands.  The way the
-transient map works, it takes priority over almost all maps, but
-disappears as soon as you press something that doesn&#39;t belong to it.</p>
-
-<h2 id="the-zoom-in-/-zoom-out-use-case">The zoom-in / zoom-out use case</h2>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;&lt;f2&gt; g&quot;</span><span class="p">)</span>
-                <span class="p">(</span><span class="nv">def-rep-command</span>
-                    <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;g&quot;</span> <span class="o">.</span> <span class="nv">text-scale-increase</span><span class="p">)</span>
-                      <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="o">.</span> <span class="nv">text-scale-decrease</span><span class="p">))))</span>
-<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;&lt;f2&gt; l&quot;</span><span class="p">)</span>
-                <span class="p">(</span><span class="nv">def-rep-command</span>
-                    <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;l&quot;</span> <span class="o">.</span> <span class="nv">text-scale-decrease</span><span class="p">)</span>
-                      <span class="p">(</span><span class="s">&quot;g&quot;</span> <span class="o">.</span> <span class="nv">text-scale-increase</span><span class="p">))))</span>
+<p>An interesting thing that I want to mention though is the customization of the default
+<code>recenter-top-bottom</code> behavior. This is the default one:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">recenter-positions</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">middle</span> <span class="nv">top</span> <span class="nv">bottom</span><span class="p">))</span>
 </code></pre></div>
-<p>And this is it. A nice thing about this setup is that I don&#39;t have to
-think about the zoom state and quitting it: I&#39;ll quit it automatically
-as soon as I press anything other than <kbd>l</kbd> or <kbd>g</kbd>.
-Moreover, the command that exited the zoom state will be executed as
-usual.</p>
+<p>And this is the logical one that I&#39;m using:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">recenter-positions</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">top</span> <span class="nv">middle</span> <span class="nv">bottom</span><span class="p">))</span>
+</code></pre></div>
+<p>Try it out, and see if it makes sense to you. For me, when I&#39;ve just jumped to a function
+definition, which usually means that the point is on the first line of the function, the first
+recenter position has to be <code>top</code>, since that will maximize the amount of the function body that&#39;s
+displayed on the screen.</p>
+
+<p>Another use-case is when I&#39;m reading an info or a web page. After a recenter to top, all that I have
+read is scrolled out of view, and I can continue from the top.</p>
 
 </div>
 
@@ -298,16 +275,6 @@ usual.</p>
     
       <li>
         <h3>
-          <!-- <a href="//2015/03/28/recenter/"> -->
-          <a href="/2015/03/28/recenter/">
-            recenter-positions, that's not how gravity works!
-            <small>28 Mar 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
           <!-- <a href="//2015/03/26/hydra-ivy-swiper/"> -->
           <a href="/2015/03/26/hydra-ivy-swiper/">
             A Hydra for ivy/swiper
@@ -322,6 +289,16 @@ usual.</p>
           <a href="/2015/03/25/swiper-0.2.0/">
             Swiper 0.2.0 is out
             <small>25 Mar 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/03/23/region-to-toilet/"> -->
+          <a href="/2015/03/23/region-to-toilet/">
+            Transform region into ASCII art
+            <small>23 Mar 2015</small>
           </a>
         </h3>
       </li>

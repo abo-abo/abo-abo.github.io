@@ -11,7 +11,7 @@
 
   <title>
     
-      Binding one function multiple times in Hydra &middot; (or emacs
+      (or emacs &middot; irrelevant)
     
   </title>
 
@@ -231,96 +231,92 @@
       </div>
 
       <div class="container content">
-        <div class="post">
-  <h1 class="post-title">Binding one function multiple times in Hydra</h1>
-  <span class="post-date">16 Feb 2015</span>
-  <p>Here&#39;s a recent feature that&#39;s now available in <a href="https://github.com/abo-abo/hydra">hydra</a>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-zoom</span> <span class="p">(</span><span class="nv">global-map</span> <span class="s">&quot;&lt;f2&gt;&quot;</span><span class="p">)</span>
-  <span class="s">&quot;zoom&quot;</span>
-  <span class="p">(</span><span class="s">&quot;g&quot;</span> <span class="nv">text-scale-increase</span> <span class="s">&quot;in&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nv">text-scale-decrease</span> <span class="s">&quot;out&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;0&quot;</span> <span class="p">(</span><span class="nv">text-scale-set</span> <span class="mi">0</span><span class="p">)</span> <span class="s">&quot;reset&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;1&quot;</span> <span class="p">(</span><span class="nv">text-scale-set</span> <span class="mi">0</span><span class="p">)</span> <span class="nb">:bind</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;2&quot;</span> <span class="p">(</span><span class="nv">text-scale-set</span> <span class="mi">0</span><span class="p">)</span> <span class="nb">:bind</span> <span class="no">nil</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">))</span>
+        <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/2014/12/20/poyekhali!/">
+        Poyekhali!
+      </a>
+    </h1>
+
+    <span class="post-date">20 Dec 2014</span>
+
+    <p>Welcome to <b><code>(or emacs</code></b>!</p>
+
+<p>My name is Oleh and I&#39;ve been using Emacs for about 3 years now.  I
+think that it&#39;s an awesome editor, and I&#39;ve accumulated some know-how
+to make it even better (at least for me and people who think like me).
+Sharing is caring, so here we go.</p>
+
+<h2 id="ace-window-update"><code>ace-window</code> update</h2>
+
+<p>On this weekend I&#39;ve made a major update to my package
+<a href="https://github.com/abo-abo/ace-window">ace-window</a> that allows it to
+be used as a library. Luckily the change went smoothly, as there are
+no complaints in the github issues so far.  In case you don&#39;t know
+what the package does in the first place, a short blurb follows.</p>
+
+<h2 id="ace-window&#39;s-&quot;what-and-why&quot;"><code>ace-window</code>&#39;s &quot;what and why&quot;</h2>
+
+<p>I&#39;m sure you&#39;re aware of the <code>other-window</code> command. While it&#39;s great for
+two windows, it quickly loses its value when there are more windows:
+you need to call it many times, and since it&#39;s not easily predictable,
+you have to check each time if you&#39;re in the window that you wanted.</p>
+
+<p>Another approach is to use <code>windmove-left</code>, <code>windmove-up</code> etc.  These
+are fast and predictable. Their disadvantage is that they need 4 key
+bindings.  The default ones are shift+arrows, which are hard to reach.</p>
+
+<p>This package aims to take the speed and predictability of <code>windmove</code>
+and pack it into a single key binding, similar to <code>other-window</code>.  To
+achieve this, I&#39;m using the excellent
+<a href="https://github.com/winterTTr/ace-jump-mode">ace-jump-mode</a>.</p>
+
+<p>Here&#39;s how the package looks in action: <a href="/download/ace-window.gif">ace-window.gif</a></p>
+
+<p>Since switching windows is a frequently used operation, I recommend
+binding <code>ace-window</code> to something short, like <kbd>M-p</kbd>.</p>
+
+<p>By default, three actions are available:</p>
+
+<ul>
+<li><kbd>M-p</kbd> - select window</li>
+<li><kbd>C-u M-p</kbd> - swap the current window with the selected window</li>
+<li><kbd>C-u C-u M-p</kbd> - delete the selected window</li>
+</ul>
+
+<h2 id="finally,-the-library-part">finally, the library part</h2>
+
+<p>So now, what if you want to select a window to maximize with <code>ace-window</code>?
+After the change that I&#39;ve mentioned, the code to do this is dirt simple:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">ace-maximize-window</span> <span class="p">()</span>
+  <span class="s">&quot;Ace maximize window.&quot;</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">setq</span> <span class="nv">aw--current-op</span>
+        <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">aj</span><span class="p">)</span>
+          <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">wnd</span> <span class="p">(</span><span class="nv">aj-position-window</span> <span class="nv">aj</span><span class="p">)))</span>
+            <span class="p">(</span><span class="nf">select-window</span> <span class="nv">wnd</span><span class="p">)</span>
+            <span class="p">(</span><span class="nv">delete-other-windows</span><span class="p">))))</span>
+  <span class="p">(</span><span class="nv">aw--doit</span> <span class="s">&quot; Ace - Maximize Window&quot;</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-M-o&quot;</span><span class="p">)</span> <span class="ss">&#39;ace-maximize-window</span><span class="p">)</span>
 </code></pre></div>
-<p>Here, the entry points are <kbd>&lt;f2&gt; g</kbd>, <kbd>&lt;f2&gt; l</kbd>, and <kbd>&lt;f2&gt; 0</kbd>, the
-others aren&#39;t bound in the global map.
-You can also have the same function in both red and blue versions. Here&#39;s how the hint will look like:</p>
-
-<p><img src="/download/hydra-multi.png" alt="hydra-multi"></p>
-
-<p>The multiply-defined functions will be neatly grouped together.</p>
-
-<p>If you remember, <code>(text-scale-set 0)</code> uses a sexp syntax for a Hydra
-head: it will be wrapped in <code>(lambda () (interactive) ...)</code> automatically.</p>
-
+  </div>
+  
 </div>
 
-<div class="twitter-share">
-  <a href="https://twitter.com/share"
-     class="twitter-share-button"
-     data-via="_abo_abo"
-     data-dnt="true">
-    Tweet
-  </a>
+<div class="pagination">
+  
+    <span class="pagination-item older">Older</span>
+  
+  
+    
+      <a class="pagination-item newer" href="/page19">Newer</a>
+    
+  
 </div>
 
-<div class="related">
-  <h2>Related Posts</h2>
-  <ul class="related-posts">
-    
-      <li>
-        <h3>
-          <!-- <a href="//2015/03/28/recenter/"> -->
-          <a href="/2015/03/28/recenter/">
-            recenter-positions, that's not how gravity works!
-            <small>28 Mar 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
-          <!-- <a href="//2015/03/26/hydra-ivy-swiper/"> -->
-          <a href="/2015/03/26/hydra-ivy-swiper/">
-            A Hydra for ivy/swiper
-            <small>26 Mar 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
-          <!-- <a href="//2015/03/25/swiper-0.2.0/"> -->
-          <a href="/2015/03/25/swiper-0.2.0/">
-            Swiper 0.2.0 is out
-            <small>25 Mar 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-  </ul>
-</div>
-
-<div id="disqus_thread"></div>
-<script type="text/javascript">
-  var disqus_shortname = 'oremacs'; // required: replace example with your forum shortname
-
-  /* * * DON'T EDIT BELOW THIS LINE * * */
-  (function() {
-  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-  })();
-</script>
-
-<script>
-  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
-</script>
-<noscript>
-  Please enable JavaScript to view the
-  <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
-</noscript>
 
       </div>
     </div>

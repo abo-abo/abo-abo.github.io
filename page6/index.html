@@ -148,6 +148,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -228,6 +232,50 @@
 
       <div class="container content">
         <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/2015/02/28/hydra-repeat/">
+        Hydra-repeat
+      </a>
+    </h1>
+
+    <span class="post-date">28 Feb 2015</span>
+
+    <p>Did you know that you can repeat the most recent Emacs command with <code>repeat</code>:</p>
+
+<blockquote>
+<p>Repeat most recently executed command.
+If REPEAT-ARG is non-nil (interactively, with a prefix argument),
+supply a prefix argument to that command.  Otherwise, give the
+command the same prefix argument it was given before, if any.</p>
+</blockquote>
+
+<p>The default binding to repeat is <kbd>C-x z</kbd>. You can then
+continue with just <kbd>z</kbd>: <kbd>C-x zzzzzzzz</kbd>.</p>
+
+<p>Unfortunately, since <code>defhydra</code> defines new command names based on the
+ones that you give it, passing <code>repeat</code> as one of the heads will not
+work. So I&#39;ve added <code>hydra-repeat</code> that&#39;s supposed to work in the same way.</p>
+
+<p>So now, I can define a Hydra like this:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-vi</span> <span class="p">()</span>
+  <span class="s">&quot;vi&quot;</span>
+  <span class="p">(</span><span class="s">&quot;h&quot;</span> <span class="nf">backward-char</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">next-line</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;k&quot;</span> <span class="nv">previous-line</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nf">forward-char</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;.&quot;</span> <span class="nv">hydra-repeat</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-v&quot;</span><span class="p">)</span> <span class="ss">&#39;hydra-vi/body</span><span class="p">)</span>
+</code></pre></div>
+<p>And if I press <kbd>C-v 4l..</kbd>, it will result in movement forward (<code>forward-char</code>) by 4 chars 3 times:</p>
+
+<ul>
+<li>first time from <kbd>4l</kbd></li>
+<li>other two times, with the same prefix 4, from <kbd>..</kbd></li>
+</ul>
+
+  </div>
   
   <div class="post">
     <h1 class="post-title">
@@ -512,200 +560,6 @@ chunk of my start up time, 28 percent, is taken by:</p>
 <div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;eclipse-theme</span><span class="p">)</span>
 </code></pre></div>
 <p>I don&#39;t know why it takes so long to call <code>custom-theme-set-faces</code>, it&#39;s a mystery.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/02/23/hydra-0.11.0/">
-        Hydra 0.11.0 is out
-      </a>
-    </h1>
-
-    <span class="post-date">23 Feb 2015</span>
-
-    <p>As usual, I&#39;ll just re-state the
-<a href="https://github.com/abo-abo/hydra/releases/tag/0.11.0">release notes</a>
-and add some more notes in the end.</p>
-
-<h2 id="fixes">Fixes</h2>
-
-<ul>
-<li>Emacs 24.3 (and maybe earlier versions) compatibility added</li>
-<li>(hydra-cleanup): Should not delete buffer first when window is dedicated.</li>
-<li>(lv-message): Should not deactivate mark.</li>
-<li>quit signals are intercepted, so that proper clean-up is done.</li>
-<li>no defuns with the same name will be generated in case some heads&#39; cmd parts coincide</li>
-</ul>
-
-<h2 id="new-features">New Features</h2>
-
-<h3 id="pink-body-color">Pink body color</h3>
-
-<p>When body color is pink, and hydra intercepts a binding which isn&#39;t a head, instead of quitting the
-hydra and executing the binding (default red behavior), it will execute the binding and <strong>not quit</strong>
-the hydra. This type of hydra is very similar to <code>define-minor-mode</code>.</p>
-
-<p>So now, pink and amaranth are body colors that are a flavor of the default red that, instead of
-quitting when a non-head binding is intercepted, respectively run the binding or issue a warning.</p>
-
-<h3 id="teal-body-color">Teal body color</h3>
-
-<p>Teal color behaves similarly to amaranth (issues a warning when intercepting foreign bindings),
-but the default behavior for each head is to quit.</p>
-
-<p>The following evaluates to true:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">equal</span>
- <span class="p">(</span><span class="nf">macroexpand</span>
-  <span class="o">&#39;</span><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-test</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">amaranth</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="nv">fun-a</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;b&quot;</span> <span class="nv">fun-b</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;c&quot;</span> <span class="nv">fun-c</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;d&quot;</span> <span class="nv">fun-d</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;e&quot;</span> <span class="nv">fun-e</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;f&quot;</span> <span class="nv">fun-f</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)))</span>
- <span class="p">(</span><span class="nf">macroexpand</span>
-  <span class="o">&#39;</span><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-test</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">teal</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="nv">fun-a</span> <span class="nb">:color</span> <span class="nv">red</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;b&quot;</span> <span class="nv">fun-b</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;c&quot;</span> <span class="nv">fun-c</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;d&quot;</span> <span class="nv">fun-d</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;e&quot;</span> <span class="nv">fun-e</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;f&quot;</span> <span class="nv">fun-f</span><span class="p">))))</span>
-</code></pre></div>
-<p>So if you want to write less, use teal color in this case.</p>
-
-<h3 id="alternative-color-less-syntax">Alternative color-less syntax</h3>
-
-<p>The color syntax is working quite well, since I was able to keep an almost full backward-compatibility:
-once you pinpoint a color it will have that behavior, all the new behaviors will be released under a new color.</p>
-
-<p>Some might prefer an alternative set of switches rather than colors. New compat switches are:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">- &quot;:exit nil&quot; for &quot;:color red&quot;; You don&#39;t have to specify either
-  option in the body, since they are the default behavior that was
-  available on Hydra release
-- &quot;:exit t&quot; for &quot;:color blue&quot;
-- &quot;:foreign-keys warn&quot; for &quot;:color amaranth&quot;
-- &quot;:foreign-keys warn :exit t&quot; for &quot;:color teal&quot;
-- &quot;:foreign-keys run&quot; for &quot;:color pink&quot;
-</code></pre></div>
-<p>The property <code>:exit</code> can be inherited and overridden in the same way as <code>:color</code> red or blue.</p>
-
-<p>The following evaluates to true:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">equal</span>
- <span class="p">(</span><span class="nf">macroexpand</span>
-  <span class="o">&#39;</span><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-test</span> <span class="p">()</span>
-    <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="nv">fun-a</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;b&quot;</span> <span class="nv">fun-b</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;c&quot;</span> <span class="nv">fun-c</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;d&quot;</span> <span class="nv">fun-d</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;e&quot;</span> <span class="nv">fun-e</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;f&quot;</span> <span class="nv">fun-f</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)))</span>
- <span class="p">(</span><span class="nf">macroexpand</span>
-  <span class="o">&#39;</span><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-test</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="nv">fun-a</span> <span class="nb">:color</span> <span class="nv">red</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;b&quot;</span> <span class="nv">fun-b</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;c&quot;</span> <span class="nv">fun-c</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;d&quot;</span> <span class="nv">fun-d</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;e&quot;</span> <span class="nv">fun-e</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;f&quot;</span> <span class="nv">fun-f</span><span class="p">))))</span>
-</code></pre></div>
-<p>The following two are exactly the same as the two above:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">equal</span>
- <span class="p">(</span><span class="nf">macroexpand</span>
-  <span class="o">&#39;</span><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-test</span> <span class="p">()</span>
-    <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="nv">fun-a</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;b&quot;</span> <span class="nv">fun-b</span> <span class="nb">:exit</span> <span class="no">t</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;c&quot;</span> <span class="nv">fun-c</span> <span class="nb">:exit</span> <span class="no">t</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;d&quot;</span> <span class="nv">fun-d</span> <span class="nb">:exit</span> <span class="no">t</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;e&quot;</span> <span class="nv">fun-e</span> <span class="nb">:exit</span> <span class="no">t</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;f&quot;</span> <span class="nv">fun-f</span> <span class="nb">:exit</span> <span class="no">t</span><span class="p">)))</span>
- <span class="p">(</span><span class="nf">macroexpand</span>
-  <span class="o">&#39;</span><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-test</span> <span class="p">(</span><span class="nb">:exit</span> <span class="no">t</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="nv">fun-a</span> <span class="nb">:exit</span> <span class="no">nil</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;b&quot;</span> <span class="nv">fun-b</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;c&quot;</span> <span class="nv">fun-c</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;d&quot;</span> <span class="nv">fun-d</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;e&quot;</span> <span class="nv">fun-e</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;f&quot;</span> <span class="nv">fun-f</span><span class="p">))))</span>
-</code></pre></div>
-<h3 id="ruby-style-string-interpolation-in-docstrings">Ruby-style string interpolation in docstrings</h3>
-
-<p>Here&#39;s an example:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-marked-items</span> <span class="p">(</span><span class="nv">dired-mode-map</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
-  <span class="s">&quot;</span>
-<span class="s">Number of marked items: %(length (dired-get-marked-files))</span>
-<span class="s">Auto-revert mode is:    %`auto-revert-mode</span>
-<span class="s">&quot;</span>
-      <span class="p">(</span><span class="s">&quot;m&quot;</span> <span class="nv">dired-mark</span> <span class="s">&quot;mark&quot;</span><span class="p">))</span>
-</code></pre></div>
-<p>To enable this behavior, the docstring has to start with a newline (which will be stripped).  This
-makes sense, since you usually want to align extensive docstrings, like I did this one.  The escape
-syntax for variables is such that you can auto-complete them with <code>company-mode</code>.  Both variables
-and sexps can use <code>format</code> style width specifiers. See the documentation of <code>format</code> for more
-details.</p>
-
-<h3 id="examples-7-9-added-to-hydra-examples.el">Examples 7-9 added to hydra-examples.el</h3>
-
-<p>These examples explain Ruby-style interpolation.</p>
-
-<h3 id="updated-faces">Updated faces</h3>
-
-<p>I&#39;ve updated each face to match their color by default. Remember, that you can customize each
-face interactively with <kbd>M-x</kbd> <code>customize-group</code> <code>hydra</code>.</p>
-
-<h3 id="alternative-grey-scale-or-custom-faces">Alternative grey-scale or custom faces</h3>
-
-<p>If you don&#39;t want colors for some reason, you can customize <code>hydra-fontify-head-function</code> to your
-taste.</p>
-
-<p>As an example:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">hydra-fontify-head-function</span>
-      <span class="nf">#&#39;</span><span class="nv">hydra-fontify-head-greyscale</span><span class="p">)</span>
-</code></pre></div>
-<p>This function is already defined in hydra.el, but you could define a similar one on your own:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">hydra-fontify-head-greyscale</span> <span class="p">(</span><span class="nv">head</span> <span class="nv">body</span><span class="p">)</span>
-  <span class="s">&quot;Produce a pretty string from HEAD and BODY.</span>
-<span class="s">HEAD&#39;s binding is returned as a string wrapped with [] or {}.&quot;</span>
-  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">color</span> <span class="p">(</span><span class="nv">hydra--head-color</span> <span class="nv">head</span> <span class="nv">body</span><span class="p">)))</span>
-    <span class="p">(</span><span class="nf">format</span>
-     <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">eq</span> <span class="nv">color</span> <span class="ss">&#39;blue</span><span class="p">)</span>
-         <span class="s">&quot;[%s]&quot;</span>
-       <span class="s">&quot;(%s)&quot;</span><span class="p">)</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">head</span><span class="p">))))</span>
-</code></pre></div>
-<h3 id="new-switch-:body-pre">New switch :body-pre</h3>
-
-<p>This sexp or function will be prepended to the prefix/body function.
-Here&#39;s an example of use:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">defvar</span> <span class="nv">hydra-vi/init-pos</span> <span class="no">nil</span><span class="p">)</span>
-<span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-vi</span> <span class="p">(</span><span class="nb">:body-pre</span> <span class="p">(</span><span class="k">setq</span> <span class="nv">hydra-vi/init-pos</span> <span class="p">(</span><span class="nf">point</span><span class="p">))</span>
-                    <span class="nb">:color</span> <span class="nv">pink</span><span class="p">)</span>
-  <span class="s">&quot;vi&quot;</span>
-  <span class="c1">;; arrows</span>
-  <span class="p">(</span><span class="s">&quot;h&quot;</span> <span class="nf">backward-char</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">next-line</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;k&quot;</span> <span class="nv">previous-line</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nf">forward-char</span><span class="p">)</span>
-  <span class="c1">;; exit points</span>
-  <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="p">(</span><span class="nf">goto-char</span> <span class="nv">hydra-vi/init-pos</span><span class="p">)</span> <span class="s">&quot;ins&quot;</span> <span class="nb">:exit</span> <span class="no">t</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;C-n&quot;</span> <span class="p">(</span><span class="nf">forward-line</span> <span class="mi">1</span><span class="p">)</span> <span class="no">nil</span> <span class="nb">:exit</span> <span class="no">t</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;C-p&quot;</span> <span class="p">(</span><span class="nf">forward-line</span> <span class="mi">-1</span><span class="p">)</span> <span class="no">nil</span> <span class="nb">:exit</span> <span class="no">t</span><span class="p">))</span>
-</code></pre></div>
-<p>Here, upon entering the hydra, the point position will be saved. And upon quitting, it will be
-restored.</p>
-
-<h2 id="outro">Outro</h2>
-
-<p>I hope that you&#39;re enjoying the new updates as much as I do.
-Since the last release, there are two new blog posts about using hydra that I&#39;m aware of:
-by <a href="http://howardism.org/Technical/Emacs/lists-and-key-sequences.html">Howard Abrams</a> and
-<a href="http://kitchingroup.cheme.cmu.edu/blog/2015/02/22/org-mode-links-meet-hydra/">John Kitchin</a>.</p>
-
-<p>Additionally, <a href="https://github.com/hura">@hura</a>,
-<a href="https://github.com/kaushalmodi">@kaushalmodi</a>, and
-<a href="https://github.com/glucas">@glucas</a> have made some additions to the
-<a href="https://github.com/abo-abo/hydra/wiki">Hydra wiki</a>. Anyone is welcome
-to share their useful hydras there. Thanks a lot and happy hacking!</p>
 
   </div>
   
