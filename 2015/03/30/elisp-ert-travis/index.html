@@ -11,7 +11,7 @@
 
   <title>
     
-      Exploring Emacs packages &middot; (or emacs
+      An update to my Elisp ERT / Travis CI setup &middot; (or emacs
     
   </title>
 
@@ -232,82 +232,46 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Exploring Emacs packages</h1>
-  <span class="post-date">25 Jan 2015</span>
-  <p>Currently, <a href="http://melpa.org/">MELPA</a> hosts over <code>2250</code> packages. That&#39;s
-quite a large number, although it&#39;s still feasible to try most of the
-popular ones. In comparison,</p>
-<div class="highlight"><pre><code class="language-sh" data-lang="sh">apt-cache pkgnames <span class="p">|</span> wc
+  <h1 class="post-title">An update to my Elisp ERT / Travis CI setup</h1>
+  <span class="post-date">30 Mar 2015</span>
+  <p>This post might be interesting to people who use Travis CI to test their Elisp packages.</p>
+
+<p>I&#39;ve noticed a few days ago that my tests on Travis CI started failing randomly.  Turns out that the
+widely used <a href="https://launchpad.net/%7Ecassou/+archive/ubuntu/emacs">ppa:cassou/emacs</a> has become
+deprecated. It still sort of works, but sometimes <code>apt-get update</code> just times out, and I get a build
+error.</p>
+
+<p>Since it was the only one that I was using, I had to find another one. I went with <code>emacs-snapshot</code>
+from <a href="https://launchpad.net/%7Eubuntu-elisp/+archive/ppa">ppa:ubuntu-elisp</a>.</p>
+
+<p>Here&#39;s my current <a href="https://github.com/abo-abo/lispy/blob/master/.travis.yml">.travis.yml</a>:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">language: emacs-lisp
+env:
+  matrix:
+    - emacs=emacs-snapshot
+
+before_install:
+  - sudo add-apt-repository -y ppa:ubuntu-elisp
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq $emacs
+  - curl -fsSkL --max-time 10 --retry 10 --retry-delay 10 https://raw.github.com/cask/cask/master/go | python
+
+script:
+  - make cask
+  - make test
 </code></pre></div>
-<p>gives me the number <code>50250</code>. I don&#39;t recall calling <code>apt-cache
-pkgnames</code> ever before, while I call <code>package-list-packages</code> all the
-time. I suppose that this will have to change when the number of
-packages grows further.</p>
-
-<p>I usually explore packages just as they show up as new in <code>package-list-packages</code>.
-I&#39;ll share the two tools that I use for exploring them.</p>
-
-<h2 id="smex">Smex</h2>
-
-<p><a href="https://github.com/nonsequitur/smex">Smex</a> is an <kbd>M-x</kbd> enhancement for Emacs.
-In addition to executing commands faster, it gives you an option to jump to the current command&#39;s definition
-with <kbd>M-.</kbd>.</p>
-
-<p>Here&#39;s how I bind <code>smex</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;smex</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">global-set-key</span> <span class="s">&quot;\C-t&quot;</span> <span class="ss">&#39;smex</span><span class="p">)</span>
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">smex-prepare-ido-bindings</span> <span class="p">()</span>
-  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">ido-completion-map</span>
-      <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-,&quot;</span><span class="p">)</span> <span class="ss">&#39;smex-describe-function</span><span class="p">)</span>
-  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">ido-completion-map</span>
-      <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-w&quot;</span><span class="p">)</span> <span class="ss">&#39;smex-where-is</span><span class="p">)</span>
-  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">ido-completion-map</span>
-      <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-.&quot;</span><span class="p">)</span> <span class="ss">&#39;smex-find-function</span><span class="p">)</span>
-  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">ido-completion-map</span>
-      <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-a&quot;</span><span class="p">)</span> <span class="ss">&#39;move-beginning-of-line</span><span class="p">)</span>
-  <span class="c1">;; (define-key ido-completion-map &quot;\C-i&quot; &#39;smex-helm)</span>
-  <span class="c1">;; (define-key ido-completion-map &quot; &quot; &#39;smex-helm)</span>
-  <span class="p">)</span>
+<p>I&#39;ve adopted one more change in the above code: <code>EMACS</code> is replaced by <code>emacs</code>.
+The reason for this is that both <code>ansi-term</code> and <code>compile</code>
+for legacy reasons set <code>EMACS</code> to <a href="https://lists.gnu.org/archive/html/emacs-devel/2015-03/msg00994.html">strange values</a>,
+like <code>&quot;24.4.91.2 (term:0.96)&quot;</code>.
+So if you have in your Makefile:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">EMACS ?= emacs
 </code></pre></div>
-<p>I don&#39;t feel bad at all for unbinding <code>transpose-chars</code>,
-<kbd>C-t</kbd> is such a prime binding, that only the best commands
-can deserve it. And since I touch-type, it&#39;s easier for me to hit
-<kbd>M-DEL</kbd> and retype the word when I notice a mistake, than to
-carefully navigate to the mistake location and call <code>transpose-chars</code>
-with surgical precision. On the other hand, the number of Emacs
-packages is only going to grow, so it becomes less and less feasible
-to bind everything. Instead, seldom used stuff can be called though
-<code>smex</code>. For instance, I don&#39;t bind
-<a href="https://github.com/ardumont/markdown-toc">markdown-toc</a> or
-<a href="https://github.com/hagleitn/speed-type">speed-type</a> and call them via
-<kbd>C-t</kbd> instead.</p>
-
-<p>Back to the point, <kbd>C-t</kbd> ... <kbd>C-.</kbd>
-(<code>smex-find-function</code>) allows me to quickly jump to the source of the
-package that I want to explore.</p>
-
-<h2 id="semantic-tags">Semantic tags</h2>
-
-<p>Once I&#39;m in the source code, I can quickly get an overview with
-<kbd>g</kbd> (<code>lispy-goto</code>) from
-<a href="https://github.com/abo-abo/lispy">lispy</a>. It uses CEDET&#39;s semantic
-module to get a list of tags in current directory with
-<a href="https://github.com/emacs-helm/helm">helm</a> for completion.  In my
-opinion, it&#39;s much prettier than <code>helm</code>&#39;s own <code>helm-semantic</code>. It also
-explores more tags for Emacs Lisp, for instance it will capture
-<code>use-package</code> and <code>global-set-key</code> tags.</p>
-
-<p>A new cute feature that I added recently is a different background for
-user-visible functions, i.e.  the ones that are callable by
-<kbd>M-x</kbd> or <code>smex</code>.  Here&#39;s how it looks like, for the
-<code>speed-type</code> package (interactive functions have a purple background):</p>
-
-<p><img src="/download/lispy-goto.png" alt="lispy-goto"></p>
-
-<p>If the image text looks too small, you can right click / view image in
-your browser. Here, I can see at a glance, that there are three
-commands that I can call.  I can also see a few variables, two of them
-don&#39;t include <code>--</code>, so they&#39;re probably customizable.</p>
+<p>you&#39;re going to have a bad time. So I changed my <a href="https://github.com/abo-abo/lispy/blob/master/Makefile">Makefile</a> to:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">emacs ?= emacs
+</code></pre></div>
+<p>And now I can compile and test while inside Emacs with no issues.  The only issue left is that I
+don&#39;t yet know which PPA I should use for a stable Emacs. Maybe someone has a suggestion.</p>
 
 </div>
 
@@ -326,16 +290,6 @@ don&#39;t include <code>--</code>, so they&#39;re probably customizable.</p>
     
       <li>
         <h3>
-          <!-- <a href="//2015/03/30/elisp-ert-travis/"> -->
-          <a href="/2015/03/30/elisp-ert-travis/">
-            An update to my Elisp ERT / Travis CI setup
-            <small>30 Mar 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
           <!-- <a href="//2015/03/28/recenter/"> -->
           <a href="/2015/03/28/recenter/">
             recenter-positions, that's not how gravity works!
@@ -350,6 +304,16 @@ don&#39;t include <code>--</code>, so they&#39;re probably customizable.</p>
           <a href="/2015/03/26/hydra-ivy-swiper/">
             A Hydra for ivy/swiper
             <small>26 Mar 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/03/25/swiper-0.2.0/"> -->
+          <a href="/2015/03/25/swiper-0.2.0/">
+            Swiper 0.2.0 is out
+            <small>25 Mar 2015</small>
           </a>
         </h3>
       </li>

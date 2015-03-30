@@ -4,13 +4,59 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-03-28T16:28:27+01:00</updated>
+ <updated>2015-04-01T09:21:35+02:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>An update to my Elisp ERT / Travis CI setup</title>
+   <link href="http://oremacs.com/2015/03/30/elisp-ert-travis/"/>
+   <updated>2015-03-30T00:00:00+02:00</updated>
+   <id>http://oremacs.com/2015/03/30/elisp-ert-travis</id>
+   <content type="html">&lt;p&gt;This post might be interesting to people who use Travis CI to test their Elisp packages.&lt;/p&gt;
+
+&lt;p&gt;I&amp;#39;ve noticed a few days ago that my tests on Travis CI started failing randomly.  Turns out that the
+widely used &lt;a href=&quot;https://launchpad.net/%7Ecassou/+archive/ubuntu/emacs&quot;&gt;ppa:cassou/emacs&lt;/a&gt; has become
+deprecated. It still sort of works, but sometimes &lt;code&gt;apt-get update&lt;/code&gt; just times out, and I get a build
+error.&lt;/p&gt;
+
+&lt;p&gt;Since it was the only one that I was using, I had to find another one. I went with &lt;code&gt;emacs-snapshot&lt;/code&gt;
+from &lt;a href=&quot;https://launchpad.net/%7Eubuntu-elisp/+archive/ppa&quot;&gt;ppa:ubuntu-elisp&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;#39;s my current &lt;a href=&quot;https://github.com/abo-abo/lispy/blob/master/.travis.yml&quot;&gt;.travis.yml&lt;/a&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;language: emacs-lisp
+env:
+  matrix:
+    - emacs=emacs-snapshot
+
+before_install:
+  - sudo add-apt-repository -y ppa:ubuntu-elisp
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq $emacs
+  - curl -fsSkL --max-time 10 --retry 10 --retry-delay 10 https://raw.github.com/cask/cask/master/go | python
+
+script:
+  - make cask
+  - make test
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;I&amp;#39;ve adopted one more change in the above code: &lt;code&gt;EMACS&lt;/code&gt; is replaced by &lt;code&gt;emacs&lt;/code&gt;.
+The reason for this is that both &lt;code&gt;ansi-term&lt;/code&gt; and &lt;code&gt;compile&lt;/code&gt;
+for legacy reasons set &lt;code&gt;EMACS&lt;/code&gt; to &lt;a href=&quot;https://lists.gnu.org/archive/html/emacs-devel/2015-03/msg00994.html&quot;&gt;strange values&lt;/a&gt;,
+like &lt;code&gt;&amp;quot;24.4.91.2 (term:0.96)&amp;quot;&lt;/code&gt;.
+So if you have in your Makefile:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;EMACS ?= emacs
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;you&amp;#39;re going to have a bad time. So I changed my &lt;a href=&quot;https://github.com/abo-abo/lispy/blob/master/Makefile&quot;&gt;Makefile&lt;/a&gt; to:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;emacs ?= emacs
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And now I can compile and test while inside Emacs with no issues.  The only issue left is that I
+don&amp;#39;t yet know which PPA I should use for a stable Emacs. Maybe someone has a suggestion.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>recenter-positions, that's not how gravity works!</title>
