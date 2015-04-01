@@ -4,13 +4,220 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-04-01T09:21:35+02:00</updated>
+ <updated>2015-04-01T20:47:23+02:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>lispy 0.25.0 is out</title>
+   <link href="http://oremacs.com/2015/04/01/lispy.0.25.0-is-out/"/>
+   <updated>2015-04-01T00:00:00+02:00</updated>
+   <id>http://oremacs.com/2015/04/01/lispy.0.25.0-is-out</id>
+   <content type="html">&lt;p&gt;Seriously, check &lt;a href=&quot;https://github.com/abo-abo/lispy/releases/tag/0.25.0&quot;&gt;the release notes&lt;/a&gt; if you
+don&amp;#39;t believe me.&lt;/p&gt;
+
+&lt;h2 id=&quot;fixes&quot;&gt;Fixes&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Add &lt;code&gt;minibuffer-inactive-mode&lt;/code&gt; to the &lt;code&gt;lispy-elisp-modes&lt;/code&gt; list. It means that you can eval there if you want.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;V&lt;/kbd&gt; (&lt;code&gt;lispy-visit&lt;/code&gt;) should turn on &lt;code&gt;projectile-global-mode&lt;/code&gt; if it&amp;#39;s not on.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;M&lt;/kbd&gt; (&lt;code&gt;lispy-multiline&lt;/code&gt;) works better for Clojure: the regexes for vectors, maps and sets have been improved.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;C-k&lt;/kbd&gt; should not delete only the string when located at start of string.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;M&lt;/kbd&gt; will not turn vectors into lists any more.&lt;/li&gt;
+&lt;li&gt;the backquote bug for &lt;kbd&gt;i&lt;/kbd&gt; and &lt;kbd&gt;M&lt;/kbd&gt; was fixed.&lt;/li&gt;
+&lt;li&gt;you can flatten Elisp closures as well, at least the plain ones.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;new-features&quot;&gt;New Features&lt;/h2&gt;
+
+&lt;h3 id=&quot;b-calls-lispy-back&quot;&gt;&lt;kbd&gt;b&lt;/kbd&gt; calls &lt;code&gt;lispy-back&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;The movement commands, such as:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;the arrows &lt;kbd&gt;hjkl&lt;/kbd&gt; (&lt;code&gt;lispy-left&lt;/code&gt;, &lt;code&gt;lispy-down&lt;/code&gt; etc.)&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;f&lt;/kbd&gt; (&lt;code&gt;lispy-flow&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;q&lt;/kbd&gt; (&lt;code&gt;lispy-ace-paren&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;i&lt;/kbd&gt; (&lt;code&gt;lispy-tab&lt;/code&gt;), only when called for an active region&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;will not store each movement in the point-and-mark history. You can press &lt;kbd&gt;b&lt;/kbd&gt; to go back in
+history. This is especially useful for &lt;kbd&gt;h&lt;/kbd&gt;, &lt;kbd&gt;l&lt;/kbd&gt;, and &lt;kbd&gt;f&lt;/kbd&gt;, since they are
+not trivially reversible.&lt;/p&gt;
+
+&lt;p&gt;&lt;kbd&gt;b&lt;/kbd&gt; was previously bound to &lt;code&gt;lispy-store-region-and-buffer&lt;/code&gt;, so you could do Ediff with
+&lt;kbd&gt;b&lt;/kbd&gt; and &lt;kbd&gt;B&lt;/kbd&gt;. Now it&amp;#39;s bound to &lt;kbd&gt;xB&lt;/kbd&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;hungry-comment-delete&quot;&gt;Hungry comment delete&lt;/h3&gt;
+
+&lt;p&gt;&lt;kbd&gt;C-d&lt;/kbd&gt; (&lt;code&gt;lispy-delete&lt;/code&gt;) when positioned at the start of a comment, and with only whitespace
+before the start of the line, will delete the whole comment.&lt;/p&gt;
+
+&lt;p&gt;If you want to un-comment, just use &lt;kbd&gt;C-u ;&lt;/kbd&gt; from any point in the comment.&lt;/p&gt;
+
+&lt;h3 id=&quot;added-flatten-operation-for-clojure&quot;&gt;Added flatten operation for Clojure&lt;/h3&gt;
+
+&lt;p&gt;&lt;kbd&gt;xf&lt;/kbd&gt; (&lt;code&gt;lispy-flatten&lt;/code&gt;) now also works for Clojure, before it was only for Elisp.&lt;/p&gt;
+
+&lt;h4 id=&quot;example-1-(flatten-a-macro):&quot;&gt;Example 1 (flatten a macro):&lt;/h4&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;err&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;-&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;map &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;sqr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;filter &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;odd?&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;When you press &lt;kbd&gt;xf&lt;/kbd&gt; you get this:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;err&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;filter &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;odd?&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;map &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;sqr&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h4 id=&quot;example-2-(flatten-a-standard-function):&quot;&gt;Example 2 (flatten a standard function):&lt;/h4&gt;
+
+&lt;p&gt;Start with:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;err&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;map &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;odd?&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;After &lt;kbd&gt;xf&lt;/kbd&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;f&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;odd?&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;coll&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;lazy-seq&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;when-let &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;seq &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;coll&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)]&lt;/span&gt;
+              &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;chunked-seq?&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;chunk-first&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                      &lt;span class=&quot;nv&quot;&gt;size&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;int &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;count &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+                      &lt;span class=&quot;nv&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;chunk-buffer&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)]&lt;/span&gt;
+                  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;dotimes &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+                    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;chunk-append&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;f&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;.nth&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+                  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;chunk-cons&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;chunk&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                              &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;map &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;f&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;chunk-rest&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cons &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;f&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;first &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+                      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;map &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;f&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;rest &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;A bit of a gibberish, but at least we can confirm that &lt;code&gt;map&lt;/code&gt; is indeed lazy.&lt;/p&gt;
+
+&lt;h4 id=&quot;example-3-(flatten-your-own-function):&quot;&gt;Example 3 (flatten your own function):&lt;/h4&gt;
+
+&lt;p&gt;Example function:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defn &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;sqr&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;* &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This one requires the function to be properly loaded with &lt;kbd&gt;C-c C-l&lt;/kbd&gt; (&lt;code&gt;cider-load-file&lt;/code&gt;),
+otherwise Clojure will not know the location of the function.&lt;/p&gt;
+
+&lt;p&gt;Example statement:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;+ &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;sqr&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;After &lt;kbd&gt;xf&lt;/kbd&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;+ &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;* &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;added-lax-eval-for-clojure&quot;&gt;Added lax eval for Clojure&lt;/h3&gt;
+
+&lt;p&gt;This is similar to the lax eval for Elisp. If you mark an expression with a region:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;asdf [1 2 3]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;and press &lt;kbd&gt;e&lt;/kbd&gt;, you will actually eval this:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;do &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;asdf&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;asdf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;You can do this for let bindings, it&amp;#39;s super-useful for debugging.  The rule is that if the first
+element of the region is a symbol, and there&amp;#39;s more stuff in the region besides the symbol, a lax
+eval will be performed.&lt;/p&gt;
+
+&lt;h3 id=&quot;e-will-auto-start-cider&quot;&gt;&lt;kbd&gt;e&lt;/kbd&gt; will auto-start CIDER&lt;/h3&gt;
+
+&lt;p&gt;If CIDER isn&amp;#39;t live, &lt;kbd&gt;e&lt;/kbd&gt; will start it and properly eval the current statement.&lt;/p&gt;
+
+&lt;h3 id=&quot;2f-will-search-for-variables-first&quot;&gt;&lt;kbd&gt;2F&lt;/kbd&gt; will search for variables first&lt;/h3&gt;
+
+&lt;p&gt;Since Elisp is a LISP-2, there can be a function and a variable with the same name.  &lt;kbd&gt;F&lt;/kbd&gt;
+(&lt;code&gt;lispy-follow&lt;/code&gt;) prefers functions, but now &lt;kbd&gt;2F&lt;/kbd&gt; will prefer variables.&lt;/p&gt;
+
+&lt;h3 id=&quot;2e-will-eval-and-insert-the-commented-result&quot;&gt;&lt;kbd&gt;2e&lt;/kbd&gt; will eval and insert the commented result&lt;/h3&gt;
+
+&lt;p&gt;Starting with:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;err&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;filter &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;odd?&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;map &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;sqr&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Pressing &lt;kbd&gt;2e&lt;/kbd&gt; gives:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;filter &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;odd?&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;map &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;sqr&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]))&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;;; =&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;;; (1 9 25)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This works for all dialects, so you can also have:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;symbol-function&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;exit-minibuffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;;; =&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;;; (closure (t)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;;;          nil &amp;quot;Terminate this minibuffer argument.&amp;quot; (interactive)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;;;          (setq deactivate-mark nil)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;;;          (throw (quote exit)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;;;            nil))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;or&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-cl&quot; data-lang=&quot;cl&quot;&gt;&lt;span class=&quot;vg&quot;&gt;*MODULES*&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;;; =&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;;; (&amp;quot;SWANK-ARGLISTS&amp;quot; &amp;quot;SWANK-FANCY-INSPECTOR&amp;quot; &amp;quot;SWANK-FUZZY&amp;quot; &lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;;;                   &amp;quot;SWANK-UTIL&amp;quot; &amp;quot;SWANK-PRESENTATIONS&amp;quot; &lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;;;                   &amp;quot;SWANK-TRACE-DIALOG&amp;quot; &amp;quot;SB-CLTL2&amp;quot;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;To do the last eval you need to be in special.
+It means that you first have to mark the symbol &lt;code&gt;*MODULES*&lt;/code&gt; with a region.
+A convenient function to mark the current symbol is &lt;kbd&gt;M-m&lt;/kbd&gt; (&lt;code&gt;lispy-mark-symbol&lt;/code&gt;).&lt;/p&gt;
+
+&lt;h3 id=&quot;y-(lispy-occur)-now-has-an-ivy-back-end&quot;&gt;&lt;kbd&gt;y&lt;/kbd&gt; (&lt;code&gt;lispy-occur&lt;/code&gt;) now has an &lt;code&gt;ivy&lt;/code&gt; back end&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;lispy-occur&lt;/code&gt; launches an interactive search within the current top-level expression, usually a
+defun. This is useful to see where a variable is used in a function, or to quickly navigate to a
+statement.&lt;/p&gt;
+
+&lt;p&gt;You can customize &lt;code&gt;lispy-occur-backend&lt;/code&gt; to either &lt;code&gt;ivy&lt;/code&gt; (the default) or &lt;code&gt;helm&lt;/code&gt; (if you have it,
+since it&amp;#39;s no longer a dependency of &lt;code&gt;lispy&lt;/code&gt;).&lt;/p&gt;
+
+&lt;h3 id=&quot;add-ivy-back-end-to-lispy-completion-method&quot;&gt;Add ivy back end to &lt;code&gt;lispy-completion-method&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;Now it&amp;#39;s the default one for navigating to tags. You can select alternatively &lt;code&gt;helm&lt;/code&gt; or &lt;code&gt;ido&lt;/code&gt; if you
+wish.&lt;/p&gt;
+
+&lt;h3 id=&quot;remove-the-dependency-on-ace-jump-mode&quot;&gt;Remove the dependency on &lt;code&gt;ace-jump-mode&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;Instead the dependency on &lt;code&gt;ace-window&lt;/code&gt; will be re-used. This allows for a lot of code
+simplifications and better tests.&lt;/p&gt;
+
+&lt;p&gt;New custom variables:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;lispy-avy-style-char&lt;/code&gt;: choose where the overlay appears for &lt;kbd&gt;Q&lt;/kbd&gt; (&lt;code&gt;lispy-ace-char&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;lispy-avy-style-paren&lt;/code&gt;: choose where the overlay appears for &lt;kbd&gt;q&lt;/kbd&gt; (&lt;code&gt;lispy-ace-paren&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;lispy-avy-style-symbol&lt;/code&gt;: choose where the overlay appears for &lt;kbd&gt;a&lt;/kbd&gt; (&lt;code&gt;lispy-ace-symbol&lt;/code&gt;)
+and &lt;kbd&gt;-&lt;/kbd&gt; (&lt;code&gt;lispy-ace-subword&lt;/code&gt;) and &lt;kbd&gt;H&lt;/kbd&gt; (&lt;code&gt;ace-symbol-replace&lt;/code&gt;).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;There&amp;#39;s also &lt;code&gt;lispy-avy-keys&lt;/code&gt;, which is &lt;code&gt;a&lt;/code&gt; ... &lt;code&gt;z&lt;/code&gt; by default.&lt;/p&gt;
+
+&lt;h3 id=&quot;add-lispy-compat&quot;&gt;Add &lt;code&gt;lispy-compat&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;This is a list of compatibility features with other packages, such as &lt;code&gt;edebug&lt;/code&gt; and &lt;code&gt;god-mode&lt;/code&gt;.
+They add overhead, so you might want to turn them off if you don&amp;#39;t use the mentioned packages.&lt;/p&gt;
+
+&lt;h3 id=&quot;f-works-for-scheme&quot;&gt;&lt;kbd&gt;F&lt;/kbd&gt; works for Scheme&lt;/h3&gt;
+
+&lt;p&gt;You can navigate to a symbol definition in Scheme with &lt;kbd&gt;F&lt;/kbd&gt;. This feature was already
+in place for Elisp, Clojure and CL.&lt;/p&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;Looks like a great batch of features, but I&amp;#39;m the most happy about the stupid backquote bug being
+fixed.&lt;/p&gt;
+
+&lt;p&gt;Up next: pre-defined key binding &lt;a href=&quot;https://github.com/abo-abo/lispy/issues/57&quot;&gt;themes&lt;/a&gt;, featuring:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;the beloved &lt;code&gt;default&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;the old-school &lt;code&gt;paredit&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;the special-only &lt;code&gt;minimal&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;and maybe one more.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Feel free to chime in, if you&amp;#39;ve got a key setup that you think other people will like. Happy
+hacking!&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>An update to my Elisp ERT / Travis CI setup</title>

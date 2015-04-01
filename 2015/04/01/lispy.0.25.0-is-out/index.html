@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      lispy 0.25.0 is out &middot; (or emacs
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="/public/css/octicons.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Scripts -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body class="layout-reverse theme-base-08">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <!-- <div class="sidebar-item"> -->
+  <!--   <p>unused</p> -->
+  <!-- </div> -->
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about/">About</a>
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/archive/">Archive</a>
+        
+      
+    
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+
+    <div id="github" class="sidebar-nav-item">
+      <button type="button"
+              class="btn btn-info"
+              data-toggle="collapse"
+              data-target="#github-projects">
+        <span class="octicon octicon-mark-github"></span> My Emacs Projects
+      </button>
+      <div id="github-projects" class="collapse">
+        <ul style="margin-bottom:0em;">
+          <li>
+            <a href="https://github.com/abo-abo/lispy">lispy</a>
+            <p>vi-like Paredit</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/worf">worf</a>
+            <p>vi-like bindings for org-mode</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-window">ace-window</a>
+            <p>switch windows with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-link">ace-link</a>
+            <p>follow links with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/function-args">function-args</a>
+            <p>enhance <code>CEDET</code> for C++</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/helm-make">helm-make</a>
+            <p>select a Makefile target with <code>helm</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/make-it-so">make-it-so</a>
+            <p>transform files with Makefile recipes</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/org-download">org-download</a>
+            <p>drag-and-drop images to <code>org-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo?tab=repositories">
+              <span class="octicon octicon-octoface"></span>
+              and more
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
+
+  <div class="sidebar-item">
+    <p>
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.0/">
+        <img alt="Creative Commons License"
+             style="border-width:0;opacity: 0.3;"
+             src="https://i.creativecommons.org/l/by-nc-sa/2.0/88x31.png"/>
+      </a>
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">(or emacs</a>
+            <small>irrelevant)</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">lispy 0.25.0 is out</h1>
+  <span class="post-date">01 Apr 2015</span>
+  <p>Seriously, check <a href="https://github.com/abo-abo/lispy/releases/tag/0.25.0">the release notes</a> if you
+don&#39;t believe me.</p>
+
+<h2 id="fixes">Fixes</h2>
+
+<ul>
+<li>Add <code>minibuffer-inactive-mode</code> to the <code>lispy-elisp-modes</code> list. It means that you can eval there if you want.</li>
+<li><kbd>V</kbd> (<code>lispy-visit</code>) should turn on <code>projectile-global-mode</code> if it&#39;s not on.</li>
+<li><kbd>M</kbd> (<code>lispy-multiline</code>) works better for Clojure: the regexes for vectors, maps and sets have been improved.</li>
+<li><kbd>C-k</kbd> should not delete only the string when located at start of string.</li>
+<li><kbd>M</kbd> will not turn vectors into lists any more.</li>
+<li>the backquote bug for <kbd>i</kbd> and <kbd>M</kbd> was fixed.</li>
+<li>you can flatten Elisp closures as well, at least the plain ones.</li>
+</ul>
+
+<h2 id="new-features">New Features</h2>
+
+<h3 id="b-calls-lispy-back"><kbd>b</kbd> calls <code>lispy-back</code></h3>
+
+<p>The movement commands, such as:</p>
+
+<ul>
+<li>the arrows <kbd>hjkl</kbd> (<code>lispy-left</code>, <code>lispy-down</code> etc.)</li>
+<li><kbd>f</kbd> (<code>lispy-flow</code>)</li>
+<li><kbd>q</kbd> (<code>lispy-ace-paren</code>)</li>
+<li><kbd>i</kbd> (<code>lispy-tab</code>), only when called for an active region</li>
+</ul>
+
+<p>will not store each movement in the point-and-mark history. You can press <kbd>b</kbd> to go back in
+history. This is especially useful for <kbd>h</kbd>, <kbd>l</kbd>, and <kbd>f</kbd>, since they are
+not trivially reversible.</p>
+
+<p><kbd>b</kbd> was previously bound to <code>lispy-store-region-and-buffer</code>, so you could do Ediff with
+<kbd>b</kbd> and <kbd>B</kbd>. Now it&#39;s bound to <kbd>xB</kbd>.</p>
+
+<h3 id="hungry-comment-delete">Hungry comment delete</h3>
+
+<p><kbd>C-d</kbd> (<code>lispy-delete</code>) when positioned at the start of a comment, and with only whitespace
+before the start of the line, will delete the whole comment.</p>
+
+<p>If you want to un-comment, just use <kbd>C-u ;</kbd> from any point in the comment.</p>
+
+<h3 id="added-flatten-operation-for-clojure">Added flatten operation for Clojure</h3>
+
+<p><kbd>xf</kbd> (<code>lispy-flatten</code>) now also works for Clojure, before it was only for Elisp.</p>
+
+<h4 id="example-1-(flatten-a-macro):">Example 1 (flatten a macro):</h4>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="err">|</span><span class="p">(</span><span class="nf">-&gt;&gt;</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">]</span>
+     <span class="p">(</span><span class="nb">map </span><span class="nv">sqr</span><span class="p">)</span>
+     <span class="p">(</span><span class="nb">filter </span><span class="nv">odd?</span><span class="p">))</span>
+</code></pre></div>
+<p>When you press <kbd>xf</kbd> you get this:</p>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="err">|</span><span class="p">(</span><span class="nb">filter </span><span class="nv">odd?</span> <span class="p">(</span><span class="nb">map </span><span class="nv">sqr</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">]))</span>
+</code></pre></div>
+<h4 id="example-2-(flatten-a-standard-function):">Example 2 (flatten a standard function):</h4>
+
+<p>Start with:</p>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="err">|</span><span class="p">(</span><span class="nb">map </span><span class="nv">odd?</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">])</span>
+</code></pre></div>
+<p>After <kbd>xf</kbd>:</p>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">f</span> <span class="nv">odd?</span> <span class="nv">coll</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">]]</span>
+  <span class="p">(</span><span class="nf">lazy-seq</span> <span class="p">(</span><span class="nb">when-let </span><span class="p">[</span><span class="nv">s</span> <span class="p">(</span><span class="nb">seq </span><span class="nv">coll</span><span class="p">)]</span>
+              <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nf">chunked-seq?</span> <span class="nv">s</span><span class="p">)</span>
+                <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">c</span> <span class="p">(</span><span class="nf">chunk-first</span> <span class="nv">s</span><span class="p">)</span>
+                      <span class="nv">size</span> <span class="p">(</span><span class="nb">int </span><span class="p">(</span><span class="nb">count </span><span class="nv">c</span><span class="p">))</span>
+                      <span class="nv">b</span> <span class="p">(</span><span class="nf">chunk-buffer</span> <span class="nv">size</span><span class="p">)]</span>
+                  <span class="p">(</span><span class="nb">dotimes </span><span class="p">[</span><span class="nv">i</span> <span class="nv">size</span><span class="p">]</span>
+                    <span class="p">(</span><span class="nf">chunk-append</span> <span class="nv">b</span> <span class="p">(</span><span class="nf">f</span> <span class="p">(</span><span class="nf">.nth</span> <span class="nv">c</span> <span class="nv">i</span><span class="p">))))</span>
+                  <span class="p">(</span><span class="nf">chunk-cons</span> <span class="p">(</span><span class="nf">chunk</span> <span class="nv">b</span><span class="p">)</span>
+                              <span class="p">(</span><span class="nb">map </span><span class="nv">f</span> <span class="p">(</span><span class="nf">chunk-rest</span> <span class="nv">s</span><span class="p">))))</span>
+                <span class="p">(</span><span class="nb">cons </span><span class="p">(</span><span class="nf">f</span> <span class="p">(</span><span class="nb">first </span><span class="nv">s</span><span class="p">))</span>
+                      <span class="p">(</span><span class="nb">map </span><span class="nv">f</span> <span class="p">(</span><span class="nb">rest </span><span class="nv">s</span><span class="p">)))))))</span>
+</code></pre></div>
+<p>A bit of a gibberish, but at least we can confirm that <code>map</code> is indeed lazy.</p>
+
+<h4 id="example-3-(flatten-your-own-function):">Example 3 (flatten your own function):</h4>
+
+<p>Example function:</p>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="kd">defn </span><span class="nv">sqr</span> <span class="p">[</span><span class="nv">x</span><span class="p">]</span>
+  <span class="p">(</span><span class="nb">* </span><span class="nv">x</span> <span class="nv">x</span><span class="p">))</span>
+</code></pre></div>
+<p>This one requires the function to be properly loaded with <kbd>C-c C-l</kbd> (<code>cider-load-file</code>),
+otherwise Clojure will not know the location of the function.</p>
+
+<p>Example statement:</p>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="nb">+ </span><span class="err">|</span><span class="p">(</span><span class="nf">sqr</span> <span class="mi">10</span><span class="p">)</span> <span class="mi">20</span><span class="p">)</span>
+</code></pre></div>
+<p>After <kbd>xf</kbd>:</p>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="nb">+ </span><span class="err">|</span><span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">x</span> <span class="mi">10</span><span class="p">]</span>
+     <span class="p">(</span><span class="nb">* </span><span class="nv">x</span> <span class="nv">x</span><span class="p">))</span> <span class="mi">20</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="added-lax-eval-for-clojure">Added lax eval for Clojure</h3>
+
+<p>This is similar to the lax eval for Elisp. If you mark an expression with a region:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">asdf [1 2 3]
+</code></pre></div>
+<p>and press <kbd>e</kbd>, you will actually eval this:</p>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="k">do </span><span class="p">(</span><span class="k">def </span><span class="nv">asdf</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">])</span>
+    <span class="nv">asdf</span><span class="p">)</span>
+</code></pre></div>
+<p>You can do this for let bindings, it&#39;s super-useful for debugging.  The rule is that if the first
+element of the region is a symbol, and there&#39;s more stuff in the region besides the symbol, a lax
+eval will be performed.</p>
+
+<h3 id="e-will-auto-start-cider"><kbd>e</kbd> will auto-start CIDER</h3>
+
+<p>If CIDER isn&#39;t live, <kbd>e</kbd> will start it and properly eval the current statement.</p>
+
+<h3 id="2f-will-search-for-variables-first"><kbd>2F</kbd> will search for variables first</h3>
+
+<p>Since Elisp is a LISP-2, there can be a function and a variable with the same name.  <kbd>F</kbd>
+(<code>lispy-follow</code>) prefers functions, but now <kbd>2F</kbd> will prefer variables.</p>
+
+<h3 id="2e-will-eval-and-insert-the-commented-result"><kbd>2e</kbd> will eval and insert the commented result</h3>
+
+<p>Starting with:</p>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="err">|</span><span class="p">(</span><span class="nb">filter </span><span class="nv">odd?</span> <span class="p">(</span><span class="nb">map </span><span class="nv">sqr</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">]))</span>
+</code></pre></div>
+<p>Pressing <kbd>2e</kbd> gives:</p>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="nb">filter </span><span class="nv">odd?</span> <span class="p">(</span><span class="nb">map </span><span class="nv">sqr</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">]))</span>
+<span class="c1">;; =&gt;</span>
+<span class="c1">;; (1 9 25)</span>
+</code></pre></div>
+<p>This works for all dialects, so you can also have:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">symbol-function</span> <span class="ss">&#39;exit-minibuffer</span><span class="p">)</span>
+<span class="c1">;; =&gt;</span>
+<span class="c1">;; (closure (t)</span>
+<span class="c1">;;          nil &quot;Terminate this minibuffer argument.&quot; (interactive)</span>
+<span class="c1">;;          (setq deactivate-mark nil)</span>
+<span class="c1">;;          (throw (quote exit)</span>
+<span class="c1">;;            nil))</span>
+</code></pre></div>
+<p>or</p>
+<div class="highlight"><pre><code class="language-cl" data-lang="cl"><span class="vg">*MODULES*</span>
+<span class="c1">;; =&gt;</span>
+<span class="c1">;; (&quot;SWANK-ARGLISTS&quot; &quot;SWANK-FANCY-INSPECTOR&quot; &quot;SWANK-FUZZY&quot; </span>
+<span class="c1">;;                   &quot;SWANK-UTIL&quot; &quot;SWANK-PRESENTATIONS&quot; </span>
+<span class="c1">;;                   &quot;SWANK-TRACE-DIALOG&quot; &quot;SB-CLTL2&quot;)</span>
+</code></pre></div>
+<p>To do the last eval you need to be in special.
+It means that you first have to mark the symbol <code>*MODULES*</code> with a region.
+A convenient function to mark the current symbol is <kbd>M-m</kbd> (<code>lispy-mark-symbol</code>).</p>
+
+<h3 id="y-(lispy-occur)-now-has-an-ivy-back-end"><kbd>y</kbd> (<code>lispy-occur</code>) now has an <code>ivy</code> back end</h3>
+
+<p><code>lispy-occur</code> launches an interactive search within the current top-level expression, usually a
+defun. This is useful to see where a variable is used in a function, or to quickly navigate to a
+statement.</p>
+
+<p>You can customize <code>lispy-occur-backend</code> to either <code>ivy</code> (the default) or <code>helm</code> (if you have it,
+since it&#39;s no longer a dependency of <code>lispy</code>).</p>
+
+<h3 id="add-ivy-back-end-to-lispy-completion-method">Add ivy back end to <code>lispy-completion-method</code></h3>
+
+<p>Now it&#39;s the default one for navigating to tags. You can select alternatively <code>helm</code> or <code>ido</code> if you
+wish.</p>
+
+<h3 id="remove-the-dependency-on-ace-jump-mode">Remove the dependency on <code>ace-jump-mode</code></h3>
+
+<p>Instead the dependency on <code>ace-window</code> will be re-used. This allows for a lot of code
+simplifications and better tests.</p>
+
+<p>New custom variables:</p>
+
+<ul>
+<li><code>lispy-avy-style-char</code>: choose where the overlay appears for <kbd>Q</kbd> (<code>lispy-ace-char</code>)</li>
+<li><code>lispy-avy-style-paren</code>: choose where the overlay appears for <kbd>q</kbd> (<code>lispy-ace-paren</code>)</li>
+<li><code>lispy-avy-style-symbol</code>: choose where the overlay appears for <kbd>a</kbd> (<code>lispy-ace-symbol</code>)
+and <kbd>-</kbd> (<code>lispy-ace-subword</code>) and <kbd>H</kbd> (<code>ace-symbol-replace</code>).</li>
+</ul>
+
+<p>There&#39;s also <code>lispy-avy-keys</code>, which is <code>a</code> ... <code>z</code> by default.</p>
+
+<h3 id="add-lispy-compat">Add <code>lispy-compat</code></h3>
+
+<p>This is a list of compatibility features with other packages, such as <code>edebug</code> and <code>god-mode</code>.
+They add overhead, so you might want to turn them off if you don&#39;t use the mentioned packages.</p>
+
+<h3 id="f-works-for-scheme"><kbd>F</kbd> works for Scheme</h3>
+
+<p>You can navigate to a symbol definition in Scheme with <kbd>F</kbd>. This feature was already
+in place for Elisp, Clojure and CL.</p>
+
+<h2 id="outro">Outro</h2>
+
+<p>Looks like a great batch of features, but I&#39;m the most happy about the stupid backquote bug being
+fixed.</p>
+
+<p>Up next: pre-defined key binding <a href="https://github.com/abo-abo/lispy/issues/57">themes</a>, featuring:</p>
+
+<ul>
+<li>the beloved <code>default</code>.</li>
+<li>the old-school <code>paredit</code>.</li>
+<li>the special-only <code>minimal</code>.</li>
+<li>and maybe one more.</li>
+</ul>
+
+<p>Feel free to chime in, if you&#39;ve got a key setup that you think other people will like. Happy
+hacking!</p>
+
+</div>
+
+<div class="twitter-share">
+  <a href="https://twitter.com/share"
+     class="twitter-share-button"
+     data-via="_abo_abo"
+     data-dnt="true">
+    Tweet
+  </a>
+</div>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/03/30/elisp-ert-travis/"> -->
+          <a href="/2015/03/30/elisp-ert-travis/">
+            An update to my Elisp ERT / Travis CI setup
+            <small>30 Mar 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/03/28/recenter/"> -->
+          <a href="/2015/03/28/recenter/">
+            recenter-positions, that's not how gravity works!
+            <small>28 Mar 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/03/26/hydra-ivy-swiper/"> -->
+          <a href="/2015/03/26/hydra-ivy-swiper/">
+            A Hydra for ivy/swiper
+            <small>26 Mar 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'oremacs'; // required: replace example with your forum shortname
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+<script>
+  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+</script>
+<noscript>
+  Please enable JavaScript to view the
+  <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>

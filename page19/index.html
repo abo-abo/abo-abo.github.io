@@ -235,6 +235,59 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2014/12/27/mmm-minty/">
+        Mmm... minty
+      </a>
+    </h1>
+
+    <span class="post-date">27 Dec 2014</span>
+
+    <h2 id="the-backstory">The backstory</h2>
+
+<p>In <a href="/2014/12/24/light-it-up/">one of the earlier posts</a>,
+I was discussing the implementation of an Emacs Lisp lexer for
+<a href="http://pygments.org/">Pygments</a>. Here, I&#39;ll show how to install the
+update and get nicely highlighted code in a pdf via the
+<a href="http://code.google.com/p/minted">minted</a> LaTeX package.</p>
+
+<h2 id="the-install">The install</h2>
+
+<p>Assuming that you are on a Debian-related system:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">sudo apt-get install mercurial
+mkdir ~/git &amp;&amp; cd ~/git
+hg clone https://bitbucket.org/abo-abo/pygments-main
+cd pygments-main
+make mapfiles
+sudo python setup.py install
+</code></pre></div>
+<p>And, of course, I&#39;m assuming that you already have TeX Live installed.
+I&#39;m not too sophisticated about it, so I just install everything:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">sudo apt-get install texlive-full
+</code></pre></div>
+<h2 id="the-result">The result</h2>
+
+<p>So here I took some code from
+<a href="/2014/12/25/ode-to-toggle/">a previous post</a> and
+copy-pasted it into <a href="/download/minty.org">minty.org</a> file.
+And here&#39;s the result of the PDF export (<kbd>C-c C-e lo</kbd>):
+<a href="/download/minty.pdf">minty.pdf</a>.</p>
+
+<h2 id="the-red-tape">The red tape</h2>
+
+<p><code>org-mode</code> had trouble exporting on my laptop until I did this:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">cd /usr/bin/
+sudo ln -s /usr/local/texlive/2013/bin/x86_64-linux/pdflatex
+</code></pre></div>
+<p>Also be mindful of the <code>-shell-escape</code> flag to <code>pdflatex</code>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">org-latex-pdf-process</span>
+      <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f&quot;</span>
+        <span class="s">&quot;pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f&quot;</span>
+        <span class="s">&quot;pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f&quot;</span><span class="p">))</span>
+</code></pre></div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2014/12/26/the-little-package-that-could/">
         tiny.el - the little package that could
       </a>
@@ -969,208 +1022,6 @@ In fact, I saw this gem today at Stack Overflow:</p>
 <blockquote>
 <p>I am using Emacs 23 and cedet 1.0.1 ...</p>
 </blockquote>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2014/12/22/sometimes-things-break/">
-        Sometimes things break
-      </a>
-    </h1>
-
-    <span class="post-date">22 Dec 2014</span>
-
-    <p>I was very surprised to find the
-<a href="https://github.com/abo-abo/lispy">lispy</a> build broken after I pushed
-some minor update, like a change to README.md.  I mean, how in the
-world would a few words in README.md break the Elisp tests?  Upon
-investigation, it turned out that only one test was broken <sup id="fnref1"><a href="#fn1" rel="footnote">1</a></sup>.  This
-one:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">ert-deftest</span> <span class="nv">clojure-thread-macro</span> <span class="p">()</span>
-  <span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;cider</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">should</span>
-   <span class="p">(</span><span class="nv">string=</span>
-    <span class="p">(</span><span class="nv">lispy-with</span>
-     <span class="s">&quot;|(map sqr (filter odd? [1 2 3 4 5]))&quot;</span> <span class="s">&quot;2(-&gt;&gt;]&lt;]&lt;]wwlM&quot;</span><span class="p">)</span>
-    <span class="s">&quot;(-&gt;&gt; [1 2 3 4 5]\n  (map sqr)\n  (filter odd?))|&quot;</span><span class="p">)))</span>
-</code></pre></div>
-<p>The culprit was an update in <code>clojure-mode</code>&#39;s indentation.
-The previous behavior:</p>
-<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="nf">-&gt;&gt;</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">]</span>
-   <span class="p">(</span><span class="nb">map </span><span class="nv">sqr</span><span class="p">)</span>
-   <span class="p">(</span><span class="nb">filter </span><span class="nv">odd?</span><span class="p">))</span>
-</code></pre></div>
-<p>is now replaced with:</p>
-<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="nf">-&gt;&gt;</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">]</span>
-     <span class="p">(</span><span class="nb">map </span><span class="nv">sqr</span><span class="p">)</span>
-     <span class="p">(</span><span class="nb">filter </span><span class="nv">odd?</span><span class="p">))</span>
-</code></pre></div>
-<p>Thankfully, the <a href="https://travis-ci.com/">Travis CI</a> in combination
-with <a href="https://github.com/cask/cask">cask</a> is keeping me up to date.
-Apparently, there were some
-<a href="https://github.com/clojure-emacs/clojure-mode/issues/265">heated discussions</a>
-accompanying the change, and there was some reverting going on.
-Anyway, it looks to me that both approaches have merit: the first one
-is more logical, since <code>-&gt;&gt;</code> is an operation akin to Elisp&#39;s
-<code>with-current-buffer</code>, where the first argument is different from the
-others, while the second one is more aesthetically pleasing.  Fine
-with me either way, I&#39;m not complaining:)</p>
-
-<p>Also, the key sequence in the test is pretty ancient.  These days I&#39;d
-probably use:
-<kbd>2(-&gt;&gt;</kbd><kbd>C-f</kbd><kbd>d&lt;j&lt;skwAM</kbd>.  I&#39;ve
-recently done a more complex Elisp refactoring screencast, check it
-out <a href="https://www.youtube.com/watch?v=Djn6dXzXp_E">here</a>.  Later on, I
-plan to do more Emacs-related screencasts (not just <code>lispy</code>-related)
-on my <a href="https://www.youtube.com/user/abo5abo/videos">channel</a>.</p>
-
-<p>If you haven&#39;t tried <a href="https://github.com/abo-abo/lispy"><code>lispy</code></a> yet, you&#39;re missing out -
-doing this refactor operation feels like you&#39;re doing the 15-number puzzle:</p>
-
-<p><img src="/download/15-puzzle.png" alt="15puzzle"></p>
-
-<p>And that&#39;s fun in my book. But let me get back to the short overview
-of the Emacs testing tools that lead me to this post, mainly <code>cask</code>.</p>
-
-<h2 id="cask:-what-does-it-do?"><code>cask</code>: what does it do?</h2>
-
-<p>According to <a href="http://cask.readthedocs.org/en/latest/">its own documentation</a>:</p>
-
-<blockquote>
-<p>Cask is a project management tool for Emacs Lisp to automate the
-package development cycle; development, dependencies, testing,
-building, packaging and more.</p>
-</blockquote>
-
-<p>Yes, please, I&#39;d like to do that! But after the exciting intro
-sentence, there&#39;s very little followup documentation-wise.  It took me
-ages to figure out how <code>cask</code> can actually give me some tangible
-benefits, since I thought that <code>package.el</code> is enough to maintain my
-own config (it still is).</p>
-
-<h2 id="tangible-benefits-of-cask">tangible benefits of <code>cask</code></h2>
-
-<p>I&#39;d like to be sure that my packages work across recent Emacs
-versions.  I&#39;m using the
-<a href="http://savannah.gnu.org/git/?group=emacs">bleeding edge</a> myself, but
-people who download my packages from MELPA might be using something
-older, like <code>emacs-24.3</code>.</p>
-
-<p>So I want to run my tests on both versions. Also, even for just one
-version, the tests need to be run in a minimum environment, i.e. with
-only the dependencies loaded, so that my personal configuration does
-not interfere with the tests.</p>
-
-<p>This is where <code>cask</code> actually shines: it can bootstrap a whole new
-<code>.emacs.d</code>, separate from your own, just for running tests.  It can do
-it on your machine as well as on Travis CI.</p>
-
-<p>Here&#39;s my <code>Cask</code> file for <code>lispy</code>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">(source gnu)
-(source melpa)
-
-(package-file &quot;lispy.el&quot;)
-
-(files &quot;*.el&quot; (:exclude &quot;init.el&quot; &quot;lispy-test.el&quot;))
-
-(development
- (depends-on &quot;helm&quot;)
- (depends-on &quot;ace-jump-mode&quot;)
- (depends-on &quot;noflet&quot;)
- (depends-on &quot;iedit&quot;)
- (depends-on &quot;multiple-cursors&quot;)
- (depends-on &quot;cider&quot;)
- (depends-on &quot;slime&quot;)
- (depends-on &quot;geiser&quot;)
- (depends-on &quot;projectile&quot;)
- (depends-on &quot;s&quot;)
- (depends-on &quot;highlight&quot;))
-</code></pre></div>
-<p>And here&#39;s the <code>Makefile</code>:</p>
-<div class="highlight"><pre><code class="language-Makefile" data-lang="Makefile"><span class="nv">EMACS</span> <span class="o">=</span> emacs
-<span class="c"># EMACS = emacs-24.3</span>
-
-<span class="nv">CASK</span> <span class="o">=</span> ~/.cask/bin/cask
-<span class="nv">CASKEMACS</span> <span class="o">=</span> <span class="k">$(</span>CASK<span class="k">)</span> <span class="nb">exec</span> <span class="k">$(</span>EMACS<span class="k">)</span>
-<span class="nv">LOAD</span> <span class="o">=</span> -l lispy-inline.el -l lispy.el -l lispy-test.el
-
-<span class="nf">all</span><span class="o">:</span> <span class="n">test</span>
-
-<span class="nf">cask</span><span class="o">:</span>
-    <span class="k">$(</span>shell <span class="nv">EMACS</span><span class="o">=</span><span class="k">$(</span>EMACS<span class="k">)</span> <span class="k">$(</span>CASK<span class="k">))</span>
-
-<span class="nf">compile</span><span class="o">:</span>
-    <span class="k">$(</span>CASKEMACS<span class="k">)</span> -q  <span class="k">$(</span>LOAD<span class="k">)</span> lispy.el <span class="se">\</span>
-    --eval <span class="s2">&quot;(progn (mapc #&#39;byte-compile-file &#39;(\&quot;lispy.el\&quot; \&quot;lispy-inline.el\&quot; \&quot;le-clojure.el\&quot; \&quot;le-scheme.el\&quot; \&quot;le-lisp.el\&quot;)) (switch-to-buffer \&quot;*Compile-Log*\&quot;) (ert t))&quot;</span>
-
-<span class="nf">test</span><span class="o">:</span>
-    <span class="k">$(</span>CASKEMACS<span class="k">)</span> -batch <span class="k">$(</span>LOAD<span class="k">)</span> -f ert-run-tests-batch-and-exit
-
-<span class="nf">clean</span><span class="o">:</span>
-    rm -f *.elc
-</code></pre></div>
-<p>As you can see, the <code>Makefile</code> has two separate testing targets: an
-interactive one (<code>compile</code>) and a non-interactive one (<code>test</code>).
-There&#39;s actually some validity to this, since it happened once that
-the same tests we failing in non-interactive mode, but passing in
-interactive mode. Also, <code>compile</code> obviously compiles, testing for
-compilation warnings/errors.  I can change the Emacs version at the
-top, although I don&#39;t have to do it too often.</p>
-
-<p>Finally, here&#39;s <code>.travis.yml</code>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">language: emacs-lisp
-env:
-  matrix:
-    - EMACS=emacs24
-
-before_install:
-  - sudo add-apt-repository -y ppa:cassou/emacs
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq $EMACS
-  - curl -fsSkL --max-time 10 --retry 10 --retry-delay 10 https://raw.github.com/cask/cask/master/go | python
-
-script:
-  - make cask
-  - make test
-</code></pre></div>
-<p>So each time I push a change to github, Travis CI will</p>
-
-<ul>
-<li>install emacs24</li>
-<li>install cask</li>
-<li>install the packages from MELPA:
-
-<ul>
-<li><code>helm</code></li>
-<li><code>ace-jump-mode</code></li>
-<li><code>noflet</code></li>
-<li><code>iedit</code></li>
-<li><code>multiple-cursors</code></li>
-<li><code>cider</code></li>
-<li><code>slime</code></li>
-<li><code>geiser</code></li>
-<li><code>projectile</code></li>
-<li><code>s</code></li>
-<li><code>highlight</code></li>
-</ul></li>
-<li>load Emacs with these packages</li>
-<li>load <code>lispy-test.el</code> and run it</li>
-<li>show up green if <code>make test</code> returned <code>0</code></li>
-</ul>
-
-<p>Seems a bit wasteful, but it&#39;s <a href="http://xkcd.com/908/">the Cloud</a> - what can you do?</p>
-
-<div class="footnotes">
-<hr>
-<ol>
-
-<li id="fn1">
-<p>upon even further investigation, the test itself was broken for almost a year, since <code>lispy-with-clojure</code> should have been used instead of <code>lispy-with</code>, but <code>cider</code> was changing the indentation of <code>-&gt;&gt;</code> also for <code>emacs-lisp-mode</code>, so things were kind of working out&nbsp;<a href="#fnref1" rev="footnote">&#8617;</a></p>
-</li>
-
-</ol>
-</div>
 
   </div>
   
