@@ -4,13 +4,73 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-04-01T20:47:23+02:00</updated>
+ <updated>2015-04-02T21:40:21+02:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Paredit emulation in lispy</title>
+   <link href="http://oremacs.com/2015/04/02/lispy-paredit-emulation/"/>
+   <updated>2015-04-02T00:00:00+02:00</updated>
+   <id>http://oremacs.com/2015/04/02/lispy-paredit-emulation</id>
+   <content type="html">&lt;h2 id=&quot;intro&quot;&gt;Intro&lt;/h2&gt;
+
+&lt;p&gt;I just finished this feature today.  Almost all Paredit functionality is available in terms of
+&lt;a href=&quot;https://github.com/abo-abo/lispy&quot;&gt;lispy&lt;/a&gt;&amp;#39;s own functions.  The only functions that I didn&amp;#39;t
+implement were the ones that I didn&amp;#39;t find any use for: &lt;code&gt;paredit-backslash&lt;/code&gt; (ugh, prompts),
+&lt;code&gt;paredit-comment-dwim&lt;/code&gt; (covered by regular &lt;kbd&gt;;&lt;/kbd&gt;), &lt;code&gt;paredit-forward-down&lt;/code&gt; and
+&lt;code&gt;paredit-backward-down&lt;/code&gt; (both just move out of special, and throw a lot).&lt;/p&gt;
+
+&lt;h2 id=&quot;setting-the-keymap-theme&quot;&gt;Setting the keymap theme&lt;/h2&gt;
+
+&lt;p&gt;So if you ever thought that &lt;code&gt;lispy&lt;/code&gt; could be a good idea, but the non-special key bindings are weird,
+and you&amp;#39;re too used to Paredit, you can now try this setting:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;lispy-set-key-theme&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;special&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;paredit&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c-digits&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Here&amp;#39;s the setting that I&amp;#39;m using, since I love &lt;code&gt;lispy&lt;/code&gt;&amp;#39;s default bindings:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;lispy-set-key-theme&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;oleh&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;special&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;lispy&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c-digits&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The default setting actually is this one, &lt;code&gt;lispy-mode-map-oleh&lt;/code&gt; is an additional map for use with
+my &lt;a href=&quot;http://oremacs.com/2015/02/14/semi-xmodmap/&quot;&gt;Xmodmap setup&lt;/a&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;lispy-set-key-theme&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;special&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;lispy&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c-digits&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Each item in the list passed to &lt;code&gt;lispy-set-key-theme&lt;/code&gt; designates a keymap to turn on.
+So in a non-LISP buffer you could turn on just the special map:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;lispy-set-key-theme&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;special&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This would mean that zero regular bindings get overridden, but when the point is before or after a
+paren, you get the &lt;code&gt;lispy&lt;/code&gt; bindings. Actually, I&amp;#39;ve just enabled &lt;code&gt;lispy-mode&lt;/code&gt; for &lt;code&gt;markdown-mode&lt;/code&gt;,
+and it&amp;#39;s working great. Unfortunately, I haven&amp;#39;t yet figured out how to make a minor mode&amp;#39;s keymap
+buffer-local. Maybe someone reading has an idea.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-screencast&quot;&gt;The screencast&lt;/h2&gt;
+
+&lt;p&gt;I went through all of Paredit tests and made ERT tests out of them, to make sure that the features
+are actually working. I&amp;#39;ve recorded a short (&amp;lt;3 minutes)
+&lt;a href=&quot;https://www.youtube.com/watch?v=RDcc3RBQ9Gw&quot;&gt;screencast&lt;/a&gt; of implementing one of the tests.  Have a
+look, maybe you&amp;#39;ll something interesting in my setup. There are two short pauses in the video,
+that&amp;#39;s just me thinking how to write down a function. My ERT and Magit workflows are also shown.&lt;/p&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;The new key-theme feature is meant to make &lt;code&gt;lispy&lt;/code&gt; super-not-annoying. I think it&amp;#39;s useful, since
+using &lt;code&gt;lispy&lt;/code&gt; in Paredit mode was annoying for me, so the opposite has to be true for people that
+are used to Paredit. So if you notice a bug, please &lt;a href=&quot;https://github.com/abo-abo/lispy/issues&quot;&gt;report it&lt;/a&gt;, bug
+reports are very important for my non-annoyance agenda.&lt;/p&gt;
+
+&lt;p&gt;Finally, if you&amp;#39;re super-devoted to Paredit and don&amp;#39;t want to drop it, now you can easily have both
+&lt;code&gt;lispy-mode&lt;/code&gt; and &lt;code&gt;paredit-mode&lt;/code&gt; on. Just use this setting:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;lispy-set-key-theme&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;special&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Or this one if you additionally want &lt;kbd&gt;C-1&lt;/kbd&gt; to show the inline doc, and &lt;kbd&gt;C-2&lt;/kbd&gt; to show
+the inline args:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;lispy-set-key-theme&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;special&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c-digits&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
+ </entry>
  
  <entry>
    <title>lispy 0.25.0 is out</title>

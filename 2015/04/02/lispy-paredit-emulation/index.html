@@ -11,7 +11,7 @@
 
   <title>
     
-      lispy 0.24.0 is out &middot; (or emacs
+      Paredit emulation in lispy &middot; (or emacs
     
   </title>
 
@@ -232,108 +232,61 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">lispy 0.24.0 is out</h1>
-  <span class="post-date">08 Mar 2015</span>
-  <p>The last release was a month ago, and there have been 70 commits to
-master since then.  If you&#39;re not familiar with <code>lispy</code>, see
-<a href="/2015/01/19/lispy.0.21.0-is-out/">my intro post for version 0.21.0</a>.
-I&#39;ll just copy <a href="https://github.com/abo-abo/lispy/releases/tag/0.24.0">the release notes</a> here,
-while adding a few things.</p>
+  <h1 class="post-title">Paredit emulation in lispy</h1>
+  <span class="post-date">02 Apr 2015</span>
+  <h2 id="intro">Intro</h2>
 
-<h2 id="fixes">Fixes</h2>
+<p>I just finished this feature today.  Almost all Paredit functionality is available in terms of
+<a href="https://github.com/abo-abo/lispy">lispy</a>&#39;s own functions.  The only functions that I didn&#39;t
+implement were the ones that I didn&#39;t find any use for: <code>paredit-backslash</code> (ugh, prompts),
+<code>paredit-comment-dwim</code> (covered by regular <kbd>;</kbd>), <code>paredit-forward-down</code> and
+<code>paredit-backward-down</code> (both just move out of special, and throw a lot).</p>
 
-<ul>
-<li><kbd>DEL</kbd> behaves properly after a string and one space.</li>
-<li><kbd>C-k</kbd> works better for expressions preceded with &quot;#&quot;.</li>
-<li><kbd>3 </kbd> should not add a space when there is one already.</li>
-<li><kbd>#</kbd> will not add a space after a comma.</li>
-<li><kbd>C-j</kbd> works better in comments after a quote.</li>
-<li><code>lispy--eval-elisp-form</code> first arg is now named <code>lispy-form</code> instead of <code>form</code>. It was impossible
-to evaluate an unrelated <code>form</code> variable with the previous behavior.</li>
-<li><kbd>F</kbd> again works properly when jumping to a jar (e.g. to <code>defn</code>) from Clojure source.</li>
-<li><kbd>C-k</kbd> won&#39;t call <code>delete-region</code> in some obscure branches.</li>
-</ul>
+<h2 id="setting-the-keymap-theme">Setting the keymap theme</h2>
 
-<h2 id="enhancements">Enhancements</h2>
-
-<ul>
-<li><kbd>P</kbd> (<code>lispy-paste</code>) will add a newline when called from start of line.  This way,
-<kbd>nP</kbd> becomes equivalent to <kbd>c</kbd> (<code>lispy-clone</code>). Of course, it&#39;s more flexible: you
-can do e.g. <kbd>nkP</kbd>.</li>
-<li><kbd>xb</kbd> (<code>lispy-bind-variable</code>) now works on regions as well. Use it to bind the current
-sexp or region as a let-bound variable: it will put you in <code>iedit</code>. When you&#39;re done with <code>iedit</code>, press
-<kbd>M-m</kbd> (<code>lispy-mark-symbol</code>) to exit <code>iedit</code>. If you need to move the let binding around, use
-a combination of <kbd>C</kbd> (<code>lispy-convolute</code>) and <kbd>h</kbd> (<code>lispy-left</code>).</li>
-<li><kbd>g</kbd> will ignore <code>loaddefs.el</code> for Elisp.</li>
-<li><kbd>M-m</kbd> works better in unbalanced buffers, which should be an rare thing.</li>
-<li>add <code>defhydra</code> to <code>lispy-tag-arity</code>: now <kbd>g</kbd> will recognize <code>defhydra</code> statements.</li>
-<li>The tag logic was improved to do less parsing.</li>
-<li><code>lispy-outline</code> was updated to match the standard <code>^;;;</code> outline regex. Try pressing <kbd>I</kbd>
-in e.g. org.el, it&#39;s quite beautiful.</li>
-<li>All <code>lispy-eval</code> functions will preserve the match data.</li>
-<li><kbd>&gt;</kbd> will delete the extra whitespace while slurping.</li>
-<li>Added <code>undercover</code>/Coveralls test coverage report.</li>
-<li><kbd>H</kbd> (<code>lispy-ace-symbol-replace</code>) is now a Hydra: type <kbd>h</kbd> to delete more, type
-<kbd>u</kbd> to undo.</li>
-<li><kbd>Q</kbd> (<code>lispy-ace-char</code>) now uses <code>avy</code> to jump. This change allows to cover this
-function with a test.</li>
-</ul>
-
-<h2 id="new-features">New features</h2>
-
-<h3 id="p-can-now-iterate-dolist-variables-in-elisp."><kbd>p</kbd> can now iterate <code>dolist</code> variables in Elisp.</h3>
-<div class="highlight"><pre><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nb">defun</span> <span class="nv">range</span> <span class="p">(</span><span class="nv">a</span> <span class="nv">b</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">message</span> <span class="s">&quot;called range&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">number-sequence</span> <span class="nv">a</span> <span class="nv">b</span><span class="p">))</span>
-<span class="p">(</span><span class="nb">dolist</span> <span class="err">|</span><span class="p">(</span><span class="nv">i</span> <span class="p">(</span><span class="nv">range</span> <span class="mi">1</span> <span class="mi">3</span><span class="p">))</span>
-  <span class="p">(</span><span class="nv">message</span> <span class="s">&quot;i=%d&quot;</span> <span class="nv">i</span><span class="p">))</span>
+<p>So if you ever thought that <code>lispy</code> could be a good idea, but the non-special key bindings are weird,
+and you&#39;re too used to Paredit, you can now try this setting:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">lispy-set-key-theme</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">special</span> <span class="nv">paredit</span> <span class="nv">c-digits</span><span class="p">))</span>
 </code></pre></div>
-<p>Pressing <kbd>p</kbd> with point where <code>|</code> is, will</p>
+<p>Here&#39;s the setting that I&#39;m using, since I love <code>lispy</code>&#39;s default bindings:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">lispy-set-key-theme</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">oleh</span> <span class="nv">special</span> <span class="nv">lispy</span> <span class="nv">c-digits</span><span class="p">))</span>
+</code></pre></div>
+<p>The default setting actually is this one, <code>lispy-mode-map-oleh</code> is an additional map for use with
+my <a href="http://oremacs.com/2015/02/14/semi-xmodmap/">Xmodmap setup</a>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">lispy-set-key-theme</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">special</span> <span class="nv">lispy</span> <span class="nv">c-digits</span><span class="p">))</span>
+</code></pre></div>
+<p>Each item in the list passed to <code>lispy-set-key-theme</code> designates a keymap to turn on.
+So in a non-LISP buffer you could turn on just the special map:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">lispy-set-key-theme</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">special</span><span class="p">))</span>
+</code></pre></div>
+<p>This would mean that zero regular bindings get overridden, but when the point is before or after a
+paren, you get the <code>lispy</code> bindings. Actually, I&#39;ve just enabled <code>lispy-mode</code> for <code>markdown-mode</code>,
+and it&#39;s working great. Unfortunately, I haven&#39;t yet figured out how to make a minor mode&#39;s keymap
+buffer-local. Maybe someone reading has an idea.</p>
 
-<ul>
-<li>call <code>range</code> and set <code>i</code> to 1</li>
-<li>set <code>i</code> to 2</li>
-<li>set <code>i</code> to 3</li>
-<li>set <code>i</code> to nil</li>
-<li>call <code>range</code> and set <code>i</code> to 1</li>
-</ul>
+<h2 id="the-screencast">The screencast</h2>
 
-<p>This is another step toward <code>edebug</code>-less debugging, adding to special behavior for <code>let</code>, <code>cond</code>
-and <code>labels</code>. Remember that you can drop out of <code>edebug</code> with <kbd>Z</kbd> (<code>lispy-edebug-stop</code>).
-This function will take the current function arguments that <code>edebug</code> provides, store them in
-top-level, and exit <code>edebug</code>.
-This is really cool for setting up entry conditions for a function that you want to debug,
-or even a function with an empty body that you want to write. Why am I so eager to exit <code>edebug</code>?
-Because it puts the code in read-only mode, which is quite restrictive.</p>
-
-<h2 id="incompatible-changes">Incompatible changes</h2>
-
-<ul>
-<li><code>lispy-helm-columns</code> is now a list <code>&#39;(60 80)</code>. The first number is
-the width of the tag name column, the second number is the width of
-both tag name and tag file. The tag name column is left-aligned, while the file column is right-aligned.</li>
-<li><kbd>j</kbd> and <kbd>k</kbd> should now move to outline when at
-beginning of comment. The previous behavior was to look for the first
-sexp in the direction. You can still do that with <kbd>f</kbd>.</li>
-<li><kbd>I</kbd> (<code>lispy-shiftab</code>) is now a two-way cycle, instead of
-three-way, like <code>org-mode</code>.  The contents can be obtained with
-<kbd>C-u I</kbd> or <kbd>C-u C-TAB</kbd>.</li>
-</ul>
+<p>I went through all of Paredit tests and made ERT tests out of them, to make sure that the features
+are actually working. I&#39;ve recorded a short (&lt;3 minutes)
+<a href="https://www.youtube.com/watch?v=RDcc3RBQ9Gw">screencast</a> of implementing one of the tests.  Have a
+look, maybe you&#39;ll something interesting in my setup. There are two short pauses in the video,
+that&#39;s just me thinking how to write down a function. My ERT and Magit workflows are also shown.</p>
 
 <h2 id="outro">Outro</h2>
 
-<p>It seems that <code>lispy</code> is winding down feature-wise, which is a good
-thing, because I&#39;m almost out of keys - there&#39;s only <kbd>Y</kbd> and
-<kbd>U</kbd> left.</p>
+<p>The new key-theme feature is meant to make <code>lispy</code> super-not-annoying. I think it&#39;s useful, since
+using <code>lispy</code> in Paredit mode was annoying for me, so the opposite has to be true for people that
+are used to Paredit. So if you notice a bug, please <a href="https://github.com/abo-abo/lispy/issues">report it</a>, bug
+reports are very important for my non-annoyance agenda.</p>
 
-<p>Possible next steps would be to improve the test coverage (currently
-48%) and the documentation.  Perhaps I&#39;ll try to implement some
-automation for generating
-<a href="http://oremacs.com/lispy/">the function reference</a>, or learn some
-texinfo and write an actual manual, see how <code>ox-texinfo</code> holds up.</p>
-
-<p>I hope that you&#39;ll grow to enjoy <code>lispy</code> as much as I do. Happy hacking!</p>
-
+<p>Finally, if you&#39;re super-devoted to Paredit and don&#39;t want to drop it, now you can easily have both
+<code>lispy-mode</code> and <code>paredit-mode</code> on. Just use this setting:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">lispy-set-key-theme</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">special</span><span class="p">))</span>
+</code></pre></div>
+<p>Or this one if you additionally want <kbd>C-1</kbd> to show the inline doc, and <kbd>C-2</kbd> to show
+the inline args:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">lispy-set-key-theme</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">special</span> <span class="nv">c-digits</span><span class="p">))</span>
+</code></pre></div>
 </div>
 
 <div class="twitter-share">
@@ -351,16 +304,6 @@ texinfo and write an actual manual, see how <code>ox-texinfo</code> holds up.</p
     
       <li>
         <h3>
-          <!-- <a href="//2015/04/02/lispy-paredit-emulation/"> -->
-          <a href="/2015/04/02/lispy-paredit-emulation/">
-            Paredit emulation in lispy
-            <small>02 Apr 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
           <!-- <a href="//2015/04/01/lispy.0.25.0-is-out/"> -->
           <a href="/2015/04/01/lispy.0.25.0-is-out/">
             lispy 0.25.0 is out
@@ -375,6 +318,16 @@ texinfo and write an actual manual, see how <code>ox-texinfo</code> holds up.</p
           <a href="/2015/03/30/elisp-ert-travis/">
             An update to my Elisp ERT / Travis CI setup
             <small>30 Mar 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/03/28/recenter/"> -->
+          <a href="/2015/03/28/recenter/">
+            recenter-positions, that's not how gravity works!
+            <small>28 Mar 2015</small>
           </a>
         </h3>
       </li>
