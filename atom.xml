@@ -4,13 +4,98 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-04-07T21:16:28+02:00</updated>
+ <updated>2015-04-09T17:47:45+02:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Complete stuff with Counsel</title>
+   <link href="http://oremacs.com/2015/04/09/counsel-completion/"/>
+   <updated>2015-04-09T00:00:00+02:00</updated>
+   <id>http://oremacs.com/2015/04/09/counsel-completion</id>
+   <content type="html">&lt;h2 id=&quot;intro&quot;&gt;Intro&lt;/h2&gt;
+
+&lt;p&gt;If you like my package &lt;a href=&quot;https://github.com/abo-abo/swiper&quot;&gt;swiper&lt;/a&gt;,
+I&amp;#39;m sure you&amp;#39;ll also like &lt;a href=&quot;http://melpa.org/#/counsel&quot;&gt;counsel&lt;/a&gt;. It
+lives in the same repository, but you can install it separately from
+MELPA.&lt;/p&gt;
+
+&lt;p&gt;Counsel uses &lt;code&gt;ivy&lt;/code&gt; - the same method as &lt;code&gt;swiper&lt;/code&gt; to:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Complete Elisp at point with &lt;code&gt;counsel-el&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Complete Clojure at point with &lt;code&gt;counsel-clj&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Open a git-managed file with &lt;code&gt;counsel-git&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Describe an Elisp variable with &lt;code&gt;counsel-describe-variable&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Describe an Elisp function with &lt;code&gt;counsel-describe-function&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Look up an Elisp symbol in the info with &lt;code&gt;counsel-info-lookup-symbol&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Insert a Unicode character at point with &lt;code&gt;counsel-unicode-char&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Below, I&amp;#39;ll describe the functions that I added just today.&lt;/p&gt;
+
+&lt;h3 id=&quot;counsel-describe-function&quot;&gt;&lt;code&gt;counsel-describe-function&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;This is just a replacement for &lt;code&gt;describe-function&lt;/code&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/counsel-describe-function.png&quot; alt=&quot;counsel-describe-function.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;As you can see, regular expressions work here as well.  The
+space-splitting behavior is the same as in &lt;code&gt;swiper&lt;/code&gt;, so don&amp;#39;t expect
+to be able to match a single space: spaces are wild.&lt;/p&gt;
+
+&lt;h3 id=&quot;counsel-describe-variable&quot;&gt;&lt;code&gt;counsel-describe-variable&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;This is just a replacement for &lt;code&gt;describe-variable&lt;/code&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/counsel-describe-variable.png&quot; alt=&quot;counsel-describe-variable.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Well, actually I&amp;#39;ve used &lt;code&gt;ido-mode&lt;/code&gt; with &lt;code&gt;flx&lt;/code&gt; matching for these two
+functions before. In my experience, &lt;code&gt;ivy&lt;/code&gt; handles much better:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;you are in charge of which regex you&amp;#39;re searching for&lt;/li&gt;
+&lt;li&gt;you see the candidate count&lt;/li&gt;
+&lt;li&gt;no crazy wrap-around candidate cycling&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;And it works faster, too.&lt;/p&gt;
+
+&lt;p&gt;Here are my bindings:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;f1&amp;gt; f&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;counsel-describe-function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;f1&amp;gt; v&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;counsel-describe-variable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;counsel-info-lookup-symbol&quot;&gt;&lt;code&gt;counsel-info-lookup-symbol&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/counsel-info-lookup-symbol.png&quot; alt=&quot;counsel-info-lookup-symbol.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;I don&amp;#39;t use this one too often, but it&amp;#39;s nice to have the option:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;f2&amp;gt; i&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;counsel-info-lookup-symbol&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;counsel-unicode-char&quot;&gt;&lt;code&gt;counsel-unicode-char&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/counsel-unicode-char.png&quot; alt=&quot;counsel-unicode-char.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;At around 40000 candidates, &lt;code&gt;ivy&lt;/code&gt; starts to feel clunky (around 0.1s
+display delay). Unfortunately, I don&amp;#39;t really see a way around this,
+except using tricks like &lt;code&gt;while-no-input&lt;/code&gt;, which didn&amp;#39;t work right
+when I tried it earlier. It would be really cool to do the completion
+in another thread, but alas.&lt;/p&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;Give the new functions a try. I think &lt;code&gt;ivy&lt;/code&gt; can become a viable &lt;code&gt;ido&lt;/code&gt;
+replacement, at least it has done so for me: the only &lt;code&gt;ido&lt;/code&gt; functions
+that I&amp;#39;m still using are &lt;code&gt;ido-switch-buffer&lt;/code&gt; and &lt;code&gt;ido-find-file&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Also, if you&amp;#39;re using &lt;code&gt;projectile&lt;/code&gt;, you can use &lt;code&gt;ivy&lt;/code&gt; completion for it:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;projectile-completion-system&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ivy&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
+ </entry>
  
  <entry>
    <title>Rule-based multi-line in lispy</title>

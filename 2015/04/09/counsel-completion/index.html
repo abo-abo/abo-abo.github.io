@@ -11,7 +11,7 @@
 
   <title>
     
-      A new Swiper demo on Youtube &middot; (or emacs
+      Complete stuff with Counsel &middot; (or emacs
     
   </title>
 
@@ -236,74 +236,86 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">A new Swiper demo on Youtube</h1>
-  <span class="post-date">19 Mar 2015</span>
-  <h2 id="youtube-video">Youtube video</h2>
+  <h1 class="post-title">Complete stuff with Counsel</h1>
+  <span class="post-date">09 Apr 2015</span>
+  <h2 id="intro">Intro</h2>
 
-<p>Today, I&#39;ve fixed a few bugs in both <a href="https://github.com/abo-abo/swiper">swiper</a> and <code>ivy</code>.
-Finally, the number of candidates display has also been added.  You can see the whole thing in the
-<a href="https://www.youtube.com/watch?v=s3qwiAtKjuA">one minute video demo</a>.</p>
+<p>If you like my package <a href="https://github.com/abo-abo/swiper">swiper</a>,
+I&#39;m sure you&#39;ll also like <a href="http://melpa.org/#/counsel">counsel</a>. It
+lives in the same repository, but you can install it separately from
+MELPA.</p>
 
-<p>Here are the bindings that I&#39;m using:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="s">&quot;\C-r&quot;</span> <span class="ss">&#39;swiper</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">global-set-key</span> <span class="s">&quot;\C-s&quot;</span> <span class="ss">&#39;swiper</span><span class="p">)</span>
+<p>Counsel uses <code>ivy</code> - the same method as <code>swiper</code> to:</p>
+
+<ul>
+<li>Complete Elisp at point with <code>counsel-el</code>.</li>
+<li>Complete Clojure at point with <code>counsel-clj</code>.</li>
+<li>Open a git-managed file with <code>counsel-git</code>.</li>
+<li>Describe an Elisp variable with <code>counsel-describe-variable</code>.</li>
+<li>Describe an Elisp function with <code>counsel-describe-function</code>.</li>
+<li>Look up an Elisp symbol in the info with <code>counsel-info-lookup-symbol</code>.</li>
+<li>Insert a Unicode character at point with <code>counsel-unicode-char</code>.</li>
+</ul>
+
+<p>Below, I&#39;ll describe the functions that I added just today.</p>
+
+<h3 id="counsel-describe-function"><code>counsel-describe-function</code></h3>
+
+<p>This is just a replacement for <code>describe-function</code>:</p>
+
+<p><img src="/download/counsel-describe-function.png" alt="counsel-describe-function.png"></p>
+
+<p>As you can see, regular expressions work here as well.  The
+space-splitting behavior is the same as in <code>swiper</code>, so don&#39;t expect
+to be able to match a single space: spaces are wild.</p>
+
+<h3 id="counsel-describe-variable"><code>counsel-describe-variable</code></h3>
+
+<p>This is just a replacement for <code>describe-variable</code>:</p>
+
+<p><img src="/download/counsel-describe-variable.png" alt="counsel-describe-variable.png"></p>
+
+<p>Well, actually I&#39;ve used <code>ido-mode</code> with <code>flx</code> matching for these two
+functions before. In my experience, <code>ivy</code> handles much better:</p>
+
+<ul>
+<li>you are in charge of which regex you&#39;re searching for</li>
+<li>you see the candidate count</li>
+<li>no crazy wrap-around candidate cycling</li>
+</ul>
+
+<p>And it works faster, too.</p>
+
+<p>Here are my bindings:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;&lt;f1&gt; f&quot;</span><span class="p">)</span> <span class="ss">&#39;counsel-describe-function</span><span class="p">)</span>
+<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;&lt;f1&gt; v&quot;</span><span class="p">)</span> <span class="ss">&#39;counsel-describe-variable</span><span class="p">)</span>
 </code></pre></div>
-<h2 id="integration-tests">Integration tests</h2>
+<h3 id="counsel-info-lookup-symbol"><code>counsel-info-lookup-symbol</code></h3>
 
-<p>I&#39;ve also added some <a href="https://github.com/abo-abo/swiper/blob/master/ivy-test.el">integration tests</a>,
-if you&#39;re interested. I didn&#39;t know how to do exactly this type of testing before (when there&#39;s input from minibuffer).
-Turns out, it&#39;s pretty easy to do using <code>execute-kbd-macro</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;ert</span><span class="p">)</span>
+<p><img src="/download/counsel-info-lookup-symbol.png" alt="counsel-info-lookup-symbol.png"></p>
 
-<span class="p">(</span><span class="k">defvar</span> <span class="nv">ivy-expr</span> <span class="no">nil</span>
-  <span class="s">&quot;Holds a test expression to evaluate with `ivy-eval&#39;.&quot;</span><span class="p">)</span>
-
-<span class="p">(</span><span class="k">defvar</span> <span class="nv">ivy-result</span> <span class="no">nil</span>
-  <span class="s">&quot;Holds the eval result of `ivy-expr&#39; by `ivy-eval&#39;.&quot;</span><span class="p">)</span>
-
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">ivy-eval</span> <span class="p">()</span>
-  <span class="s">&quot;Evaluate `ivy-expr&#39;.&quot;</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-result</span> <span class="p">(</span><span class="nf">eval</span> <span class="nv">ivy-expr</span><span class="p">)))</span>
-
-<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c e&quot;</span><span class="p">)</span> <span class="ss">&#39;ivy-eval</span><span class="p">)</span>
-
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">ivy-with</span> <span class="p">(</span><span class="nv">expr</span> <span class="nv">keys</span><span class="p">)</span>
-  <span class="s">&quot;Evaluate EXPR followed by KEYS.&quot;</span>
-  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">ivy-expr</span> <span class="nv">expr</span><span class="p">))</span>
-    <span class="p">(</span><span class="nf">execute-kbd-macro</span>
-     <span class="p">(</span><span class="nf">vconcat</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c e&quot;</span><span class="p">)</span>
-              <span class="p">(</span><span class="nv">kbd</span> <span class="nv">keys</span><span class="p">)))</span>
-    <span class="nv">ivy-result</span><span class="p">))</span>
-
-<span class="p">(</span><span class="nb">ert-deftest</span> <span class="nv">ivy-read</span> <span class="p">()</span>
-  <span class="p">(</span><span class="nv">should</span> <span class="p">(</span><span class="nf">equal</span>
-           <span class="p">(</span><span class="nv">ivy-read</span> <span class="s">&quot;pattern: &quot;</span> <span class="no">nil</span><span class="p">)</span>
-           <span class="no">nil</span><span class="p">))</span>
-  <span class="p">(</span><span class="nv">should</span> <span class="p">(</span><span class="nf">equal</span>
-           <span class="p">(</span><span class="nv">ivy-read</span> <span class="s">&quot;pattern: &quot;</span> <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;42&quot;</span><span class="p">))</span>
-           <span class="s">&quot;42&quot;</span><span class="p">))</span>
-  <span class="p">(</span><span class="nv">should</span> <span class="p">(</span><span class="nf">equal</span>
-           <span class="p">(</span><span class="nv">ivy-with</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">ivy-read</span> <span class="s">&quot;pattern: &quot;</span> <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;blue&quot;</span> <span class="s">&quot;yellow&quot;</span><span class="p">))</span>
-                     <span class="s">&quot;C-m&quot;</span><span class="p">)</span>
-           <span class="s">&quot;blue&quot;</span><span class="p">))</span>
-  <span class="p">(</span><span class="nv">should</span> <span class="p">(</span><span class="nf">equal</span>
-           <span class="p">(</span><span class="nv">ivy-with</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">ivy-read</span> <span class="s">&quot;pattern: &quot;</span> <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;blue&quot;</span> <span class="s">&quot;yellow&quot;</span><span class="p">))</span>
-                     <span class="s">&quot;y C-m&quot;</span><span class="p">)</span>
-           <span class="s">&quot;yellow&quot;</span><span class="p">))</span>
-  <span class="p">(</span><span class="nv">should</span> <span class="p">(</span><span class="nf">equal</span>
-           <span class="p">(</span><span class="nv">ivy-with</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">ivy-read</span> <span class="s">&quot;pattern: &quot;</span> <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;blue&quot;</span> <span class="s">&quot;yellow&quot;</span><span class="p">))</span>
-                     <span class="s">&quot;y DEL b C-m&quot;</span><span class="p">)</span>
-           <span class="s">&quot;blue&quot;</span><span class="p">))</span>
-  <span class="p">(</span><span class="nv">should</span> <span class="p">(</span><span class="nf">equal</span>
-           <span class="p">(</span><span class="nv">ivy-with</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">ivy-read</span> <span class="s">&quot;pattern: &quot;</span> <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;blue&quot;</span> <span class="s">&quot;yellow&quot;</span><span class="p">))</span>
-                     <span class="s">&quot;z C-m&quot;</span><span class="p">)</span>
-           <span class="no">nil</span><span class="p">)))</span>
+<p>I don&#39;t use this one too often, but it&#39;s nice to have the option:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;&lt;f2&gt; i&quot;</span><span class="p">)</span> <span class="ss">&#39;counsel-info-lookup-symbol</span><span class="p">)</span>
 </code></pre></div>
+<h3 id="counsel-unicode-char"><code>counsel-unicode-char</code></h3>
+
+<p><img src="/download/counsel-unicode-char.png" alt="counsel-unicode-char.png"></p>
+
+<p>At around 40000 candidates, <code>ivy</code> starts to feel clunky (around 0.1s
+display delay). Unfortunately, I don&#39;t really see a way around this,
+except using tricks like <code>while-no-input</code>, which didn&#39;t work right
+when I tried it earlier. It would be really cool to do the completion
+in another thread, but alas.</p>
+
 <h2 id="outro">Outro</h2>
 
-<p>Give the package a try, if you haven&#39;t yet. You can get it from <a href="http://melpa.org/#/swiper">MELPA</a>.</p>
+<p>Give the new functions a try. I think <code>ivy</code> can become a viable <code>ido</code>
+replacement, at least it has done so for me: the only <code>ido</code> functions
+that I&#39;m still using are <code>ido-switch-buffer</code> and <code>ido-find-file</code>.</p>
 
+<p>Also, if you&#39;re using <code>projectile</code>, you can use <code>ivy</code> completion for it:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">projectile-completion-system</span> <span class="ss">&#39;ivy</span><span class="p">)</span>
+</code></pre></div>
 </div>
 
 <div class="twitter-share">
@@ -321,16 +333,6 @@ Turns out, it&#39;s pretty easy to do using <code>execute-kbd-macro</code>:</p>
     
       <li>
         <h3>
-          <!-- <a href="//2015/04/09/counsel-completion/"> -->
-          <a href="/2015/04/09/counsel-completion/">
-            Complete stuff with Counsel
-            <small>09 Apr 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
           <!-- <a href="//2015/04/06/lispy-multiline/"> -->
           <a href="/2015/04/06/lispy-multiline/">
             Rule-based multi-line in lispy
@@ -345,6 +347,16 @@ Turns out, it&#39;s pretty easy to do using <code>execute-kbd-macro</code>:</p>
           <a href="/2015/04/02/lispy-paredit-emulation/">
             Paredit emulation in lispy
             <small>02 Apr 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/04/01/lispy.0.25.0-is-out/"> -->
+          <a href="/2015/04/01/lispy.0.25.0-is-out/">
+            lispy 0.25.0 is out
+            <small>01 Apr 2015</small>
           </a>
         </h3>
       </li>
