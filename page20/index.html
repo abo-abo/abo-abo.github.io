@@ -235,6 +235,199 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2014/12/24/light-it-up/">
+        Light it up! Pygments for Emacs Lisp.
+      </a>
+    </h1>
+
+    <span class="post-date">24 Dec 2014</span>
+
+    <h2 id="the-challenge">The Challenge</h2>
+
+<p>More than 2 years ago, the formidable @bbatsov of <a href="http://emacsredux.com">Emacs Redux</a> had this to say:</p>
+
+<blockquote class="twitter-tweet" lang="en"><p>After so many years pygments (a popular syntax highlighting library used by GitHub &amp; others) still lacks proper support for Emacs Lisp <a href="https://twitter.com/hashtag/fail?src=hash">#fail</a></p>&mdash; Bozhidar Batsov (@bbatsov) <a href="https://twitter.com/bbatsov/status/246929917546221568">September 15, 2012</a></blockquote>
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<p>Well, let&#39;s turn that #fail-frown upside down!</p>
+
+<h2 id="the-python">The Python</h2>
+
+<p>A quick search brought me to this page:
+<a href="http://pygments.org/docs/lexerdevelopment/">Write your own lexer -- Pygments</a>.
+Turns out that the Pygments development takes place on
+<a href="https://bitbucket.org/birkenfeld/pygments-main">Bitbucket</a>, so I had
+to start an account there. I shortly cloned the repository:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">hg clone https://abo-abo@bitbucket.org/birkenfeld/pygments-main
+</code></pre></div>
+<p>Then I quickly copy-pasted some starting code:</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;SchemeLexer&#39;</span><span class="p">,</span> <span class="s">&#39;CommonLispLexer&#39;</span><span class="p">,</span>
+           <span class="s">&#39;HyLexer&#39;</span><span class="p">,</span> <span class="s">&#39;RacketLexer&#39;</span><span class="p">,</span>
+           <span class="s">&#39;NewLispLexer&#39;</span><span class="p">,</span> <span class="s">&#39;EmacsLispLexer&#39;</span><span class="p">]</span>
+
+<span class="k">class</span> <span class="nc">EmacsLispLexer</span><span class="p">(</span><span class="n">RegexLexer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An ELisp lexer, parsing a stream and outputting the tokens</span>
+<span class="sd">    needed to highlight elisp code.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s">&#39;ELisp&#39;</span>
+    <span class="n">aliases</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;emacs&#39;</span><span class="p">,</span> <span class="s">&#39;elisp&#39;</span><span class="p">]</span>
+    <span class="n">filenames</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;*.el&#39;</span><span class="p">]</span>
+    <span class="n">mimetypes</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;text/x-elisp&#39;</span><span class="p">]</span>
+
+    <span class="n">flags</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">MULTILINE</span>
+
+    <span class="c"># the rest of the code was copied from CommonLispLexer for now</span>
+</code></pre></div>
+<p>Apparently, infrastructure-wise, I only need to know two commands.
+The first one needs to be run just once, so that Pygments is aware of the new lexer:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">$ cd ~/git/pygments-main &amp;&amp; make mapfiles
+</code></pre></div>
+<p>The second command is to (re-)generate <code>/tmp/example.html</code>:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">$ cp ~/git/emacs/lisp/vc/ediff.el \
+  ~/git/pygments-main/tests/examplefiles/
+$ ./pygmentize -O full -f html -o /tmp/example.html \
+  tests/examplefiles/ediff.el
+</code></pre></div>
+<p>I would repeat the last line with each update to the code, and then
+refresh the page in Firefox to see the result.</p>
+
+<h2 id="the-elisp">The Elisp</h2>
+
+<p>To finalize the lexer, the following tasks ensued:</p>
+
+<ul>
+<li>get a list of built-in macros</li>
+<li>get a list of special forms</li>
+<li>get a list of built-in functions</li>
+</ul>
+
+<p>In the process, I&#39;ve added two more lists:</p>
+
+<ul>
+<li><p>a list of built-in functions that are highlighted with <code>font-lock-keyword-face</code>:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">&#39;defvaralias&#39;, &#39;provide&#39;, &#39;require&#39;,
+&#39;with-no-warnings&#39;, &#39;define-widget&#39;, &#39;with-electric-help&#39;,
+&#39;throw&#39;, &#39;defalias&#39;, &#39;featurep&#39;
+</code></pre></div></li>
+<li><p>a list of built-in functions and macros that are highlighted with <code>font-lock-warning-face</code>:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">&#39;cl-assert&#39;, &#39;cl-check-type&#39;, &#39;error&#39;, &#39;signal&#39;,
+&#39;user-error&#39;, &#39;warn&#39;
+</code></pre></div></li>
+</ul>
+
+<p>To generate the other three lists, I started off writing things in
+<code>*scratch*</code>, but after a while my compulsion to <kbd>C-x C-s</kbd>
+kicked in and I&#39;ve saved the work to <code>research.el</code>.  At least,
+<a href="http://batsov.com/articles/2012/03/08/emacs-tip-number-5-save-buffers-automatically-on-buffer-or-window-switch/">thanks to @bbatsov</a>,
+I&#39;m not <kbd>C-x C-s</kbd>-ing that much since I&#39;ve added this:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">save-and-switch-buffer</span> <span class="p">()</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="k">and</span> <span class="p">(</span><span class="nf">buffer-file-name</span><span class="p">)</span>
+             <span class="p">(</span><span class="nv">not</span> <span class="p">(</span><span class="nv">bound-and-true-p</span> <span class="nv">archive-subfile-mode</span><span class="p">)))</span>
+    <span class="p">(</span><span class="nv">save-buffer</span><span class="p">))</span>
+  <span class="p">(</span><span class="nv">ido-switch-buffer</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">global-set-key</span> <span class="s">&quot;η&quot;</span> <span class="ss">&#39;save-and-switch-buffer</span><span class="p">)</span>
+</code></pre></div>
+<p>But it&#39;s time for the student to one-up the master, so here&#39;s a tip to
+improve even further:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">oleh-ido-setup-hook</span> <span class="p">()</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">ido-buffer-completion-map</span> <span class="s">&quot;η&quot;</span> <span class="ss">&#39;ido-next-match</span><span class="p">))</span>
+</code></pre></div>
+<p>This way I can cycle the buffers with the same shortcut that invokes
+<code>save-and-switch-buffer</code>. The defaults are <kbd>C-s</kbd> and
+<kbd>C-r</kbd>, in case you didn&#39;t know.</p>
+
+<h2 id="the-c">The C</h2>
+
+<p>Getting the list of built-in C functions and special forms, obviously
+involved browsing the C source code. In case you don&#39;t (yet) have the Emacs sources,
+they&#39;re here:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">$ git clone git://git.savannah.gnu.org/emacs.git
+</code></pre></div>
+<p>I switched to the <code>./src</code> directory and called <kbd>M-x</kbd> <code>find-name-dired</code> with
+<code>*.c</code> to build a list of all the sources.
+Then I ran the following code from <code>research.el</code>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">defvar</span> <span class="nv">foo-c-functions</span> <span class="no">nil</span><span class="p">)</span>
+<span class="p">(</span><span class="k">defvar</span> <span class="nv">foo-c-special-forms</span> <span class="no">nil</span><span class="p">)</span>
+
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">c-research</span> <span class="p">()</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">files</span> <span class="p">(</span><span class="nv">dired-get-marked-files</span><span class="p">))</span>
+        <span class="p">(</span><span class="nv">i</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="p">(</span><span class="nb">dolist</span> <span class="p">(</span><span class="nv">file</span> <span class="nv">files</span><span class="p">)</span>
+      <span class="p">(</span><span class="nf">message</span> <span class="s">&quot;%d&quot;</span> <span class="p">(</span><span class="nb">incf</span> <span class="nv">i</span><span class="p">))</span>
+      <span class="p">(</span><span class="nb">with-current-buffer</span> <span class="p">(</span><span class="nv">find-file-noselect</span> <span class="nv">file</span><span class="p">)</span>
+        <span class="p">(</span><span class="nf">goto-char</span> <span class="p">(</span><span class="nf">point-min</span><span class="p">))</span>
+        <span class="p">(</span><span class="k">while</span> <span class="p">(</span><span class="nf">re-search-forward</span> <span class="s">&quot;^DEFUN (&quot;</span> <span class="no">nil</span> <span class="no">t</span><span class="p">)</span>
+          <span class="p">(</span><span class="nf">backward-char</span> <span class="mi">1</span><span class="p">)</span>
+          <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">beg</span> <span class="p">(</span><span class="nf">point</span><span class="p">))</span>
+                <span class="p">(</span><span class="nv">end</span> <span class="p">(</span><span class="k">save-excursion</span>
+                       <span class="p">(</span><span class="nv">forward-list</span><span class="p">)</span>
+                       <span class="p">(</span><span class="nf">point</span><span class="p">)))</span>
+                <span class="nv">str</span><span class="p">)</span>
+            <span class="p">(</span><span class="nf">forward-char</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="p">(</span><span class="nf">search-forward</span> <span class="s">&quot;\&quot;&quot;</span> <span class="no">nil</span> <span class="no">t</span><span class="p">)</span>
+            <span class="p">(</span><span class="k">setq</span> <span class="nv">str</span> <span class="p">(</span><span class="nf">read</span> <span class="p">(</span><span class="nf">buffer-substring-no-properties</span>
+                             <span class="p">(</span><span class="nf">+</span> <span class="nv">beg</span> <span class="mi">2</span><span class="p">)</span> <span class="p">(</span><span class="nf">1-</span> <span class="p">(</span><span class="nf">point</span><span class="p">)))))</span>
+            <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">re-search-forward</span> <span class="s">&quot;UNEVALLED&quot;</span> <span class="nv">end</span> <span class="no">t</span><span class="p">)</span>
+                <span class="p">(</span><span class="nb">push</span> <span class="nv">str</span> <span class="nv">foo-c-special-forms</span><span class="p">)</span>
+              <span class="p">(</span><span class="nb">push</span> <span class="nv">str</span> <span class="nv">foo-c-functions</span><span class="p">))))))))</span>
+</code></pre></div>
+<p>This was beautiful, by the way, to just generate this sort of
+documentation from such well-formatted and documented C sources.  Free
+Software FTW.</p>
+
+<p>If you&#39;re interested, there are 1294 built-in functions.
+Here&#39;s a list of 23 special forms that I found:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="k">and</span> <span class="k">catch</span> <span class="k">cond</span> <span class="k">condition-case</span> <span class="k">defconst</span>
+<span class="k">defvar</span> <span class="k">function</span> <span class="k">if</span> <span class="k">interactive</span> <span class="k">let</span> <span class="k">let*</span>
+<span class="k">or</span> <span class="k">prog1</span> <span class="k">prog2</span> <span class="k">progn</span> <span class="k">quote</span>
+<span class="k">save-current-buffer</span> <span class="k">save-excursion</span>
+<span class="k">save-restriction</span> <span class="k">setq</span> <span class="k">setq-default</span>
+<span class="k">unwind-protect</span> <span class="k">while</span>
+</code></pre></div>
+<p>You can read up on the special forms in the
+<a href="http://mitpress.mit.edu/sicp/full-text/book/book-Z-H-10.html#%_sec_1.1.3">SICP</a>.
+There&#39;s no node for them, so just use isearch.</p>
+
+<h2 id="the-result">The Result</h2>
+
+<p>You can see it here: <a href="/download/ediff.html">ediff.html</a>, as well as on
+the rest of the site, since I&#39;ve switched it on everywhere.</p>
+
+<h2 id="the-impact">The Impact</h2>
+
+<p>Unfortunately this won&#39;t have impact on the Github source code
+highlighter, since
+<a href="http://www.greghendershott.com/2014/11/github-dropped-pygments.html">Github dropped Pygments</a>
+recently.</p>
+
+<p>But people that use the static blog generator
+<a href="http://jekyllrb.com">Jekyll</a> or the LaTeX package
+<a href="http://code.google.com/p/minted">minted</a> (that&#39;s the package that
+<code>org-mode</code>&#39;s PDF Export uses by default) will be able to get better
+Elisp highlighting. In fact, this blog is already using the new highlighter.</p>
+
+<p>See the rest of projects that use Pygments
+<a href="http://pygments.org/faq/#who-uses-pygments">here</a></p>
+
+<h2 id="the-bitbucket">The Bitbucket</h2>
+
+<p>So now, to share the new lexer with the world I just have to learn how to:</p>
+
+<ul>
+<li>stage and commit in Mercurial</li>
+<li>push Mercurial to Bitbucket</li>
+<li>open a pull request on Bitbucket</li>
+</ul>
+
+<p>I don&#39;t <em>want</em> to become a <a href="http://xkcd.com/1220/">hipster</a>, these things just happen.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2014/12/23/upcase-word-you-silly/">
         upcase-word, you so silly
       </a>

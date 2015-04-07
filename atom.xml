@@ -4,13 +4,217 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-04-02T21:40:21+02:00</updated>
+ <updated>2015-04-07T21:16:28+02:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Rule-based multi-line in lispy</title>
+   <link href="http://oremacs.com/2015/04/06/lispy-multiline/"/>
+   <updated>2015-04-06T00:00:00+02:00</updated>
+   <id>http://oremacs.com/2015/04/06/lispy-multiline</id>
+   <content type="html">&lt;h2 id=&quot;where-do-one-line-expressions-come-from?&quot;&gt;Where do one-line expressions come from?&lt;/h2&gt;
+
+&lt;p&gt;When programming LISP, especially with &lt;a href=&quot;https://github.com/abo-abo/lispy&quot;&gt;lispy&lt;/a&gt;, it&amp;#39;s easy to
+generate random one-line expressions. This is, of course, because the results of &lt;code&gt;read&lt;/code&gt; or &lt;code&gt;eval&lt;/code&gt;
+don&amp;#39;t contain any whitespace information: all original newlines are lost.&lt;/p&gt;
+
+&lt;p&gt;Just to review the multitude of ways to insert generated code into a buffer using &lt;code&gt;lispy&lt;/code&gt; I&amp;#39;ll list
+the shortcuts and the test-based explanations (at around 2000 lines of tests and 54% test coverage,
+&lt;code&gt;lispy&lt;/code&gt; is pretty well tested).&lt;/p&gt;
+
+&lt;h3 id=&quot;eval-and-insert&quot;&gt;eval-and-insert&lt;/h3&gt;
+
+&lt;p&gt;&lt;kbd&gt;E&lt;/kbd&gt; calls &lt;code&gt;lispy-eval-and-insert&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/lispy-test-eval-and-insert.png&quot; alt=&quot;lispy-test-eval-and-insert.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;The image above is generated using the interactive test visualizer &lt;code&gt;lispy-view-test&lt;/code&gt;, bound to
+&lt;kbd&gt;xv&lt;/kbd&gt;. If you want to explore how a certain command is intended to behave, just find the
+corresponding test (with the same name as the command) and call &lt;kbd&gt;xv&lt;/kbd&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;eval-and-replace&quot;&gt;eval-and-replace&lt;/h3&gt;
+
+&lt;p&gt;&lt;kbd&gt;xr&lt;/kbd&gt; calls &lt;code&gt;lispy-eval-and-replace&lt;/code&gt;.  This function evaluates the current expression and
+replaces it with the result.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/lispy-test-eval-and-replace.png&quot; alt=&quot;lispy-test-eval-and-replace.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;The sequence of actions in the test:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;e&lt;/kbd&gt; calls &lt;code&gt;lispy-eval&lt;/code&gt; to set &lt;code&gt;foo&lt;/code&gt; to &lt;code&gt;42&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;j&lt;/kbd&gt; calls &lt;code&gt;lispy-down&lt;/code&gt; to move to the next sexp.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;xr&lt;/kbd&gt; calls &lt;code&gt;lispy-eval-and-replace&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Ideally, there should have been &lt;code&gt;&amp;quot;xr&amp;quot;&lt;/code&gt; instead of &lt;code&gt;(lispy-eval-and-replace)&lt;/code&gt; in the test, but
+there&amp;#39;s a small wrinkle in the &lt;code&gt;lispy-with&lt;/code&gt; macro that needs to be fixed before that can happen.&lt;/p&gt;
+
+&lt;h3 id=&quot;flatten&quot;&gt;flatten&lt;/h3&gt;
+
+&lt;p&gt;&lt;kbd&gt;xf&lt;/kbd&gt; calls &lt;code&gt;lispy-flatten&lt;/code&gt;. This function expands in-place the current function or macro
+call.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/lispy-test-flatten.png&quot; alt=&quot;lispy-test-flatten.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;In this test, the misleadingly named function &lt;code&gt;square&lt;/code&gt; is evaluated and flattened, to see if the
+&lt;code&gt;&amp;amp;optional&lt;/code&gt; and &lt;code&gt;&amp;amp;rest&lt;/code&gt; argument passing rules indeed work.&lt;/p&gt;
+
+&lt;p&gt;The flatten operation works really well for Elisp and quite well for Clojure.  The CL implementation
+would need to heavily rely on SLIME features (currently absent), since the CL spec doesn&amp;#39;t define an
+equivalent of Elisp&amp;#39;s &lt;code&gt;symbol-function&lt;/code&gt;. The same applies to Scheme, I guess.&lt;/p&gt;
+
+&lt;h3 id=&quot;oneline&quot;&gt;oneline&lt;/h3&gt;
+
+&lt;p&gt;&lt;kbd&gt;O&lt;/kbd&gt; calls &lt;code&gt;lispy-oneline&lt;/code&gt;. It&amp;#39;s not eval-based, it just deletes the newlines.
+If there are any comments present, they are pushed out.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/lispy-test-oneline.png&quot; alt=&quot;lispy-test-oneline.png&quot;&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;lispy-alt-multiline-demo-1&quot;&gt;&lt;code&gt;lispy-alt-multiline&lt;/code&gt; Demo 1&lt;/h2&gt;
+
+&lt;p&gt;In the following image, I just press &lt;kbd&gt;T&lt;/kbd&gt; once, starting from an unchanged buffer:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/lispy-alt-multiline-1.gif&quot; alt=&quot;lispy-alt-multiline-1.gif&quot;&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;lispy-alt-multiline-demo-2&quot;&gt;&lt;code&gt;lispy-alt-multiline&lt;/code&gt; Demo 2&lt;/h2&gt;
+
+&lt;h3 id=&quot;flatten-push&quot;&gt;Flatten &lt;code&gt;push&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;Start from this code (the cursor is in the CSS, if you don&amp;#39;t see it):&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot;
+data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;dotimes&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;&lt;cursor&gt;(&lt;/cursor&gt;&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;push&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;nreverse&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;After &lt;kbd&gt;xf&lt;/kbd&gt; it becomes:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;dotimes&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;&lt;cursor&gt;(&lt;/cursor&gt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;res&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;cons&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;nreverse&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Since &lt;code&gt;push&lt;/code&gt; is a macro, &lt;code&gt;macroexpand&lt;/code&gt; is used. And since &lt;code&gt;macroexpand&lt;/code&gt; doesn&amp;#39;t give newline
+information, &lt;code&gt;pp-to-string&lt;/code&gt; is used, and it gives a reasonable result.&lt;/p&gt;
+
+&lt;h3 id=&quot;flatten-dotimes&quot;&gt;Flatten &lt;code&gt;dotimes&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;Start with the same code, but with cursor on &lt;code&gt;dotimes&lt;/code&gt; this time:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot;
+data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;&lt;cursor&gt;(&lt;/cursor&gt;&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;dotimes&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;push&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;nreverse&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;After &lt;kbd&gt;xf&lt;/kbd&gt; it becomes:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;&lt;cursor&gt;(&lt;/cursor&gt;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;cl--block-wrapper&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;catch&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;--cl-block-nil--&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;--dotimes-limit--&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;while&lt;/span&gt;
+           &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;--dotimes-limit--&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;res&lt;/span&gt;
+               &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;cons&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;i&lt;/span&gt;
+               &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;1+&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;nreverse&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;This time &lt;code&gt;pp-to-string&lt;/code&gt; isn&amp;#39;t as good: &lt;code&gt;let&lt;/code&gt; and &lt;code&gt;while&lt;/code&gt; statements are messed up.
+Follow this up with &lt;kbd&gt;T&lt;/kbd&gt; which calls &lt;code&gt;lispy-alt-multiline&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;&lt;cursor&gt;(&lt;/cursor&gt;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;cl--block-wrapper&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;catch&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;--cl-block-nil--&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;--dotimes-limit--&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+           &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;i&lt;/span&gt;
+                 &lt;span class=&quot;nv&quot;&gt;--dotimes-limit--&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;res&lt;/span&gt;
+               &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;cons&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;i&lt;/span&gt;
+                     &lt;span class=&quot;nv&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;i&lt;/span&gt;
+               &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;1+&lt;/span&gt;
+                &lt;span class=&quot;nv&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;nreverse&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Well, at least some parts look better. It could be make perfect by adding a sort of threshold when
+printing each sub-expression. It&amp;#39;s less than, say &lt;code&gt;15&lt;/code&gt; chars, which &lt;code&gt;(setq i (1+ i))&lt;/code&gt; is, no
+newlines should be added. I&amp;#39;ll add this a bit later.&lt;/p&gt;
+
+&lt;h2 id=&quot;more-on-lispy-alt-multiline&quot;&gt;More on &lt;code&gt;lispy-alt-multiline&lt;/code&gt;&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;lispy-alt-multiline&lt;/code&gt; can be used on a LISP expression to re-format it across multiple lines.  It
+doesn&amp;#39;t matter in which shape the expression currently is, since all current newlines will be removed
+before the algorithm starts.&lt;/p&gt;
+
+&lt;p&gt;This has to be done with some rules, since a one-line expression can transform to multiple viable
+multi-line forms. So far, these rules are implemented by customizing these variables:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defvar&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;lispy--multiline-take-3&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defvar&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;defmacro&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;defcustom&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;defgroup&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;List of constructs for which the first 3 elements are on the first line.&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defvar&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;lispy--multiline-take-2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defface&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;define-minor-mode&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;condition-case&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;incf&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;car&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;cdr&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;&amp;gt;=&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;&amp;lt;=&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;eq&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;equal&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;incf&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;decf&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;cl-incf&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;cl-decf&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;catch&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;provide&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;cons&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;unless&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;List of constructs for which the first 2 elements are on the first line.&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The name suggests that there should be &lt;code&gt;lispy-multiline&lt;/code&gt;, and there is, bound to &lt;kbd&gt;M&lt;/kbd&gt;.  The
+difference between &lt;kbd&gt;M&lt;/kbd&gt; and &lt;kbd&gt;T&lt;/kbd&gt; is that &lt;kbd&gt;M&lt;/kbd&gt; is older and ad-hoc, while
+&lt;kbd&gt;T&lt;/kbd&gt; is newer and rule-based. This means that the latter can misbehave, since it&amp;#39;s not yet
+fully tested. However, it has the following built-in check to make sure that it doesn&amp;#39;t mess up your
+code:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;The &lt;code&gt;read&lt;/code&gt; of the expression before transformation should be &lt;code&gt;equal&lt;/code&gt; to the &lt;code&gt;read&lt;/code&gt; of the
+transformed expression.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;If the above check fails, no change will be performed on the source code. So your code should be
+pretty safe. One more cool thing that I want to add to other operations is that it checks if the
+buffer will be changed after the transformation. If there will be no change, it will just issue a
+&lt;code&gt;&amp;quot;No change&amp;quot;&lt;/code&gt; message, and no change will be performed. This is really cool if you obsess about the
+buffer changed marker in the mode line like I do.&lt;/p&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;The functions bound to &lt;kbd&gt;O&lt;/kbd&gt;, &lt;kbd&gt;M&lt;/kbd&gt;, and &lt;kbd&gt;T&lt;/kbd&gt; apply to the current expression.
+To be really sure which one, turn on &lt;code&gt;show-paren-mode&lt;/code&gt;.  You can also call these functions not from
+special, although it&amp;#39;s not very convenient. The typical strategy in that case would be to bind all
+of them on a prefix map, e.g. &lt;kbd&gt;C-c&lt;/kbd&gt;.
+How is it different from &lt;a href=&quot;https://github.com/abo-abo/lispy#how-to-get-into-list-editing-mode-special&quot;&gt;special&lt;/a&gt; then?&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Instead of typing &lt;kbd&gt;[T&lt;/kbd&gt; you would type &lt;kbd&gt;C-c T&lt;/kbd&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;But the advantage of the special approach is that &lt;kbd&gt;[&lt;/kbd&gt;
+actually does something (moves point to the start of the current list),
+instead of just being a useless part of a key combination like &lt;kbd&gt;C-c&lt;/kbd&gt;.
+And if you&amp;#39;re in special already, there&amp;#39;s no need for &lt;kbd&gt;[&lt;/kbd&gt;.&lt;/p&gt;
+
+&lt;p&gt;I hope that you enjoy the new update. If it&amp;#39;s needed, variables like &lt;code&gt;lispy--multiline-take-3&lt;/code&gt; can
+be made buffer-local so that &lt;kbd&gt;T&lt;/kbd&gt; works appropriately for Clojure, CL and Scheme, instead of
+just Elisp. If you&amp;#39;d like to add support for your favorite dialect in this way, I&amp;#39;d be happy to
+explain some details if needed and to merge the PR. Happy hacking!&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Paredit emulation in lispy</title>

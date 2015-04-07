@@ -235,6 +235,90 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/01/28/notes-on-elisp-indentation/">
+        A few notes on Elisp indentation
+      </a>
+    </h1>
+
+    <span class="post-date">28 Jan 2015</span>
+
+    <p>I sure do like to keep my Elisp code nice and indented.
+But sometimes the indentation engine just won&#39;t listen.</p>
+
+<h2 id="lisp-indent-function">lisp-indent-function</h2>
+
+<p>By default, the indentation is handled as if:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">lisp-indent-function</span> <span class="ss">&#39;lisp-indent-function</span><span class="p">)</span>
+</code></pre></div>
+<p>At least in one case, it looks horrible:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">cl-labels</span> <span class="p">((</span><span class="nv">square</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+                    <span class="p">(</span><span class="nf">*</span> <span class="nv">x</span> <span class="nv">x</span><span class="p">)))</span>
+  <span class="p">(</span><span class="nf">mapcar</span> <span class="nf">#&#39;</span><span class="nv">square</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">0</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">)))</span>
+<span class="c1">;; =&gt; (0 1 4 9 16 25)</span>
+</code></pre></div>
+<p>That&#39;s why I have:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">lisp-indent-function</span> <span class="ss">&#39;common-lisp-indent-function</span><span class="p">)</span>
+</code></pre></div>
+<p>which leads to this indentation:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">cl-labels</span> <span class="p">((</span><span class="nv">square</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+              <span class="p">(</span><span class="nf">*</span> <span class="nv">x</span> <span class="nv">x</span><span class="p">)))</span>
+  <span class="p">(</span><span class="nf">mapcar</span> <span class="nf">#&#39;</span><span class="nv">square</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">0</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">)))</span>
+<span class="c1">;; =&gt; (0 1 4 9 16 25)</span>
+</code></pre></div>
+<p>Ah, much better. The indentation does change a bit in other places as
+a result of this. To my experience, it can be fixed on a case-by-case
+basis by declaring the indent level for the offending function or
+macro.</p>
+
+<h2 id="declaring-indent-level">Declaring indent level</h2>
+
+<p>Here&#39;s how it looks like</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defmacro</span> <span class="nv">lispy-save-excursion</span> <span class="p">(</span><span class="kp">&amp;rest</span> <span class="nv">body</span><span class="p">)</span>
+  <span class="s">&quot;More intuitive (`save-excursion&#39; BODY).&quot;</span>
+  <span class="p">(</span><span class="nb">declare</span> <span class="p">(</span><span class="nv">indent</span> <span class="mi">0</span><span class="p">))</span>
+  <span class="o">`</span><span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">out</span> <span class="p">(</span><span class="k">save-excursion</span>
+                <span class="o">,@</span><span class="nv">body</span><span class="p">)))</span>
+     <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">bolp</span><span class="p">)</span>
+       <span class="p">(</span><span class="nv">back-to-indentation</span><span class="p">))</span>
+     <span class="nv">out</span><span class="p">))</span>
+</code></pre></div>
+<p>By default, functions behave as if their <code>indent</code> was declared to <code>nil</code>.
+Zero here means that we expect zero arguments on the same line, so that this indentation follows:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">lispy-save-excursion</span>
+  <span class="p">(</span><span class="nv">lispy--out-forward</span> <span class="nv">arg</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">backward-list</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">indent-sexp</span><span class="p">))</span>
+</code></pre></div>
+<p>The indentation above is just like the one that the original <code>save-excursion</code> has.
+Note that if I hadn&#39;t declared the indent, it would look like this:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">lispy-save-excursion</span>
+ <span class="p">(</span><span class="nv">lispy--out-forward</span> <span class="nv">arg</span><span class="p">)</span>
+ <span class="p">(</span><span class="nv">backward-list</span><span class="p">)</span>
+ <span class="p">(</span><span class="nv">indent-sexp</span><span class="p">))</span>
+</code></pre></div>
+<p>The impact is much larger for statements that require an <code>indent</code> of 1:</p>
+
+<p>Compare the proper thing:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">lispy-dotimes</span> <span class="nv">arg</span>
+  <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">point</span><span class="p">)</span> <span class="p">(</span><span class="nf">point-max</span><span class="p">))</span>
+    <span class="p">(</span><span class="ne">error</span> <span class="s">&quot;Reached end of buffer&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="nv">forward-list</span><span class="p">))</span>
+</code></pre></div>
+<p>to this horror:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">lispy-dotimes</span> <span class="nv">arg</span>
+               <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">point</span><span class="p">)</span> <span class="p">(</span><span class="nf">point-max</span><span class="p">))</span>
+                 <span class="p">(</span><span class="ne">error</span> <span class="s">&quot;Reached end of buffer&quot;</span><span class="p">))</span>
+               <span class="p">(</span><span class="nv">forward-list</span><span class="p">))</span>
+</code></pre></div>
+<h2 id="outro">Outro</h2>
+
+<p>I&#39;ve shown two things you can try if you find your Elisp indentation
+annoying. If you know of more, let me know.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/01/27/my-refactoring-workflow/">
         My "refactoring" workflow
       </a>
@@ -595,111 +679,6 @@ you haven&#39;t yet copied text since Emacs started.</p>
 I learned something new while writing it, and I hope you did too.  If
 you know of a better way to accomplish the original task, please do
 share.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/01/23/eltex/">
-        ElTeX - generate full LaTeX documents from Emacs Lisp
-      </a>
-    </h1>
-
-    <span class="post-date">23 Jan 2015</span>
-
-    <p>OK. Please stop laughing. It&#39;s a
-<a href="https://github.com/abo-abo/eltex">thing</a> now.</p>
-
-<p>Seriously though, it&#39;s my little project of writing a major mode for
-Emacs.  I&#39;ve written many minor modes, but this is my first major
-one. Granted, it&#39;s only a small derivation of <code>emacs-lisp-mode</code>.</p>
-
-<h2 id="how-the-eltex-looks-like">How the ElTeX looks like</h2>
-
-<p>Here&#39;s how a sample document outline looks like:</p>
-
-<p><img src="/download/eltex-fontified.png" alt="eltex-fontified"></p>
-
-<p>Here, <code>homogenization</code>, <code>smoluchowski-equation</code>, and
-<code>model-description-geometry</code> are simply Elisp functions that should
-produce a string on call. They are defined <a href="https://github.com/abo-abo/eltex/blob/master/demos/demo-math.elt">here</a>.</p>
-
-<p>On calling <kbd>M-x</kbd> <code>eltex-compile</code>, the corresponding LaTeX
-document will be written to the file to which <code>eltex-filename</code> points
-to.</p>
-
-<h2 id="how-the-corresponding-latex-looks-like">How the corresponding LaTeX looks like</h2>
-
-<p>Here&#39;s an excerpt of what will be generated:</p>
-<div class="highlight"><pre><code class="language-latex" data-lang="latex"><span class="k">\documentclass</span><span class="nb">{</span>article<span class="nb">}</span>
-<span class="k">\usepackage</span><span class="na">[fleqn]</span><span class="nb">{</span>amsmath<span class="nb">}</span>
-<span class="k">\usepackage</span><span class="nb">{</span>amsthm<span class="nb">}</span>
-<span class="k">\usepackage</span><span class="nb">{</span>enumerate<span class="nb">}</span>
-<span class="k">\usepackage</span><span class="nb">{</span>amsfonts<span class="nb">}</span>
-<span class="k">\usepackage</span><span class="nb">{</span>xcolor<span class="nb">}</span>
-<span class="k">\usepackage</span><span class="na">[style=numeric,natbib=true,backend=bibtex]</span><span class="nb">{</span>biblatex<span class="nb">}</span>
-<span class="k">\addbibresource</span><span class="nb">{</span>analysis.bib<span class="nb">}</span>
-<span class="k">\begin</span><span class="nb">{</span>document<span class="nb">}</span>
-
-<span class="k">\section</span><span class="nb">{</span>Introduction<span class="nb">}</span>
-
-<span class="k">\subsection</span><span class="nb">{</span>Homogenization<span class="nb">}</span>
-</code></pre></div>
-<h2 id="how-the-original-eltex-looks-like-in-emacs-lisp-mode">How the original ElTeX looks like in <code>emacs-lisp-mode</code></h2>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">eltex-filename</span> <span class="s">&quot;~/tpaper/tpaper.tex&quot;</span><span class="p">)</span>
-<span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;eltex-macros</span><span class="p">)</span>
-
-<span class="c1">;;* Document</span>
-<span class="p">(</span><span class="nv">documentclass</span>
- <span class="s">&quot;article&quot;</span>
- <span class="p">(</span><span class="nv">usepackage</span>
-  <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;amsmath&quot;</span> <span class="s">&quot;fleqn&quot;</span><span class="p">)</span>
-  <span class="s">&quot;amsthm&quot;</span>
-  <span class="s">&quot;enumerate&quot;</span>
-  <span class="s">&quot;amsfonts&quot;</span>
-  <span class="s">&quot;xcolor&quot;</span>
-  <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;biblatex&quot;</span> <span class="s">&quot;style=numeric,natbib=true,backend=bibtex&quot;</span><span class="p">))</span>
- <span class="p">(</span><span class="nv">bibliography</span> <span class="s">&quot;analysis&quot;</span><span class="p">)</span>
- <span class="p">(</span><span class="nv">document</span>
-  <span class="p">(</span><span class="nv">section</span> <span class="s">&quot;Introduction&quot;</span>
-           <span class="p">(</span><span class="nv">homogenization</span><span class="p">)</span>
-           <span class="p">(</span><span class="nv">smoluchowski-equation</span><span class="p">))</span>
-  <span class="p">(</span><span class="nv">section</span> <span class="s">&quot;Notations and Assumptions&quot;</span>
-           <span class="p">(</span><span class="nv">model-description-geometry</span><span class="p">))</span>
-  <span class="s">&quot;\\printbibliography&quot;</span><span class="p">))</span>
-</code></pre></div>
-<h2 id="why-this?">Why this?</h2>
-
-<p>Well, why not? At one point I was frustrated with LaTeX not allowing
-me to define mathematically rich entities. I did hack up a few TeX
-macros for this eventually, but it was very awkward.</p>
-
-<p>So I thought that I could make Emacs Lisp generate simple LaTeX in a
-similar way that C generates machine code. No more intricate LaTeX
-macros, only plain LaTeX, generated from (intricate) Elisp.</p>
-
-<p>This is still very much in a toy stage, I don&#39;t currently use it for
-anything serious.  Still, in case you&#39;re interested in defining
-derived major modes, you can look at my
-<a href="https://github.com/abo-abo/eltex/blob/master/eltex.el">implementation</a>,
-it&#39;s only 25 lines. The interesting thing about it, if you noticed, is
-that it replaces all double quoted strings visually with single quoted
-strings, so that they don&#39;t jump out as much.</p>
-
-<h2 id="more-examples">More examples</h2>
-
-<p>Here&#39;s how the typesetting of some mathematical logic looks like:</p>
-
-<p><img src="/download/eltex-math.png" alt="eltex-math"></p>
-
-<p>And here&#39;s the corresponding LaTeX:</p>
-
-<p><img src="/download/eltex-math-latex.png" alt="eltex-math-latex"></p>
-
-<p>Note how simple the resulting LaTeX is, considering how many variables
-were used to generate it. Now, I can update anything in the <code>with</code>
-Elisp binding, and the corresponding LaTeX will be appropriately
-regenerated, error-free.</p>
 
   </div>
   
