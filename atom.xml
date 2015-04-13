@@ -4,13 +4,243 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-04-09T17:47:45+02:00</updated>
+ <updated>2015-04-13T20:22:34+02:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Hydra 0.13.0 is out</title>
+   <link href="http://oremacs.com/2015/04/13/hydra-0.13.0/"/>
+   <updated>2015-04-13T00:00:00+02:00</updated>
+   <id>http://oremacs.com/2015/04/13/hydra-0.13.0</id>
+   <content type="html">&lt;p&gt;A lot of the changes for this release aren&amp;#39;t very user-visible, although they
+are important in improving the usability.  The main change is the move from the
+standard &lt;code&gt;set-transient-map&lt;/code&gt; to my own &lt;code&gt;hydra-set-transient-map&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;This change has allowed to remove the part where the amaranth and pink hydras
+intercept a binding which doesn&amp;#39;t belong to them and then try to forward it back
+to Emacs. It was done in this way, which might be interesting for people who
+write Elisp:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-keymap&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;hydra-intercept&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Binding &lt;code&gt;t&lt;/code&gt; means that when the keymap is active, any binding which doesn&amp;#39;t
+belong to the keymap will be interpreted as &lt;code&gt;t&lt;/code&gt;.  Then, I would use &lt;code&gt;lookup-key&lt;/code&gt;
+and &lt;code&gt;this-command-keys&lt;/code&gt; and try to call the result.  That method was quite
+fragile:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;It didn&amp;#39;t work for prefix keys while a pink hydra was active.&lt;/li&gt;
+&lt;li&gt;It didn&amp;#39;t work for some keys in the terminal because of &lt;code&gt;input-decode-map&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The new method solves the mentioned issues by not using &lt;code&gt;t&lt;/code&gt; and instead running
+this function in the &lt;code&gt;pre-command-hook&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra--clearfun&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Disable the current Hydra unless `this-command&amp;#39; is a head.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;memq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;this-command&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;handle-switch-frame&lt;/span&gt;
+                           &lt;span class=&quot;nv&quot;&gt;keyboard-quit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hydra-disable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;unless&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;eq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;this-command&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;lookup-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-curr-map&lt;/span&gt;
+                            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;this-single-command-keys&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;unless&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cl-case&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-curr-foreign-keys&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ne&quot;&gt;warn&lt;/span&gt;
+                 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;this-command&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;hydra-amaranth-warn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;run&lt;/span&gt;
+                 &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hydra-disable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This approach is actually very similar to what the built-in &lt;code&gt;set-transient-map&lt;/code&gt;
+does from Emacs 24.4 onward.  Of course, changing the a large cog in the Hydra
+mechanism can lead to some new bugs, or even old bugs to re-surface. So I really
+appreciate the help from &lt;a href=&quot;https://github.com/jhonnyseven&quot;&gt;@jhonnyseven&lt;/a&gt; in testing the new code.&lt;/p&gt;
+
+&lt;p&gt;As always, if you find something very broken, you can roll back to &lt;a href=&quot;http://elpa.gnu.org/packages/hydra.html&quot;&gt;the GNU ELPA version&lt;/a&gt;
+and raise an &lt;a href=&quot;https://github.com/abo-abo/hydra/issues&quot;&gt;issue&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;fixes&quot;&gt;Fixes&lt;/h2&gt;
+
+&lt;h3 id=&quot;single-command-red/blue-issue&quot;&gt;single command red/blue issue&lt;/h3&gt;
+
+&lt;p&gt;Fix the uniqueness issue, when a single command is assigned to both a
+red and a blue head.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;#39;s an example:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-zoom&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;f2&amp;gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;zoom&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;g&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;text-scale-increase&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;in&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;l&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;text-scale-decrease&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;out&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;r&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;text-scale-set&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;reset&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;0&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;text-scale-set&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:bind&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:exit&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;1&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;text-scale-set&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:bind&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:exit&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Here, three heads are assigned &lt;code&gt;(text-scale-set 0)&lt;/code&gt;, however their behavior is different:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;r&lt;/kbd&gt; doesn&amp;#39;t exit and has a string hint.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;0&lt;/kbd&gt; exits and has an empty hint (so only the key is in the docstring).&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;1&lt;/kbd&gt; exits and has a nil hint (will not be displayed in the docstring).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The latter two call &lt;code&gt;hydra-zoom/lambda-0-and-exit&lt;/code&gt;, while &lt;kbd&gt;r&lt;/kbd&gt;
+calls &lt;code&gt;hydra-zoom/lambda-r&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;don&amp;#39;t-default-hydra-repeast--prefix-arg-to-1&quot;&gt;Don&amp;#39;t default &lt;code&gt;hydra-repeast--prefix-arg&lt;/code&gt; to 1&lt;/h3&gt;
+
+&lt;p&gt;See &lt;a href=&quot;https://github.com/abo-abo/hydra/issues/61&quot;&gt;#61&lt;/a&gt; for more info.&lt;/p&gt;
+
+&lt;h3 id=&quot;allow-hydra-repeat-to-take-a-numeric-arg&quot;&gt;Allow &lt;code&gt;hydra-repeat&lt;/code&gt; to take a numeric arg&lt;/h3&gt;
+
+&lt;p&gt;For &lt;code&gt;hydra-vi&lt;/code&gt;, it&amp;#39;s now possible to do this &lt;kbd&gt;4j.2..&lt;/kbd&gt;.
+The line will be forwarded:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;4 times by &lt;kbd&gt;4j&lt;/kbd&gt;&lt;/li&gt;
+&lt;li&gt;4 times by &lt;kbd&gt;.&lt;/kbd&gt;&lt;/li&gt;
+&lt;li&gt;2 times by &lt;kbd&gt;2.&lt;/kbd&gt;&lt;/li&gt;
+&lt;li&gt;2 times by &lt;kbd&gt;.&lt;/kbd&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;See &lt;a href=&quot;https://github.com/abo-abo/hydra/issues/92&quot;&gt;#92&lt;/a&gt; for more info.&lt;/p&gt;
+
+&lt;h3 id=&quot;key-chord-will-be-disabled-for-the-duration-of-a-hydra&quot;&gt;Key chord will be disabled for the duration of a hydra&lt;/h3&gt;
+
+&lt;p&gt;This means that hydras have become much more easy to use with key chords.  For
+instance, if &lt;kbd&gt;dj&lt;/kbd&gt; key chord calls a hydra or is part of the hydra, you
+won&amp;#39;t call the &lt;kbd&gt;jj&lt;/kbd&gt; key chord by accident with &lt;kbd&gt;djj&lt;/kbd&gt;.&lt;/p&gt;
+
+&lt;p&gt;See &lt;a href=&quot;https://github.com/abo-abo/hydra/issues/97&quot;&gt;#97&lt;/a&gt; for more info.&lt;/p&gt;
+
+&lt;h2 id=&quot;new-features&quot;&gt;New Features&lt;/h2&gt;
+
+&lt;h3 id=&quot;variable-as-a-string-docstring-spec&quot;&gt;Variable as a string docstring spec&lt;/h3&gt;
+
+&lt;p&gt;You can now use this form in your hydras:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defvar&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;foo&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;a b c&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;bar&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;  bar %s`foo&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;a&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;q&amp;quot;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Previously, it would only work for &lt;code&gt;%s(foo)&lt;/code&gt; forms.&lt;/p&gt;
+
+&lt;h3 id=&quot;:bind-property-can-also-be-a-keymap&quot;&gt;&lt;code&gt;:bind&lt;/code&gt; property can also be a keymap&lt;/h3&gt;
+
+&lt;p&gt;If you remember, you can set &lt;code&gt;:bind&lt;/code&gt; in the body to define in which way the
+heads should be bound &lt;em&gt;outside&lt;/em&gt; the Hydra. You also assign/override &lt;code&gt;:bind&lt;/code&gt; for
+each head.  This is especially useful to set &lt;code&gt;:bind&lt;/code&gt; to nil for a few heads that
+you don&amp;#39;t want to bind outside.&lt;/p&gt;
+
+&lt;p&gt;Previously, &lt;code&gt;:bind&lt;/code&gt; could be either a lambda or nil. Now a keymap is also accepted.&lt;/p&gt;
+
+&lt;h3 id=&quot;integration-tests&quot;&gt;Integration tests&lt;/h3&gt;
+
+&lt;p&gt;In addition to the abundant macro-expansion tests, integration tests are now
+also running, both for &lt;code&gt;emacs24&lt;/code&gt; and for &lt;code&gt;emacs-snapshot&lt;/code&gt;. This means that hydra
+should be a lot more stable now.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;#39;s an example test:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-simple-1&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-c&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;a&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;insert&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;j&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;b&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;insert&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;k&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;q&amp;quot;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;ert-deftest&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-integration-1&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;should&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;string=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hydra-with&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;|&amp;quot;&lt;/span&gt;
+                               &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;execute-kbd-macro&lt;/span&gt;
+                                &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-c aabbaaqaabbaa&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+                   &lt;span class=&quot;s&quot;&gt;&amp;quot;jjkkjjaabbaa|&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;should&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;string=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hydra-with&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;|&amp;quot;&lt;/span&gt;
+                               &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;condition-case&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;
+                                   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;execute-kbd-macro&lt;/span&gt;
+                                    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-c aabb C-g&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+                                 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;quit&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+                               &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;execute-kbd-macro&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;aaqaabbaa&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+                   &lt;span class=&quot;s&quot;&gt;&amp;quot;jjkkaaqaabbaa|&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;In the tests above, &lt;code&gt;hydra-simple&lt;/code&gt; is a defined and bound hydra. &lt;code&gt;&amp;quot;|&amp;quot;&lt;/code&gt;
+represents the buffer text (empty), where &lt;code&gt;|&lt;/code&gt; is the point position.
+And &lt;code&gt;(kbd &amp;quot;C-c aabbaaqaabbaa&amp;quot;)&lt;/code&gt; represents the key sequence that you can normally press by hand.
+Finally, &lt;code&gt;&amp;quot;jjkkjjaabbaa|&amp;quot;&lt;/code&gt; is what the buffer and the point position should look like afterwards.
+If you find a hydra bug, it would be really cool to submit a new integration test to make sure that
+this bug doesn&amp;#39;t happen in the future.&lt;/p&gt;
+
+&lt;h3 id=&quot;basic-error-handling&quot;&gt;Basic error handling&lt;/h3&gt;
+
+&lt;p&gt;I really like the &lt;a href=&quot;https://github.com/jwiegley/use-package&quot;&gt;use-package&lt;/a&gt; feature where it catches load-time errors and issues a message instead of bringing up the debugger. This is really useful, since it&amp;#39;s hard to fix the bug with a mostly broken Emacs, in the case when the error happened early in the load process. So the same behavior now happens with &lt;code&gt;defhydra&lt;/code&gt;. In case of an error, &lt;code&gt;defhydra&lt;/code&gt; will be equivalent to a no-op, and the error message will be written to the &lt;code&gt;*Messages*&lt;/code&gt; buffer.&lt;/p&gt;
+
+&lt;h3 id=&quot;use-a-variable-instead-of-a-function-for-the-hint&quot;&gt;Use a variable instead of a function for the hint&lt;/h3&gt;
+
+&lt;p&gt;This leads up to the yet unresolved &lt;a href=&quot;https://github.com/abo-abo/hydra/issues/86&quot;&gt;#86&lt;/a&gt;, which asks
+for heads to be activated conditionally.&lt;/p&gt;
+
+&lt;p&gt;For now, you can modify the docstring on your own if you wish.
+Here&amp;#39;s some code from the expansion of &lt;code&gt;hydra-zoom&lt;/code&gt; to explain what I mean:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;set&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defvar&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-zoom/hint&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;
+   &lt;span class=&quot;s&quot;&gt;&amp;quot;Dynamic hint for hydra-zoom.&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+ &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;format&lt;/span&gt;
+   &lt;span class=&quot;o&quot;&gt;#(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;zoom: [g]: in, [l]: out.&amp;quot;&lt;/span&gt;
+     &lt;span class=&quot;mi&quot;&gt;7&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;8&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;face&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-face-red&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+     &lt;span class=&quot;mi&quot;&gt;16&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;17&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;face&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-face-red&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;;; in head body:&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-is-helpful&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-lv&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;lv-message&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;eval&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-zoom/hint&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;message&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;eval&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-zoom/hint&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Eventually, I&amp;#39;ll add some automatic stuff to fix #86. But for now, you can
+experiment with modifying e.g. &lt;code&gt;hydra-zoom/hint&lt;/code&gt; inside heads, if you want.&lt;/p&gt;
+
+&lt;h3 id=&quot;multiple-inheritance-for-hydra-heads&quot;&gt;Multiple inheritance for Hydra heads&lt;/h3&gt;
+
+&lt;p&gt;Each hydra, e.g. &lt;code&gt;hydra-foo&lt;/code&gt; will now declare its own heads as a variable
+&lt;code&gt;hydra-foo/heads&lt;/code&gt;. It&amp;#39;s possible to inherit them like this:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-zoom&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;f2&amp;gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;zoom&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;g&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;text-scale-increase&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;in&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;s&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;text-scale-decrease&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;out&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-arrows&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;h&amp;quot;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;backward-char&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;left&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;j&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;next-line&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;down&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;k&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;previous-line&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;up&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;l&amp;quot;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;forward-char&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;right&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-zoom-child&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:inherit&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hydra-zoom/heads&lt;/span&gt;
+                                      &lt;span class=&quot;nv&quot;&gt;hydra-arrows/heads&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                            &lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;amaranth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;zoom&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;q&amp;quot;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Here, &lt;code&gt;hydra-zoom-child&lt;/code&gt; inherits the heads of &lt;code&gt;hydra-zoom&lt;/code&gt; and &lt;code&gt;hydra-arrows&lt;/code&gt;.
+It adds one more head &lt;kbd&gt;q&lt;/kbd&gt; to quit. Also, it changes the color to
+amaranth, which means that it&amp;#39;s only possible to exit it with &lt;kbd&gt;q&lt;/kbd&gt; or
+&lt;kbd&gt;C-g&lt;/kbd&gt;. This hydra&amp;#39;s parents remain at their original (red) color.&lt;/p&gt;
+
+&lt;p&gt;See &lt;a href=&quot;https://github.com/abo-abo/hydra/issues/57&quot;&gt;#57&lt;/a&gt; for more info.&lt;/p&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;A big thanks to all who contributed towards this release and to &lt;a href=&quot;https://github.com/abo-abo/hydra/wiki&quot;&gt;the wiki&lt;/a&gt;.
+If you have an idea that would be cool in Hydra, do raise &lt;a href=&quot;https://github.com/abo-abo/hydra/issues&quot;&gt;an issue&lt;/a&gt;.
+And if you written some cool code that uses the already available Hydra features, please share it on the wiki.
+It&amp;#39;s also a good way to protect your code against regressions (although the best one would be an integration test).&lt;/p&gt;
+
+&lt;p&gt;Finally, check out the new version of
+&lt;a href=&quot;https://github.com/joostkremers/pandoc-mode&quot;&gt;pandoc-mode&lt;/a&gt; which is
+one of the coolest and most elaborate uses of Hydra yet.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Complete stuff with Counsel</title>

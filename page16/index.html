@@ -239,6 +239,107 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/01/15/c++-smart-dot/">
+        C++ - a dot inserts last var plus dot
+      </a>
+    </h1>
+
+    <span class="post-date">15 Jan 2015</span>
+
+    <p>It is very much in the spirit of C++ to pull an object into existence
+with e.g. a constructor definition and then poke and prod it with
+various method calls. Most of the time, the dot will have the object
+name on the left. So why not automatically insert the object name each
+time I press the dot? Below, I&#39;ll show a code that does exactly that.</p>
+
+<h2 id="the-dot-command">The dot command</h2>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">c++-smart-dot</span> <span class="p">()</span>
+  <span class="s">&quot;Insert a dot or an object name plus dot when appropriate.&quot;</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">var-name</span><span class="p">)</span>
+    <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="k">and</span> <span class="p">(</span><span class="nv">looking-back</span> <span class="s">&quot;^[ \t]*&quot;</span><span class="p">)</span>
+             <span class="p">(</span><span class="k">setq</span> <span class="nv">var-name</span> <span class="p">(</span><span class="nv">c++-get-recent-var</span><span class="p">)))</span>
+        <span class="p">(</span><span class="nf">insert</span> <span class="nv">var-name</span> <span class="s">&quot;.&quot;</span><span class="p">)</span>
+      <span class="p">(</span><span class="nf">insert</span> <span class="s">&quot;.&quot;</span><span class="p">))))</span>
+</code></pre></div>
+<p>This one is pretty simple: if we are at the beginning of the line,
+optionally with some spaces or (ugh) tabs before the point, then try
+to insert the object name along with a dot.</p>
+
+<p>Here&#39;s how to bind it:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">eval-after-load</span> <span class="s">&quot;cc-mode&quot;</span>
+  <span class="o">`</span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">c++-mode-map</span> <span class="s">&quot;.&quot;</span> <span class="ss">&#39;c++-smart-dot</span><span class="p">))</span>
+</code></pre></div>
+<h2 id="how-to-get-the-recent-variable">How to get the recent variable</h2>
+
+<p>This code doesn&#39;t aim to be thorough, it&#39;s just a hack that
+works reasonably well.</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">defconst</span> <span class="nv">c++-var-regex</span> <span class="s">&quot;[A-Za-z][A-Za-z0-9_]*&quot;</span>
+  <span class="s">&quot;The regex for C++ variable name.&quot;</span><span class="p">)</span>
+
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">c++-get-recent-var</span> <span class="p">()</span>
+  <span class="s">&quot;Return the closest thing that looks like an object.</span>
+<span class="s">The search is performed backwards through code.&quot;</span>
+  <span class="p">(</span><span class="k">save-excursion</span>
+    <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="k">or</span>
+           <span class="c1">;; variable dot chain</span>
+           <span class="p">(</span><span class="nv">looking-back</span>
+            <span class="p">(</span><span class="nf">format</span> <span class="s">&quot; \\(%s\\)\\.%s.*\n[\t ]*&quot;</span>
+                    <span class="nv">c++-var-regex</span>
+                    <span class="nv">c++-var-regex</span><span class="p">))</span>
+           <span class="c1">;; variable constructor init</span>
+           <span class="p">(</span><span class="nv">looking-back</span>
+            <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;[\t ]+\\(%s\\)\\(?:([^)]*)\\)?;[\t\n ]*&quot;</span>
+                    <span class="nv">c++-var-regex</span><span class="p">))</span>
+           <span class="c1">;; variable dot, first on line</span>
+           <span class="p">(</span><span class="nf">re-search-backward</span>
+            <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;^[ \t]*\\(%s\\)\\.&quot;</span> <span class="nv">c++-var-regex</span><span class="p">)</span> <span class="no">nil</span> <span class="no">t</span><span class="p">))</span>
+      <span class="p">(</span><span class="nv">match-string-no-properties</span> <span class="mi">1</span><span class="p">))))</span>
+</code></pre></div>
+<p>If you&#39;re a stickler for performance and you don&#39;t want to call format a bunch of times,
+you can amend the code like this:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defalias</span> <span class="ss">&#39;c++-get-recent-var</span>
+    <span class="p">(</span><span class="nv">byte-compile</span>
+     <span class="o">`</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span>
+        <span class="p">(</span><span class="k">save-excursion</span>
+          <span class="p">(</span><span class="nb">when</span>
+              <span class="p">(</span><span class="k">or</span>
+               <span class="c1">;; variable dot chain</span>
+               <span class="p">(</span><span class="nv">looking-back</span>
+                <span class="o">,</span><span class="p">(</span><span class="nf">format</span>
+                  <span class="s">&quot; \\(%s\\)\\.%s.*\n[\t ]*&quot;</span>
+                  <span class="nv">c++-var-regex</span>
+                  <span class="nv">c++-var-regex</span><span class="p">))</span>
+               <span class="c1">;; variable constructor init</span>
+               <span class="p">(</span><span class="nv">looking-back</span>
+                <span class="o">,</span><span class="p">(</span><span class="nf">format</span>
+                  <span class="s">&quot;[\t ]+\\(%s\\)\\(?:([^)]*)\\)?;[\t\n ]*&quot;</span>
+                  <span class="nv">c++-var-regex</span><span class="p">))</span>
+               <span class="c1">;; variable dot, first on line</span>
+               <span class="p">(</span><span class="nf">re-search-backward</span>
+                <span class="o">,</span><span class="p">(</span><span class="nf">format</span> <span class="s">&quot;^[ \t]*\\(%s\\)\\.&quot;</span> <span class="nv">c++-var-regex</span><span class="p">)</span> <span class="no">nil</span> <span class="no">t</span><span class="p">))</span>
+            <span class="p">(</span><span class="nv">match-string-no-properties</span> <span class="mi">1</span><span class="p">)))))</span>
+  <span class="s">&quot;Return the closest thing that looks like an object.</span>
+<span class="s">The search is performed backwards through code.&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>The thing above looks slightly ugly. I&#39;m open to suggestions to make
+it look nicer.</p>
+
+<h2 id="the-sample-application">The sample application</h2>
+
+<p>For the happy people that have never seen C++:</p>
+<div class="highlight"><pre><code class="language-C++" data-lang="C++"><span class="n">DataOut</span><span class="o">&lt;</span><span class="n">dim</span><span class="o">&gt;</span> <span class="n">data_out</span><span class="p">;</span>
+<span class="n">data_out</span><span class="p">.</span><span class="n">attach_dof_handler</span><span class="p">(</span><span class="n">dof_handler</span><span class="p">);</span>
+<span class="n">data_out</span><span class="p">.</span><span class="n">add_data_vector</span><span class="p">(</span><span class="n">solution</span><span class="p">,</span> <span class="s">&quot;u&quot;</span><span class="p">);</span>
+<span class="n">data_out</span><span class="p">.</span><span class="n">build_patches</span><span class="p">();</span>
+</code></pre></div>
+<p>Here, after defining an object <code>data_out</code>, I insert it subsequently
+with just <kbd>.</kbd>.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/01/14/repeatable-commands/">
         Zoom in / out with style
       </a>
@@ -450,115 +551,6 @@ Here are some relevant tests for the regex support:</p>
                  <span class="s">&quot;\&quot;|foo\&quot;&quot;</span><span class="p">))</span>
 <span class="p">(</span><span class="nv">should</span> <span class="p">(</span><span class="nv">string=</span> <span class="p">(</span><span class="nv">lispy-with</span> <span class="s">&quot;\&quot;\\\\(foo|\\\\)\&quot;&quot;</span> <span class="s">&quot;\C-d&quot;</span><span class="p">)</span>
                  <span class="s">&quot;\&quot;foo|\&quot;&quot;</span><span class="p">))</span>
-</code></pre></div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/01/10/dired-ansi-term/">
-        dired and ansi-term&#58; BFF
-      </a>
-    </h1>
-
-    <span class="post-date">10 Jan 2015</span>
-
-    <p>In the comments to
-<a href="/2015/01/01/three-ansi-term-tips/">my previous post on ansi-term</a>, I discovered
-<a href="https://github.com/adamrt/sane-term">sane-term</a> - a package that
-cycles though your terminals in Emacs, as well as implements some of
-the tips that I gave. While it&#39;s nice and all, and you should check it
-out if you&#39;re looking for something like that, it&#39;s not really for
-me. I will describe the system that I&#39;m currently using below.</p>
-
-<h2 id="what-is-the-best-list-length-for-cycling?">What is the best list length for cycling?</h2>
-
-<p>In my opinion, it&#39;s one or two. If it&#39;s one, you&#39;re not really
-cycling, if it&#39;s two, it&#39;s fine. Anything more than that causes
-stress, since you have to check each time if the outcome of the cycle
-ended up being the one that you wanted.</p>
-
-<p>That&#39;s why I usually have only one <code>*ansi-term*</code> active in my Emacs
-session at all times.  Here&#39;s how it looks like:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">terminal</span> <span class="p">()</span>
-  <span class="s">&quot;Switch to terminal. Launch if nonexistent.&quot;</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">get-buffer</span> <span class="s">&quot;*ansi-term*&quot;</span><span class="p">)</span>
-      <span class="p">(</span><span class="nv">switch-to-buffer</span> <span class="s">&quot;*ansi-term*&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">ansi-term</span> <span class="s">&quot;/bin/bash&quot;</span><span class="p">))</span>
-  <span class="p">(</span><span class="nf">get-buffer-process</span> <span class="s">&quot;*ansi-term*&quot;</span><span class="p">))</span>
-
-<span class="p">(</span><span class="nb">defalias</span> <span class="ss">&#39;tt</span> <span class="ss">&#39;terminal</span><span class="p">)</span>
-</code></pre></div>
-<p>At one point, I had <code>terminal</code> bound to <kbd>C-t</kbd>, until I found
-a command even better suited for that binding, which was
-<a href="https://github.com/nonsequitur/smex/">smex</a>. The actual <code>terminal</code>
-command isn&#39;t bound right now, I just launch it from <code>smex</code> on very
-rare occasions.</p>
-
-<h2 id="how-i-launch-terminal-95%-of-the-time">How I launch terminal 95% of the time</h2>
-
-<p>From <code>dired</code> of course. The shell&#39;s natural way of switching the
-directory with <code>cd</code> is extremely inefficient compared to <code>dired</code>.  So
-any time I want to have a shell in a specific directory, I first
-navigate there with <code>dired</code>, sometimes combined with
-<code>ido-find-file</code>. Then I get my current <code>*ansi-term*</code> and tell it to
-switch to the current <code>dired</code> buffer&#39;s directory with <kbd>`</kbd>
-binding:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;`&quot;</span><span class="p">)</span> <span class="ss">&#39;dired-open-term</span><span class="p">)</span>
-
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">dired-open-term</span> <span class="p">()</span>
-  <span class="s">&quot;Open an `ansi-term&#39; that corresponds to current directory.&quot;</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">current-dir</span> <span class="p">(</span><span class="nv">dired-current-directory</span><span class="p">)))</span>
-    <span class="p">(</span><span class="nv">term-send-string</span>
-     <span class="p">(</span><span class="nv">terminal</span><span class="p">)</span>
-     <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">file-remote-p</span> <span class="nv">current-dir</span><span class="p">)</span>
-         <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">v</span> <span class="p">(</span><span class="nv">tramp-dissect-file-name</span> <span class="nv">current-dir</span> <span class="no">t</span><span class="p">)))</span>
-           <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;ssh %s@%s\n&quot;</span>
-                   <span class="p">(</span><span class="nf">aref</span> <span class="nv">v</span> <span class="mi">1</span><span class="p">)</span> <span class="p">(</span><span class="nf">aref</span> <span class="nv">v</span> <span class="mi">2</span><span class="p">)))</span>
-       <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;cd &#39;%s&#39;\n&quot;</span> <span class="nv">current-dir</span><span class="p">)))))</span>
-</code></pre></div>
-<p>I also have a similar <code>eshell</code> setup, although I have yet to
-comprehend why <code>eshell</code> is great and am using <code>*ansi-term*</code> most of the
-time instead.</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;&#39;&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span>
-    <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">eshell-cmd</span>
-     <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;cd %s&quot;</span>
-             <span class="p">(</span><span class="nf">expand-file-name</span>
-              <span class="nv">default-directory</span><span class="p">)))))</span>
-</code></pre></div>
-<h2 id="how-i-launch-dired-100%-of-the-time">How I launch <code>dired</code> 100% of the time</h2>
-
-<p>With <code>dired-jump</code>, of course. This command will examine your current
-buffer&#39;s <code>default-directory</code> and open a <code>dired</code> buffer there. All you
-need is:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;dired-x</span><span class="p">)</span>
-</code></pre></div>
-<p>The <code>dired-jump</code> command will be bound automatically to <kbd>C-x
-C-j</kbd>.  I have it also bound to <kbd>C-:</kbd>, since that&#39;s more
-convenient to press with my keyboard layout.</p>
-
-<p>It&#39;s also better in the common situation when I want to jump to a
-<code>dired</code> buffer from <code>*ansi-term*</code>. In that situation, <kbd>C-x
-C-j</kbd> will not work by default, and will call <code>term-line-mode</code>
-instead. But it will work once you are in <code>term-line-mode</code>.  You can
-go back to the default <code>term-char-mode</code> with <kbd>C-x C-k</kbd>.  To
-avoid this nonsense, just bind <code>dired-jump</code> to some binding that&#39;s
-convenient for you and works from <code>*ansi-term*</code>.</p>
-
-<h2 id="what-i-do-when-i-need-more-than-one-terminal">What I do when I need more than one terminal</h2>
-
-<p>Then I just name one: since the default one is supposed to be named
-<code>*ansi-term*</code>, if I create one named e.g. <code>*jekyll*</code>, it will be
-ignored by <code>dired-open-term</code>. This is exactly what I want, since I just
-create named terminals for long running processes like <code>jekyll serve</code>.
-And I can switch to the named terminals with just <code>ido-switch-buffer</code>.
-Here is the very simple code:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">named-term</span> <span class="p">(</span><span class="nv">name</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">interactive</span> <span class="s">&quot;sName: &quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">ansi-term</span> <span class="s">&quot;/bin/bash&quot;</span> <span class="nv">name</span><span class="p">))</span>
 </code></pre></div>
   </div>
   
