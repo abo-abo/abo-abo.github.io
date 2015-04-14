@@ -1,0 +1,858 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>My git notes</title>
+<!-- 2015-04-14 Tue 17:16 -->
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="generator" content="Org-mode" />
+<meta  name="author" content="Oleh Krehel" />
+<link rel="stylesheet" type="text/css" href="style.css"/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">My git notes</h1>
+
+<div id="outline-container-unnumbered-1" class="outline-2">
+<h2 id="unnumbered-1">Articles</h2>
+<div class="outline-text-2" id="text-unnumbered-1">
+</div><div id="outline-container-unnumbered-2" class="outline-3">
+<h3 id="unnumbered-2"><span class="done DONE">DONE</span> <a href="http://git-scm.com/book/en/Git-Branching-Branching-Workflows">Git - Branching Workflows</a></h3>
+<div class="outline-text-3" id="text-unnumbered-2">
+</div>
+</div>
+<div id="outline-container-unnumbered-3" class="outline-3">
+<h3 id="unnumbered-3"><span class="done DONE">DONE</span> <a href="http://git-scm.com/book/en/Distributed-Git-Distributed-Workflows">Git - Distributed Workflows</a></h3>
+<div class="outline-text-3" id="text-unnumbered-3">
+</div>
+</div>
+<div id="outline-container-unnumbered-4" class="outline-3">
+<h3 id="unnumbered-4"><span class="done DONE">DONE</span> <a href="http://git-scm.com/book/en/Customizing-Git-Git-Hooks">Git - Git Hooks</a></h3>
+<div class="outline-text-3" id="text-unnumbered-4">
+</div>
+</div>
+<div id="outline-container-unnumbered-5" class="outline-3">
+<h3 id="unnumbered-5"><span class="done DONE">DONE</span> <a href="https://git.wiki.kernel.org/index.php/GitSubmoduleTutorial">Git Submodule Tutorial</a></h3>
+<div class="outline-text-3" id="text-unnumbered-5">
+</div>
+</div>
+</div>
+<div id="outline-container-unnumbered-6" class="outline-2">
+<h2 id="unnumbered-6">Book</h2>
+<div class="outline-text-2" id="text-unnumbered-6">
+</div><div id="outline-container-unnumbered-7" class="outline-3">
+<h3 id="unnumbered-7">git init</h3>
+</div>
+<div id="outline-container-unnumbered-8" class="outline-3">
+<h3 id="unnumbered-8">git add</h3>
+</div>
+<div id="outline-container-unnumbered-9" class="outline-3">
+<h3 id="unnumbered-9">git commit</h3>
+<div class="outline-text-3" id="text-unnumbered-9">
+</div><div id="outline-container-unnumbered-10" class="outline-4">
+<h4 id="unnumbered-10">git commit -a</h4>
+<div class="outline-text-4" id="text-unnumbered-10">
+<p>
+Skips staging(i.e. git add) altogether.
+</p>
+</div>
+</div>
+<div id="outline-container-unnumbered-11" class="outline-4">
+<h4 id="unnumbered-11">git commit &#x2013;amend</h4>
+<div class="outline-text-4" id="text-unnumbered-11">
+<p>
+Changes the last commit message.
+Also works with "git add" and "git remove".
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-unnumbered-12" class="outline-3">
+<h3 id="unnumbered-12">git clone</h3>
+<div class="outline-text-3" id="text-unnumbered-12">
+<div class="org-src-container">
+
+<pre class="src src-sh">git clone user@server:/.../project.git
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-unnumbered-13" class="outline-3">
+<h3 id="unnumbered-13">git status</h3>
+</div>
+<div id="outline-container-unnumbered-14" class="outline-3">
+<h3 id="unnumbered-14">git diff</h3>
+<div class="outline-text-3" id="text-unnumbered-14">
+<p>
+Variants:
+</p>
+<ul class="org-ul">
+<li>kdiff3</li>
+<li>tkdiff</li>
+<li>meld</li>
+<li>xzdiff</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-unnumbered-15" class="outline-3">
+<h3 id="unnumbered-15">git commit</h3>
+</div>
+<div id="outline-container-unnumbered-16" class="outline-3">
+<h3 id="unnumbered-16">git rm</h3>
+<div class="outline-text-3" id="text-unnumbered-16">
+</div><div id="outline-container-unnumbered-17" class="outline-4">
+<h4 id="unnumbered-17">remove just from git</h4>
+<div class="outline-text-4" id="text-unnumbered-17">
+<div class="org-src-container">
+
+<pre class="src src-sh">git rm --cached &lt;file&gt;
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-unnumbered-18" class="outline-3">
+<h3 id="unnumbered-18">git mv</h3>
+<div class="outline-text-3" id="text-unnumbered-18">
+<p>
+A convenience command:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">git mv README.txt README
+</pre>
+</div>
+<p>
+is equivalent to:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">mv README.txt README
+git rm README.txt
+git add README
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-unnumbered-19" class="outline-3">
+<h3 id="unnumbered-19">git log</h3>
+<div class="outline-text-3" id="text-unnumbered-19">
+</div><div id="outline-container-unnumbered-20" class="outline-4">
+<h4 id="unnumbered-20">git log -p</h4>
+<div class="outline-text-4" id="text-unnumbered-20">
+<p>
+include diffs
+</p>
+</div>
+</div>
+<div id="outline-container-unnumbered-21" class="outline-4">
+<h4 id="unnumbered-21">git log -3</h4>
+<div class="outline-text-4" id="text-unnumbered-21">
+<p>
+show last 3 commits
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-unnumbered-22" class="outline-3">
+<h3 id="unnumbered-22">git reset HEAD &lt;file&gt;</h3>
+<div class="outline-text-3" id="text-unnumbered-22">
+<p>
+Use this to unstage a &lt;file&gt; e.g. after
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">git add *
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-unnumbered-23" class="outline-3">
+<h3 id="unnumbered-23">git checkout</h3>
+<div class="outline-text-3" id="text-unnumbered-23">
+</div><div id="outline-container-unnumbered-24" class="outline-4">
+<h4 id="unnumbered-24">git checkout &#x2013; &lt;file&gt;</h4>
+<div class="outline-text-4" id="text-unnumbered-24">
+<p>
+discard changes to a &lt;file&gt;
+this is dangerous: there's no way to recover uncommited changes.
+</p>
+</div>
+</div>
+<div id="outline-container-unnumbered-25" class="outline-4">
+<h4 id="unnumbered-25">git checkout &lt;branch&gt;</h4>
+<div class="outline-text-4" id="text-unnumbered-25">
+<p>
+switch to &lt;branch&gt;
+</p>
+</div>
+</div>
+<div id="outline-container-unnumbered-26" class="outline-4">
+<h4 id="unnumbered-26">git checkout -b &lt;branch&gt;</h4>
+<div class="outline-text-4" id="text-unnumbered-26">
+<p>
+a shorthand for
+git branch &lt;branch&gt;
+git checkout &lt;branch&gt;
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-unnumbered-27" class="outline-3">
+<h3 id="unnumbered-27">git remote add &lt;alias&gt; &lt;url&gt;</h3>
+<div class="outline-text-3" id="text-unnumbered-27">
+<p>
+Create an alias for a remote repository
+</p>
+</div>
+</div>
+<div id="outline-container-unnumbered-28" class="outline-3">
+<h3 id="unnumbered-28">git tag</h3>
+<div class="outline-text-3" id="text-unnumbered-28">
+<p>
+List tags
+</p>
+</div>
+<div id="outline-container-unnumbered-29" class="outline-4">
+<h4 id="unnumbered-29">git tag -a</h4>
+<div class="outline-text-4" id="text-unnumbered-29">
+<p>
+annotated tag
+</p>
+</div>
+</div>
+<div id="outline-container-unnumbered-30" class="outline-4">
+<h4 id="unnumbered-30">git tag &lt;name&gt;</h4>
+<div class="outline-text-4" id="text-unnumbered-30">
+<p>
+lightweight tag
+</p>
+</div>
+</div>
+<div id="outline-container-unnumbered-31" class="outline-4">
+<h4 id="unnumbered-31">git tag -a v1.2 -m 'version 1.2' 0fceb02</h4>
+<div class="outline-text-4" id="text-unnumbered-31">
+<p>
+tag an earlier commit
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-unnumbered-32" class="outline-3">
+<h3 id="unnumbered-32">git branch</h3>
+<div class="outline-text-3" id="text-unnumbered-32">
+</div><div id="outline-container-unnumbered-33" class="outline-4">
+<h4 id="unnumbered-33">git branch &lt;branch&gt;</h4>
+<div class="outline-text-4" id="text-unnumbered-33">
+<p>
+create branch
+</p>
+</div>
+</div>
+<div id="outline-container-unnumbered-34" class="outline-4">
+<h4 id="unnumbered-34">git branch -d &lt;branch&gt;</h4>
+<div class="outline-text-4" id="text-unnumbered-34">
+<p>
+delete branch
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-unnumbered-35" class="outline-3">
+<h3 id="unnumbered-35">git checkout &lt;branch name&gt;</h3>
+<div class="outline-text-3" id="text-unnumbered-35">
+<p>
+switch to branch
+</p>
+</div>
+</div>
+<div id="outline-container-unnumbered-36" class="outline-3">
+<h3 id="unnumbered-36">git merge</h3>
+</div>
+<div id="outline-container-unnumbered-37" class="outline-3">
+<h3 id="unnumbered-37">git mergetool</h3>
+<div class="outline-text-3" id="text-unnumbered-37">
+<p>
+visual merge with e.g. meld.
+</p>
+</div>
+</div>
+<div id="outline-container-unnumbered-38" class="outline-3">
+<h3 id="unnumbered-38">git fetch &lt;origin&gt;</h3>
+<div class="outline-text-3" id="text-unnumbered-38">
+<p>
+synchronize with a remote branch &lt;origin&gt; that someone else commited to
+</p>
+</div>
+</div>
+<div id="outline-container-unnumbered-39" class="outline-3">
+<h3 id="unnumbered-39">git push &lt;origin&gt; &lt;branch&gt;</h3>
+<div class="outline-text-3" id="text-unnumbered-39">
+<p>
+push your commits to remote branch
+</p>
+</div>
+</div>
+<div id="outline-container-unnumbered-40" class="outline-3">
+<h3 id="unnumbered-40">git diff HEAD HEAD~1 &lt;file&gt;</h3>
+</div>
+<div id="outline-container-unnumbered-41" class="outline-3">
+<h3 id="unnumbered-41">git reflog</h3>
+<div class="outline-text-3" id="text-unnumbered-41">
+<p>
+show where HEAD has been recently.
+</p>
+</div>
+</div>
+<div id="outline-container-unnumbered-42" class="outline-3">
+<h3 id="unnumbered-42">git stash</h3>
+<div class="outline-text-3" id="text-unnumbered-42">
+<p>
+save dirty directory onto stack to avoid a commit.
+</p>
+</div>
+</div>
+<div id="outline-container-unnumbered-43" class="outline-3">
+<h3 id="unnumbered-43">git blame &lt;file&gt;</h3>
+<div class="outline-text-3" id="text-unnumbered-43">
+<p>
+Show the &lt;file&gt; line by line, alongside the commit that added them.
+</p>
+</div>
+</div>
+<div id="outline-container-unnumbered-44" class="outline-3">
+<h3 id="unnumbered-44">git blame -C &lt;file&gt;</h3>
+<div class="outline-text-3" id="text-unnumbered-44">
+<p>
+Add a column showing which file the line came from.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-unnumbered-45" class="outline-2">
+<h2 id="unnumbered-45">Tasks</h2>
+<div class="outline-text-2" id="text-unnumbered-45">
+</div><div id="outline-container-unnumbered-46" class="outline-3">
+<h3 id="unnumbered-46">hide ^M in diff output</h3>
+<div class="outline-text-3" id="text-unnumbered-46">
+<div class="org-src-container">
+
+<pre class="src src-sh">git config --global core.whitespace cr-at-eol
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-unnumbered-47" class="outline-3">
+<h3 id="unnumbered-47">ignore file permissions</h3>
+<div class="outline-text-3" id="text-unnumbered-47">
+<div class="org-src-container">
+
+<pre class="src src-sh">git config core.fileMode false
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-unnumbered-48" class="outline-3">
+<h3 id="unnumbered-48">github</h3>
+<div class="outline-text-3" id="text-unnumbered-48">
+</div><div id="outline-container-unnumbered-49" class="outline-4">
+<h4 id="unnumbered-49">omit password</h4>
+<div class="outline-text-4" id="text-unnumbered-49">
+<div class="org-src-container">
+
+<pre class="src src-sh">git clone git@github.com:abo-abo/function-args.git
+</pre>
+</div>
+<p>
+If I clone like this, I don't need to enter the password.
+</p>
+</div>
+</div>
+<div id="outline-container-unnumbered-50" class="outline-4">
+<h4 id="unnumbered-50"><a href="https://help.github.com/articles/generating-ssh-keys">Generating SSH Keys github:help</a></h4>
+<div class="outline-text-4" id="text-unnumbered-50">
+</div><ul class="org-ul"><li><a id="unnumbered-51"></a>step 1<br  /><div class="outline-text-5" id="text-unnumbered-51">
+<div class="org-src-container">
+
+<pre class="src src-sh">ssh-add
+</pre>
+</div>
+</div></li>
+<li><a id="unnumbered-52"></a>step 2<br  /><div class="outline-text-5" id="text-unnumbered-52">
+<div class="org-src-container">
+
+<pre class="src src-sh">ssh -T git@github.com
+</pre>
+</div>
+</div></li>
+<li><a id="unnumbered-53"></a>step 3<br  /><div class="outline-text-5" id="text-unnumbered-53">
+<p>
+Remember to copy the ~/.ssh to newly installed systems.
+</p>
+</div></li></ul>
+</div>
+</div>
+<div id="outline-container-unnumbered-54" class="outline-3">
+<h3 id="unnumbered-54">make bare repository</h3>
+<div class="outline-text-3" id="text-unnumbered-54">
+<ul class="org-ul">
+<li>remove everything but .git</li>
+<li>move .git/* to .</li>
+</ul>
+<div class="org-src-container">
+
+<pre class="src src-sh">git config --bool core.bare true
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-unnumbered-55" class="outline-3">
+<h3 id="unnumbered-55">diff staged</h3>
+<div class="outline-text-3" id="text-unnumbered-55">
+<div class="org-src-container">
+
+<pre class="src src-sh">git diff --cached
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-unnumbered-56" class="outline-3">
+<h3 id="unnumbered-56">move master to branch</h3>
+<div class="outline-text-3" id="text-unnumbered-56">
+<div class="org-src-container">
+
+<pre class="src src-sh">git branch -m master old_master
+git checkout -b master
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-unnumbered-57" class="outline-3">
+<h3 id="unnumbered-57">subtree merging</h3>
+<div class="outline-text-3" id="text-unnumbered-57">
+<div class="org-src-container">
+
+<pre class="src src-sh"><span style="color: #7F0055; font-weight: bold;">cd</span> ~/Dropbox/org
+git remote add thermal_remote ../thermal
+git fetch thermal_remote
+git checkout -b thermal_branch thermal_remote/master
+git read-tree --prefix=research/thermal/ -u thermal_branch
+git merge --squash -s subtree --no-commit thermal_branch
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-unnumbered-58" class="outline-3">
+<h3 id="unnumbered-58">undo last commit</h3>
+<div class="outline-text-3" id="text-unnumbered-58">
+<div class="org-src-container">
+
+<pre class="src src-sh">git reset --soft HEAD^1
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-unnumbered-59" class="outline-3">
+<h3 id="unnumbered-59">summary of commits</h3>
+<div class="outline-text-3" id="text-unnumbered-59">
+<div class="org-src-container">
+
+<pre class="src src-sh">git shortlog -s
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-unnumbered-60" class="outline-3">
+<h3 id="unnumbered-60">commits of author</h3>
+<div class="outline-text-3" id="text-unnumbered-60">
+<div class="org-src-container">
+
+<pre class="src src-sh">git log --author=<span style="color: #2A00FF;">"Jon"</span>
+git log --author=Jon
+git log --author=Smith
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-unnumbered-61" class="outline-3">
+<h3 id="unnumbered-61">diff ignoring whitespace</h3>
+<div class="outline-text-3" id="text-unnumbered-61">
+<div class="org-src-container">
+
+<pre class="src src-sh">git diff -w
+</pre>
+</div>
+<p>
+Also, Meld/Edit/Preferences/Text Filters/All whitespace.
+</p>
+</div>
+</div>
+<div id="outline-container-unnumbered-62" class="outline-3">
+<h3 id="unnumbered-62">squashing commits</h3>
+<div class="outline-text-3" id="text-unnumbered-62">
+<ol class="org-ol">
+<li>git rebase -i HEAD~4</li>
+<li>leave one commit, place 's' by others</li>
+<li>add a new comment</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-unnumbered-63" class="outline-3">
+<h3 id="unnumbered-63">grep entire history:</h3>
+<div class="outline-text-3" id="text-unnumbered-63">
+<div class="org-src-container">
+
+<pre class="src src-sh">git grep <span style="color: #2A00FF;">"step 8"</span> $(<span style="color: #ff00ff;">git</span> rev-list --all)
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-unnumbered-64" class="outline-3">
+<h3 id="unnumbered-64">remove multiple files that aren't on the disk</h3>
+<div class="outline-text-3" id="text-unnumbered-64">
+<div class="org-src-container">
+
+<pre class="src src-sh">git rm $(<span style="color: #ff00ff;">git</span> ls-files --deleted)
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-unnumbered-65" class="outline-3">
+<h3 id="unnumbered-65">merge vr. rebase</h3>
+<div class="outline-text-3" id="text-unnumbered-65">
+</div><div id="outline-container-unnumbered-66" class="outline-4">
+<h4 id="unnumbered-66">avoid merge commits that result from git pull</h4>
+<div class="outline-text-4" id="text-unnumbered-66">
+<p>
+When you push, but someone else pushed before you, you have to pull in
+their changes first. Normally, git does a merge commit in this
+situation.
+</p>
+
+<p>
+Such merge commits can be numerous and convey no useful information
+and litter the history.
+</p>
+
+<p>
+Therefore, always pull with <code>git pull --rebase</code>.
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">git config --global --bool pull.rebase true
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-unnumbered-67" class="outline-4">
+<h4 id="unnumbered-67">interactively rebase local commits before pushing</h4>
+<div class="outline-text-4" id="text-unnumbered-67">
+<p>
+Every time before pushing a set of commits:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">git rebase -i
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-unnumbered-68" class="outline-3">
+<h3 id="unnumbered-68">add github upstream</h3>
+<div class="outline-text-3" id="text-unnumbered-68">
+<div class="org-src-container">
+
+<pre class="src src-sh">git remote add upstream https://github.com/octocat/Spoon-Knife.git
+git fetch upstream
+git merge upstream/master
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-unnumbered-69" class="outline-3">
+<h3 id="unnumbered-69">add github pages to a repository</h3>
+<div class="outline-text-3" id="text-unnumbered-69">
+<div class="org-src-container">
+
+<pre class="src src-sh"><span style="color: #7F0055; font-weight: bold;">cd</span> ~/git/lispy
+mkdir gh-pages
+<span style="color: #7F0055; font-weight: bold;">cd</span> gh-pages
+git clone git@github.com:abo-abo/lispy.git .
+git checkout --orphan gh-pages
+git rm -rf .
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-unnumbered-70" class="outline-3">
+<h3 id="unnumbered-70">git bisect</h3>
+<div class="outline-text-3" id="text-unnumbered-70">
+<ol class="org-ol">
+<li><p>
+git bisect start &lt;good commit&gt; &lt;bad commit(usually HEAD)&gt;
+</p></li>
+<li><p>
+git bisect good
+</p>
+<p>
+git bisect bad
+</p></li>
+</ol>
+</div>
+</div>
+<div id="outline-container-unnumbered-71" class="outline-3">
+<h3 id="unnumbered-71">remove large files</h3>
+<div class="outline-text-3" id="text-unnumbered-71">
+<p>
+<a href="http://rtyley.github.io/bfg-repo-cleaner/">http://rtyley.github.io/bfg-repo-cleaner/</a>
+</p>
+</div>
+</div>
+<div id="outline-container-unnumbered-72" class="outline-3">
+<h3 id="unnumbered-72">git am (apply patch)</h3>
+<div class="outline-text-3" id="text-unnumbered-72">
+<ol class="org-ol">
+<li>Find the patch in .git/rebase-apply/0001</li>
+<li>git apply .git/rebase-apply/0001 &#x2013;reject</li>
+<li>magit <kbd>RC</kbd>.</li>
+</ol>
+
+<p>
+source: <a href="http://www.pizzhacks.com/bugdrome/2011/10/deal-with-git-am-failures/">Deal with git am failures</a>
+</p>
+</div>
+</div>
+<div id="outline-container-unnumbered-73" class="outline-3">
+<h3 id="unnumbered-73">getting git subtree to work</h3>
+<div class="outline-text-3" id="text-unnumbered-73">
+<div class="org-src-container">
+
+<pre class="src src-sh">sudo chmod +x /usr/share/doc/git/contrib/subtree/git-subtree.sh
+sudo ln -s /usr/share/doc/git/contrib/subtree/git-subtree.sh $(<span style="color: #ff00ff;">git</span> --exec-path)/git-subtree
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-unnumbered-74" class="outline-3">
+<h3 id="unnumbered-74">remove old history from a git repository</h3>
+<div class="outline-text-3" id="text-unnumbered-74">
+<p>
+<a href="http://stackoverflow.com/questions/4515580/how-do-i-remove-the-old-history-from-a-git-repository">source</a>
+</p>
+</div>
+</div>
+<div id="outline-container-unnumbered-75" class="outline-3">
+<h3 id="unnumbered-75">delete remote branch</h3>
+<div class="outline-text-3" id="text-unnumbered-75">
+<div class="org-src-container">
+
+<pre class="src src-sh">git push origin --delete scratch/outline
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-unnumbered-76" class="outline-2">
+<h2 id="unnumbered-76">Emacs tools</h2>
+<div class="outline-text-2" id="text-unnumbered-76">
+</div><div id="outline-container-unnumbered-77" class="outline-3">
+<h3 id="unnumbered-77">magit</h3>
+<div class="outline-text-3" id="text-unnumbered-77">
+</div><div id="outline-container-unnumbered-78" class="outline-4">
+<h4 id="unnumbered-78">magit shortcuts</h4>
+<div class="outline-text-4" id="text-unnumbered-78">
+</div><ul class="org-ul"><li><a id="unnumbered-79"></a>E - interactive rebase<br  /></li>
+<li><a id="unnumbered-80"></a>lf - follow file<br  /></li>
+<li><a id="unnumbered-81"></a>M-s M-h M-2 M-4 - visibility<br  /></li></ul>
+</div>
+<div id="outline-container-unnumbered-82" class="outline-4">
+<h4 id="unnumbered-82">edit older commit message</h4>
+<div class="outline-text-4" id="text-unnumbered-82">
+<ol class="org-ol">
+<li>ll</li>
+<li>E</li>
+<li>r (reword)</li>
+<li>C-c C-c</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-unnumbered-83" class="outline-4">
+<h4 id="unnumbered-83"><a href="http://vimeo.com/2871241">Meet Magit on Vimeo</a></h4>
+</div>
+</div>
+<div id="outline-container-unnumbered-84" class="outline-3">
+<h3 id="unnumbered-84">ediff</h3>
+<div class="outline-text-3" id="text-unnumbered-84">
+<p>
+<kbd>*</kbd> to refine match
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-unnumbered-85" class="outline-2">
+<h2 id="unnumbered-85">ELPA workflow</h2>
+<div class="outline-text-2" id="text-unnumbered-85">
+</div><div id="outline-container-unnumbered-86" class="outline-3">
+<h3 id="unnumbered-86">-s subtree method</h3>
+<div class="outline-text-3" id="text-unnumbered-86">
+</div><div id="outline-container-unnumbered-87" class="outline-4">
+<h4 id="unnumbered-87">Getting Started</h4>
+<div class="outline-text-4" id="text-unnumbered-87">
+<ol class="org-ol">
+<li>packages/hydra must <b>not</b> exist</li>
+<li>create a branch hydra tracking the upstream</li>
+<li>git subtree add &#x2013;prefix packages/hydra hydra</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-unnumbered-88" class="outline-4">
+<h4 id="unnumbered-88">Merging from upstream</h4>
+<div class="outline-text-4" id="text-unnumbered-88">
+<ol class="org-ol">
+<li>Switch to the branch that tracks upstream:</li>
+</ol>
+<div class="org-src-container">
+
+<pre class="src src-sh">git checkout hydra &amp;&amp; git pull
+</pre>
+</div>
+
+<ol class="org-ol">
+<li>Switch to master and merge:</li>
+</ol>
+<div class="org-src-container">
+
+<pre class="src src-sh">git checkout master
+git subtree merge --prefix packages/hydra hydra
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-unnumbered-89" class="outline-2">
+<h2 id="unnumbered-89">Github tasks</h2>
+<div class="outline-text-2" id="text-unnumbered-89">
+</div><div id="outline-container-unnumbered-90" class="outline-3">
+<h3 id="unnumbered-90">force push</h3>
+<div class="outline-text-3" id="text-unnumbered-90">
+<div class="org-src-container">
+
+<pre class="src src-sh">git push --force origin master
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-unnumbered-91" class="outline-3">
+<h3 id="unnumbered-91">push tags</h3>
+<div class="outline-text-3" id="text-unnumbered-91">
+<div class="org-src-container">
+
+<pre class="src src-sh">git push --tags
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-unnumbered-92" class="outline-3">
+<h3 id="unnumbered-92">get user pubkeys</h3>
+<div class="outline-text-3" id="text-unnumbered-92">
+<div class="org-src-container">
+
+<pre class="src src-sh">curl https://github.com/abo-abo.keys
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-unnumbered-93" class="outline-3">
+<h3 id="unnumbered-93">get all the pulls locally</h3>
+<div class="outline-text-3" id="text-unnumbered-93">
+<p>
+<a href="https://news.ycombinator.com/item?id=9051220">source</a>
+</p>
+</div>
+<div id="outline-container-unnumbered-94" class="outline-4">
+<h4 id="unnumbered-94">config</h4>
+<div class="outline-text-4" id="text-unnumbered-94">
+<div class="org-src-container">
+
+<pre class="src src-sh">[remote <span style="color: #2A00FF;">"upstream"</span>]
+    url = https://github.com/abo-abo/hydra
+    fetch = +refs/heads/*:refs/remotes/upstream/*
+    fetch = +refs/pull/*/head:refs/pull/upstream/*
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-unnumbered-95" class="outline-4">
+<h4 id="unnumbered-95">routine</h4>
+<div class="outline-text-4" id="text-unnumbered-95">
+<div class="org-src-container">
+
+<pre class="src src-sh">git fetch --all
+</pre>
+</div>
+<p>
+This results in <b>all</b> pull requests available in the local repo in the
+local <code>pull/</code> namespace. To check out e.g. PR #42:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">git checkout -b foo refs/pull/upstream/42
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

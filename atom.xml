@@ -4,13 +4,107 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-04-13T20:22:34+02:00</updated>
+ <updated>2015-04-14T17:18:04+02:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Org-mode Hydras incoming!</title>
+   <link href="http://oremacs.com/2015/04/14/hydra-org-mode/"/>
+   <updated>2015-04-14T00:00:00+02:00</updated>
+   <id>http://oremacs.com/2015/04/14/hydra-org-mode</id>
+   <content type="html">&lt;h2 id=&quot;a-hydra-for-org-mode-time/clock/capture&quot;&gt;A hydra for org-mode time/clock/capture&lt;/h2&gt;
+
+&lt;p&gt;This is a categorized version of the hydra that &lt;a href=&quot;https://github.com/WorldsEndless&quot;&gt;@WorldsEndless&lt;/a&gt; contributed
+today to the &lt;a href=&quot;https://github.com/abo-abo/hydra/wiki/Hydras-by-Topic&quot;&gt;wiki&lt;/a&gt;.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-global-org&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;blue&lt;/span&gt;
+                            &lt;span class=&quot;nb&quot;&gt;:hint&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;Timer^^        ^Clock^         ^Capture^&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;--------------------------------------------------&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;s_t_art        _w_ clock in    _c_apture&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt; _s_top        _o_ clock out   _l_ast capture&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;_r_eset        _j_ clock goto&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;_p_rint&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;t&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-timer-start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;s&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-timer-stop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;;; Need to be at timer&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;r&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-timer-set-timer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;;; Print timer value to buffer&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;p&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-timer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;w&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;org-clock-in&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;o&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-clock-out&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;;; Visit the clocked task from any buffer&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;j&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-clock-goto&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;c&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-capture&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;l&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-capture-goto-last-stored&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;I&amp;#39;ve bound it like this:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;[f11]&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;hydra-global-org/body&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Previously, I had &lt;kbd&gt;f11&lt;/kbd&gt; bound to &lt;code&gt;org-clock-goto&lt;/code&gt;, thanks to
+the &lt;a href=&quot;http://doc.norang.ca/org-mode.html&quot;&gt;Org Mode - Organize Your Life In Plain Text!&lt;/a&gt;
+post.  I kind of recommend that post, as it has a tonne of useful
+stuff. At the same time, it resulted in me copying too much stuff that I didn&amp;#39;t understand into my config,
+ultimately discouraging me from using &lt;code&gt;org-mode&lt;/code&gt;. YMMV.&lt;/p&gt;
+
+&lt;p&gt;Screenshot:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/hydra-org-global.png&quot; alt=&quot;hydra-org-global.png&quot;&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;a-hydra-for-refile/archive&quot;&gt;A hydra for refile/archive&lt;/h2&gt;
+
+&lt;p&gt;Inspired by the previous one, I wanted to write a hydra of my own.  As
+it happened, I was just about to clean up my git notes. So I wanted a
+nice refile hydra to speed up the process.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;#39;s the hydra&amp;#39;s code, which is now part of
+&lt;a href=&quot;https://github.com/abo-abo/worf&quot;&gt;worf&lt;/a&gt;.  Worf is a package for
+quickly navigating around an &lt;code&gt;org-mode&lt;/code&gt; buffer, you can get it from
+MELPA.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-refile&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:hint&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;
+                        &lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;teal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;Refile:^^   _k_eep: %`org-refile-keep&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;----------------------------------&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;_l_ast      _a_rchive&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;_o_ther&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;_t_his&lt;/span&gt;
+
+&lt;span class=&quot;s&quot;&gt;&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;t&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;worf-refile-this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;o&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;worf-refile-other&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;l&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;worf-refile-last&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;k&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-refile-keep&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;not&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-refile-keep&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+       &lt;span class=&quot;nb&quot;&gt;:exit&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;a&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;org-archive-subtree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;q&amp;quot;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;quit&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Some explanations:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;worf-refile-this&lt;/code&gt; will give you a choice of this file&amp;#39;s headings for refiling.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;worf-refile-other&lt;/code&gt; will give you a choice of your &lt;code&gt;org-refile-targets&lt;/code&gt; except the current file.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;worf-refile-last&lt;/code&gt; will refile to the last refile location without prompting.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;k&lt;/kbd&gt; will toggle &lt;code&gt;org-refile-keep&lt;/code&gt;, which decides if refiling moves or copies the text.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;And here&amp;#39;s how it looks like:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/hydra-refile.png&quot; alt=&quot;hydra-refile.png&quot;&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;Thanks for the contribution, enjoy the new stuff.
+Also, if you ever want to dig around someone&amp;#39;s git notes, you can read &lt;a href=&quot;/public/git-notes/git.html&quot;&gt;mine&lt;/a&gt;,
+courtesy of &lt;code&gt;org-mode&lt;/code&gt; export.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Hydra 0.13.0 is out</title>
