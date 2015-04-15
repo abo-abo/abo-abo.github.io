@@ -239,6 +239,148 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/01/27/my-refactoring-workflow/">
+        My "refactoring" workflow
+      </a>
+    </h1>
+
+    <span class="post-date">27 Jan 2015</span>
+
+    <p>Well, &quot;refactoring&quot; is for the Java people, I simply rename things.
+Just today, I had to do a big rename operation related to the
+<a href="https://github.com/abo-abo/lispy/releases">release of lispy 0.22.0</a>.
+Below, I&#39;ll share some functions and packages that I used for that.</p>
+
+<h2 id="my-github-setup">My Github setup</h2>
+
+<p>Here&#39;s it (<code>tree -da -L 1</code>) is:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">.
+├── .cask
+├── gh-pages
+├── .git
+└── images
+</code></pre></div>
+<p>I&#39;ve cloned my <code>gh-pages</code> branch into its own git repository <em>inside</em>
+the original <code>lispy</code> repository. This way, I can rename functions in
+the code and the documentation simultaneously.</p>
+
+<h2 id="declaring-functions-obsolete-in-elisp">Declaring functions obsolete in Elisp</h2>
+
+<p>It can be done like this:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">define-obsolete-function-alias</span> <span class="ss">&#39;lispy-out-forward</span>
+    <span class="ss">&#39;lispy-right</span> <span class="s">&quot;0.21.0&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">define-obsolete-function-alias</span> <span class="ss">&#39;lispy-out-backward</span>
+    <span class="ss">&#39;lispy-left</span> <span class="s">&quot;0.21.0&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">define-obsolete-function-alias</span> <span class="ss">&#39;lispy-out-forward-nostring</span>
+    <span class="ss">&#39;lispy-right-nostring</span> <span class="s">&quot;0.21.0&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>After version <code>&quot;0.21.0&quot;</code> hits, any time you call <code>lispy-left</code> by its
+now obsolete alias <code>lispy-out-backward</code>, you&#39;ll get a message:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">`lispy-out-forward&#39; is an obsolete command (as of 0.21.0); use `lispy-right&#39; instead.
+</code></pre></div>
+<p>So now, since I&#39;m releasing version <code>&quot;0.22.0&quot;</code>, I can remove even the
+alias declarations. I gave people one week of warnings to adjust (just
+rename to the new name) any of their code that&#39;s calling the currently
+obsolete functions.</p>
+
+<h2 id="renaming-obsolete-functions-in-the-documentation">Renaming obsolete functions in the documentation</h2>
+
+<p>Taking advantage of the repository setup, I can:</p>
+
+<h3 id="step-1:-call-rgrep">Step 1: call <code>rgrep</code></h3>
+
+<p><code>rgrep</code> is a fine function, I wonder why it&#39;s not bound by default; I
+bind it to <kbd>C-&lt;</kbd>, taking advantage of my weird key
+mappings (I&#39;m actually pressing the <kbd>C-;-l</kbd> physical keys).</p>
+
+<p>It requires 3 inputs:</p>
+
+<ol>
+<li><strong>Symbol to search for</strong>: I call it with the point positioned on
+the symbol that I want to rename in the code, in the middle of the
+<code>define-obsolete-function-alias</code> tag, so <code>rgrep</code> picks up the
+symbol name as the default and I just type <kbd>RET</kbd> to select
+it.</li>
+<li><strong>File pattern</strong>: <code>*.el</code>, the current file extension is the
+default. I type <code>*</code> <kbd>RET</kbd>, since I want to match the <code>org</code> and <code>html</code>
+files as well.</li>
+<li><strong>Base directory</strong>: this directory will be will be recursively
+searched for files that match the file pattern; the default
+<code>~/git/lispy/</code> is fine here, <kbd>RET</kbd>.</li>
+</ol>
+
+<h3 id="step-2:-call-wgrep">Step 2: call <code>wgrep</code></h3>
+
+<p><a href="https://github.com/mhayashi1120/Emacs-wgrep">wgrep</a> is a fine
+package, I wonder why it&#39;s not more popular. Since it&#39;s so similar to
+<code>wdired</code> (one of the best things since sliced bread, btw), I like to bind
+the starter to  <kbd>C-x C-q</kbd> and the finisher to <kbd>C-c C-c</kbd>
+as well:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">eval-after-load</span> <span class="ss">&#39;grep</span>
+  <span class="o">&#39;</span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">grep-mode-map</span>
+    <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-x C-q&quot;</span><span class="p">)</span> <span class="ss">&#39;wgrep-change-to-wgrep-mode</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nv">eval-after-load</span> <span class="ss">&#39;wgrep</span>
+  <span class="o">&#39;</span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">grep-mode-map</span>
+    <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c C-c&quot;</span><span class="p">)</span> <span class="ss">&#39;wgrep-finish-edit</span><span class="p">))</span>
+</code></pre></div>
+<h3 id="step-3:-call-iedit">Step 3: call <code>iedit</code></h3>
+
+<p><a href="https://github.com/victorhge/iedit">iedit</a> is an amazing package, it&#39;s crazy-good.
+Here&#39;s how I bind it, since once <code>iedit-mode</code> is on, you can move to the next occurrence with <kbd>C-i</kbd>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-M-i&quot;</span><span class="p">)</span> <span class="ss">&#39;iedit-mode</span><span class="p">)</span>
+</code></pre></div>
+<p>In order to change <em>really</em> every occurrence in the buffer, I need to
+mark the thing that I want to change, before <kbd>C-M-i</kbd>.
+Otherwise, <code>iedit</code> will automatically add symbol bounds (a nice
+feature, actually), so that e.g. <code>=lispy-out-forward=</code> will not match
+<code>lispy-out-forward</code>.</p>
+
+<p>Finally, I interactively, char-by-char, rename e.g. <code>lispy-out-forward</code> to <code>lispy-right</code>.
+The experience is similar to the popular <a href="https://github.com/magnars/multiple-cursors.el">multiple-cursors</a>,
+which I also like to use, just for different purposes.</p>
+
+<h3 id="step-4:-exiting">Step 4: exiting</h3>
+
+<p>When I&#39;m done:</p>
+
+<ul>
+<li>I exit <code>iedit-mode</code> with <kbd>C-M-i</kbd>.</li>
+<li>I exit <code>wgrep</code> with <kbd>C-c C-c</kbd></li>
+<li>I save all affected files if I want, since they aren&#39;t saved yet and
+it&#39;s still possible to revert everything.</li>
+</ul>
+
+<h2 id="outro">Outro</h2>
+
+<blockquote>
+<p>Woah, that&#39;s a lot of steps!</p>
+</blockquote>
+
+<p>True, but do note that all three tools can be used on their own for
+various other tasks.  See for instance my other
+<a href="http://youtu.be/DFTXnC1scno?t=3m49s">&quot;refactoring&quot; demo</a>, that uses
+<code>iedit-mode</code> to unbind a <code>let</code>-bound variable in Elisp (should also
+work for Common Lisp, since the syntax is the same).</p>
+
+<p>There&#39;s beauty and utility in having such composable tools. A lot of
+the time, it&#39;s better than to just have one &quot;Rename&quot; button. For
+instance, when only one buffer is involved, the <code>rgrep</code>-<code>wgrep</code> step
+can be skipped and I can rename stuff with <code>iedit-mode</code> only.</p>
+
+<p>Or, when the playground for renaming is less than a buffer, I can:</p>
+
+<ol>
+<li><kbd>C-x nd</kbd> - <code>narrow-to-defun</code> or <kbd>C-x nn</kbd> -
+<code>narrow-to-region</code> (both are equivalent to <kbd>N</kbd> in <code>lispy</code>)</li>
+<li><code>iedit-mode</code></li>
+<li><kbd>C-x nw</kbd> - <code>widen</code> (<kbd>W</kbd> in <code>lispy</code>)</li>
+</ol>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/01/26/occur-dwim/">
         occur-dwim (Do What I Mean)
       </a>
@@ -562,74 +704,6 @@ strings, so that they don&#39;t jump out as much.</p>
 were used to generate it. Now, I can update anything in the <code>with</code>
 Elisp binding, and the corresponding LaTeX will be appropriately
 regenerated, error-free.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/01/22/clojure-sugar-for-elisp/">
-        Adding a bit of Clojure's sugar to Elisp
-      </a>
-    </h1>
-
-    <span class="post-date">22 Jan 2015</span>
-
-    <p>I just wanted to highlight my latest
-<a href="http://comments.gmane.org/gmane.emacs.devel/181534">submission to emacs-devel</a>.</p>
-
-<h2 id="the-patch">The patch</h2>
-
-<p>The attached
-<a href="http://lists.gnu.org/archive/html/emacs-devel/2015-01/txtqCl_ExSFYV.txt">patch</a>,
-together with the macro
-<a href="https://github.com/abo-abo/short-lambda">short-lambda</a> will add a
-shorthand for defining <code>lambda</code>s in Emacs Lisp.</p>
-
-<p>Here&#39;s an excerpt from <a href="http://clojure.org/reader">the Clojure reader docs</a></p>
-
-<blockquote>
-<p>Anonymous function literal (<code>#()</code>)</p>
-
-<p><code>#(...)</code> =&gt; <code>(fn [args] (...))</code></p>
-
-<p>where args are determined by the presence of argument literals
-taking the form <code>%</code>, <code>%n</code> or <code>%&amp;</code>. <code>%</code> is a synonym for <code>%1</code>, <code>%n</code> designates
-the nth arg (1-based), and <code>%&amp;</code> designates a rest arg. This is not a
-replacement for <code>fn</code> - idiomatic used would be for very short one-off
-mapping/filter fns and the like.</p>
-
-<p><code>#()</code> forms cannot be nested.</p>
-</blockquote>
-
-<h2 id="what-the-patch-does">What the patch does</h2>
-
-<p>It makes it possible to write this in Elisp:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">mapc</span> <span class="o">#(</span><span class="nf">put</span> <span class="nf">%</span> <span class="ss">&#39;disabled</span> <span class="no">nil</span><span class="p">)</span>
-      <span class="o">&#39;</span><span class="p">(</span><span class="nf">upcase-region</span> <span class="nf">downcase-region</span> <span class="nf">narrow-to-region</span><span class="p">))</span>
-</code></pre></div>
-<p>You can also do this and other things that you would expect, if you&#39;re
-familiar with Clojure:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">cl-mapcar</span> <span class="o">#(</span><span class="nf">concat</span> <span class="nv">%1</span> <span class="s">&quot; are &quot;</span> <span class="nv">%2</span><span class="p">)</span>
-           <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;roses&quot;</span> <span class="s">&quot;violets&quot;</span><span class="p">)</span>
-           <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;red&quot;</span> <span class="s">&quot;blue&quot;</span><span class="p">))</span>
-<span class="c1">;; =&gt; (&quot;roses are red&quot; &quot;violets are blue&quot;)</span>
-</code></pre></div>
-<p>Or you could replace this snippet from <code>org-mode</code>&#39;s code:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">mapcar</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
-          <span class="p">(</span><span class="k">and</span> <span class="p">(</span><span class="nf">member</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">x</span><span class="p">)</span> <span class="nv">matchers</span><span class="p">)</span> <span class="p">(</span><span class="nf">nth</span> <span class="mi">1</span> <span class="nv">x</span><span class="p">)))</span>
-        <span class="nv">org-latex-regexps</span><span class="p">)</span>
-</code></pre></div>
-<p>with this sugar-coated code:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">mapcar</span> <span class="o">#(</span><span class="k">and</span> <span class="p">(</span><span class="nf">member</span> <span class="p">(</span><span class="nf">car</span> <span class="nf">%</span><span class="p">)</span> <span class="nv">matchers</span><span class="p">)</span> <span class="p">(</span><span class="nf">nth</span> <span class="mi">1</span> <span class="nf">%</span><span class="p">))</span>
-        <span class="nv">org-latex-regexps</span><span class="p">)</span>
-</code></pre></div>
-<h2 id="outro">Outro</h2>
-
-<p>I hope that this gets accepted, although there are some conservative
-people that protest against this change.  Let me know if you would
-like to have this option for your Elisp setups.  And remember that you
-can try out the patch if you&#39;re familiar with
-<a href="http://www.emacswiki.org/emacs/BuildingEmacs">building Emacs from source</a>.</p>
 
   </div>
   

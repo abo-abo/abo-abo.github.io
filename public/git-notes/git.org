@@ -179,6 +179,18 @@ Also, Meld/Edit/Preferences/Text Filters/All whitespace.
 #+begin_src sh :results output
 git grep "step 8" $(git rev-list --all)
 #+end_src
+** pickaxe
+This one will echo the commit messages for when the number of matches
+was changed.
+#+begin_src sh
+git log -Shydra-create --
+#+end_src
+
+There's also =-G=. This one will show the log if a line that matches
+the search string was added, removed, or changed:
+#+begin_src sh
+git log -Ghydra-create --
+#+end_src
 ** remove multiple files that aren't on the disk
 #+begin_src sh
 git rm $(git ls-files --deleted)
