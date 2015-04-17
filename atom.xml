@@ -4,13 +4,147 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-04-15T19:05:22+02:00</updated>
+ <updated>2015-04-17T22:30:58+02:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Introducing ivy-mode</title>
+   <link href="http://oremacs.com/2015/04/16/ivy-mode/"/>
+   <updated>2015-04-16T00:00:00+02:00</updated>
+   <id>http://oremacs.com/2015/04/16/ivy-mode</id>
+   <content type="html">&lt;p&gt;Today I&amp;#39;d like to introduce a function that has completely replaced
+&lt;code&gt;ido-mode&lt;/code&gt; for me: &lt;code&gt;ivy-mode&lt;/code&gt;. It comes with the
+&lt;a href=&quot;https://github.com/abo-abo/swiper&quot;&gt;swiper&lt;/a&gt; package, available both in
+&lt;a href=&quot;http://melpa.org/#/swiper&quot;&gt;MELPA&lt;/a&gt; and
+&lt;a href=&quot;https://elpa.gnu.org/packages/swiper.html&quot;&gt;GNU ELPA&lt;/a&gt;.
+The latter is a bit slower to update, so the version there can be a bit outdated sometimes.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-quick-video-demo&quot;&gt;The quick video demo&lt;/h2&gt;
+
+&lt;p&gt;If you prefer listening and watching to reading, check out the video
+demo &lt;a href=&quot;https://www.youtube.com/watch?v=VvnJQpTFVDc&quot;&gt;here&lt;/a&gt;.
+It repeats most of the stuff written down below.&lt;/p&gt;
+
+&lt;h2 id=&quot;generic-completion&quot;&gt;Generic completion&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;ivy-mode&lt;/code&gt; is simply a minor mode that changes
+&lt;code&gt;completing-read-function&lt;/code&gt; to &lt;code&gt;ivy-completing-read&lt;/code&gt; while it&amp;#39;s active.
+This function is used in most of the places where Emacs requires
+completion, like:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;M-x&lt;/kbd&gt; &lt;code&gt;execute-extended-command&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;C-h f&lt;/kbd&gt; &lt;code&gt;describe-function&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;C-h v&lt;/kbd&gt; &lt;code&gt;describe-variable&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;package-install&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;C-x b&lt;/kbd&gt; &lt;code&gt;switch-to-buffer&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;C-x C-f&lt;/kbd&gt; &lt;code&gt;find-file&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;So, while &lt;code&gt;ivy-mode&lt;/code&gt; is on, all these functions and more will use ivy completion.&lt;/p&gt;
+
+&lt;h2 id=&quot;package-specific-completion&quot;&gt;Package-specific completion&lt;/h2&gt;
+
+&lt;h3 id=&quot;org-mode&quot;&gt;org-mode&lt;/h3&gt;
+
+&lt;p&gt;With the most recent master version, &lt;code&gt;org-mode&lt;/code&gt; will obey
+&lt;code&gt;completing-read-function&lt;/code&gt;, so it should work by default.  If you try
+it for refiling to headings with similar names, you&amp;#39;ll really notice
+how much better &lt;code&gt;ivy-mode&lt;/code&gt; is at it. &lt;code&gt;helm-mode&lt;/code&gt; also does well, if
+you don&amp;#39;t mind the large window.&lt;/p&gt;
+
+&lt;h3 id=&quot;magit&quot;&gt;magit&lt;/h3&gt;
+
+&lt;p&gt;This setting is needed to use ivy completion:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;magit-completing-read-function&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ivy-completing-read&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;find-file-in-project&quot;&gt;find-file-in-project&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/technomancy/find-file-in-project&quot;&gt;find-file-in-project&lt;/a&gt;
+will use ivy by default if it&amp;#39;s available.&lt;/p&gt;
+
+&lt;h3 id=&quot;projectile&quot;&gt;projectile&lt;/h3&gt;
+
+&lt;p&gt;You can set this to make it work:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;projectile-completion-system&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ivy&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;smex&quot;&gt;smex&lt;/h3&gt;
+
+&lt;p&gt;Yes, it&amp;#39;s also possible, since today. Although you&amp;#39;ll have to use my
+fork of &lt;a href=&quot;https://github.com/abo-abo/smex&quot;&gt;smex&lt;/a&gt; if you want to try it.
+I&amp;#39;ve sent a pull request, it&amp;#39;s all backwards-compatible, so hopefully
+it&amp;#39;ll get merged.&lt;/p&gt;
+
+&lt;p&gt;The nice thing is that &lt;code&gt;smex&lt;/code&gt; can take care of the sorting all by
+itself, since &lt;code&gt;ivy&lt;/code&gt; doesn&amp;#39;t do that yet.&lt;/p&gt;
+
+&lt;h3 id=&quot;my-packages&quot;&gt;my packages&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/abo-abo/lispy&quot;&gt;lispy&lt;/a&gt; and
+&lt;a href=&quot;https://github.com/abo-abo/function-args&quot;&gt;function-args&lt;/a&gt; use &lt;code&gt;ivy&lt;/code&gt; by
+default. You can also enable it for
+&lt;a href=&quot;https://github.com/abo-abo/helm-make&quot;&gt;helm-make&lt;/a&gt;, for which the
+default is obviously &lt;code&gt;helm&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;file-name-completion&quot;&gt;File name completion&lt;/h2&gt;
+
+&lt;p&gt;When &lt;code&gt;ivy-mode&lt;/code&gt; is on, &lt;code&gt;find-file&lt;/code&gt; will also use it.  The completion
+is considerably different from all other cases, since it&amp;#39;s done in
+stages, just like &lt;code&gt;ido-find-file&lt;/code&gt; does it.&lt;/p&gt;
+
+&lt;p&gt;The key bindings are:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;RET&lt;/kbd&gt; will select the current candidate and finish.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;C-j&lt;/kbd&gt; will try to continue the completion, i.e. if the
+current candidate is a directory, move to that directory. But if the
+current candidate is a file or &lt;code&gt;./&lt;/code&gt;, then finish.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;/&lt;/kbd&gt; will switch to completing the sub-directories of &lt;code&gt;/&lt;/code&gt;,
+but if the candidate is a perfect match, it will act like
+&lt;kbd&gt;C-j&lt;/kbd&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;~&lt;/kbd&gt; will switch to completing the sub-directories of &lt;code&gt;~/&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;C-n&lt;/kbd&gt; and &lt;kbd&gt;C-p&lt;/kbd&gt; naturally select the next and the previous candidate.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;what&amp;#39;s-it-all-for?&quot;&gt;What&amp;#39;s it all for?&lt;/h2&gt;
+
+&lt;p&gt;Well, for me the advantage is obvious: I get my completion just the
+way I like it.  You can use it as well if you find that you like it
+more than ido.  I&amp;#39;ll just list a list of features that I like:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The current number of candidates is robustly displayed and updated after each key stroke.&lt;/li&gt;
+&lt;li&gt;The minibuffer is an actual editing area, where the bindings like
+&lt;kbd&gt;C-a&lt;/kbd&gt;, &lt;kbd&gt;M-DEL&lt;/kbd&gt; and &lt;kbd&gt;C-k&lt;/kbd&gt; etc. work just as
+you expect. Once you internalize the way that the regex is built, you
+can get your match very quickly and intuitively.&lt;/li&gt;
+&lt;li&gt;The actual regular expressions constructs like &lt;code&gt;\\b&lt;/code&gt; or &lt;code&gt;$&lt;/code&gt; and &lt;code&gt;^&lt;/code&gt; work. The only thing that works differently
+is the space: you can&amp;#39;t match a single space because any amount of spaces translates into the &lt;code&gt;.*&lt;/code&gt; wild card.
+But you can use it to your advantage and use the space instead of all the various symbol joining constructs out there, like
+&lt;code&gt;snake_case&lt;/code&gt;, or &lt;code&gt;kebab-case&lt;/code&gt; (yeah, it&amp;#39;s totally called that, check the wiki), or &lt;code&gt;whatever/this/is/case&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;The familiar &lt;kbd&gt;M-&amp;lt;&lt;/kbd&gt; and &lt;kbd&gt;M-&amp;gt;&lt;/kbd&gt; key bindings also work as expected, navigating you to the first and last candidate respectively.
+When you press &lt;kbd&gt;C-p&lt;/kbd&gt; on the first match or &lt;kbd&gt;C-n&lt;/kbd&gt; on the last match, the match will not change, unlike the behavior
+of &lt;code&gt;ido&lt;/code&gt; that has annoyed me a lot.&lt;/li&gt;
+&lt;li&gt;The minibuffer key bindings can actually be properly customized:
+just set &lt;code&gt;ivy-minibuffer-map&lt;/code&gt; to whatever you like, it won&amp;#39;t be
+changed. Even in Emacs 24.5, if you customize &lt;code&gt;ido-completion-map&lt;/code&gt;,
+the change will be reset.  That was fixed only in the current master.&lt;/li&gt;
+&lt;li&gt;You don&amp;#39;t have to rely on &lt;code&gt;flx&lt;/code&gt; or &lt;code&gt;flx-ido&lt;/code&gt; to save you from the overwhelming number of matches.
+Instead, you type maybe a bit more, but in return you get a &lt;em&gt;very consistent&lt;/em&gt; and predictable result.
+No black boxes or hidden variables that dramatically change the order of candidates from time to time.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;Check it out, I hope you like it. And a big thanks to all who
+contributed code or bug reports.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Display the initial Hydra hint with a delay</title>

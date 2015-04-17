@@ -239,6 +239,81 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/02/12/ido-occasional/">
+        Occasionally ido
+      </a>
+    </h1>
+
+    <span class="post-date">12 Feb 2015</span>
+
+    <p>As I was refactoring my <code>.emacs</code>, I found a silly wrapper around
+<code>describe-function</code> that uses <code>ido-completing-read</code>.  I think I was
+aware at the time that
+<a href="https://github.com/DarwinAwardWinner/ido-ubiquitous">ido-ubiquitous</a>
+could simply make <code>describe-function</code> use <code>ido-completing-read</code>. The
+problem was that it also affected the <code>completing-read</code> in functions
+that became <code>headlong-bookmark-jump</code> from
+<a href="https://github.com/abo-abo/headlong">headlong</a>
+(see <a href="/2015/01/06/rushing-headlong/">the corresponding post</a>
+if you missed it).</p>
+
+<h2 id="a-bit-of-code-to-make-things-right">A bit of code to make things right</h2>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">ido-occasional-completing-read</span>
+    <span class="p">(</span><span class="nv">prompt</span> <span class="nv">collection</span>
+     <span class="kp">&amp;optional</span> <span class="nv">predicate</span> <span class="nv">require-match</span> <span class="nv">initial-input</span>
+       <span class="nv">hist</span> <span class="nv">def</span> <span class="nv">inherit-input-method</span><span class="p">)</span>
+  <span class="s">&quot;Use `ido-completing-read&#39; if the collection isn&#39;t too large.</span>
+<span class="s">Fall back to `completing-read&#39; otherwise.&quot;</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">filtered-collection</span>
+         <span class="p">(</span><span class="nf">all-completions</span> <span class="s">&quot;&quot;</span> <span class="nv">collection</span> <span class="nv">predicate</span><span class="p">)))</span>
+    <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">&lt;=</span> <span class="p">(</span><span class="nf">length</span> <span class="nv">filtered-collection</span><span class="p">)</span> <span class="mi">30000</span><span class="p">)</span>
+        <span class="p">(</span><span class="nv">ido-completing-read</span>
+         <span class="nv">prompt</span> <span class="nv">filtered-collection</span> <span class="no">nil</span>
+         <span class="nv">require-match</span> <span class="nv">initial-input</span> <span class="nv">hist</span>
+         <span class="nv">def</span> <span class="no">nil</span><span class="p">)</span>
+      <span class="p">(</span><span class="nf">completing-read</span>
+       <span class="nv">prompt</span> <span class="nv">collection</span> <span class="nv">predicate</span>
+       <span class="nv">require-match</span> <span class="nv">initial-input</span> <span class="nv">hist</span>
+       <span class="nv">def</span> <span class="nv">inherit-input-method</span><span class="p">))))</span>
+
+<span class="c1">;;;###autoload</span>
+<span class="p">(</span><span class="nb">defmacro</span> <span class="nv">with-ido-completion</span> <span class="p">(</span><span class="nv">fun</span><span class="p">)</span>
+  <span class="s">&quot;Wrap FUN in another interactive function with ido completion.&quot;</span>
+  <span class="o">`</span><span class="p">(</span><span class="nb">defun</span> <span class="o">,</span><span class="p">(</span><span class="nf">intern</span> <span class="p">(</span><span class="nf">concat</span> <span class="p">(</span><span class="nf">symbol-name</span> <span class="nv">fun</span><span class="p">)</span> <span class="s">&quot;/with-ido&quot;</span><span class="p">))</span> <span class="p">()</span>
+     <span class="o">,</span><span class="p">(</span><span class="nf">format</span> <span class="s">&quot;Forward to `%S&#39; with ido completion.&quot;</span> <span class="nv">fun</span><span class="p">)</span>
+     <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+     <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">completing-read-function</span>
+            <span class="ss">&#39;ido-occasional-completing-read</span><span class="p">))</span>
+       <span class="p">(</span><span class="nf">call-interactively</span> <span class="nf">#&#39;</span><span class="o">,</span><span class="nv">fun</span><span class="p">))))</span>
+</code></pre></div>
+<p>The only thing that <code>ido-occasional-completing-read</code> does is to
+pre-filter <code>collection</code> with <code>predicate</code> and pass it on to
+<code>ido-completing-read</code>. And <code>with-ido-completion</code> is just a convenience wrapper.</p>
+
+<h2 id="example">Example</h2>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;&lt;f1&gt; f&quot;</span><span class="p">)</span>
+                <span class="p">(</span><span class="nv">with-ido-completion</span> <span class="nv">describe-function</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;&lt;f1&gt; v&quot;</span><span class="p">)</span>
+                <span class="p">(</span><span class="nv">with-ido-completion</span> <span class="nv">describe-variable</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;&lt;f2&gt; i&quot;</span><span class="p">)</span>
+                <span class="p">(</span><span class="nv">with-ido-completion</span> <span class="nv">info-lookup-symbol</span><span class="p">))</span>
+</code></pre></div>
+<p>Here, <code>with-ido-completion</code> will generate
+e.g. <code>describe-function/with-ido</code>, which will subsequently be bound to
+<kbd>&lt;f1&gt; f</kbd>. The good-old <code>describe-function</code> is left unaffected.</p>
+
+<p>Note, that if I turn on <code>helm-mode</code> at this point, it will override
+<code>describe-function</code> with its own completion, but it will not touch
+<code>describe-function/with-ido</code> which I bound. This can be useful e.g. if
+I want to use <code>helm-mode</code> (or <code>icy-mode</code> or <code>icomplete-mode</code>) for some
+completion, but not all.</p>
+
+<p>You can find the package at <a href="https://github.com/abo-abo/ido-occasional">ido-occasional</a>.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/02/11/elisp-newbie-style/">
         Elisp newbie-style
       </a>
@@ -673,67 +748,6 @@ through <code>(require &#39;hydra-examples)</code> unless you <code>(setq hydra-
 beforehand.  This is because I have no idea what kind of bindings will work for you, you
 should decide yourself.  But I am providing you with a template. The number of examples
 has also grown to six.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/02/07/hydra-on-youtubes/">
-        A new Hydra demo on Youtube
-      </a>
-    </h1>
-
-    <span class="post-date">07 Feb 2015</span>
-
-    <p>This will be a short post sharing two pieces of information.</p>
-
-<h2 id="a-hydra-demo-is-on-youtube">A Hydra demo is on Youtube</h2>
-
-<p>Here is the <a href="https://www.youtube.com/watch?v=_qZliI1BKzI">link</a>, and here is the current window-switching code:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span>
- <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-M-o&quot;</span><span class="p">)</span>
- <span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-window</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">amaranth</span><span class="p">)</span>
-   <span class="s">&quot;window&quot;</span>
-   <span class="p">(</span><span class="s">&quot;h&quot;</span> <span class="nv">windmove-left</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">windmove-down</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;k&quot;</span> <span class="nv">windmove-up</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nv">windmove-right</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;v&quot;</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span>
-          <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-          <span class="p">(</span><span class="nv">split-window-right</span><span class="p">)</span>
-          <span class="p">(</span><span class="nv">windmove-right</span><span class="p">))</span>
-        <span class="s">&quot;vert&quot;</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;x&quot;</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span>
-          <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-          <span class="p">(</span><span class="nv">split-window-below</span><span class="p">)</span>
-          <span class="p">(</span><span class="nv">windmove-down</span><span class="p">))</span>
-        <span class="s">&quot;horz&quot;</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;t&quot;</span> <span class="nv">transpose-frame</span> <span class="s">&quot;&#39;&quot;</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;o&quot;</span> <span class="nv">delete-other-windows</span> <span class="s">&quot;one&quot;</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="nv">ace-window</span> <span class="s">&quot;ace&quot;</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;s&quot;</span> <span class="nv">ace-swap-window</span> <span class="s">&quot;swap&quot;</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;d&quot;</span> <span class="nv">ace-delete-window</span> <span class="s">&quot;del&quot;</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;i&quot;</span> <span class="nv">ace-maximize-window</span> <span class="s">&quot;ace-one&quot;</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;b&quot;</span> <span class="nv">ido-switch-buffer</span> <span class="s">&quot;buf&quot;</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;m&quot;</span> <span class="nv">headlong-bookmark-jump</span> <span class="s">&quot;bmk&quot;</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span> <span class="s">&quot;cancel&quot;</span><span class="p">)))</span>
-</code></pre></div>
-<h2 id="ace-window-0.7.0-is-out"><code>ace-window 0.7.0</code> is out</h2>
-
-<p>You can see the release notes <a href="https://github.com/abo-abo/ace-window/releases/tag/0.7.0">here</a>.
-There&#39;s not a whole lot of user-visible changes, but a large portion of the code was re-written
-to facilitate the use of the API. I hope that no new bugs were introduced with this change,
-you can still fall back to <a href="https://github.com/abo-abo/ace-window/releases/tag/0.6.1">0.6.1</a> and send
-me <a href="https://github.com/abo-abo/ace-window/issues">an issue</a> if something broke. There&#39;s a benefit
-in the long run, just see how simple the code has become:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">ace-maximize-window</span> <span class="p">()</span>
-  <span class="s">&quot;Ace maximize window.&quot;</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="nf">select-window</span>
-   <span class="p">(</span><span class="nv">aw-select</span> <span class="s">&quot; Ace - Maximize Window&quot;</span><span class="p">))</span>
-  <span class="p">(</span><span class="nv">delete-other-windows</span><span class="p">))</span>
-</code></pre></div>
-<p>Here, <code>aw-select</code> just returns a selected window, and nothing else. Very easy to use.</p>
 
   </div>
   
