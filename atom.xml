@@ -4,13 +4,81 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-04-17T22:30:58+02:00</updated>
+ <updated>2015-04-19T14:52:58+02:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Grep in a git repository using ivy</title>
+   <link href="http://oremacs.com/2015/04/19/git-grep-ivy/"/>
+   <updated>2015-04-19T00:00:00+02:00</updated>
+   <id>http://oremacs.com/2015/04/19/git-grep-ivy</id>
+   <content type="html">&lt;p&gt;Just got this request a few minutes ago, and now this feature is in
+the &lt;a href=&quot;https://github.com/abo-abo/swiper/blob/master/counsel.el&quot;&gt;swiper&lt;/a&gt;
+repository (available as &lt;code&gt;counsel&lt;/code&gt; from MELPA).&lt;/p&gt;
+
+&lt;p&gt;The motivation was to write an ivy equivalent of &lt;a href=&quot;https://github.com/yasuyk/helm-git-grep&quot;&gt;helm-git-grep&lt;/a&gt;.
+I didn&amp;#39;t use this feature before, but the only thing that I needed to get me started was this shell command:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;git --no-pager grep --full-name -n --no-color -i -e foobar
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The rest of the code (just 20 lines) followed all by itself:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;counsel-git-grep-function&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;&amp;amp;optional&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;_pred&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;&amp;amp;rest&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;_u&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Grep in the current git repository for STRING.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;split-string&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;shell-command-to-string&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;format&lt;/span&gt;
+     &lt;span class=&quot;s&quot;&gt;&amp;quot;git --no-pager grep --full-name -n --no-color -i -e \&amp;quot;%s\&amp;quot;&amp;quot;&lt;/span&gt;
+     &lt;span class=&quot;nf&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+   &lt;span class=&quot;s&quot;&gt;&amp;quot;\n&amp;quot;&lt;/span&gt;
+   &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;counsel-git-grep&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Grep for a string in the current git repository.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;default-directory&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;locate-dominating-file&lt;/span&gt;
+                             &lt;span class=&quot;nv&quot;&gt;default-directory&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;.git&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ivy-read&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;pattern: &amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;counsel-git-grep-function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+        &lt;span class=&quot;nv&quot;&gt;lst&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;val&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;lst&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;split-string&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;:&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;find-file&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;car&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;lst&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;goto-char&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;point-min&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;forward-line&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;1-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;string-to-number&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;cadr&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;lst&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Thanks to the push from Stefan Monnier, &lt;code&gt;ivy-read&lt;/code&gt; also supports a
+function to be passed instead of a static collection of strings. In
+this case, it&amp;#39;s &lt;code&gt;counsel-git-grep-function&lt;/code&gt; that basically takes one
+argument: the thing that we&amp;#39;re looking for.&lt;/p&gt;
+
+&lt;p&gt;After this, &lt;code&gt;shell-command-to-string&lt;/code&gt; is my go-to function to quickly
+bring some shell output into Elisp. As you can see, it&amp;#39;s enough to
+pass it a shell command in a string form to get a string response.  I
+transform the response into a list of line strings with
+&lt;code&gt;split-string&lt;/code&gt;, making sure to pass the &lt;code&gt;t&lt;/code&gt; argument to avoid empty
+strings.&lt;/p&gt;
+
+&lt;p&gt;One final trick that you can learn for your own Elisp programming is
+the &lt;code&gt;let&lt;/code&gt; / &lt;code&gt;default-directory&lt;/code&gt; / &lt;code&gt;(locate-dominating-file default-directory &amp;quot;.git&amp;quot;)&lt;/code&gt; combo.
+It&amp;#39;s quite useful for dealing with git shell commands.
+And that&amp;#39;s it, it only remains to open a file and jump to the selected line.&lt;/p&gt;
+
+&lt;p&gt;I think that &lt;code&gt;counsel-git-grep&lt;/code&gt; might complement and slightly displace &lt;code&gt;rgrep&lt;/code&gt; or &lt;code&gt;ag&lt;/code&gt; in my setup.
+So I&amp;#39;ve given it a nice binding:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-c j&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;counsel-git-grep&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;I hope that I&amp;#39;ve made a good case of how easy it is to quickly write
+something in Elisp, especially if it&amp;#39;s just a shell command
+wrapper. So if you&amp;#39;re on the fence of whether to learn Elisp or not,
+do yourself a favor and learn it: it pays off quickly and is a lot of
+fun.&lt;/p&gt;
+
+&lt;p&gt;Side note: I&amp;#39;ve mentioned &lt;code&gt;\bfun\b&lt;/code&gt; in this blog 182 times, mostly as a variable representing a function (courtesy of &lt;code&gt;counsel-git-grep&lt;/code&gt;).&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Introducing ivy-mode</title>

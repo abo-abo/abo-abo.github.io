@@ -11,7 +11,7 @@
 
   <title>
     
-      ace-window full path &middot; (or emacs
+      Grep in a git repository using ivy &middot; (or emacs
     
   </title>
 
@@ -240,117 +240,68 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">ace-window full path</h1>
-  <span class="post-date">03 Mar 2015</span>
-  <p>I just closed a really helpful
-<a href="https://github.com/abo-abo/ace-window/issues/21">issue</a> for
-<code>ace-window</code>.  Turns out that there&#39;s a plugin for vim called
-Easymotion that&#39;s very similar to <code>ace-jump-mode</code>.  And that plugin
-doesn&#39;t highlight the leading chars one by one, but instead gives them
-all at once.  Which is a pretty good idea, since it&#39;s more convenient
-to read the whole path at once and type it in at once rather than:</p>
+  <h1 class="post-title">Grep in a git repository using ivy</h1>
+  <span class="post-date">19 Apr 2015</span>
+  <p>Just got this request a few minutes ago, and now this feature is in
+the <a href="https://github.com/abo-abo/swiper/blob/master/counsel.el">swiper</a>
+repository (available as <code>counsel</code> from MELPA).</p>
 
-<ul>
-<li>read one char</li>
-<li>type one char</li>
-<li>read one more char</li>
-<li>type one more char</li>
-<li>... (maybe more steps)</li>
-</ul>
-
-<p>To turn on the new behavior:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">aw-leading-char-style</span> <span class="ss">&#39;path</span><span class="p">)</span>
+<p>The motivation was to write an ivy equivalent of <a href="https://github.com/yasuyk/helm-git-grep">helm-git-grep</a>.
+I didn&#39;t use this feature before, but the only thing that I needed to get me started was this shell command:</p>
+<div class="highlight"><pre><code class="language-sh" data-lang="sh">git --no-pager grep --full-name -n --no-color -i -e foobar
 </code></pre></div>
-<p>Although this will only have an effect once you have more than 10 windows.
-But this method really improves the functions from avy-jump.el.
-I&#39;ve added some more commands and renamed the old ones since yesterday.</p>
+<p>The rest of the code (just 20 lines) followed all by itself:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel-git-grep-function</span> <span class="p">(</span><span class="nf">string</span> <span class="kp">&amp;optional</span> <span class="nv">_pred</span> <span class="kp">&amp;rest</span> <span class="nv">_u</span><span class="p">)</span>
+  <span class="s">&quot;Grep in the current git repository for STRING.&quot;</span>
+  <span class="p">(</span><span class="nv">split-string</span>
+   <span class="p">(</span><span class="nv">shell-command-to-string</span>
+    <span class="p">(</span><span class="nf">format</span>
+     <span class="s">&quot;git --no-pager grep --full-name -n --no-color -i -e \&quot;%s\&quot;&quot;</span>
+     <span class="nf">string</span><span class="p">))</span>
+   <span class="s">&quot;\n&quot;</span>
+   <span class="no">t</span><span class="p">))</span>
 
-<h2 id="avy-jump-demos">avy-jump demos</h2>
-
-<h3 id="avi-goto-char-2"><code>avi-goto-char-2</code></h3>
-
-<p>Here&#39;s how I like to bind <code>avi-goto-char-2</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-&#39;&quot;</span><span class="p">)</span> <span class="ss">&#39;avi-goto-char-2</span><span class="p">)</span>
-</code></pre></div>
-<p>And here&#39;s the result of <kbd>C-&#39; bu</kbd>:</p>
-
-<p><img src="/download/avi-goto-char-2.png" alt="avi-goto-char-2"></p>
-
-<p>As you can see, nothing is overwritten by the overlay - it&#39;s appended
-after the search chars. In the screenshot above, I have <code>avi-background</code> at nil; you can set it to
-t if you want a gray background.</p>
-
-<h3 id="avi-goto-char"><code>avi-goto-char</code></h3>
-
-<p>After binding <code>avi-goto-char</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;π&quot;</span><span class="p">)</span> <span class="ss">&#39;avi-goto-char</span><span class="p">)</span>
-</code></pre></div>
-<p>Here&#39;s the result of <kbd>π b</kbd>:</p>
-
-<p><img src="/download/avi-goto-char.png" alt="avi-goto-char"></p>
-
-<h3 id="avi-goto-line"><code>avi-goto-line</code></h3>
-
-<p>After binding <code>avi-goto-line</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-g f&quot;</span><span class="p">)</span> <span class="ss">&#39;avi-goto-line</span><span class="p">)</span>
-</code></pre></div>
-<p>Here&#39;s the result of <kbd>M-g f</kbd>:</p>
-
-<p><img src="/download/avi-goto-line.png" alt="avi-goto-line"></p>
-
-<p>I&#39;ve also added:</p>
-
-<ul>
-<li><code>avi-copy-line</code></li>
-<li><code>avi-move-line</code></li>
-<li><code>avi-copy-region</code></li>
-</ul>
-
-<p>These functions use the method of <code>avi-goto-line</code> to copy/move stuff.
-It might be useful for line-based text.</p>
-
-<h3 id="avi-goto-word-0"><code>avi-goto-word-0</code></h3>
-
-<p>Here&#39;s the simple definition and the binding:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">avi-goto-word-0</span> <span class="p">()</span>
-  <span class="s">&quot;Jump to a word start in current window.&quot;</span>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel-git-grep</span> <span class="p">()</span>
+  <span class="s">&quot;Grep for a string in the current git repository.&quot;</span>
   <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">avi-keys</span> <span class="p">(</span><span class="nv">number-sequence</span> <span class="nv">?a</span> <span class="nv">?z</span><span class="p">))</span>
-         <span class="p">(</span><span class="nv">candidates</span> <span class="p">(</span><span class="nv">avi--regex-candidates</span> <span class="s">&quot;\\b\\sw&quot;</span><span class="p">)))</span>
-    <span class="p">(</span><span class="nv">avi--goto</span>
-     <span class="p">(</span><span class="nv">avi--process</span> <span class="nv">candidates</span> <span class="nf">#&#39;</span><span class="nv">avi--overlay-pre</span><span class="p">))))</span>
-<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-g e&quot;</span><span class="p">)</span> <span class="ss">&#39;avi-goto-word-0</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">default-directory</span> <span class="p">(</span><span class="nv">locate-dominating-file</span>
+                             <span class="nv">default-directory</span> <span class="s">&quot;.git&quot;</span><span class="p">))</span>
+        <span class="p">(</span><span class="nv">val</span> <span class="p">(</span><span class="nv">ivy-read</span> <span class="s">&quot;pattern: &quot;</span> <span class="ss">&#39;counsel-git-grep-function</span><span class="p">))</span>
+        <span class="nv">lst</span><span class="p">)</span>
+    <span class="p">(</span><span class="nb">when</span> <span class="nv">val</span>
+      <span class="p">(</span><span class="k">setq</span> <span class="nv">lst</span> <span class="p">(</span><span class="nv">split-string</span> <span class="nv">val</span> <span class="s">&quot;:&quot;</span><span class="p">))</span>
+      <span class="p">(</span><span class="nv">find-file</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">lst</span><span class="p">))</span>
+      <span class="p">(</span><span class="nf">goto-char</span> <span class="p">(</span><span class="nf">point-min</span><span class="p">))</span>
+      <span class="p">(</span><span class="nf">forward-line</span> <span class="p">(</span><span class="nf">1-</span> <span class="p">(</span><span class="nf">string-to-number</span> <span class="p">(</span><span class="nv">cadr</span> <span class="nv">lst</span><span class="p">)))))))</span>
 </code></pre></div>
-<p>There might be quite a lot of candidates for this one, but there&#39;s no call to <code>read-char</code>.
-Here&#39;s what happens after <kbd>M-g e</kbd>:</p>
+<p>Thanks to the push from Stefan Monnier, <code>ivy-read</code> also supports a
+function to be passed instead of a static collection of strings. In
+this case, it&#39;s <code>counsel-git-grep-function</code> that basically takes one
+argument: the thing that we&#39;re looking for.</p>
 
-<p><img src="/download/avi-goto-word-0.png" alt="avi-goto-word-0"></p>
+<p>After this, <code>shell-command-to-string</code> is my go-to function to quickly
+bring some shell output into Elisp. As you can see, it&#39;s enough to
+pass it a shell command in a string form to get a string response.  I
+transform the response into a list of line strings with
+<code>split-string</code>, making sure to pass the <code>t</code> argument to avoid empty
+strings.</p>
 
-<h3 id="avi-goto-word-1"><code>avi-goto-word-1</code></h3>
+<p>One final trick that you can learn for your own Elisp programming is
+the <code>let</code> / <code>default-directory</code> / <code>(locate-dominating-file default-directory &quot;.git&quot;)</code> combo.
+It&#39;s quite useful for dealing with git shell commands.
+And that&#39;s it, it only remains to open a file and jump to the selected line.</p>
 
-<p>Here&#39;s a version of it that reads one char:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">avi-goto-word-1</span> <span class="p">()</span>
-  <span class="s">&quot;Jump to a word start in current window.</span>
-<span class="s">Read one char with which the word should start.&quot;</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">candidates</span> <span class="p">(</span><span class="nv">avi--regex-candidates</span>
-                     <span class="p">(</span><span class="nf">concat</span>
-                      <span class="s">&quot;\\b&quot;</span>
-                      <span class="p">(</span><span class="nf">string</span> <span class="p">(</span><span class="nf">read-char</span> <span class="s">&quot;char: &quot;</span><span class="p">))))))</span>
-    <span class="p">(</span><span class="nv">avi--goto</span>
-     <span class="p">(</span><span class="nv">avi--process</span> <span class="nv">candidates</span> <span class="nf">#&#39;</span><span class="nv">avi--overlay-pre</span><span class="p">))))</span>
-<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-g w&quot;</span><span class="p">)</span> <span class="ss">&#39;avi-goto-word-1</span><span class="p">)</span>
+<p>I think that <code>counsel-git-grep</code> might complement and slightly displace <code>rgrep</code> or <code>ag</code> in my setup.
+So I&#39;ve given it a nice binding:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c j&quot;</span><span class="p">)</span> <span class="ss">&#39;counsel-git-grep</span><span class="p">)</span>
 </code></pre></div>
-<p>Here&#39;s what happens after <kbd>M-g w b</kbd>:</p>
+<p>I hope that I&#39;ve made a good case of how easy it is to quickly write
+something in Elisp, especially if it&#39;s just a shell command
+wrapper. So if you&#39;re on the fence of whether to learn Elisp or not,
+do yourself a favor and learn it: it pays off quickly and is a lot of
+fun.</p>
 
-<p><img src="/download/avi-goto-word-1.png" alt="avi-goto-word-1"></p>
-
-<h2 id="outro">Outro</h2>
-
-<p>Give the new functions a go and see if you like them. New ideas are
-welcome, especially pertaining to ripping off vim plugins. I did the
-vimtutor once, but I have no idea how vim plugins work. But it turns
-out that I like Easymotion.</p>
+<p>Side note: I&#39;ve mentioned <code>\bfun\b</code> in this blog 182 times, mostly as a variable representing a function (courtesy of <code>counsel-git-grep</code>).</p>
 
 </div>
 
@@ -369,16 +320,6 @@ out that I like Easymotion.</p>
     
       <li>
         <h3>
-          <!-- <a href="//2015/04/19/git-grep-ivy/"> -->
-          <a href="/2015/04/19/git-grep-ivy/">
-            Grep in a git repository using ivy
-            <small>19 Apr 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
           <!-- <a href="//2015/04/16/ivy-mode/"> -->
           <a href="/2015/04/16/ivy-mode/">
             Introducing ivy-mode
@@ -393,6 +334,16 @@ out that I like Easymotion.</p>
           <a href="/2015/04/15/hydra-idle-hint/">
             Display the initial Hydra hint with a delay
             <small>15 Apr 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/04/14/hydra-org-mode/"> -->
+          <a href="/2015/04/14/hydra-org-mode/">
+            Org-mode Hydras incoming!
+            <small>14 Apr 2015</small>
           </a>
         </h3>
       </li>

@@ -156,6 +156,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -236,6 +240,97 @@
 
       <div class="container content">
         <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/2015/02/18/undo-nonsense/">
+        Reverting nonsense
+      </a>
+    </h1>
+
+    <span class="post-date">18 Feb 2015</span>
+
+    <p>It happens to me frequently when making a demo, or just experimenting
+around that I want to revert the buffer to the last saved
+state. Obviously such a command exists in Emacs, and it&#39;s
+unsurprisingly called <code>revert-buffer</code>:</p>
+
+<blockquote>
+<p>Replace current buffer text with the text of the visited file on disk.
+This undoes all changes since the file was visited or saved.</p>
+</blockquote>
+
+<p>But the poor old <code>revert-buffer</code> isn&#39;t bound by default in Emacs. The perfect binding for it is <kbd>C-x C-r</kbd>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span>
+ <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-x C-r&quot;</span><span class="p">)</span>
+ <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span> <span class="p">(</span><span class="k">interactive</span><span class="p">)</span> <span class="p">(</span><span class="nv">revert-buffer</span> <span class="no">nil</span> <span class="no">t</span><span class="p">)))</span>
+</code></pre></div>
+<p>I believe the lambda is used to get the &quot;no questions asked&quot;
+treatment.  Anyway, by default Emacs binds <kbd>C-x C-r</kbd> to
+<code>find-file-read-only</code>, which really is a trash-tier command.</p>
+
+<blockquote>
+<p>Why is <code>find-file-read-only</code> useless?</p>
+</blockquote>
+
+<p>Because <kbd>C-x C-q</kbd> is bound to <code>read-only-mode</code> - a really
+good command (made even better with <code>wdired</code> and <code>wgrep</code>).  So
+<code>find-file-read-only</code> is just <kbd>C-x C-f C-x C-q</kbd>. And I don&#39;t
+ever recall needing to use that, since <kbd>v</kbd>
+(<code>dired-view-file</code>) is almost equivalent if not better.</p>
+
+<p>As a bonus, <kbd>C-x C-r</kbd> is mnemonic for &quot;revert&quot;.</p>
+
+<h2 id="auto-reverting">Auto-reverting</h2>
+
+<p>While on the topic, let me mention <code>auto-revert-mode</code>. I have this in my config:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-auto-revert-mode</span> <span class="mi">1</span><span class="p">)</span>
+</code></pre></div>
+<p>This way, if any opened and saved file was modified outside of Emacs, it will be updated
+in a short while. I was able to use this to a great advantage when writing the SVG picture
+for the <a href="/2015/02/14/semi-xmodmap/">Xmodmap post</a>:</p>
+
+<ul>
+<li>I opened the SVG in the default image mode in one Emacs instance</li>
+<li>and opened the same document in XML mode in another (mode is toggled with <kbd>C-c C-c</kbd>)</li>
+</ul>
+
+<p>With that setup, I was able to see the picture update as I was inputting the XML.
+Here&#39;s some Elisp for XML generation, if you&#39;re interested</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">make-row</span> <span class="p">(</span><span class="nv">row-str</span> <span class="nv">ix</span> <span class="nv">iy</span> <span class="nv">fill</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">mapconcat</span>
+   <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+     <span class="p">(</span><span class="nf">format</span>
+      <span class="s">&quot;&lt;g&gt;&lt;text x=\&quot;%d\&quot; y=\&quot;%d\&quot; style=\&quot;font-size:10px;fill:%s;font-family:Deja Vu Sans Mono\&quot;&gt;%s&lt;/text&gt;&lt;/g&gt;&quot;</span>
+      <span class="p">(</span><span class="nf">+</span> <span class="nv">ix</span> <span class="p">(</span><span class="nf">*</span> <span class="nv">x</span> <span class="mi">30</span><span class="p">))</span>
+      <span class="nv">iy</span>
+      <span class="nv">fill</span>
+      <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">y</span> <span class="p">(</span><span class="nf">elt</span> <span class="nv">row-str</span> <span class="nv">x</span><span class="p">)))</span>
+        <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">stringp</span> <span class="nv">y</span><span class="p">)</span>
+            <span class="nv">y</span>
+          <span class="p">(</span><span class="nf">make-string</span> <span class="mi">1</span> <span class="nv">y</span><span class="p">)))))</span>
+   <span class="p">(</span><span class="nv">number-sequence</span> <span class="mi">0</span> <span class="p">(</span><span class="nf">1-</span> <span class="p">(</span><span class="nf">length</span> <span class="nv">row-str</span><span class="p">)))</span>
+   <span class="s">&quot;\n&quot;</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nv">make-row</span>
+ <span class="s">&quot;QWERTYUIOP&quot;</span>
+ <span class="mi">95</span> <span class="mi">140</span>
+ <span class="s">&quot;#2b2828&quot;</span><span class="p">)</span>
+<span class="c1">;; =&gt;</span>
+</code></pre></div>
+<p>The last statement would generate:
+<g><text x="95" y="140" style="font-size:10px;fill:#2b2828;font-family:Deja Vu Sans Mono">Q</text></g>
+<g><text x="125" y="140" style="font-size:10px;fill:#2b2828;font-family:Deja Vu Sans Mono">W</text></g>
+<g><text x="155" y="140" style="font-size:10px;fill:#2b2828;font-family:Deja Vu Sans Mono">E</text></g>
+<g><text x="185" y="140" style="font-size:10px;fill:#2b2828;font-family:Deja Vu Sans Mono">R</text></g>
+<g><text x="215" y="140" style="font-size:10px;fill:#2b2828;font-family:Deja Vu Sans Mono">T</text></g>
+<g><text x="245" y="140" style="font-size:10px;fill:#2b2828;font-family:Deja Vu Sans Mono">Y</text></g>
+<g><text x="275" y="140" style="font-size:10px;fill:#2b2828;font-family:Deja Vu Sans Mono">U</text></g>
+<g><text x="305" y="140" style="font-size:10px;fill:#2b2828;font-family:Deja Vu Sans Mono">I</text></g>
+<g><text x="335" y="140" style="font-size:10px;fill:#2b2828;font-family:Deja Vu Sans Mono">O</text></g>
+<g><text x="365" y="140" style="font-size:10px;fill:#2b2828;font-family:Deja Vu Sans Mono">P</text></g>.</p>
+
+  </div>
   
   <div class="post">
     <h1 class="post-title">
@@ -539,77 +634,6 @@ you&#39;re not afraid to experiment a little.  The cost of losing the
 semicolon is pretty minor, the bigger issue is in finding the
 unmodified QWERTY extremely sluggish after using this approach.</p>
 
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/02/13/elisp-linting/">
-        Elisp linting options
-      </a>
-    </h1>
-
-    <span class="post-date">13 Feb 2015</span>
-
-    <p>I discovered today that I was using <code>declare-function</code> in a wrong way.
-So I&#39;ll share how to use it properly.</p>
-
-<h2 id="declare-function"><code>declare-function</code></h2>
-
-<p>I was just using it to shut up the byte compiler&#39;s <code>&quot;not known to be
-defined&quot;</code> warning.  Turns out that it can also be used to check if the
-functions actually exist in the file to which they point to. You can
-use <code>check-declare-file</code> to check one file, or
-<code>check-declare-directory</code> to recursively check the whole directory.</p>
-
-<p>Here&#39;s an example output:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">Warning (check-declare): helm-info.el said `Info-goto-node&#39; was defined in info.el.gz: arglist mismatch
-Warning (check-declare): helm-info.el said `Info-find-node&#39; was defined in info.el.gz: arglist mismatch
-Warning (check-declare): helm-plugin.el said `Info-goto-node&#39; was defined in info.el.gz: arglist mismatch
-Warning (check-declare): helm-plugin.el said `Info-find-node&#39; was defined in info.el.gz: arglist mismatch
-Warning (check-declare): helm-emms.el said `with-current-emms-playlist&#39; was defined in emms.el: function not found
-Warning (check-declare): projectile.el said `ggtags-ensure-project&#39; was defined in ggtags.el: file not found
-Warning (check-declare): projectile.el said `ggtags-update-tags&#39; was defined in ggtags.el: file not found
-Warning (check-declare): async-bytecomp.el said `package-desc-reqs&#39; was defined in package.el.gz: function not found
-</code></pre></div>
-<p>My mistake was assuming that the <code>FILE</code> argument of <code>declare-function</code>
-was somehow related to <code>require</code>.  But of course it had to be simply
-the name of the file that contains the said function. If the referenced file is in an external package,
-e.g. <code>(declare-function cider-repl-return &quot;ext:cider-repl&quot;)</code> can be used.</p>
-
-<h2 id="checkdoc"><code>checkdoc</code></h2>
-
-<p>This one is actually very useful once you embrace it.  It will
-<em>tsk-tsk</em> you until all your functions are documented. And since
-you&#39;re already writing a docstring, might as well make it
-good. Sometimes this leads me to removing a function that&#39;s called
-only once, just so that I don&#39;t have to document it.</p>
-
-<h2 id="byte-compile-file"><code>byte-compile-file</code></h2>
-
-<p>Leaving the obvious for last. This will speed up the code in addition to checking for errors.
-In <code>dired</code> you can use:</p>
-
-<ul>
-<li>several <kbd>m</kbd> (<code>dired-mark</code>) followed by <kbd>B</kbd> (<code>dired-do-byte-compile</code>).</li>
-<li>a single <kbd>*%</kbd> (<code>dired-mark-files-regexp</code>) <code>el$</code> followed by <kbd>B</kbd>.</li>
-</ul>
-
-<p>I even have a <code>compile</code> target in <code>lispy</code>&#39;s <a href="https://github.com/abo-abo/lispy/blob/master/Makefile">Makefile</a>:</p>
-<div class="highlight"><pre><code class="language-Makefile" data-lang="Makefile"><span class="nf">compile</span><span class="o">:</span>
-    <span class="k">$(</span>CASK<span class="k">)</span> <span class="nb">exec</span> <span class="k">$(</span>EMACS<span class="k">)</span> -batch <span class="k">$(</span>LOAD<span class="k">)</span> -l lispy-test.el -l compile.elt
-</code></pre></div>
-<p>Here are the contents of compile.elt:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;check-declare</span><span class="p">)</span>
-<span class="p">(</span><span class="k">setq</span> <span class="nv">check-declare-ext-errors</span> <span class="no">t</span><span class="p">)</span>
-<span class="p">(</span><span class="k">setq</span> <span class="nv">files</span> <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;lispy.el&quot;</span>
-              <span class="s">&quot;lispy-inline.el&quot;</span>
-              <span class="s">&quot;le-clojure.el&quot;</span>
-              <span class="s">&quot;le-scheme.el&quot;</span>
-              <span class="s">&quot;le-lisp.el&quot;</span><span class="p">))</span>
-<span class="p">(</span><span class="nf">mapc</span> <span class="nf">#&#39;</span><span class="nv">byte-compile-file</span> <span class="nv">files</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">ert</span> <span class="no">t</span><span class="p">)</span>
-<span class="p">(</span><span class="nf">apply</span> <span class="nf">#&#39;</span><span class="nv">check-declare-files</span> <span class="nv">files</span><span class="p">)</span>
-</code></pre></div>
   </div>
   
 </div>
