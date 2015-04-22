@@ -243,6 +243,67 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/03/17/more-info/">
+        More Info
+      </a>
+    </h1>
+
+    <span class="post-date">17 Mar 2015</span>
+
+    <p>I really liked Marcin Borkowski&#39;s post on <a href="http://mbork.pl/2014-12-27_Info_dispatch">Info dispatch</a>,
+where he describes how to open several <code>*info*</code> buffers for the most commonly used manuals.
+However, as I tried to call one of these functions today, I forgot the key binding.</p>
+
+<h2 id="hydra-to-the-rescue!">Hydra to the rescue!</h2>
+
+<p>Here&#39;s what I&#39;ve come up with:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">ora-open-info</span> <span class="p">(</span><span class="nv">topic</span> <span class="nv">bname</span><span class="p">)</span>
+  <span class="s">&quot;Open info on TOPIC in BNAME.&quot;</span>
+  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">get-buffer</span> <span class="nv">bname</span><span class="p">)</span>
+      <span class="p">(</span><span class="k">progn</span>
+        <span class="p">(</span><span class="nv">switch-to-buffer</span> <span class="nv">bname</span><span class="p">)</span>
+        <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nf">string-match</span> <span class="nv">topic</span> <span class="nv">Info-current-file</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">Info-goto-node</span> <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;(%s)&quot;</span> <span class="nv">topic</span><span class="p">))))</span>
+    <span class="p">(</span><span class="nv">info</span> <span class="nv">topic</span> <span class="nv">bname</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-info-to</span> <span class="p">(</span><span class="nb">:hint</span> <span class="no">nil</span> <span class="nb">:color</span> <span class="nv">teal</span><span class="p">)</span>
+  <span class="s">&quot;</span>
+<span class="s">_o_rg e_l_isp _e_macs _h_yperspec&quot;</span>
+  <span class="p">(</span><span class="s">&quot;o&quot;</span> <span class="p">(</span><span class="nv">ora-open-info</span> <span class="s">&quot;org&quot;</span> <span class="s">&quot;*org info*&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="p">(</span><span class="nv">ora-open-info</span> <span class="s">&quot;elisp&quot;</span> <span class="s">&quot;*elisp info*&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="s">&quot;e&quot;</span> <span class="p">(</span><span class="nv">ora-open-info</span> <span class="s">&quot;emacs&quot;</span> <span class="s">&quot;*emacs info*&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="s">&quot;h&quot;</span> <span class="p">(</span><span class="nv">ora-open-info</span> <span class="s">&quot;gcl&quot;</span> <span class="s">&quot;*hyperspec*&quot;</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="nf">define-key</span> <span class="nv">Info-mode-map</span> <span class="s">&quot;t&quot;</span> <span class="ss">&#39;hydra-info-to/body</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="the-plan">The Plan</h3>
+
+<p>I already have the <kbd>&lt;f1&gt; i</kbd> key binding hard wired to my fingers. So after I&#39;m in
+<em>any</em> Info buffer, I plan to press <kbd>t</kbd> and get this dispatch:</p>
+
+<p><img src="/download/hydra-info-dispatch.png" alt="hydra-info-dispatch.png"></p>
+
+<h2 id="getting-the-hyperspec">Getting the Hyperspec</h2>
+
+<p>I&#39;ve heard people lauding HTML while dumping on Info.
+I&#39;d suggest them to compare the <a href="http://www.lispworks.com/documentation/HyperSpec/Front/index.htm">Common Lisp Hyperspec</a> web site
+to this <a href="http://ftp.gnu.org/gnu/gcl/gcl.info.tgz">info file</a> extracted from there.
+Their contents are identical, but it&#39;s easier and more pleasant to use Info.</p>
+
+<p>After I downloaded the file, I extracted it to <code>./etc/info/gcl.info</code>, where <code>.</code> is my <code>emacs-d</code>.
+Then I just added this directory to the Info path:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">Info-additional-directory-list</span>
+      <span class="p">(</span><span class="nf">list</span> <span class="p">(</span><span class="nf">expand-file-name</span> <span class="s">&quot;etc/info/&quot;</span> <span class="nv">emacs-d</span><span class="p">)))</span>
+</code></pre></div>
+<h2 id="outro">Outro</h2>
+
+<p>Reading Info is pleasant and educational. In case you&#39;re new to Info, there&#39;s Info for Info. In Info
+format! Just press <kbd>&lt;f1&gt; i h</kbd>.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/03/16/try-j/">
         Try J
       </a>
@@ -580,151 +641,6 @@ like:</p>
 
 <p>Give the new back end <a href="https://github.com/abo-abo/swiper">a go</a>, see if you like it. It looks quite pretty and minimalist to me, but I&#39;m
 biased since I made it.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/03/12/ace-window-display-mode/">
-        ace-window display mode
-      </a>
-    </h1>
-
-    <span class="post-date">12 Mar 2015</span>
-
-    <h2 id="intro">Intro</h2>
-
-<p>Today, I&#39;ll describe a quite recent addition to <a href="https://github.com/abo-abo/ace-window">ace-window</a>,
-which comes from the idea by <a href="https://github.com/deftsp">@deftsp</a>:</p>
-
-<blockquote>
-<p>Why not show the <code>ace-window</code> dispatch keys in the mode line all the time?</p>
-</blockquote>
-
-<p>Certainly, there&#39;s no reason not to have this option, and it actually makes the whole interface
-better, since it becomes less feedback-based:</p>
-
-<ul>
-<li>You glance at a window that you want.</li>
-<li>You know which key you have to press <em>before</em> you call <code>ace-window</code></li>
-<li>You make a single-step call instead of:
-
-<ul>
-<li>press <code>ace-window</code> shortcut,</li>
-<li>read the dispatch char,</li>
-<li>press the dispatch char.</li>
-</ul></li>
-</ul>
-
-<p>The feature is implemented as <code>ace-window-display-mode</code> - a minor mode that you can toggle on or
-off whenever you feel like it.</p>
-
-<p>Here&#39;s how it looks like:</p>
-
-<p><img src="/download/ace-window-display-mode.png" alt="ace-window-display-mode.png"></p>
-
-<p>As you can see, I&#39;ve made <code>aw-keys</code> list short on purpose, just to show you that the full path
-will be displayed. See, for instance, the <code>*scratch*</code> window: its path is <code>gf</code>.</p>
-
-<h2 id="implementation">Implementation</h2>
-
-<p>Since the implementation is quite short, I&#39;ll post it here and go over a few things that might
-interest people who write Elisp (on some level, please don&#39;t mock me for being obvious).</p>
-
-<p>As per request of a curious reader, I&#39;ve updated the code with the comments from below.  Don&#39;t try
-this at home, excessive commenting is bad style.</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="c1">;; Something that modifies the Emacs behavior should</span>
-<span class="c1">;; preferrably be implemented as a minor mode.</span>
-<span class="c1">;;;###autoload</span>
-<span class="p">(</span><span class="nb">define-minor-mode</span> <span class="nv">ace-window-display-mode</span>
-    <span class="s">&quot;Minor mode for showing the ace window key in the mode line.&quot;</span>
-  <span class="c1">;; And since this minor mode isn&#39;t tied to a particular</span>
-  <span class="c1">;; buffer, I declare it as global.</span>
-  <span class="c1">;;</span>
-  <span class="c1">;; An interesting quirk is that I have to put *something*</span>
-  <span class="c1">;; between the docstring and the body, otherwise it won&#39;t</span>
-  <span class="c1">;; work.</span>
-  <span class="nb">:global</span> <span class="no">t</span>
-  <span class="c1">;; Dispatch on the variable symbol of the mode -</span>
-  <span class="c1">;; `ace-window-display-mode`.  `define-minor-mode&#39; will</span>
-  <span class="c1">;; define both a variable and function symbol.</span>
-  <span class="p">(</span><span class="k">if</span> <span class="nv">ace-window-display-mode</span>
-      <span class="p">(</span><span class="k">progn</span>
-        <span class="c1">;; Update the window parameters</span>
-        <span class="p">(</span><span class="nv">aw-update</span><span class="p">)</span>
-        <span class="c1">;; Since `mode-line-format&#39; is a buffer-local</span>
-        <span class="c1">;; variable, I set it with `set-default&#39;, in order</span>
-        <span class="c1">;; for the change to not just happen in the current</span>
-        <span class="c1">;; buffer.</span>
-        <span class="p">(</span><span class="nf">set-default</span>
-         <span class="ss">&#39;mode-line-format</span>
-         <span class="o">`</span><span class="p">((</span><span class="nv">ace-window-display-mode</span>
-            <span class="p">(</span><span class="nb">:eval</span> <span class="p">(</span><span class="nf">window-parameter</span> <span class="p">(</span><span class="nf">selected-window</span><span class="p">)</span>
-                                     <span class="ss">&#39;ace-window-path</span><span class="p">)))</span>
-           <span class="o">,@</span><span class="p">(</span><span class="nf">default-value</span> <span class="ss">&#39;mode-line-format</span><span class="p">)))</span>
-        <span class="p">(</span><span class="nf">force-mode-line-update</span> <span class="no">t</span><span class="p">)</span>
-        <span class="c1">;; Each time a window is created or deleted, Emacs</span>
-        <span class="c1">;; will run the `window-configuration-change-hook&#39; -</span>
-        <span class="c1">;; exactly what I need to update `mode-line-format&#39;.</span>
-        <span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;window-configuration-change-hook</span> <span class="ss">&#39;aw-update</span><span class="p">))</span>
-    <span class="p">(</span><span class="nf">set-default</span>
-     <span class="ss">&#39;mode-line-format</span>
-     <span class="p">(</span><span class="nv">assq-delete-all</span>
-      <span class="ss">&#39;ace-window-display-mode</span>
-      <span class="p">(</span><span class="nf">default-value</span> <span class="ss">&#39;mode-line-format</span><span class="p">)))</span>
-    <span class="p">(</span><span class="nv">remove-hook</span> <span class="ss">&#39;window-configuration-change-hook</span> <span class="ss">&#39;aw-update</span><span class="p">)))</span>
-
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">aw-update</span> <span class="p">()</span>
-  <span class="s">&quot;Update ace-window-path window parameter for all windows.&quot;</span>
-  <span class="p">(</span><span class="nv">avy-traverse</span>
-   <span class="p">(</span><span class="nv">avy-tree</span> <span class="p">(</span><span class="nv">aw-window-list</span><span class="p">)</span> <span class="nv">aw-keys</span><span class="p">)</span>
-   <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">path</span> <span class="nv">leaf</span><span class="p">)</span>
-     <span class="c1">;; Use `set-window-parameter&#39; to store a variable for</span>
-     <span class="c1">;; each window.  Buffer local variables would not work</span>
-     <span class="c1">;; here, since one buffer can be displayed in multiple</span>
-     <span class="c1">;; windows, and those would need a different key each.</span>
-     <span class="p">(</span><span class="nf">set-window-parameter</span>
-      <span class="nv">leaf</span> <span class="ss">&#39;ace-window-path</span>
-      <span class="p">(</span><span class="nf">propertize</span>
-       <span class="p">(</span><span class="nf">apply</span> <span class="nf">#&#39;string</span> <span class="p">(</span><span class="nf">reverse</span> <span class="nv">path</span><span class="p">))</span>
-       <span class="ss">&#39;face</span> <span class="ss">&#39;aw-mode-line-face</span><span class="p">)))))</span>
-</code></pre></div>
-<p>Since I&#39;m writing something that modifies Emacs behavior when it&#39;s enabled, I first try to implement
-it as a minor mode. And since this minor mode isn&#39;t tied to a particular buffer, I declare it as
-global.</p>
-
-<p>An interesting quirk is that I have to put <em>something</em> between the docstring and the body, otherwise
-it won&#39;t work. In this case, I put <code>:global t</code>.</p>
-
-<p>Next, follows that standard dispatch on the variable symbol of the mode - <code>ace-window-display-mode</code>.
-The <code>define-minor-mode</code> macro will make both variable and function definition for the symbol it&#39;s
-given:</p>
-
-<ul>
-<li>the variable is used to check if the mode is on.</li>
-<li>the function is used to turn the mode on / off.</li>
-</ul>
-
-<p>Note the use of <code>assq-delete-all</code>: this is for when some other package modifies the
-<code>mode-line-format</code> after <code>ace-window</code> does. In that case, <code>ace-window</code>&#39;s entry wouldn&#39;t be the first
-one any more.</p>
-
-<p>Since <code>mode-line-format</code> is a buffer-local variable, I set it with <code>set-default</code>, in order for the
-change to not just happen in the current buffer.</p>
-
-<p>Each time a window is created or deleted, Emacs will run the <code>window-configuration-change-hook</code> -
-exactly what I need to update <code>mode-line-format</code>.</p>
-
-<p>One final trick is to use <code>set-window-parameter</code> to store a variable for each window.  Buffer local
-variables would not work here, since one buffer can be displayed in multiple windows, and those
-would need a different key each.</p>
-
-<p>I really like how the <code>avy-tree</code> / <code>avy-traverse</code> interface ended up as: the same functions are used
-for selecting window and setting <code>mode-line-format</code>.</p>
-
-<h2 id="outro">Outro</h2>
-
-<p>I hope that you enjoy the update, and keep those interesting ideas coming!</p>
 
   </div>
   

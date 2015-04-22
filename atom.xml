@@ -4,13 +4,158 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-04-19T14:52:58+02:00</updated>
+ <updated>2015-04-22T21:26:10+02:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Swiper 0.3.0 is out, with ivy-mode.</title>
+   <link href="http://oremacs.com/2015/04/22/swiper-0.3.0/"/>
+   <updated>2015-04-22T00:00:00+02:00</updated>
+   <id>http://oremacs.com/2015/04/22/swiper-0.3.0</id>
+   <content type="html">&lt;p&gt;This &lt;a href=&quot;https://github.com/abo-abo/swiper/releases/tag/0.3.0&quot;&gt;release&lt;/a&gt; packs more than 90 commits, which is quite a lot for me.
+The most important part of this release is &lt;code&gt;ivy-mode&lt;/code&gt;, which is a nice alternative to &lt;code&gt;ido-mode&lt;/code&gt; or &lt;code&gt;helm-mode&lt;/code&gt;.
+I&amp;#39;ve mentioned it already in &lt;a href=&quot;http://oremacs.com/2015/04/16/ivy-mode/&quot;&gt;an earlier post&lt;/a&gt;,
+I&amp;#39;ll just review all the little details, changes and customizations here.&lt;/p&gt;
+
+&lt;h2 id=&quot;important:-remove-the-old-ivy-package&quot;&gt;Important: remove the old &lt;code&gt;ivy&lt;/code&gt; package&lt;/h2&gt;
+
+&lt;p&gt;One important change related to MELPA is that the &lt;code&gt;ivy&lt;/code&gt; package was merged into &lt;code&gt;swiper&lt;/code&gt; package. So if you still have a stand-alone &lt;code&gt;ivy&lt;/code&gt; package, you should delete it, or you&amp;#39;ll get incompatibility problems.&lt;/p&gt;
+
+&lt;h2 id=&quot;video-demo-of-counsel-git-grep&quot;&gt;Video Demo of &lt;code&gt;counsel-git-grep&lt;/code&gt;&lt;/h2&gt;
+
+&lt;p&gt;If you like videos, you can watch the &lt;a href=&quot;https://www.youtube.com/watch?v=AgRsYOJi6ao&quot;&gt;this quick demo&lt;/a&gt;
+which mostly shows off the new &lt;code&gt;counsel-git-grep&lt;/code&gt; function.&lt;/p&gt;
+
+&lt;h2 id=&quot;fixes&quot;&gt;Fixes&lt;/h2&gt;
+
+&lt;h3 id=&quot;add-work-around-for-window-start-being-not-current&quot;&gt;Add work-around for &lt;code&gt;window-start&lt;/code&gt; being not current&lt;/h3&gt;
+
+&lt;p&gt;From now on, you won&amp;#39;t encounter some un-highlighted matches when your window is scrolled.&lt;/p&gt;
+
+&lt;h3 id=&quot;make-thing-at-point-work&quot;&gt;Make &lt;code&gt;thing-at-point&lt;/code&gt; work&lt;/h3&gt;
+
+&lt;p&gt;&lt;kbd&gt;C-h v&lt;/kbd&gt; and &lt;kbd&gt;C-h f&lt;/kbd&gt; should select thing-at-point properly.&lt;/p&gt;
+
+&lt;h3 id=&quot;don&amp;#39;t-try-to-fontify-huge-buffers&quot;&gt;Don&amp;#39;t try to fontify huge buffers&lt;/h3&gt;
+
+&lt;p&gt;It&amp;#39;s a nice feature of swiper that everything in the minibuffer is fontified.  However, this can cause a slowdown for buffers with x10000 lines. So this feature is automatically turned off for these large buffers.&lt;/p&gt;
+
+&lt;h3 id=&quot;exclude-a-few-modes-from-font-locking&quot;&gt;Exclude a few modes from font locking&lt;/h3&gt;
+
+&lt;p&gt;Some modes just misbehave when &lt;code&gt;font-lock-ensure&lt;/code&gt; is called. Excluded:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;org-agenda-mode&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;dired-mode&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;new-features&quot;&gt;New Features&lt;/h2&gt;
+
+&lt;h3 id=&quot;ivy-mode:-complete-everything-with-ivy&quot;&gt;&lt;code&gt;ivy-mode&lt;/code&gt;: complete everything with Ivy&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;ivy-mode&lt;/code&gt; uses swiper&amp;#39;s approach to completion for almost all completion in Emacs, like:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;execute-extended-command&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;package-install&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;find-file&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;See the &lt;a href=&quot;https://github.com/abo-abo/swiper/wiki/File-Completion&quot;&gt;wiki page&lt;/a&gt; for the details on the key bindings related to &lt;code&gt;ivy-mode&lt;/code&gt;, which are especially important to know for &lt;code&gt;find-file&lt;/code&gt;.  Also see the &lt;a href=&quot;https://www.youtube.com/watch?v=VvnJQpTFVDc&quot;&gt;intro video&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;new-counsel-functions&quot;&gt;New Counsel functions&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;counsel-describe-variable&lt;/code&gt; - replacement for &lt;kbd&gt;C-h v&lt;/kbd&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;counsel-describe-function&lt;/code&gt; - replacement for &lt;kbd&gt;C-h f&lt;/kbd&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;counsel-info-lookup-symbol&lt;/code&gt; - just a wrapper around &lt;code&gt;info-lookup-symbol&lt;/code&gt;, you get the same behavior by just calling &lt;code&gt;info-lookup-symbol&lt;/code&gt; with &lt;code&gt;ivy-mode&lt;/code&gt; on.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;counsel-unicode-char&lt;/code&gt; - replacement for &lt;code&gt;ucs-insert&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;counsel-git-grep&quot;&gt;&lt;code&gt;counsel-git-grep&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;This is a really cool command for grepping at once all the files in your current git repository. For smaller repositories (&amp;lt;20000) lines, ivy handles the completion by itself.  For larger repositories, it defers the work to &lt;code&gt;git grep&lt;/code&gt;. It works really well for the Emacs repo with its 3,000,000 lines, especially if you&amp;#39;re using Emacs 25 (from &lt;code&gt;emacs-snapshot&lt;/code&gt; or self-built).&lt;/p&gt;
+
+&lt;p&gt;This function makes use of &lt;kbd&gt;C-M-n&lt;/kbd&gt; and &lt;kbd&gt;C-M-p&lt;/kbd&gt; bindings, which switch between candidates without exiting the minibuffer. Also, they highlight the current candidate with the swiper faces. You can think of this command as multi-swiper.&lt;/p&gt;
+
+&lt;p&gt;Even for very large repos, it will always display the amount of matches correctly. Also note that swiper-style regex is used here (spaces are wild), and the case is ignored.&lt;/p&gt;
+
+&lt;h3 id=&quot;the-arrows-can-take-numeric-arguments&quot;&gt;The arrows can take numeric arguments&lt;/h3&gt;
+
+&lt;p&gt;&lt;kbd&gt;C-n&lt;/kbd&gt; / &lt;kbd&gt;C-p&lt;/kbd&gt;, &lt;kbd&gt;C-s&lt;/kbd&gt; / &lt;kbd&gt;C-r&lt;/kbd&gt;, and &lt;kbd&gt;C-M-n&lt;/kbd&gt; / &lt;kbd&gt;C-M-p&lt;/kbd&gt; can all take numeric args, e.g. &lt;kbd&gt;M-5&lt;/kbd&gt; or &lt;kbd&gt;C-u&lt;/kbd&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;add-a-recenter-binding&quot;&gt;Add a recenter binding&lt;/h3&gt;
+
+&lt;p&gt;&lt;kbd&gt;C-l&lt;/kbd&gt; will recenter the window in which swiper was called.&lt;/p&gt;
+
+&lt;h3 id=&quot;look-up-ivy-key-bindings-with-c-h-m&quot;&gt;Look up Ivy key bindings with &lt;kbd&gt;C-h m&lt;/kbd&gt;&lt;/h3&gt;
+
+&lt;p&gt;While in the minibuffer, press &lt;kbd&gt;C-h m&lt;/kbd&gt; to see the active modes. Ivy also has a paragraph with its bindings.&lt;/p&gt;
+
+&lt;h3 id=&quot;use-c-v-and-m-v-to-scroll&quot;&gt;Use &lt;kbd&gt;C-v&lt;/kbd&gt; and &lt;kbd&gt;M-v&lt;/kbd&gt; to scroll&lt;/h3&gt;
+
+&lt;p&gt;You can use these bindings to speed up your minibuffer scrolling.&lt;/p&gt;
+
+&lt;h3 id=&quot;allow-c-.-to-jump-to-definition&quot;&gt;Allow &lt;kbd&gt;C-.&lt;/kbd&gt; to jump-to-definition&lt;/h3&gt;
+
+&lt;p&gt;For &lt;code&gt;counsel-describe-variable&lt;/code&gt; and &lt;code&gt;counsel-describe-function&lt;/code&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;pressing &lt;kbd&gt;C-m&lt;/kbd&gt; will actually describe the current candidate.&lt;/li&gt;
+&lt;li&gt;pressing &lt;kbd&gt;C-.&lt;/kbd&gt; will instead jump to definition of the the current candidate.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;This is very useful for me, I jump to definitions more often that describe.&lt;/p&gt;
+
+&lt;h3 id=&quot;bind-arrows&quot;&gt;Bind arrows&lt;/h3&gt;
+
+&lt;p&gt;The actual arrow keys are also bound to the corresponding Emacs arrows.&lt;/p&gt;
+
+&lt;h3 id=&quot;add-a-way-to-exit-ignoring-the-candidates&quot;&gt;Add a way to exit ignoring the candidates&lt;/h3&gt;
+
+&lt;p&gt;If your current input matches a candidate, &lt;kbd&gt;C-m&lt;/kbd&gt; and &lt;kbd&gt;C-j&lt;/kbd&gt; will exit with that candidate.  If you want to exit with your exact input instead, press &lt;kbd&gt;C-u C-j&lt;/kbd&gt;.  This is very useful for creating new files and directories.&lt;/p&gt;
+
+&lt;h3 id=&quot;use-m-q-to-toggle-regexp-quote&quot;&gt;Use &lt;kbd&gt;M-q&lt;/kbd&gt; to toggle &lt;code&gt;regexp-quote&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;This can be useful while completing file names (with a lot of dots). Pressing &lt;kbd&gt;M-q&lt;/kbd&gt; toggles between regex and non-regex matching.&lt;/p&gt;
+
+&lt;h3 id=&quot;customize-ivy-re-builders-alist&quot;&gt;Customize &lt;code&gt;ivy-re-builders-alist&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;This is pretty intricate, look up the variable to see the details. In short, you can use this to apply `regexp-quote&amp;#39; for some types of completion if you want.&lt;/p&gt;
+
+&lt;h3 id=&quot;customize-what-to-do-on-del-error&quot;&gt;Customize what to do on &lt;kbd&gt;DEL&lt;/kbd&gt; error&lt;/h3&gt;
+
+&lt;p&gt;The standard behavior on a &lt;kbd&gt;DEL&lt;/kbd&gt; error (usually empty minibuffer) is to exit the minibuffer.  I like this behavior, since it&amp;#39;s similar to the behavior to fixing wrongly typed chars: only in this case &lt;kbd&gt;DEL&lt;/kbd&gt; &amp;quot;fixes&amp;quot; a wrongly typed command.&lt;/p&gt;
+
+&lt;p&gt;But if you want to customize it, just set &lt;code&gt;ivy-on-del-error-function&lt;/code&gt; to something other than &lt;code&gt;minibuffer-keyboard-quit&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;customize-ivy-extra-directories&quot;&gt;Customize &lt;code&gt;ivy-extra-directories&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;Customize this if you don&amp;#39;t want to see &lt;code&gt;../&lt;/code&gt; and &lt;code&gt;./&lt;/code&gt; while completing file names.&lt;/p&gt;
+
+&lt;h3 id=&quot;customize-ivy-sort-functions-alist&quot;&gt;Customize &lt;code&gt;ivy-sort-functions-alist&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;Use this variable to customize sorting, depending on what you&amp;#39;re completing.  For example:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ivy-sort-functions-alist&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;read-file-name-internal&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ivy-sort-file-function-default&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;internal-complete-buffer&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;counsel-git-grep-function&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;string-lessp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;customize-ivy-subdir-face&quot;&gt;Customize &lt;code&gt;ivy-subdir-face&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;While completing file names, the directories will use &lt;code&gt;ivy-subdir-face&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;Big thanks to all who contributed, especially &lt;a href=&quot;https://github.com/tsdh&quot;&gt;@tsdh&lt;/a&gt;.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Grep in a git repository using ivy</title>
