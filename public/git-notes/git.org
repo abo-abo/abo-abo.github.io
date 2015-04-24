@@ -254,6 +254,18 @@ sudo ln -s /usr/share/doc/git/contrib/subtree/git-subtree.sh $(git --exec-path)/
 #+begin_src sh
 git push origin --delete scratch/outline
 #+end_src
+** submodule
+*** remove submodule
+#+begin_src sh
+git submodule deinit foo
+# no trailing slash
+git rm foo
+#+end_src
+*** add submodule
+#+begin_src sh
+git submodule add git@github.com:abo-abo/plain-org-wiki.git git/plain-org-wiki
+#+end_src
+
 * Emacs tools
 ** magit
 *** magit shortcuts

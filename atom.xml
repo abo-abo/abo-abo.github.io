@@ -4,13 +4,142 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-04-22T21:26:10+02:00</updated>
+ <updated>2015-04-24T16:41:59+02:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Oremacs config is on Github</title>
+   <link href="http://oremacs.com/2015/04/24/oremacs-config/"/>
+   <updated>2015-04-24T00:00:00+02:00</updated>
+   <id>http://oremacs.com/2015/04/24/oremacs-config</id>
+   <content type="html">&lt;p&gt;I noticed that the packages that I&amp;#39;ve published on
+&lt;a href=&quot;https://github.com/abo-abo&quot;&gt;Github&lt;/a&gt; in the last year did get a nice
+boost in quality just from being published, viewed, used and commented
+on.&lt;/p&gt;
+
+&lt;p&gt;So it makes sense to do the same for my full Emacs config, which lives in the &lt;a href=&quot;https://github.com/abo-abo/oremacs&quot;&gt;oremacs&lt;/a&gt; repository as of today.&lt;/p&gt;
+
+&lt;p&gt;The config is personal in the sense that I&amp;#39;m actually using it
+verbatim, but it&amp;#39;s been configured in a way that&amp;#39;s it&amp;#39;s easy to
+replicate and modify it.&lt;/p&gt;
+
+&lt;h2 id=&quot;who-can-benefit-from-this-config&quot;&gt;Who can benefit from this config&lt;/h2&gt;
+
+&lt;p&gt;The audience is people like me, who like to tinker with Elisp just for
+fun of it.  If you want things to just work, or you find learning
+Elisp a chore, it&amp;#39;s not for you.&lt;/p&gt;
+
+&lt;p&gt;The config won&amp;#39;t work initially, it won&amp;#39;t work always, but when it
+finally does work (hopefully), it will be glorious!&lt;/p&gt;
+
+&lt;h2 id=&quot;installation-and-running&quot;&gt;Installation and Running&lt;/h2&gt;
+
+&lt;h3 id=&quot;requirements&quot;&gt;Requirements&lt;/h3&gt;
+
+&lt;p&gt;Emacs 24 is required. Obviously, newer versions are better, but the
+default &lt;code&gt;emacs24&lt;/code&gt; that you get from the package manager should work.&lt;/p&gt;
+
+&lt;p&gt;I&amp;#39;m currently switching between Emacs 24.5.2 built from source and the
+current master from &lt;a href=&quot;https://savannah.gnu.org/git/?group=emacs&quot;&gt;git&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;install-command&quot;&gt;Install command&lt;/h3&gt;
+
+&lt;p&gt;This config doesn&amp;#39;t assume to become your main config when you install
+it.  It installs in-place in the git directory and will start from
+there without touching your main config.  But you still get access to
+all your stuff, like bookmarks stored in your actual &lt;code&gt;~/.emacs.d/&lt;/code&gt;
+etc.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; ~/git
+git clone https://github.com/abo-abo/oremacs
+&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;oremacs
+make install
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;run-command&quot;&gt;Run command&lt;/h3&gt;
+
+&lt;p&gt;Run without updating:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;make run
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Run with an upstream + ELPA update:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;make up
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Run with an upstream + ELPA + org-mode + CEDET update:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;make install
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;perks&quot;&gt;Perks&lt;/h2&gt;
+
+&lt;h3 id=&quot;standalone&quot;&gt;Standalone&lt;/h3&gt;
+
+&lt;p&gt;You can try it without messing up your current Emacs config.  I actually have multiple versions of this on my system to work-around incompatibility between versions. This way, I can use my full setup even in case I get a bug report for an older Emacs version.&lt;/p&gt;
+
+&lt;h3 id=&quot;fast-start-up&quot;&gt;Fast start up&lt;/h3&gt;
+
+&lt;p&gt;With a SSD, it starts in 1 second. Most features are autoloaded and it&amp;#39;s easy to add new autoloaded features.&lt;/p&gt;
+
+&lt;h3 id=&quot;tracks-the-most-recent-org-mode-and-cedet&quot;&gt;Tracks the most recent org-mode and CEDET&lt;/h3&gt;
+
+&lt;p&gt;Since these packages take a long time to byte compile, they are updated not with &lt;code&gt;make up&lt;/code&gt; but with &lt;code&gt;make install&lt;/code&gt;. They are actually git submodules, which means that they won&amp;#39;t update if I don&amp;#39;t update them in the upstream.&lt;/p&gt;
+
+&lt;h3 id=&quot;bankruptcy-proof&quot;&gt;Bankruptcy-proof&lt;/h3&gt;
+
+&lt;p&gt;It&amp;#39;s hard to become Emacs-bankrupt with this config, since the config is composed of many independent pieces that you can simply ignore if you don&amp;#39;t need them.&lt;/p&gt;
+
+&lt;h3 id=&quot;anti-rsi-qwerty-mod&quot;&gt;Anti-RSI QWERTY mod&lt;/h3&gt;
+
+&lt;p&gt;The config comes with its own &lt;code&gt;.Xmodmap&lt;/code&gt; that makes &lt;kbd&gt;;&lt;/kbd&gt; into an additional modifier. RSI savers:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;;-v&lt;/kbd&gt; instead of &lt;kbd&gt;Enter&lt;/kbd&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;;-o&lt;/kbd&gt; instead of &lt;kbd&gt;Backspace&lt;/kbd&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;;-f&lt;/kbd&gt; instead of &lt;kbd&gt;Shift-9&lt;/kbd&gt; and &lt;kbd&gt;Shift-0&lt;/kbd&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;;-a&lt;/kbd&gt; instead of &lt;kbd&gt;-&lt;/kbd&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;;-s&lt;/kbd&gt; instead of &lt;kbd&gt;Shift--&lt;/kbd&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;;-q&lt;/kbd&gt; instead of &lt;kbd&gt;Shift-&amp;#39;&lt;/kbd&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;;-e&lt;/kbd&gt; instead of &lt;kbd&gt;=&lt;/kbd&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;;-u&lt;/kbd&gt; in addition / instead of &lt;kbd&gt;C-u&lt;/kbd&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;And obviously the replacements for the two keys that the mod takes away:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;;-j&lt;/kbd&gt; instead of &lt;kbd&gt;;&lt;/kbd&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;;-d&lt;/kbd&gt; instead of &lt;kbd&gt;Shift-;&lt;/kbd&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;One more Elisp-level RSI-saver is the swap between &lt;kbd&gt;C-p&lt;/kbd&gt; and &lt;kbd&gt;C-h&lt;/kbd&gt;. Moving up/down line is very important, and it&amp;#39;s nice to have these keys close, which &lt;kbd&gt;C-n&lt;/kbd&gt; and &lt;kbd&gt;C-h&lt;/kbd&gt; are.&lt;/p&gt;
+
+&lt;p&gt;It also includes:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;a bunch of Hydras that save you key strokes.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;lispy-mode&lt;/code&gt; which quickens any LISP mode, especially Elisp.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;worf-mode&lt;/code&gt; which quickens &lt;code&gt;org-mode&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ivy-mode&lt;/code&gt; which quickens all completion.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;swiper&lt;/code&gt; which quickens &lt;code&gt;isearch&lt;/code&gt; (by replacing it).&lt;/li&gt;
+&lt;li&gt;C/C++ is customized with &lt;code&gt;function-args-mode&lt;/code&gt; and a bunch of hacks.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;org-mode-starter&quot;&gt;Org mode starter&lt;/h3&gt;
+
+&lt;p&gt;The config starts you off with a fully configured &lt;code&gt;org-mode&lt;/code&gt; setup that includes:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;gtd.org for getting things done.&lt;/li&gt;
+&lt;li&gt;ent.org to track entertainment.&lt;/li&gt;
+&lt;li&gt;wiki folder for quickly starting and selecting wikis.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;I hope that you try and enjoy the new config. Perhaps not verbatim,
+but if you find the tips on this blog helpful, this config is their
+actual implementation that you can use for reference.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Swiper 0.3.0 is out, with ivy-mode.</title>
