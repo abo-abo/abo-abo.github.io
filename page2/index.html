@@ -243,6 +243,71 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/04/15/hydra-idle-hint/">
+        Display the initial Hydra hint with a delay
+      </a>
+    </h1>
+
+    <span class="post-date">15 Apr 2015</span>
+
+    <p>More hydra goodness incoming, this time thanks to <a href="https://github.com/joedicastro">@joedicastro</a>.
+Firstly, he contributed this awesome-looking <code>twittering-mode</code> hydra to <a href="https://github.com/abo-abo/hydra/wiki/Twittering">the wiki</a>:</p>
+
+<p><img src="https://camo.githubusercontent.com/c2c541ec30563223701609c24c5ed5ec7ebf59b6/68747470733a2f2f7062732e7477696d672e636f6d2f6d656469612f43436b336a4851556b4141436e62502e706e673a6c61726765" alt="hydra-twittering.png"></p>
+
+<p>And a similarly nice one for <a href="https://github.com/abo-abo/hydra/wiki/Helm-2">helm</a>:</p>
+
+<p><img src="https://camo.githubusercontent.com/757f726b2010173505f1c2b32cb9292f9c20ddaa/687474703a2f2f692e696d6775722e636f6d2f696a47703675392e706e67" alt="hydra-helm-2.png"></p>
+
+<p>You can look up the code for both hydras by following the above two links.</p>
+
+<p>Secondly, he gave me a nice idea in <a href="https://github.com/abo-abo/hydra/issues/108">#108</a>:</p>
+
+<blockquote>
+<p>A nice thing that guide-key has is that you can set an idle time to
+wait until you press a key to activate any head before show the
+hydra hints buffer (explained in hydra terms). This is very helpful
+when you know the key bindings by memory and you do not need to see
+the hints buffer, but if you forget how to activate any head, you
+simple press the hydra binding and wait the &quot;idle time&quot; and the
+hints buffer is shown to help you to choose the right next binding.</p>
+</blockquote>
+
+<p>So this option is now also possible. Here&#39;s an example, using <code>hydra-toggle</code> from hydra-examples.el:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-toggle</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">blue</span>
+                        <span class="nb">:idle</span> <span class="mf">1.0</span><span class="p">)</span>
+  <span class="s">&quot;toggle&quot;</span>
+  <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="nv">abbrev-mode</span> <span class="s">&quot;abbrev&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;d&quot;</span> <span class="nv">toggle-debug-on-error</span> <span class="s">&quot;debug&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;f&quot;</span> <span class="nv">auto-fill-mode</span> <span class="s">&quot;fill&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;t&quot;</span> <span class="nv">toggle-truncate-lines</span> <span class="s">&quot;truncate&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span> <span class="s">&quot;cancel&quot;</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c C-v&quot;</span><span class="p">)</span> <span class="ss">&#39;hydra-toggle/body</span><span class="p">)</span>
+</code></pre></div>
+<p>So the single change from the old code is <code>:idle 1.0</code>, which means:</p>
+
+<blockquote>
+<p>After a call to <code>hydra-toggle/body</code>, instead of displaying the hint
+as usual, start a timer for 1.0 seconds. Once the timer runs out,
+display the hint.  But if the hydra has exited before that time,
+cancel the timer.</p>
+</blockquote>
+
+<p>Typically, I&#39;m not a huge fan of timers, but it&#39;s nice to have the
+option.  And indeed, I&#39;ve been noticing that I could do without a hint
+for some simple and more often used hydras. But a command can go from
+often to barely used quickly, and disabling the hint altogether seems
+too harsh. A timer could be a nice middle ground, especially since I
+can decide whether to use it or not and the interval for each specific
+hydra.</p>
+
+<p>Anyway, thanks for the contributions. Enjoy the new feature, and keep
+those good ideas coming!</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/04/14/hydra-org-mode/">
         Org-mode Hydras incoming!
       </a>
@@ -868,70 +933,6 @@ be made buffer-local so that <kbd>T</kbd> works appropriately for Clojure, CL an
 just Elisp. If you&#39;d like to add support for your favorite dialect in this way, I&#39;d be happy to
 explain some details if needed and to merge the PR. Happy hacking!</p>
 
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/04/02/lispy-paredit-emulation/">
-        Paredit emulation in lispy
-      </a>
-    </h1>
-
-    <span class="post-date">02 Apr 2015</span>
-
-    <h2 id="intro">Intro</h2>
-
-<p>I just finished this feature today.  Almost all Paredit functionality is available in terms of
-<a href="https://github.com/abo-abo/lispy">lispy</a>&#39;s own functions.  The only functions that I didn&#39;t
-implement were the ones that I didn&#39;t find any use for: <code>paredit-backslash</code> (ugh, prompts),
-<code>paredit-comment-dwim</code> (covered by regular <kbd>;</kbd>), <code>paredit-forward-down</code> and
-<code>paredit-backward-down</code> (both just move out of special, and throw a lot).</p>
-
-<h2 id="setting-the-keymap-theme">Setting the keymap theme</h2>
-
-<p>So if you ever thought that <code>lispy</code> could be a good idea, but the non-special key bindings are weird,
-and you&#39;re too used to Paredit, you can now try this setting:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">lispy-set-key-theme</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">special</span> <span class="nv">paredit</span> <span class="nv">c-digits</span><span class="p">))</span>
-</code></pre></div>
-<p>Here&#39;s the setting that I&#39;m using, since I love <code>lispy</code>&#39;s default bindings:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">lispy-set-key-theme</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">oleh</span> <span class="nv">special</span> <span class="nv">lispy</span> <span class="nv">c-digits</span><span class="p">))</span>
-</code></pre></div>
-<p>The default setting actually is this one, <code>lispy-mode-map-oleh</code> is an additional map for use with
-my <a href="http://oremacs.com/2015/02/14/semi-xmodmap/">Xmodmap setup</a>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">lispy-set-key-theme</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">special</span> <span class="nv">lispy</span> <span class="nv">c-digits</span><span class="p">))</span>
-</code></pre></div>
-<p>Each item in the list passed to <code>lispy-set-key-theme</code> designates a keymap to turn on.
-So in a non-LISP buffer you could turn on just the special map:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">lispy-set-key-theme</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">special</span><span class="p">))</span>
-</code></pre></div>
-<p>This would mean that zero regular bindings get overridden, but when the point is before or after a
-paren, you get the <code>lispy</code> bindings. Actually, I&#39;ve just enabled <code>lispy-mode</code> for <code>markdown-mode</code>,
-and it&#39;s working great. Unfortunately, I haven&#39;t yet figured out how to make a minor mode&#39;s keymap
-buffer-local. Maybe someone reading has an idea.</p>
-
-<h2 id="the-screencast">The screencast</h2>
-
-<p>I went through all of Paredit tests and made ERT tests out of them, to make sure that the features
-are actually working. I&#39;ve recorded a short (&lt;3 minutes)
-<a href="https://www.youtube.com/watch?v=RDcc3RBQ9Gw">screencast</a> of implementing one of the tests.  Have a
-look, maybe you&#39;ll something interesting in my setup. There are two short pauses in the video,
-that&#39;s just me thinking how to write down a function. My ERT and Magit workflows are also shown.</p>
-
-<h2 id="outro">Outro</h2>
-
-<p>The new key-theme feature is meant to make <code>lispy</code> super-not-annoying. I think it&#39;s useful, since
-using <code>lispy</code> in Paredit mode was annoying for me, so the opposite has to be true for people that
-are used to Paredit. So if you notice a bug, please <a href="https://github.com/abo-abo/lispy/issues">report it</a>, bug
-reports are very important for my non-annoyance agenda.</p>
-
-<p>Finally, if you&#39;re super-devoted to Paredit and don&#39;t want to drop it, now you can easily have both
-<code>lispy-mode</code> and <code>paredit-mode</code> on. Just use this setting:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">lispy-set-key-theme</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">special</span><span class="p">))</span>
-</code></pre></div>
-<p>Or this one if you additionally want <kbd>C-1</kbd> to show the inline doc, and <kbd>C-2</kbd> to show
-the inline args:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">lispy-set-key-theme</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">special</span> <span class="nv">c-digits</span><span class="p">))</span>
-</code></pre></div>
   </div>
   
 </div>

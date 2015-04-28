@@ -4,13 +4,165 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-04-24T16:41:59+02:00</updated>
+ <updated>2015-04-28T18:31:49+02:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Blending colors in Elisp</title>
+   <link href="http://oremacs.com/2015/04/28/blending-faces/"/>
+   <updated>2015-04-28T00:00:00+02:00</updated>
+   <id>http://oremacs.com/2015/04/28/blending-faces</id>
+   <content type="html">&lt;h2 id=&quot;intro&quot;&gt;Intro&lt;/h2&gt;
+
+&lt;p&gt;This is a slightly obscure feature that I&amp;#39;ve added today to
+&lt;a href=&quot;https://github.com/abo-abo/swiper&quot;&gt;ivy-mode&lt;/a&gt;. It&amp;#39;s obscure, since
+very few packages give their candidates a face with a custom
+background.  Still, when that happens, a conflict arises:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Which face to apply: &lt;code&gt;ivy-current-match&lt;/code&gt; or the existing one?&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;In the image below, I&amp;#39;ve blended them both in a 50-50 mixture:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/ivy-blend.png&quot; alt=&quot;ivy-blend.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;By the way, if you&amp;#39;re wondering where the backgrounds come from in the
+first place, it&amp;#39;s &lt;a href=&quot;https://github.com/abo-abo/lispy&quot;&gt;lispy-goto&lt;/a&gt;
+function (if you know what &lt;code&gt;imenu&lt;/code&gt; is, it&amp;#39;s an advanced version of
+that).  This function collects all the Elisp tags in the current
+directory, and offers to jump to them. The functions that have
+&lt;code&gt;interactive&lt;/code&gt; in them, are highlighted with &lt;code&gt;lispy-command-name-face&lt;/code&gt;.
+In the above screenshot, the first 7 functions are interactive, and the other 2 are not.&lt;/p&gt;
+
+&lt;p&gt;If you&amp;#39;re interested in how color blending is done, I&amp;#39;ll describe it
+shortly below.&lt;/p&gt;
+
+&lt;h2 id=&quot;color-building-internals&quot;&gt;Color-building internals&lt;/h2&gt;
+
+&lt;p&gt;First, a smaller and more clear example (I&amp;#39;ve used &lt;code&gt;rainbow-mode&lt;/code&gt; and &lt;code&gt;htmlize-buffer&lt;/code&gt;):&lt;/p&gt;
+
+&lt;style type=&quot;text/css&quot;&gt;
+    &lt;!--
+      .ATTRLIST {
+        /* (:background &quot;#800080&quot;) */
+        background-color: #800080;
+      }
+      .ATTRLIST-1 {
+        /* (:background &quot;blue&quot;) */
+        background-color: #0000ff;
+      }
+      .ATTRLIST-2 {
+        /* (:foreground &quot;white&quot;) */
+        color: #ffffff;
+      }
+      .ATTRLIST-3 {
+        /* (:background &quot;red&quot;) */
+        background-color: #ff0000;
+      }
+      .comment {
+        /* font-lock-comment-face */
+        color: #3F7F5F;
+      }
+      .comment-delimiter {
+        /* font-lock-comment-delimiter-face */
+        color: #3F7F5F;
+      }
+      .string {
+        /* font-lock-string-face */
+        color: #2A00FF;
+      }
+    --&gt;
+    &lt;/style&gt;
+
+&lt;pre&gt;
+(colir-blend
+ (color-values &lt;span class=&quot;string&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;ATTRLIST-3&quot;&gt;&lt;span class=&quot;ATTRLIST-2&quot;&gt;red&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;string&quot;&gt;&quot;&lt;/span&gt;)
+ (color-values &lt;span class=&quot;string&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;ATTRLIST-1&quot;&gt;&lt;span class=&quot;ATTRLIST-2&quot;&gt;blue&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;string&quot;&gt;&quot;&lt;/span&gt;))
+&lt;span class=&quot;comment-delimiter&quot;&gt;;; &lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;=&amp;gt; &quot;&lt;/span&gt;&lt;span class=&quot;ATTRLIST&quot;&gt;&lt;span class=&quot;ATTRLIST-2&quot;&gt;#800080&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;&quot;
+&lt;/span&gt;&lt;/pre&gt;
+
+&lt;p&gt;Here, &lt;code&gt;colir-blend&lt;/code&gt; is a very small function that I&amp;#39;ll describe below,
+and &lt;code&gt;color-values&lt;/code&gt; is a function from faces.el that forwards to a C
+function &lt;code&gt;xw-color-values&lt;/code&gt; with this doc:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Return a list of three integers, (RED GREEN BLUE), each between 0
+and either 65280 or 65535 (the maximum depends on the system).&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Which is a bit weird, since the last time I checked, the standard for
+colors was one-byte per channel, not two.  Granted, it was about 10
+years ago that I checked, and indeed, the
+&lt;a href=&quot;http://en.wikipedia.org/wiki/RGB_color_model#Numeric_representations&quot;&gt;entry on Wikipedia&lt;/a&gt;
+says:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;High-end digital image equipment are often able to deal with larger
+integer ranges for each primary color, such as 0..1023 (10 bits),
+0..65535 (16 bits) or even larger, by extending the 24-bits (three
+8-bit values) to 32-bit, 48-bit, or 64-bit units&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Apparently, Emacs is outfitted to deal high-end digital image
+equipment. But I&amp;#39;m still pretty sure that most graphics cards that you
+can buy only give 8 bits per each channel. Anyway, here&amp;#39;s the code for
+the basic functions:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;colir-join&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;r&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;g&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Build a color from R G B.&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;Inverse of `color-values&amp;#39;.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;#%02x%02x%02x&amp;quot;&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;ash&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;r&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;-8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;ash&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;g&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;-8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;ash&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;-8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;colir-blend&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;c1&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c2&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;&amp;amp;optional&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;alpha&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Blend the two colors C1 and C2 with ALPHA.&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;C1 and C2 are in the format of `color-values&amp;#39;.&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;ALPHA is a number between 0.0 and 1.0 which corresponds to the&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;influence of C1 on the result.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;alpha&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;or&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;alpha&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;apply&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;#&amp;#39;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;colir-join&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;cl-mapcar&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;round&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;alpha&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;alpha&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;
+          &lt;span class=&quot;nv&quot;&gt;c1&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;All pretty simple:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Split each color into red, green, and blue integers with &lt;code&gt;color-values&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Compute a mean for each color channel.&lt;/li&gt;
+&lt;li&gt;Build the new color by concatenating the hex components into a string.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;In the example above:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The result of &lt;code&gt;(color-values &amp;quot;red&amp;quot;)&lt;/code&gt; is &lt;code&gt;(65535 0 0)&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;The result of &lt;code&gt;(color-values &amp;quot;blue&amp;quot;)&lt;/code&gt; is &lt;code&gt;(0 0 65535)&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Their arithmetic mean is &lt;code&gt;(32768 0 32768)&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Divided by &lt;code&gt;256&lt;/code&gt; with &lt;code&gt;ash&lt;/code&gt;, we get &lt;code&gt;(128 0 128)&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Converted to hex, &lt;code&gt;(128 0 128)&lt;/code&gt; is &lt;code&gt;(80 0 80)&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;And the final color is &lt;code&gt;&amp;quot;#800080&amp;quot;&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;I hope that you&amp;#39;ve enjoyed this little venture into Elisp and colors.
+People say rough things about Elisp sometimes, but hey: it offers
+functions ranging from the assembly-level &lt;code&gt;ash&lt;/code&gt;, all the way up to
+Photoshop-grade color channel handling.&lt;/p&gt;
+
+&lt;p&gt;If only it could get a good optimization bump, like JavaScript got at
+one point, and a small threading library, we&amp;#39;d be all set.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Oremacs config is on Github</title>

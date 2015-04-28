@@ -243,6 +243,40 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/03/04/eclipse-theme/">
+        Eclipse theme
+      </a>
+    </h1>
+
+    <span class="post-date">04 Mar 2015</span>
+
+    <p>I started using Emacs around 2010-2011 when I needed an environment
+for C++ and LaTeX.  The default color theme was horrendous (it still
+is), and I don&#39;t fancy myself a designer, so I just copied a color
+theme of the thing that I was using previously: Eclipse.</p>
+
+<p><a href="https://github.com/abo-abo/eclipse-theme">This theme</a> modifies almost
+nothing except the font lock faces, and looks reasonable while called
+with <code>-nw</code>, although I don&#39;t see why anyone wouldn&#39;t want to take
+advantage of what graphical Emacs has to offer.</p>
+
+<p>Here&#39;s a sampler:</p>
+
+<p><img src="/download/eclipse-theme.png" alt="eclipse-theme.png"></p>
+
+<p>It&#39;s shown together with my fork of
+<a href="https://github.com/abo-abo/powerline">powerline</a>.  I&#39;ll try to merge
+it as a theme eventually, I&#39;m delaying it because <code>powerline</code> isn&#39;t
+very easy to understand/modify.</p>
+
+<p>Eclipse theme should be on MELPA soon, I hope you&#39;ll enjoy it. I&#39;ve
+tried probably 30 themes on MELPA, but I just can&#39;t part with
+<code>eclipse-theme</code>. I&#39;m guessing that it&#39;s a feeling that most theme creators share.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/03/03/ace-window-full-path/">
         ace-window full path
       </a>
@@ -641,67 +675,6 @@ i.e. home row keys and no background:</p>
     <span class="p">(</span><span class="k">setq</span> <span class="nv">aw-keys</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">?a</span> <span class="nv">?s</span> <span class="nv">?d</span> <span class="nv">?f</span> <span class="nv">?g</span> <span class="nv">?h</span> <span class="nv">?j</span> <span class="nv">?k</span> <span class="nv">?l</span><span class="p">))</span>
     <span class="p">(</span><span class="k">setq</span> <span class="nv">aw-background</span> <span class="no">nil</span><span class="p">))</span>
 </code></pre></div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/02/26/compilation-check-declare/">
-        Compilation-style check-declare-file
-      </a>
-    </h1>
-
-    <span class="post-date">26 Feb 2015</span>
-
-    <p>As a follow-up to my older post on <a href="/2015/02/13/elisp-linting/">Elisp linting options</a>,
-I&#39;ve made <code>check-declare-file</code> and <code>check-declare-directory</code> give out warnings similar to those
-that e.g. <code>byte-compile-file</code> gives:</p>
-
-<ul>
-<li>each warning now has a location in a file-line-column format</li>
-<li>you can click on the link to jump to the warning location</li>
-<li><code>first-error</code> / <code>next-error</code> / <code>previous-error</code> work as well</li>
-<li>the warning line blinks momentarily with each jump</li>
-</ul>
-
-<p>Here&#39;s how it looks like:</p>
-
-<p><img src="/download/check-declare.png" alt="check-declare"></p>
-
-<p>You can already use this feature if you&#39;re on Emacs trunk, otherwise
-you&#39;ll have to wait for 25.1 to come out.</p>
-
-<p>There&#39;s also a new custom variable that you can set to get a more strict check:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">check-declare-ext-errors</span> <span class="no">t</span><span class="p">)</span>
-</code></pre></div>
-<p>Unless you set it, the standard behavior is to issue a <code>&quot;skipping
-external file&quot;</code> message when checking a statement like the one above.
-The reason is that the external package might not be loaded or
-something.  As long as I&#39;m checking, I prefer to check everything, so
-there&#39;s no reason not to have <code>check-declare-ext-errors</code> always true.</p>
-
-<h2 id="a-trick-to-actually-load-slime-repl">A trick to actually load <code>slime-repl</code></h2>
-
-<p>Here&#39;s the Makefile target for <code>check-declare</code>:</p>
-<div class="highlight"><pre><code class="language-Makefile" data-lang="Makefile"><span class="nf">check-declare</span><span class="o">:</span>
-    <span class="k">$(</span>CASKEMACS<span class="k">)</span> -batch <span class="k">$(</span>LOAD<span class="k">)</span> -l check-declare.elt
-</code></pre></div>
-<p>And here are the contents of check-declare.elt:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">check-declare-ext-errors</span> <span class="no">t</span><span class="p">)</span>
-<span class="p">(</span><span class="k">setq</span> <span class="nv">files</span> <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;lispy.el&quot;</span>
-              <span class="s">&quot;lispy-inline.el&quot;</span>
-              <span class="s">&quot;le-clojure.el&quot;</span>
-              <span class="s">&quot;le-scheme.el&quot;</span>
-              <span class="s">&quot;le-lisp.el&quot;</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">add-to-list</span> <span class="ss">&#39;load-path</span>
-             <span class="p">(</span><span class="nf">concat</span> <span class="p">(</span><span class="nf">file-name-directory</span>
-                      <span class="p">(</span><span class="nv">locate-library</span> <span class="s">&quot;slime&quot;</span><span class="p">))</span>
-                     <span class="s">&quot;contrib/&quot;</span><span class="p">))</span>
-<span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;slime-repl</span><span class="p">)</span>
-<span class="p">(</span><span class="nf">apply</span> <span class="nf">#&#39;</span><span class="nv">check-declare-files</span> <span class="nv">files</span><span class="p">)</span>
-</code></pre></div>
-<p>As you see, I first find where slime.el is located using <code>locate-library</code>, and then add the
-contrib sub-directory to the <code>load-path</code>. After this, it&#39;s finally possible to <code>(require &#39;slime-repl)</code>.</p>
-
   </div>
   
 </div>
