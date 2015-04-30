@@ -243,6 +243,60 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/01/08/org-protocol-2/">
+        My org-protocol setup, part 2.
+      </a>
+    </h1>
+
+    <span class="post-date">08 Jan 2015</span>
+
+    <p>This continues the code from <a href="/2015/01/07/org-protocol-1/">the part 1</a>.</p>
+
+<h2 id="org-handle-link-youtube"><code>org-handle-link-youtube</code></h2>
+
+<p>I tried to make the first call to <code>youtube-dl</code> asynchronous, but it
+wasn&#39;t working out.  So for the current code, there&#39;s still about a 2
+second delay before the capture buffer appears.</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;async</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">org-handle-link-youtube</span> <span class="p">(</span><span class="nv">link</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">lexical-let*</span>
+      <span class="p">((</span><span class="nv">file-name</span> <span class="p">(</span><span class="nv">org-trim</span>
+                   <span class="p">(</span><span class="nv">shell-command-to-string</span>
+                    <span class="p">(</span><span class="nf">concat</span>
+                     <span class="s">&quot;youtube-dl \&quot;&quot;</span>
+                     <span class="nv">link</span>
+                     <span class="s">&quot;\&quot;&quot;</span>
+                     <span class="s">&quot; -o \&quot;%(title)s.%(ext)s\&quot; --get-filename&quot;</span><span class="p">))))</span>
+       <span class="p">(</span><span class="nv">dir</span> <span class="s">&quot;~/Downloads/Videos&quot;</span><span class="p">)</span>
+       <span class="p">(</span><span class="nv">full-name</span>
+        <span class="p">(</span><span class="nf">expand-file-name</span> <span class="nv">file-name</span> <span class="nv">dir</span><span class="p">)))</span>
+    <span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;org-link-hook</span>
+              <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span>
+                <span class="p">(</span><span class="nf">concat</span>
+                 <span class="p">(</span><span class="nv">org-make-link-string</span> <span class="nv">dir</span> <span class="nv">dir</span><span class="p">)</span>
+                 <span class="s">&quot;\n&quot;</span>
+                 <span class="p">(</span><span class="nv">org-make-link-string</span> <span class="nv">full-name</span> <span class="nv">file-name</span><span class="p">))))</span>
+    <span class="p">(</span><span class="nv">async-shell-command</span>
+     <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;youtube-dl \&quot;%s\&quot; -o \&quot;%s\&quot;&quot;</span> <span class="nv">link</span> <span class="nv">full-name</span><span class="p">))</span>
+    <span class="p">(</span><span class="nv">find-file</span> <span class="p">(</span><span class="nv">org-expand</span> <span class="s">&quot;ent.org&quot;</span><span class="p">))</span>
+    <span class="p">(</span><span class="nf">goto-char</span> <span class="p">(</span><span class="nf">point-min</span><span class="p">))</span>
+    <span class="p">(</span><span class="nf">re-search-forward</span> <span class="s">&quot;^\\*+ +Videos&quot;</span> <span class="no">nil</span> <span class="no">t</span><span class="p">)))</span>
+</code></pre></div>
+<p>Some notes for people who want to learn more Elisp:</p>
+
+<ul>
+<li><code>lexical-let*</code> is needed to have <code>dir</code> and <code>full-name</code> visible in the <code>lambda</code>.</li>
+<li><code>org-make-link-string</code> is a nice utility command that escapes all sorts of
+characters that <code>org-mode</code> doesn&#39;t like, e.g. brackets etc.</li>
+</ul>
+
+<p>You can see my full <code>org-capture</code> and <code>org-protocol</code> setup
+<a href="https://github.com/abo-abo/org-fu">here</a>.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/01/07/org-protocol-1/">
         My org-protocol setup, part 1.
       </a>
@@ -617,86 +671,6 @@ doesn&#39;t make a playlist when given a list of files.</p>
 by default in <code>dired</code>:</p>
 <div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="s">&quot;r&quot;</span> <span class="ss">&#39;dired-start-process</span><span class="p">)</span>
 </code></pre></div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/01/03/time-flies/">
-        Time flies
-      </a>
-    </h1>
-
-    <span class="post-date">03 Jan 2015</span>
-
-    <p>This is the 15th post on this blog. Thankfully, no heart attacks after
-the 13th one or anything.  So I&#39;ll commemorate it with a post on
-dealing with dates in <code>calc</code>.</p>
-
-<h2 id="how-much-time-has-passed-since-i-started-this-blog?">How much time has passed since I started this blog?</h2>
-
-<ol>
-<li><p>Open <code>calc</code> with <kbd>C-x **</kbd>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">--- Emacs Calculator Mode ---
-    .
-</code></pre></div></li>
-<li><p>Enter <code>20 Dec 2014</code> with <kbd>&#39;&lt;12 20 14</kbd><kbd>RET</kbd>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">--- Emacs Calculator Mode ---
-1:  &lt;Sat Dec 20, 2014&gt;
-    .
-</code></pre></div></li>
-<li><p>Enter current time with <kbd>tN</kbd>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">--- Emacs Calculator Mode ---
-2:  &lt;Sat Dec 20, 2014&gt;
-1:  &lt;11:56:27am Sat Jan 3, 2015&gt;
-    .
-</code></pre></div></li>
-<li><p>Subtract with <kbd>-</kbd>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">--- Emacs Calculator Mode ---
-1:  -14.498044
-    .
-</code></pre></div></li>
-</ol>
-
-<p>This means that, if I want to maintain my one-post-per-day streak, I
-still have half of a day to post this. Unfortunately, I have only an
-old version of the blog repository on this machine, and the current
-one is on a laptop at home. So I&#39;ll post this in the evening.</p>
-
-<h2 id="did-you-know-what-2015-looks-like-in-binary?">Did you know what 2015 looks like in binary?</h2>
-
-<p>In your current <code>calc</code> session,</p>
-
-<ol>
-<li><p>Enter <kbd>2015</kbd> <kbd>SPC</kbd>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">--- Emacs Calculator Mode ---
-2:  -14.498044
-1:  2015
-    .
-</code></pre></div></li>
-<li><p>Switch to binary with <kbd>d2</kbd>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">--- Emacs Calculator Mode ---
-2:  -2#1110.011111110111111111001111110001
-1:  2#11111011111
-.
-</code></pre></div></li>
-<li><p>Wow, a palindrome. It&#39;s too spooky, switch back to decimal with <kbd>d0</kbd>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">--- Emacs Calculator Mode ---
-2:  -14.498044
-1:  2015
-    .
-</code></pre></div></li>
-</ol>
-
-<p>If you&#39;re new to <code>calc</code>, you&#39;ll probably wonder why you can&#39;t enter
-negative numbers with <kbd>-</kbd>. It can be done with <kbd>_</kbd>,
-just like in
-<a href="http://www.jsoftware.com/help/primer/negative_number.htm">J</a>. Find
-out more in the
-<a href="http://www.gnu.org/software/emacs/manual/html_mono/calc.html">info</a>;
-the
-<a href="http://www.gnu.org/software/emacs/manual/html_mono/calc.html#Tutorial">interactive tutorial</a>
-is absolutely excellent.</p>
-
   </div>
   
 </div>

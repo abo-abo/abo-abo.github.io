@@ -265,6 +265,10 @@ git rm foo
 #+begin_src sh
 git submodule add git@github.com:abo-abo/plain-org-wiki.git git/plain-org-wiki
 #+end_src
+** format-patch for a single commit
+#+begin_src sh
+git format-patch -1 bad234
+#+end_src
 
 * Emacs tools
 ** magit
@@ -334,3 +338,5 @@ local =pull/= namespace. To check out e.g. PR #42:
 #+begin_src sh
 git checkout -b foo refs/pull/upstream/42
 #+end_src
+** reference other repo
+user/repo#issue

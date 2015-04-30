@@ -243,6 +243,111 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/01/23/eltex/">
+        ElTeX - generate full LaTeX documents from Emacs Lisp
+      </a>
+    </h1>
+
+    <span class="post-date">23 Jan 2015</span>
+
+    <p>OK. Please stop laughing. It&#39;s a
+<a href="https://github.com/abo-abo/eltex">thing</a> now.</p>
+
+<p>Seriously though, it&#39;s my little project of writing a major mode for
+Emacs.  I&#39;ve written many minor modes, but this is my first major
+one. Granted, it&#39;s only a small derivation of <code>emacs-lisp-mode</code>.</p>
+
+<h2 id="how-the-eltex-looks-like">How the ElTeX looks like</h2>
+
+<p>Here&#39;s how a sample document outline looks like:</p>
+
+<p><img src="/download/eltex-fontified.png" alt="eltex-fontified"></p>
+
+<p>Here, <code>homogenization</code>, <code>smoluchowski-equation</code>, and
+<code>model-description-geometry</code> are simply Elisp functions that should
+produce a string on call. They are defined <a href="https://github.com/abo-abo/eltex/blob/master/demos/demo-math.elt">here</a>.</p>
+
+<p>On calling <kbd>M-x</kbd> <code>eltex-compile</code>, the corresponding LaTeX
+document will be written to the file to which <code>eltex-filename</code> points
+to.</p>
+
+<h2 id="how-the-corresponding-latex-looks-like">How the corresponding LaTeX looks like</h2>
+
+<p>Here&#39;s an excerpt of what will be generated:</p>
+<div class="highlight"><pre><code class="language-latex" data-lang="latex"><span class="k">\documentclass</span><span class="nb">{</span>article<span class="nb">}</span>
+<span class="k">\usepackage</span><span class="na">[fleqn]</span><span class="nb">{</span>amsmath<span class="nb">}</span>
+<span class="k">\usepackage</span><span class="nb">{</span>amsthm<span class="nb">}</span>
+<span class="k">\usepackage</span><span class="nb">{</span>enumerate<span class="nb">}</span>
+<span class="k">\usepackage</span><span class="nb">{</span>amsfonts<span class="nb">}</span>
+<span class="k">\usepackage</span><span class="nb">{</span>xcolor<span class="nb">}</span>
+<span class="k">\usepackage</span><span class="na">[style=numeric,natbib=true,backend=bibtex]</span><span class="nb">{</span>biblatex<span class="nb">}</span>
+<span class="k">\addbibresource</span><span class="nb">{</span>analysis.bib<span class="nb">}</span>
+<span class="k">\begin</span><span class="nb">{</span>document<span class="nb">}</span>
+
+<span class="k">\section</span><span class="nb">{</span>Introduction<span class="nb">}</span>
+
+<span class="k">\subsection</span><span class="nb">{</span>Homogenization<span class="nb">}</span>
+</code></pre></div>
+<h2 id="how-the-original-eltex-looks-like-in-emacs-lisp-mode">How the original ElTeX looks like in <code>emacs-lisp-mode</code></h2>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">eltex-filename</span> <span class="s">&quot;~/tpaper/tpaper.tex&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;eltex-macros</span><span class="p">)</span>
+
+<span class="c1">;;* Document</span>
+<span class="p">(</span><span class="nv">documentclass</span>
+ <span class="s">&quot;article&quot;</span>
+ <span class="p">(</span><span class="nv">usepackage</span>
+  <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;amsmath&quot;</span> <span class="s">&quot;fleqn&quot;</span><span class="p">)</span>
+  <span class="s">&quot;amsthm&quot;</span>
+  <span class="s">&quot;enumerate&quot;</span>
+  <span class="s">&quot;amsfonts&quot;</span>
+  <span class="s">&quot;xcolor&quot;</span>
+  <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;biblatex&quot;</span> <span class="s">&quot;style=numeric,natbib=true,backend=bibtex&quot;</span><span class="p">))</span>
+ <span class="p">(</span><span class="nv">bibliography</span> <span class="s">&quot;analysis&quot;</span><span class="p">)</span>
+ <span class="p">(</span><span class="nv">document</span>
+  <span class="p">(</span><span class="nv">section</span> <span class="s">&quot;Introduction&quot;</span>
+           <span class="p">(</span><span class="nv">homogenization</span><span class="p">)</span>
+           <span class="p">(</span><span class="nv">smoluchowski-equation</span><span class="p">))</span>
+  <span class="p">(</span><span class="nv">section</span> <span class="s">&quot;Notations and Assumptions&quot;</span>
+           <span class="p">(</span><span class="nv">model-description-geometry</span><span class="p">))</span>
+  <span class="s">&quot;\\printbibliography&quot;</span><span class="p">))</span>
+</code></pre></div>
+<h2 id="why-this?">Why this?</h2>
+
+<p>Well, why not? At one point I was frustrated with LaTeX not allowing
+me to define mathematically rich entities. I did hack up a few TeX
+macros for this eventually, but it was very awkward.</p>
+
+<p>So I thought that I could make Emacs Lisp generate simple LaTeX in a
+similar way that C generates machine code. No more intricate LaTeX
+macros, only plain LaTeX, generated from (intricate) Elisp.</p>
+
+<p>This is still very much in a toy stage, I don&#39;t currently use it for
+anything serious.  Still, in case you&#39;re interested in defining
+derived major modes, you can look at my
+<a href="https://github.com/abo-abo/eltex/blob/master/eltex.el">implementation</a>,
+it&#39;s only 25 lines. The interesting thing about it, if you noticed, is
+that it replaces all double quoted strings visually with single quoted
+strings, so that they don&#39;t jump out as much.</p>
+
+<h2 id="more-examples">More examples</h2>
+
+<p>Here&#39;s how the typesetting of some mathematical logic looks like:</p>
+
+<p><img src="/download/eltex-math.png" alt="eltex-math"></p>
+
+<p>And here&#39;s the corresponding LaTeX:</p>
+
+<p><img src="/download/eltex-math-latex.png" alt="eltex-math-latex"></p>
+
+<p>Note how simple the resulting LaTeX is, considering how many variables
+were used to generate it. Now, I can update anything in the <code>with</code>
+Elisp binding, and the corresponding LaTeX will be appropriately
+regenerated, error-free.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/01/22/clojure-sugar-for-elisp/">
         Adding a bit of Clojure's sugar to Elisp
       </a>
@@ -858,89 +963,6 @@ great deal more. For instance, if you raise an issue like</p>
 <p>I would say it&#39;s because I haven&#39;t implemented it yet, since it was
 tricky.  But I&#39;ll get to it, now that I see that there&#39;s some interest
 in <code>lispy</code> from Racket users.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/01/18/sprucing-up-org-download/">
-        Sprucing up org-download
-      </a>
-    </h1>
-
-    <span class="post-date">18 Jan 2015</span>
-
-    <p>My interest in <a href="https://github.com/abo-abo/org-download">org-download</a>
-was renewed today with
-<a href="http://thread.gmane.org/gmane.emacs.orgmode/93964">this thread</a> on
-<code>org-mode</code>&#39;s mailing list.</p>
-
-<p><code>org-download</code> allows you to drag-and-drop an image from e.g. Firefox
-or your own file system to an <code>org-mode</code> buffer. When I originally
-wrote it, I was taking a Chemistry course on
-<a href="https://www.edx.org/">edX</a>, which included homework and exams with a
-lot of images. Doing the homework in a literate style with <code>org-mode</code>,
-I wanted the problems to be completely self-contained, and for that I
-needed to save all the images from the website, preferably quickly, to
-an <code>org-mode</code> buffer. With a few hacks and some advice and
-contributions from more experienced hackers, <code>org-download</code> came to
-be.</p>
-
-<h2 id="today&#39;s-commits">Today&#39;s commits</h2>
-
-<p>The main contribution from today&#39;s commits was adding the code that
-un-aliases images that point to HTML. I see a lot of these from the
-people that I&#39;m following on my Twitter,
-<a href="https://twitter.com/_abo_abo">@&#95;abo&#95;abo</a>. Here&#39;s the code:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defcustom</span> <span class="nv">org-download-img-regex-list</span>
-  <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;&lt;img +src=\&quot;&quot;</span> <span class="s">&quot;&lt;img +\\(class=\&quot;[^\&quot;]+\&quot;\\)? *src=\&quot;&quot;</span><span class="p">)</span>
-  <span class="s">&quot;This regex is used to unalias links that look like images.</span>
-<span class="s">The html to which the links points will be searched for these</span>
-<span class="s">regexes, one by one, until one succeeds.  The found image address</span>
-<span class="s">will be used.&quot;</span>
-  <span class="nb">:group</span> <span class="ss">&#39;org-download</span><span class="p">)</span>
-</code></pre></div>
-<p>and in <code>(org-download-image link)</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nv">image-type-from-file-name</span> <span class="nv">link</span><span class="p">)</span>
-    <span class="p">(</span><span class="nb">with-current-buffer</span>
-        <span class="p">(</span><span class="nv">url-retrieve-synchronously</span> <span class="nv">link</span> <span class="no">t</span><span class="p">)</span>
-      <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">regexes</span> <span class="nv">org-download-img-regex-list</span><span class="p">)</span>
-            <span class="nv">lnk</span><span class="p">)</span>
-        <span class="p">(</span><span class="k">while</span> <span class="p">(</span><span class="k">and</span> <span class="p">(</span><span class="nv">not</span> <span class="nv">lnk</span><span class="p">)</span> <span class="nv">regexes</span><span class="p">)</span>
-          <span class="p">(</span><span class="nf">goto-char</span> <span class="p">(</span><span class="nf">point-min</span><span class="p">))</span>
-          <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">re-search-forward</span> <span class="p">(</span><span class="nb">pop</span> <span class="nv">regexes</span><span class="p">)</span> <span class="no">nil</span> <span class="no">t</span><span class="p">)</span>
-            <span class="p">(</span><span class="nf">backward-char</span><span class="p">)</span>
-            <span class="p">(</span><span class="k">setq</span> <span class="nv">lnk</span> <span class="p">(</span><span class="nf">read</span> <span class="p">(</span><span class="nf">current-buffer</span><span class="p">)))))</span>
-        <span class="p">(</span><span class="k">if</span> <span class="nv">lnk</span>
-            <span class="p">(</span><span class="k">setq</span> <span class="nv">link</span> <span class="nv">lnk</span><span class="p">)</span>
-          <span class="p">(</span><span class="ne">error</span> <span class="s">&quot;link %s does not point to an image&quot;</span> <span class="nv">link</span><span class="p">)))))</span>
-</code></pre></div>
-<p>Here, <code>image-type-from-file-name</code> is a built-in from <code>image.el</code> that
-decides if <code>link</code> looks like an image file or not.</p>
-
-<p>As you can see, since I intend to use <code>link</code> right after to be
-transformed right now, I&#39;m using <code>url-retrieve-synchronously</code>, instead
-of the asynchronous <code>url-retrieve</code>. The other one is used by default
-to download the actual image.</p>
-
-<p>Note the use of the <code>while</code> / <code>pop</code> combination for traversing a list.
-I&#39;ve seen it used in some places in the Emacs core, and I think it&#39;s
-pretty neat.</p>
-
-<p>Arranging the regular expressions into a list is necessary to give
-priority to some regexes. For instance, the first element of
-<code>org-download-img-regex-list</code> should match e.g. an actual referred
-image on Twitter, while the second element will match at least a
-profile picture in the case when there is no referred image.</p>
-
-<h2 id="visual-demo">Visual demo</h2>
-
-<p>I think that I might have over-engineered the custom options of
-<code>org-download</code> a bit. Just to keep you motivated enough to figure them
-out, here&#39;s a link to
-<a href="https://www.youtube.com/watch?v=dAojpHR-6Uo">a Youtube demo</a> of the
-fast clickety-clicking (the mouse usage), that comes after some
-clackety-clacking (the customization).</p>
 
   </div>
   

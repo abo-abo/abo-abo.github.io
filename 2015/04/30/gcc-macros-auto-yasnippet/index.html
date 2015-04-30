@@ -11,7 +11,7 @@
 
   <title>
     
-      Compilation-style check-declare-file &middot; (or emacs
+      GCC macros and auto-yasnippet &middot; (or emacs
     
   </title>
 
@@ -240,57 +240,86 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Compilation-style check-declare-file</h1>
-  <span class="post-date">26 Feb 2015</span>
-  <p>As a follow-up to my older post on <a href="/2015/02/13/elisp-linting/">Elisp linting options</a>,
-I&#39;ve made <code>check-declare-file</code> and <code>check-declare-directory</code> give out warnings similar to those
-that e.g. <code>byte-compile-file</code> gives:</p>
+  <h1 class="post-title">GCC macros and auto-yasnippet</h1>
+  <span class="post-date">30 Apr 2015</span>
+  <p>As one thing leads to another, it occurred to me that I didn&#39;t know
+what <code>__GNUC__</code> macro does.  Which brought me to the manual page on
+<a href="https://gcc.gnu.org/onlinedocs/cpp/Common-Predefined-Macros.html">Common Predefined Macros</a>.</p>
+
+<h2 id="using-org-mode-babel-to-check-the-macro-values">Using <code>org-mode</code> Babel to check the macro values</h2>
+
+<p>I decided that just skimming through the page wasn&#39;t enough, and I
+wanted to brush up on my <code>org-mode</code> babel.  So I created this
+<a href="https://raw.githubusercontent.com/abo-abo/oremacs/github/etc/org/wiki/C.org">wiki page</a>
+to which you&#39;re welcome if you ever need to check <code>__BYTE_ORDER_</code> or
+<code>__UINT_FAST16_TYPE__</code> on your system.</p>
+
+<p>Here&#39;s a small excerpt of it:</p>
+<div class="highlight"><pre><code class="language-C" data-lang="C"><span class="cp">#+begin_src C :results verbatim</span>
+<span class="cp">#include &lt;stdio.h&gt;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// version stuff</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;__GNUC__ %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">__GNUC__</span><span class="p">);</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;__GNUC_MINOR__ %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">__GNUC_MINOR__</span><span class="p">);</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;__GNUC_PATCHLEVEL__ %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">__GNUC_PATCHLEVEL__</span><span class="p">);</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;__VERSION__ %s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">__VERSION__</span><span class="p">);</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="cp">#+end_src</span>
+</code></pre></div>
+<p>When you navigate to any place in the code and press <kbd>C-c C-c</kbd>, which calls (sic) <code>org-ctrl-c-ctrl-c</code>,
+it will re-compile and re-run your program.</p>
+
+<p>I list here some of the <a href="https://github.com/abo-abo/oremacs/blob/github/oleh/modes/ora-org.el">config</a> to make it all work:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">org-babel-do-load-languages</span>
+ <span class="ss">&#39;org-babel-load-languages</span>
+ <span class="o">&#39;</span><span class="p">((</span><span class="nv">C</span> <span class="o">.</span> <span class="no">t</span><span class="p">)</span>
+   <span class="c1">;; ...</span>
+   <span class="p">))</span>
+
+<span class="p">(</span><span class="k">setq</span> <span class="nv">org-babel-C-compiler</span> <span class="s">&quot;gcc -std=c99&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="new-auto-yasnippet-method">New <code>auto-yasnippet</code> method</h2>
+
+<p>You can read up on what <code>auto-yasnippet</code> is in <a href="http://oremacs.com/2015/01/30/auto-yasnippet/">this post</a>.
+For the wiki page, I had to insert the <code>printf</code> statements a bunch of times, some of them with triply-repeated symbols.
+Take, for instance, this statement:</p>
+<div class="highlight"><pre><code class="language-C" data-lang="C"><span class="n">printf</span><span class="p">(</span><span class="s">&quot;__INT32_TYPE__ %s (%d)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">ESTR</span><span class="p">(</span><span class="n">__INT32_TYPE__</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">__INT32_TYPE__</span><span class="p">));</span>
+</code></pre></div>
+<p>With the old method, I would insert <code>~</code> before each <code>INT32</code> and call <code>aya-create</code>. But it would result in this snippet, which isn&#39;t optimal:</p>
+<div class="highlight"><pre><code class="language-C" data-lang="C"><span class="n">printf</span><span class="p">(</span><span class="s">&quot;__$1 %s (%d)</span><span class="se">\\</span><span class="s">n&quot;</span><span class="p">,</span> <span class="n">ESTR</span><span class="p">(</span><span class="n">__</span><span class="err">$</span><span class="mi">1</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">__</span><span class="err">$</span><span class="mi">1</span><span class="p">));</span>
+</code></pre></div>
+<p>With the new method (the old one still works, it&#39;s just that the new one takes priority), I would only quote the first field like so:</p>
+<div class="highlight"><pre><code class="language-C" data-lang="C"><span class="n">printf</span><span class="p">(</span><span class="s">&quot;__`INT32&#39;_TYPE__ %s (%d)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">ESTR</span><span class="p">(</span><span class="n">__INT32_TYPE__</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">__INT32_TYPE__</span><span class="p">));</span>
+</code></pre></div>
+<p>Which results in this snippet:</p>
+<div class="highlight"><pre><code class="language-C" data-lang="C"><span class="n">printf</span><span class="p">(</span><span class="s">&quot;__$1_TYPE__ %s (%d)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">ESTR</span><span class="p">(</span><span class="n">__</span><span class="err">$</span><span class="mi">1</span><span class="n">_TYPE__</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">__</span><span class="err">$</span><span class="mi">1</span><span class="n">_TYPE__</span><span class="p">));</span>
+</code></pre></div>
+<p>Much better.</p>
+
+<h2 id="oremacs-wiki-workflow"><code>oremacs</code> wiki workflow</h2>
+
+<p>If you&#39;re crazy enough (in a good way) to follow <a href="https://github.com/abo-abo/oremacs">oremacs</a>, you&#39;ll get the
+new wiki page delivered right to your config with</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">make install
+</code></pre></div>
+<p>which will also update to the latest <code>org-mode</code> and CEDET.</p>
+
+<p>And here&#39;s how to access it:</p>
 
 <ul>
-<li>each warning now has a location in a file-line-column format</li>
-<li>you can click on the link to jump to the warning location</li>
-<li><code>first-error</code> / <code>next-error</code> / <code>previous-error</code> work as well</li>
-<li>the warning line blinks momentarily with each jump</li>
+<li>run <code>xmodmap etc/.Xmodmap</code> to make <kbd>;</kbd> into a modifier</li>
+<li>press <kbd>;-k</kbd> to open a dispatch hydra</li>
+<li>press <kbd>w</kbd> to select the wiki</li>
+<li>select <code>C</code> (currently, the only other candidate is <code>git</code>)</li>
 </ul>
 
-<p>Here&#39;s how it looks like:</p>
+<h2 id="outro">Outro</h2>
 
-<p><img src="/download/check-declare.png" alt="check-declare"></p>
-
-<p>You can already use this feature if you&#39;re on Emacs trunk, otherwise
-you&#39;ll have to wait for 25.1 to come out.</p>
-
-<p>There&#39;s also a new custom variable that you can set to get a more strict check:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">check-declare-ext-errors</span> <span class="no">t</span><span class="p">)</span>
-</code></pre></div>
-<p>Unless you set it, the standard behavior is to issue a <code>&quot;skipping
-external file&quot;</code> message when checking a statement like the one above.
-The reason is that the external package might not be loaded or
-something.  As long as I&#39;m checking, I prefer to check everything, so
-there&#39;s no reason not to have <code>check-declare-ext-errors</code> always true.</p>
-
-<h2 id="a-trick-to-actually-load-slime-repl">A trick to actually load <code>slime-repl</code></h2>
-
-<p>Here&#39;s the Makefile target for <code>check-declare</code>:</p>
-<div class="highlight"><pre><code class="language-Makefile" data-lang="Makefile"><span class="nf">check-declare</span><span class="o">:</span>
-    <span class="k">$(</span>CASKEMACS<span class="k">)</span> -batch <span class="k">$(</span>LOAD<span class="k">)</span> -l check-declare.elt
-</code></pre></div>
-<p>And here are the contents of check-declare.elt:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">check-declare-ext-errors</span> <span class="no">t</span><span class="p">)</span>
-<span class="p">(</span><span class="k">setq</span> <span class="nv">files</span> <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;lispy.el&quot;</span>
-              <span class="s">&quot;lispy-inline.el&quot;</span>
-              <span class="s">&quot;le-clojure.el&quot;</span>
-              <span class="s">&quot;le-scheme.el&quot;</span>
-              <span class="s">&quot;le-lisp.el&quot;</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">add-to-list</span> <span class="ss">&#39;load-path</span>
-             <span class="p">(</span><span class="nf">concat</span> <span class="p">(</span><span class="nf">file-name-directory</span>
-                      <span class="p">(</span><span class="nv">locate-library</span> <span class="s">&quot;slime&quot;</span><span class="p">))</span>
-                     <span class="s">&quot;contrib/&quot;</span><span class="p">))</span>
-<span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;slime-repl</span><span class="p">)</span>
-<span class="p">(</span><span class="nf">apply</span> <span class="nf">#&#39;</span><span class="nv">check-declare-files</span> <span class="nv">files</span><span class="p">)</span>
-</code></pre></div>
-<p>As you see, I first find where slime.el is located using <code>locate-library</code>, and then add the
-contrib sub-directory to the <code>load-path</code>. After this, it&#39;s finally possible to <code>(require &#39;slime-repl)</code>.</p>
+<p>Check out the new <code>auto-yasnippet</code> method, I think it&#39;s pretty
+efficient.  I hope that you&#39;ll find the wiki page useful in your C
+pursuits.  And a big thanks to Eric Schulte for <code>org-babel</code>.</p>
 
 </div>
 
@@ -309,16 +338,6 @@ contrib sub-directory to the <code>load-path</code>. After this, it&#39;s finall
     
       <li>
         <h3>
-          <!-- <a href="//2015/04/30/gcc-macros-auto-yasnippet/"> -->
-          <a href="/2015/04/30/gcc-macros-auto-yasnippet/">
-            GCC macros and auto-yasnippet
-            <small>30 Apr 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
           <!-- <a href="//2015/04/28/blending-faces/"> -->
           <a href="/2015/04/28/blending-faces/">
             Blending colors in Elisp
@@ -333,6 +352,16 @@ contrib sub-directory to the <code>load-path</code>. After this, it&#39;s finall
           <a href="/2015/04/24/oremacs-config/">
             Oremacs config is on Github
             <small>24 Apr 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/04/22/swiper-0.3.0/"> -->
+          <a href="/2015/04/22/swiper-0.3.0/">
+            Swiper 0.3.0 is out, with ivy-mode.
+            <small>22 Apr 2015</small>
           </a>
         </h3>
       </li>

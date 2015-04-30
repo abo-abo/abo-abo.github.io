@@ -4,13 +4,99 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-04-28T18:31:49+02:00</updated>
+ <updated>2015-04-30T19:10:58+02:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>GCC macros and auto-yasnippet</title>
+   <link href="http://oremacs.com/2015/04/30/gcc-macros-auto-yasnippet/"/>
+   <updated>2015-04-30T00:00:00+02:00</updated>
+   <id>http://oremacs.com/2015/04/30/gcc-macros-auto-yasnippet</id>
+   <content type="html">&lt;p&gt;As one thing leads to another, it occurred to me that I didn&amp;#39;t know
+what &lt;code&gt;__GNUC__&lt;/code&gt; macro does.  Which brought me to the manual page on
+&lt;a href=&quot;https://gcc.gnu.org/onlinedocs/cpp/Common-Predefined-Macros.html&quot;&gt;Common Predefined Macros&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;using-org-mode-babel-to-check-the-macro-values&quot;&gt;Using &lt;code&gt;org-mode&lt;/code&gt; Babel to check the macro values&lt;/h2&gt;
+
+&lt;p&gt;I decided that just skimming through the page wasn&amp;#39;t enough, and I
+wanted to brush up on my &lt;code&gt;org-mode&lt;/code&gt; babel.  So I created this
+&lt;a href=&quot;https://raw.githubusercontent.com/abo-abo/oremacs/github/etc/org/wiki/C.org&quot;&gt;wiki page&lt;/a&gt;
+to which you&amp;#39;re welcome if you ever need to check &lt;code&gt;__BYTE_ORDER_&lt;/code&gt; or
+&lt;code&gt;__UINT_FAST16_TYPE__&lt;/code&gt; on your system.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;#39;s a small excerpt of it:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-C&quot; data-lang=&quot;C&quot;&gt;&lt;span class=&quot;cp&quot;&gt;#+begin_src C :results verbatim&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;#include &amp;lt;stdio.h&amp;gt;&lt;/span&gt;
+
+&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;// version stuff&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;__GNUC__ %d&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;__GNUC__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;__GNUC_MINOR__ %d&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;__GNUC_MINOR__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;__GNUC_PATCHLEVEL__ %d&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;__GNUC_PATCHLEVEL__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;__VERSION__ %s&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;__VERSION__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;#+end_src&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;When you navigate to any place in the code and press &lt;kbd&gt;C-c C-c&lt;/kbd&gt;, which calls (sic) &lt;code&gt;org-ctrl-c-ctrl-c&lt;/code&gt;,
+it will re-compile and re-run your program.&lt;/p&gt;
+
+&lt;p&gt;I list here some of the &lt;a href=&quot;https://github.com/abo-abo/oremacs/blob/github/oleh/modes/ora-org.el&quot;&gt;config&lt;/a&gt; to make it all work:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;org-babel-do-load-languages&lt;/span&gt;
+ &lt;span class=&quot;ss&quot;&gt;&amp;#39;org-babel-load-languages&lt;/span&gt;
+ &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;C&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;c1&quot;&gt;;; ...&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-babel-C-compiler&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;gcc -std=c99&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;new-auto-yasnippet-method&quot;&gt;New &lt;code&gt;auto-yasnippet&lt;/code&gt; method&lt;/h2&gt;
+
+&lt;p&gt;You can read up on what &lt;code&gt;auto-yasnippet&lt;/code&gt; is in &lt;a href=&quot;http://oremacs.com/2015/01/30/auto-yasnippet/&quot;&gt;this post&lt;/a&gt;.
+For the wiki page, I had to insert the &lt;code&gt;printf&lt;/code&gt; statements a bunch of times, some of them with triply-repeated symbols.
+Take, for instance, this statement:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-C&quot; data-lang=&quot;C&quot;&gt;&lt;span class=&quot;n&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;__INT32_TYPE__ %s (%d)&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ESTR&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;__INT32_TYPE__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;sizeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;__INT32_TYPE__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;With the old method, I would insert &lt;code&gt;~&lt;/code&gt; before each &lt;code&gt;INT32&lt;/code&gt; and call &lt;code&gt;aya-create&lt;/code&gt;. But it would result in this snippet, which isn&amp;#39;t optimal:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-C&quot; data-lang=&quot;C&quot;&gt;&lt;span class=&quot;n&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;__$1 %s (%d)&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\\&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;n&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ESTR&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;__&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;sizeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;__&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;With the new method (the old one still works, it&amp;#39;s just that the new one takes priority), I would only quote the first field like so:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-C&quot; data-lang=&quot;C&quot;&gt;&lt;span class=&quot;n&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;__`INT32&amp;#39;_TYPE__ %s (%d)&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ESTR&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;__INT32_TYPE__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;sizeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;__INT32_TYPE__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Which results in this snippet:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-C&quot; data-lang=&quot;C&quot;&gt;&lt;span class=&quot;n&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;__$1_TYPE__ %s (%d)&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ESTR&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;__&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_TYPE__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;sizeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;__&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_TYPE__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Much better.&lt;/p&gt;
+
+&lt;h2 id=&quot;oremacs-wiki-workflow&quot;&gt;&lt;code&gt;oremacs&lt;/code&gt; wiki workflow&lt;/h2&gt;
+
+&lt;p&gt;If you&amp;#39;re crazy enough (in a good way) to follow &lt;a href=&quot;https://github.com/abo-abo/oremacs&quot;&gt;oremacs&lt;/a&gt;, you&amp;#39;ll get the
+new wiki page delivered right to your config with&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;make install
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;which will also update to the latest &lt;code&gt;org-mode&lt;/code&gt; and CEDET.&lt;/p&gt;
+
+&lt;p&gt;And here&amp;#39;s how to access it:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;run &lt;code&gt;xmodmap etc/.Xmodmap&lt;/code&gt; to make &lt;kbd&gt;;&lt;/kbd&gt; into a modifier&lt;/li&gt;
+&lt;li&gt;press &lt;kbd&gt;;-k&lt;/kbd&gt; to open a dispatch hydra&lt;/li&gt;
+&lt;li&gt;press &lt;kbd&gt;w&lt;/kbd&gt; to select the wiki&lt;/li&gt;
+&lt;li&gt;select &lt;code&gt;C&lt;/code&gt; (currently, the only other candidate is &lt;code&gt;git&lt;/code&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;Check out the new &lt;code&gt;auto-yasnippet&lt;/code&gt; method, I think it&amp;#39;s pretty
+efficient.  I hope that you&amp;#39;ll find the wiki page useful in your C
+pursuits.  And a big thanks to Eric Schulte for &lt;code&gt;org-babel&lt;/code&gt;.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Blending colors in Elisp</title>
