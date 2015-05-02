@@ -4,13 +4,245 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-04-30T19:10:58+02:00</updated>
+ <updated>2015-05-02T19:01:26+02:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Ivy-mode 0.4.0 is out</title>
+   <link href="http://oremacs.com/2015/05/02/swiper-0.4.0/"/>
+   <updated>2015-05-02T00:00:00+02:00</updated>
+   <id>http://oremacs.com/2015/05/02/swiper-0.4.0</id>
+   <content type="html">&lt;p&gt;This is a feature-packed release with a lot of cool things like:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Partial completion on &lt;kbd&gt;TAB&lt;/kbd&gt;&lt;/li&gt;
+&lt;li&gt;Resume the last completion session with &lt;code&gt;ivy-resume&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Multi-tier regex matching&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The detailed release notes follow.&lt;/p&gt;
+
+&lt;h2 id=&quot;fixes&quot;&gt;Fixes&lt;/h2&gt;
+
+&lt;h3 id=&quot;glob-expansion-in-rgrep&quot;&gt;Glob expansion in &lt;code&gt;rgrep&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;While completing file names, ivy expands the file name to
+full. Unfortunately, &lt;code&gt;rgrep&lt;/code&gt; uses &lt;code&gt;read-file-name-internal&lt;/code&gt; and isn&amp;#39;t
+receptive to globs being expanded with the current directory.  A
+work-around this is to use the generic strategy when ivy is in
+trouble:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;enter the input text as if there was no completion.&lt;/li&gt;
+&lt;li&gt;exit with &lt;kbd&gt;C-u C-j&lt;/kbd&gt; (forwards to &lt;code&gt;ivy-immediate-done&lt;/code&gt;).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code&gt;ivy-immediate-done&lt;/code&gt; is currently unbound by default. If you want, you
+can bind it in your config like this:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ivy-minibuffer-map&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-c C-d&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ivy-immediate-done&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;exclude-a-couple-more-modes-from-font-lock&quot;&gt;Exclude a couple more modes from font-lock&lt;/h3&gt;
+
+&lt;p&gt;This time, they are &lt;code&gt;jabber-chat-mode&lt;/code&gt; and &lt;code&gt;elfeed-search-mode&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;fix-a-flag-in-swiper-query-replace&quot;&gt;Fix a flag in &lt;code&gt;swiper-query-replace&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;You can launch a query replace with &lt;kbd&gt;M-q&lt;/kbd&gt; from swiper.&lt;/p&gt;
+
+&lt;h3 id=&quot;avoid-sorting-org-refile-candidates&quot;&gt;Avoid sorting &lt;code&gt;org-refile&lt;/code&gt; candidates&lt;/h3&gt;
+
+&lt;p&gt;By default, ivy completion candidates are sorted with
+&lt;code&gt;string-lessp&lt;/code&gt;. The sorting can be customized with
+&lt;code&gt;ivy-sort-functions-alist&lt;/code&gt;. While refiling, the natural order is
+actually best, so the sorting is turned off in that case.&lt;/p&gt;
+
+&lt;h3 id=&quot;reset-to-the-first-candidate-when-switching-directories&quot;&gt;Reset to the first candidate when switching directories&lt;/h3&gt;
+
+&lt;p&gt;With &lt;code&gt;ivy-mode&lt;/code&gt; you can select a file anywhere on your file system by
+switching directories repeatedly with &lt;kbd&gt;C-j&lt;/kbd&gt;
+(&lt;code&gt;ivy-alt-done&lt;/code&gt;). After moving to a new directory, the point should be
+on the first candidate.&lt;/p&gt;
+
+&lt;h3 id=&quot;fixup-the-face-order&quot;&gt;Fixup the face order&lt;/h3&gt;
+
+&lt;p&gt;All this time there was an issue with the face order swapping between
+1 and 2 groups.  This is now fixed.  Also, I&amp;#39;ve made
+&lt;code&gt;swiper-match-face-4&lt;/code&gt; inherit from &lt;code&gt;isearch-fail&lt;/code&gt;. It&amp;#39;s important to
+have all 4 faces be different.&lt;/p&gt;
+
+&lt;h3 id=&quot;don&amp;#39;t-error-on-bad-regex&quot;&gt;Don&amp;#39;t error on bad regex&lt;/h3&gt;
+
+&lt;p&gt;When the current input is a bad regex, just display no candidates and
+continue. Don&amp;#39;t throw an error.&lt;/p&gt;
+
+&lt;h2 id=&quot;new-features&quot;&gt;New Features&lt;/h2&gt;
+
+&lt;h3 id=&quot;use-//-instead-of-/-to-move-to-root&quot;&gt;Use &lt;kbd&gt;//&lt;/kbd&gt; instead of &lt;kbd&gt;/&lt;/kbd&gt; to move to root&lt;/h3&gt;
+
+&lt;p&gt;While completing file names, you can enter &lt;kbd&gt;//&lt;/kbd&gt; to move to
+the root directory.  This change was necessary in order to make it
+possible to enter e.g. &lt;code&gt;/sudo:&lt;/code&gt; or &lt;code&gt;/ssh:&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;host-completion-for-/sudo:-and-/ssh:&quot;&gt;Host completion for &lt;code&gt;/sudo:&lt;/code&gt; and &lt;code&gt;/ssh:&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;This feature is a bit flaky for now. But it works well on my
+machine. It should get better after a few bug reports. You can start
+the completion right after the method, e.g. &lt;code&gt;/ssh:&lt;/code&gt; &lt;kbd&gt;RET&lt;/kbd&gt;, or
+after method+user, e.g. &lt;code&gt;/ssh:oleh@&lt;/code&gt; &lt;kbd&gt;RET&lt;/kbd&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;respect-confirm-nonexistent-file-or-buffer&quot;&gt;Respect &lt;code&gt;confirm-nonexistent-file-or-buffer&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;If you set &lt;code&gt;confirm-nonexistent-file-or-buffer&lt;/code&gt; to t (it&amp;#39;s nil by
+default), you&amp;#39;ll have to confirm when you create a new file or buffer
+with ivy.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/wiki/abo-abo/swiper/images/ivy-confirm.png&quot; alt=&quot;confirm.png&quot;&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;highlight-remote-buffers-with-ivy-remote-face&quot;&gt;Highlight remote buffers with &lt;code&gt;ivy-remote&lt;/code&gt; face&lt;/h3&gt;
+
+&lt;p&gt;Just some extra polish to make things look nicer. The buffers to which
+you&amp;#39;re connected through TRAMP will be highlighted with the new
+&lt;code&gt;ivy-remote&lt;/code&gt; face.&lt;/p&gt;
+
+&lt;h3 id=&quot;change-the-prompt-for-match-required-interactions&quot;&gt;Change the prompt for &lt;code&gt;match-required&lt;/code&gt; interactions&lt;/h3&gt;
+
+&lt;p&gt;Sometimes, the Emacs functions that call completion specify to it that
+a match is required, i.e. you can&amp;#39;t just type in some random stuff -
+you have to select one of the candidates given to you.  In that case
+ivy will appropriately change the prompt like this:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/wiki/abo-abo/swiper/images/ivy-match-required.png&quot; alt=&quot;match-required.png&quot;&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;improve-the-candidate-selection-while-using-history&quot;&gt;Improve the candidate selection while using history&lt;/h3&gt;
+
+&lt;p&gt;While completing, you press &lt;kbd&gt;M-p&lt;/kbd&gt; to select the previous
+input. This update tries to select not just the first candidates that
+matches, but the actual previous candidate that you selected before.&lt;/p&gt;
+
+&lt;h3 id=&quot;use-alpha-compositing-to-add-ivy-current-match-face&quot;&gt;Use alpha compositing to add &lt;code&gt;ivy-current-match-face&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;This is only relevant for when the completion candidates have custom
+face backgrounds. But in that case, the minibuffer looks a lot nicer.&lt;/p&gt;
+
+&lt;h3 id=&quot;add-partial-completion&quot;&gt;Add partial completion&lt;/h3&gt;
+
+&lt;p&gt;Press &lt;kbd&gt;TAB&lt;/kbd&gt; to do call &lt;code&gt;ivy-partial-or-done&lt;/code&gt; to complete the
+current thing to the largest possible prefix. When called twice in a
+row, it&amp;#39;s the same as &lt;kbd&gt;C-j&lt;/kbd&gt;, i.e. it will finish the
+completion.&lt;/p&gt;
+
+&lt;h3 id=&quot;improve-completion-of-hidden-buffers&quot;&gt;Improve completion of hidden buffers&lt;/h3&gt;
+
+&lt;p&gt;In Emacs, hidden buffer names start with a space. To see them all,
+press a single space while completing buffers in &lt;code&gt;ivy-mode&lt;/code&gt;. You can
+toggle between hidden and non-hidden buffers by editing the first
+space in your input query. Remember that with &lt;code&gt;ivy-mode&lt;/code&gt; the
+minibuffer is a proper editable area, so &lt;kbd&gt;C-a&lt;/kbd&gt; works properly
+(unlike in &lt;code&gt;isearch&lt;/code&gt; or &lt;code&gt;ido-mode&lt;/code&gt;).&lt;/p&gt;
+
+&lt;h3 id=&quot;allow-to-quote-spaces-while-matching&quot;&gt;Allow to quote spaces while matching&lt;/h3&gt;
+
+&lt;p&gt;Spaces are wild while matching - they serve as group
+boundaries. However, sometimes it would be useful to quote them. From
+now on, you can quote &lt;code&gt;N&lt;/code&gt; consecutive spaces by inputting &lt;code&gt;N+1&lt;/code&gt;
+consecutive spaces.&lt;/p&gt;
+
+&lt;h2 id=&quot;add-multi-tier-regex-matching&quot;&gt;Add multi-tier regex matching&lt;/h2&gt;
+
+&lt;p&gt;This is actually a really cool feature, so if you&amp;#39;re paying attention
+to any section, let it be this one.&lt;/p&gt;
+
+&lt;h3 id=&quot;user-side&quot;&gt;User side&lt;/h3&gt;
+
+&lt;p&gt;For example, I cloned
+&lt;a href=&quot;https://github.com/boostorg/boost/tree/boost-1.58.0&quot;&gt;boost-1.58.0&lt;/a&gt;
+and called &lt;code&gt;counsel-git&lt;/code&gt;, which is like a &lt;code&gt;find-file&lt;/code&gt; for all files in
+a git repository at once.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Initially, it gives 45919 candidate files.&lt;/li&gt;
+&lt;li&gt;With input &amp;quot;utility&amp;quot;, there are 234 candidates.&lt;/li&gt;
+&lt;li&gt;With input &amp;quot;utility hpp&amp;quot;, there are 139 candidates.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Now, the interesting part. If I want to exclude anything with &amp;quot;hpp&amp;quot; in
+it, I change the input to &amp;quot;utility !hpp&amp;quot; (with &lt;kbd&gt;M-b !&lt;/kbd&gt;) to
+get 95 candidates (95=234-139, it checks out).  I could exclude some
+more:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;with input &amp;quot;utility !hpp cpp&amp;quot; there are 57 candidates.&lt;/li&gt;
+&lt;li&gt;with input &amp;quot;utility !hpp cpp ipp&amp;quot; there are 46 candidates.&lt;/li&gt;
+&lt;li&gt;I can unify the regex to &amp;quot;utility ![hic]pp&amp;quot; and also get 46 candidates.&lt;/li&gt;
+&lt;li&gt;exclude htm with &amp;quot;utility ![hic]pp htm&amp;quot; to get only 17 candidates.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;You can use this strategy anywhere, not just for git file. For example, in &lt;code&gt;describe-function&lt;/code&gt; or &lt;code&gt;swiper&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;elisp-side&quot;&gt;Elisp side&lt;/h3&gt;
+
+&lt;p&gt;You can customize &lt;code&gt;ivy-re-builders-alist&lt;/code&gt; to make &lt;code&gt;ivy-mode&lt;/code&gt; complete
+in the way that you like.  The alist dispatches on the collection
+type, so you can have one completion strategy for buffers, another for
+files and still another for everything else.&lt;/p&gt;
+
+&lt;p&gt;Each function on the alist should turn the string input into a string
+regex. So the simplest one would be &lt;code&gt;regexp-quote&lt;/code&gt;. If you want to use
+multi-tier matching, the function should instead return a list of
+regexps of two types:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;the ones that should match (will be joined by &lt;code&gt;and&lt;/code&gt;).&lt;/li&gt;
+&lt;li&gt;the ones that should not match (will be joined by &lt;code&gt;or&lt;/code&gt;).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;add-ivy-resume&quot;&gt;Add &lt;code&gt;ivy-resume&lt;/code&gt;&lt;/h2&gt;
+
+&lt;p&gt;This feature is still a bit of a work-in-progress. But it allows you
+to resume the last completion to the point before you entered
+&lt;kbd&gt;RET&lt;/kbd&gt; or &lt;kbd&gt;C-g&lt;/kbd&gt; etc.  It only works for features that
+specifically passed &lt;code&gt;:action&lt;/code&gt; to &lt;code&gt;ivy-read&lt;/code&gt;.  You could resume other
+features, but nothing would be done when you select the candidate,
+since &lt;code&gt;ivy-completing-read&lt;/code&gt; has no idea what the function that called
+it was going to do with the result.&lt;/p&gt;
+
+&lt;p&gt;Currently, you can resume:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;counsel-describe-variable&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;counsel-describe-function&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;lispy-goto&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;swiper&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Here&amp;#39;s how I&amp;#39;ve bound it in my config:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-c C-r&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ivy-resume&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;[f6]&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ivy-resume&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The &lt;code&gt;ivy-resume&lt;/code&gt; feature adds &lt;code&gt;occur&lt;/code&gt;-like functionality to &lt;code&gt;swiper&lt;/code&gt;.
+Calling &lt;code&gt;ivy-resume&lt;/code&gt; is like switching to the &lt;code&gt;*Occur*&lt;/code&gt; buffer.&lt;/p&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;Big thanks to all who contributed, especially
+&lt;a href=&quot;https://github.com/tsdh&quot;&gt;@tsdh&lt;/a&gt; and
+&lt;a href=&quot;https://github.com/zhaojiangbin&quot;&gt;@zhaojiangbin&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;If you&amp;#39;re considering to switch from &lt;code&gt;ido-mode&lt;/code&gt; to &lt;code&gt;ivy-mode&lt;/code&gt;, now is
+a good time, since the most glaring gaps have now been filled. You can
+find some up-to-date info on the
+&lt;a href=&quot;https://github.com/abo-abo/swiper/wiki&quot;&gt;swiper wiki&lt;/a&gt;. I switched the
+page syntax from markdown to org-mode, but Github makes the headings
+way to big. So it might be easier to clone the wiki and view the org
+files in Emacs:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;git clone https://github.com/abo-abo/swiper.wiki.git
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
+ </entry>
  
  <entry>
    <title>GCC macros and auto-yasnippet</title>

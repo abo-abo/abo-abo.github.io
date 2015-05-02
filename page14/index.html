@@ -160,6 +160,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -240,6 +244,139 @@
 
       <div class="container content">
         <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/2015/02/03/one-hydra-two-hydra/">
+        One Hydra Two Hydra Red Hydra Blue Hydra
+      </a>
+    </h1>
+
+    <span class="post-date">03 Feb 2015</span>
+
+    <p>Hydra evolution picks up the pace with
+<a href="https://github.com/abo-abo/hydra/releases/tag/0.6.1">hydra 0.6.1</a>.
+This version adds prefix arguments to all Hydras.</p>
+
+<h2 id="some-examples">Some Examples</h2>
+
+<h3 id="look-ma,-no-modifiers!">Look ma, no modifiers!</h3>
+
+<p>Now it&#39;s possible to write this:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span>
+ <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-z&quot;</span><span class="p">)</span>
+ <span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-vi</span> <span class="p">()</span>
+   <span class="s">&quot;vi&quot;</span>
+   <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nf">forward-char</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;h&quot;</span> <span class="nf">backward-char</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">next-line</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;k&quot;</span> <span class="nv">previous-line</span><span class="p">)))</span>
+</code></pre></div>
+<p>And now <kbd>C-z 5j7l</kbd> will move 5 lines down and 7 characters
+left, still with the option to press <kbd>h</kbd>, <kbd>j</kbd>,
+<kbd>k</kbd>, <kbd>l</kbd> some more.</p>
+
+<p>Additionally <kbd>C-z C-u C-u C-u k</kbd> will move 64 lines up, since <kbd>C-u</kbd> multiplies its
+argument by 4 each time.</p>
+
+<h3 id="the-good-old-zoom">The good-old zoom</h3>
+
+<p>If you remember, this was the original Hydra:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-zoom</span> <span class="p">(</span><span class="nv">global-map</span> <span class="s">&quot;&lt;f2&gt;&quot;</span><span class="p">)</span>
+  <span class="s">&quot;zoom&quot;</span>
+  <span class="p">(</span><span class="s">&quot;g&quot;</span> <span class="nv">text-scale-increase</span> <span class="s">&quot;in&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nv">text-scale-decrease</span> <span class="s">&quot;out&quot;</span><span class="p">))</span>
+</code></pre></div>
+<p>Now, <kbd>&lt;f2&gt; g 4g 2l</kbd> will zoom in 5 times, and zoom out 2
+times for a total of +3 zoom.</p>
+
+<h3 id="the-good-old-move-splitter">The good-old move-splitter</h3>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-splitter</span> <span class="p">(</span><span class="nv">global-map</span> <span class="s">&quot;C-M-s&quot;</span><span class="p">)</span>
+  <span class="s">&quot;splitter&quot;</span>
+  <span class="p">(</span><span class="s">&quot;h&quot;</span> <span class="nv">hydra-move-splitter-left</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">hydra-move-splitter-down</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;k&quot;</span> <span class="nv">hydra-move-splitter-up</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nv">hydra-move-splitter-right</span><span class="p">))</span>
+</code></pre></div>
+<p>This Hydra can benefit from numeric arguments as well: <kbd>C-M-s l
+40l</kbd> will quickly make the right window a lot smaller.</p>
+
+<p>If I wanted to type <kbd>C-M-s 40 l</kbd>, I would have to use this definition instead:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span>
+ <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-M-s&quot;</span><span class="p">)</span>
+ <span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-splitter</span> <span class="p">()</span>
+   <span class="s">&quot;splitter&quot;</span>
+   <span class="p">(</span><span class="s">&quot;h&quot;</span> <span class="nv">hydra-move-splitter-left</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">hydra-move-splitter-down</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;k&quot;</span> <span class="nv">hydra-move-splitter-up</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nv">hydra-move-splitter-right</span><span class="p">)))</span>
+</code></pre></div>
+<p>For that case, I would get the hint immediately after <kbd>C-M-s</kbd> and would be able to give the numeric argument immediately,
+but I wouldn&#39;t be able to bind anything else on <kbd>C-M-s</kbd> as a prefix, e.g.:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-M-s z&quot;</span><span class="p">)</span> <span class="ss">&#39;recenter-top-bottom</span><span class="p">)</span>
+</code></pre></div>
+<p>The code above would give the error <code>&quot;Key sequence C-M-s z starts with non-prefix key C-M-s&quot;</code>.
+So you can pick the method that you prefer, the choice is there.</p>
+
+<h2 id="the-ultimate-window-switching-setup">The ultimate window switching setup</h2>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span>
+ <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-M-o&quot;</span><span class="p">)</span>
+ <span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-window</span> <span class="p">()</span>
+   <span class="s">&quot;window&quot;</span>
+   <span class="p">(</span><span class="s">&quot;h&quot;</span> <span class="nv">windmove-left</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">windmove-down</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;k&quot;</span> <span class="nv">windmove-up</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nv">windmove-right</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span>
+          <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">ace-window</span> <span class="mi">1</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;ace-window-end-once-hook</span>
+                    <span class="ss">&#39;hydra-window/body</span><span class="p">))</span>
+        <span class="s">&quot;ace&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;v&quot;</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span>
+          <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">split-window-right</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">windmove-right</span><span class="p">))</span>
+        <span class="s">&quot;vert&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;x&quot;</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span>
+          <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">split-window-below</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">windmove-down</span><span class="p">))</span>
+        <span class="s">&quot;horz&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;s&quot;</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span>
+          <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">ace-window</span> <span class="mi">4</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;ace-window-end-once-hook</span>
+                    <span class="ss">&#39;hydra-window/body</span><span class="p">))</span>
+        <span class="s">&quot;swap&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;d&quot;</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span>
+          <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">ace-window</span> <span class="mi">16</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;ace-window-end-once-hook</span>
+                    <span class="ss">&#39;hydra-window/body</span><span class="p">))</span>
+        <span class="s">&quot;del&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;o&quot;</span> <span class="nv">delete-other-windows</span> <span class="s">&quot;1&quot;</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;i&quot;</span> <span class="nv">ace-maximize-window</span> <span class="s">&quot;a1&quot;</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span> <span class="s">&quot;cancel&quot;</span><span class="p">)))</span>
+</code></pre></div>
+<p>The credit for this monster goes to <a href="https://github.com/bcarrell">bcarell</a>, I just refined his approach
+with making <code>ace-window</code> not quit the <code>hydra-window</code> Hydra.
+This setup needs the latest <a href="https://github.com/abo-abo/ace-window">ace-window</a>.</p>
+
+<p>Here&#39;s the result of <kbd>C-M-o xvxv</kbd> starting from a single window:</p>
+
+<p><img src="/download/hydra-window.png" alt="hydra-window"></p>
+
+<p>From here, I can quickly maximize the current window with <kbd>o</kbd>
+while simultaneously quitting the Hydra; <kbd>i</kbd> will maximize a
+window as well, but it will select it with <code>ace-window</code>, instead of
+maximizing the current one.</p>
+
+<p>Note that, since numerical arguments are working now, <kbd>4a</kbd> is
+the same as <kbd>s</kbd> (swap) and <kbd>16a</kbd> or <kbd>C-u C-u
+a</kbd> is the same as <kbd>d</kbd> (delete).</p>
+
+  </div>
   
   <div class="post">
     <h1 class="post-title">
@@ -886,109 +1023,6 @@ you call <kbd>H-w</kbd> (<code>aya-create</code>).  Here, <code>|</code> represe
 verbose programming languages and repetitive text, and that a day will
 come when repetition is no longer needed and <code>auto-yasnippet</code> will
 become obsolete.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/01/29/more-hydra-goodness/">
-        Combining ace-window and windmove with hydra
-      </a>
-    </h1>
-
-    <span class="post-date">29 Jan 2015</span>
-
-    <p>I was inspired by Sacha Chua&#39;s <a href="http://sachachua.com/blog/2015/01/emacs-microhabit-switching-windows-windmove-ace-window-ace-jump/">recent post</a>
-explaining her window bindings, that combine both <code>ace-window</code> and <code>windmove</code>.
-So I wrote down an update to Hydra in order to get a similar setup.</p>
-
-<h2 id="sacha&#39;s-code">Sacha&#39;s code</h2>
-
-<p>Here it is:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">key-chord-define-global</span>
- <span class="s">&quot;yy&quot;</span>
- <span class="p">(</span><span class="nv">sacha/def-rep-command</span>
-  <span class="o">&#39;</span><span class="p">(</span><span class="no">nil</span>
-    <span class="p">(</span><span class="s">&quot;&lt;left&gt;&quot;</span> <span class="o">.</span> <span class="nv">windmove-left</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;&lt;right&gt;&quot;</span> <span class="o">.</span> <span class="nv">windmove-right</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;&lt;down&gt;&quot;</span> <span class="o">.</span> <span class="nv">windmove-down</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;&lt;up&gt;&quot;</span> <span class="o">.</span> <span class="nv">windmove-up</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;y&quot;</span> <span class="o">.</span> <span class="nv">other-window</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;h&quot;</span> <span class="o">.</span> <span class="nv">ace-window</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;s&quot;</span> <span class="o">.</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span> <span class="p">(</span><span class="k">interactive</span><span class="p">)</span> <span class="p">(</span><span class="nv">ace-window</span> <span class="mi">4</span><span class="p">)))</span>
-    <span class="p">(</span><span class="s">&quot;d&quot;</span> <span class="o">.</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span> <span class="p">(</span><span class="k">interactive</span><span class="p">)</span> <span class="p">(</span><span class="nv">ace-window</span> <span class="mi">16</span><span class="p">))))))</span>
-</code></pre></div>
-<h2 id="my-code">My code</h2>
-
-<p>Here&#39;s what I&#39;ve come up with, thanks to the newest code in
-<a href="https://github.com/abo-abo/hydra">hydra</a>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">hydra-universal-argument</span> <span class="p">(</span><span class="nv">arg</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">interactive</span> <span class="s">&quot;P&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">setq</span> <span class="nv">prefix-arg</span> <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">consp</span> <span class="nv">arg</span><span class="p">)</span>
-                       <span class="p">(</span><span class="nf">list</span> <span class="p">(</span><span class="nf">*</span> <span class="mi">4</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">arg</span><span class="p">)))</span>
-                     <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">eq</span> <span class="nv">arg</span> <span class="ss">&#39;-</span><span class="p">)</span>
-                         <span class="p">(</span><span class="nf">list</span> <span class="mi">-4</span><span class="p">)</span>
-                       <span class="o">&#39;</span><span class="p">(</span><span class="mi">4</span><span class="p">)))))</span>
-
-<span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-window</span> <span class="p">(</span><span class="nv">global-map</span> <span class="s">&quot;C-M-o&quot;</span><span class="p">)</span>
-  <span class="s">&quot;window&quot;</span>
-  <span class="p">(</span><span class="s">&quot;h&quot;</span> <span class="nv">windmove-left</span> <span class="s">&quot;left&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">windmove-down</span> <span class="s">&quot;down&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;k&quot;</span> <span class="nv">windmove-up</span> <span class="s">&quot;up&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nv">windmove-right</span> <span class="s">&quot;right&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="nv">ace-window</span> <span class="s">&quot;ace&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;u&quot;</span> <span class="nv">hydra-universal-argument</span> <span class="s">&quot;universal&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;s&quot;</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span> <span class="p">(</span><span class="k">interactive</span><span class="p">)</span> <span class="p">(</span><span class="nv">ace-window</span> <span class="mi">4</span><span class="p">))</span> <span class="s">&quot;swap&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;d&quot;</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span> <span class="p">(</span><span class="k">interactive</span><span class="p">)</span> <span class="p">(</span><span class="nv">ace-window</span> <span class="mi">16</span><span class="p">))</span> <span class="s">&quot;delete&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;o&quot;</span><span class="p">))</span>
-
-<span class="p">(</span><span class="nv">key-chord-define-global</span> <span class="s">&quot;yy&quot;</span> <span class="ss">&#39;hydra-window/body</span><span class="p">)</span>
-</code></pre></div>
-<p>The new code should already be available in
-<a href="http://melpa.org/">MELPA</a>.  I&#39;ll update the code in
-<a href="https://elpa.gnu.org/packages/hydra.html">GNU ELPA</a> soon, when I make
-sure that there were no bugs introduced by the change.</p>
-
-<p>If anyone wants to see how the <code>defhydra</code> macro expands, you can check
-out
-<a href="https://github.com/abo-abo/hydra/blob/master/hydra-test.el">hydra-test.el</a>.
-I just added a Travis CI setup, so if you&#39;re interested in starting
-to test your Elisp code, you can have a very simple example.</p>
-
-<h2 id="how-the-defined-hydra-works">How the defined Hydra works</h2>
-
-<p>With this setup:</p>
-
-<ul>
-<li><p>to swap two windows (i.e. call <kbd>C-u</kbd> <code>ace-window</code>), I can do any of:</p>
-
-<ul>
-<li><kbd>C-M-o s</kbd></li>
-<li><kbd>C-M-o ua</kbd></li>
-<li><kbd>yys</kbd></li>
-<li><kbd>yyua</kbd></li>
-</ul></li>
-<li><p>to delete one window (i.e. call <kbd>C-u C-u</kbd> <code>ace-window</code>), any of:</p>
-
-<ul>
-<li><kbd>C-M-o d</kbd></li>
-<li><kbd>C-M-o uua</kbd></li>
-<li><kbd>yyd</kbd></li>
-<li><kbd>yyuua</kbd></li>
-</ul></li>
-<li><p>to move one window down, two windows right, and one window up:</p>
-
-<ul>
-<li><kbd>C-M-o jllk</kbd></li>
-<li><kbd>yyjllk</kbd></li>
-</ul></li>
-</ul>
-
-<p>Although every other shortcut except the Hydra heads will vanquish the
-Hydra, sometimes I have nothing on my mind that needs doing. For that
-case, as you can see above, I enter <kbd>o</kbd> in its own list
-without a function, so that <kbd>o</kbd> will dismiss the Hydra
-without doing anything.</p>
 
   </div>
   
