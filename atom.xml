@@ -4,13 +4,104 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-05-02T19:01:26+02:00</updated>
+ <updated>2015-05-08T13:03:46+02:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>New on MELPA - avy</title>
+   <link href="http://oremacs.com/2015/05/08/avy-0.1.0/"/>
+   <updated>2015-05-08T00:00:00+02:00</updated>
+   <id>http://oremacs.com/2015/05/08/avy-0.1.0</id>
+   <content type="html">&lt;p&gt;This package contains the library on which &lt;a href=&quot;https://github.com/abo-abo/ace-window&quot;&gt;ace-window&lt;/a&gt; and
+&lt;a href=&quot;https://github.com/abo-abo/ace-link&quot;&gt;ace-link&lt;/a&gt; now depend, as well as a multitude of navigation
+commands.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/wiki/abo-abo/avy-jump/images/avy-avatar-1.png&quot; alt=&quot;logo.png&quot;&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;intro&quot;&gt;Intro&lt;/h2&gt;
+
+&lt;p&gt;Yes, they used to depend on &lt;a href=&quot;https://github.com/winterTTr/ace-jump-mode&quot;&gt;ace-jump-mode&lt;/a&gt;, hence the
+&lt;code&gt;ace&lt;/code&gt; in their names, but as I added features to my packages over time, it became harder to compose
+features because of &lt;code&gt;ace-jump-mode&lt;/code&gt; inflexibility.&lt;/p&gt;
+
+&lt;p&gt;Don&amp;#39;t get me wrong, &lt;code&gt;ace-jump-mode&lt;/code&gt; is a fine standalone package, and if you&amp;#39;re using it only for
+jumping to chars, there are few reasons for you to make the switch. However, if you&amp;#39;re interested in
+the new and juicy features, such as: &lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;jumping to word starts&lt;/li&gt;
+&lt;li&gt;jumping to sub-word starts&lt;/li&gt;
+&lt;li&gt;jumping to line beginnings or endings&lt;/li&gt;
+&lt;li&gt;copying and moving lines&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;with most of the features coming in &lt;code&gt;-0&lt;/code&gt;, &lt;code&gt;-1&lt;/code&gt;, or &lt;code&gt;-2&lt;/code&gt; flavor, or if you&amp;#39;re interested in building
+an &lt;code&gt;ace-jump-mode&lt;/code&gt;-based package, then you should consider &lt;a href=&quot;https://github.com/abo-abo/avy&quot;&gt;avy&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-leading-chars-flavor&quot;&gt;The leading chars flavor&lt;/h2&gt;
+
+&lt;p&gt;All of the commands provided are about jumping to visible characters, and possibly doing some stuff.
+Since usually there are a lot of these visible characters, it&amp;#39;s advantageous to first narrow them
+somewhat. So each command can be divided into two phases: the narrowing phase and the decision phase.&lt;/p&gt;
+
+&lt;p&gt;There are 3 variations of the narrowing phase:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;The &lt;code&gt;-0&lt;/code&gt; flavor, e.g. &lt;code&gt;avy-goto-word-0&lt;/code&gt; or &lt;code&gt;avy-goto-line&lt;/code&gt; doesn&amp;#39;t narrow at all. The advantage
+that there&amp;#39;s minimum context switching (no narrowing phase, only decision phase). The disadvantage
+is that the number of candidates in the decision phase can be quite large.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The &lt;code&gt;-1&lt;/code&gt; flavor, e.g. &lt;code&gt;avy-goto-word-1&lt;/code&gt; or &lt;code&gt;avy-goto-char&lt;/code&gt; narrows by the first character of the
+thing.  The disadvantage is the context switch: first you call the command, then you switch context
+to scan and input the leading char, then you switch context to scan and input the decision chars.
+The advantage is less candidates in the decision phase.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The &lt;code&gt;-2&lt;/code&gt; flavor is my favorite &lt;code&gt;avy-goto-char-2&lt;/code&gt;: it reads &lt;strong&gt;two&lt;/strong&gt; consecutive chars, instead of
+just one.  This doesn&amp;#39;t impact the narrowing phase too much, since inputting two consecutive chars
+isn&amp;#39;t much more than just one.  But it greatly decreases the number of candidates in the decision
+phase. The small amount of candidates allows me to use this setting for the decision:&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;avy-keys&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;?a&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;?s&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;?d&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;?f&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;?g&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;?h&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;?j&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;?k&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;?l&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;That&amp;#39;s only 9 decision chars, all of them on the home row.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-decision-char-overlay-flavors&quot;&gt;The decision char overlay flavors&lt;/h2&gt;
+
+&lt;p&gt;Once again, there are three, here are their corresponding &lt;code&gt;defcustom&lt;/code&gt;s:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defcustom&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;avy-goto-char-style&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;pre&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Method of displaying the overlays for `avy-goto-char&amp;#39; and `avy-goto-char-2&amp;#39;.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;:type&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;choice&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:tag&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Pre&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;pre&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:tag&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;At&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;at&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:tag&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Post&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defcustom&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;avy-goto-word-style&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;pre&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Method of displaying the overlays for `avy-goto-word-0&amp;#39; and `avy-goto-word-0&amp;#39;.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;:type&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;choice&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:tag&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Pre&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;pre&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:tag&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;At&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;at&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:tag&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Post&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;If you&amp;#39;re used to &lt;code&gt;ace-jump-mode&lt;/code&gt;, the corresponding style is &lt;code&gt;at&lt;/code&gt;, which displays the overlay at
+the target position, one character at a time.  I don&amp;#39;t like this style most of the time, I prefer
+&lt;code&gt;pre&lt;/code&gt; which is more similar to &lt;code&gt;vim-easymotion&lt;/code&gt;: it will display the full char path at once, before
+the target position. This results in less feedback and more efficiency, in my opinion.&lt;/p&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;Give the new package a try, it&amp;#39;s already been pretty active the last few days, with bugs being fixed
+and new features appearing, thanks to all who contributed.&lt;/p&gt;
+
+&lt;p&gt;If you want to see some screenshots, there are plenty at the
+&lt;a href=&quot;https://github.com/abo-abo/avy&quot;&gt;repository page&lt;/a&gt;, and also in an earlier
+&lt;a href=&quot;http://oremacs.com/2015/03/03/ace-window-full-path/&quot;&gt;post&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Finally, the package in on &lt;a href=&quot;http://melpa.org/#/avy&quot;&gt;MELPA&lt;/a&gt;, so it&amp;#39;s convenient to install.  The only hassle is to decide where to bind all these commands.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Ivy-mode 0.4.0 is out</title>

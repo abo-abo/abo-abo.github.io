@@ -11,7 +11,7 @@
 
   <title>
     
-      Yet another youtube-dl interface for Emacs &middot; (or emacs
+      New on MELPA - avy &middot; (or emacs
     
   </title>
 
@@ -244,98 +244,91 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Yet another youtube-dl interface for Emacs</h1>
-  <span class="post-date">05 Jan 2015</span>
-  <p>If you haven&#39;t been living under a rock, you already know what
-<a href="https://www.youtube.com/">Youtube</a> is.  It&#39;s a repository with videos of
-varying degree of usefulness with a terrible media player tacked on.
-Instead, I like to watch my videos in
-<a href="http://www.videolan.org/vlc/index.html">VLC</a>, which comes closest to
-providing an Emacs-like experience among video players.</p>
+  <h1 class="post-title">New on MELPA - avy</h1>
+  <span class="post-date">08 May 2015</span>
+  <p>This package contains the library on which <a href="https://github.com/abo-abo/ace-window">ace-window</a> and
+<a href="https://github.com/abo-abo/ace-link">ace-link</a> now depend, as well as a multitude of navigation
+commands.</p>
 
-<h2 id="useful-vlc-shortcuts">Useful VLC shortcuts</h2>
+<p><img src="https://raw.githubusercontent.com/wiki/abo-abo/avy-jump/images/avy-avatar-1.png" alt="logo.png"></p>
 
-<p>Here is a list of shortcuts that really make me stick with VLC:</p>
+<h2 id="intro">Intro</h2>
+
+<p>Yes, they used to depend on <a href="https://github.com/winterTTr/ace-jump-mode">ace-jump-mode</a>, hence the
+<code>ace</code> in their names, but as I added features to my packages over time, it became harder to compose
+features because of <code>ace-jump-mode</code> inflexibility.</p>
+
+<p>Don&#39;t get me wrong, <code>ace-jump-mode</code> is a fine standalone package, and if you&#39;re using it only for
+jumping to chars, there are few reasons for you to make the switch. However, if you&#39;re interested in
+the new and juicy features, such as: </p>
 
 <ul>
-<li><kbd>f</kbd> - toggle full-screen</li>
-<li><kbd>b</kbd> - toggle audio track</li>
-<li><kbd>n</kbd> - toggle subtitle track</li>
-<li><kbd>&#93;</kbd> - speed up play by <code>0.1</code></li>
-<li><kbd>&#91;</kbd> - slow down play by <code>0.1</code></li>
-<li><kbd>M-right</kbd> - forward by 15 seconds</li>
-<li><kbd>M-left</kbd> - backward by 15 seconds</li>
-<li><kbd>C-right</kbd> - forward by 60 seconds</li>
-<li><kbd>C-left</kbd> - backward by 60 seconds</li>
-<li><kbd>M-1</kbd> - quarter of video size</li>
-<li><kbd>M-2</kbd> - half of video size</li>
-<li><kbd>M-3</kbd> - full video size</li>
-<li><kbd>M-4</kbd> - double video size</li>
-<li><kbd>C-h</kbd> - toggle mouse buttons</li>
+<li>jumping to word starts</li>
+<li>jumping to sub-word starts</li>
+<li>jumping to line beginnings or endings</li>
+<li>copying and moving lines</li>
 </ul>
 
-<p>So if you&#39;re not watching instructional videos at <code>1.6</code> speed,
-or skipping the Simpsons intro sequence with <kbd>M-right</kbd>, you&#39;re missing out.</p>
+<p>with most of the features coming in <code>-0</code>, <code>-1</code>, or <code>-2</code> flavor, or if you&#39;re interested in building
+an <code>ace-jump-mode</code>-based package, then you should consider <a href="https://github.com/abo-abo/avy">avy</a>.</p>
 
-<h2 id="from-youtube-to-vlc">From Youtube to VLC</h2>
+<h2 id="the-leading-chars-flavor">The leading chars flavor</h2>
 
-<p><a href="https://github.com/rg3/youtube-dl/">youtube-dl</a> is an excellent command-line tool
-for saving the videos from Youtube. It downloads the highest resolution at a usually
-higher speed than Youtube&#39;s player buffers. I&#39;ve discovered it when I had to download
-a bunch of lecture videos from <a href="https://www.edx.org/">edX</a>.
-You can install it with:</p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">sudo pip install youtube-dl
+<p>All of the commands provided are about jumping to visible characters, and possibly doing some stuff.
+Since usually there are a lot of these visible characters, it&#39;s advantageous to first narrow them
+somewhat. So each command can be divided into two phases: the narrowing phase and the decision phase.</p>
+
+<p>There are 3 variations of the narrowing phase:</p>
+
+<ul>
+<li><p>The <code>-0</code> flavor, e.g. <code>avy-goto-word-0</code> or <code>avy-goto-line</code> doesn&#39;t narrow at all. The advantage
+that there&#39;s minimum context switching (no narrowing phase, only decision phase). The disadvantage
+is that the number of candidates in the decision phase can be quite large.</p></li>
+<li><p>The <code>-1</code> flavor, e.g. <code>avy-goto-word-1</code> or <code>avy-goto-char</code> narrows by the first character of the
+thing.  The disadvantage is the context switch: first you call the command, then you switch context
+to scan and input the leading char, then you switch context to scan and input the decision chars.
+The advantage is less candidates in the decision phase.</p></li>
+<li><p>The <code>-2</code> flavor is my favorite <code>avy-goto-char-2</code>: it reads <strong>two</strong> consecutive chars, instead of
+just one.  This doesn&#39;t impact the narrowing phase too much, since inputting two consecutive chars
+isn&#39;t much more than just one.  But it greatly decreases the number of candidates in the decision
+phase. The small amount of candidates allows me to use this setting for the decision:</p></li>
+</ul>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">avy-keys</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">?a</span> <span class="nv">?s</span> <span class="nv">?d</span> <span class="nv">?f</span> <span class="nv">?g</span> <span class="nv">?h</span> <span class="nv">?j</span> <span class="nv">?k</span> <span class="nv">?l</span><span class="p">))</span>
 </code></pre></div>
-<h2 id="one-emacs-script-to-rule-them-all">One Emacs script to rule them all</h2>
+<p>That&#39;s only 9 decision chars, all of them on the home row.</p>
 
-<p>I quickly tired of opening a shell, setting the directory, entering
-the command, and pasting the link. So I wrote some Elisp code that does it for me.
-It&#39;s nothing too sophisticated, but I&#39;ve been using this version for a couple months:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">youtube-dl</span> <span class="p">()</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">str</span> <span class="p">(</span><span class="nv">current-kill</span> <span class="mi">0</span><span class="p">))</span>
-         <span class="p">(</span><span class="nv">default-directory</span> <span class="s">&quot;~/Downloads&quot;</span><span class="p">)</span>
-         <span class="p">(</span><span class="nv">proc</span> <span class="p">(</span><span class="nf">get-buffer-process</span> <span class="p">(</span><span class="nv">ansi-term</span> <span class="s">&quot;/bin/bash&quot;</span><span class="p">))))</span>
-    <span class="p">(</span><span class="nv">term-send-string</span>
-     <span class="nv">proc</span>
-     <span class="p">(</span><span class="nf">concat</span> <span class="s">&quot;cd ~/Downloads &amp;&amp; youtube-dl &quot;</span> <span class="nv">str</span> <span class="s">&quot;\n&quot;</span><span class="p">))))</span>
+<h2 id="the-decision-char-overlay-flavors">The decision char overlay flavors</h2>
+
+<p>Once again, there are three, here are their corresponding <code>defcustom</code>s:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defcustom</span> <span class="nv">avy-goto-char-style</span> <span class="ss">&#39;pre</span>
+  <span class="s">&quot;Method of displaying the overlays for `avy-goto-char&#39; and `avy-goto-char-2&#39;.&quot;</span>
+  <span class="nb">:type</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">choice</span>
+          <span class="p">(</span><span class="nv">const</span> <span class="nb">:tag</span> <span class="s">&quot;Pre&quot;</span> <span class="nv">pre</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">const</span> <span class="nb">:tag</span> <span class="s">&quot;At&quot;</span> <span class="nv">at</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">const</span> <span class="nb">:tag</span> <span class="s">&quot;Post&quot;</span> <span class="nv">post</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="nb">defcustom</span> <span class="nv">avy-goto-word-style</span> <span class="ss">&#39;pre</span>
+  <span class="s">&quot;Method of displaying the overlays for `avy-goto-word-0&#39; and `avy-goto-word-0&#39;.&quot;</span>
+  <span class="nb">:type</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">choice</span>
+          <span class="p">(</span><span class="nv">const</span> <span class="nb">:tag</span> <span class="s">&quot;Pre&quot;</span> <span class="nv">pre</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">const</span> <span class="nb">:tag</span> <span class="s">&quot;At&quot;</span> <span class="nv">at</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">const</span> <span class="nb">:tag</span> <span class="s">&quot;Post&quot;</span> <span class="nv">post</span><span class="p">)))</span>
 </code></pre></div>
-<p>How it works:</p>
+<p>If you&#39;re used to <code>ace-jump-mode</code>, the corresponding style is <code>at</code>, which displays the overlay at
+the target position, one character at a time.  I don&#39;t like this style most of the time, I prefer
+<code>pre</code> which is more similar to <code>vim-easymotion</code>: it will display the full char path at once, before
+the target position. This results in less feedback and more efficiency, in my opinion.</p>
 
-<ol>
-<li>Copy the link in Firefox</li>
-<li><kbd>M-x</kbd> <code>youtube-dl</code>.</li>
-</ol>
+<h2 id="outro">Outro</h2>
 
-<p>That&#39;s it. A new <code>*ansi-term*</code> will open with the task of downloading the video from the link
-in the clipboard to <code>~/Downloads</code>.
-I don&#39;t have to wait for the download to finish and can immediately open the video from <code>dired</code>.
-See <a href="/2015/01/04/dired-nohup/">the previous post</a> for the description of
-<code>dired</code> process-starting setup. I can stack up multiple downloads at once if I wish in different
-<code>*ansi-term*</code>s.</p>
+<p>Give the new package a try, it&#39;s already been pretty active the last few days, with bugs being fixed
+and new features appearing, thanks to all who contributed.</p>
 
-<blockquote>
-<p>This is my script. There are many like it, but this one is mine.</p>
-</blockquote>
+<p>If you want to see some screenshots, there are plenty at the
+<a href="https://github.com/abo-abo/avy">repository page</a>, and also in an earlier
+<a href="http://oremacs.com/2015/03/03/ace-window-full-path/">post</a>.</p>
 
-<p>I did an internet search before writing this post. Apparently many
-others had the same idea of integrating <code>youtube-dl</code> into Emacs.  You
-can use mine or any other code to generate a setup that works for you.
-For instance, for a while, instead of copy-pasting the URL and calling
-<code>youtube-dl</code> I used to just click the
-<a href="https://addons.mozilla.org/en-US/firefox/addon/org-mode-capture/">org-mode capture</a>
-button in Firefox, and it would automatically create a <code>TODO</code> item,
-download the video, and put the link to the downloaded video in the
-<code>TODO</code>.</p>
-
-<p>I&#39;ve dropped this workflow when
-<a href="http://debbugs.gnu.org/cgi/bugreport.cgi?bug=16737">the yank bug</a>
-surfaced. I don&#39;t yet have enough experience of working with Emacs&#39;s C
-code to fix it.  Although, according to this
-<a href="https://plus.google.com/u/0/+JorgenSch%C3%A4fer/posts/ZaZcunihGqc">excellent rant</a>,
-fixing the bug is only half of the problem: getting it merged is hard.
-I&#39;ll see how it goes with <a href="http://debbugs.gnu.org/cgi/bugreport.cgi?bug=19493">my latest tiny patch</a>.
-So far it has been ignored, but it is only two days old as of now.</p>
+<p>Finally, the package in on <a href="http://melpa.org/#/avy">MELPA</a>, so it&#39;s convenient to install.  The only hassle is to decide where to bind all these commands.</p>
 
 </div>
 
@@ -354,16 +347,6 @@ So far it has been ignored, but it is only two days old as of now.</p>
     
       <li>
         <h3>
-          <!-- <a href="//2015/05/08/avy-0.1.0/"> -->
-          <a href="/2015/05/08/avy-0.1.0/">
-            New on MELPA - avy
-            <small>08 May 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
           <!-- <a href="//2015/05/02/swiper-0.4.0/"> -->
           <a href="/2015/05/02/swiper-0.4.0/">
             Ivy-mode 0.4.0 is out
@@ -378,6 +361,16 @@ So far it has been ignored, but it is only two days old as of now.</p>
           <a href="/2015/04/30/gcc-macros-auto-yasnippet/">
             GCC macros and auto-yasnippet
             <small>30 Apr 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/04/28/blending-faces/"> -->
+          <a href="/2015/04/28/blending-faces/">
+            Blending colors in Elisp
+            <small>28 Apr 2015</small>
           </a>
         </h3>
       </li>
