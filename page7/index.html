@@ -247,6 +247,135 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/03/14/more-swiper-ivy-stuff/">
+        More on swiper and ivy
+      </a>
+    </h1>
+
+    <span class="post-date">14 Mar 2015</span>
+
+    <p>I&#39;ll describe two new things in <a href="https://github.com/abo-abo/swiper">swiper</a> and <code>ivy</code> that happened
+within the day. Although you can install them separately from MELPA, they still live in a single git
+repository.</p>
+
+<h2 id="swiper-/-ivy-faces-now-inherit-the-standard-ones"><code>swiper</code> / <code>ivy</code> faces now inherit the standard ones</h2>
+
+<p>It&#39;s a good idea by <a href="https://github.com/purcell">@purcell</a>, and I tend to agree. So now, there are
+six faces that inherit <code>highlight</code>, <code>isearch-lazy-highlight-face</code>, <code>isearch</code> and <code>match</code> faces
+between them.  The advantage is that most themes re-define the above four faces as they see fit, so
+the swiper faces will fit in better without customization.</p>
+
+<p>Still, I really enjoy the previous faces that were derived from the Swiper sprite. You can have them
+as part of <a href="https://github.com/abo-abo/eclipse-theme">eclipse-theme</a>. The theme creators can just
+copy them verbatim to a light theme if they so choose.</p>
+
+<p>By the way, it seems that not all Emacs users are aware that you can customize faces.  You can do so
+interactively for most popular packages. For example, after <kbd>M-x</kbd> <code>customize-group</code>
+<code>swiper</code>, you get a GUI for selecting most configurable things for <code>swiper</code>, including the faces.</p>
+
+<p>The GUI will generate the code that looks something like this:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">custom-set-faces</span>
+  <span class="o">&#39;</span><span class="p">(</span><span class="nv">ivy-current-match</span> <span class="p">((</span><span class="no">t</span> <span class="p">(</span><span class="nb">:background</span> <span class="s">&quot;#e5b7c0&quot;</span><span class="p">)))))</span>
+</code></pre></div>
+<h2 id="elisp-completion-with-ivy">Elisp completion with <code>ivy</code></h2>
+
+<p>The code to complete Elisp code at point is very simple:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel</span> <span class="p">()</span>
+  <span class="s">&quot;Elisp completion at point.&quot;</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">bnd</span> <span class="p">(</span><span class="nv">bounds-of-thing-at-point</span> <span class="ss">&#39;symbol</span><span class="p">))</span>
+         <span class="p">(</span><span class="nv">str</span> <span class="p">(</span><span class="nf">buffer-substring-no-properties</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">bnd</span><span class="p">)</span> <span class="p">(</span><span class="nf">cdr</span> <span class="nv">bnd</span><span class="p">)))</span>
+         <span class="p">(</span><span class="nv">candidates</span> <span class="p">(</span><span class="nf">all-completions</span> <span class="nv">str</span> <span class="nv">obarray</span><span class="p">))</span>
+         <span class="p">(</span><span class="nv">ivy-height</span> <span class="mi">7</span><span class="p">)</span>
+         <span class="p">(</span><span class="nv">res</span> <span class="p">(</span><span class="nv">ivy-read</span> <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;pattern (%s): &quot;</span> <span class="nv">str</span><span class="p">)</span>
+                        <span class="nv">candidates</span><span class="p">)))</span>
+    <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">stringp</span> <span class="nv">res</span><span class="p">)</span>
+      <span class="p">(</span><span class="nf">delete-region</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">bnd</span><span class="p">)</span> <span class="p">(</span><span class="nf">cdr</span> <span class="nv">bnd</span><span class="p">))</span>
+      <span class="p">(</span><span class="nf">insert</span> <span class="nv">res</span><span class="p">))))</span>
+</code></pre></div>
+<p>The only function above that isn&#39;t one of the familiar primitives is <code>ivy-read</code>.  But even that one
+has a similar interface to that of <code>completing-read</code> or <code>ido-completing-read</code>.  I was using
+<code>helm-lisp-completion-at-point</code> before, but <code>counsel</code> is much less obtrusive, while offering
+comparable speed and convenience:</p>
+
+<p><img src="/download/counsel-1.png" alt="counsel-1.png"></p>
+
+<p>The default minibuffer height for <code>ivy</code> is set to 10 via <code>ivy-height</code>.  It&#39;s quite reasonable all-around, but
+for <code>counsel</code> I&#39;ve set it to 7 via a let binding.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/2015/03/13/introducing-ivy/">
+        Swiper now has an ivy back end
+      </a>
+    </h1>
+
+    <span class="post-date">13 Mar 2015</span>
+
+    <h2 id="intro">Intro</h2>
+
+<p>Just three days ago, I wrote <code>swiper</code> and introduced it in
+<a href="http://oremacs.com/2015/03/10/no-swiping/">a post</a>.
+And while <code>swiper</code> solved the problem of <a href="https://github.com/ShingoFukuyama/helm-swoop">helm-swoop</a>
+being awkward for me to use, <code>swiper</code>&#39;s code itself is pretty awkward, since even after using <code>helm</code>
+a dozen times in my packages, I&#39;m still not well-versed in its internals.</p>
+
+<p>And, apparently, there are people who don&#39;t like <code>helm</code> because it updates a lot.  I don&#39;t know if
+it counts as a viable complaint, but I do agree that the <code>helm</code> update time is quite long.  So I
+wrote down an alternative completion back end for <code>swiper</code>. It looks quite similar to
+<code>ido-vertical-mode</code>, although it is completely unrelated to <code>ido</code>. In fact, the matching algorithm
+currently is similar to <code>helm-match-plugin</code>: <code>&quot;for example&quot;</code> is transformed into
+<code>&quot;\\(for\\).*\\(example\\)&quot;</code>.</p>
+
+<p><img src="/download/swiper-ivy.png" alt="swiper-ivy.png"></p>
+
+<h2 id="the-details">The Details</h2>
+
+<p>Currently, in the <code>ivy</code> version of <code>swiper</code> only the anchoring algorithm is missing.  Anchoring is
+what I call the process of selecting a close candidate when the number of candidates changes.  It
+seems that <code>helm</code> doesn&#39;t implement an anchoring algorithm, so both <code>helm-swoop</code> and <code>swiper</code>
+implement their own. I don&#39;t know how easy it would be to write down the proper generic thing, my
+current implementation for the <code>helm</code> version of <code>swiper</code> is quite hacky.</p>
+
+<p>Just to explain to you what needs to be done. Suppose there&#39;s an input &quot;ab&quot; that matches 50
+candidates, and the candidate number 42 is the current one. Now, if the user types one char to make
+the input into &quot;abc&quot;, the number of candidates has changed to 10, and the candidate that was current
+previously doesn&#39;t match any more. It is up to the matcher code to decide which of the 10 candidates
+has to be current now. Usually it doesn&#39;t matter much, but in the case of <code>swiper</code> it matters since
+the point will be moved to the current candidate in the original window.</p>
+
+<p>In any case, there&#39;s still a lot of things that have to be done for <code>ivy</code>, but I think that
+it&#39;s quite usable now. Actually, I&#39;ve already added it to my bindings:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="s">&quot;\C-s&quot;</span> <span class="ss">&#39;swiper</span><span class="p">)</span>
+</code></pre></div>
+<p>Here&#39;s how it looks like:</p>
+
+<p><img src="/download/ivy-swiper-1.png" alt="ivy-swiper-1.png"></p>
+
+<p>And here&#39;s an example of completion in <code>dired</code>:</p>
+
+<p><img src="/download/ivy-swiper-2.png" alt="ivy-swiper-2.png"></p>
+
+<p>You need to have Emacs 24.4 in order to get a nicer highlight in the minibuffer that uses
+<code>add-face-text-property</code> instead of the old <code>propertize</code>.</p>
+
+<p>There&#39;s a custom variable that decides the height of the minibuffer window, you can set it as you
+like:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defcustom</span> <span class="nv">ivy-height</span> <span class="mi">10</span>
+  <span class="s">&quot;Number of lines for the minibuffer window.&quot;</span>
+  <span class="nb">:type</span> <span class="ss">&#39;integer</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="outro">Outro</h2>
+
+<p>Give the new back end <a href="https://github.com/abo-abo/swiper">a go</a>, see if you like it. It looks quite pretty and minimalist to me, but I&#39;m
+biased since I made it.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/03/12/ace-window-display-mode/">
         ace-window display mode
       </a>
@@ -555,206 +684,6 @@ palette is quite limited), so they loop about if you have many groups:</p>
 
 <p>Yup, the technology is there. Although a <code>powerline</code> theme for the
 <code>helm</code> mode line is still missing.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/03/09/lispy-point-history/">
-        lispy point history
-      </a>
-    </h1>
-
-    <span class="post-date">09 Mar 2015</span>
-
-    <p>It was kind of disappointing to summarize in
-<a href="/2015/03/08/lispy.0.24.0-is-out/">the last post</a>
-that there weren&#39;t many new features for
-<a href="https://github.com/abo-abo/lispy">lispy 0.24.0</a>. So I thought long and hard and came up with something
-quite obvious: since <code>lispy</code> offers commands to quickly manipulate point and mark, it should offer one
-to quickly restore them.</p>
-
-<p>Here&#39;s the bulk of the new code:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">defvar</span> <span class="nv">lispy-pos-ring</span> <span class="p">(</span><span class="nv">make-ring</span> <span class="mi">200</span><span class="p">)</span>
-  <span class="s">&quot;Ring for point and mark position history.&quot;</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">ring-insert</span> <span class="nv">lispy-pos-ring</span> <span class="mi">1</span><span class="p">)</span>
-
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">lispy--remember</span> <span class="p">()</span>
-  <span class="s">&quot;Store the current point and mark in history.&quot;</span>
-  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">region-active-p</span><span class="p">)</span>
-      <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">bnd</span> <span class="p">(</span><span class="nv">lispy--bounds-dwim</span><span class="p">)))</span>
-        <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nf">equal</span> <span class="nv">bnd</span> <span class="p">(</span><span class="nv">ring-ref</span> <span class="nv">lispy-pos-ring</span> <span class="mi">0</span><span class="p">))</span>
-          <span class="p">(</span><span class="nv">ring-insert</span> <span class="nv">lispy-pos-ring</span> <span class="nv">bnd</span><span class="p">)))</span>
-    <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nf">eq</span> <span class="p">(</span><span class="nf">point</span><span class="p">)</span> <span class="p">(</span><span class="nv">ring-ref</span> <span class="nv">lispy-pos-ring</span> <span class="mi">0</span><span class="p">))</span>
-    <span class="p">(</span><span class="nv">ring-insert</span> <span class="nv">lispy-pos-ring</span> <span class="p">(</span><span class="nf">point</span><span class="p">)))))</span>
-
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">lispy-back</span> <span class="p">()</span>
-  <span class="s">&quot;Move point to a previous position&quot;</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">zerop</span> <span class="p">(</span><span class="nv">ring-length</span> <span class="nv">lispy-pos-ring</span><span class="p">))</span>
-      <span class="p">(</span><span class="ne">user-error</span> <span class="s">&quot;At beginning of point history&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">pt</span> <span class="p">(</span><span class="nv">ring-remove</span> <span class="nv">lispy-pos-ring</span> <span class="mi">0</span><span class="p">)))</span>
-      <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">consp</span> <span class="nv">pt</span><span class="p">)</span>
-          <span class="p">(</span><span class="nv">lispy--mark</span> <span class="nv">pt</span><span class="p">)</span>
-        <span class="p">(</span><span class="nv">deactivate-mark</span><span class="p">)</span>
-        <span class="p">(</span><span class="nf">goto-char</span> <span class="nv">pt</span><span class="p">)))))</span>
-</code></pre></div>
-<p>Here, I&#39;m using <code>lispy-pos-ring</code> made with <code>make-ring</code> to store the
-last 200 point and mark positions. In Elisp, a ring is basically a stack backed by a vector.
-When the vector space overflows, the older stuff is overwritten.</p>
-
-<p>In this ring I store each time either the point, or a cons of the
-point and mark if the region is active. This way possible to restore
-the region even if it was deactivated several movement commands ago.</p>
-
-<p>I&#39;ve put <code>lispy--remember</code> into the most used navigation commands:</p>
-
-<ul>
-<li><kbd>j</kbd> - <code>lispy-down</code></li>
-<li><kbd>k</kbd> - <code>lispy-up</code></li>
-<li><kbd>h</kbd> - <code>lispy-left</code></li>
-<li><kbd>l</kbd> - <code>lispy-right</code></li>
-<li><kbd>f</kbd> - <code>lispy-flow</code></li>
-<li><kbd>i</kbd> - <code>lispy-mark-car</code> (when the region is active)</li>
-<li><kbd>a</kbd> - <code>lispy-ace-paren</code></li>
-</ul>
-
-<p>And <code>lispy-back</code> is now bound to <kbd>b</kbd>. The previous binding of
-<kbd>b</kbd> - <code>lispy-store-region-and-buffer</code> is now bound to
-<kbd>xB</kbd> (quite close to <kbd>B</kbd> - the binding for
-<code>lispy-ediff-regions</code>).</p>
-
-<p>I really like the new command, it&#39;s especially useful to reverse
-<kbd>h</kbd> and <kbd>l</kbd>.  Previously, they could be reversed
-with <kbd>f</kbd>, but that can get annoying if you have to press it
-many times. This results in a much more relaxed editing - I know that
-whatever I press, I can restore the point position quickly if needed.</p>
-
-<p>This feature is added to the already present list of safeguards:</p>
-
-<ul>
-<li><kbd>j</kbd> and <kbd>k</kbd> are guaranteed not to exit the parent list.</li>
-<li><kbd>&gt;</kbd> and <kbd>&lt;</kbd> are guaranteed not to exit the parent list.</li>
-<li><kbd>C</kbd> reverses itself.</li>
-</ul>
-
-<p>Here&#39;s a recipe to copy the third item of the current list and move
-the point back: <kbd>4mnb</kbd>. You can use it to copy a function&#39;s
-docstring if you&#39;re in Elisp.  You&#39;ll need <kbd>3mnb</kbd> for
-Clojure, since it weirdly has the docstring <em>before</em> the arguments.  I
-think it&#39;s pretty cool: by typing <kbd>3mnb</kbd> I&#39;m basically
-calling <code>(kill-new (caddr (current-sexp)))</code> on my own code.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/03/08/lispy.0.24.0-is-out/">
-        lispy 0.24.0 is out
-      </a>
-    </h1>
-
-    <span class="post-date">08 Mar 2015</span>
-
-    <p>The last release was a month ago, and there have been 70 commits to
-master since then.  If you&#39;re not familiar with <code>lispy</code>, see
-<a href="/2015/01/19/lispy.0.21.0-is-out/">my intro post for version 0.21.0</a>.
-I&#39;ll just copy <a href="https://github.com/abo-abo/lispy/releases/tag/0.24.0">the release notes</a> here,
-while adding a few things.</p>
-
-<h2 id="fixes">Fixes</h2>
-
-<ul>
-<li><kbd>DEL</kbd> behaves properly after a string and one space.</li>
-<li><kbd>C-k</kbd> works better for expressions preceded with &quot;#&quot;.</li>
-<li><kbd>3 </kbd> should not add a space when there is one already.</li>
-<li><kbd>#</kbd> will not add a space after a comma.</li>
-<li><kbd>C-j</kbd> works better in comments after a quote.</li>
-<li><code>lispy--eval-elisp-form</code> first arg is now named <code>lispy-form</code> instead of <code>form</code>. It was impossible
-to evaluate an unrelated <code>form</code> variable with the previous behavior.</li>
-<li><kbd>F</kbd> again works properly when jumping to a jar (e.g. to <code>defn</code>) from Clojure source.</li>
-<li><kbd>C-k</kbd> won&#39;t call <code>delete-region</code> in some obscure branches.</li>
-</ul>
-
-<h2 id="enhancements">Enhancements</h2>
-
-<ul>
-<li><kbd>P</kbd> (<code>lispy-paste</code>) will add a newline when called from start of line.  This way,
-<kbd>nP</kbd> becomes equivalent to <kbd>c</kbd> (<code>lispy-clone</code>). Of course, it&#39;s more flexible: you
-can do e.g. <kbd>nkP</kbd>.</li>
-<li><kbd>xb</kbd> (<code>lispy-bind-variable</code>) now works on regions as well. Use it to bind the current
-sexp or region as a let-bound variable: it will put you in <code>iedit</code>. When you&#39;re done with <code>iedit</code>, press
-<kbd>M-m</kbd> (<code>lispy-mark-symbol</code>) to exit <code>iedit</code>. If you need to move the let binding around, use
-a combination of <kbd>C</kbd> (<code>lispy-convolute</code>) and <kbd>h</kbd> (<code>lispy-left</code>).</li>
-<li><kbd>g</kbd> will ignore <code>loaddefs.el</code> for Elisp.</li>
-<li><kbd>M-m</kbd> works better in unbalanced buffers, which should be an rare thing.</li>
-<li>add <code>defhydra</code> to <code>lispy-tag-arity</code>: now <kbd>g</kbd> will recognize <code>defhydra</code> statements.</li>
-<li>The tag logic was improved to do less parsing.</li>
-<li><code>lispy-outline</code> was updated to match the standard <code>^;;;</code> outline regex. Try pressing <kbd>I</kbd>
-in e.g. org.el, it&#39;s quite beautiful.</li>
-<li>All <code>lispy-eval</code> functions will preserve the match data.</li>
-<li><kbd>&gt;</kbd> will delete the extra whitespace while slurping.</li>
-<li>Added <code>undercover</code>/Coveralls test coverage report.</li>
-<li><kbd>H</kbd> (<code>lispy-ace-symbol-replace</code>) is now a Hydra: type <kbd>h</kbd> to delete more, type
-<kbd>u</kbd> to undo.</li>
-<li><kbd>Q</kbd> (<code>lispy-ace-char</code>) now uses <code>avy</code> to jump. This change allows to cover this
-function with a test.</li>
-</ul>
-
-<h2 id="new-features">New features</h2>
-
-<h3 id="p-can-now-iterate-dolist-variables-in-elisp."><kbd>p</kbd> can now iterate <code>dolist</code> variables in Elisp.</h3>
-<div class="highlight"><pre><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nb">defun</span> <span class="nv">range</span> <span class="p">(</span><span class="nv">a</span> <span class="nv">b</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">message</span> <span class="s">&quot;called range&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">number-sequence</span> <span class="nv">a</span> <span class="nv">b</span><span class="p">))</span>
-<span class="p">(</span><span class="nb">dolist</span> <span class="err">|</span><span class="p">(</span><span class="nv">i</span> <span class="p">(</span><span class="nv">range</span> <span class="mi">1</span> <span class="mi">3</span><span class="p">))</span>
-  <span class="p">(</span><span class="nv">message</span> <span class="s">&quot;i=%d&quot;</span> <span class="nv">i</span><span class="p">))</span>
-</code></pre></div>
-<p>Pressing <kbd>p</kbd> with point where <code>|</code> is, will</p>
-
-<ul>
-<li>call <code>range</code> and set <code>i</code> to 1</li>
-<li>set <code>i</code> to 2</li>
-<li>set <code>i</code> to 3</li>
-<li>set <code>i</code> to nil</li>
-<li>call <code>range</code> and set <code>i</code> to 1</li>
-</ul>
-
-<p>This is another step toward <code>edebug</code>-less debugging, adding to special behavior for <code>let</code>, <code>cond</code>
-and <code>labels</code>. Remember that you can drop out of <code>edebug</code> with <kbd>Z</kbd> (<code>lispy-edebug-stop</code>).
-This function will take the current function arguments that <code>edebug</code> provides, store them in
-top-level, and exit <code>edebug</code>.
-This is really cool for setting up entry conditions for a function that you want to debug,
-or even a function with an empty body that you want to write. Why am I so eager to exit <code>edebug</code>?
-Because it puts the code in read-only mode, which is quite restrictive.</p>
-
-<h2 id="incompatible-changes">Incompatible changes</h2>
-
-<ul>
-<li><code>lispy-helm-columns</code> is now a list <code>&#39;(60 80)</code>. The first number is
-the width of the tag name column, the second number is the width of
-both tag name and tag file. The tag name column is left-aligned, while the file column is right-aligned.</li>
-<li><kbd>j</kbd> and <kbd>k</kbd> should now move to outline when at
-beginning of comment. The previous behavior was to look for the first
-sexp in the direction. You can still do that with <kbd>f</kbd>.</li>
-<li><kbd>I</kbd> (<code>lispy-shiftab</code>) is now a two-way cycle, instead of
-three-way, like <code>org-mode</code>.  The contents can be obtained with
-<kbd>C-u I</kbd> or <kbd>C-u C-TAB</kbd>.</li>
-</ul>
-
-<h2 id="outro">Outro</h2>
-
-<p>It seems that <code>lispy</code> is winding down feature-wise, which is a good
-thing, because I&#39;m almost out of keys - there&#39;s only <kbd>Y</kbd> and
-<kbd>U</kbd> left.</p>
-
-<p>Possible next steps would be to improve the test coverage (currently
-48%) and the documentation.  Perhaps I&#39;ll try to implement some
-automation for generating
-<a href="http://oremacs.com/lispy/">the function reference</a>, or learn some
-texinfo and write an actual manual, see how <code>ox-texinfo</code> holds up.</p>
-
-<p>I hope that you&#39;ll grow to enjoy <code>lispy</code> as much as I do. Happy hacking!</p>
 
   </div>
   

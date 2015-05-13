@@ -4,13 +4,179 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-05-08T13:03:46+02:00</updated>
+ <updated>2015-05-18T13:35:54+02:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Free avy with your goto-line</title>
+   <link href="http://oremacs.com/2015/05/17/avy-goto-line/"/>
+   <updated>2015-05-17T00:00:00+02:00</updated>
+   <id>http://oremacs.com/2015/05/17/avy-goto-line</id>
+   <content type="html">&lt;p&gt;I have a fondness for Emacs commands and key bindings that you can
+get for free.  Here, by &amp;quot;free&amp;quot; I mean customizations that don&amp;#39;t
+require you to change your old workflow (i.e. unbind your old
+bindings), but still get the new workflow with comfortable bindings.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;For free (almost physical) keys, see my post on
+&lt;a href=&quot;http://oremacs.com/2015/02/14/semi-xmodmap/&quot;&gt;xmodmap&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;See &lt;a href=&quot;http://oremacs.com/2015/05/13/ace-window-0.9.0/&quot;&gt;the last post&lt;/a&gt;
+to see how you can get window manipulation commands &amp;quot;for free&amp;quot; when
+you call &lt;code&gt;ace-window&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;With &lt;a href=&quot;https://github.com/abo-abo/hydra&quot;&gt;hydra&lt;/a&gt;, you can define
+lightweight minor modes for almost free or even completely free key
+bindings.&lt;/li&gt;
+&lt;li&gt;With &lt;a href=&quot;https://github.com/abo-abo/lispy&quot;&gt;lispy&lt;/a&gt;, you get list
+manipulation bindings (single letters, no less) for free when your
+point is positioned at a list boundary, or when the region is
+active.&lt;/li&gt;
+&lt;li&gt;With &lt;a href=&quot;https://github.com/abo-abo/worf&quot;&gt;worf&lt;/a&gt;, you get heading
+navigation and manipulation bindings, also single-letter, when your
+point is at a heading or markup start.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Today, I describe a recent addition to
+&lt;a href=&quot;https://github.com/abo-abo/avy&quot;&gt;avy&lt;/a&gt;: when you call &lt;code&gt;avy-goto-line&lt;/code&gt;
+and decide that you don&amp;#39;t want to use &lt;code&gt;avy-keys&lt;/code&gt; to select a line on
+screen, and you want to select a line by number, you can just enter
+that number.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;avy-goto-line&lt;/code&gt; will recognize that you entered a digit, and forward
+to &lt;code&gt;goto-line&lt;/code&gt; with that digit already pre-entered. So basically there&amp;#39;s no disadvantage to doing this:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;M-g g&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;avy-goto-line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Even if you use the &lt;code&gt;avy&lt;/code&gt; method zero times, you lose no efficiency
+when compared with regular &lt;code&gt;goto-line&lt;/code&gt;, you just get a pretty
+light-show with each call:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/avy-goto-line.png&quot; alt=&quot;avy-goto-line.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;You can customize a lot of things in &lt;code&gt;avy&lt;/code&gt;, for instance the keys or
+the way the overlays are displayed.  See the
+&lt;a href=&quot;https://github.com/abo-abo/avy/wiki/defcustom&quot;&gt;new wiki page&lt;/a&gt; on
+customization for more info.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>ace-window 0.9.0 is out</title>
+   <link href="http://oremacs.com/2015/05/13/ace-window-0.9.0/"/>
+   <updated>2015-05-13T00:00:00+02:00</updated>
+   <id>http://oremacs.com/2015/05/13/ace-window-0.9.0</id>
+   <content type="html">&lt;p&gt;&lt;img src=&quot;https://cloud.githubusercontent.com/assets/390964/7583437/86180fa6-f895-11e4-80ef-c24a7bdf9bf6.png&quot; alt=&quot;ace-window-keys.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;I kind of forgot to tag the &lt;code&gt;0.8.0&lt;/code&gt; release on Github, so it&amp;#39;s been a
+whole 3 months since the last release. In this post, I&amp;#39;ll only
+describe the newest exciting feature in more detail, see
+&lt;a href=&quot;http://oremacs.com/archive/&quot;&gt;the archive&lt;/a&gt; for
+&lt;a href=&quot;http://oremacs.com/2015/02/27/ace-window-leading-char/&quot;&gt;older&lt;/a&gt;
+&lt;a href=&quot;http://oremacs.com/2015/03/02/ace-window-without-ace/&quot;&gt;posts&lt;/a&gt;
+&lt;a href=&quot;http://oremacs.com/2015/03/03/ace-window-full-path/&quot;&gt;on&lt;/a&gt;
+&lt;a href=&quot;http://oremacs.com/2015/03/06/ace-window-toggle/&quot;&gt;ace&lt;/a&gt;
+&lt;a href=&quot;http://oremacs.com/2015/03/12/ace-window-display-mode/&quot;&gt;window&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;new-features&quot;&gt;New Features&lt;/h2&gt;
+
+&lt;h3 id=&quot;display-the-window-decision-chars-in-the-mode-line&quot;&gt;Display the window decision chars in the mode line&lt;/h3&gt;
+
+&lt;p&gt;Enable &lt;code&gt;ace-window-display-mode&lt;/code&gt; for this. This gives you the
+advantage of always being aware which window corresponds to which
+char.&lt;/p&gt;
+
+&lt;h3 id=&quot;new-defcustom:-aw-ignore-current&quot;&gt;New defcustom: &lt;code&gt;aw-ignore-current&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;This is off by default. When t, &lt;code&gt;ace-window&lt;/code&gt; will ignore
+&lt;code&gt;selected-window&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;allow-to-switch-the-window-action-midway&quot;&gt;Allow to switch the window action midway&lt;/h3&gt;
+
+&lt;p&gt;Ace-window has many commands available, like:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;ace-select-window&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ace-delete-window&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ace-swap-window&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;...&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;But did you wish sometimes when you called &lt;code&gt;ace-select-window&lt;/code&gt; that
+you should have called &lt;code&gt;ace-delete-window&lt;/code&gt;? In the old way, you would
+cancel &lt;code&gt;ace-select-window&lt;/code&gt; with &lt;kbd&gt;C-g&lt;/kbd&gt; and call
+&lt;code&gt;ace-delete-window&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;With the new way, you can, just press &lt;kbd&gt;x&lt;/kbd&gt; followed by the
+decision char.  All keys are customizable through &lt;code&gt;aw-dispatch-alist&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defvar&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;aw-dispatch-alist&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;?x&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;aw-delete-window&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot; Ace - Delete Window&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;?m&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;aw-swap-window&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot; Ace - Swap Window&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;?n&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;aw-flip-window&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;?v&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;aw-split-window-vert&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot; Ace - Split Vert Window&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;?b&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;aw-split-window-horz&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot; Ace - Split Horz Window&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;?i&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;delete-other-windows&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot; Ace - Maximize Window&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;?o&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;delete-other-windows&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;List of actions for `aw-dispatch-default&amp;#39;.&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The strings beside each command are important: they are used to update
+the mode line when you press a char. They also mean that a window
+should be selected using &lt;code&gt;aw-keys&lt;/code&gt; for the corresponding command. If
+there&amp;#39;s no string, the command is just called straight away, with no
+arguments.  To reiterate, for each entry without a string, its command
+will be called immediately, and for others the window will be selected
+first.&lt;/p&gt;
+
+&lt;p&gt;Also, take note of &lt;code&gt;aw-flip-window&lt;/code&gt;. Suppose the you have a lot (say
+7) windows, but you only want to cycle between the most recent
+two. You can do so with &lt;kbd&gt;n&lt;/kbd&gt;, with no need to press the
+decision char.&lt;/p&gt;
+
+&lt;p&gt;I call this feature &amp;quot;the dispatch&amp;quot;. The dispatch normally happens when:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;you&amp;#39;re prompted for &lt;code&gt;aw-keys&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;you press a char that isn&amp;#39;t in &lt;code&gt;aw-keys&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;there&amp;#39;s an entry in &lt;code&gt;aw-dispatch-alist&lt;/code&gt; for this char&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;If you want to skip step 1 always (since, by default, you&amp;#39;re not
+prompted for &lt;code&gt;aw-keys&lt;/code&gt; when you have 2 or less windows), use:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;aw-dispatch-always&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Be careful though, setting this means that you&amp;#39;ll always have to
+select a window with &lt;code&gt;aw-keys&lt;/code&gt;, even if there are only two. This is a
+large toll on the muscle memory. On the other hand, even with one
+window, assuming you&amp;#39;ve bound &lt;code&gt;ace-window&lt;/code&gt; to &lt;kbd&gt;M-p&lt;/kbd&gt;, you get:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;split-window-vertically&lt;/code&gt; on &lt;kbd&gt;M-p v&lt;/kbd&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;split-window-horizontally&lt;/code&gt; on &lt;kbd&gt;M-p b&lt;/kbd&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;delete-other-windows&lt;/code&gt; on &lt;kbd&gt;M-p o&lt;/kbd&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;What&amp;#39;s also nice is that these commands scale with the amount of
+windows: if you have only one window, you get no prompt for &lt;kbd&gt;M-p
+v&lt;/kbd&gt;, so it acts just like &lt;kbd&gt;C-x 2&lt;/kbd&gt;. But if you have more
+windows, you don&amp;#39;t have to select the window that you want to split
+beforehand: you can select it after you decided to issue a split
+operation.&lt;/p&gt;
+
+&lt;p&gt;See &lt;a href=&quot;https://github.com/abo-abo/ace-window/wiki&quot;&gt;the wiki&lt;/a&gt; for a nice
+customization setup by &lt;a href=&quot;https://github.com/joedicastro&quot;&gt;@joedicastro&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;Give the new feature a try. The jump in utility between the new and
+old &lt;code&gt;ace-window&lt;/code&gt;, I feel, is of the same magnitude as the jump between
+&lt;code&gt;other-window&lt;/code&gt; and &lt;code&gt;ace-window&lt;/code&gt;. However, it doesn&amp;#39;t come for free and
+the muscle memory needs to be readjusted slightly.&lt;/p&gt;
+
+&lt;p&gt;Big thanks to all who contributed, especially to &lt;a href=&quot;https://github.com/joedicastro&quot;&gt;@joedicastro&lt;/a&gt;.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>New on MELPA - avy</title>
