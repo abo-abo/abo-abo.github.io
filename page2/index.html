@@ -247,6 +247,96 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/04/30/gcc-macros-auto-yasnippet/">
+        GCC macros and auto-yasnippet
+      </a>
+    </h1>
+
+    <span class="post-date">30 Apr 2015</span>
+
+    <p>As one thing leads to another, it occurred to me that I didn&#39;t know
+what <code>__GNUC__</code> macro does.  Which brought me to the manual page on
+<a href="https://gcc.gnu.org/onlinedocs/cpp/Common-Predefined-Macros.html">Common Predefined Macros</a>.</p>
+
+<h2 id="using-org-mode-babel-to-check-the-macro-values">Using <code>org-mode</code> Babel to check the macro values</h2>
+
+<p>I decided that just skimming through the page wasn&#39;t enough, and I
+wanted to brush up on my <code>org-mode</code> babel.  So I created this
+<a href="https://raw.githubusercontent.com/abo-abo/oremacs/github/etc/org/wiki/C.org">wiki page</a>
+to which you&#39;re welcome if you ever need to check <code>__BYTE_ORDER_</code> or
+<code>__UINT_FAST16_TYPE__</code> on your system.</p>
+
+<p>Here&#39;s a small excerpt of it:</p>
+<div class="highlight"><pre><code class="language-C" data-lang="C"><span class="cp">#+begin_src C :results verbatim</span>
+<span class="cp">#include &lt;stdio.h&gt;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// version stuff</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;__GNUC__ %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">__GNUC__</span><span class="p">);</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;__GNUC_MINOR__ %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">__GNUC_MINOR__</span><span class="p">);</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;__GNUC_PATCHLEVEL__ %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">__GNUC_PATCHLEVEL__</span><span class="p">);</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;__VERSION__ %s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">__VERSION__</span><span class="p">);</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="cp">#+end_src</span>
+</code></pre></div>
+<p>When you navigate to any place in the code and press <kbd>C-c C-c</kbd>, which calls (sic) <code>org-ctrl-c-ctrl-c</code>,
+it will re-compile and re-run your program.</p>
+
+<p>I list here some of the <a href="https://github.com/abo-abo/oremacs/blob/github/oleh/modes/ora-org.el">config</a> to make it all work:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">org-babel-do-load-languages</span>
+ <span class="ss">&#39;org-babel-load-languages</span>
+ <span class="o">&#39;</span><span class="p">((</span><span class="nv">C</span> <span class="o">.</span> <span class="no">t</span><span class="p">)</span>
+   <span class="c1">;; ...</span>
+   <span class="p">))</span>
+
+<span class="p">(</span><span class="k">setq</span> <span class="nv">org-babel-C-compiler</span> <span class="s">&quot;gcc -std=c99&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="new-auto-yasnippet-method">New <code>auto-yasnippet</code> method</h2>
+
+<p>You can read up on what <code>auto-yasnippet</code> is in <a href="http://oremacs.com/2015/01/30/auto-yasnippet/">this post</a>.
+For the wiki page, I had to insert the <code>printf</code> statements a bunch of times, some of them with triply-repeated symbols.
+Take, for instance, this statement:</p>
+<div class="highlight"><pre><code class="language-C" data-lang="C"><span class="n">printf</span><span class="p">(</span><span class="s">&quot;__INT32_TYPE__ %s (%d)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">ESTR</span><span class="p">(</span><span class="n">__INT32_TYPE__</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">__INT32_TYPE__</span><span class="p">));</span>
+</code></pre></div>
+<p>With the old method, I would insert <code>~</code> before each <code>INT32</code> and call <code>aya-create</code>. But it would result in this snippet, which isn&#39;t optimal:</p>
+<div class="highlight"><pre><code class="language-C" data-lang="C"><span class="n">printf</span><span class="p">(</span><span class="s">&quot;__$1 %s (%d)</span><span class="se">\\</span><span class="s">n&quot;</span><span class="p">,</span> <span class="n">ESTR</span><span class="p">(</span><span class="n">__</span><span class="err">$</span><span class="mi">1</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">__</span><span class="err">$</span><span class="mi">1</span><span class="p">));</span>
+</code></pre></div>
+<p>With the new method (the old one still works, it&#39;s just that the new one takes priority), I would only quote the first field like so:</p>
+<div class="highlight"><pre><code class="language-C" data-lang="C"><span class="n">printf</span><span class="p">(</span><span class="s">&quot;__`INT32&#39;_TYPE__ %s (%d)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">ESTR</span><span class="p">(</span><span class="n">__INT32_TYPE__</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">__INT32_TYPE__</span><span class="p">));</span>
+</code></pre></div>
+<p>Which results in this snippet:</p>
+<div class="highlight"><pre><code class="language-C" data-lang="C"><span class="n">printf</span><span class="p">(</span><span class="s">&quot;__$1_TYPE__ %s (%d)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">ESTR</span><span class="p">(</span><span class="n">__</span><span class="err">$</span><span class="mi">1</span><span class="n">_TYPE__</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">__</span><span class="err">$</span><span class="mi">1</span><span class="n">_TYPE__</span><span class="p">));</span>
+</code></pre></div>
+<p>Much better.</p>
+
+<h2 id="oremacs-wiki-workflow"><code>oremacs</code> wiki workflow</h2>
+
+<p>If you&#39;re crazy enough (in a good way) to follow <a href="https://github.com/abo-abo/oremacs">oremacs</a>, you&#39;ll get the
+new wiki page delivered right to your config with</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">make install
+</code></pre></div>
+<p>which will also update to the latest <code>org-mode</code> and CEDET.</p>
+
+<p>And here&#39;s how to access it:</p>
+
+<ul>
+<li>run <code>xmodmap etc/.Xmodmap</code> to make <kbd>;</kbd> into a modifier</li>
+<li>press <kbd>;-k</kbd> to open a dispatch hydra</li>
+<li>press <kbd>w</kbd> to select the wiki</li>
+<li>select <code>C</code> (currently, the only other candidate is <code>git</code>)</li>
+</ul>
+
+<h2 id="outro">Outro</h2>
+
+<p>Check out the new <code>auto-yasnippet</code> method, I think it&#39;s pretty
+efficient.  I hope that you&#39;ll find the wiki page useful in your C
+pursuits.  And a big thanks to Eric Schulte for <code>org-babel</code>.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/04/28/blending-faces/">
         Blending colors in Elisp
       </a>
@@ -752,144 +842,6 @@ do yourself a favor and learn it: it pays off quickly and is a lot of
 fun.</p>
 
 <p>Side note: I&#39;ve mentioned <code>\bfun\b</code> in this blog 182 times, mostly as a variable representing a function (courtesy of <code>counsel-git-grep</code>).</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/04/16/ivy-mode/">
-        Introducing ivy-mode
-      </a>
-    </h1>
-
-    <span class="post-date">16 Apr 2015</span>
-
-    <p>Today I&#39;d like to introduce a function that has completely replaced
-<code>ido-mode</code> for me: <code>ivy-mode</code>. It comes with the
-<a href="https://github.com/abo-abo/swiper">swiper</a> package, available both in
-<a href="http://melpa.org/#/swiper">MELPA</a> and
-<a href="https://elpa.gnu.org/packages/swiper.html">GNU ELPA</a>.
-The latter is a bit slower to update, so the version there can be a bit outdated sometimes.</p>
-
-<h2 id="the-quick-video-demo">The quick video demo</h2>
-
-<p>If you prefer listening and watching to reading, check out the video
-demo <a href="https://www.youtube.com/watch?v=VvnJQpTFVDc">here</a>.
-It repeats most of the stuff written down below.</p>
-
-<h2 id="generic-completion">Generic completion</h2>
-
-<p><code>ivy-mode</code> is simply a minor mode that changes
-<code>completing-read-function</code> to <code>ivy-completing-read</code> while it&#39;s active.
-This function is used in most of the places where Emacs requires
-completion, like:</p>
-
-<ul>
-<li><kbd>M-x</kbd> <code>execute-extended-command</code></li>
-<li><kbd>C-h f</kbd> <code>describe-function</code></li>
-<li><kbd>C-h v</kbd> <code>describe-variable</code></li>
-<li><code>package-install</code></li>
-<li><kbd>C-x b</kbd> <code>switch-to-buffer</code></li>
-<li><kbd>C-x C-f</kbd> <code>find-file</code></li>
-</ul>
-
-<p>So, while <code>ivy-mode</code> is on, all these functions and more will use ivy completion.</p>
-
-<h2 id="package-specific-completion">Package-specific completion</h2>
-
-<h3 id="org-mode">org-mode</h3>
-
-<p>With the most recent master version, <code>org-mode</code> will obey
-<code>completing-read-function</code>, so it should work by default.  If you try
-it for refiling to headings with similar names, you&#39;ll really notice
-how much better <code>ivy-mode</code> is at it. <code>helm-mode</code> also does well, if
-you don&#39;t mind the large window.</p>
-
-<h3 id="magit">magit</h3>
-
-<p>This setting is needed to use ivy completion:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">magit-completing-read-function</span> <span class="ss">&#39;ivy-completing-read</span><span class="p">)</span>
-</code></pre></div>
-<h3 id="find-file-in-project">find-file-in-project</h3>
-
-<p><a href="https://github.com/technomancy/find-file-in-project">find-file-in-project</a>
-will use ivy by default if it&#39;s available.</p>
-
-<h3 id="projectile">projectile</h3>
-
-<p>You can set this to make it work:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">projectile-completion-system</span> <span class="ss">&#39;ivy</span><span class="p">)</span>
-</code></pre></div>
-<h3 id="smex">smex</h3>
-
-<p>Yes, it&#39;s also possible, since today. Although you&#39;ll have to use my
-fork of <a href="https://github.com/abo-abo/smex">smex</a> if you want to try it.
-I&#39;ve sent a pull request, it&#39;s all backwards-compatible, so hopefully
-it&#39;ll get merged.</p>
-
-<p>The nice thing is that <code>smex</code> can take care of the sorting all by
-itself, since <code>ivy</code> doesn&#39;t do that yet.</p>
-
-<h3 id="my-packages">my packages</h3>
-
-<p><a href="https://github.com/abo-abo/lispy">lispy</a> and
-<a href="https://github.com/abo-abo/function-args">function-args</a> use <code>ivy</code> by
-default. You can also enable it for
-<a href="https://github.com/abo-abo/helm-make">helm-make</a>, for which the
-default is obviously <code>helm</code>.</p>
-
-<h2 id="file-name-completion">File name completion</h2>
-
-<p>When <code>ivy-mode</code> is on, <code>find-file</code> will also use it.  The completion
-is considerably different from all other cases, since it&#39;s done in
-stages, just like <code>ido-find-file</code> does it.</p>
-
-<p>The key bindings are:</p>
-
-<ul>
-<li><kbd>RET</kbd> will select the current candidate and finish.</li>
-<li><kbd>C-j</kbd> will try to continue the completion, i.e. if the
-current candidate is a directory, move to that directory. But if the
-current candidate is a file or <code>./</code>, then finish.</li>
-<li><kbd>/</kbd> will switch to completing the sub-directories of <code>/</code>,
-but if the candidate is a perfect match, it will act like
-<kbd>C-j</kbd>.</li>
-<li><kbd>~</kbd> will switch to completing the sub-directories of <code>~/</code>.</li>
-<li><kbd>C-n</kbd> and <kbd>C-p</kbd> naturally select the next and the previous candidate.</li>
-</ul>
-
-<h2 id="what&#39;s-it-all-for?">What&#39;s it all for?</h2>
-
-<p>Well, for me the advantage is obvious: I get my completion just the
-way I like it.  You can use it as well if you find that you like it
-more than ido.  I&#39;ll just list a list of features that I like:</p>
-
-<ul>
-<li>The current number of candidates is robustly displayed and updated after each key stroke.</li>
-<li>The minibuffer is an actual editing area, where the bindings like
-<kbd>C-a</kbd>, <kbd>M-DEL</kbd> and <kbd>C-k</kbd> etc. work just as
-you expect. Once you internalize the way that the regex is built, you
-can get your match very quickly and intuitively.</li>
-<li>The actual regular expressions constructs like <code>\\b</code> or <code>$</code> and <code>^</code> work. The only thing that works differently
-is the space: you can&#39;t match a single space because any amount of spaces translates into the <code>.*</code> wild card.
-But you can use it to your advantage and use the space instead of all the various symbol joining constructs out there, like
-<code>snake_case</code>, or <code>kebab-case</code> (yeah, it&#39;s totally called that, check the wiki), or <code>whatever/this/is/case</code>.</li>
-<li>The familiar <kbd>M-&lt;</kbd> and <kbd>M-&gt;</kbd> key bindings also work as expected, navigating you to the first and last candidate respectively.
-When you press <kbd>C-p</kbd> on the first match or <kbd>C-n</kbd> on the last match, the match will not change, unlike the behavior
-of <code>ido</code> that has annoyed me a lot.</li>
-<li>The minibuffer key bindings can actually be properly customized:
-just set <code>ivy-minibuffer-map</code> to whatever you like, it won&#39;t be
-changed. Even in Emacs 24.5, if you customize <code>ido-completion-map</code>,
-the change will be reset.  That was fixed only in the current master.</li>
-<li>You don&#39;t have to rely on <code>flx</code> or <code>flx-ido</code> to save you from the overwhelming number of matches.
-Instead, you type maybe a bit more, but in return you get a <em>very consistent</em> and predictable result.
-No black boxes or hidden variables that dramatically change the order of candidates from time to time.</li>
-</ul>
-
-<h2 id="outro">Outro</h2>
-
-<p>Check it out, I hope you like it. And a big thanks to all who
-contributed code or bug reports.</p>
 
   </div>
   

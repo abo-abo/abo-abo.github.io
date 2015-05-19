@@ -247,6 +247,92 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/05/19/checkdoc-batch/">
+        New in Emacs - run checkdoc in batch mode
+      </a>
+    </h1>
+
+    <span class="post-date">19 May 2015</span>
+
+    <h2 id="more-checkdoc-goodness">More <code>checkdoc</code> goodness</h2>
+
+<p>If you&#39;re doing some Elisp coding, you should definitely check out the
+built-in <code>checkdoc</code> command. Too bad it&#39;s (was) interactive-only. With
+a small modification, I&#39;ve made it suitable for batch.</p>
+
+<p>You can check out how I did it in the
+<a href="https://github.com/abo-abo/avy">avy</a> (or
+<a href="https://github.com/abo-abo/lispy">lispy</a>) repository. Here&#39;s my
+<code>compile</code> target in the Makefile:</p>
+<div class="highlight"><pre><code class="language-Makefile" data-lang="Makefile"><span class="nv">emacs</span> <span class="o">?=</span> emacs
+
+<span class="nf">compile</span><span class="o">:</span>
+    <span class="k">$(</span>emacs<span class="k">)</span> -batch -l targets/avy-init.el
+</code></pre></div>
+<p>And here are the contents of avy-init.el:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">add-to-list</span> <span class="ss">&#39;load-path</span> <span class="nv">default-directory</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">mapc</span> <span class="nf">#&#39;</span><span class="nv">byte-compile-file</span> <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;avy.el&quot;</span><span class="p">))</span>
+<span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;avy</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;checkdoc</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">with-current-buffer</span> <span class="p">(</span><span class="nv">find-file</span> <span class="s">&quot;avy.el&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">checkdoc-current-buffer</span> <span class="no">t</span><span class="p">))</span>
+</code></pre></div>
+<p>I made <code>compile</code> target a dependency of the <code>all</code> target, so with a
+single <code>make</code> I can:</p>
+
+<ul>
+<li>run the tests</li>
+<li>check for compiler warnings</li>
+<li>check for <code>checkdoc</code> style warnings</li>
+</ul>
+
+<h2 id="compile-over-ansi-term"><code>compile</code> over <code>ansi-term</code></h2>
+
+<p>There&#39;s no reason to use <code>ansi-term</code> (or an external shell) over
+<code>compile</code> in this case. Using <kbd>M-x</kbd> <code>compile</code> (or actually
+<kbd>M-x</kbd> <a href="https://github.com/abo-abo/helm-make">helm-make</a>) I
+can navigate to any compilation or style warning or failed test from
+the <code>*compilation*</code> buffer.</p>
+
+<p>For the lazy, it&#39;s possible to jump to errors with a mouse, but
+navigating errors is a breeze with this Hydra:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-error</span> <span class="p">(</span><span class="nv">global-map</span> <span class="s">&quot;M-g&quot;</span><span class="p">)</span>
+  <span class="s">&quot;goto-error&quot;</span>
+  <span class="p">(</span><span class="s">&quot;h&quot;</span> <span class="nv">first-error</span> <span class="s">&quot;first&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">next-error</span> <span class="s">&quot;next&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;k&quot;</span> <span class="nv">previous-error</span> <span class="s">&quot;prev&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;v&quot;</span> <span class="nv">recenter-top-bottom</span> <span class="s">&quot;recenter&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span> <span class="s">&quot;quit&quot;</span><span class="p">))</span>
+</code></pre></div>
+<p>There is also
+<a href="https://github.com/abo-abo/ace-link">ace-link-compilation</a>, but I
+tend not to use it often.</p>
+
+<p>I make good use of one of the coolest <code>compilation-mode</code> features:
+pressing <kbd>g</kbd> will restart the compilation process.</p>
+
+<h2 id="outro">Outro</h2>
+
+<p>Check out the new feature, I think it&#39;s really cool. Another incentive
+to try is that lately the
+<a href="https://savannah.gnu.org/git/?group=emacs">emacs trunk</a> has been
+extremely stable: I&#39;m on Emacs25 almost all the time now, since it
+feels a lot faster.</p>
+
+<p>Here are my aliasing settings:</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>which newemacs
+/usr/local/bin/newemacs
+<span class="nv">$ </span>readlink -f <span class="sb">`</span>which newemacs<span class="sb">`</span>
+/home/oleh/git/gnu-emacs/src/emacs
+</code></pre></div>
+<p>To run the tests with <code>newemacs</code> instead of <code>emacs</code> (since that&#39;s the
+one for which <code>checkdoc</code> works in batch), use <kbd>M-x</kbd> <code>setenv</code>
+-&gt; <code>emacs</code> -&gt; <code>newemacs</code>.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/05/17/avy-goto-line/">
         Free avy with your goto-line
       </a>
@@ -748,96 +834,6 @@ way to big. So it might be easier to clone the wiki and view the org
 files in Emacs:</p>
 <div class="highlight"><pre><code class="language-text" data-lang="text">git clone https://github.com/abo-abo/swiper.wiki.git
 </code></pre></div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/04/30/gcc-macros-auto-yasnippet/">
-        GCC macros and auto-yasnippet
-      </a>
-    </h1>
-
-    <span class="post-date">30 Apr 2015</span>
-
-    <p>As one thing leads to another, it occurred to me that I didn&#39;t know
-what <code>__GNUC__</code> macro does.  Which brought me to the manual page on
-<a href="https://gcc.gnu.org/onlinedocs/cpp/Common-Predefined-Macros.html">Common Predefined Macros</a>.</p>
-
-<h2 id="using-org-mode-babel-to-check-the-macro-values">Using <code>org-mode</code> Babel to check the macro values</h2>
-
-<p>I decided that just skimming through the page wasn&#39;t enough, and I
-wanted to brush up on my <code>org-mode</code> babel.  So I created this
-<a href="https://raw.githubusercontent.com/abo-abo/oremacs/github/etc/org/wiki/C.org">wiki page</a>
-to which you&#39;re welcome if you ever need to check <code>__BYTE_ORDER_</code> or
-<code>__UINT_FAST16_TYPE__</code> on your system.</p>
-
-<p>Here&#39;s a small excerpt of it:</p>
-<div class="highlight"><pre><code class="language-C" data-lang="C"><span class="cp">#+begin_src C :results verbatim</span>
-<span class="cp">#include &lt;stdio.h&gt;</span>
-
-<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-  <span class="c1">// version stuff</span>
-  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;__GNUC__ %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">__GNUC__</span><span class="p">);</span>
-  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;__GNUC_MINOR__ %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">__GNUC_MINOR__</span><span class="p">);</span>
-  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;__GNUC_PATCHLEVEL__ %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">__GNUC_PATCHLEVEL__</span><span class="p">);</span>
-  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;__VERSION__ %s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">__VERSION__</span><span class="p">);</span>
-  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-<span class="cp">#+end_src</span>
-</code></pre></div>
-<p>When you navigate to any place in the code and press <kbd>C-c C-c</kbd>, which calls (sic) <code>org-ctrl-c-ctrl-c</code>,
-it will re-compile and re-run your program.</p>
-
-<p>I list here some of the <a href="https://github.com/abo-abo/oremacs/blob/github/oleh/modes/ora-org.el">config</a> to make it all work:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">org-babel-do-load-languages</span>
- <span class="ss">&#39;org-babel-load-languages</span>
- <span class="o">&#39;</span><span class="p">((</span><span class="nv">C</span> <span class="o">.</span> <span class="no">t</span><span class="p">)</span>
-   <span class="c1">;; ...</span>
-   <span class="p">))</span>
-
-<span class="p">(</span><span class="k">setq</span> <span class="nv">org-babel-C-compiler</span> <span class="s">&quot;gcc -std=c99&quot;</span><span class="p">)</span>
-</code></pre></div>
-<h2 id="new-auto-yasnippet-method">New <code>auto-yasnippet</code> method</h2>
-
-<p>You can read up on what <code>auto-yasnippet</code> is in <a href="http://oremacs.com/2015/01/30/auto-yasnippet/">this post</a>.
-For the wiki page, I had to insert the <code>printf</code> statements a bunch of times, some of them with triply-repeated symbols.
-Take, for instance, this statement:</p>
-<div class="highlight"><pre><code class="language-C" data-lang="C"><span class="n">printf</span><span class="p">(</span><span class="s">&quot;__INT32_TYPE__ %s (%d)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">ESTR</span><span class="p">(</span><span class="n">__INT32_TYPE__</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">__INT32_TYPE__</span><span class="p">));</span>
-</code></pre></div>
-<p>With the old method, I would insert <code>~</code> before each <code>INT32</code> and call <code>aya-create</code>. But it would result in this snippet, which isn&#39;t optimal:</p>
-<div class="highlight"><pre><code class="language-C" data-lang="C"><span class="n">printf</span><span class="p">(</span><span class="s">&quot;__$1 %s (%d)</span><span class="se">\\</span><span class="s">n&quot;</span><span class="p">,</span> <span class="n">ESTR</span><span class="p">(</span><span class="n">__</span><span class="err">$</span><span class="mi">1</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">__</span><span class="err">$</span><span class="mi">1</span><span class="p">));</span>
-</code></pre></div>
-<p>With the new method (the old one still works, it&#39;s just that the new one takes priority), I would only quote the first field like so:</p>
-<div class="highlight"><pre><code class="language-C" data-lang="C"><span class="n">printf</span><span class="p">(</span><span class="s">&quot;__`INT32&#39;_TYPE__ %s (%d)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">ESTR</span><span class="p">(</span><span class="n">__INT32_TYPE__</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">__INT32_TYPE__</span><span class="p">));</span>
-</code></pre></div>
-<p>Which results in this snippet:</p>
-<div class="highlight"><pre><code class="language-C" data-lang="C"><span class="n">printf</span><span class="p">(</span><span class="s">&quot;__$1_TYPE__ %s (%d)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">ESTR</span><span class="p">(</span><span class="n">__</span><span class="err">$</span><span class="mi">1</span><span class="n">_TYPE__</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">__</span><span class="err">$</span><span class="mi">1</span><span class="n">_TYPE__</span><span class="p">));</span>
-</code></pre></div>
-<p>Much better.</p>
-
-<h2 id="oremacs-wiki-workflow"><code>oremacs</code> wiki workflow</h2>
-
-<p>If you&#39;re crazy enough (in a good way) to follow <a href="https://github.com/abo-abo/oremacs">oremacs</a>, you&#39;ll get the
-new wiki page delivered right to your config with</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">make install
-</code></pre></div>
-<p>which will also update to the latest <code>org-mode</code> and CEDET.</p>
-
-<p>And here&#39;s how to access it:</p>
-
-<ul>
-<li>run <code>xmodmap etc/.Xmodmap</code> to make <kbd>;</kbd> into a modifier</li>
-<li>press <kbd>;-k</kbd> to open a dispatch hydra</li>
-<li>press <kbd>w</kbd> to select the wiki</li>
-<li>select <code>C</code> (currently, the only other candidate is <code>git</code>)</li>
-</ul>
-
-<h2 id="outro">Outro</h2>
-
-<p>Check out the new <code>auto-yasnippet</code> method, I think it&#39;s pretty
-efficient.  I hope that you&#39;ll find the wiki page useful in your C
-pursuits.  And a big thanks to Eric Schulte for <code>org-babel</code>.</p>
-
   </div>
   
 </div>

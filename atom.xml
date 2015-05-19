@@ -4,13 +4,95 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-05-18T13:35:54+02:00</updated>
+ <updated>2015-05-19T16:44:50+02:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>New in Emacs - run checkdoc in batch mode</title>
+   <link href="http://oremacs.com/2015/05/19/checkdoc-batch/"/>
+   <updated>2015-05-19T00:00:00+02:00</updated>
+   <id>http://oremacs.com/2015/05/19/checkdoc-batch</id>
+   <content type="html">&lt;h2 id=&quot;more-checkdoc-goodness&quot;&gt;More &lt;code&gt;checkdoc&lt;/code&gt; goodness&lt;/h2&gt;
+
+&lt;p&gt;If you&amp;#39;re doing some Elisp coding, you should definitely check out the
+built-in &lt;code&gt;checkdoc&lt;/code&gt; command. Too bad it&amp;#39;s (was) interactive-only. With
+a small modification, I&amp;#39;ve made it suitable for batch.&lt;/p&gt;
+
+&lt;p&gt;You can check out how I did it in the
+&lt;a href=&quot;https://github.com/abo-abo/avy&quot;&gt;avy&lt;/a&gt; (or
+&lt;a href=&quot;https://github.com/abo-abo/lispy&quot;&gt;lispy&lt;/a&gt;) repository. Here&amp;#39;s my
+&lt;code&gt;compile&lt;/code&gt; target in the Makefile:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-Makefile&quot; data-lang=&quot;Makefile&quot;&gt;&lt;span class=&quot;nv&quot;&gt;emacs&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;?=&lt;/span&gt; emacs
+
+&lt;span class=&quot;nf&quot;&gt;compile&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;emacs&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt; -batch -l targets/avy-init.el
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And here are the contents of avy-init.el:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;add-to-list&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;load-path&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;default-directory&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;mapc&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;#&amp;#39;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;byte-compile-file&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;avy.el&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;avy&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;checkdoc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;with-current-buffer&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;find-file&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;avy.el&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;checkdoc-current-buffer&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;I made &lt;code&gt;compile&lt;/code&gt; target a dependency of the &lt;code&gt;all&lt;/code&gt; target, so with a
+single &lt;code&gt;make&lt;/code&gt; I can:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;run the tests&lt;/li&gt;
+&lt;li&gt;check for compiler warnings&lt;/li&gt;
+&lt;li&gt;check for &lt;code&gt;checkdoc&lt;/code&gt; style warnings&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;compile-over-ansi-term&quot;&gt;&lt;code&gt;compile&lt;/code&gt; over &lt;code&gt;ansi-term&lt;/code&gt;&lt;/h2&gt;
+
+&lt;p&gt;There&amp;#39;s no reason to use &lt;code&gt;ansi-term&lt;/code&gt; (or an external shell) over
+&lt;code&gt;compile&lt;/code&gt; in this case. Using &lt;kbd&gt;M-x&lt;/kbd&gt; &lt;code&gt;compile&lt;/code&gt; (or actually
+&lt;kbd&gt;M-x&lt;/kbd&gt; &lt;a href=&quot;https://github.com/abo-abo/helm-make&quot;&gt;helm-make&lt;/a&gt;) I
+can navigate to any compilation or style warning or failed test from
+the &lt;code&gt;*compilation*&lt;/code&gt; buffer.&lt;/p&gt;
+
+&lt;p&gt;For the lazy, it&amp;#39;s possible to jump to errors with a mouse, but
+navigating errors is a breeze with this Hydra:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-error&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;M-g&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;goto-error&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;h&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;first-error&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;first&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;j&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;next-error&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;next&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;k&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;previous-error&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;prev&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;v&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;recenter-top-bottom&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;recenter&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;q&amp;quot;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;quit&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;There is also
+&lt;a href=&quot;https://github.com/abo-abo/ace-link&quot;&gt;ace-link-compilation&lt;/a&gt;, but I
+tend not to use it often.&lt;/p&gt;
+
+&lt;p&gt;I make good use of one of the coolest &lt;code&gt;compilation-mode&lt;/code&gt; features:
+pressing &lt;kbd&gt;g&lt;/kbd&gt; will restart the compilation process.&lt;/p&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;Check out the new feature, I think it&amp;#39;s really cool. Another incentive
+to try is that lately the
+&lt;a href=&quot;https://savannah.gnu.org/git/?group=emacs&quot;&gt;emacs trunk&lt;/a&gt; has been
+extremely stable: I&amp;#39;m on Emacs25 almost all the time now, since it
+feels a lot faster.&lt;/p&gt;
+
+&lt;p&gt;Here are my aliasing settings:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;which newemacs
+/usr/local/bin/newemacs
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;readlink -f &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;which newemacs&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;
+/home/oleh/git/gnu-emacs/src/emacs
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;To run the tests with &lt;code&gt;newemacs&lt;/code&gt; instead of &lt;code&gt;emacs&lt;/code&gt; (since that&amp;#39;s the
+one for which &lt;code&gt;checkdoc&lt;/code&gt; works in batch), use &lt;kbd&gt;M-x&lt;/kbd&gt; &lt;code&gt;setenv&lt;/code&gt;
+-&amp;gt; &lt;code&gt;emacs&lt;/code&gt; -&amp;gt; &lt;code&gt;newemacs&lt;/code&gt;.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Free avy with your goto-line</title>
