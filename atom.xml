@@ -4,13 +4,67 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-05-19T16:44:50+02:00</updated>
+ <updated>2015-05-22T19:36:50+02:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>New on MELPA - define word at point</title>
+   <link href="http://oremacs.com/2015/05/22/define-word/"/>
+   <updated>2015-05-22T00:00:00+02:00</updated>
+   <id>http://oremacs.com/2015/05/22/define-word</id>
+   <content type="html">&lt;p&gt;Doing things in Emacs &lt;em&gt;superlatively&lt;/em&gt; better than having to switch to
+another application.&lt;/p&gt;
+
+&lt;p&gt;In this case, &amp;quot;doing things&amp;quot; is getting the dictionary definition of
+word at point, and &amp;quot;&lt;em&gt;superlatively&lt;/em&gt;&amp;quot; is a word that I didn&amp;#39;t know - a
+straw that broke the camel&amp;#39;s back and caused me to finally automate
+the process of getting the definition of a word that I encounter in an
+Emacs buffer.&lt;/p&gt;
+
+&lt;p&gt;The whole process of writing the &lt;code&gt;define-word&lt;/code&gt; package took around 30
+minutes, I just had to:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;See which engine DuckDuckGo uses.&lt;/li&gt;
+&lt;li&gt;Follow to &lt;a href=&quot;https://www.wordnik.com/words/superlative&quot;&gt;wordnik&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Try to get an API key, read their draconian TOS and decide that I don&amp;#39;t want
+to agree to it just to get their key.&lt;/li&gt;
+&lt;li&gt;Examine the HTML that it returns and note that it&amp;#39;s quite regular.&lt;/li&gt;
+&lt;li&gt;Write a 10 line function with &lt;code&gt;re-search-forward&lt;/code&gt; to extract the word
+definitions from a sample page that I saved with &lt;code&gt;wget&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Then just wrap the function in an &lt;code&gt;url-retrieve&lt;/code&gt; and done.  It&amp;#39;s a
+good thing that I learned to use &lt;code&gt;url-retrieve&lt;/code&gt; when I wrote
+&lt;a href=&quot;https://github.com/abo-abo/org-download&quot;&gt;org-download&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;#39;s how it looks like in action, the word under point is &amp;quot;Authors&amp;quot;
+and instead of visiting
+&lt;a href=&quot;https://www.wordnik.com/words/authors&quot;&gt;this page&lt;/a&gt;, you can see it
+right away in your Echo Area:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/wiki/abo-abo/define-word/images/define-word.png&quot; alt=&quot;demo&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;The result is displayed simply with &lt;code&gt;message&lt;/code&gt;, so it doesn&amp;#39;t mess with
+your window config.  You read it, press any key and the Echo Area
+popup will vanish automatically.&lt;/p&gt;
+
+&lt;p&gt;Install the package from MELPA or check it out at &lt;a href=&quot;https://github.com/abo-abo/define-word&quot;&gt;github&lt;/a&gt;.
+You just need to decide where to bind it:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-c d&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;define-word-at-point&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-c D&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;define-word&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;At less than 50 lines, the source is very easy to understand. So if
+you&amp;#39;re looking to write some Elisp that retrieves and parses some HTML
+from a web service, it&amp;#39;s nice to look at a simple implementation of
+how it&amp;#39;s done.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>New in Emacs - run checkdoc in batch mode</title>

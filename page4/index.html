@@ -164,6 +164,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -244,6 +248,95 @@
 
       <div class="container content">
         <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/2015/04/09/counsel-completion/">
+        Complete stuff with Counsel
+      </a>
+    </h1>
+
+    <span class="post-date">09 Apr 2015</span>
+
+    <h2 id="intro">Intro</h2>
+
+<p>If you like my package <a href="https://github.com/abo-abo/swiper">swiper</a>,
+I&#39;m sure you&#39;ll also like <a href="http://melpa.org/#/counsel">counsel</a>. It
+lives in the same repository, but you can install it separately from
+MELPA.</p>
+
+<p>Counsel uses <code>ivy</code> - the same method as <code>swiper</code> to:</p>
+
+<ul>
+<li>Complete Elisp at point with <code>counsel-el</code>.</li>
+<li>Complete Clojure at point with <code>counsel-clj</code>.</li>
+<li>Open a git-managed file with <code>counsel-git</code>.</li>
+<li>Describe an Elisp variable with <code>counsel-describe-variable</code>.</li>
+<li>Describe an Elisp function with <code>counsel-describe-function</code>.</li>
+<li>Look up an Elisp symbol in the info with <code>counsel-info-lookup-symbol</code>.</li>
+<li>Insert a Unicode character at point with <code>counsel-unicode-char</code>.</li>
+</ul>
+
+<p>Below, I&#39;ll describe the functions that I added just today.</p>
+
+<h3 id="counsel-describe-function"><code>counsel-describe-function</code></h3>
+
+<p>This is just a replacement for <code>describe-function</code>:</p>
+
+<p><img src="/download/counsel-describe-function.png" alt="counsel-describe-function.png"></p>
+
+<p>As you can see, regular expressions work here as well.  The
+space-splitting behavior is the same as in <code>swiper</code>, so don&#39;t expect
+to be able to match a single space: spaces are wild.</p>
+
+<h3 id="counsel-describe-variable"><code>counsel-describe-variable</code></h3>
+
+<p>This is just a replacement for <code>describe-variable</code>:</p>
+
+<p><img src="/download/counsel-describe-variable.png" alt="counsel-describe-variable.png"></p>
+
+<p>Well, actually I&#39;ve used <code>ido-mode</code> with <code>flx</code> matching for these two
+functions before. In my experience, <code>ivy</code> handles much better:</p>
+
+<ul>
+<li>you are in charge of which regex you&#39;re searching for</li>
+<li>you see the candidate count</li>
+<li>no crazy wrap-around candidate cycling</li>
+</ul>
+
+<p>And it works faster, too.</p>
+
+<p>Here are my bindings:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;&lt;f1&gt; f&quot;</span><span class="p">)</span> <span class="ss">&#39;counsel-describe-function</span><span class="p">)</span>
+<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;&lt;f1&gt; v&quot;</span><span class="p">)</span> <span class="ss">&#39;counsel-describe-variable</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="counsel-info-lookup-symbol"><code>counsel-info-lookup-symbol</code></h3>
+
+<p><img src="/download/counsel-info-lookup-symbol.png" alt="counsel-info-lookup-symbol.png"></p>
+
+<p>I don&#39;t use this one too often, but it&#39;s nice to have the option:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;&lt;f2&gt; i&quot;</span><span class="p">)</span> <span class="ss">&#39;counsel-info-lookup-symbol</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="counsel-unicode-char"><code>counsel-unicode-char</code></h3>
+
+<p><img src="/download/counsel-unicode-char.png" alt="counsel-unicode-char.png"></p>
+
+<p>At around 40000 candidates, <code>ivy</code> starts to feel clunky (around 0.1s
+display delay). Unfortunately, I don&#39;t really see a way around this,
+except using tricks like <code>while-no-input</code>, which didn&#39;t work right
+when I tried it earlier. It would be really cool to do the completion
+in another thread, but alas.</p>
+
+<h2 id="outro">Outro</h2>
+
+<p>Give the new functions a try. I think <code>ivy</code> can become a viable <code>ido</code>
+replacement, at least it has done so for me: the only <code>ido</code> functions
+that I&#39;m still using are <code>ido-switch-buffer</code> and <code>ido-find-file</code>.</p>
+
+<p>Also, if you&#39;re using <code>projectile</code>, you can use <code>ivy</code> completion for it:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">projectile-completion-system</span> <span class="ss">&#39;ivy</span><span class="p">)</span>
+</code></pre></div>
+  </div>
   
   <div class="post">
     <h1 class="post-title">
@@ -775,41 +868,6 @@ So if you have in your Makefile:</p>
 </code></pre></div>
 <p>And now I can compile and test while inside Emacs with no issues.  The only issue left is that I
 don&#39;t yet know which PPA I should use for a stable Emacs. Maybe someone has a suggestion.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/03/28/recenter/">
-        recenter-positions, that's not how gravity works!
-      </a>
-    </h1>
-
-    <span class="post-date">28 Mar 2015</span>
-
-    <p>Yesterday, I&#39;ve added a new binding to <code>swiper-map</code>: <kbd>C-l</kbd> will now call
-<code>swiper-recenter-top-bottom</code>.
-The implementation is really easy, almost nothing to write home about:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">swiper-recenter-top-bottom</span> <span class="p">(</span><span class="kp">&amp;optional</span> <span class="nv">arg</span><span class="p">)</span>
-  <span class="s">&quot;Call (`recenter-top-bottom&#39; ARG) in `swiper--window&#39;.&quot;</span>
-  <span class="p">(</span><span class="k">interactive</span> <span class="s">&quot;P&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="nb">with-selected-window</span> <span class="nv">swiper--window</span>
-    <span class="p">(</span><span class="nv">recenter-top-bottom</span> <span class="nv">arg</span><span class="p">)))</span>
-</code></pre></div>
-<p>An interesting thing that I want to mention though is the customization of the default
-<code>recenter-top-bottom</code> behavior. This is the default one:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">recenter-positions</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">middle</span> <span class="nv">top</span> <span class="nv">bottom</span><span class="p">))</span>
-</code></pre></div>
-<p>And this is the logical one that I&#39;m using:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">recenter-positions</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">top</span> <span class="nv">middle</span> <span class="nv">bottom</span><span class="p">))</span>
-</code></pre></div>
-<p>Try it out, and see if it makes sense to you. For me, when I&#39;ve just jumped to a function
-definition, which usually means that the point is on the first line of the function, the first
-recenter position has to be <code>top</code>, since that will maximize the amount of the function body that&#39;s
-displayed on the screen.</p>
-
-<p>Another use-case is when I&#39;m reading an info or a web page. After a recenter to top, all that I have
-read is scrolled out of view, and I can continue from the top.</p>
 
   </div>
   
