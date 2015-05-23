@@ -4,13 +4,187 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-05-22T19:36:50+02:00</updated>
+ <updated>2015-05-23T14:54:27+02:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Ivy-mode 0.5.0 is out</title>
+   <link href="http://oremacs.com/2015/05/23/swiper-0.5.0/"/>
+   <updated>2015-05-23T00:00:00+02:00</updated>
+   <id>http://oremacs.com/2015/05/23/swiper-0.5.0</id>
+   <content type="html">&lt;p&gt;At this point, &lt;a href=&quot;https://github.com/abo-abo/swiper&quot;&gt;swiper&lt;/a&gt; is only a
+fraction of &lt;code&gt;ivy-mode&lt;/code&gt;&amp;#39;s functionality.  Still, it&amp;#39;s nice to keep them
+all, together with &lt;a href=&quot;http://melpa.org/#/counsel&quot;&gt;counsel&lt;/a&gt;, in a single
+repository: &lt;code&gt;counsel-git-grep&lt;/code&gt; works much better this way.&lt;/p&gt;
+
+&lt;p&gt;Anyway, I&amp;#39;ll echo &lt;a href=&quot;https://github.com/abo-abo/swiper/releases/tag/0.5.0&quot;&gt;the release notes&lt;/a&gt; here, there are quite a few exciting new features.&lt;/p&gt;
+
+&lt;h2 id=&quot;fixes&quot;&gt;Fixes&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;TAB&lt;/kbd&gt; shouldn&amp;#39;t delete input when there&amp;#39;s no candidate.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;TAB&lt;/kbd&gt; should switch directories properly.&lt;/li&gt;
+&lt;li&gt;require &lt;code&gt;dired&lt;/code&gt; when completing file names, so that the directory face is loaded.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;TAB&lt;/kbd&gt; should work with &lt;code&gt;confirm-nonexistent-file-or-buffer&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;TAB&lt;/kbd&gt; should handle empty input.&lt;/li&gt;
+&lt;li&gt;work around &lt;code&gt;grep-read-files&lt;/code&gt;: it should be possible to simply &lt;kbd&gt;M-x&lt;/kbd&gt; &lt;code&gt;rgrep&lt;/code&gt; &lt;kbd&gt;RET RET RET&lt;/kbd&gt;.&lt;/li&gt;
+&lt;li&gt;Fix the transition from a bad regex to a good one - you can input a bad regex to get 0 candidates, the candidates come back once the regex is fixed.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ivy-switch-buffer&lt;/code&gt; should pre-select &lt;code&gt;other-buffer&lt;/code&gt; just like &lt;code&gt;switch-buffer&lt;/code&gt; does it.&lt;/li&gt;
+&lt;li&gt;Fix selecting &amp;quot;C:\&amp;quot; on Windows.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;counsel-git-grep&lt;/code&gt; should warn if not in a repository.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;C-M-n&lt;/kbd&gt; shouldn&amp;#39;t try to call action if there isn&amp;#39;t one.&lt;/li&gt;
+&lt;li&gt;Turn on sorting for &lt;code&gt;counsel-info-lookup-symbol&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ivy-read&lt;/code&gt; should check for an outdated cons initial-input.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;new-features&quot;&gt;New Features&lt;/h2&gt;
+
+&lt;h3 id=&quot;out-of-order-matching&quot;&gt;Out of order matching&lt;/h3&gt;
+
+&lt;p&gt;I actually like in-order matching, meaning the input &amp;quot;in ma&amp;quot; will match &amp;quot;in-order matching&amp;quot;, but not &amp;quot;made in&amp;quot;. But the users can switch to out-of-order matching if they use this code:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ivy-re-builders-alist&lt;/span&gt;
+          &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ivy--regex-ignore-order&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code&gt;ivy-re-builders-alist&lt;/code&gt; is the flexible way to customize the regex builders per-collection.  Using &lt;code&gt;t&lt;/code&gt; here, means to use this regex builder for everything. You could choose to have in-order for files, and out-of-order for buffers and so on.&lt;/p&gt;
+
+&lt;h3 id=&quot;new-defcustom:-ivy-tab-space&quot;&gt;New defcustom: &lt;code&gt;ivy-tab-space&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;Use this to have a space inserted each time you press &lt;kbd&gt;TAB&lt;/kbd&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ivy-tab-space&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;ignore-case-for-tab&quot;&gt;ignore case for TAB&lt;/h3&gt;
+
+&lt;p&gt;&amp;quot;pub&amp;quot; can expand to &amp;quot;Public License&amp;quot;.&lt;/p&gt;
+
+&lt;h3 id=&quot;new-command:-counsel-load-library&quot;&gt;New command: &lt;code&gt;counsel-load-library&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;This command is much better than the standard &lt;code&gt;load-libary&lt;/code&gt; that it
+upgrades.  It applies a sort of &lt;code&gt;uniquify&lt;/code&gt; effect to all your
+libraries, which is very useful:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://cloud.githubusercontent.com/assets/2937359/7783947/7da9395e-0154-11e5-86cd-45d38c0f2c17.png&quot; alt=&quot;counsel-load-library&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;In this case, I have &lt;code&gt;avy&lt;/code&gt; installed both from the package manager and
+manually. I can easily distinguish them.&lt;/p&gt;
+
+&lt;p&gt;Another cool feature is that instead of using &lt;code&gt;find-library&lt;/code&gt; (which is
+also bad, since it would report two versions of &lt;code&gt;avy&lt;/code&gt; with the same
+name and no way to distinguish them), you can simply use
+&lt;code&gt;counsel-load-library&lt;/code&gt; and type &lt;kbd&gt;C-.&lt;/kbd&gt; instead of
+&lt;kbd&gt;RET&lt;/kbd&gt; to finalize.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;#39;s another scenario: first load the library, then call
+&lt;code&gt;ivy-resume&lt;/code&gt; and immediately open the library file.&lt;/p&gt;
+
+&lt;h3 id=&quot;new-command:-ivy-partial&quot;&gt;New command: &lt;code&gt;ivy-partial&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;Does a partial complete without exiting. Use this code to replace
+&lt;code&gt;ivy-partial-or-done&lt;/code&gt; with this command:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ivy-minibuffer-map&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;TAB&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ivy-partial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;allow-to-use-^-in-swiper&quot;&gt;Allow to use &lt;code&gt;^&lt;/code&gt; in &lt;code&gt;swiper&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;In regex terms, &lt;code&gt;^&lt;/code&gt; is the beginning of line. You can now use this in
+&lt;code&gt;swiper&lt;/code&gt; to filter your matches.&lt;/p&gt;
+
+&lt;h3 id=&quot;new-command:-swiper-avy&quot;&gt;New command: &lt;code&gt;swiper-avy&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;This command is crazy good: it combines the best features of &lt;code&gt;swiper&lt;/code&gt;
+(all buffer an once, flexible input length) and &lt;code&gt;avy&lt;/code&gt; (quickly select
+one candidate once you&amp;#39;ve narrowed to about 10-20 candidates).&lt;/p&gt;
+
+&lt;p&gt;For instance, I can enter &amp;quot;to&amp;quot; into &lt;code&gt;swiper&lt;/code&gt; to get around 10 matches.  Instead of using &lt;kbd&gt;C-n&lt;/kbd&gt; a bunch of times to select the one of 10 that I want, I just press &lt;kbd&gt;C-&amp;#39;&lt;/kbd&gt;, followed by &lt;kbd&gt;a&lt;/kbd&gt; or &lt;kbd&gt;s&lt;/kbd&gt; or &lt;kbd&gt;d&lt;/kbd&gt; ... to select one of the matches visible on screen.&lt;/p&gt;
+
+&lt;p&gt;So both packages use their best feature to cover up the others worst drawback.&lt;/p&gt;
+
+&lt;h3 id=&quot;add-support-for-virtual-buffers&quot;&gt;Add support for virtual buffers&lt;/h3&gt;
+
+&lt;p&gt;I was never a fan of &lt;code&gt;recentf&lt;/code&gt; until now. The virtual buffers feature works in the same way as &lt;code&gt;ido-use-virtual-buffers&lt;/code&gt;: when you call &lt;code&gt;ivy-switch-buffer&lt;/code&gt;, your recently visited files as well as all your bookmarks are appended to the end of the buffer list.&lt;/p&gt;
+
+&lt;p&gt;Suppose you killed a buffer and want to bring it back: now you do it as if you didn&amp;#39;t kill the buffer and instead buried it. The bookmarks access is also nice.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;#39;s how to configure it, along with some customization of &lt;code&gt;recentf&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ivy-use-virtual-buffers&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;use-package&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;recentf&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;:config&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;recentf-exclude&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;COMMIT_MSG&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;COMMIT_EDITMSG&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;github.*txt$&amp;quot;&lt;/span&gt;
+          &lt;span class=&quot;s&quot;&gt;&amp;quot;.*png$&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;recentf-max-saved-items&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;60&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;add-a-few-wrapper-commands-for-the-minibuffer&quot;&gt;Add a few wrapper commands for the minibuffer&lt;/h3&gt;
+
+&lt;p&gt;All these commands just forward to their built-in counterparts, only trying not to exit the first line of the minibuffer.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;M-DEL&lt;/kbd&gt; calls &lt;code&gt;ivy-backward-kill-word&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;C-d&lt;/kbd&gt; calls &lt;code&gt;ivy-delete-char&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;M-d&lt;/kbd&gt; calls &lt;code&gt;ivy-kill-word&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;C-f&lt;/kbd&gt; calls &lt;code&gt;ivy-forward-char&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;allow-to-customize-the-minibuffer-formatter&quot;&gt;Allow to customize the minibuffer formatter&lt;/h3&gt;
+
+&lt;p&gt;See &lt;a href=&quot;https://github.com/abo-abo/swiper/wiki/Customize-candidate-menu-style&quot;&gt;the wiki&lt;/a&gt; on how to customize
+the minibuffer display to look like this:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;100 Find file: ~/
+  file1
+  file2
+&amp;gt; file3
+  file4
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;when-completing-file-names,-tab-should-defer-to-minibuffer-complete&quot;&gt;When completing file names, &lt;kbd&gt;TAB&lt;/kbd&gt; should defer to &lt;code&gt;minibuffer-complete&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;Thanks to this, you can &lt;kbd&gt;TAB&lt;/kbd&gt;-complete your ssh hosts, e.g.:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;/ss&lt;/code&gt; &lt;kbd&gt;TAB&lt;/kbd&gt; -&amp;gt; &lt;code&gt;/ssh&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;/ssh:ol&lt;/code&gt; &lt;kbd&gt;TAB&lt;/kbd&gt; -&amp;gt; &lt;code&gt;/ssh:oleh@&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;more-commands-work-with-ivy-resume&quot;&gt;More commands work with &lt;code&gt;ivy-resume&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;I&amp;#39;ve added:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;counsel-git-grep&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;counsel-git&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Others (that start with &lt;code&gt;counsel-&lt;/code&gt;) should work fine as well. Also don&amp;#39;t forget that you can use &lt;kbd&gt;C-M-n&lt;/kbd&gt; and &lt;kbd&gt;C-M-p&lt;/kbd&gt; to:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;switch candidate&lt;/li&gt;
+&lt;li&gt;call the action for the candidate&lt;/li&gt;
+&lt;li&gt;stay in the minibuffer&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;This is especially powerful for &lt;code&gt;counsel-git-grep&lt;/code&gt;: you can easily check the whole repository for something with just typing in the query and holding &lt;kbd&gt;C-M-n&lt;/kbd&gt;. The matches will be highlighted &lt;code&gt;swiper&lt;/code&gt;-style, of course.&lt;/p&gt;
+
+&lt;h3 id=&quot;allow-to-recenter-during-counsel-git-grep&quot;&gt;Allow to recenter during &lt;code&gt;counsel-git-grep&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;Use &lt;kbd&gt;C-l&lt;/kbd&gt; to recenter.&lt;/p&gt;
+
+&lt;h3 id=&quot;update-the-quoting-of-spaces&quot;&gt;Update the quoting of spaces&lt;/h3&gt;
+
+&lt;p&gt;Split only on single spaces, from all other space groups, remove one space.&lt;/p&gt;
+
+&lt;p&gt;As you might know, a space is used in place of &lt;code&gt;.*&lt;/code&gt; in &lt;code&gt;ivy&lt;/code&gt;. In case
+you want an actual space, you can now quote them even easier.&lt;/p&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;Thanks to all who contributed, check out the new stuff, and make sure
+to bind &lt;code&gt;ivy-resume&lt;/code&gt; to something short: it has become a really nice
+feature.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>New on MELPA - define word at point</title>

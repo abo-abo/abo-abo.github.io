@@ -251,6 +251,114 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/02/24/emacs-speed-test/">
+        Profile your Emacs start-up time
+      </a>
+    </h1>
+
+    <span class="post-date">24 Feb 2015</span>
+
+    <p>I bet I could compete for the shortest <code>~/.emacs</code> ever:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">(load &quot;~/Dropbox/source/site-lisp/init&quot;)
+</code></pre></div>
+<p>However, it being one line doesn&#39;t make it start up any faster.
+Here&#39;s what I have in my Makefile beside <code>init.el</code>:</p>
+<div class="highlight"><pre><code class="language-Makefile" data-lang="Makefile"><span class="nf">profile</span><span class="o">:</span>
+    emacs -Q -l git/profile-dotemacs/profile-dotemacs.el <span class="se">\</span>
+    --eval <span class="s2">&quot;(setq profile-dotemacs-file \</span>
+<span class="s2">        (setq load-file-name \&quot;</span><span class="k">$(</span>abspath init.el<span class="k">)</span><span class="s2">\&quot;))&quot;</span> <span class="se">\</span>
+    -f profile-dotemacs
+</code></pre></div>
+<p>The package that I&#39;m using,
+<a href="http://randomsample.de/profile-dotemacs.el">profile-dotemacs.el</a>
+comes from David Engster, one of the major contributors to CEDET, so
+you know it&#39;s got to be good.  Once you launch it as I showed above,
+it will give you the times that various sections took to load in an
+overlay.</p>
+
+<p>On very sunny days I can almost get Emacs to start under one second,
+although when I checked just now, it turned out to be <code>1.20s</code>.  I
+value short start up time very highly, since due to my messing with
+Elisp, the Emacs global state can become so messed up that it&#39;s a lot
+faster to just restart it, rather than spend 10 minutes surgically
+restoring the state. And, of course, it&#39;s a bonus for using Emacs on a
+laptop, which I do at home.</p>
+
+<p>I&#39;ve used two methods to shorten the boot time, I&#39;ll describe them below.</p>
+
+<h2 id="use-package-:idle-option"><code>use-package</code> <code>:idle</code> option</h2>
+
+<p>This one is a big time saver, since <code>org-mode</code> just takes so long to load:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">use-package</span> <span class="nv">org</span>
+    <span class="nb">:defer</span> <span class="no">t</span>
+    <span class="nb">:idle</span> <span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;oleh/org</span><span class="p">))</span>
+</code></pre></div>
+<p>I&#39;m cautious not to abuse <code>:idle</code>, since if it happens that I start
+Emacs and start frantically typing all over the place, Emacs will
+never get to be idle and the <code>:idle</code> statements won&#39;t load.  So I only
+use it for <code>org</code> and one or two other things.</p>
+
+<h2 id="autoloading-stuff">autoloading stuff</h2>
+
+<p>Here&#39;s some helper code for this:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">update-all-autoloads</span> <span class="p">()</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">cd</span> <span class="nv">emacs-d</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">generated-autoload-file</span>
+         <span class="p">(</span><span class="nf">expand-file-name</span> <span class="s">&quot;loaddefs.el&quot;</span><span class="p">)))</span>
+    <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nv">not</span> <span class="p">(</span><span class="nf">file-exists-p</span> <span class="nv">generated-autoload-file</span><span class="p">))</span>
+      <span class="p">(</span><span class="nb">with-current-buffer</span> <span class="p">(</span><span class="nv">find-file-noselect</span>
+                            <span class="nv">generated-autoload-file</span><span class="p">)</span>
+        <span class="p">(</span><span class="nf">insert</span> <span class="s">&quot;;;&quot;</span><span class="p">)</span>
+        <span class="p">(</span><span class="nv">save-buffer</span><span class="p">)))</span>
+    <span class="p">(</span><span class="nf">mapcar</span> <span class="nf">#&#39;</span><span class="nv">update-directory-autoloads</span>
+            <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;&quot;</span> <span class="s">&quot;oleh&quot;</span> <span class="s">&quot;oleh/modes&quot;</span><span class="p">))))</span>
+</code></pre></div>
+<p>Here, <code>emacs-d</code> is the directory of my <code>init.el</code>.
+The directory <code>modes</code> contains 44 Elisp files for each major mode or package that I customize.</p>
+
+<p>For instance, here are the contents of <code>Info.el</code>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">Info-mode-map</span> <span class="s">&quot;j&quot;</span> <span class="ss">&#39;ora-para-down</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">define-key</span> <span class="nv">Info-mode-map</span> <span class="s">&quot;k&quot;</span> <span class="ss">&#39;ora-para-up</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">define-key</span> <span class="nv">Info-mode-map</span> <span class="s">&quot;v&quot;</span> <span class="ss">&#39;recenter-top-bottom</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">define-key</span> <span class="nv">Info-mode-map</span> <span class="s">&quot;h&quot;</span> <span class="ss">&#39;backward-char</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">define-key</span> <span class="nv">Info-mode-map</span> <span class="s">&quot;l&quot;</span> <span class="ss">&#39;forward-char</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">define-key</span> <span class="nv">Info-mode-map</span> <span class="s">&quot;w&quot;</span> <span class="ss">&#39;forward-word</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">define-key</span> <span class="nv">Info-mode-map</span> <span class="s">&quot;b&quot;</span> <span class="ss">&#39;backward-word</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">define-key</span> <span class="nv">Info-mode-map</span> <span class="s">&quot;a&quot;</span> <span class="ss">&#39;beginning-of-line</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">define-key</span> <span class="nv">Info-mode-map</span> <span class="s">&quot;e&quot;</span> <span class="ss">&#39;end-of-line</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">define-key</span> <span class="nv">Info-mode-map</span> <span class="s">&quot;A&quot;</span> <span class="ss">&#39;beginning-of-buffer</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">define-key</span> <span class="nv">Info-mode-map</span> <span class="s">&quot;E&quot;</span> <span class="ss">&#39;end-of-buffer</span><span class="p">)</span>
+
+<span class="c1">;;;###autoload</span>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">oleh-Info-hook</span> <span class="p">())</span>
+</code></pre></div>
+<p>This is one of the simpler ones, I think it would take around a week
+of posts to cover what I have in <code>magit.el</code>. The file <code>Info.el</code> never
+gets loaded until I open a buffer in <code>Info-mode</code>.
+Here&#39;s what gets loaded every time:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">load</span> <span class="p">(</span><span class="nf">concat</span> <span class="nv">emacs-d</span> <span class="s">&quot;loaddefs.el&quot;</span><span class="p">)</span> <span class="no">nil</span> <span class="no">t</span><span class="p">)</span>
+<span class="c1">;; ...</span>
+<span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;Info-mode-hook</span> <span class="ss">&#39;oleh-Info-hook</span><span class="p">)</span>
+</code></pre></div>
+<p>My <code>loaddefs.el</code> is just over 1000 lines and is automatically
+generated by <code>update-all-autoloads</code>. And here are the lines in
+<code>loaddefs.el</code> responsible for loading <code>Info.el</code>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">autoload</span> <span class="ss">&#39;oleh-Info-hook</span> <span class="s">&quot;oleh/modes/Info&quot;</span> <span class="s">&quot;\</span>
+
+
+<span class="s">\(fn)&quot;</span> <span class="no">nil</span> <span class="no">nil</span><span class="p">)</span>
+</code></pre></div>
+<p>So the statements above are cheap to load.  Actually, the largest
+chunk of my start up time, 28 percent, is taken by:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;eclipse-theme</span><span class="p">)</span>
+</code></pre></div>
+<p>I don&#39;t know why it takes so long to call <code>custom-theme-set-faces</code>, it&#39;s a mystery.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/02/23/hydra-0.11.0/">
         Hydra 0.11.0 is out
       </a>
@@ -588,145 +696,6 @@ proves otherwise.</p>
 
 <p>On the other hand, I&#39;ve started reading &quot;The Reasoned Schemer&quot; this
 week. Now that&#39;s intimidating.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/02/19/hydra-colors-reloaded/">
-        Two new Hydra colors - pink and teal
-      </a>
-    </h1>
-
-    <span class="post-date">19 Feb 2015</span>
-
-    <p>Two new colors are being added up to a total of five: red, blue,
-amaranth, pink and teal.
-I should carefully restate what they do to avoid confusion.</p>
-
-<h2 id="the-three-rules-of-hydratics">The three rules of Hydratics</h2>
-
-<p><strike>1. A hydra may not injure a human being or, through inaction, allow a human being to come to harm.</strike></p>
-
-<p>Seriously though, see below.</p>
-
-<h3 id="rule-1:-hydra-heads-are-either-red-or-blue">Rule 1: Hydra heads are either red or blue</h3>
-
-<p>Once you&#39;re in a Hydra state:</p>
-
-<ul>
-<li>calling a red head will call the command and continue the state</li>
-<li>calling a blue head will call the command and stop the state</li>
-</ul>
-
-<p>They may have a reddish or a bluish face that isn&#39;t exactly red or
-blue, but that&#39;s what they are underneath. I hope you get what I mean.</p>
-
-<h3 id="rule-2:-red-or-blue-is-inherited-from-the-body-color">Rule 2: red or blue is inherited from the body color</h3>
-
-<p>This is merely a convenience, you can still explicitly override each
-head to be blue or red:</p>
-
-<ul>
-<li>if the body is red, amaranth or pink, the heads inherit red</li>
-<li>if the body is blue or teal, the heads inherit blue</li>
-</ul>
-
-<h3 id="rule-3:">Rule 3:</h3>
-
-<p>When you call a binding which isn&#39;t a head:</p>
-
-<ul>
-<li>amaranth, teal and pink Hydras will intercept it</li>
-<li>red and blue Hydras will quit and let Emacs execute your binding</li>
-</ul>
-
-<p>Finally, on intercepting a non-head, amaranth and teal will issue a
-warning and do nothing without quitting. And pink will try to call the
-intercepted command without quitting. Currently only non-prefix
-bindings can be called, since I haven&#39;t figured out how to do it for prefixes.</p>
-
-<h3 id="a-nice-table-to-sum-things-up">A nice table to sum things up</h3>
-
-<p>Thanks to <a href="https://github.com/kaushalmodi">@kaushalmodi</a> for pointing me in this direction:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">|----------+-----------+-----------------------+-----------------|
-| Body     | Head      | Executing NON-HEADS   | Executing HEADS |
-| Color    | Inherited |                       |                 |
-|          | Color     |                       |                 |
-|----------+-----------+-----------------------+-----------------|
-| amaranth | red       | Disallow and Continue | Continue        |
-| teal     | blue      | Disallow and Continue | Quit            |
-| pink     | red       | Allow and Continue    | Continue        |
-| red      | red       | Allow and Quit        | Continue        |
-| blue     | blue      | Allow and Quit        | Quit            |
-|----------+-----------+-----------------------+-----------------|
-</code></pre></div>
-<h2 id="the-extra-awesome-ruby-style-hydra-docstrings">The extra-awesome Ruby-style Hydra docstrings</h2>
-
-<p>Turns out learning Ruby wasn&#39;t a complete waste of time, at least I
-learned about string interpolation. And now I&#39;m sticking it into Elisp
-packages, first <a href="https://github.com/abo-abo/tiny">tiny</a>, and now
-<a href="https://github.com/abo-abo/hydra">hydra</a>.</p>
-
-<p>How it works:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-toggle</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">pink</span><span class="p">)</span>
-  <span class="s">&quot;</span>
-<span class="s">_a_ abbrev-mode:       %`abbrev-mode</span>
-<span class="s">_d_ debug-on-error:    %`debug-on-error</span>
-<span class="s">_f_ auto-fill-mode:    %`auto-fill-function</span>
-<span class="s">_g_ golden-ratio-mode: %`golden-ratio-mode</span>
-<span class="s">_t_ truncate-lines:    %`truncate-lines</span>
-<span class="s">_w_ whitespace-mode:   %`whitespace-mode</span>
-
-<span class="s">&quot;</span>
-  <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="nv">abbrev-mode</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;d&quot;</span> <span class="nv">toggle-debug-on-error</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;f&quot;</span> <span class="nv">auto-fill-mode</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;g&quot;</span> <span class="nv">golden-ratio-mode</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;t&quot;</span> <span class="nv">toggle-truncate-lines</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;w&quot;</span> <span class="nv">whitespace-mode</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span> <span class="s">&quot;cancel&quot;</span><span class="p">))</span>
-
-<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c C-v&quot;</span><span class="p">)</span> <span class="ss">&#39;hydra-toggle/body</span><span class="p">)</span>
-</code></pre></div>
-<p>Here, using e.g. <code>&quot;_a_&quot;</code> translates to <code>&quot;a&quot;</code> with proper face.  More
-interestingly, e.g.</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="s">&quot;foobar %`abbrev-mode&quot;</span>
-</code></pre></div>
-<p>translates roughly to</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">format</span> <span class="s">&quot;foobar %S&quot;</span> <span class="nv">abbrev-mode</span><span class="p">)</span>
-</code></pre></div>
-<p>This means that you actually see the state of the mode that you&#39;re
-changing.  The escape syntax was chosen with another intent in mind:
-because of the backquote, if you have <code>company-mode</code> on, you can
-complete the symbols while in string.</p>
-
-<p>See how it looks like in action:</p>
-
-<p><img src="/download/hydra-toggle-pink.png" alt="hydra-toggle-pink"></p>
-
-<h2 id="small-note-on-pink-hydras">Small note on pink Hydras</h2>
-
-<p>It&#39;s useful for instance it the above example, when I don&#39;t care about
-self-inserting, but I still want to do navigation. Basically pink
-Hydra is the closest thing to an actual minor mode. Thanks to
-<a href="https://github.com/angelic-sedition">@angelic-sedition</a> for the idea.</p>
-
-<h2 id="small-note-on-teal-hydras">Small note on teal Hydras</h2>
-
-<p>It provides an interface similar to <code>magit</code> dispatch: pressing
-appropriate keys does things and pressing the wrong keys issues a
-warning. The only difference between teal and amaranth is the color
-inheritance, otherwise they behave exactly the same.  This means that
-if you want a non-quitting Hydra that will end up with more blue
-heads, start with teal, otherwise, start with amaranth.
-Thanks to <a href="https://github.com/ffevotte">@ffevotte</a> for the idea.</p>
-
-<h2 id="outro">Outro</h2>
-
-<p>It feels like things are finally falling into place with this package.
-I hope that you like the new changes and find new cool uses for the added abilities.
-Happy hacking!</p>
 
   </div>
   

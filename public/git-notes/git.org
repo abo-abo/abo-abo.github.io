@@ -237,6 +237,10 @@ git rm -rf .
    git bisect bad
 ** remove large files
 http://rtyley.github.io/bfg-repo-cleaner/
+** generate a patch from a subtree project
+#+begin_src sh
+git format-patch HEAD~1 --relative=packages/swiper/
+#+end_src
 ** git am (apply patch)
 1. Find the patch in .git/rebase-apply/0001
 2. git apply .git/rebase-apply/0001 --reject
