@@ -4,13 +4,244 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-05-23T14:54:27+02:00</updated>
+ <updated>2015-05-29T15:32:35+02:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>lispy 0.26.0 is out</title>
+   <link href="http://oremacs.com/2015/05/29/lispy-0.26.0/"/>
+   <updated>2015-05-29T00:00:00+02:00</updated>
+   <id>http://oremacs.com/2015/05/29/lispy-0.26.0</id>
+   <content type="html">&lt;p&gt;Lispy 0.25.0 came out 2 months ago; 177 commits later, comes version
+0.26.0.  The release notes are stored
+&lt;a href=&quot;https://github.com/abo-abo/lispy/releases/tag/0.26.0&quot;&gt;at Github&lt;/a&gt;, and
+I&amp;#39;ll post them here as well.&lt;/p&gt;
+
+&lt;p&gt;The coolest changes are the new reader-based &lt;kbd&gt;M&lt;/kbd&gt;, which:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Gives out very pretty output, with minor diffs for actual code,
+which is quite impressive considering all newline information is
+discarded and then reconstructed.&lt;/li&gt;
+&lt;li&gt;Works for things that Elisp can&amp;#39;t read, like &lt;code&gt;#&amp;lt;marker ...&amp;gt;&lt;/code&gt; etc, very useful for debugging.&lt;/li&gt;
+&lt;li&gt;Customizable rule sets; rules for Elisp and Clojure come with the package.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The improvements to &lt;kbd&gt;g&lt;/kbd&gt; and &lt;kbd&gt;G&lt;/kbd&gt; also great:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Because of caching, the prettified tags can be displayed in less
+than &lt;code&gt;0.15s&lt;/code&gt; on Emacs&amp;#39; &lt;code&gt;lisp/&lt;/code&gt; directory, which has 21256 tags in 252 files.&lt;/li&gt;
+&lt;li&gt;The tags collector looks at file modification time, so you get the updated tags right after you save.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The details for these and other features follow below.&lt;/p&gt;
+
+&lt;h2 id=&quot;fixes&quot;&gt;Fixes&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;C-k&lt;/kbd&gt; should delete the whole multi-line string.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;y&lt;/kbd&gt; should work for all parens, not just &lt;code&gt;(&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;p&lt;/kbd&gt; should actually eval in other window for &lt;code&gt;dolist&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Prevent pairs inserting an extra space when at minibuffer start.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;ol&lt;/kbd&gt; works properly for active region.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;new-features&quot;&gt;New Features&lt;/h2&gt;
+
+&lt;h3 id=&quot;misc&quot;&gt;Misc&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;xf&lt;/kbd&gt; will pretty-print the macros for Elisp.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;M-m&lt;/kbd&gt; works better when before &lt;code&gt;)&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Fix &lt;kbd&gt;&amp;#39;&lt;/kbd&gt;, &lt;kbd&gt;^&lt;/kbd&gt; after a &lt;code&gt;,&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Improve &lt;kbd&gt;/&lt;/kbd&gt; (splice) for quoted regions.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;Z&lt;/kbd&gt; works with &lt;code&gt;&amp;amp;key&lt;/code&gt; arguments.&lt;/li&gt;
+&lt;li&gt;The new &lt;kbd&gt;M&lt;/kbd&gt; is used in &lt;kbd&gt;xf&lt;/kbd&gt;.&lt;/li&gt;
+&lt;li&gt;Allow to flatten Elisp &lt;code&gt;defsubst&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;c&lt;/kbd&gt; should insert an extra newline for top-level sexps.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;paredit-key-bindings&quot;&gt;Paredit key bindings&lt;/h3&gt;
+
+&lt;p&gt;You can have only Paredit + special key bindings by using this composition of key themes:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;lispy-set-key-theme&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;special&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;paredit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The default setting is:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;lispy-set-key-theme&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;special&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;lispy&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c-digits&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;new-algorithm-for-multi-lining&quot;&gt;New algorithm for multi-lining&lt;/h3&gt;
+
+&lt;p&gt;&lt;kbd&gt;M&lt;/kbd&gt; is now bound to &lt;code&gt;lispy-alt-multiline&lt;/code&gt; instead of
+&lt;code&gt;lispy-multiline&lt;/code&gt;.  It has a much better and more customizable
+algorithm.&lt;/p&gt;
+
+&lt;p&gt;See these variables for customization:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;lispy-multiline-threshold&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;lispy--multiline-take-3&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;lispy--multiline-take-3-arg&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;lispy--multiline-take-2&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;lispy--multiline-take-2-arg&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;They are set to reasonable defaults. But you can customize them if you feel that a particular form should be multi-lined in a different way.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;lispy-multiline-threshold&lt;/code&gt; is a bit of ad-hoc to make things nice. Set this to nil if you want a completely rigorous multi-line. With the default setting of 32, expressions shorter than this won&amp;#39;t be multi-lined. This makes 95% of the code look really good.&lt;/p&gt;
+
+&lt;p&gt;The algorithm has a safety check implemented for Elisp: if &lt;code&gt;read&lt;/code&gt; on the transformed expression returns something different than &lt;code&gt;read&lt;/code&gt; on the original expression, an error will be signaled and no change will be made. For expressions that can&amp;#39;t be &lt;code&gt;read&lt;/code&gt;, like buffers/markers/windows/cyclic lists/overlays, only a warning will be issued (&lt;code&gt;lispy&lt;/code&gt; can read them, unlike &lt;code&gt;read&lt;/code&gt;).&lt;/p&gt;
+
+&lt;h3 id=&quot;d-and-&amp;gt;-give-priority-to-lispy-right&quot;&gt;&lt;kbd&gt;d&lt;/kbd&gt; and &lt;kbd&gt;&amp;gt;&lt;/kbd&gt; give priority to &lt;code&gt;lispy-right&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;For the expression &lt;code&gt;(a)|(b)&lt;/code&gt;, &lt;code&gt;(a)&lt;/code&gt; will be considered the sexp at point, instead of &lt;code&gt;(b)&lt;/code&gt;. This is consistent with &lt;code&gt;show-paren-mode&lt;/code&gt;.  If a space is present, all ambiguities are resolved anyway.&lt;/p&gt;
+
+&lt;h3 id=&quot;b-works-fine-even-if-the-buffer-changes&quot;&gt;&lt;kbd&gt;b&lt;/kbd&gt; works fine even if the buffer changes&lt;/h3&gt;
+
+&lt;p&gt;I&amp;#39;ve switched the point and mark history to markers instead of points. When the buffer is changed, the markers are updated, so &lt;kbd&gt;b&lt;/kbd&gt; will work fine.&lt;/p&gt;
+
+&lt;h3 id=&quot;extend-clojure-reader&quot;&gt;Extend Clojure reader&lt;/h3&gt;
+
+&lt;p&gt;In order for &lt;kbd&gt;i&lt;/kbd&gt; (prettify code) to work for Clojure, it must be able to read the current expression. I&amp;#39;ve been extending the Elisp reader to understand Clojure.  In the past commits, support was added for:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;empty sets&lt;/li&gt;
+&lt;li&gt;commas&lt;/li&gt;
+&lt;li&gt;auto-symbols, like &lt;code&gt;p1__7041#&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;extend-elisp-reader&quot;&gt;Extend Elisp reader&lt;/h3&gt;
+
+&lt;p&gt;It should be possible to read any &lt;code&gt;#&amp;lt;...&amp;gt;&lt;/code&gt; form, as well as &lt;code&gt;#1&lt;/code&gt;-type forms.&lt;/p&gt;
+
+&lt;h3 id=&quot;g-and-g-get-a-persistent-action-for-ivy&quot;&gt;&lt;kbd&gt;g&lt;/kbd&gt; and &lt;kbd&gt;G&lt;/kbd&gt; get a persistent action for &lt;code&gt;ivy&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;This is a powerful feature that the &lt;code&gt;helm&lt;/code&gt; back end has had for a long time.  When you press &lt;kbd&gt;g&lt;/kbd&gt;, &lt;kbd&gt;C-n&lt;/kbd&gt; and &lt;kbd&gt;C-p&lt;/kbd&gt; will change the current selection.  But &lt;kbd&gt;C-M-n&lt;/kbd&gt; and &lt;kbd&gt;C-M-p&lt;/kbd&gt; will change the current selection &lt;em&gt;and&lt;/em&gt; move there, without exiting the completion.&lt;/p&gt;
+
+&lt;p&gt;This also means that you can call &lt;code&gt;ivy-resume&lt;/code&gt; to resume either &lt;kbd&gt;g&lt;/kbd&gt; (&lt;code&gt;lispy-goto&lt;/code&gt;) or
+&lt;kbd&gt;G&lt;/kbd&gt; (&lt;code&gt;lispy-goto-local&lt;/code&gt;).&lt;/p&gt;
+
+&lt;h3 id=&quot;e-works-with-defvar-local&quot;&gt;&lt;kbd&gt;e&lt;/kbd&gt; works with &lt;code&gt;defvar-local&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;As you might know, the regular &lt;kbd&gt;C-x C-e&lt;/kbd&gt; or &lt;code&gt;eval-buffer&lt;/code&gt; will not reset the values of &lt;code&gt;defvar&lt;/code&gt;, &lt;code&gt;defcustom&lt;/code&gt; and such (you need &lt;kbd&gt;C-M-x&lt;/kbd&gt; instead). But &lt;kbd&gt;e&lt;/kbd&gt; does it, now also for &lt;code&gt;defvar-local&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;improve-faces-for-dark-backgrounds&quot;&gt;Improve faces for dark backgrounds&lt;/h3&gt;
+
+&lt;p&gt;I normally use a light background, so I didn&amp;#39;t notice before that the faces looked horrible with a dark background.&lt;/p&gt;
+
+&lt;h3 id=&quot;the-&amp;#96;-will-quote-the-region&quot;&gt;The &lt;kbd&gt;&amp;#96;&lt;/kbd&gt; will quote the region&lt;/h3&gt;
+
+&lt;p&gt;If you have a region selected, pressing &lt;kbd&gt;&amp;#96;&lt;/kbd&gt; will result in:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;`symbol&amp;#39;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;customize-the-file-selection-back-end-for-v&quot;&gt;Customize the file selection back end for &lt;kbd&gt;V&lt;/kbd&gt;&lt;/h3&gt;
+
+&lt;p&gt;&lt;kbd&gt;V&lt;/kbd&gt; (&lt;code&gt;lispy-visit&lt;/code&gt;) allows to open a file in current project. Previously, it used &lt;code&gt;projectile&lt;/code&gt;.
+Now it uses &lt;code&gt;find-file-in-project&lt;/code&gt; by default, with the option to customize to &lt;code&gt;projectile&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;fixup-calls-to-looking-back&quot;&gt;Fixup calls to &lt;code&gt;looking-back&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;Apparently, &lt;code&gt;looking-back&lt;/code&gt; isn&amp;#39;t very efficient, so it&amp;#39;s preferable to avoid it or at least add a search bound to improve efficiency. Also the bound became mandatory in 25, while it was optional before.&lt;/p&gt;
+
+&lt;h3 id=&quot;m-m-will-work-better-in-strings-and-comments.&quot;&gt;&lt;kbd&gt;M-m&lt;/kbd&gt; will work better in strings and comments.&lt;/h3&gt;
+
+&lt;p&gt;See the relevant test:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;should&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;string=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;lispy-with&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;\&amp;quot;See `plu|mage&amp;#39;.\&amp;quot;&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;M-m&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+                 &lt;span class=&quot;s&quot;&gt;&amp;quot;\&amp;quot;See ~`plumage&amp;#39;|.\&amp;quot;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Thanks to this, to e.g. get the value of a quoted var in a docstring or a comment, or jump to its definition, you can &lt;kbd&gt;M-m&lt;/kbd&gt;. Then, you can step-in with &lt;kbd&gt;i&lt;/kbd&gt; to select the symbol without quotes.&lt;/p&gt;
+
+&lt;h3 id=&quot;update-the-tags-strategy&quot;&gt;Update the tags strategy&lt;/h3&gt;
+
+&lt;p&gt;A much better algorithm with caching an examining of file modification time is used now.  This means that the tags should be up-to-date 99% of the time, even immediately after a save, and no necessary re-parsing will be done. And it all works fine with the &lt;code&gt;lispy-tag-arity&lt;/code&gt; modifications.&lt;/p&gt;
+
+&lt;p&gt;1% of the time, &lt;code&gt;lispy-tag-arity&lt;/code&gt; stops working, I don&amp;#39;t know why, since it&amp;#39;s hard to reproduce. You can then pass a prefix arg to refresh tags bypassing the cache, e.g &lt;kbd&gt;2g&lt;/kbd&gt; or &lt;kbd&gt;2G&lt;/kbd&gt;.&lt;/p&gt;
+
+&lt;p&gt;Also a bug is fixed in Clojure tag navigation, where the tag start positions were off by one char.&lt;/p&gt;
+
+&lt;p&gt;The fetched tags retrieval is fast: less than &lt;code&gt;0.15s&lt;/code&gt; on Emacs&amp;#39;
+&lt;code&gt;lisp/&lt;/code&gt; directory to retrieve 21256 tags from 252 files.  Which means
+it&amp;#39;s lightning fast on smaller code bases (&lt;code&gt;lispy&lt;/code&gt; has only 651 tags).&lt;/p&gt;
+
+&lt;h3 id=&quot;xj-can-also-step-into-macros&quot;&gt;&lt;kbd&gt;xj&lt;/kbd&gt; can also step into macros&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;lispy-debug-step-in&lt;/code&gt;, bound to &lt;kbd&gt;xj&lt;/kbd&gt; locally and &lt;kbd&gt;C-x C-j&lt;/kbd&gt; globally can now step into macros, as well as into functions. This command is very useful for Edebug-less debugging.  Stepping into macros with &lt;code&gt;&amp;amp;rest&lt;/code&gt; parameters should work fine as well.&lt;/p&gt;
+
+&lt;h3 id=&quot;p-can-now-lax-eval-function-and-macro-arguments&quot;&gt;&lt;kbd&gt;p&lt;/kbd&gt; can now lax-eval function and macro arguments&lt;/h3&gt;
+
+&lt;p&gt;When positioned at function or macro args, &lt;kbd&gt;p&lt;/kbd&gt; will set them as if the function or macro was called with empty args, or the appropriate amount of nils. If the function is interned and interactive, use its interactive form to set the arguments appropriately.&lt;/p&gt;
+
+&lt;p&gt;Again, this is very useful for debugging.&lt;/p&gt;
+
+&lt;h3 id=&quot;allow-to-paste-anywhere-in-the-list-using-a-numeric-arg&quot;&gt;Allow to paste anywhere in the list using a numeric arg&lt;/h3&gt;
+
+&lt;p&gt;As you might know, &lt;kbd&gt;P&lt;/kbd&gt; (&lt;code&gt;lispy-paste&lt;/code&gt;) is a powerful command that:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Replaces selection with current kill when the region is active.&lt;/li&gt;
+&lt;li&gt;Yanks the current kill before or after the current list otherwise.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Now, you can:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Yank the current kill to become the second element of the list with &lt;kbd&gt;2P&lt;/kbd&gt;&lt;/li&gt;
+&lt;li&gt;Yank the current kill to become the third element of the list with &lt;kbd&gt;3P&lt;/kbd&gt;&lt;/li&gt;
+&lt;li&gt;...&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;It&amp;#39;s OK to pass a larger arg than the length of the current list. In
+that case, the paste will be made into the last element of the list.&lt;/p&gt;
+
+&lt;h3 id=&quot;update-the-way-/-(lispy-splice)-works&quot;&gt;Update the way &lt;kbd&gt;/&lt;/kbd&gt; (&lt;code&gt;lispy-splice&lt;/code&gt;) works&lt;/h3&gt;
+
+&lt;p&gt;When there&amp;#39;s no next element within parent, jump to parent from
+appropriate side. When the region is active, don&amp;#39;t deactivate it. When
+splicing region, remove random quotes at region bounds.&lt;/p&gt;
+
+&lt;p&gt;This change makes the splice a lot more manageable. For example,
+starting with this Clojure code, with &lt;code&gt;|&lt;/code&gt; marking the current point:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defn &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;read-resource&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Read a resource into a string&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;read-string&lt;/span&gt;
+   &lt;span class=&quot;err&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;slurp &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;clojure.java.io/resource&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;A double splice &lt;kbd&gt;//&lt;/kbd&gt; will result in:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defn &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;read-resource&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Read a resource into a string&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;err&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;read-string&lt;/span&gt;
+   &lt;span class=&quot;nb&quot;&gt;slurp &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;clojure.java.io/resource&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;After &lt;kbd&gt;xR&lt;/kbd&gt; (reverse list), &lt;kbd&gt;2 SPC&lt;/kbd&gt; (same as
+&lt;kbd&gt;C-f&lt;/kbd&gt;), &lt;code&gt;-&amp;gt;&lt;/code&gt; (plain insert),
+&lt;kbd&gt;[M&lt;/kbd&gt; (back to parent and multi-line), the final result:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defn &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;read-resource&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Read a resource into a string&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;err&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;-&amp;gt; &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;path&lt;/span&gt;
+      &lt;span class=&quot;nv&quot;&gt;clojure.java.io/resource&lt;/span&gt;
+      &lt;span class=&quot;nv&quot;&gt;slurp&lt;/span&gt;
+      &lt;span class=&quot;nv&quot;&gt;read-string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This also shows off &lt;kbd&gt;xR&lt;/kbd&gt; - &lt;code&gt;lispy-reverse&lt;/code&gt;, which reverses
+the current list.  Finally, reverting from the last code to the
+initial one can be done simply with &lt;kbd&gt;xf&lt;/kbd&gt; - it will flatten
+the &lt;code&gt;-&amp;gt;&lt;/code&gt; macro call.&lt;/p&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;Thanks to all who contributed, enjoy the new stuff. Would also be nice
+to get some more feedback and bug reports. Currently, it might seem
+that a large part of the features are either perfect or unused.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Ivy-mode 0.5.0 is out</title>
