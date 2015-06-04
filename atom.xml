@@ -4,13 +4,98 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-05-29T15:32:35+02:00</updated>
+ <updated>2015-06-04T20:25:06+02:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>counsel-git-grep, in async</title>
+   <link href="http://oremacs.com/2015/06/04/git-grep-ivy-2/"/>
+   <updated>2015-06-04T00:00:00+02:00</updated>
+   <id>http://oremacs.com/2015/06/04/git-grep-ivy-2</id>
+   <content type="html">&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
+
+&lt;p&gt;It took me quite a while to figure out, but finally
+&lt;code&gt;counsel-git-grep&lt;/code&gt;, which I&amp;#39;ve described
+&lt;a href=&quot;http://oremacs.com/2015/04/19/git-grep-ivy/&quot;&gt;before&lt;/a&gt; works completely
+asynchronously, which means it&amp;#39;s very fast and smooth even for huge
+repositories.&lt;/p&gt;
+
+&lt;p&gt;If you don&amp;#39;t know what &lt;code&gt;git grep&lt;/code&gt; is: it allows you to search for a
+regular expression in your Git repository. In a way, it&amp;#39;s just a
+&lt;code&gt;find&lt;/code&gt; / &lt;code&gt;grep&lt;/code&gt; combo, but very concise and fast.  It&amp;#39;s particularly
+great for finding all uses and references to a symbol.&lt;/p&gt;
+
+&lt;p&gt;It can be useful even for non-programmers. One great application is to
+stick all your org-mode files into a Git repository. Then you can
+search all your files at once very fast: all my org stuff takes more
+than 1000,000 lines and there&amp;#39;s no lag while searching. I really
+should remove some pdfs from the repository at some point.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-video-demo&quot;&gt;The Video Demo&lt;/h2&gt;
+
+&lt;p&gt;Check out the speed and the various command in this &lt;a href=&quot;https://www.youtube.com/watch?v=OEmXQNS7ofo&quot;&gt;Video Demo&lt;/a&gt;. Each key stroke starts two asynchronous shell calls, while canceling the current ones if they are still running.  Here are the example calls:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git --no-pager grep --full-name -n --no-color &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    -i -e &lt;span class=&quot;s2&quot;&gt;&amp;quot;forward-line 1&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; head -n 200
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git grep -i -c &lt;span class=&quot;s1&quot;&gt;&amp;#39;forward-line 1&amp;#39;&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; sed &lt;span class=&quot;s1&quot;&gt;&amp;#39;s/.*:\\(.*\\)/\\1/g&amp;#39;&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; awk &lt;span class=&quot;s1&quot;&gt;&amp;#39;{s+=$1} END {print s}&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;the-elisp-side&quot;&gt;The Elisp side&lt;/h2&gt;
+
+&lt;p&gt;I figure since I was interested in this topic, probably a few more people are as well.
+So I&amp;#39;ll explain below how async processing is done (in this case):&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;counsel--gg-count&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;regex&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;&amp;amp;optional&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;no-async&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Quickly count the amount of git grep REGEX matches.&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;When NO-ASYNC is non-nil, do it synchronously.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;default-directory&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;counsel--git-grep-dir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;cmd&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;concat&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;git grep -i -c &amp;#39;%s&amp;#39;&amp;quot;&lt;/span&gt;
+                             &lt;span class=&quot;nv&quot;&gt;regex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                     &lt;span class=&quot;s&quot;&gt;&amp;quot; | sed &amp;#39;s/.*:\\(.*\\)/\\1/g&amp;#39;&amp;quot;&lt;/span&gt;
+                     &lt;span class=&quot;s&quot;&gt;&amp;quot; | awk &amp;#39;{s+=$1} END {print s}&amp;#39;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;counsel-ggc-process&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot; *counsel-gg-count*&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;no-async&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;string-to-number&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;shell-command-to-string&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cmd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;proc&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;get-process&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;counsel-ggc-process&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;buff&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;get-buffer&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;counsel-ggc-process&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;proc&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;delete-process&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;proc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;buff&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;kill-buffer&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;buff&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;proc&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;start-process-shell-command&lt;/span&gt;
+                    &lt;span class=&quot;nv&quot;&gt;counsel-ggc-process&lt;/span&gt;
+                    &lt;span class=&quot;nv&quot;&gt;counsel-ggc-process&lt;/span&gt;
+                    &lt;span class=&quot;nv&quot;&gt;cmd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;set-process-sentinel&lt;/span&gt;
+         &lt;span class=&quot;nv&quot;&gt;proc&lt;/span&gt;
+         &lt;span class=&quot;nf&quot;&gt;#&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;process&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+             &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;string=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;event&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;finished\n&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+               &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;with-current-buffer&lt;/span&gt;
+                   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;process-buffer&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;process&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ivy--full-length&lt;/span&gt;
+                       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;string-to-number&lt;/span&gt;
+                        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;buffer-string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+               &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ivy--insert-minibuffer&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ivy--format&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ivy--all-candidates&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ol&gt;
+&lt;li&gt;Since we&amp;#39;re calling a shell command, it&amp;#39;s important to set &lt;code&gt;default-directory&lt;/code&gt; to a proper value: the shell command will be run there.&lt;/li&gt;
+&lt;li&gt;The output from the process will be channeled into a buffer. I start the buffer name with a space to make it hidden: it will not be shown in the buffer list and &lt;code&gt;switch-to-buffer&lt;/code&gt; completion.&lt;/li&gt;
+&lt;li&gt;I leave the sync option and use &lt;code&gt;shell-command-to-string&lt;/code&gt; for that. Sometimes it&amp;#39;s necessary to know the amount of candidates without a delay.&lt;/li&gt;
+&lt;li&gt;If &lt;code&gt;get-process&lt;/code&gt; and &lt;code&gt;get-buffer&lt;/code&gt; return something it means that the shell command is still running from the previous input. But the input has changed and that data has become useless, so I kill both the process and the buffer.&lt;/li&gt;
+&lt;li&gt;Then I start a new process with &lt;code&gt;start-process-shell-command&lt;/code&gt;- a convenience wrapper around the basic &lt;code&gt;start-process&lt;/code&gt; that&amp;#39;s useful for passing a full shell command with arguments.&lt;/li&gt;
+&lt;li&gt;Finally, I let &lt;code&gt;counsel--gg-count&lt;/code&gt; return without waiting for &lt;code&gt;git grep&lt;/code&gt; to finish. But something needs to be done when it finishes, so I use &lt;code&gt;set-process-sentinel&lt;/code&gt;. Emacs will call my lambda when there&amp;#39;s a new event from the process.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;To check out the new stuff, just install or upgrade &lt;code&gt;counsel&lt;/code&gt; from MELPA. Or clone &lt;a href=&quot;https://github.com/abo-abo/swiper&quot;&gt;the source&lt;/a&gt;. I hope that my Elisp explanations were useful, async stuff is awesome, and I hope to see more of it in future Emacs packages.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>lispy 0.26.0 is out</title>

@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      counsel-git-grep, in async &middot; (or emacs
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="/public/css/octicons.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Scripts -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body class="layout-reverse theme-base-08">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <!-- <div class="sidebar-item"> -->
+  <!--   <p>unused</p> -->
+  <!-- </div> -->
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about/">About</a>
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/archive/">Archive</a>
+        
+      
+    
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+
+    <div id="github" class="sidebar-nav-item">
+      <button type="button"
+              class="btn btn-info"
+              data-toggle="collapse"
+              data-target="#github-projects">
+        <span class="octicon octicon-mark-github"></span> My Emacs Projects
+      </button>
+      <div id="github-projects" class="collapse">
+        <ul style="margin-bottom:0em;">
+          <li>
+            <a href="https://github.com/abo-abo/lispy">lispy</a>
+            <p>vi-like Paredit</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/worf">worf</a>
+            <p>vi-like bindings for org-mode</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-window">ace-window</a>
+            <p>switch windows with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-link">ace-link</a>
+            <p>follow links with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/function-args">function-args</a>
+            <p>enhance <code>CEDET</code> for C++</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/helm-make">helm-make</a>
+            <p>select a Makefile target with <code>helm</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/make-it-so">make-it-so</a>
+            <p>transform files with Makefile recipes</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/org-download">org-download</a>
+            <p>drag-and-drop images to <code>org-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo?tab=repositories">
+              <span class="octicon octicon-octoface"></span>
+              and more
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
+
+  <div class="sidebar-item">
+    <p>
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.0/">
+        <img alt="Creative Commons License"
+             style="border-width:0;opacity: 0.3;"
+             src="https://i.creativecommons.org/l/by-nc-sa/2.0/88x31.png"/>
+      </a>
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">(or emacs</a>
+            <small>irrelevant)</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">counsel-git-grep, in async</h1>
+  <span class="post-date">04 Jun 2015</span>
+  <h2 id="introduction">Introduction</h2>
+
+<p>It took me quite a while to figure out, but finally
+<code>counsel-git-grep</code>, which I&#39;ve described
+<a href="http://oremacs.com/2015/04/19/git-grep-ivy/">before</a> works completely
+asynchronously, which means it&#39;s very fast and smooth even for huge
+repositories.</p>
+
+<p>If you don&#39;t know what <code>git grep</code> is: it allows you to search for a
+regular expression in your Git repository. In a way, it&#39;s just a
+<code>find</code> / <code>grep</code> combo, but very concise and fast.  It&#39;s particularly
+great for finding all uses and references to a symbol.</p>
+
+<p>It can be useful even for non-programmers. One great application is to
+stick all your org-mode files into a Git repository. Then you can
+search all your files at once very fast: all my org stuff takes more
+than 1000,000 lines and there&#39;s no lag while searching. I really
+should remove some pdfs from the repository at some point.</p>
+
+<h2 id="the-video-demo">The Video Demo</h2>
+
+<p>Check out the speed and the various command in this <a href="https://www.youtube.com/watch?v=OEmXQNS7ofo">Video Demo</a>. Each key stroke starts two asynchronous shell calls, while canceling the current ones if they are still running.  Here are the example calls:</p>
+<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span class="nv">$ </span>git --no-pager grep --full-name -n --no-color <span class="se">\</span>
+    -i -e <span class="s2">&quot;forward-line 1&quot;</span> <span class="p">|</span> head -n 200
+<span class="nv">$ </span>git grep -i -c <span class="s1">&#39;forward-line 1&#39;</span> <span class="se">\</span>
+    <span class="p">|</span> sed <span class="s1">&#39;s/.*:\\(.*\\)/\\1/g&#39;</span> <span class="se">\</span>
+    <span class="p">|</span> awk <span class="s1">&#39;{s+=$1} END {print s}&#39;</span>
+</code></pre></div>
+<h2 id="the-elisp-side">The Elisp side</h2>
+
+<p>I figure since I was interested in this topic, probably a few more people are as well.
+So I&#39;ll explain below how async processing is done (in this case):</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel--gg-count</span> <span class="p">(</span><span class="nv">regex</span> <span class="kp">&amp;optional</span> <span class="nv">no-async</span><span class="p">)</span>
+  <span class="s">&quot;Quickly count the amount of git grep REGEX matches.</span>
+<span class="s">When NO-ASYNC is non-nil, do it synchronously.&quot;</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">default-directory</span> <span class="nv">counsel--git-grep-dir</span><span class="p">)</span>
+        <span class="p">(</span><span class="nv">cmd</span> <span class="p">(</span><span class="nf">concat</span> <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;git grep -i -c &#39;%s&#39;&quot;</span>
+                             <span class="nv">regex</span><span class="p">)</span>
+                     <span class="s">&quot; | sed &#39;s/.*:\\(.*\\)/\\1/g&#39;&quot;</span>
+                     <span class="s">&quot; | awk &#39;{s+=$1} END {print s}&#39;&quot;</span><span class="p">))</span>
+        <span class="p">(</span><span class="nv">counsel-ggc-process</span> <span class="s">&quot; *counsel-gg-count*&quot;</span><span class="p">))</span>
+    <span class="p">(</span><span class="k">if</span> <span class="nv">no-async</span>
+        <span class="p">(</span><span class="nf">string-to-number</span> <span class="p">(</span><span class="nv">shell-command-to-string</span> <span class="nv">cmd</span><span class="p">))</span>
+      <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">proc</span> <span class="p">(</span><span class="nf">get-process</span> <span class="nv">counsel-ggc-process</span><span class="p">))</span>
+            <span class="p">(</span><span class="nv">buff</span> <span class="p">(</span><span class="nf">get-buffer</span> <span class="nv">counsel-ggc-process</span><span class="p">)))</span>
+        <span class="p">(</span><span class="nb">when</span> <span class="nv">proc</span>
+          <span class="p">(</span><span class="nf">delete-process</span> <span class="nv">proc</span><span class="p">))</span>
+        <span class="p">(</span><span class="nb">when</span> <span class="nv">buff</span>
+          <span class="p">(</span><span class="nf">kill-buffer</span> <span class="nv">buff</span><span class="p">))</span>
+        <span class="p">(</span><span class="k">setq</span> <span class="nv">proc</span> <span class="p">(</span><span class="nv">start-process-shell-command</span>
+                    <span class="nv">counsel-ggc-process</span>
+                    <span class="nv">counsel-ggc-process</span>
+                    <span class="nv">cmd</span><span class="p">))</span>
+        <span class="p">(</span><span class="nf">set-process-sentinel</span>
+         <span class="nv">proc</span>
+         <span class="nf">#&#39;</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">process</span> <span class="nv">event</span><span class="p">)</span>
+             <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nv">string=</span> <span class="nv">event</span> <span class="s">&quot;finished\n&quot;</span><span class="p">)</span>
+               <span class="p">(</span><span class="nb">with-current-buffer</span>
+                   <span class="p">(</span><span class="nf">process-buffer</span> <span class="nv">process</span><span class="p">)</span>
+                 <span class="p">(</span><span class="k">setq</span> <span class="nv">ivy--full-length</span>
+                       <span class="p">(</span><span class="nf">string-to-number</span>
+                        <span class="p">(</span><span class="nf">buffer-string</span><span class="p">))))</span>
+               <span class="p">(</span><span class="nv">ivy--insert-minibuffer</span>
+                <span class="p">(</span><span class="nv">ivy--format</span> <span class="nv">ivy--all-candidates</span><span class="p">)))))))))</span>
+</code></pre></div>
+<ol>
+<li>Since we&#39;re calling a shell command, it&#39;s important to set <code>default-directory</code> to a proper value: the shell command will be run there.</li>
+<li>The output from the process will be channeled into a buffer. I start the buffer name with a space to make it hidden: it will not be shown in the buffer list and <code>switch-to-buffer</code> completion.</li>
+<li>I leave the sync option and use <code>shell-command-to-string</code> for that. Sometimes it&#39;s necessary to know the amount of candidates without a delay.</li>
+<li>If <code>get-process</code> and <code>get-buffer</code> return something it means that the shell command is still running from the previous input. But the input has changed and that data has become useless, so I kill both the process and the buffer.</li>
+<li>Then I start a new process with <code>start-process-shell-command</code>- a convenience wrapper around the basic <code>start-process</code> that&#39;s useful for passing a full shell command with arguments.</li>
+<li>Finally, I let <code>counsel--gg-count</code> return without waiting for <code>git grep</code> to finish. But something needs to be done when it finishes, so I use <code>set-process-sentinel</code>. Emacs will call my lambda when there&#39;s a new event from the process.</li>
+</ol>
+
+<h2 id="outro">Outro</h2>
+
+<p>To check out the new stuff, just install or upgrade <code>counsel</code> from MELPA. Or clone <a href="https://github.com/abo-abo/swiper">the source</a>. I hope that my Elisp explanations were useful, async stuff is awesome, and I hope to see more of it in future Emacs packages.</p>
+
+</div>
+
+<div class="twitter-share">
+  <a href="https://twitter.com/share"
+     class="twitter-share-button"
+     data-via="_abo_abo"
+     data-dnt="true">
+    Tweet
+  </a>
+</div>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/05/29/lispy-0.26.0/"> -->
+          <a href="/2015/05/29/lispy-0.26.0/">
+            lispy 0.26.0 is out
+            <small>29 May 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/05/23/swiper-0.5.0/"> -->
+          <a href="/2015/05/23/swiper-0.5.0/">
+            Ivy-mode 0.5.0 is out
+            <small>23 May 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/05/22/define-word/"> -->
+          <a href="/2015/05/22/define-word/">
+            New on MELPA - define word at point
+            <small>22 May 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'oremacs'; // required: replace example with your forum shortname
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+<script>
+  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+</script>
+<noscript>
+  Please enable JavaScript to view the
+  <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>
