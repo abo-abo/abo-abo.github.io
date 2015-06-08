@@ -11,7 +11,7 @@
 
   <title>
     
-      ace-window full path &middot; (or emacs
+      More productive describe-variable &middot; (or emacs
     
   </title>
 
@@ -248,118 +248,56 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">ace-window full path</h1>
-  <span class="post-date">03 Mar 2015</span>
-  <p>I just closed a really helpful
-<a href="https://github.com/abo-abo/ace-window/issues/21">issue</a> for
-<code>ace-window</code>.  Turns out that there&#39;s a plugin for vim called
-Easymotion that&#39;s very similar to <code>ace-jump-mode</code>.  And that plugin
-doesn&#39;t highlight the leading chars one by one, but instead gives them
-all at once.  Which is a pretty good idea, since it&#39;s more convenient
-to read the whole path at once and type it in at once rather than:</p>
+  <h1 class="post-title">More productive describe-variable</h1>
+  <span class="post-date">08 Jun 2015</span>
+  <p>I refer to <code>counsel-describe-variable</code> here, which you can get from
+the MELPA <code>counsel</code> package, or from
+<a href="https://github.com/abo-abo/swiper">Github</a>. If you&#39;re not familiar, <code>counsel</code> contains specialized functions using <code>ivy-mode</code> completion. Being specialized means that you can do more than usual, for instance here are the exit points of <code>counsel-describe-variable</code>:</p>
 
 <ul>
-<li>read one char</li>
-<li>type one char</li>
-<li>read one more char</li>
-<li>type one more char</li>
-<li>... (maybe more steps)</li>
+<li><kbd>RET</kbd> calls <code>describe-variable</code>: a plain <code>describe-variable</code> with <code>ivy-mode</code> on
+looks like <code>counsel-describe-variable</code>, but has only this exit point.</li>
+<li><kbd>C-.</kbd> calls <code>counsel-find-symbol</code>: jump to symbol declaration.</li>
+<li><kbd>C-,</kbd> calls <code>counsel--info-lookup-symbol</code>: jump to symbol reference in <code>*Info*</code>.</li>
 </ul>
 
-<p>To turn on the new behavior:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">aw-leading-char-style</span> <span class="ss">&#39;path</span><span class="p">)</span>
+<p>These can also be extended by binding new commands in <code>counsel-describe-map</code>.</p>
+
+<p>I&#39;ll just describe one useful scenario that happened just now. I was working on <a href="http://debbugs.gnu.org/cgi/bugreport.cgi?bug=20754">a <code>checkdoc.el</code> change</a>
+and was testing it with <code>avy.el</code>. And I got a few style warnings for this code, which I got from a <a href="https://github.com/abo-abo/avy/pull/59">contributor</a> (thanks for the code btw):</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">defvar</span> <span class="nv">avy-translate-char-function</span> <span class="nf">#&#39;identity</span>
+  <span class="s">&quot;Function to translate user input key. This can be useful for</span>
+<span class="s">adding mirror key. E.g. one can make SPACE an alternative of &#39;a&#39;,</span>
+<span class="s">by adding:</span>
+
+<span class="s">\(setq avy-translate-char-function</span>
+<span class="s">      (lambda (c) (if (= c 32) ?a c)))</span>
+
+<span class="s">to allow typing SPACE instead of character &#39;a&#39; to jump to the location</span>
+<span class="s">highlighted by &#39;a&#39;.&quot;</span><span class="p">)</span>
 </code></pre></div>
-<p>Although this will only have an effect once you have more than 10 windows.
-But this method really improves the functions from avy-jump.el.
-I&#39;ve added some more commands and renamed the old ones since yesterday.</p>
-
-<h2 id="avy-jump-demos">avy-jump demos</h2>
-
-<h3 id="avi-goto-char-2"><code>avi-goto-char-2</code></h3>
-
-<p>Here&#39;s how I like to bind <code>avi-goto-char-2</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-&#39;&quot;</span><span class="p">)</span> <span class="ss">&#39;avi-goto-char-2</span><span class="p">)</span>
+<p>One of the warnings that <code>avy-translate-char-function</code> should be quoted while inside the docstring like so:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="s">&quot;`avy-translate-char-function&#39;&quot;</span>
 </code></pre></div>
-<p>And here&#39;s the result of <kbd>C-&#39; bu</kbd>:</p>
+<p>Of course that wouldn&#39;t play well with <code>setq</code>, so I wanted to see if
+any other variables that end in <code>-function</code> provide an example of use
+like here, and, if so, how they quote.</p>
 
-<p><img src="/download/avi-goto-char-2.png" alt="avi-goto-char-2"></p>
-
-<p>As you can see, nothing is overwritten by the overlay - it&#39;s appended
-after the search chars. In the screenshot above, I have <code>avi-background</code> at nil; you can set it to
-t if you want a gray background.</p>
-
-<h3 id="avi-goto-char"><code>avi-goto-char</code></h3>
-
-<p>After binding <code>avi-goto-char</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;π&quot;</span><span class="p">)</span> <span class="ss">&#39;avi-goto-char</span><span class="p">)</span>
+<p>This is my <a href="https://github.com/abo-abo/oremacs/blob/github/oleh/keys.el">personal configuration</a>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;&lt;f1&gt; v&quot;</span><span class="p">)</span> <span class="ss">&#39;counsel-describe-variable</span><span class="p">)</span>
 </code></pre></div>
-<p>Here&#39;s the result of <kbd>π b</kbd>:</p>
+<p>So I did <kbd>&lt;f1&gt; v</kbd> <code>function$</code> to describe a variable that ends with <code>function</code>.
+Here, <code>$</code> is a part of <a href="http://www.emacswiki.org/emacs/RegularExpression">a regular expression</a>, which should be a priority to learn if you want to be a (not just) Emacs Power User.</p>
 
-<p><img src="/download/avi-goto-char.png" alt="avi-goto-char"></p>
+<p>And now the key part: instead of pressing <kbd>RET</kbd> to describe just the current candidate, I repeatedly press <kbd>C-M-n</kbd> (<code>ivy-next-line-and-call</code>). After each <kbd>C-M-n</kbd>, the next candidate will be selected and the <code>*Help*</code> window will be updated.</p>
 
-<h3 id="avi-goto-line"><code>avi-goto-line</code></h3>
-
-<p>After binding <code>avi-goto-line</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-g f&quot;</span><span class="p">)</span> <span class="ss">&#39;avi-goto-line</span><span class="p">)</span>
+<p>With this trick I was able to skim through the 346 matches in seconds. The conclusion was that an example isn&#39;t usually provided, with <code>nnmail-expiry-wait-function</code> being an exemption.
+In the end, I decided not to provide such an explicit example and shorten the doc to this:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">defvar</span> <span class="nv">avy-translate-char-function</span> <span class="nf">#&#39;identity</span>
+  <span class="s">&quot;Function to translate user input key into another key.</span>
+<span class="s">For example, to make SPC do the same as ?a, use</span>
+<span class="s">\(lambda (c) (if (= c 32) ?a c)).&quot;</span><span class="p">)</span>
 </code></pre></div>
-<p>Here&#39;s the result of <kbd>M-g f</kbd>:</p>
-
-<p><img src="/download/avi-goto-line.png" alt="avi-goto-line"></p>
-
-<p>I&#39;ve also added:</p>
-
-<ul>
-<li><code>avi-copy-line</code></li>
-<li><code>avi-move-line</code></li>
-<li><code>avi-copy-region</code></li>
-</ul>
-
-<p>These functions use the method of <code>avi-goto-line</code> to copy/move stuff.
-It might be useful for line-based text.</p>
-
-<h3 id="avi-goto-word-0"><code>avi-goto-word-0</code></h3>
-
-<p>Here&#39;s the simple definition and the binding:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">avi-goto-word-0</span> <span class="p">()</span>
-  <span class="s">&quot;Jump to a word start in current window.&quot;</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">avi-keys</span> <span class="p">(</span><span class="nv">number-sequence</span> <span class="nv">?a</span> <span class="nv">?z</span><span class="p">))</span>
-         <span class="p">(</span><span class="nv">candidates</span> <span class="p">(</span><span class="nv">avi--regex-candidates</span> <span class="s">&quot;\\b\\sw&quot;</span><span class="p">)))</span>
-    <span class="p">(</span><span class="nv">avi--goto</span>
-     <span class="p">(</span><span class="nv">avi--process</span> <span class="nv">candidates</span> <span class="nf">#&#39;</span><span class="nv">avi--overlay-pre</span><span class="p">))))</span>
-<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-g e&quot;</span><span class="p">)</span> <span class="ss">&#39;avi-goto-word-0</span><span class="p">)</span>
-</code></pre></div>
-<p>There might be quite a lot of candidates for this one, but there&#39;s no call to <code>read-char</code>.
-Here&#39;s what happens after <kbd>M-g e</kbd>:</p>
-
-<p><img src="/download/avi-goto-word-0.png" alt="avi-goto-word-0"></p>
-
-<h3 id="avi-goto-word-1"><code>avi-goto-word-1</code></h3>
-
-<p>Here&#39;s a version of it that reads one char:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">avi-goto-word-1</span> <span class="p">()</span>
-  <span class="s">&quot;Jump to a word start in current window.</span>
-<span class="s">Read one char with which the word should start.&quot;</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">candidates</span> <span class="p">(</span><span class="nv">avi--regex-candidates</span>
-                     <span class="p">(</span><span class="nf">concat</span>
-                      <span class="s">&quot;\\b&quot;</span>
-                      <span class="p">(</span><span class="nf">string</span> <span class="p">(</span><span class="nf">read-char</span> <span class="s">&quot;char: &quot;</span><span class="p">))))))</span>
-    <span class="p">(</span><span class="nv">avi--goto</span>
-     <span class="p">(</span><span class="nv">avi--process</span> <span class="nv">candidates</span> <span class="nf">#&#39;</span><span class="nv">avi--overlay-pre</span><span class="p">))))</span>
-<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-g w&quot;</span><span class="p">)</span> <span class="ss">&#39;avi-goto-word-1</span><span class="p">)</span>
-</code></pre></div>
-<p>Here&#39;s what happens after <kbd>M-g w b</kbd>:</p>
-
-<p><img src="/download/avi-goto-word-1.png" alt="avi-goto-word-1"></p>
-
-<h2 id="outro">Outro</h2>
-
-<p>Give the new functions a go and see if you like them. New ideas are
-welcome, especially pertaining to ripping off vim plugins. I did the
-vimtutor once, but I have no idea how vim plugins work. But it turns
-out that I like Easymotion.</p>
-
 </div>
 
 <div class="twitter-share">
@@ -377,16 +315,6 @@ out that I like Easymotion.</p>
     
       <li>
         <h3>
-          <!-- <a href="//2015/06/08/describe-variable-tip/"> -->
-          <a href="/2015/06/08/describe-variable-tip/">
-            More productive describe-variable
-            <small>08 Jun 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
           <!-- <a href="//2015/06/04/git-grep-ivy-2/"> -->
           <a href="/2015/06/04/git-grep-ivy-2/">
             counsel-git-grep, in async
@@ -401,6 +329,16 @@ out that I like Easymotion.</p>
           <a href="/2015/05/29/lispy-0.26.0/">
             lispy 0.26.0 is out
             <small>29 May 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/05/23/swiper-0.5.0/"> -->
+          <a href="/2015/05/23/swiper-0.5.0/">
+            Ivy-mode 0.5.0 is out
+            <small>23 May 2015</small>
           </a>
         </h3>
       </li>

@@ -4,13 +4,68 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-06-04T20:25:06+02:00</updated>
+ <updated>2015-06-08T13:02:01+02:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>More productive describe-variable</title>
+   <link href="http://oremacs.com/2015/06/08/describe-variable-tip/"/>
+   <updated>2015-06-08T00:00:00+02:00</updated>
+   <id>http://oremacs.com/2015/06/08/describe-variable-tip</id>
+   <content type="html">&lt;p&gt;I refer to &lt;code&gt;counsel-describe-variable&lt;/code&gt; here, which you can get from
+the MELPA &lt;code&gt;counsel&lt;/code&gt; package, or from
+&lt;a href=&quot;https://github.com/abo-abo/swiper&quot;&gt;Github&lt;/a&gt;. If you&amp;#39;re not familiar, &lt;code&gt;counsel&lt;/code&gt; contains specialized functions using &lt;code&gt;ivy-mode&lt;/code&gt; completion. Being specialized means that you can do more than usual, for instance here are the exit points of &lt;code&gt;counsel-describe-variable&lt;/code&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;RET&lt;/kbd&gt; calls &lt;code&gt;describe-variable&lt;/code&gt;: a plain &lt;code&gt;describe-variable&lt;/code&gt; with &lt;code&gt;ivy-mode&lt;/code&gt; on
+looks like &lt;code&gt;counsel-describe-variable&lt;/code&gt;, but has only this exit point.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;C-.&lt;/kbd&gt; calls &lt;code&gt;counsel-find-symbol&lt;/code&gt;: jump to symbol declaration.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;C-,&lt;/kbd&gt; calls &lt;code&gt;counsel--info-lookup-symbol&lt;/code&gt;: jump to symbol reference in &lt;code&gt;*Info*&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;These can also be extended by binding new commands in &lt;code&gt;counsel-describe-map&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;I&amp;#39;ll just describe one useful scenario that happened just now. I was working on &lt;a href=&quot;http://debbugs.gnu.org/cgi/bugreport.cgi?bug=20754&quot;&gt;a &lt;code&gt;checkdoc.el&lt;/code&gt; change&lt;/a&gt;
+and was testing it with &lt;code&gt;avy.el&lt;/code&gt;. And I got a few style warnings for this code, which I got from a &lt;a href=&quot;https://github.com/abo-abo/avy/pull/59&quot;&gt;contributor&lt;/a&gt; (thanks for the code btw):&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defvar&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;avy-translate-char-function&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;#&amp;#39;identity&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Function to translate user input key. This can be useful for&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;adding mirror key. E.g. one can make SPACE an alternative of &amp;#39;a&amp;#39;,&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;by adding:&lt;/span&gt;
+
+&lt;span class=&quot;s&quot;&gt;\(setq avy-translate-char-function&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;      (lambda (c) (if (= c 32) ?a c)))&lt;/span&gt;
+
+&lt;span class=&quot;s&quot;&gt;to allow typing SPACE instead of character &amp;#39;a&amp;#39; to jump to the location&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;highlighted by &amp;#39;a&amp;#39;.&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;One of the warnings that &lt;code&gt;avy-translate-char-function&lt;/code&gt; should be quoted while inside the docstring like so:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;`avy-translate-char-function&amp;#39;&amp;quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Of course that wouldn&amp;#39;t play well with &lt;code&gt;setq&lt;/code&gt;, so I wanted to see if
+any other variables that end in &lt;code&gt;-function&lt;/code&gt; provide an example of use
+like here, and, if so, how they quote.&lt;/p&gt;
+
+&lt;p&gt;This is my &lt;a href=&quot;https://github.com/abo-abo/oremacs/blob/github/oleh/keys.el&quot;&gt;personal configuration&lt;/a&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;f1&amp;gt; v&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;counsel-describe-variable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;So I did &lt;kbd&gt;&amp;lt;f1&amp;gt; v&lt;/kbd&gt; &lt;code&gt;function$&lt;/code&gt; to describe a variable that ends with &lt;code&gt;function&lt;/code&gt;.
+Here, &lt;code&gt;$&lt;/code&gt; is a part of &lt;a href=&quot;http://www.emacswiki.org/emacs/RegularExpression&quot;&gt;a regular expression&lt;/a&gt;, which should be a priority to learn if you want to be a (not just) Emacs Power User.&lt;/p&gt;
+
+&lt;p&gt;And now the key part: instead of pressing &lt;kbd&gt;RET&lt;/kbd&gt; to describe just the current candidate, I repeatedly press &lt;kbd&gt;C-M-n&lt;/kbd&gt; (&lt;code&gt;ivy-next-line-and-call&lt;/code&gt;). After each &lt;kbd&gt;C-M-n&lt;/kbd&gt;, the next candidate will be selected and the &lt;code&gt;*Help*&lt;/code&gt; window will be updated.&lt;/p&gt;
+
+&lt;p&gt;With this trick I was able to skim through the 346 matches in seconds. The conclusion was that an example isn&amp;#39;t usually provided, with &lt;code&gt;nnmail-expiry-wait-function&lt;/code&gt; being an exemption.
+In the end, I decided not to provide such an explicit example and shorten the doc to this:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defvar&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;avy-translate-char-function&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;#&amp;#39;identity&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Function to translate user input key into another key.&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;For example, to make SPC do the same as ?a, use&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;\(lambda (c) (if (= c 32) ?a c)).&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
+ </entry>
  
  <entry>
    <title>counsel-git-grep, in async</title>
