@@ -168,6 +168,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -248,6 +252,40 @@
 
       <div class="container content">
         <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/2015/06/09/lispy-case-to-cond/">
+        Transform a LISP case into a cond with lispy
+      </a>
+    </h1>
+
+    <span class="post-date">09 Jun 2015</span>
+
+    <p>Just a little extension to the old <kbd>xc</kbd> (<code>lispy-to-cond</code>)
+command that I&#39;ve added today to <a href="https://github.com/abo-abo/lispy">lispy</a>:</p>
+
+<p><img src="/download/lispy-case-to-cond.png" alt="lispy-case-to-cond.png"></p>
+
+<p>Previously, <kbd>xc</kbd> could only transform a series of nested <code>if</code>
+into a <code>cond</code>.  You can even chain <kbd>xcxi</kbd> to transform a
+<code>case</code> statement into equivalent <code>if</code> statements.</p>
+
+<p>Note also that unwanted whitespace is properly removed. What you see
+in the picture is actually an
+<a href="https://www.gnu.org/software/emacs/manual/html_node/ert/">ERT</a> test
+that&#39;s being run each time I commit new stuff. It makes sure that
+starting in the first buffer state and pressing <kbd>xc</kbd> really
+results in the second buffer state. With this test, it&#39;s reasonable to
+believe that <kbd>xc</kbd> will actually work the same way in an
+interactive scenario. Right now, there are 599 of these type of tests
+in lispy-test.el.  To view them like in the screenshot, you can press
+<kbd>xv</kbd>.</p>
+
+<p>Final note, I realize that it should be <code>eql</code> instead of <code>eq</code>, but I
+like <code>eq</code> more: it&#39;s 33% more efficient.</p>
+
+  </div>
   
   <div class="post">
     <h1 class="post-title">
@@ -807,64 +845,6 @@ you want an actual space, you can now quote them even easier.</p>
 <p>Thanks to all who contributed, check out the new stuff, and make sure
 to bind <code>ivy-resume</code> to something short: it has become a really nice
 feature.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/05/22/define-word/">
-        New on MELPA - define word at point
-      </a>
-    </h1>
-
-    <span class="post-date">22 May 2015</span>
-
-    <p>Doing things in Emacs <em>superlatively</em> better than having to switch to
-another application.</p>
-
-<p>In this case, &quot;doing things&quot; is getting the dictionary definition of
-word at point, and &quot;<em>superlatively</em>&quot; is a word that I didn&#39;t know - a
-straw that broke the camel&#39;s back and caused me to finally automate
-the process of getting the definition of a word that I encounter in an
-Emacs buffer.</p>
-
-<p>The whole process of writing the <code>define-word</code> package took around 30
-minutes, I just had to:</p>
-
-<ul>
-<li>See which engine DuckDuckGo uses.</li>
-<li>Follow to <a href="https://www.wordnik.com/words/superlative">wordnik</a>.</li>
-<li>Try to get an API key, read their draconian TOS and decide that I don&#39;t want
-to agree to it just to get their key.</li>
-<li>Examine the HTML that it returns and note that it&#39;s quite regular.</li>
-<li>Write a 10 line function with <code>re-search-forward</code> to extract the word
-definitions from a sample page that I saved with <code>wget</code>.</li>
-</ul>
-
-<p>Then just wrap the function in an <code>url-retrieve</code> and done.  It&#39;s a
-good thing that I learned to use <code>url-retrieve</code> when I wrote
-<a href="https://github.com/abo-abo/org-download">org-download</a>.</p>
-
-<p>Here&#39;s how it looks like in action, the word under point is &quot;Authors&quot;
-and instead of visiting
-<a href="https://www.wordnik.com/words/authors">this page</a>, you can see it
-right away in your Echo Area:</p>
-
-<p><img src="https://raw.githubusercontent.com/wiki/abo-abo/define-word/images/define-word.png" alt="demo"></p>
-
-<p>The result is displayed simply with <code>message</code>, so it doesn&#39;t mess with
-your window config.  You read it, press any key and the Echo Area
-popup will vanish automatically.</p>
-
-<p>Install the package from MELPA or check it out at <a href="https://github.com/abo-abo/define-word">github</a>.
-You just need to decide where to bind it:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c d&quot;</span><span class="p">)</span> <span class="ss">&#39;define-word-at-point</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c D&quot;</span><span class="p">)</span> <span class="ss">&#39;define-word</span><span class="p">)</span>
-</code></pre></div>
-<p>At less than 50 lines, the source is very easy to understand. So if
-you&#39;re looking to write some Elisp that retrieves and parses some HTML
-from a web service, it&#39;s nice to look at a simple implementation of
-how it&#39;s done.</p>
 
   </div>
   

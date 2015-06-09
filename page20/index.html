@@ -168,6 +168,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -248,6 +252,64 @@
 
       <div class="container content">
         <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/2015/01/14/repeatable-commands/">
+        Zoom in / out with style
+      </a>
+    </h1>
+
+    <span class="post-date">14 Jan 2015</span>
+
+    <p>I don&#39;t usually zoom a lot, typically I do it to size up other
+people&#39;s functions. Then, I zoom-out a couple times in a row until the
+function fits on the screen. Sometimes, I overshoot the zoom-out, and
+I have to zoom-in instead. I have <code>text-scale-increase</code> bound to
+<kbd>&lt;f2&gt; g</kbd> and <code>text-scale-decrease</code> bound to
+<kbd>&lt;f2&gt; l</kbd>.</p>
+
+<p>Below, I&#39;ll demonstrate how to call those two commands interchangeably
+with e.g. <kbd>&lt;f2&gt; g g g l g g l</kbd>, i.e. omitting the
+<kbd>&lt;f2&gt;</kbd> prefix.</p>
+
+<h2 id="define-repeatable-command">Define repeatable command</h2>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">def-rep-command</span> <span class="p">(</span><span class="nv">alist</span><span class="p">)</span>
+  <span class="s">&quot;Return a lambda that calls the first function of ALIST.</span>
+<span class="s">It sets the transient map to all functions of ALIST.&quot;</span>
+  <span class="p">(</span><span class="nb">lexical-let</span> <span class="p">((</span><span class="nv">keymap</span> <span class="p">(</span><span class="nf">make-sparse-keymap</span><span class="p">))</span>
+                <span class="p">(</span><span class="nv">func</span> <span class="p">(</span><span class="nv">cdar</span> <span class="nv">alist</span><span class="p">)))</span>
+    <span class="p">(</span><span class="nf">mapc</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+            <span class="p">(</span><span class="nf">define-key</span> <span class="nv">keymap</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nf">cdr</span> <span class="nv">x</span><span class="p">)))</span>
+          <span class="nv">alist</span><span class="p">)</span>
+    <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">arg</span><span class="p">)</span>
+      <span class="p">(</span><span class="k">interactive</span> <span class="s">&quot;p&quot;</span><span class="p">)</span>
+      <span class="p">(</span><span class="nf">funcall</span> <span class="nv">func</span> <span class="nv">arg</span><span class="p">)</span>
+      <span class="p">(</span><span class="nv">set-transient-map</span> <span class="nv">keymap</span> <span class="no">t</span><span class="p">))))</span>
+</code></pre></div>
+<p>This is a pretty simple function that takes an alist of keys and
+commands, and returns a lambda that calls the first command and sets
+the transient map to call the first and other commands.  The way the
+transient map works, it takes priority over almost all maps, but
+disappears as soon as you press something that doesn&#39;t belong to it.</p>
+
+<h2 id="the-zoom-in-/-zoom-out-use-case">The zoom-in / zoom-out use case</h2>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;&lt;f2&gt; g&quot;</span><span class="p">)</span>
+                <span class="p">(</span><span class="nv">def-rep-command</span>
+                    <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;g&quot;</span> <span class="o">.</span> <span class="nv">text-scale-increase</span><span class="p">)</span>
+                      <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="o">.</span> <span class="nv">text-scale-decrease</span><span class="p">))))</span>
+<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;&lt;f2&gt; l&quot;</span><span class="p">)</span>
+                <span class="p">(</span><span class="nv">def-rep-command</span>
+                    <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;l&quot;</span> <span class="o">.</span> <span class="nv">text-scale-decrease</span><span class="p">)</span>
+                      <span class="p">(</span><span class="s">&quot;g&quot;</span> <span class="o">.</span> <span class="nv">text-scale-increase</span><span class="p">))))</span>
+</code></pre></div>
+<p>And this is it. A nice thing about this setup is that I don&#39;t have to
+think about the zoom state and quitting it: I&#39;ll quit it automatically
+as soon as I press anything other than <kbd>l</kbd> or <kbd>g</kbd>.
+Moreover, the command that exited the zoom state will be executed as
+usual.</p>
+
+  </div>
   
   <div class="post">
     <h1 class="post-title">
@@ -513,147 +575,6 @@ Here is the very simple code:</p>
 <div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">named-term</span> <span class="p">(</span><span class="nv">name</span><span class="p">)</span>
   <span class="p">(</span><span class="k">interactive</span> <span class="s">&quot;sName: &quot;</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">ansi-term</span> <span class="s">&quot;/bin/bash&quot;</span> <span class="nv">name</span><span class="p">))</span>
-</code></pre></div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/01/09/ido-find-file-tilde/">
-        tilde in ido-find-file
-      </a>
-    </h1>
-
-    <span class="post-date">09 Jan 2015</span>
-
-    <p>On seeing
-<a href="http://emacs.stackexchange.com/questions/7193/how-to-replicate-the-to-home-to-root-behaviour-in-ido-find-file-but">this Emacs Stack Exchange question</a>,
-it occurred to me that if some config code is old for me, it&#39;s not old
-for the new Emacs users. So I&#39;ll share one of the old <code>ido-find-file</code>
-hacks that I&#39;ve been using for ages.</p>
-
-<blockquote>
-<p>This song is an oldie ...but, uh ... <em>pause</em>
-Well, it&#39;s an oldie where I come from.</p>
-
-<p>-- <cite>Marty</cite></p>
-</blockquote>
-
-<h2 id="the-code">The code</h2>
-
-<p>This is the original code that I was using:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">oleh-ido-setup-hook</span> <span class="p">()</span>
-  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">ido-file-dir-completion-map</span> <span class="s">&quot;~&quot;</span>
-    <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span>
-      <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-      <span class="p">(</span><span class="nv">ido-set-current-directory</span> <span class="s">&quot;~/&quot;</span><span class="p">)</span>
-      <span class="p">(</span><span class="k">setq</span> <span class="nv">ido-exit</span> <span class="ss">&#39;refresh</span><span class="p">)</span>
-      <span class="p">(</span><span class="nv">exit-minibuffer</span><span class="p">))))</span>
-
-<span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;ido-setup-hook</span> <span class="ss">&#39;oleh-ido-setup-hook</span><span class="p">)</span>
-</code></pre></div>
-<h2 id="the-generalization">The generalization</h2>
-
-<p>It wouldn&#39;t be a LISP if I couldn&#39;t generalize the code:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">ido-find-file-jump</span> <span class="p">(</span><span class="nv">dir</span><span class="p">)</span>
-  <span class="s">&quot;Return a command that sends DIR to `ido-find-file&#39;.&quot;</span>
-  <span class="o">`</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span>
-     <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-     <span class="p">(</span><span class="nv">ido-set-current-directory</span> <span class="o">,</span><span class="nv">dir</span><span class="p">)</span>
-     <span class="p">(</span><span class="k">setq</span> <span class="nv">ido-exit</span> <span class="ss">&#39;refresh</span><span class="p">)</span>
-     <span class="p">(</span><span class="nv">exit-minibuffer</span><span class="p">)))</span>
-</code></pre></div>
-<p>And here&#39;s how to leverage this generalization:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">oleh-ido-setup-hook</span> <span class="p">()</span>
-  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">ido-file-dir-completion-map</span> <span class="s">&quot;~&quot;</span>
-    <span class="p">(</span><span class="nv">ido-find-file-jump</span> <span class="s">&quot;~/&quot;</span><span class="p">))</span>
-  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">ido-file-dir-completion-map</span> <span class="s">&quot;!&quot;</span>
-    <span class="p">(</span><span class="nv">ido-find-file-jump</span> <span class="s">&quot;~/Dropbox/source/site-lisp/&quot;</span><span class="p">))</span>
-  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">ido-file-dir-completion-map</span> <span class="s">&quot;@&quot;</span>
-    <span class="p">(</span><span class="nv">ido-find-file-jump</span> <span class="s">&quot;~/git/lispy/&quot;</span><span class="p">)))</span>
-</code></pre></div>
-<p>Note that this is pretty ugly, implementation-wise, since
-<code>ido-find-file-jump</code> would be called three times each time you do an
-<code>ido</code> related command, like <code>ido-switch-buffer</code> etc.
-I would have preferred to do it like this instead:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">eval-after-load</span> <span class="s">&quot;ido&quot;</span>
-  <span class="o">`</span><span class="p">(</span><span class="k">progn</span>
-     <span class="p">(</span><span class="nf">define-key</span> <span class="nv">ido-file-dir-completion-map</span> <span class="s">&quot;~&quot;</span>
-       <span class="p">(</span><span class="nv">ido-find-file-jump</span> <span class="s">&quot;~/&quot;</span><span class="p">))</span>
-     <span class="p">(</span><span class="nf">define-key</span> <span class="nv">ido-file-dir-completion-map</span> <span class="s">&quot;!&quot;</span>
-       <span class="p">(</span><span class="nv">ido-find-file-jump</span> <span class="s">&quot;~/Dropbox/source/site-lisp/&quot;</span><span class="p">))</span>
-     <span class="p">(</span><span class="nf">define-key</span> <span class="nv">ido-file-dir-completion-map</span> <span class="s">&quot;@&quot;</span>
-       <span class="p">(</span><span class="nv">ido-find-file-jump</span> <span class="s">&quot;~/git/lispy/&quot;</span><span class="p">))))</span>
-</code></pre></div>
-<p>But, for some strange reason, <code>ido</code> keeps overriding
-<code>ido-file-dir-completion-map</code> and I actually have to re-set my
-bindings in <code>ido-setup-hook</code>.</p>
-
-<h2 id="the-further-generalization">The further generalization</h2>
-
-<p>Here is the final iteration of the code:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">defvar</span> <span class="nv">oleh-ido-shortcuts</span>
-  <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;~/&quot;</span> <span class="s">&quot;~&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;~/Dropbox/source/site-lisp/&quot;</span> <span class="s">&quot;!&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;~/git/lispy/&quot;</span> <span class="s">&quot;@&quot;</span><span class="p">)))</span>
-
-<span class="p">(</span><span class="nf">mapc</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
-        <span class="p">(</span><span class="nf">setcar</span> <span class="nv">x</span> <span class="p">(</span><span class="nv">ido-find-file-jump</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">x</span><span class="p">))))</span>
-      <span class="nv">oleh-ido-shortcuts</span><span class="p">)</span>
-
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">oleh-ido-setup-hook</span> <span class="p">()</span>
-  <span class="p">(</span><span class="nf">mapc</span>
-   <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
-     <span class="p">(</span><span class="nf">define-key</span> <span class="nv">ido-file-dir-completion-map</span> <span class="p">(</span><span class="nv">cadr</span> <span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">x</span><span class="p">)))</span>
-   <span class="nv">oleh-ido-shortcuts</span><span class="p">))</span>
-
-<span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;ido-setup-hook</span> <span class="ss">&#39;oleh-ido-setup-hook</span><span class="p">)</span>
-</code></pre></div>
-<h2 id="the-customize-tricks">The customize tricks</h2>
-
-<blockquote>
-<p>&quot;Custom setters?<br>
-In <em>my</em> Elisp?&quot;</p>
-
-<p>It&#39;s more likely than you think.</p>
-</blockquote>
-
-<p>Note that the <code>mapc</code> statement needs to be evaluated if I dynamically
-modify <code>oleh-ido-shortcuts</code>. This isn&#39;t a problem for me, but if I
-wanted to package a code like this, I would define
-<code>oleh-ido-shortcuts</code> like this:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defcustom</span> <span class="nv">oleh-ido-shortcuts</span>
-  <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;~/&quot;</span> <span class="s">&quot;~&quot;</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;~/Dropbox/source/site-lisp/&quot;</span> <span class="s">&quot;!&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;~/git/lispy/&quot;</span> <span class="s">&quot;@&quot;</span><span class="p">))</span>
-  <span class="s">&quot;A list of directory-shortcut pairs for `ido-find-file&#39;.&quot;</span>
-  <span class="nb">:set</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">symbol</span> <span class="nv">value</span><span class="p">)</span>
-         <span class="p">(</span><span class="nf">set-default</span>
-          <span class="nv">symbol</span>
-          <span class="p">(</span><span class="nf">mapcar</span>
-           <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
-             <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">stringp</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">x</span><span class="p">))</span>
-                 <span class="p">(</span><span class="nf">cons</span> <span class="p">(</span><span class="nv">ido-find-file-jump</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">x</span><span class="p">))</span>
-                       <span class="p">(</span><span class="nf">cdr</span> <span class="nv">x</span><span class="p">))</span>
-               <span class="nv">x</span><span class="p">))</span>
-           <span class="nv">value</span><span class="p">))))</span>
-</code></pre></div>
-<p>Now, this should work:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">csetq</span> <span class="nv">oleh-ido-shortcuts</span>
-       <span class="p">(</span><span class="k">progn</span>
-         <span class="p">(</span><span class="nf">setcar</span> <span class="p">(</span><span class="nf">rassoc</span> <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;@&quot;</span><span class="p">)</span> <span class="nv">oleh-ido-shortcuts</span><span class="p">)</span>
-                 <span class="s">&quot;~/git/worf&quot;</span><span class="p">)</span>
-         <span class="nv">oleh-ido-shortcuts</span><span class="p">))</span>
-
-<span class="p">(</span><span class="nv">csetq</span> <span class="nv">oleh-ido-shortcuts</span>
-       <span class="p">(</span><span class="nf">cons</span> <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;~/git/&quot;</span> <span class="s">&quot;^&quot;</span><span class="p">)</span>
-             <span class="nv">oleh-ido-shortcuts</span><span class="p">))</span>
-</code></pre></div>
-<p>Here, the appropriate lambda is auto-generated by using the <code>:set</code>
-property of <code>oleh-ido-shortcuts</code>.
-And <code>csetq</code> is just a <code>customize</code>-aware version of <code>setq</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defmacro</span> <span class="nv">csetq</span> <span class="p">(</span><span class="nv">variable</span> <span class="nv">value</span><span class="p">)</span>
-  <span class="o">`</span><span class="p">(</span><span class="nf">funcall</span> <span class="p">(</span><span class="k">or</span> <span class="p">(</span><span class="nf">get</span> <span class="ss">&#39;,variable</span> <span class="ss">&#39;custom-set</span><span class="p">)</span> <span class="ss">&#39;set-default</span><span class="p">)</span>
-            <span class="ss">&#39;,variable</span> <span class="o">,</span><span class="nv">value</span><span class="p">))</span>
 </code></pre></div>
   </div>
   
