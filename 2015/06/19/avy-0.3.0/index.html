@@ -11,7 +11,7 @@
 
   <title>
     
-      Grep in a git repository using ivy &middot; (or emacs
+      avy 0.3.0 is out &middot; (or emacs
     
   </title>
 
@@ -252,68 +252,49 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Grep in a git repository using ivy</h1>
-  <span class="post-date">19 Apr 2015</span>
-  <p>Just got this request a few minutes ago, and now this feature is in
-the <a href="https://github.com/abo-abo/swiper/blob/master/counsel.el">swiper</a>
-repository (available as <code>counsel</code> from MELPA).</p>
+  <h1 class="post-title">avy 0.3.0 is out</h1>
+  <span class="post-date">19 Jun 2015</span>
+  <p>This is a feature-packed release consisting of 57 commits done over
+the course of the last month by me and many
+<a href="https://github.com/abo-abo/avy/graphs/contributors">contributors</a>.</p>
 
-<p>The motivation was to write an ivy equivalent of <a href="https://github.com/yasuyk/helm-git-grep">helm-git-grep</a>.
-I didn&#39;t use this feature before, but the only thing that I needed to get me started was this shell command:</p>
-<div class="highlight"><pre><code class="language-sh" data-lang="sh">git --no-pager grep --full-name -n --no-color -i -e foobar
+<p>I&#39;m trying something different this time with the
+<a href="https://github.com/abo-abo/avy/releases/tag/0.3.0">release-notes</a>:
+I&#39;ve started a
+<a href="https://github.com/abo-abo/avy/blob/master/doc/Changelog.org">Changlelog.org</a>
+in the repository, which is much more pleasant to read (and write) in <a href="https://raw.githubusercontent.com/abo-abo/avy/master/doc/Changelog.org"><code>org-mode</code> form</a> inside Emacs:</p>
+
+<p><img src="/download/avy-changelog-org.png" alt="avy-changelog-org.png"></p>
+
+<p>Then I used <a href="http://pandoc.org/">pandoc</a> to convert the Org file to Markdown. Too bad, the <code>pandoc</code> install-able through <code>apt-get</code> knows nothing of Org mode,
+so I had to</p>
+<div class="highlight"><pre><code class="language-sh" data-lang="sh">cabal install pandoc
 </code></pre></div>
-<p>The rest of the code (just 20 lines) followed all by itself:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel-git-grep-function</span> <span class="p">(</span><span class="nf">string</span> <span class="kp">&amp;optional</span> <span class="nv">_pred</span> <span class="kp">&amp;rest</span> <span class="nv">_u</span><span class="p">)</span>
-  <span class="s">&quot;Grep in the current git repository for STRING.&quot;</span>
-  <span class="p">(</span><span class="nv">split-string</span>
-   <span class="p">(</span><span class="nv">shell-command-to-string</span>
-    <span class="p">(</span><span class="nf">format</span>
-     <span class="s">&quot;git --no-pager grep --full-name -n --no-color -i -e \&quot;%s\&quot;&quot;</span>
-     <span class="nf">string</span><span class="p">))</span>
-   <span class="s">&quot;\n&quot;</span>
-   <span class="no">t</span><span class="p">))</span>
+<p>and let <code>cabal</code> do its thing for like 30 minutes. The exported
+Markdown wasn&#39;t too bad, just had to reformat most things to one line,
+since Github&#39;s <code>fill-column</code> is like 150 chars instead of the
+usual 80.  If someone has more experience of exporting Org to
+Markdown, please do share: maybe there&#39;s a better way to do this.</p>
 
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel-git-grep</span> <span class="p">()</span>
-  <span class="s">&quot;Grep for a string in the current git repository.&quot;</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">default-directory</span> <span class="p">(</span><span class="nv">locate-dominating-file</span>
-                             <span class="nv">default-directory</span> <span class="s">&quot;.git&quot;</span><span class="p">))</span>
-        <span class="p">(</span><span class="nv">val</span> <span class="p">(</span><span class="nv">ivy-read</span> <span class="s">&quot;pattern: &quot;</span> <span class="ss">&#39;counsel-git-grep-function</span><span class="p">))</span>
-        <span class="nv">lst</span><span class="p">)</span>
-    <span class="p">(</span><span class="nb">when</span> <span class="nv">val</span>
-      <span class="p">(</span><span class="k">setq</span> <span class="nv">lst</span> <span class="p">(</span><span class="nv">split-string</span> <span class="nv">val</span> <span class="s">&quot;:&quot;</span><span class="p">))</span>
-      <span class="p">(</span><span class="nv">find-file</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">lst</span><span class="p">))</span>
-      <span class="p">(</span><span class="nf">goto-char</span> <span class="p">(</span><span class="nf">point-min</span><span class="p">))</span>
-      <span class="p">(</span><span class="nf">forward-line</span> <span class="p">(</span><span class="nf">1-</span> <span class="p">(</span><span class="nf">string-to-number</span> <span class="p">(</span><span class="nv">cadr</span> <span class="nv">lst</span><span class="p">)))))))</span>
+<p>Anyway, read the release notes either at <a href="https://github.com/abo-abo/avy/releases/tag/0.3.0">github</a> or <a href="https://raw.githubusercontent.com/abo-abo/avy/master/doc/Changelog.org">inside Emacs</a> and enjoy the cool new stuff.  Big thanks to all contributors.</p>
+
+<p>Also check out the <a href="https://github.com/abo-abo/avy/wiki/defcustom">wiki page on customization</a> and other pages.
+I think it would be cool to have a separate page for e.g. <code>avy-goto-char</code> with the screenshots (or gifs) for all values of <code>avy-style</code>:</p>
+
+<ul>
+<li><code>pre</code></li>
+<li><code>post</code></li>
+<li><code>at</code></li>
+<li><code>at-full</code></li>
+<li><code>de-bruijn</code></li>
+</ul>
+
+<p>So if anyone is willing to contribute (and check out those overlay
+styles in the process), please go ahead: you can either clone the wiki
+with:</p>
+<div class="highlight"><pre><code class="language-sh" data-lang="sh">git clone https://github.com/abo-abo/avy.wiki.git
 </code></pre></div>
-<p>Thanks to the push from Stefan Monnier, <code>ivy-read</code> also supports a
-function to be passed instead of a static collection of strings. In
-this case, it&#39;s <code>counsel-git-grep-function</code> that basically takes one
-argument: the thing that we&#39;re looking for.</p>
-
-<p>After this, <code>shell-command-to-string</code> is my go-to function to quickly
-bring some shell output into Elisp. As you can see, it&#39;s enough to
-pass it a shell command in a string form to get a string response.  I
-transform the response into a list of line strings with
-<code>split-string</code>, making sure to pass the <code>t</code> argument to avoid empty
-strings.</p>
-
-<p>One final trick that you can learn for your own Elisp programming is
-the <code>let</code> / <code>default-directory</code> / <code>(locate-dominating-file default-directory &quot;.git&quot;)</code> combo.
-It&#39;s quite useful for dealing with git shell commands.
-And that&#39;s it, it only remains to open a file and jump to the selected line.</p>
-
-<p>I think that <code>counsel-git-grep</code> might complement and slightly displace <code>rgrep</code> or <code>ag</code> in my setup.
-So I&#39;ve given it a nice binding:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c j&quot;</span><span class="p">)</span> <span class="ss">&#39;counsel-git-grep</span><span class="p">)</span>
-</code></pre></div>
-<p>I hope that I&#39;ve made a good case of how easy it is to quickly write
-something in Elisp, especially if it&#39;s just a shell command
-wrapper. So if you&#39;re on the fence of whether to learn Elisp or not,
-do yourself a favor and learn it: it pays off quickly and is a lot of
-fun.</p>
-
-<p>Side note: I&#39;ve mentioned <code>\bfun\b</code> in this blog 182 times, mostly as a variable representing a function (courtesy of <code>counsel-git-grep</code>).</p>
+<p>and push, or just <a href="https://github.com/abo-abo/avy/wiki/_new">edit</a> it using Github&#39;s widgets.</p>
 
 </div>
 
@@ -332,16 +313,6 @@ fun.</p>
     
       <li>
         <h3>
-          <!-- <a href="//2015/06/19/avy-0.3.0/"> -->
-          <a href="/2015/06/19/avy-0.3.0/">
-            avy 0.3.0 is out
-            <small>19 Jun 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
           <!-- <a href="//2015/06/09/lispy-case-to-cond/"> -->
           <a href="/2015/06/09/lispy-case-to-cond/">
             Transform a LISP case into a cond with lispy
@@ -356,6 +327,16 @@ fun.</p>
           <a href="/2015/06/08/describe-variable-tip/">
             More productive describe-variable
             <small>08 Jun 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/06/04/git-grep-ivy-2/"> -->
+          <a href="/2015/06/04/git-grep-ivy-2/">
+            counsel-git-grep, in async
+            <small>04 Jun 2015</small>
           </a>
         </h3>
       </li>

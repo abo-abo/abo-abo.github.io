@@ -4,13 +4,62 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-06-09T19:51:54+02:00</updated>
+ <updated>2015-06-19T18:30:06+02:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>avy 0.3.0 is out</title>
+   <link href="http://oremacs.com/2015/06/19/avy-0.3.0/"/>
+   <updated>2015-06-19T00:00:00+02:00</updated>
+   <id>http://oremacs.com/2015/06/19/avy-0.3.0</id>
+   <content type="html">&lt;p&gt;This is a feature-packed release consisting of 57 commits done over
+the course of the last month by me and many
+&lt;a href=&quot;https://github.com/abo-abo/avy/graphs/contributors&quot;&gt;contributors&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;I&amp;#39;m trying something different this time with the
+&lt;a href=&quot;https://github.com/abo-abo/avy/releases/tag/0.3.0&quot;&gt;release-notes&lt;/a&gt;:
+I&amp;#39;ve started a
+&lt;a href=&quot;https://github.com/abo-abo/avy/blob/master/doc/Changelog.org&quot;&gt;Changlelog.org&lt;/a&gt;
+in the repository, which is much more pleasant to read (and write) in &lt;a href=&quot;https://raw.githubusercontent.com/abo-abo/avy/master/doc/Changelog.org&quot;&gt;&lt;code&gt;org-mode&lt;/code&gt; form&lt;/a&gt; inside Emacs:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/avy-changelog-org.png&quot; alt=&quot;avy-changelog-org.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Then I used &lt;a href=&quot;http://pandoc.org/&quot;&gt;pandoc&lt;/a&gt; to convert the Org file to Markdown. Too bad, the &lt;code&gt;pandoc&lt;/code&gt; install-able through &lt;code&gt;apt-get&lt;/code&gt; knows nothing of Org mode,
+so I had to&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;cabal install pandoc
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;and let &lt;code&gt;cabal&lt;/code&gt; do its thing for like 30 minutes. The exported
+Markdown wasn&amp;#39;t too bad, just had to reformat most things to one line,
+since Github&amp;#39;s &lt;code&gt;fill-column&lt;/code&gt; is like 150 chars instead of the
+usual 80.  If someone has more experience of exporting Org to
+Markdown, please do share: maybe there&amp;#39;s a better way to do this.&lt;/p&gt;
+
+&lt;p&gt;Anyway, read the release notes either at &lt;a href=&quot;https://github.com/abo-abo/avy/releases/tag/0.3.0&quot;&gt;github&lt;/a&gt; or &lt;a href=&quot;https://raw.githubusercontent.com/abo-abo/avy/master/doc/Changelog.org&quot;&gt;inside Emacs&lt;/a&gt; and enjoy the cool new stuff.  Big thanks to all contributors.&lt;/p&gt;
+
+&lt;p&gt;Also check out the &lt;a href=&quot;https://github.com/abo-abo/avy/wiki/defcustom&quot;&gt;wiki page on customization&lt;/a&gt; and other pages.
+I think it would be cool to have a separate page for e.g. &lt;code&gt;avy-goto-char&lt;/code&gt; with the screenshots (or gifs) for all values of &lt;code&gt;avy-style&lt;/code&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;pre&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;post&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;at&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;at-full&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;de-bruijn&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;So if anyone is willing to contribute (and check out those overlay
+styles in the process), please go ahead: you can either clone the wiki
+with:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;git clone https://github.com/abo-abo/avy.wiki.git
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;and push, or just &lt;a href=&quot;https://github.com/abo-abo/avy/wiki/_new&quot;&gt;edit&lt;/a&gt; it using Github&amp;#39;s widgets.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Transform a LISP case into a cond with lispy</title>

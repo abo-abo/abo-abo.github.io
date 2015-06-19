@@ -255,6 +255,155 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/04/22/swiper-0.3.0/">
+        Swiper 0.3.0 is out, with ivy-mode.
+      </a>
+    </h1>
+
+    <span class="post-date">22 Apr 2015</span>
+
+    <p>This <a href="https://github.com/abo-abo/swiper/releases/tag/0.3.0">release</a> packs more than 90 commits, which is quite a lot for me.
+The most important part of this release is <code>ivy-mode</code>, which is a nice alternative to <code>ido-mode</code> or <code>helm-mode</code>.
+I&#39;ve mentioned it already in <a href="http://oremacs.com/2015/04/16/ivy-mode/">an earlier post</a>,
+I&#39;ll just review all the little details, changes and customizations here.</p>
+
+<h2 id="important:-remove-the-old-ivy-package">Important: remove the old <code>ivy</code> package</h2>
+
+<p>One important change related to MELPA is that the <code>ivy</code> package was merged into <code>swiper</code> package. So if you still have a stand-alone <code>ivy</code> package, you should delete it, or you&#39;ll get incompatibility problems.</p>
+
+<h2 id="video-demo-of-counsel-git-grep">Video Demo of <code>counsel-git-grep</code></h2>
+
+<p>If you like videos, you can watch the <a href="https://www.youtube.com/watch?v=AgRsYOJi6ao">this quick demo</a>
+which mostly shows off the new <code>counsel-git-grep</code> function.</p>
+
+<h2 id="fixes">Fixes</h2>
+
+<h3 id="add-work-around-for-window-start-being-not-current">Add work-around for <code>window-start</code> being not current</h3>
+
+<p>From now on, you won&#39;t encounter some un-highlighted matches when your window is scrolled.</p>
+
+<h3 id="make-thing-at-point-work">Make <code>thing-at-point</code> work</h3>
+
+<p><kbd>C-h v</kbd> and <kbd>C-h f</kbd> should select thing-at-point properly.</p>
+
+<h3 id="don&#39;t-try-to-fontify-huge-buffers">Don&#39;t try to fontify huge buffers</h3>
+
+<p>It&#39;s a nice feature of swiper that everything in the minibuffer is fontified.  However, this can cause a slowdown for buffers with x10000 lines. So this feature is automatically turned off for these large buffers.</p>
+
+<h3 id="exclude-a-few-modes-from-font-locking">Exclude a few modes from font locking</h3>
+
+<p>Some modes just misbehave when <code>font-lock-ensure</code> is called. Excluded:</p>
+
+<ul>
+<li><code>org-agenda-mode</code></li>
+<li><code>dired-mode</code></li>
+</ul>
+
+<h2 id="new-features">New Features</h2>
+
+<h3 id="ivy-mode:-complete-everything-with-ivy"><code>ivy-mode</code>: complete everything with Ivy</h3>
+
+<p><code>ivy-mode</code> uses swiper&#39;s approach to completion for almost all completion in Emacs, like:</p>
+
+<ul>
+<li><code>execute-extended-command</code></li>
+<li><code>package-install</code></li>
+<li><code>find-file</code></li>
+</ul>
+
+<p>See the <a href="https://github.com/abo-abo/swiper/wiki/File-Completion">wiki page</a> for the details on the key bindings related to <code>ivy-mode</code>, which are especially important to know for <code>find-file</code>.  Also see the <a href="https://www.youtube.com/watch?v=VvnJQpTFVDc">intro video</a>.</p>
+
+<h3 id="new-counsel-functions">New Counsel functions</h3>
+
+<ul>
+<li><code>counsel-describe-variable</code> - replacement for <kbd>C-h v</kbd>.</li>
+<li><code>counsel-describe-function</code> - replacement for <kbd>C-h f</kbd>.</li>
+<li><code>counsel-info-lookup-symbol</code> - just a wrapper around <code>info-lookup-symbol</code>, you get the same behavior by just calling <code>info-lookup-symbol</code> with <code>ivy-mode</code> on.</li>
+<li><code>counsel-unicode-char</code> - replacement for <code>ucs-insert</code>.</li>
+</ul>
+
+<h3 id="counsel-git-grep"><code>counsel-git-grep</code></h3>
+
+<p>This is a really cool command for grepping at once all the files in your current git repository. For smaller repositories (&lt;20000) lines, ivy handles the completion by itself.  For larger repositories, it defers the work to <code>git grep</code>. It works really well for the Emacs repo with its 3,000,000 lines, especially if you&#39;re using Emacs 25 (from <code>emacs-snapshot</code> or self-built).</p>
+
+<p>This function makes use of <kbd>C-M-n</kbd> and <kbd>C-M-p</kbd> bindings, which switch between candidates without exiting the minibuffer. Also, they highlight the current candidate with the swiper faces. You can think of this command as multi-swiper.</p>
+
+<p>Even for very large repos, it will always display the amount of matches correctly. Also note that swiper-style regex is used here (spaces are wild), and the case is ignored.</p>
+
+<h3 id="the-arrows-can-take-numeric-arguments">The arrows can take numeric arguments</h3>
+
+<p><kbd>C-n</kbd> / <kbd>C-p</kbd>, <kbd>C-s</kbd> / <kbd>C-r</kbd>, and <kbd>C-M-n</kbd> / <kbd>C-M-p</kbd> can all take numeric args, e.g. <kbd>M-5</kbd> or <kbd>C-u</kbd>.</p>
+
+<h3 id="add-a-recenter-binding">Add a recenter binding</h3>
+
+<p><kbd>C-l</kbd> will recenter the window in which swiper was called.</p>
+
+<h3 id="look-up-ivy-key-bindings-with-c-h-m">Look up Ivy key bindings with <kbd>C-h m</kbd></h3>
+
+<p>While in the minibuffer, press <kbd>C-h m</kbd> to see the active modes. Ivy also has a paragraph with its bindings.</p>
+
+<h3 id="use-c-v-and-m-v-to-scroll">Use <kbd>C-v</kbd> and <kbd>M-v</kbd> to scroll</h3>
+
+<p>You can use these bindings to speed up your minibuffer scrolling.</p>
+
+<h3 id="allow-c-.-to-jump-to-definition">Allow <kbd>C-.</kbd> to jump-to-definition</h3>
+
+<p>For <code>counsel-describe-variable</code> and <code>counsel-describe-function</code>:</p>
+
+<ul>
+<li>pressing <kbd>C-m</kbd> will actually describe the current candidate.</li>
+<li>pressing <kbd>C-.</kbd> will instead jump to definition of the the current candidate.</li>
+</ul>
+
+<p>This is very useful for me, I jump to definitions more often that describe.</p>
+
+<h3 id="bind-arrows">Bind arrows</h3>
+
+<p>The actual arrow keys are also bound to the corresponding Emacs arrows.</p>
+
+<h3 id="add-a-way-to-exit-ignoring-the-candidates">Add a way to exit ignoring the candidates</h3>
+
+<p>If your current input matches a candidate, <kbd>C-m</kbd> and <kbd>C-j</kbd> will exit with that candidate.  If you want to exit with your exact input instead, press <kbd>C-u C-j</kbd>.  This is very useful for creating new files and directories.</p>
+
+<h3 id="use-m-q-to-toggle-regexp-quote">Use <kbd>M-q</kbd> to toggle <code>regexp-quote</code></h3>
+
+<p>This can be useful while completing file names (with a lot of dots). Pressing <kbd>M-q</kbd> toggles between regex and non-regex matching.</p>
+
+<h3 id="customize-ivy-re-builders-alist">Customize <code>ivy-re-builders-alist</code></h3>
+
+<p>This is pretty intricate, look up the variable to see the details. In short, you can use this to apply `regexp-quote&#39; for some types of completion if you want.</p>
+
+<h3 id="customize-what-to-do-on-del-error">Customize what to do on <kbd>DEL</kbd> error</h3>
+
+<p>The standard behavior on a <kbd>DEL</kbd> error (usually empty minibuffer) is to exit the minibuffer.  I like this behavior, since it&#39;s similar to the behavior to fixing wrongly typed chars: only in this case <kbd>DEL</kbd> &quot;fixes&quot; a wrongly typed command.</p>
+
+<p>But if you want to customize it, just set <code>ivy-on-del-error-function</code> to something other than <code>minibuffer-keyboard-quit</code>.</p>
+
+<h3 id="customize-ivy-extra-directories">Customize <code>ivy-extra-directories</code></h3>
+
+<p>Customize this if you don&#39;t want to see <code>../</code> and <code>./</code> while completing file names.</p>
+
+<h3 id="customize-ivy-sort-functions-alist">Customize <code>ivy-sort-functions-alist</code></h3>
+
+<p>Use this variable to customize sorting, depending on what you&#39;re completing.  For example:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-sort-functions-alist</span>
+  <span class="o">&#39;</span><span class="p">((</span><span class="nv">read-file-name-internal</span> <span class="o">.</span> <span class="nv">ivy-sort-file-function-default</span><span class="p">)</span>
+    <span class="p">(</span><span class="nf">internal-complete-buffer</span> <span class="o">.</span> <span class="no">nil</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">counsel-git-grep-function</span> <span class="o">.</span> <span class="no">nil</span><span class="p">)</span>
+    <span class="p">(</span><span class="no">t</span> <span class="o">.</span> <span class="nf">string-lessp</span><span class="p">)))</span>
+</code></pre></div>
+<h3 id="customize-ivy-subdir-face">Customize <code>ivy-subdir-face</code></h3>
+
+<p>While completing file names, the directories will use <code>ivy-subdir-face</code>.</p>
+
+<h2 id="outro">Outro</h2>
+
+<p>Big thanks to all who contributed, especially <a href="https://github.com/tsdh">@tsdh</a>.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/04/19/git-grep-ivy/">
         Grep in a git repository using ivy
       </a>
@@ -623,240 +772,6 @@ MELPA.</p>
 <p>Thanks for the contribution, enjoy the new stuff.
 Also, if you ever want to dig around someone&#39;s git notes, you can read <a href="/public/git-notes/git.html">mine</a>,
 courtesy of <code>org-mode</code> export.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/04/13/hydra-0.13.0/">
-        Hydra 0.13.0 is out
-      </a>
-    </h1>
-
-    <span class="post-date">13 Apr 2015</span>
-
-    <p>A lot of the changes for this release aren&#39;t very user-visible, although they
-are important in improving the usability.  The main change is the move from the
-standard <code>set-transient-map</code> to my own <code>hydra-set-transient-map</code>.</p>
-
-<p>This change has allowed to remove the part where the amaranth and pink hydras
-intercept a binding which doesn&#39;t belong to them and then try to forward it back
-to Emacs. It was done in this way, which might be interesting for people who
-write Elisp:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">hydra-keymap</span> <span class="no">t</span> <span class="ss">&#39;hydra-intercept</span><span class="p">)</span>
-</code></pre></div>
-<p>Binding <code>t</code> means that when the keymap is active, any binding which doesn&#39;t
-belong to the keymap will be interpreted as <code>t</code>.  Then, I would use <code>lookup-key</code>
-and <code>this-command-keys</code> and try to call the result.  That method was quite
-fragile:</p>
-
-<ul>
-<li>It didn&#39;t work for prefix keys while a pink hydra was active.</li>
-<li>It didn&#39;t work for some keys in the terminal because of <code>input-decode-map</code>.</li>
-</ul>
-
-<p>The new method solves the mentioned issues by not using <code>t</code> and instead running
-this function in the <code>pre-command-hook</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">hydra--clearfun</span> <span class="p">()</span>
-  <span class="s">&quot;Disable the current Hydra unless `this-command&#39; is a head.&quot;</span>
-  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">memq</span> <span class="nv">this-command</span> <span class="o">&#39;</span><span class="p">(</span><span class="nf">handle-switch-frame</span>
-                           <span class="nv">keyboard-quit</span><span class="p">))</span>
-      <span class="p">(</span><span class="nv">hydra-disable</span><span class="p">)</span>
-    <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nf">eq</span> <span class="nv">this-command</span>
-                <span class="p">(</span><span class="nf">lookup-key</span> <span class="nv">hydra-curr-map</span>
-                            <span class="p">(</span><span class="nf">this-single-command-keys</span><span class="p">)))</span>
-      <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nb">cl-case</span> <span class="nv">hydra-curr-foreign-keys</span>
-                <span class="p">(</span><span class="ne">warn</span>
-                 <span class="p">(</span><span class="k">setq</span> <span class="nv">this-command</span> <span class="ss">&#39;hydra-amaranth-warn</span><span class="p">))</span>
-                <span class="p">(</span><span class="nv">run</span>
-                 <span class="no">t</span><span class="p">)</span>
-                <span class="p">(</span><span class="no">t</span> <span class="no">nil</span><span class="p">))</span>
-        <span class="p">(</span><span class="nv">hydra-disable</span><span class="p">)))))</span>
-</code></pre></div>
-<p>This approach is actually very similar to what the built-in <code>set-transient-map</code>
-does from Emacs 24.4 onward.  Of course, changing the a large cog in the Hydra
-mechanism can lead to some new bugs, or even old bugs to re-surface. So I really
-appreciate the help from <a href="https://github.com/jhonnyseven">@jhonnyseven</a> in testing the new code.</p>
-
-<p>As always, if you find something very broken, you can roll back to <a href="http://elpa.gnu.org/packages/hydra.html">the GNU ELPA version</a>
-and raise an <a href="https://github.com/abo-abo/hydra/issues">issue</a>.</p>
-
-<h2 id="fixes">Fixes</h2>
-
-<h3 id="single-command-red/blue-issue">single command red/blue issue</h3>
-
-<p>Fix the uniqueness issue, when a single command is assigned to both a
-red and a blue head.</p>
-
-<p>Here&#39;s an example:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-zoom</span> <span class="p">(</span><span class="nv">global-map</span> <span class="s">&quot;&lt;f2&gt;&quot;</span><span class="p">)</span>
-  <span class="s">&quot;zoom&quot;</span>
-  <span class="p">(</span><span class="s">&quot;g&quot;</span> <span class="nv">text-scale-increase</span> <span class="s">&quot;in&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nv">text-scale-decrease</span> <span class="s">&quot;out&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;r&quot;</span> <span class="p">(</span><span class="nv">text-scale-set</span> <span class="mi">0</span><span class="p">)</span> <span class="s">&quot;reset&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;0&quot;</span> <span class="p">(</span><span class="nv">text-scale-set</span> <span class="mi">0</span><span class="p">)</span> <span class="nb">:bind</span> <span class="no">nil</span> <span class="nb">:exit</span> <span class="no">t</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;1&quot;</span> <span class="p">(</span><span class="nv">text-scale-set</span> <span class="mi">0</span><span class="p">)</span> <span class="no">nil</span> <span class="nb">:bind</span> <span class="no">nil</span> <span class="nb">:exit</span> <span class="no">t</span><span class="p">))</span>
-</code></pre></div>
-<p>Here, three heads are assigned <code>(text-scale-set 0)</code>, however their behavior is different:</p>
-
-<ul>
-<li><kbd>r</kbd> doesn&#39;t exit and has a string hint.</li>
-<li><kbd>0</kbd> exits and has an empty hint (so only the key is in the docstring).</li>
-<li><kbd>1</kbd> exits and has a nil hint (will not be displayed in the docstring).</li>
-</ul>
-
-<p>The latter two call <code>hydra-zoom/lambda-0-and-exit</code>, while <kbd>r</kbd>
-calls <code>hydra-zoom/lambda-r</code>.</p>
-
-<h3 id="don&#39;t-default-hydra-repeast--prefix-arg-to-1">Don&#39;t default <code>hydra-repeast--prefix-arg</code> to 1</h3>
-
-<p>See <a href="https://github.com/abo-abo/hydra/issues/61">#61</a> for more info.</p>
-
-<h3 id="allow-hydra-repeat-to-take-a-numeric-arg">Allow <code>hydra-repeat</code> to take a numeric arg</h3>
-
-<p>For <code>hydra-vi</code>, it&#39;s now possible to do this <kbd>4j.2..</kbd>.
-The line will be forwarded:</p>
-
-<ul>
-<li>4 times by <kbd>4j</kbd></li>
-<li>4 times by <kbd>.</kbd></li>
-<li>2 times by <kbd>2.</kbd></li>
-<li>2 times by <kbd>.</kbd></li>
-</ul>
-
-<p>See <a href="https://github.com/abo-abo/hydra/issues/92">#92</a> for more info.</p>
-
-<h3 id="key-chord-will-be-disabled-for-the-duration-of-a-hydra">Key chord will be disabled for the duration of a hydra</h3>
-
-<p>This means that hydras have become much more easy to use with key chords.  For
-instance, if <kbd>dj</kbd> key chord calls a hydra or is part of the hydra, you
-won&#39;t call the <kbd>jj</kbd> key chord by accident with <kbd>djj</kbd>.</p>
-
-<p>See <a href="https://github.com/abo-abo/hydra/issues/97">#97</a> for more info.</p>
-
-<h2 id="new-features">New Features</h2>
-
-<h3 id="variable-as-a-string-docstring-spec">Variable as a string docstring spec</h3>
-
-<p>You can now use this form in your hydras:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">defvar</span> <span class="nv">foo</span> <span class="s">&quot;a b c&quot;</span><span class="p">)</span>
-<span class="p">(</span><span class="nb">defhydra</span> <span class="nv">bar</span> <span class="p">()</span>
-  <span class="s">&quot;</span>
-<span class="s">  bar %s`foo</span>
-<span class="s">&quot;</span>
-  <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="ss">&#39;t</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span><span class="p">))</span>
-</code></pre></div>
-<p>Previously, it would only work for <code>%s(foo)</code> forms.</p>
-
-<h3 id=":bind-property-can-also-be-a-keymap"><code>:bind</code> property can also be a keymap</h3>
-
-<p>If you remember, you can set <code>:bind</code> in the body to define in which way the
-heads should be bound <em>outside</em> the Hydra. You also assign/override <code>:bind</code> for
-each head.  This is especially useful to set <code>:bind</code> to nil for a few heads that
-you don&#39;t want to bind outside.</p>
-
-<p>Previously, <code>:bind</code> could be either a lambda or nil. Now a keymap is also accepted.</p>
-
-<h3 id="integration-tests">Integration tests</h3>
-
-<p>In addition to the abundant macro-expansion tests, integration tests are now
-also running, both for <code>emacs24</code> and for <code>emacs-snapshot</code>. This means that hydra
-should be a lot more stable now.</p>
-
-<p>Here&#39;s an example test:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-simple-1</span> <span class="p">(</span><span class="nv">global-map</span> <span class="s">&quot;C-c&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="p">(</span><span class="nf">insert</span> <span class="s">&quot;j&quot;</span><span class="p">))</span>
-  <span class="p">(</span><span class="s">&quot;b&quot;</span> <span class="p">(</span><span class="nf">insert</span> <span class="s">&quot;k&quot;</span><span class="p">))</span>
-  <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span><span class="p">))</span>
-
-<span class="p">(</span><span class="nb">ert-deftest</span> <span class="nv">hydra-integration-1</span> <span class="p">()</span>
-  <span class="p">(</span><span class="nv">should</span> <span class="p">(</span><span class="nv">string=</span> <span class="p">(</span><span class="nv">hydra-with</span> <span class="s">&quot;|&quot;</span>
-                               <span class="p">(</span><span class="nf">execute-kbd-macro</span>
-                                <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c aabbaaqaabbaa&quot;</span><span class="p">)))</span>
-                   <span class="s">&quot;jjkkjjaabbaa|&quot;</span><span class="p">))</span>
-  <span class="p">(</span><span class="nv">should</span> <span class="p">(</span><span class="nv">string=</span> <span class="p">(</span><span class="nv">hydra-with</span> <span class="s">&quot;|&quot;</span>
-                               <span class="p">(</span><span class="k">condition-case</span> <span class="no">nil</span>
-                                   <span class="p">(</span><span class="nf">execute-kbd-macro</span>
-                                    <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c aabb C-g&quot;</span><span class="p">))</span>
-                                 <span class="p">(</span><span class="nv">quit</span> <span class="no">nil</span><span class="p">))</span>
-                               <span class="p">(</span><span class="nf">execute-kbd-macro</span> <span class="s">&quot;aaqaabbaa&quot;</span><span class="p">))</span>
-                   <span class="s">&quot;jjkkaaqaabbaa|&quot;</span><span class="p">)))</span>
-</code></pre></div>
-<p>In the tests above, <code>hydra-simple</code> is a defined and bound hydra. <code>&quot;|&quot;</code>
-represents the buffer text (empty), where <code>|</code> is the point position.
-And <code>(kbd &quot;C-c aabbaaqaabbaa&quot;)</code> represents the key sequence that you can normally press by hand.
-Finally, <code>&quot;jjkkjjaabbaa|&quot;</code> is what the buffer and the point position should look like afterwards.
-If you find a hydra bug, it would be really cool to submit a new integration test to make sure that
-this bug doesn&#39;t happen in the future.</p>
-
-<h3 id="basic-error-handling">Basic error handling</h3>
-
-<p>I really like the <a href="https://github.com/jwiegley/use-package">use-package</a> feature where it catches load-time errors and issues a message instead of bringing up the debugger. This is really useful, since it&#39;s hard to fix the bug with a mostly broken Emacs, in the case when the error happened early in the load process. So the same behavior now happens with <code>defhydra</code>. In case of an error, <code>defhydra</code> will be equivalent to a no-op, and the error message will be written to the <code>*Messages*</code> buffer.</p>
-
-<h3 id="use-a-variable-instead-of-a-function-for-the-hint">Use a variable instead of a function for the hint</h3>
-
-<p>This leads up to the yet unresolved <a href="https://github.com/abo-abo/hydra/issues/86">#86</a>, which asks
-for heads to be activated conditionally.</p>
-
-<p>For now, you can modify the docstring on your own if you wish.
-Here&#39;s some code from the expansion of <code>hydra-zoom</code> to explain what I mean:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">set</span>
- <span class="p">(</span><span class="k">defvar</span> <span class="nv">hydra-zoom/hint</span> <span class="no">nil</span>
-   <span class="s">&quot;Dynamic hint for hydra-zoom.&quot;</span><span class="p">)</span>
- <span class="o">&#39;</span><span class="p">(</span><span class="nf">format</span>
-   <span class="o">#(</span><span class="s">&quot;zoom: [g]: in, [l]: out.&quot;</span>
-     <span class="mi">7</span> <span class="mi">8</span> <span class="p">(</span><span class="nv">face</span> <span class="nv">hydra-face-red</span><span class="p">)</span>
-     <span class="mi">16</span> <span class="mi">17</span> <span class="p">(</span><span class="nv">face</span> <span class="nv">hydra-face-red</span><span class="p">))))</span>
-<span class="c1">;; in head body:</span>
-<span class="p">(</span><span class="nb">when</span> <span class="nv">hydra-is-helpful</span>
-  <span class="p">(</span><span class="k">if</span> <span class="nv">hydra-lv</span>
-      <span class="p">(</span><span class="nv">lv-message</span>
-       <span class="p">(</span><span class="nf">eval</span> <span class="nv">hydra-zoom/hint</span><span class="p">))</span>
-    <span class="p">(</span><span class="nf">message</span>
-     <span class="p">(</span><span class="nf">eval</span> <span class="nv">hydra-zoom/hint</span><span class="p">))))</span>
-</code></pre></div>
-<p>Eventually, I&#39;ll add some automatic stuff to fix #86. But for now, you can
-experiment with modifying e.g. <code>hydra-zoom/hint</code> inside heads, if you want.</p>
-
-<h3 id="multiple-inheritance-for-hydra-heads">Multiple inheritance for Hydra heads</h3>
-
-<p>Each hydra, e.g. <code>hydra-foo</code> will now declare its own heads as a variable
-<code>hydra-foo/heads</code>. It&#39;s possible to inherit them like this:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-zoom</span> <span class="p">(</span><span class="nv">global-map</span> <span class="s">&quot;&lt;f2&gt;&quot;</span><span class="p">)</span>
-  <span class="s">&quot;zoom&quot;</span>
-  <span class="p">(</span><span class="s">&quot;g&quot;</span> <span class="nv">text-scale-increase</span> <span class="s">&quot;in&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;s&quot;</span> <span class="nv">text-scale-decrease</span> <span class="s">&quot;out&quot;</span><span class="p">))</span>
-
-<span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-arrows</span> <span class="p">()</span>
-  <span class="p">(</span><span class="s">&quot;h&quot;</span> <span class="nf">backward-char</span> <span class="s">&quot;left&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">next-line</span> <span class="s">&quot;down&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;k&quot;</span> <span class="nv">previous-line</span> <span class="s">&quot;up&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nf">forward-char</span> <span class="s">&quot;right&quot;</span><span class="p">))</span>
-
-<span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-zoom-child</span> <span class="p">(</span><span class="nb">:inherit</span> <span class="p">(</span><span class="nv">hydra-zoom/heads</span>
-                                      <span class="nv">hydra-arrows/heads</span><span class="p">)</span>
-                            <span class="nb">:color</span> <span class="nv">amaranth</span><span class="p">)</span>
-  <span class="s">&quot;zoom&quot;</span>
-  <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span><span class="p">))</span>
-</code></pre></div>
-<p>Here, <code>hydra-zoom-child</code> inherits the heads of <code>hydra-zoom</code> and <code>hydra-arrows</code>.
-It adds one more head <kbd>q</kbd> to quit. Also, it changes the color to
-amaranth, which means that it&#39;s only possible to exit it with <kbd>q</kbd> or
-<kbd>C-g</kbd>. This hydra&#39;s parents remain at their original (red) color.</p>
-
-<p>See <a href="https://github.com/abo-abo/hydra/issues/57">#57</a> for more info.</p>
-
-<h2 id="outro">Outro</h2>
-
-<p>A big thanks to all who contributed towards this release and to <a href="https://github.com/abo-abo/hydra/wiki">the wiki</a>.
-If you have an idea that would be cool in Hydra, do raise <a href="https://github.com/abo-abo/hydra/issues">an issue</a>.
-And if you written some cool code that uses the already available Hydra features, please share it on the wiki.
-It&#39;s also a good way to protect your code against regressions (although the best one would be an integration test).</p>
-
-<p>Finally, check out the new version of
-<a href="https://github.com/joostkremers/pandoc-mode">pandoc-mode</a> which is
-one of the coolest and most elaborate uses of Hydra yet.</p>
 
   </div>
   
