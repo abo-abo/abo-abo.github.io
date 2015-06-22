@@ -255,6 +255,90 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/02/25/rectangle-hydra/">
+        Rectangle-mode Hydra
+      </a>
+    </h1>
+
+    <span class="post-date">25 Feb 2015</span>
+
+    <p>Today, I&#39;ll show a very useful hydra that I found yesterday on the
+<a href="https://github.com/abo-abo/hydra/wiki/Rectangle-Operations">hydra wiki</a>.
+The idea is by <a href="https://github.com/zhaojiangbin">@zhaojiangbin</a>, I&#39;ve
+made some minor changes to get the arrows to work the way that I like,
+and made all keys into plain letters.</p>
+
+<h2 id="the-code">The code</h2>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">ora-ex-point-mark</span> <span class="p">()</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">if</span> <span class="nv">rectangle-mark-mode</span>
+      <span class="p">(</span><span class="nv">exchange-point-and-mark</span><span class="p">)</span>
+    <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">mk</span> <span class="p">(</span><span class="nv">mark</span><span class="p">)))</span>
+      <span class="p">(</span><span class="nv">rectangle-mark-mode</span> <span class="mi">1</span><span class="p">)</span>
+      <span class="p">(</span><span class="nf">goto-char</span> <span class="nv">mk</span><span class="p">))))</span>
+
+<span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-rectangle</span> <span class="p">(</span><span class="nb">:body-pre</span> <span class="p">(</span><span class="nv">rectangle-mark-mode</span> <span class="mi">1</span><span class="p">)</span>
+                           <span class="nb">:color</span> <span class="nv">pink</span>
+                           <span class="nb">:post</span> <span class="p">(</span><span class="nv">deactivate-mark</span><span class="p">))</span>
+  <span class="s">&quot;</span>
+<span class="s">  ^_k_^     _d_elete    _s_tring     |\\     _,,,--,,_</span>
+<span class="s">_h_   _l_   _o_k        _y_ank       /,`.-&#39;`&#39;   ._  \-;;,_</span>
+<span class="s">  ^_j_^     _n_ew-copy  _r_eset     |,4-  ) )_   .;.(  `&#39;-&#39;</span>
+<span class="s">^^^^        _e_xchange  _u_ndo     &#39;---&#39;&#39;(_/._)-&#39;(_\_)</span>
+<span class="s">^^^^        ^ ^         _p_aste</span>
+<span class="s">&quot;</span>
+  <span class="p">(</span><span class="s">&quot;h&quot;</span> <span class="nf">backward-char</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nf">forward-char</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;k&quot;</span> <span class="nv">previous-line</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">next-line</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;e&quot;</span> <span class="nv">ora-ex-point-mark</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;n&quot;</span> <span class="nv">copy-rectangle-as-kill</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;d&quot;</span> <span class="nv">delete-rectangle</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;r&quot;</span> <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">region-active-p</span><span class="p">)</span>
+           <span class="p">(</span><span class="nv">deactivate-mark</span><span class="p">)</span>
+         <span class="p">(</span><span class="nv">rectangle-mark-mode</span> <span class="mi">1</span><span class="p">))</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;y&quot;</span> <span class="nv">yank-rectangle</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;u&quot;</span> <span class="nv">undo</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;s&quot;</span> <span class="nv">string-rectangle</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;p&quot;</span> <span class="nv">kill-rectangle</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;o&quot;</span> <span class="no">nil</span> <span class="no">nil</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-x SPC&quot;</span><span class="p">)</span> <span class="ss">&#39;hydra-rectangle/body</span><span class="p">)</span>
+</code></pre></div>
+<p>There was a lot of screen estate left over, so I added some ASCII-art. I wanted something
+related to syrup, or at least pancakes, but instead I found a cat. Apparently, it&#39;s very
+easy to find pictures of cats on the internet. Who knew.</p>
+
+<p>Here&#39;s how it looks like in-action:</p>
+
+<p><img src="/download/hydra-rectangle.png" alt="hydra-rectangle"></p>
+
+<p>The pink variation is pretty useful here, since it doesn&#39;t get in the
+way of e.g. <kbd>DEL</kbd> or <kbd>C-n</kbd> or <kbd>C-e</kbd> or inserting spaces.</p>
+
+<p>I&#39;ve been using it today for editing some table data in <code>org-mode</code>,
+and it feels pretty efficient.</p>
+
+<h2 id="some-explanations">Some explanations</h2>
+
+<p>What does what:</p>
+
+<ul>
+<li><kbd>d</kbd> deletes rectangle; it&#39;s similar to <kbd>C-d</kbd>.</li>
+<li><kbd>n</kbd> copies rectangle; it&#39;s similar to <kbd>M-w</kbd>.</li>
+<li><kbd>o</kbd> exits; it&#39;s very easy to press.</li>
+<li><kbd>e</kbd> exchanges the point and mark; it&#39;s also quite useful to re-activate the region
+if you disabled it with <kbd>n</kbd> or <kbd>r</kbd>.</li>
+<li><kbd>s</kbd> fills the selected rectangle with a string.</li>
+<li><kbd>y</kbd> yanks the rectangle that you saved before with <kbd>n</kbd>.</li>
+<li><kbd>r</kbd> deactivates or activates the rectangle at point.</li>
+<li><kbd>u</kbd> calls <code>undo</code>.</li>
+<li><kbd>p</kbd> kills the rectangle; it&#39;s similar to <kbd>C-w</kbd>.</li>
+</ul>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/02/24/emacs-speed-test/">
         Profile your Emacs start-up time
       </a>
@@ -633,73 +717,6 @@ before. Apparently, it works and just translates to this:</p>
 
 <p>There&#39;s no need for a quitting key, it will auto-vanish when you press
 anything other than <kbd>m</kbd>.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/02/20/buffer-menu-hydra/">
-        Hydra for Buffer-menu
-      </a>
-    </h1>
-
-    <span class="post-date">20 Feb 2015</span>
-
-    <p>Here&#39;s a little code I&#39;ve made today for <code>Buffer-menu-mode</code>:</p>
-
-<div class="highlight"><pre><small><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-buffer-menu</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">pink</span><span class="p">)</span>
-  <span class="s">&quot;</span>
-<span class="s">  Mark               Unmark             Actions            Search</span>
-<span class="s">-------------------------------------------------------------------------</span>
-<span class="s">_m_: mark          _u_: unmark        _x_: execute       _R_: re-isearch</span>
-<span class="s">_s_: save          _U_: unmark up     _b_: bury          _I_: isearch</span>
-<span class="s">_d_: delete                           _g_: refresh       _O_: multi-occur</span>
-<span class="s">_D_: delete up                        _T_: files only: %`Buffer-menu-files-only</span>
-<span class="s">_~_: modified</span>
-<span class="s">&quot;</span>
-  <span class="p">(</span><span class="s">&quot;m&quot;</span> <span class="nv">Buffer-menu-mark</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;u&quot;</span> <span class="nv">Buffer-menu-unmark</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;U&quot;</span> <span class="nv">Buffer-menu-backup-unmark</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;d&quot;</span> <span class="nv">Buffer-menu-delete</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;D&quot;</span> <span class="nv">Buffer-menu-delete-backwards</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;s&quot;</span> <span class="nv">Buffer-menu-save</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;~&quot;</span> <span class="nv">Buffer-menu-not-modified</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;x&quot;</span> <span class="nv">Buffer-menu-execute</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;b&quot;</span> <span class="nv">Buffer-menu-bury</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;g&quot;</span> <span class="nv">revert-buffer</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;T&quot;</span> <span class="nv">Buffer-menu-toggle-files-only</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;O&quot;</span> <span class="nv">Buffer-menu-multi-occur</span> <span class="no">nil</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;I&quot;</span> <span class="nv">Buffer-menu-isearch-buffers</span> <span class="no">nil</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;R&quot;</span> <span class="nv">Buffer-menu-isearch-buffers-regexp</span> <span class="no">nil</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;c&quot;</span> <span class="no">nil</span> <span class="s">&quot;cancel&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;v&quot;</span> <span class="nv">Buffer-menu-select</span> <span class="s">&quot;select&quot;</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;o&quot;</span> <span class="nv">Buffer-menu-other-window</span> <span class="s">&quot;other-window&quot;</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="nv">quit-window</span> <span class="s">&quot;quit&quot;</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">))</span>
-
-<span class="p">(</span><span class="nf">define-key</span> <span class="nv">Buffer-menu-mode-map</span> <span class="s">&quot;.&quot;</span> <span class="ss">&#39;hydra-buffer-menu/body</span><span class="p">)</span>
-</code></small></pre></div>
-
-<p>You can change the color on the top to your taste: either red or pink or amaranth will work.
-For extensive Hydras I tend to pick pink, since I don&#39;t want to quit by accident, while still keeping
-the non-head bindings. For small ones, red is better.
-Here&#39;s how the result looks like:
-<img src="/download/hydra-buffer-menu.png" alt="hydra-buffer-menu"></p>
-
-<p>You can install the cow with:</p>
-<div class="highlight"><pre><code class="language-sh" data-lang="sh">apt-get moo
-</code></pre></div>
-<p>I didn&#39;t list it in the source, since Jekyll would wrap the long lines. The source is already in <a href="https://github.com/abo-abo/hydra/blob/master/hydra-examples.el#L191">hydra-examples.el</a>.
-You only have to:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;hydra-examples</span><span class="p">)</span>
-<span class="p">(</span><span class="nf">define-key</span> <span class="nv">Buffer-menu-mode-map</span> <span class="s">&quot;.&quot;</span> <span class="ss">&#39;hydra-buffer-menu/body</span><span class="p">)</span>
-</code></pre></div>
-<p>I&#39;ve been hearing some opinions lately that the growing number of
-Hydra options makes it intimidating or unclear. I hope that&#39;s not the
-majority&#39;s feeling and that the gentle repetitiveness of this example
-proves otherwise.</p>
-
-<p>On the other hand, I&#39;ve started reading &quot;The Reasoned Schemer&quot; this
-week. Now that&#39;s intimidating.</p>
 
   </div>
   

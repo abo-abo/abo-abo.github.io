@@ -11,7 +11,7 @@
 
   <title>
     
-      Do things after selecting window &middot; (or emacs
+      Debug Clojure with CIDER and lispy &middot; (or emacs
     
   </title>
 
@@ -252,67 +252,99 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Do things after selecting window</h1>
-  <span class="post-date">24 Jan 2015</span>
-  <p>I saw this question today at Stack Overflow -
-<a href="http://stackoverflow.com/q/28124095/1350992">Emacs: How to enable toolbar mode and menubar mode only under a certain mode?</a>.
-Myself, I never use the menubar or the toolbar. But maybe it&#39;s just
-because it&#39;s useless in the modes to which I&#39;m used to. What if there
-was an option to have the menu bar <em>on</em> just for a few select
-modes?  For instance, if I decided that I want to learn Haskell
-tomorrow, I wouldn&#39;t mind to have the menu bar on for a while,
-especially if there was some useful stuff there in the menu.</p>
+  <h1 class="post-title">Debug Clojure with CIDER and lispy</h1>
+  <span class="post-date">22 Jun 2015</span>
+  <p>To commemorate the release of <a href="http://batsov.com/articles/2015/06/16/cider-0-dot-9/">CIDER 0.9.0</a>, I&#39;ve just
+added the ability to debug-step-in Clojure expressions to <a href="https://github.com/abo-abo/lispy">lispy</a>.</p>
 
-<h2 id="the-code">The Code</h2>
+<p>This ability was present for Elisp for a very long time, and it&#39;s
+instrumental to
+<a href="https://github.com/abo-abo?tab=repositories">my Elisp output</a>. So now
+I&#39;ve added exactly the same thing to Clojure.</p>
 
-<p>I&#39;m not aware of a convenient hook for this job; I tried
-<code>after-change-major-mode-hook</code>, and it doesn&#39;t work when switching
-windows. The universal <code>post-command-hook</code> would be totally lame for this task.</p>
+<h2 id="how-it-works">How it works</h2>
 
-<p>Then it occurred to me, that <code>select-window</code> <em>has</em> to be called
-eventually in most circumstances.  Even
-<a href="https://github.com/abo-abo/ace-window">ace-window</a> calls
-<code>select-window</code>.</p>
-
-<p>This is what I came up with so far:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">defvar</span> <span class="nv">menubar-last</span>
-  <span class="p">(</span><span class="nv">make-ring</span> <span class="mi">20</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">ring-insert</span> <span class="nv">menubar-last</span> <span class="s">&quot;dummy&quot;</span><span class="p">)</span>
-
-<span class="p">(</span><span class="nb">defadvice</span> <span class="nf">select-window</span> <span class="p">(</span><span class="nv">after</span> <span class="nv">select-window-menubar</span> <span class="nv">activate</span><span class="p">)</span>
-  <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nf">equal</span> <span class="p">(</span><span class="nf">buffer-name</span><span class="p">)</span> <span class="p">(</span><span class="nv">ring-ref</span> <span class="nv">menubar-last</span> <span class="mi">0</span><span class="p">))</span>
-    <span class="p">(</span><span class="nv">ring-insert</span> <span class="nv">menubar-last</span> <span class="p">(</span><span class="nf">buffer-name</span><span class="p">))</span>
-    <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">yes-or-no</span>
-           <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">memq</span> <span class="nv">major-mode</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">r-mode</span> <span class="nv">lisp-interaction-mode</span><span class="p">))</span>
-               <span class="mi">1</span> <span class="mi">-1</span><span class="p">)))</span>
-      <span class="p">(</span><span class="nv">menu-bar-mode</span> <span class="nv">yes-or-no</span><span class="p">)</span>
-      <span class="p">(</span><span class="nv">tool-bar-mode</span> <span class="nv">yes-or-no</span><span class="p">))))</span>
+<p>Suppose that you have this function (borrowed from <a href="http://www.manning.com/fogus2/">The Joy of Clojure</a>):</p>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="kd">defn </span><span class="nv">l-&gt;rfix</span>
+  <span class="p">([</span><span class="nv">a</span> <span class="nv">op</span> <span class="nv">b</span><span class="p">]</span>
+   <span class="p">(</span><span class="nf">op</span> <span class="nv">a</span> <span class="nv">b</span><span class="p">))</span>
+  <span class="p">([</span><span class="nv">a</span> <span class="nv">op1</span> <span class="nv">b</span> <span class="nv">op2</span> <span class="nv">c</span><span class="p">]</span>
+   <span class="p">(</span><span class="nf">op2</span> <span class="nv">c</span> <span class="p">(</span><span class="nf">op1</span> <span class="nv">a</span> <span class="nv">b</span><span class="p">)))</span>
+  <span class="p">([</span><span class="nv">a</span> <span class="nv">op1</span> <span class="nv">b</span> <span class="nv">op2</span> <span class="nv">c</span> <span class="nv">op3</span> <span class="nv">d</span><span class="p">]</span>
+   <span class="p">(</span><span class="nf">op3</span> <span class="nv">d</span> <span class="p">(</span><span class="nf">op2</span> <span class="nv">c</span> <span class="p">(</span><span class="nf">op1</span> <span class="nv">a</span> <span class="nv">b</span><span class="p">)))))</span>
 </code></pre></div>
-<h2 id="the-ring-trickery">The Ring trickery</h2>
+<p>An important thing is that the function needs to be loaded (probably
+with <code>cider-load-file</code>), in order for Clojure to know its location. If
+you only evaluate the function with <kbd>C-x C-e</kbd>, it won&#39;t
+work. Actually, the same applies to Elisp.</p>
 
-<p>It&#39;s necessary at least for <code>magit</code>. Doing, for instance,
-<kbd>ll</kbd> operation switches windows many times.
-So I added a check that the current buffer isn&#39;t selected twice.</p>
-
-<p>In Emacs, a ring is like a stack with a limited length: you push onto
-the head, and if the stack becomes too large, the stuff gets removed
-from the tail. Perfect for debugging this code, since I don&#39;t care
-what happened 20 window switches ago, I&#39;m only interested in the most
-recent state. One small annoyance is that the following code will
-throw, if the ring is empty:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">ring-ref</span> <span class="nv">menubar-last</span> <span class="mi">0</span><span class="p">)</span>
+<p>And then you have the corresponding function call (<code>|</code> is the point, as usual):</p>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="err">|</span><span class="p">(</span><span class="nf">l-&gt;rfix</span> <span class="mi">10</span> <span class="nb">* </span><span class="mi">2</span> <span class="nb">+ </span><span class="mi">3</span><span class="p">)</span>
 </code></pre></div>
-<p>I would prefer if it just returned <code>nil</code> instead. Hence the trick of
-initializing <code>menubar-last</code> with a dummy item.  Note that this
-annoyance propagates to other areas: <code>(current-kill 0)</code> will throw if
-you haven&#39;t yet copied text since Emacs started.</p>
+<p>As you press <kbd>xj</kbd> (<code>lispy-debug-step-in</code>), the following code is evaluated on the Clojure side:</p>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="nf">do</span>
+  <span class="p">(</span><span class="k">def </span><span class="nv">a</span> <span class="mi">10</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">def </span><span class="nv">op1</span> <span class="nv">*</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">def </span><span class="nv">b</span> <span class="mi">2</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">def </span><span class="nv">op2</span> <span class="nv">+</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">def </span><span class="nv">c</span> <span class="mi">3</span><span class="p">))</span>
+</code></pre></div>
+<p>At the same time, you are taken to the second branch of the body of
+<code>l-&gt;rfix</code> - exactly the one that corresponds to 5 arguments.  And
+that&#39;s it: you now have <code>a</code>, <code>op1</code> etc defined to their proper
+values. You can now continue within the function body with many
+possible follow-ups. I&#39;ll just list the eval-related ones:</p>
 
+<ul>
+<li>Use <kbd>e</kbd> to evaluate expression at point.</li>
+<li>If you want to evaluate a symbol, mark it with <kbd>M-m</kbd>, end
+evaluate with <kbd>e</kbd>. Actually, I prefer to mark stuff with
+<kbd>m</kbd> and <kbd>hjkl</kbd> arrows, using <kbd>i</kbd> to mark
+the first element of the region. It&#39;s also possible to mark with
+<kbd>a</kbd>, and <kbd>2m</kbd>, <kbd>3m</kbd> etc.</li>
+<li>If you want to bind a symbol in a <code>let</code> binding, mark both the
+symbol and its value, and press <kbd>e</kbd>. If there are many
+<code>let</code> bindings, you can navigate to the next one with either
+<kbd>jj</kbd> or <kbd>2j</kbd>.</li>
+<li>You can debug-step-in again if needed with <kbd>xj</kbd>.</li>
+<li>You can flatten a function or a macro call with <kbd>xf</kbd>.</li>
+<li>You can eval-and-insert with <kbd>E</kbd>.</li>
+<li>You can eval-and-commented-insert with <kbd>2e</kbd>.</li>
+</ul>
+
+<p>Just to add, any of these will work properly and switch to an appropriate body branch:</p>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="nf">l-&gt;rfix</span> <span class="mi">1</span> <span class="nb">* </span><span class="mi">1</span> <span class="nb">+ </span><span class="mi">1</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">l-&gt;rfix</span> <span class="mi">2</span> <span class="nb">+ </span><span class="mi">7</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">l-&gt;rfix</span> <span class="mi">1</span> <span class="nb">+ </span><span class="mi">2</span> <span class="nb">+ </span><span class="mi">3</span> <span class="nb">+ </span><span class="mi">4</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">l-&gt;rfix</span> <span class="p">(</span><span class="nb">str </span><span class="s">&quot;a&quot;</span> <span class="s">&quot;b&quot;</span> <span class="s">&quot;c&quot;</span><span class="p">)</span> <span class="nb">+ </span><span class="mi">7</span><span class="p">)</span>
+</code></pre></div>
 <h2 id="outro">Outro</h2>
 
-<p>I&#39;m not sure if this code is more annoying than useful, but, at least,
-I learned something new while writing it, and I hope you did too.  If
-you know of a better way to accomplish the original task, please do
-share.</p>
+<p>Enjoy the new code, but be mindful that it&#39;s really fresh, so it will
+certainly have some quirks.  For instance, function arguments as a map
+won&#39;t work since I haven&#39;t programmed for that yet.  Big thanks to
+<a href="https://github.com/bbatsov">@bbatsov</a> and all CIDER contributors.</p>
+
+<p>A really cool thing that I hope to get in the future, is to make
+<kbd>Z</kbd> (<code>lispy-edebug-stop</code>) also work in Clojure.  What it does
+currently for Elisp, is to use <code>edebug</code> to setup the function
+arguments. It may be possible to use
+<a href="https://github.com/Malabarba">@Malabarba</a>&#39;s new debugger
+implementation for the same thing.</p>
+
+<p>The advantages of using <code>lispy</code>-style debugger are the following:</p>
+
+<ul>
+<li>You can navigate your code the way you want, not just in a way that
+the debugger allows you to.</li>
+<li>You can multi-debug, and have sessions last for days.</li>
+<li>You can edit the code as you debug. For this new code, I started
+debugging when there was only a function name.  I added the body code
+expression-by-expression, simultaneously debugging it.</li>
+</ul>
+
+<p>The disadvantage is a bit of namespace pollution, but I think it&#39;s
+more or less acceptable.</p>
 
 </div>
 
@@ -331,16 +363,6 @@ share.</p>
     
       <li>
         <h3>
-          <!-- <a href="//2015/06/22/debug-clojure/"> -->
-          <a href="/2015/06/22/debug-clojure/">
-            Debug Clojure with CIDER and lispy
-            <small>22 Jun 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
           <!-- <a href="//2015/06/19/avy-0.3.0/"> -->
           <a href="/2015/06/19/avy-0.3.0/">
             avy 0.3.0 is out
@@ -355,6 +377,16 @@ share.</p>
           <a href="/2015/06/09/lispy-case-to-cond/">
             Transform a LISP case into a cond with lispy
             <small>09 Jun 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <!-- <a href="//2015/06/08/describe-variable-tip/"> -->
+          <a href="/2015/06/08/describe-variable-tip/">
+            More productive describe-variable
+            <small>08 Jun 2015</small>
           </a>
         </h3>
       </li>

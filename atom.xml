@@ -4,13 +4,112 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-06-19T18:30:06+02:00</updated>
+ <updated>2015-06-23T13:04:18+02:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Debug Clojure with CIDER and lispy</title>
+   <link href="http://oremacs.com/2015/06/22/debug-clojure/"/>
+   <updated>2015-06-22T00:00:00+02:00</updated>
+   <id>http://oremacs.com/2015/06/22/debug-clojure</id>
+   <content type="html">&lt;p&gt;To commemorate the release of &lt;a href=&quot;http://batsov.com/articles/2015/06/16/cider-0-dot-9/&quot;&gt;CIDER 0.9.0&lt;/a&gt;, I&amp;#39;ve just
+added the ability to debug-step-in Clojure expressions to &lt;a href=&quot;https://github.com/abo-abo/lispy&quot;&gt;lispy&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;This ability was present for Elisp for a very long time, and it&amp;#39;s
+instrumental to
+&lt;a href=&quot;https://github.com/abo-abo?tab=repositories&quot;&gt;my Elisp output&lt;/a&gt;. So now
+I&amp;#39;ve added exactly the same thing to Clojure.&lt;/p&gt;
+
+&lt;h2 id=&quot;how-it-works&quot;&gt;How it works&lt;/h2&gt;
+
+&lt;p&gt;Suppose that you have this function (borrowed from &lt;a href=&quot;http://www.manning.com/fogus2/&quot;&gt;The Joy of Clojure&lt;/a&gt;):&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defn &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;l-&amp;gt;rfix&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;op&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;op&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;op1&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;op2&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;op2&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;op1&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;op1&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;op2&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;op3&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;d&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;op3&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;d&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;op2&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;op1&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;An important thing is that the function needs to be loaded (probably
+with &lt;code&gt;cider-load-file&lt;/code&gt;), in order for Clojure to know its location. If
+you only evaluate the function with &lt;kbd&gt;C-x C-e&lt;/kbd&gt;, it won&amp;#39;t
+work. Actually, the same applies to Elisp.&lt;/p&gt;
+
+&lt;p&gt;And then you have the corresponding function call (&lt;code&gt;|&lt;/code&gt; is the point, as usual):&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;err&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;l-&amp;gt;rfix&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;* &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;+ &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;As you press &lt;kbd&gt;xj&lt;/kbd&gt; (&lt;code&gt;lispy-debug-step-in&lt;/code&gt;), the following code is evaluated on the Clojure side:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;do&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;op1&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;op2&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;At the same time, you are taken to the second branch of the body of
+&lt;code&gt;l-&amp;gt;rfix&lt;/code&gt; - exactly the one that corresponds to 5 arguments.  And
+that&amp;#39;s it: you now have &lt;code&gt;a&lt;/code&gt;, &lt;code&gt;op1&lt;/code&gt; etc defined to their proper
+values. You can now continue within the function body with many
+possible follow-ups. I&amp;#39;ll just list the eval-related ones:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Use &lt;kbd&gt;e&lt;/kbd&gt; to evaluate expression at point.&lt;/li&gt;
+&lt;li&gt;If you want to evaluate a symbol, mark it with &lt;kbd&gt;M-m&lt;/kbd&gt;, end
+evaluate with &lt;kbd&gt;e&lt;/kbd&gt;. Actually, I prefer to mark stuff with
+&lt;kbd&gt;m&lt;/kbd&gt; and &lt;kbd&gt;hjkl&lt;/kbd&gt; arrows, using &lt;kbd&gt;i&lt;/kbd&gt; to mark
+the first element of the region. It&amp;#39;s also possible to mark with
+&lt;kbd&gt;a&lt;/kbd&gt;, and &lt;kbd&gt;2m&lt;/kbd&gt;, &lt;kbd&gt;3m&lt;/kbd&gt; etc.&lt;/li&gt;
+&lt;li&gt;If you want to bind a symbol in a &lt;code&gt;let&lt;/code&gt; binding, mark both the
+symbol and its value, and press &lt;kbd&gt;e&lt;/kbd&gt;. If there are many
+&lt;code&gt;let&lt;/code&gt; bindings, you can navigate to the next one with either
+&lt;kbd&gt;jj&lt;/kbd&gt; or &lt;kbd&gt;2j&lt;/kbd&gt;.&lt;/li&gt;
+&lt;li&gt;You can debug-step-in again if needed with &lt;kbd&gt;xj&lt;/kbd&gt;.&lt;/li&gt;
+&lt;li&gt;You can flatten a function or a macro call with &lt;kbd&gt;xf&lt;/kbd&gt;.&lt;/li&gt;
+&lt;li&gt;You can eval-and-insert with &lt;kbd&gt;E&lt;/kbd&gt;.&lt;/li&gt;
+&lt;li&gt;You can eval-and-commented-insert with &lt;kbd&gt;2e&lt;/kbd&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Just to add, any of these will work properly and switch to an appropriate body branch:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;l-&amp;gt;rfix&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;* &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;+ &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;l-&amp;gt;rfix&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;+ &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;7&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;l-&amp;gt;rfix&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;+ &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;+ &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;+ &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;l-&amp;gt;rfix&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;str &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;a&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;b&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;c&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;+ &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;7&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;Enjoy the new code, but be mindful that it&amp;#39;s really fresh, so it will
+certainly have some quirks.  For instance, function arguments as a map
+won&amp;#39;t work since I haven&amp;#39;t programmed for that yet.  Big thanks to
+&lt;a href=&quot;https://github.com/bbatsov&quot;&gt;@bbatsov&lt;/a&gt; and all CIDER contributors.&lt;/p&gt;
+
+&lt;p&gt;A really cool thing that I hope to get in the future, is to make
+&lt;kbd&gt;Z&lt;/kbd&gt; (&lt;code&gt;lispy-edebug-stop&lt;/code&gt;) also work in Clojure.  What it does
+currently for Elisp, is to use &lt;code&gt;edebug&lt;/code&gt; to setup the function
+arguments. It may be possible to use
+&lt;a href=&quot;https://github.com/Malabarba&quot;&gt;@Malabarba&lt;/a&gt;&amp;#39;s new debugger
+implementation for the same thing.&lt;/p&gt;
+
+&lt;p&gt;The advantages of using &lt;code&gt;lispy&lt;/code&gt;-style debugger are the following:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;You can navigate your code the way you want, not just in a way that
+the debugger allows you to.&lt;/li&gt;
+&lt;li&gt;You can multi-debug, and have sessions last for days.&lt;/li&gt;
+&lt;li&gt;You can edit the code as you debug. For this new code, I started
+debugging when there was only a function name.  I added the body code
+expression-by-expression, simultaneously debugging it.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The disadvantage is a bit of namespace pollution, but I think it&amp;#39;s
+more or less acceptable.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>avy 0.3.0 is out</title>
