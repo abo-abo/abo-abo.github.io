@@ -255,6 +255,83 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/03/19/swiper-on-youtubes/">
+        A new Swiper demo on Youtube
+      </a>
+    </h1>
+
+    <span class="post-date">19 Mar 2015</span>
+
+    <h2 id="youtube-video">Youtube video</h2>
+
+<p>Today, I&#39;ve fixed a few bugs in both <a href="https://github.com/abo-abo/swiper">swiper</a> and <code>ivy</code>.
+Finally, the number of candidates display has also been added.  You can see the whole thing in the
+<a href="https://www.youtube.com/watch?v=s3qwiAtKjuA">one minute video demo</a>.</p>
+
+<p>Here are the bindings that I&#39;m using:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="s">&quot;\C-r&quot;</span> <span class="ss">&#39;swiper</span><span class="p">)</span>
+<span class="p">(</span><span class="nv">global-set-key</span> <span class="s">&quot;\C-s&quot;</span> <span class="ss">&#39;swiper</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="integration-tests">Integration tests</h2>
+
+<p>I&#39;ve also added some <a href="https://github.com/abo-abo/swiper/blob/master/ivy-test.el">integration tests</a>,
+if you&#39;re interested. I didn&#39;t know how to do exactly this type of testing before (when there&#39;s input from minibuffer).
+Turns out, it&#39;s pretty easy to do using <code>execute-kbd-macro</code>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;ert</span><span class="p">)</span>
+
+<span class="p">(</span><span class="k">defvar</span> <span class="nv">ivy-expr</span> <span class="no">nil</span>
+  <span class="s">&quot;Holds a test expression to evaluate with `ivy-eval&#39;.&quot;</span><span class="p">)</span>
+
+<span class="p">(</span><span class="k">defvar</span> <span class="nv">ivy-result</span> <span class="no">nil</span>
+  <span class="s">&quot;Holds the eval result of `ivy-expr&#39; by `ivy-eval&#39;.&quot;</span><span class="p">)</span>
+
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">ivy-eval</span> <span class="p">()</span>
+  <span class="s">&quot;Evaluate `ivy-expr&#39;.&quot;</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-result</span> <span class="p">(</span><span class="nf">eval</span> <span class="nv">ivy-expr</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c e&quot;</span><span class="p">)</span> <span class="ss">&#39;ivy-eval</span><span class="p">)</span>
+
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">ivy-with</span> <span class="p">(</span><span class="nv">expr</span> <span class="nv">keys</span><span class="p">)</span>
+  <span class="s">&quot;Evaluate EXPR followed by KEYS.&quot;</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">ivy-expr</span> <span class="nv">expr</span><span class="p">))</span>
+    <span class="p">(</span><span class="nf">execute-kbd-macro</span>
+     <span class="p">(</span><span class="nf">vconcat</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c e&quot;</span><span class="p">)</span>
+              <span class="p">(</span><span class="nv">kbd</span> <span class="nv">keys</span><span class="p">)))</span>
+    <span class="nv">ivy-result</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nb">ert-deftest</span> <span class="nv">ivy-read</span> <span class="p">()</span>
+  <span class="p">(</span><span class="nv">should</span> <span class="p">(</span><span class="nf">equal</span>
+           <span class="p">(</span><span class="nv">ivy-read</span> <span class="s">&quot;pattern: &quot;</span> <span class="no">nil</span><span class="p">)</span>
+           <span class="no">nil</span><span class="p">))</span>
+  <span class="p">(</span><span class="nv">should</span> <span class="p">(</span><span class="nf">equal</span>
+           <span class="p">(</span><span class="nv">ivy-read</span> <span class="s">&quot;pattern: &quot;</span> <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;42&quot;</span><span class="p">))</span>
+           <span class="s">&quot;42&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="nv">should</span> <span class="p">(</span><span class="nf">equal</span>
+           <span class="p">(</span><span class="nv">ivy-with</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">ivy-read</span> <span class="s">&quot;pattern: &quot;</span> <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;blue&quot;</span> <span class="s">&quot;yellow&quot;</span><span class="p">))</span>
+                     <span class="s">&quot;C-m&quot;</span><span class="p">)</span>
+           <span class="s">&quot;blue&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="nv">should</span> <span class="p">(</span><span class="nf">equal</span>
+           <span class="p">(</span><span class="nv">ivy-with</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">ivy-read</span> <span class="s">&quot;pattern: &quot;</span> <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;blue&quot;</span> <span class="s">&quot;yellow&quot;</span><span class="p">))</span>
+                     <span class="s">&quot;y C-m&quot;</span><span class="p">)</span>
+           <span class="s">&quot;yellow&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="nv">should</span> <span class="p">(</span><span class="nf">equal</span>
+           <span class="p">(</span><span class="nv">ivy-with</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">ivy-read</span> <span class="s">&quot;pattern: &quot;</span> <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;blue&quot;</span> <span class="s">&quot;yellow&quot;</span><span class="p">))</span>
+                     <span class="s">&quot;y DEL b C-m&quot;</span><span class="p">)</span>
+           <span class="s">&quot;blue&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="nv">should</span> <span class="p">(</span><span class="nf">equal</span>
+           <span class="p">(</span><span class="nv">ivy-with</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">ivy-read</span> <span class="s">&quot;pattern: &quot;</span> <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;blue&quot;</span> <span class="s">&quot;yellow&quot;</span><span class="p">))</span>
+                     <span class="s">&quot;z C-m&quot;</span><span class="p">)</span>
+           <span class="no">nil</span><span class="p">)))</span>
+</code></pre></div>
+<h2 id="outro">Outro</h2>
+
+<p>Give the package a try, if you haven&#39;t yet. You can get it from <a href="http://melpa.org/#/swiper">MELPA</a>.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/03/18/ivy-git/">
         Find file in a Git repo with ivy
       </a>
@@ -591,66 +668,6 @@ when you use <code>apropos-variable</code>.</p>
 
 <p>Apropos is like old-school googling, and I find it highly useful in finding the Emacs information
 that I need. I hope that you will find it useful as well. Happy hacking!</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/03/14/more-swiper-ivy-stuff/">
-        More on swiper and ivy
-      </a>
-    </h1>
-
-    <span class="post-date">14 Mar 2015</span>
-
-    <p>I&#39;ll describe two new things in <a href="https://github.com/abo-abo/swiper">swiper</a> and <code>ivy</code> that happened
-within the day. Although you can install them separately from MELPA, they still live in a single git
-repository.</p>
-
-<h2 id="swiper-/-ivy-faces-now-inherit-the-standard-ones"><code>swiper</code> / <code>ivy</code> faces now inherit the standard ones</h2>
-
-<p>It&#39;s a good idea by <a href="https://github.com/purcell">@purcell</a>, and I tend to agree. So now, there are
-six faces that inherit <code>highlight</code>, <code>isearch-lazy-highlight-face</code>, <code>isearch</code> and <code>match</code> faces
-between them.  The advantage is that most themes re-define the above four faces as they see fit, so
-the swiper faces will fit in better without customization.</p>
-
-<p>Still, I really enjoy the previous faces that were derived from the Swiper sprite. You can have them
-as part of <a href="https://github.com/abo-abo/eclipse-theme">eclipse-theme</a>. The theme creators can just
-copy them verbatim to a light theme if they so choose.</p>
-
-<p>By the way, it seems that not all Emacs users are aware that you can customize faces.  You can do so
-interactively for most popular packages. For example, after <kbd>M-x</kbd> <code>customize-group</code>
-<code>swiper</code>, you get a GUI for selecting most configurable things for <code>swiper</code>, including the faces.</p>
-
-<p>The GUI will generate the code that looks something like this:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">custom-set-faces</span>
-  <span class="o">&#39;</span><span class="p">(</span><span class="nv">ivy-current-match</span> <span class="p">((</span><span class="no">t</span> <span class="p">(</span><span class="nb">:background</span> <span class="s">&quot;#e5b7c0&quot;</span><span class="p">)))))</span>
-</code></pre></div>
-<h2 id="elisp-completion-with-ivy">Elisp completion with <code>ivy</code></h2>
-
-<p>The code to complete Elisp code at point is very simple:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel</span> <span class="p">()</span>
-  <span class="s">&quot;Elisp completion at point.&quot;</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">bnd</span> <span class="p">(</span><span class="nv">bounds-of-thing-at-point</span> <span class="ss">&#39;symbol</span><span class="p">))</span>
-         <span class="p">(</span><span class="nv">str</span> <span class="p">(</span><span class="nf">buffer-substring-no-properties</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">bnd</span><span class="p">)</span> <span class="p">(</span><span class="nf">cdr</span> <span class="nv">bnd</span><span class="p">)))</span>
-         <span class="p">(</span><span class="nv">candidates</span> <span class="p">(</span><span class="nf">all-completions</span> <span class="nv">str</span> <span class="nv">obarray</span><span class="p">))</span>
-         <span class="p">(</span><span class="nv">ivy-height</span> <span class="mi">7</span><span class="p">)</span>
-         <span class="p">(</span><span class="nv">res</span> <span class="p">(</span><span class="nv">ivy-read</span> <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;pattern (%s): &quot;</span> <span class="nv">str</span><span class="p">)</span>
-                        <span class="nv">candidates</span><span class="p">)))</span>
-    <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">stringp</span> <span class="nv">res</span><span class="p">)</span>
-      <span class="p">(</span><span class="nf">delete-region</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">bnd</span><span class="p">)</span> <span class="p">(</span><span class="nf">cdr</span> <span class="nv">bnd</span><span class="p">))</span>
-      <span class="p">(</span><span class="nf">insert</span> <span class="nv">res</span><span class="p">))))</span>
-</code></pre></div>
-<p>The only function above that isn&#39;t one of the familiar primitives is <code>ivy-read</code>.  But even that one
-has a similar interface to that of <code>completing-read</code> or <code>ido-completing-read</code>.  I was using
-<code>helm-lisp-completion-at-point</code> before, but <code>counsel</code> is much less obtrusive, while offering
-comparable speed and convenience:</p>
-
-<p><img src="/download/counsel-1.png" alt="counsel-1.png"></p>
-
-<p>The default minibuffer height for <code>ivy</code> is set to 10 via <code>ivy-height</code>.  It&#39;s quite reasonable all-around, but
-for <code>counsel</code> I&#39;ve set it to 7 via a let binding.</p>
 
   </div>
   

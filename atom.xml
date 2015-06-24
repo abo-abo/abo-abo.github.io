@@ -4,13 +4,127 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-06-23T13:04:18+02:00</updated>
+ <updated>2015-06-24T15:32:20+02:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>New video demo - counsel-load-theme</title>
+   <link href="http://oremacs.com/2015/06/23/counsel-load-theme/"/>
+   <updated>2015-06-23T00:00:00+02:00</updated>
+   <id>http://oremacs.com/2015/06/23/counsel-load-theme</id>
+   <content type="html">&lt;p&gt;Without further ado, here&amp;#39;s the &lt;a href=&quot;https://youtu.be/V_whk214fec&quot;&gt;video link&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-code&quot;&gt;The code&lt;/h2&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;counsel--load-theme-action&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Disable current themes and load theme X.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;condition-case&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;progn&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;mapc&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;#&amp;#39;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;disable-theme&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;custom-enabled-themes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;load-theme&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;intern&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;fboundp&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;powerline-reset&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;powerline-reset&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ne&quot;&gt;error&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Problem loading theme %s&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;;;;###autoload&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;counsel-load-theme&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Forward to `load-theme&amp;#39;.&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;Usable with `ivy-resume&amp;#39;, `ivy-next-line-and-call&amp;#39; and&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;`ivy-previous-line-and-call&amp;#39;.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ivy-read&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Load custom theme: &amp;quot;&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;mapcar&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;symbol-name&lt;/span&gt;
+                    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;custom-available-themes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+            &lt;span class=&quot;nb&quot;&gt;:action&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;#&amp;#39;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;counsel--load-theme-action&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;It looks almost trivial, the main idea is to disable all current
+themes and load the new one. Additionally, try to reset the
+&lt;code&gt;powerline&lt;/code&gt;, since it has to match the &lt;code&gt;mode-line&lt;/code&gt; face, which most
+themes customize.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-interface&quot;&gt;The Interface&lt;/h2&gt;
+
+&lt;p&gt;The interface of &lt;code&gt;ivy-read&lt;/code&gt; is the same as the built-in
+&lt;code&gt;completing-read&lt;/code&gt; in first two arguments. The difference is that it
+also accepts a callback through the &lt;code&gt;:action&lt;/code&gt; argument.  This callback
+will make the completion engine aware of what needs to be done with
+the completion result. The presence of the callback allows these completion engine features to work:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;ivy-resume&lt;/code&gt; will resume the last completion. Very useful if you
+change your mind on the candidate, or want to examine a related
+candidate.&lt;br&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ivy-next-line-and-call&lt;/code&gt; selects the next matching candidate and executes the callback for it.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ivy-previous-line-and-call&lt;/code&gt; selects the previous matching candidate and executes the callback for it.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I like to think of &lt;code&gt;ivy-resume&lt;/code&gt; as a &lt;kbd&gt;DEL&lt;/kbd&gt; or
+&lt;kbd&gt;&amp;lt;left&amp;gt;&lt;/kbd&gt; for completion. As you can erase or go back
+one character with the same &lt;kbd&gt;DEL&lt;/kbd&gt; binding, regardless of the
+last character inputted (&lt;kbd&gt;a&lt;/kbd&gt; or &lt;kbd&gt;B&lt;/kbd&gt; etc), in the
+same way you can call the completion again with the same
+&lt;kbd&gt;&amp;lt;f6&amp;gt;&lt;/kbd&gt; binding, regardless of the command that required
+completion (&lt;code&gt;counsel-git-grep&lt;/code&gt; or &lt;code&gt;counsel-load-theme&lt;/code&gt; or
+&lt;code&gt;counsel-load-library&lt;/code&gt; etc). &lt;code&gt;ivy-resume&lt;/code&gt; isn&amp;#39;t bound by default,
+since it needs to be a global binding. I just use this in my config:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;[f6]&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ivy-resume&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;For the functions that execute the callback while changing the
+candidate, the idea is:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;C-M-n&lt;/kbd&gt; (&lt;code&gt;ivy-next-line-and-call&lt;/code&gt;) corresponds to &lt;kbd&gt;C-n&lt;/kbd&gt; (&lt;code&gt;ivy-next-line&lt;/code&gt;),&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;C-M-p&lt;/kbd&gt; (&lt;code&gt;ivy-previous-line-and-call&lt;/code&gt;) corresponds to &lt;kbd&gt;C-n&lt;/kbd&gt; (&lt;code&gt;ivy-previous-line&lt;/code&gt;).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I&amp;#39;ve also showed off a generic &lt;code&gt;ivy&lt;/code&gt; feature: &lt;kbd&gt;M-j&lt;/kbd&gt; will yank
+the word at point into the minibuffer.  Think of it as the mirror of
+&lt;kbd&gt;C-w&lt;/kbd&gt; in &lt;code&gt;isearch&lt;/code&gt;. It could not be &lt;kbd&gt;C-w&lt;/kbd&gt;, since I
+like &lt;kbd&gt;C-w&lt;/kbd&gt; being bound to &lt;code&gt;kill-region&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-command/insert-mode-split&quot;&gt;The command/insert mode split&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/counsel-load-theme.png&quot; alt=&quot;counsel-load-theme.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Finally, I show off the equivalent
+&lt;a href=&quot;https://github.com/abo-abo/hydra&quot;&gt;hydra&lt;/a&gt;-based modal selection
+method.  So instead of pressing &lt;kbd&gt;C-M-n C-M-n C-M-n C-M-p
+C-M-p&lt;/kbd&gt;, you can press the equivalent &lt;kbd&gt;C-o c jjjkk&lt;/kbd&gt;.
+Luckily, you don&amp;#39;t need to remember a lot of bindings for this &lt;code&gt;hydra&lt;/code&gt;
+mode: just press &lt;kbd&gt;C-o&lt;/kbd&gt; and read the hints. I&amp;#39;ll just list the
+exit points, since that&amp;#39;s usually the more important stuff:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;To exit the &amp;quot;command-mode&amp;quot; completely, press &lt;kbd&gt;o&lt;/kbd&gt; or the standard &lt;kbd&gt;C-g&lt;/kbd&gt;.&lt;/li&gt;
+&lt;li&gt;To exit the &amp;quot;command-mode&amp;quot; with the current candidate, press &lt;kbd&gt;f&lt;/kbd&gt; or &lt;kbd&gt;d&lt;/kbd&gt;.&lt;/li&gt;
+&lt;li&gt;To exit the &amp;quot;command-mode&amp;quot; and once again edit the minibuffer, press &lt;kbd&gt;i&lt;/kbd&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;You might ask why &lt;kbd&gt;f&lt;/kbd&gt; and &lt;kbd&gt;d&lt;/kbd&gt; do the same. They
+actually mirror &lt;kbd&gt;C-j&lt;/kbd&gt; (&lt;code&gt;ivy-alt-done&lt;/code&gt;) and &lt;kbd&gt;C-m&lt;/kbd&gt;
+(&lt;code&gt;ivy-done&lt;/code&gt;). And if you ask what the difference between those two is,
+the answer is that &lt;code&gt;ivy-alt-done&lt;/code&gt; will not exit the completion when
+selecting directories during file name completion. It may be possible
+to extend this to other types of completion where it makes sense to
+select something but not to exit the minibuffer.&lt;/p&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;If you&amp;#39;re using &lt;code&gt;ivy-mode&lt;/code&gt;, make sure to try the new features: the
+action-using commands should work for any command that starts with
+&lt;code&gt;counsel-&lt;/code&gt;. For other commands, like &lt;code&gt;package-install&lt;/code&gt;, you can only
+select one candidate with &lt;kbd&gt;C-m&lt;/kbd&gt;.&lt;/p&gt;
+
+&lt;p&gt;Also do try &lt;kbd&gt;C-M-n&lt;/kbd&gt; with &lt;code&gt;counsel-find-file&lt;/code&gt;: you&amp;#39;ll be able
+to cycle through all files in a directory without exiting the
+completion. Same goes for &lt;code&gt;ivy-switch-buffer&lt;/code&gt;, which should probably
+be renamed to &lt;code&gt;counsel-switch-buffer&lt;/code&gt; for consistency.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Debug Clojure with CIDER and lispy</title>

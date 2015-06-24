@@ -11,7 +11,7 @@
 
   <title>
     
-      Org-mode Hydras incoming! &middot; (or emacs
+      New video demo - counsel-load-theme &middot; (or emacs
     
   </title>
 
@@ -252,94 +252,114 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Org-mode Hydras incoming!</h1>
-  <span class="post-date">14 Apr 2015</span>
-  <h2 id="a-hydra-for-org-mode-time/clock/capture">A hydra for org-mode time/clock/capture</h2>
+  <h1 class="post-title">New video demo - counsel-load-theme</h1>
+  <span class="post-date">23 Jun 2015</span>
+  <p>Without further ado, here&#39;s the <a href="https://youtu.be/V_whk214fec">video link</a>.</p>
 
-<p>This is a categorized version of the hydra that <a href="https://github.com/WorldsEndless">@WorldsEndless</a> contributed
-today to the <a href="https://github.com/abo-abo/hydra/wiki/Hydras-by-Topic">wiki</a>.</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-global-org</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">blue</span>
-                            <span class="nb">:hint</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="s">&quot;</span>
-<span class="s">Timer^^        ^Clock^         ^Capture^</span>
-<span class="s">--------------------------------------------------</span>
-<span class="s">s_t_art        _w_ clock in    _c_apture</span>
-<span class="s"> _s_top        _o_ clock out   _l_ast capture</span>
-<span class="s">_r_eset        _j_ clock goto</span>
-<span class="s">_p_rint</span>
-<span class="s">&quot;</span>
-  <span class="p">(</span><span class="s">&quot;t&quot;</span> <span class="nv">org-timer-start</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;s&quot;</span> <span class="nv">org-timer-stop</span><span class="p">)</span>
-  <span class="c1">;; Need to be at timer</span>
-  <span class="p">(</span><span class="s">&quot;r&quot;</span> <span class="nv">org-timer-set-timer</span><span class="p">)</span>
-  <span class="c1">;; Print timer value to buffer</span>
-  <span class="p">(</span><span class="s">&quot;p&quot;</span> <span class="nv">org-timer</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;w&quot;</span> <span class="p">(</span><span class="nv">org-clock-in</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">4</span><span class="p">)))</span>
-  <span class="p">(</span><span class="s">&quot;o&quot;</span> <span class="nv">org-clock-out</span><span class="p">)</span>
-  <span class="c1">;; Visit the clocked task from any buffer</span>
-  <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">org-clock-goto</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;c&quot;</span> <span class="nv">org-capture</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nv">org-capture-goto-last-stored</span><span class="p">))</span>
+<h2 id="the-code">The code</h2>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel--load-theme-action</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+  <span class="s">&quot;Disable current themes and load theme X.&quot;</span>
+  <span class="p">(</span><span class="k">condition-case</span> <span class="no">nil</span>
+      <span class="p">(</span><span class="k">progn</span>
+        <span class="p">(</span><span class="nf">mapc</span> <span class="nf">#&#39;</span><span class="nv">disable-theme</span> <span class="nv">custom-enabled-themes</span><span class="p">)</span>
+        <span class="p">(</span><span class="nv">load-theme</span> <span class="p">(</span><span class="nf">intern</span> <span class="nv">x</span><span class="p">))</span>
+        <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">fboundp</span> <span class="ss">&#39;powerline-reset</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">powerline-reset</span><span class="p">)))</span>
+    <span class="p">(</span><span class="ne">error</span> <span class="s">&quot;Problem loading theme %s&quot;</span> <span class="nv">x</span><span class="p">)))</span>
+
+<span class="c1">;;;###autoload</span>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel-load-theme</span> <span class="p">()</span>
+  <span class="s">&quot;Forward to `load-theme&#39;.</span>
+<span class="s">Usable with `ivy-resume&#39;, `ivy-next-line-and-call&#39; and</span>
+<span class="s">`ivy-previous-line-and-call&#39;.&quot;</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">ivy-read</span> <span class="s">&quot;Load custom theme: &quot;</span>
+            <span class="p">(</span><span class="nf">mapcar</span> <span class="ss">&#39;symbol-name</span>
+                    <span class="p">(</span><span class="nv">custom-available-themes</span><span class="p">))</span>
+            <span class="nb">:action</span> <span class="nf">#&#39;</span><span class="nv">counsel--load-theme-action</span><span class="p">))</span>
 </code></pre></div>
-<p>I&#39;ve bound it like this:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="nv">[f11]</span> <span class="ss">&#39;hydra-global-org/body</span><span class="p">)</span>
-</code></pre></div>
-<p>Previously, I had <kbd>f11</kbd> bound to <code>org-clock-goto</code>, thanks to
-the <a href="http://doc.norang.ca/org-mode.html">Org Mode - Organize Your Life In Plain Text!</a>
-post.  I kind of recommend that post, as it has a tonne of useful
-stuff. At the same time, it resulted in me copying too much stuff that I didn&#39;t understand into my config,
-ultimately discouraging me from using <code>org-mode</code>. YMMV.</p>
+<p>It looks almost trivial, the main idea is to disable all current
+themes and load the new one. Additionally, try to reset the
+<code>powerline</code>, since it has to match the <code>mode-line</code> face, which most
+themes customize.</p>
 
-<p>Screenshot:</p>
+<h2 id="the-interface">The Interface</h2>
 
-<p><img src="/download/hydra-org-global.png" alt="hydra-org-global.png"></p>
-
-<h2 id="a-hydra-for-refile/archive">A hydra for refile/archive</h2>
-
-<p>Inspired by the previous one, I wanted to write a hydra of my own.  As
-it happened, I was just about to clean up my git notes. So I wanted a
-nice refile hydra to speed up the process.</p>
-
-<p>Here&#39;s the hydra&#39;s code, which is now part of
-<a href="https://github.com/abo-abo/worf">worf</a>.  Worf is a package for
-quickly navigating around an <code>org-mode</code> buffer, you can get it from
-MELPA.</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-refile</span> <span class="p">(</span><span class="nb">:hint</span> <span class="no">nil</span>
-                        <span class="nb">:color</span> <span class="nv">teal</span><span class="p">)</span>
-  <span class="s">&quot;</span>
-<span class="s">Refile:^^   _k_eep: %`org-refile-keep</span>
-<span class="s">----------------------------------</span>
-<span class="s">_l_ast      _a_rchive</span>
-<span class="s">_o_ther</span>
-<span class="s">_t_his</span>
-
-<span class="s">&quot;</span>
-  <span class="p">(</span><span class="s">&quot;t&quot;</span> <span class="nv">worf-refile-this</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;o&quot;</span> <span class="nv">worf-refile-other</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nv">worf-refile-last</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;k&quot;</span> <span class="p">(</span><span class="k">setq</span> <span class="nv">org-refile-keep</span> <span class="p">(</span><span class="nv">not</span> <span class="nv">org-refile-keep</span><span class="p">))</span>
-       <span class="nb">:exit</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="p">(</span><span class="nv">org-archive-subtree</span><span class="p">))</span>
-  <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span> <span class="s">&quot;quit&quot;</span><span class="p">))</span>
-</code></pre></div>
-<p>Some explanations:</p>
+<p>The interface of <code>ivy-read</code> is the same as the built-in
+<code>completing-read</code> in first two arguments. The difference is that it
+also accepts a callback through the <code>:action</code> argument.  This callback
+will make the completion engine aware of what needs to be done with
+the completion result. The presence of the callback allows these completion engine features to work:</p>
 
 <ul>
-<li><code>worf-refile-this</code> will give you a choice of this file&#39;s headings for refiling.</li>
-<li><code>worf-refile-other</code> will give you a choice of your <code>org-refile-targets</code> except the current file.</li>
-<li><code>worf-refile-last</code> will refile to the last refile location without prompting.</li>
-<li><kbd>k</kbd> will toggle <code>org-refile-keep</code>, which decides if refiling moves or copies the text.</li>
+<li><code>ivy-resume</code> will resume the last completion. Very useful if you
+change your mind on the candidate, or want to examine a related
+candidate.<br></li>
+<li><code>ivy-next-line-and-call</code> selects the next matching candidate and executes the callback for it.</li>
+<li><code>ivy-previous-line-and-call</code> selects the previous matching candidate and executes the callback for it.</li>
 </ul>
 
-<p>And here&#39;s how it looks like:</p>
+<p>I like to think of <code>ivy-resume</code> as a <kbd>DEL</kbd> or
+<kbd>&lt;left&gt;</kbd> for completion. As you can erase or go back
+one character with the same <kbd>DEL</kbd> binding, regardless of the
+last character inputted (<kbd>a</kbd> or <kbd>B</kbd> etc), in the
+same way you can call the completion again with the same
+<kbd>&lt;f6&gt;</kbd> binding, regardless of the command that required
+completion (<code>counsel-git-grep</code> or <code>counsel-load-theme</code> or
+<code>counsel-load-library</code> etc). <code>ivy-resume</code> isn&#39;t bound by default,
+since it needs to be a global binding. I just use this in my config:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="nv">[f6]</span> <span class="ss">&#39;ivy-resume</span><span class="p">)</span>
+</code></pre></div>
+<p>For the functions that execute the callback while changing the
+candidate, the idea is:</p>
 
-<p><img src="/download/hydra-refile.png" alt="hydra-refile.png"></p>
+<ul>
+<li><kbd>C-M-n</kbd> (<code>ivy-next-line-and-call</code>) corresponds to <kbd>C-n</kbd> (<code>ivy-next-line</code>),</li>
+<li><kbd>C-M-p</kbd> (<code>ivy-previous-line-and-call</code>) corresponds to <kbd>C-n</kbd> (<code>ivy-previous-line</code>).</li>
+</ul>
+
+<p>I&#39;ve also showed off a generic <code>ivy</code> feature: <kbd>M-j</kbd> will yank
+the word at point into the minibuffer.  Think of it as the mirror of
+<kbd>C-w</kbd> in <code>isearch</code>. It could not be <kbd>C-w</kbd>, since I
+like <kbd>C-w</kbd> being bound to <code>kill-region</code>.</p>
+
+<h2 id="the-command/insert-mode-split">The command/insert mode split</h2>
+
+<p><img src="/download/counsel-load-theme.png" alt="counsel-load-theme.png"></p>
+
+<p>Finally, I show off the equivalent
+<a href="https://github.com/abo-abo/hydra">hydra</a>-based modal selection
+method.  So instead of pressing <kbd>C-M-n C-M-n C-M-n C-M-p
+C-M-p</kbd>, you can press the equivalent <kbd>C-o c jjjkk</kbd>.
+Luckily, you don&#39;t need to remember a lot of bindings for this <code>hydra</code>
+mode: just press <kbd>C-o</kbd> and read the hints. I&#39;ll just list the
+exit points, since that&#39;s usually the more important stuff:</p>
+
+<ul>
+<li>To exit the &quot;command-mode&quot; completely, press <kbd>o</kbd> or the standard <kbd>C-g</kbd>.</li>
+<li>To exit the &quot;command-mode&quot; with the current candidate, press <kbd>f</kbd> or <kbd>d</kbd>.</li>
+<li>To exit the &quot;command-mode&quot; and once again edit the minibuffer, press <kbd>i</kbd>.</li>
+</ul>
+
+<p>You might ask why <kbd>f</kbd> and <kbd>d</kbd> do the same. They
+actually mirror <kbd>C-j</kbd> (<code>ivy-alt-done</code>) and <kbd>C-m</kbd>
+(<code>ivy-done</code>). And if you ask what the difference between those two is,
+the answer is that <code>ivy-alt-done</code> will not exit the completion when
+selecting directories during file name completion. It may be possible
+to extend this to other types of completion where it makes sense to
+select something but not to exit the minibuffer.</p>
 
 <h2 id="outro">Outro</h2>
 
-<p>Thanks for the contribution, enjoy the new stuff.
-Also, if you ever want to dig around someone&#39;s git notes, you can read <a href="/public/git-notes/git.html">mine</a>,
-courtesy of <code>org-mode</code> export.</p>
+<p>If you&#39;re using <code>ivy-mode</code>, make sure to try the new features: the
+action-using commands should work for any command that starts with
+<code>counsel-</code>. For other commands, like <code>package-install</code>, you can only
+select one candidate with <kbd>C-m</kbd>.</p>
+
+<p>Also do try <kbd>C-M-n</kbd> with <code>counsel-find-file</code>: you&#39;ll be able
+to cycle through all files in a directory without exiting the
+completion. Same goes for <code>ivy-switch-buffer</code>, which should probably
+be renamed to <code>counsel-switch-buffer</code> for consistency.</p>
 
 </div>
 
