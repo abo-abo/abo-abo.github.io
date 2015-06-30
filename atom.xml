@@ -4,14 +4,97 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-06-24T15:32:20+02:00</updated>
+ <updated>2015-06-30T16:52:18+02:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
- 
+
+ <entry>
+   <title>Context aware hydra</title>
+   <link href="http://oremacs.com/2015/06/30/context-aware-hydra/"/>
+   <updated>2015-06-30T00:00:00+02:00</updated>
+   <id>http://oremacs.com/2015/06/30/context-aware-hydra</id>
+   <content type="html">&lt;p&gt;In this post, I&amp;#39;ll demonstrate a snippet that came up this week in a
+conversation over John Kitchin&amp;#39;s
+&lt;a href=&quot;http://kitchingroup.cheme.cmu.edu/blog/2015/06/24/Conditional-hydra-menus/&quot;&gt;post&lt;/a&gt;.
+While the following snippet isn&amp;#39;t inherently useful, it might help a creative
+user to understand Hydra a bit more and accomplish more advanced
+things.&lt;/p&gt;
+
+&lt;p&gt;This hydra demonstrates that the hint and even the key bindings aren&amp;#39;t
+set in stone: you can modify them depending on the current state of
+your Emacs, in this case the current line number.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-vi&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:hint&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;vi&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;j&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;next-line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;k&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;previous-line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;n&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;next-line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;p&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;previous-line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-vi/hint&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;evenp&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;line-number-at-pos&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;prog1&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;eval&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hydra--format&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:hint&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                           &lt;span class=&quot;s&quot;&gt;&amp;quot;\neven: _j_ _k_\n&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-vi/heads&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-vi/keymap&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;n&amp;quot;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-vi/keymap&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;p&amp;quot;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-vi/keymap&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;j&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;hydra-vi/next-line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-vi/keymap&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;k&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;hydra-vi/previous-line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;prog1&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;eval&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hydra--format&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:hint&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                           &lt;span class=&quot;s&quot;&gt;&amp;quot;\nodd: _n_ _p_\n&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-vi/heads&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-vi/keymap&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;j&amp;quot;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-vi/keymap&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;k&amp;quot;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-vi/keymap&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;n&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;hydra-vi/next-line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-vi/keymap&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;p&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;hydra-vi/previous-line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The first statement is one of the most elementary &lt;code&gt;defhydra&lt;/code&gt;
+calls. The only extra thing is that it sets the &lt;code&gt;:hint&lt;/code&gt; to nil.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;defhydra&lt;/code&gt; statement generates a bunch of function and variable
+definitions. You can examine them closely by evaluating:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;macroexpand&lt;/span&gt;
+ &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-vi&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:hint&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;s&quot;&gt;&amp;quot;vi&amp;quot;&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;j&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;next-line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;k&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;previous-line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;n&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;next-line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;p&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;previous-line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Just paste that code into &lt;code&gt;*scratch*&lt;/code&gt;, and press &lt;kbd&gt;C-j&lt;/kbd&gt;. If
+you want pretty output (153 lines of code instead of 26), turn on
+&lt;a href=&quot;https://github.com/abo-abo/lispy&quot;&gt;lispy-mode&lt;/a&gt; and press &lt;kbd&gt;E&lt;/kbd&gt;
+instead of &lt;kbd&gt;C-j&lt;/kbd&gt;.&lt;/p&gt;
+
+&lt;p&gt;Anyway, among these defined variables is &lt;code&gt;hydra-vi/hint&lt;/code&gt; which is
+evaluated each time to display the hint. So now we can just redefine
+&lt;code&gt;hydra-vi/hint&lt;/code&gt; to make it so that on even lines &lt;kbd&gt;n&lt;/kbd&gt; calls
+&lt;code&gt;next-line&lt;/code&gt;, while on odd lines it&amp;#39;s &lt;kbd&gt;j&lt;/kbd&gt;, with the
+appropriate changes in the doc. The change in bindings, modifying
+&lt;code&gt;hydra-vi/keymap&lt;/code&gt; - also one of the defined variables, needs to be a
+side-effect, since &lt;code&gt;hydra-vi/hint&lt;/code&gt; is expected to evaluate to a
+string.&lt;/p&gt;
+
+&lt;p&gt;Just to give you some idea of how it could be used: you can have a
+context-aware &amp;quot;open&amp;quot; command that, for instance, delegates to
+&lt;code&gt;open-in-pdf-tools&lt;/code&gt; or &lt;code&gt;open-in-firefox&lt;/code&gt; or &lt;code&gt;open-in-emacs&lt;/code&gt; when it
+detects that the point is on a link. And of course all these commands
+would have their own key binding that works only if the command makes
+sense.&lt;/p&gt;
+
+&lt;p&gt;This approach is described on
+&lt;a href=&quot;https://github.com/abo-abo/hydra/wiki/Conditional-Hydra&quot;&gt;the wiki&lt;/a&gt;,
+in case you read this post much later and want to see an up-to-date
+code, or even update it yourself. In case something cool comes out of
+this snippet, I can try to implement a more palatable API for
+&lt;code&gt;defhydra&lt;/code&gt;, most likely an option to supply a function name in the
+&lt;code&gt;docstring&lt;/code&gt; argument position.&lt;/p&gt;
+</content>
+ </entry>
+
  <entry>
    <title>New video demo - counsel-load-theme</title>
    <link href="http://oremacs.com/2015/06/23/counsel-load-theme/"/>
@@ -125,7 +208,7 @@ completion. Same goes for &lt;code&gt;ivy-switch-buffer&lt;/code&gt;, which shou
 be renamed to &lt;code&gt;counsel-switch-buffer&lt;/code&gt; for consistency.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Debug Clojure with CIDER and lispy</title>
    <link href="http://oremacs.com/2015/06/22/debug-clojure/"/>
@@ -224,7 +307,7 @@ expression-by-expression, simultaneously debugging it.&lt;/li&gt;
 more or less acceptable.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>avy 0.3.0 is out</title>
    <link href="http://oremacs.com/2015/06/19/avy-0.3.0/"/>
@@ -273,7 +356,7 @@ with:&lt;/p&gt;
 &lt;p&gt;and push, or just &lt;a href=&quot;https://github.com/abo-abo/avy/wiki/_new&quot;&gt;edit&lt;/a&gt; it using Github&amp;#39;s widgets.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Transform a LISP case into a cond with lispy</title>
    <link href="http://oremacs.com/2015/06/09/lispy-case-to-cond/"/>
@@ -303,7 +386,7 @@ in lispy-test.el.  To view them like in the screenshot, you can press
 like &lt;code&gt;eq&lt;/code&gt; more: it&amp;#39;s 33% more efficient.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>More productive describe-variable</title>
    <link href="http://oremacs.com/2015/06/08/describe-variable-tip/"/>
@@ -358,7 +441,7 @@ In the end, I decided not to provide such an explicit example and shorten the do
 &lt;span class=&quot;s&quot;&gt;\(lambda (c) (if (= c 32) ?a c)).&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
  </entry>
- 
+
  <entry>
    <title>counsel-git-grep, in async</title>
    <link href="http://oremacs.com/2015/06/04/git-grep-ivy-2/"/>
@@ -443,7 +526,7 @@ So I&amp;#39;ll explain below how async processing is done (in this case):&lt;/p
 &lt;p&gt;To check out the new stuff, just install or upgrade &lt;code&gt;counsel&lt;/code&gt; from MELPA. Or clone &lt;a href=&quot;https://github.com/abo-abo/swiper&quot;&gt;the source&lt;/a&gt;. I hope that my Elisp explanations were useful, async stuff is awesome, and I hope to see more of it in future Emacs packages.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>lispy 0.26.0 is out</title>
    <link href="http://oremacs.com/2015/05/29/lispy-0.26.0/"/>
@@ -674,7 +757,7 @@ to get some more feedback and bug reports. Currently, it might seem
 that a large part of the features are either perfect or unused.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Ivy-mode 0.5.0 is out</title>
    <link href="http://oremacs.com/2015/05/23/swiper-0.5.0/"/>
@@ -848,7 +931,7 @@ to bind &lt;code&gt;ivy-resume&lt;/code&gt; to something short: it has become a 
 feature.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>New on MELPA - define word at point</title>
    <link href="http://oremacs.com/2015/05/22/define-word/"/>
@@ -902,7 +985,7 @@ from a web service, it&amp;#39;s nice to look at a simple implementation of
 how it&amp;#39;s done.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>New in Emacs - run checkdoc in batch mode</title>
    <link href="http://oremacs.com/2015/05/19/checkdoc-batch/"/>
@@ -984,7 +1067,7 @@ one for which &lt;code&gt;checkdoc&lt;/code&gt; works in batch), use &lt;kbd&gt;
 -&amp;gt; &lt;code&gt;emacs&lt;/code&gt; -&amp;gt; &lt;code&gt;newemacs&lt;/code&gt;.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Free avy with your goto-line</title>
    <link href="http://oremacs.com/2015/05/17/avy-goto-line/"/>
@@ -1035,7 +1118,7 @@ the way the overlays are displayed.  See the
 customization for more info.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>ace-window 0.9.0 is out</title>
    <link href="http://oremacs.com/2015/05/13/ace-window-0.9.0/"/>
@@ -1150,7 +1233,7 @@ the muscle memory needs to be readjusted slightly.&lt;/p&gt;
 &lt;p&gt;Big thanks to all who contributed, especially to &lt;a href=&quot;https://github.com/joedicastro&quot;&gt;@joedicastro&lt;/a&gt;.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>New on MELPA - avy</title>
    <link href="http://oremacs.com/2015/05/08/avy-0.1.0/"/>
@@ -1241,7 +1324,7 @@ and new features appearing, thanks to all who contributed.&lt;/p&gt;
 &lt;p&gt;Finally, the package in on &lt;a href=&quot;http://melpa.org/#/avy&quot;&gt;MELPA&lt;/a&gt;, so it&amp;#39;s convenient to install.  The only hassle is to decide where to bind all these commands.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Ivy-mode 0.4.0 is out</title>
    <link href="http://oremacs.com/2015/05/02/swiper-0.4.0/"/>
@@ -1473,7 +1556,7 @@ files in Emacs:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;git clone https://github.com/abo-abo/swiper.wiki.git
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
  </entry>
- 
+
  <entry>
    <title>GCC macros and auto-yasnippet</title>
    <link href="http://oremacs.com/2015/04/30/gcc-macros-auto-yasnippet/"/>
@@ -1559,7 +1642,7 @@ efficient.  I hope that you&amp;#39;ll find the wiki page useful in your C
 pursuits.  And a big thanks to Eric Schulte for &lt;code&gt;org-babel&lt;/code&gt;.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Blending colors in Elisp</title>
    <link href="http://oremacs.com/2015/04/28/blending-faces/"/>
@@ -1711,7 +1794,7 @@ Photoshop-grade color channel handling.&lt;/p&gt;
 one point, and a small threading library, we&amp;#39;d be all set.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Oremacs config is on Github</title>
    <link href="http://oremacs.com/2015/04/24/oremacs-config/"/>
@@ -1840,7 +1923,7 @@ but if you find the tips on this blog helpful, this config is their
 actual implementation that you can use for reference.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Swiper 0.3.0 is out, with ivy-mode.</title>
    <link href="http://oremacs.com/2015/04/22/swiper-0.3.0/"/>
@@ -1985,7 +2068,7 @@ which mostly shows off the new &lt;code&gt;counsel-git-grep&lt;/code&gt; functio
 &lt;p&gt;Big thanks to all who contributed, especially &lt;a href=&quot;https://github.com/tsdh&quot;&gt;@tsdh&lt;/a&gt;.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Grep in a git repository using ivy</title>
    <link href="http://oremacs.com/2015/04/19/git-grep-ivy/"/>
@@ -2053,7 +2136,7 @@ fun.&lt;/p&gt;
 &lt;p&gt;Side note: I&amp;#39;ve mentioned &lt;code&gt;\bfun\b&lt;/code&gt; in this blog 182 times, mostly as a variable representing a function (courtesy of &lt;code&gt;counsel-git-grep&lt;/code&gt;).&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Introducing ivy-mode</title>
    <link href="http://oremacs.com/2015/04/16/ivy-mode/"/>
@@ -2187,7 +2270,7 @@ No black boxes or hidden variables that dramatically change the order of candida
 contributed code or bug reports.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Display the initial Hydra hint with a delay</title>
    <link href="http://oremacs.com/2015/04/15/hydra-idle-hint/"/>
@@ -2248,7 +2331,7 @@ hydra.&lt;/p&gt;
 those good ideas coming!&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Org-mode Hydras incoming!</title>
    <link href="http://oremacs.com/2015/04/14/hydra-org-mode/"/>
@@ -2342,7 +2425,7 @@ Also, if you ever want to dig around someone&amp;#39;s git notes, you can read &
 courtesy of &lt;code&gt;org-mode&lt;/code&gt; export.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Hydra 0.13.0 is out</title>
    <link href="http://oremacs.com/2015/04/13/hydra-0.13.0/"/>
@@ -2572,7 +2655,7 @@ It&amp;#39;s also a good way to protect your code against regressions (although 
 one of the coolest and most elaborate uses of Hydra yet.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Complete stuff with Counsel</title>
    <link href="http://oremacs.com/2015/04/09/counsel-completion/"/>
@@ -2657,7 +2740,7 @@ that I&amp;#39;m still using are &lt;code&gt;ido-switch-buffer&lt;/code&gt; and 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;projectile-completion-system&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ivy&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
  </entry>
- 
+
  <entry>
    <title>Rule-based multi-line in lispy</title>
    <link href="http://oremacs.com/2015/04/06/lispy-multiline/"/>
@@ -2861,7 +2944,7 @@ just Elisp. If you&amp;#39;d like to add support for your favorite dialect in th
 explain some details if needed and to merge the PR. Happy hacking!&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Paredit emulation in lispy</title>
    <link href="http://oremacs.com/2015/04/02/lispy-paredit-emulation/"/>
@@ -2921,7 +3004,7 @@ the inline args:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;lispy-set-key-theme&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;special&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c-digits&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
  </entry>
- 
+
  <entry>
    <title>lispy 0.25.0 is out</title>
    <link href="http://oremacs.com/2015/04/01/lispy.0.25.0-is-out/"/>
@@ -3128,7 +3211,7 @@ fixed.&lt;/p&gt;
 hacking!&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>An update to my Elisp ERT / Travis CI setup</title>
    <link href="http://oremacs.com/2015/03/30/elisp-ert-travis/"/>
@@ -3174,7 +3257,7 @@ So if you have in your Makefile:&lt;/p&gt;
 don&amp;#39;t yet know which PPA I should use for a stable Emacs. Maybe someone has a suggestion.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>recenter-positions, that's not how gravity works!</title>
    <link href="http://oremacs.com/2015/03/28/recenter/"/>
@@ -3205,7 +3288,7 @@ displayed on the screen.&lt;/p&gt;
 read is scrolled out of view, and I can continue from the top.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>A Hydra for ivy/swiper</title>
    <link href="http://oremacs.com/2015/03/26/hydra-ivy-swiper/"/>
@@ -3327,7 +3410,7 @@ operations at once, even though I call &lt;code&gt;undo-boundary&lt;/code&gt; in
 &lt;a href=&quot;http://i.imgur.com/QblQ8cO.gifv&quot;&gt;old dogs and new tricks&lt;/a&gt;. I don&amp;#39;t know which is which.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Swiper 0.2.0 is out</title>
    <link href="http://oremacs.com/2015/03/25/swiper-0.2.0/"/>
@@ -3502,7 +3585,7 @@ Although there are worse bindings than &lt;kbd&gt;M-%&lt;/kbd&gt; (hold three ke
 &lt;p&gt;Enjoy the new features, and a big thanks to all who contributed!&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Transform region into ASCII art</title>
    <link href="http://oremacs.com/2015/03/23/region-to-toilet/"/>
@@ -3528,7 +3611,7 @@ Here&amp;#39;s an example result:&lt;/p&gt;
 &lt;p&gt;If you don&amp;#39;t mind the strange name, the output looks quite nice.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Hydra 0.12.0 is out</title>
    <link href="http://oremacs.com/2015/03/22/hydra-0.12.0/"/>
@@ -3625,7 +3708,7 @@ hydra-examples.el.&lt;/p&gt;
 them. Happy hacking!&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Some fun with Hydra</title>
    <link href="http://oremacs.com/2015/03/21/some-fun-with-hydra/"/>
@@ -3752,7 +3835,7 @@ but you can already try it as an alternative to &lt;code&gt;org-mode&lt;/code&gt
 working.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Emacs package management</title>
    <link href="http://oremacs.com/2015/03/20/managing-emacs-packages/"/>
@@ -3869,7 +3952,7 @@ work. You have to start over with a working simple system.&lt;/p&gt;
 was reproducible from the start, before making it complex.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>A new Swiper demo on Youtube</title>
    <link href="http://oremacs.com/2015/03/19/swiper-on-youtubes/"/>
@@ -3942,7 +4025,7 @@ Turns out, it&amp;#39;s pretty easy to do using &lt;code&gt;execute-kbd-macro&lt
 &lt;p&gt;Give the package a try, if you haven&amp;#39;t yet. You can get it from &lt;a href=&quot;http://melpa.org/#/swiper&quot;&gt;MELPA&lt;/a&gt;.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Find file in a Git repo with ivy</title>
    <link href="http://oremacs.com/2015/03/18/ivy-git/"/>
@@ -4005,7 +4088,7 @@ see, the implementation is very simple: you just get a list of strings, and you&
 corresponding &lt;code&gt;ac-source&lt;/code&gt; and see where it gets its list of strings.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>More Info</title>
    <link href="http://oremacs.com/2015/03/17/more-info/"/>
@@ -4062,7 +4145,7 @@ Then I just added this directory to the Info path:&lt;/p&gt;
 format! Just press &lt;kbd&gt;&amp;lt;f1&amp;gt; i h&lt;/kbd&gt;.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Try J</title>
    <link href="http://oremacs.com/2015/03/16/try-j/"/>
@@ -4214,7 +4297,7 @@ use for it, but you could say that, just as learning LISP, learning J can make y
 languages.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Search for things with apropos</title>
    <link href="http://oremacs.com/2015/03/15/search-with-apropos/"/>
@@ -4267,7 +4350,7 @@ when you use &lt;code&gt;apropos-variable&lt;/code&gt;.&lt;/p&gt;
 that I need. I hope that you will find it useful as well. Happy hacking!&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>More on swiper and ivy</title>
    <link href="http://oremacs.com/2015/03/14/more-swiper-ivy-stuff/"/>
@@ -4323,7 +4406,7 @@ comparable speed and convenience:&lt;/p&gt;
 for &lt;code&gt;counsel&lt;/code&gt; I&amp;#39;ve set it to 7 via a let binding.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Swiper now has an ivy back end</title>
    <link href="http://oremacs.com/2015/03/13/introducing-ivy/"/>
@@ -4388,7 +4471,7 @@ like:&lt;/p&gt;
 biased since I made it.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>ace-window display mode</title>
    <link href="http://oremacs.com/2015/03/12/ace-window-display-mode/"/>
@@ -4529,7 +4612,7 @@ for selecting window and setting &lt;code&gt;mode-line-format&lt;/code&gt;.&lt;/
 &lt;p&gt;I hope that you enjoy the update, and keep those interesting ideas coming!&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Some git / magit / github tricks</title>
    <link href="http://oremacs.com/2015/03/11/git-tricks/"/>
@@ -4633,7 +4716,7 @@ them in &lt;code&gt;README.md&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;I hope that you find these illusions useful to make you a better Emacs magician. Happy hacking!&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Introducing Swiper</title>
    <link href="http://oremacs.com/2015/03/10/no-swiping/"/>
@@ -4689,7 +4772,7 @@ palette is quite limited), so they loop about if you have many groups:&lt;/p&gt;
 &lt;code&gt;helm&lt;/code&gt; mode line is still missing.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>lispy point history</title>
    <link href="http://oremacs.com/2015/03/09/lispy-point-history/"/>
@@ -4774,7 +4857,7 @@ think it&amp;#39;s pretty cool: by typing &lt;kbd&gt;3mnb&lt;/kbd&gt; I&amp;#39;
 calling &lt;code&gt;(kill-new (caddr (current-sexp)))&lt;/code&gt; on my own code.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>lispy 0.24.0 is out</title>
    <link href="http://oremacs.com/2015/03/08/lispy.0.24.0-is-out/"/>
@@ -4881,7 +4964,7 @@ texinfo and write an actual manual, see how &lt;code&gt;ox-texinfo&lt;/code&gt; 
 &lt;p&gt;I hope that you&amp;#39;ll grow to enjoy &lt;code&gt;lispy&lt;/code&gt; as much as I do. Happy hacking!&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>org-mode block templates in Hydra</title>
    <link href="http://oremacs.com/2015/03/07/hydra-org-templates/"/>
@@ -4965,7 +5048,7 @@ The first two columns contain &lt;code&gt;begin&lt;/code&gt;/&lt;code&gt;end&lt;
 third one contains the one-line templates.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Select the previous window with ace-window</title>
    <link href="http://oremacs.com/2015/03/06/ace-window-toggle/"/>
@@ -5049,7 +5132,7 @@ anything with one chord, e.g. &lt;kbd&gt;C-f&lt;/kbd&gt;, is acceptable.&lt;/p&g
 hope you&amp;#39;ll enjoy the new feature.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Testing your .emacs sanity</title>
    <link href="http://oremacs.com/2015/03/05/testing-init-sanity/"/>
@@ -5106,7 +5189,7 @@ error. That&amp;#39;s some HAL 9000 level stuff right there:&lt;/p&gt;
 &lt;/blockquote&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Eclipse theme</title>
    <link href="http://oremacs.com/2015/03/04/eclipse-theme/"/>
@@ -5136,7 +5219,7 @@ tried probably 30 themes on MELPA, but I just can&amp;#39;t part with
 &lt;code&gt;eclipse-theme&lt;/code&gt;. I&amp;#39;m guessing that it&amp;#39;s a feeling that most theme creators share.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>ace-window full path</title>
    <link href="http://oremacs.com/2015/03/03/ace-window-full-path/"/>
@@ -5253,7 +5336,7 @@ vimtutor once, but I have no idea how vim plugins work. But it turns
 out that I like Easymotion.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>ace-window without ace</title>
    <link href="http://oremacs.com/2015/03/02/ace-window-without-ace/"/>
@@ -5453,7 +5536,7 @@ hope that some people will take advantage of avy.el simplicity and
 come up with some cool new commands to share with me. Happy hacking!&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Hydra-repeat</title>
    <link href="http://oremacs.com/2015/02/28/hydra-repeat/"/>
@@ -5493,7 +5576,7 @@ work. So I&amp;#39;ve added &lt;code&gt;hydra-repeat&lt;/code&gt; that&amp;#39;s
 &lt;/ul&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Customizing ace-window leading char</title>
    <link href="http://oremacs.com/2015/02/27/ace-window-leading-char/"/>
@@ -5522,7 +5605,7 @@ i.e. home row keys and no background:&lt;/p&gt;
     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;aw-background&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
  </entry>
- 
+
  <entry>
    <title>Compilation-style check-declare-file</title>
    <link href="http://oremacs.com/2015/02/26/compilation-check-declare/"/>
@@ -5579,7 +5662,7 @@ there&amp;#39;s no reason not to have &lt;code&gt;check-declare-ext-errors&lt;/c
 contrib sub-directory to the &lt;code&gt;load-path&lt;/code&gt;. After this, it&amp;#39;s finally possible to &lt;code&gt;(require &amp;#39;slime-repl)&lt;/code&gt;.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Rectangle-mode Hydra</title>
    <link href="http://oremacs.com/2015/02/25/rectangle-hydra/"/>
@@ -5659,7 +5742,7 @@ if you disabled it with &lt;kbd&gt;n&lt;/kbd&gt; or &lt;kbd&gt;r&lt;/kbd&gt;.&lt
 &lt;/ul&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Profile your Emacs start-up time</title>
    <link href="http://oremacs.com/2015/02/24/emacs-speed-test/"/>
@@ -5763,7 +5846,7 @@ chunk of my start up time, 28 percent, is taken by:&lt;/p&gt;
 &lt;p&gt;I don&amp;#39;t know why it takes so long to call &lt;code&gt;custom-theme-set-faces&lt;/code&gt;, it&amp;#39;s a mystery.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Hydra 0.11.0 is out</title>
    <link href="http://oremacs.com/2015/02/23/hydra-0.11.0/"/>
@@ -5953,7 +6036,7 @@ by &lt;a href=&quot;http://howardism.org/Technical/Emacs/lists-and-key-sequences
 to share their useful hydras there. Thanks a lot and happy hacking!&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Saving match data in-between Elisp evals</title>
    <link href="http://oremacs.com/2015/02/22/saving-match-data/"/>
@@ -5994,7 +6077,7 @@ integers. Keeping the string separate from the regex match is a neat
 way to improve performance.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Embedding sexps in Hydra docstrings</title>
    <link href="http://oremacs.com/2015/02/21/hydra-docstring-sexp/"/>
@@ -6026,7 +6109,7 @@ before. Apparently, it works and just translates to this:&lt;/p&gt;
 anything other than &lt;kbd&gt;m&lt;/kbd&gt;.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Hydra for Buffer-menu</title>
    <link href="http://oremacs.com/2015/02/20/buffer-menu-hydra/"/>
@@ -6089,7 +6172,7 @@ proves otherwise.&lt;/p&gt;
 week. Now that&amp;#39;s intimidating.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Two new Hydra colors - pink and teal</title>
    <link href="http://oremacs.com/2015/02/19/hydra-colors-reloaded/"/>
@@ -6224,7 +6307,7 @@ I hope that you like the new changes and find new cool uses for the added abilit
 Happy hacking!&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Reverting nonsense</title>
    <link href="http://oremacs.com/2015/02/18/undo-nonsense/"/>
@@ -6311,7 +6394,7 @@ Here&amp;#39;s some Elisp for XML generation, if you&amp;#39;re interested&lt;/p
 &lt;g&gt;&lt;text x=&quot;365&quot; y=&quot;140&quot; style=&quot;font-size:10px;fill:#2b2828;font-family:Deja Vu Sans Mono&quot;&gt;P&lt;/text&gt;&lt;/g&gt;.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Hydra 0.10.0 is out</title>
    <link href="http://oremacs.com/2015/02/17/hydra-0.10.0/"/>
@@ -6382,7 +6465,7 @@ latest version of &lt;code&gt;ace-window&lt;/code&gt; will ignore &lt;code&gt;*L
 switching, as it did for &lt;code&gt;*Calc Trail*&lt;/code&gt; before.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Binding one function multiple times in Hydra</title>
    <link href="http://oremacs.com/2015/02/16/hydra-multi/"/>
@@ -6409,7 +6492,7 @@ You can also have the same function in both red and blue versions. Here&amp;#39;
 head: it will be wrapped in &lt;code&gt;(lambda () (interactive) ...)&lt;/code&gt; automatically.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Doing sudo stuff with tramp</title>
    <link href="http://oremacs.com/2015/02/15/sudo-stuffs/"/>
@@ -6462,7 +6545,7 @@ but the &lt;code&gt;find-dired&lt;/code&gt; approach is both simpler and more fl
 of files being changed.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Semimap - .Xmodmap with semicolon as an additional modifier</title>
    <link href="http://oremacs.com/2015/02/14/semi-xmodmap/"/>
@@ -6599,7 +6682,7 @@ semicolon is pretty minor, the bigger issue is in finding the
 unmodified QWERTY extremely sluggish after using this approach.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Elisp linting options</title>
    <link href="http://oremacs.com/2015/02/13/elisp-linting/"/>
@@ -6666,7 +6749,7 @@ In &lt;code&gt;dired&lt;/code&gt; you can use:&lt;/p&gt;
 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;apply&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;#&amp;#39;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;check-declare-files&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;files&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
  </entry>
- 
+
  <entry>
    <title>Occasionally ido</title>
    <link href="http://oremacs.com/2015/02/12/ido-occasional/"/>
@@ -6737,7 +6820,7 @@ completion, but not all.&lt;/p&gt;
 &lt;p&gt;You can find the package at &lt;a href=&quot;https://github.com/abo-abo/ido-occasional&quot;&gt;ido-occasional&lt;/a&gt;.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Elisp newbie-style</title>
    <link href="http://oremacs.com/2015/02/11/elisp-newbie-style/"/>
@@ -6922,7 +7005,7 @@ bindings that you didn&amp;#39;t know about, and also as a template to
 redefine some bindings that you don&amp;#39;t need.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Easy ido improvement</title>
    <link href="http://oremacs.com/2015/02/10/ido-backspace/"/>
@@ -6970,7 +7053,7 @@ which we should thank &lt;a href=&quot;https://github.com/tarsius&quot;&gt;@tars
 &lt;p&gt;Note that this behavior will not affect &lt;code&gt;ido-find-file&lt;/code&gt;, since it has its own map.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>ido-vertical - like ido, but vertical!</title>
    <link href="http://oremacs.com/2015/02/09/ido-vertical/"/>
@@ -7035,7 +7118,7 @@ if you&amp;#39;re interested. You can find the new &lt;code&gt;ido-vertical&lt;/
 gets merged.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Hydra 0.9.0 is out</title>
    <link href="http://oremacs.com/2015/02/08/hydra-0.9.0/"/>
@@ -7160,7 +7243,7 @@ should decide yourself.  But I am providing you with a template. The number of e
 has also grown to six.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>A new Hydra demo on Youtube</title>
    <link href="http://oremacs.com/2015/02/07/hydra-on-youtubes/"/>
@@ -7217,7 +7300,7 @@ in the long run, just see how simple the code has become:&lt;/p&gt;
 &lt;p&gt;Here, &lt;code&gt;aw-select&lt;/code&gt; just returns a selected window, and nothing else. Very easy to use.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>The Elisp Synergy</title>
    <link href="http://oremacs.com/2015/02/06/the-synergy/"/>
@@ -7350,7 +7433,7 @@ performance reasons, so might as well try to make the experience more
 bearable by adding some niceties to &lt;code&gt;c++-mode&lt;/code&gt;.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Introducing amaranth Hydras</title>
    <link href="http://oremacs.com/2015/02/05/amaranth-hydra/"/>
@@ -7420,7 +7503,7 @@ I was able to quickly wrap words like this:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&amp;lt;font color=&amp;quot;#FF007F&amp;quot;&amp;gt;Rose&amp;lt;/font&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
  </entry>
- 
+
  <entry>
    <title>New in Hydra - :pre and :post clauses</title>
    <link href="http://oremacs.com/2015/02/04/pre-hydra-post/"/>
@@ -7545,7 +7628,7 @@ the code is lacking. Thanks to all the people contributing
 of this version bump.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>One Hydra Two Hydra Red Hydra Blue Hydra</title>
    <link href="http://oremacs.com/2015/02/03/one-hydra-two-hydra/"/>
@@ -7674,7 +7757,7 @@ the same as &lt;kbd&gt;s&lt;/kbd&gt; (swap) and &lt;kbd&gt;16a&lt;/kbd&gt; or &l
 a&lt;/kbd&gt; is the same as &lt;kbd&gt;d&lt;/kbd&gt; (delete).&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Colorful Hydras</title>
    <link href="http://oremacs.com/2015/02/02/colorful-hydrae/"/>
@@ -7845,7 +7928,7 @@ just without citing.&lt;/p&gt;
 efficient blue or red-and-blue Hydras. Happy hacking!&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Blogging about blogging</title>
    <link href="http://oremacs.com/2015/02/01/blogging-about-blogging/"/>
@@ -7929,7 +8012,7 @@ takes long to explain what you&amp;#39;re doing, but as you play it, it&amp;#39;
 simple and natural.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>abel.el - abbrevs for Elisp</title>
    <link href="http://oremacs.com/2015/01/31/abel/"/>
@@ -8093,7 +8176,7 @@ bindings and asks no questions.&lt;/p&gt;
   &lt;span class=&quot;nb&quot;&gt;:group&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;abel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
  </entry>
- 
+
  <entry>
    <title>Re-introducing auto-yasnippet</title>
    <link href="http://oremacs.com/2015/01/30/auto-yasnippet/"/>
@@ -8306,7 +8389,7 @@ come when repetition is no longer needed and &lt;code&gt;auto-yasnippet&lt;/code
 become obsolete.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Combining ace-window and windmove with hydra</title>
    <link href="http://oremacs.com/2015/01/29/more-hydra-goodness/"/>
@@ -8405,7 +8488,7 @@ without a function, so that &lt;kbd&gt;o&lt;/kbd&gt; will dismiss the Hydra
 without doing anything.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>A few notes on Elisp indentation</title>
    <link href="http://oremacs.com/2015/01/28/notes-on-elisp-indentation/"/>
@@ -8485,7 +8568,7 @@ Note that if I hadn&amp;#39;t declared the indent, it would look like this:&lt;/
 annoying. If you know of more, let me know.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>My "refactoring" workflow</title>
    <link href="http://oremacs.com/2015/01/27/my-refactoring-workflow/"/>
@@ -8623,7 +8706,7 @@ can be skipped and I can rename stuff with &lt;code&gt;iedit-mode&lt;/code&gt; o
 &lt;/ol&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>occur-dwim (Do What I Mean)</title>
    <link href="http://oremacs.com/2015/01/26/occur-dwim/"/>
@@ -8685,7 +8768,7 @@ small sense of pride, when I found that the source of the copy-pastes
 was my old Stack Overflow answer:)&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Exploring Emacs packages</title>
    <link href="http://oremacs.com/2015/01/25/exploring-emacs-packages/"/>
@@ -8767,7 +8850,7 @@ commands that I can call.  I can also see a few variables, two of them
 don&amp;#39;t include &lt;code&gt;--&lt;/code&gt;, so they&amp;#39;re probably customizable.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Do things after selecting window</title>
    <link href="http://oremacs.com/2015/01/24/after-select-window/"/>
@@ -8834,7 +8917,7 @@ you know of a better way to accomplish the original task, please do
 share.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>ElTeX - generate full LaTeX documents from Emacs Lisp</title>
    <link href="http://oremacs.com/2015/01/23/eltex/"/>
@@ -8935,7 +9018,7 @@ Elisp binding, and the corresponding LaTeX will be appropriately
 regenerated, error-free.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Adding a bit of Clojure's sugar to Elisp</title>
    <link href="http://oremacs.com/2015/01/22/clojure-sugar-for-elisp/"/>
@@ -8999,7 +9082,7 @@ can try out the patch if you&amp;#39;re familiar with
 &lt;a href=&quot;http://www.emacswiki.org/emacs/BuildingEmacs&quot;&gt;building Emacs from source&lt;/a&gt;.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Even more dired key bindings</title>
    <link href="http://oremacs.com/2015/01/21/dired-shortcuts/"/>
@@ -9075,7 +9158,7 @@ If you notice that I&amp;#39;m using some obsolete stuff, do let me know, I&amp;
 always looking to improve.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Behold The Mighty Hydra!</title>
    <link href="http://oremacs.com/2015/01/20/introducing-hydra/"/>
@@ -9189,7 +9272,7 @@ preferences.&lt;/p&gt;
 some novel and efficient Hydras. Happy hacking!&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>lispy 0.21.0 is out</title>
    <link href="http://oremacs.com/2015/01/19/lispy.0.21.0-is-out/"/>
@@ -9539,7 +9622,7 @@ tricky.  But I&amp;#39;ll get to it, now that I see that there&amp;#39;s some in
 in &lt;code&gt;lispy&lt;/code&gt; from Racket users.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Sprucing up org-download</title>
    <link href="http://oremacs.com/2015/01/18/sprucing-up-org-download/"/>
@@ -9618,7 +9701,7 @@ fast clickety-clicking (the mouse usage), that comes after some
 clackety-clacking (the customization).&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Setting up Ediff</title>
    <link href="http://oremacs.com/2015/01/17/setting-up-ediff/"/>
@@ -9730,7 +9813,7 @@ bytes&lt;/code&gt; of information. Are you &lt;strong&gt;sure&lt;/strong&gt; you
 &lt;/blockquote&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Save before compile</title>
    <link href="http://oremacs.com/2015/01/16/compile-savely/"/>
@@ -9785,7 +9868,7 @@ that you&amp;#39;re aware of these commands:&lt;/p&gt;
 &lt;p&gt;These bindings work for &lt;kbd&gt;M-x&lt;/kbd&gt; &lt;code&gt;occur&lt;/code&gt; and &lt;code&gt;rgrep&lt;/code&gt; as well.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>C++ - a dot inserts last var plus dot</title>
    <link href="http://oremacs.com/2015/01/15/c++-smart-dot/"/>
@@ -9882,7 +9965,7 @@ it look nicer.&lt;/p&gt;
 with just &lt;kbd&gt;.&lt;/kbd&gt;.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Zoom in / out with style</title>
    <link href="http://oremacs.com/2015/01/14/repeatable-commands/"/>
@@ -9936,7 +10019,7 @@ Moreover, the command that exited the zoom state will be executed as
 usual.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Even more dired options</title>
    <link href="http://oremacs.com/2015/01/13/dired-options/"/>
@@ -9980,7 +10063,7 @@ that could happen, right?&lt;/p&gt;
 &lt;/pre&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>File sizes in dired</title>
    <link href="http://oremacs.com/2015/01/12/dired-file-size/"/>
@@ -10028,7 +10111,7 @@ shift keys that many file browsers use looks like kindergarten.&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dired-mode-map&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;z&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;dired-get-size&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
  </entry>
- 
+
  <entry>
    <title>Making Elisp regex look nicer</title>
    <link href="http://oremacs.com/2015/01/11/pretty-elisp-regex/"/>
@@ -10082,7 +10165,7 @@ Here are some relevant tests for the regex support:&lt;/p&gt;
                  &lt;span class=&quot;s&quot;&gt;&amp;quot;\&amp;quot;foo|\&amp;quot;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
  </entry>
- 
+
  <entry>
    <title>dired and ansi-term&#58; BFF</title>
    <link href="http://oremacs.com/2015/01/10/dired-ansi-term/"/>
@@ -10187,7 +10270,7 @@ Here is the very simple code:&lt;/p&gt;
   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ansi-term&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;/bin/bash&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
  </entry>
- 
+
  <entry>
    <title>tilde in ido-find-file</title>
    <link href="http://oremacs.com/2015/01/09/ido-find-file-tilde/"/>
@@ -10324,7 +10407,7 @@ And &lt;code&gt;csetq&lt;/code&gt; is just a &lt;code&gt;customize&lt;/code&gt;-
             &lt;span class=&quot;ss&quot;&gt;&amp;#39;,variable&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
  </entry>
- 
+
  <entry>
    <title>My org-protocol setup, part 2.</title>
    <link href="http://oremacs.com/2015/01/08/org-protocol-2/"/>
@@ -10374,7 +10457,7 @@ characters that &lt;code&gt;org-mode&lt;/code&gt; doesn&amp;#39;t like, e.g. bra
 &lt;a href=&quot;https://github.com/abo-abo/org-fu&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>My org-protocol setup, part 1.</title>
    <link href="http://oremacs.com/2015/01/07/org-protocol-1/"/>
@@ -10458,7 +10541,7 @@ the video and put it in the heading. And this other request causes a
 perceptible delay when capturing.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Rushing headlong</title>
    <link href="http://oremacs.com/2015/01/06/rushing-headlong/"/>
@@ -10539,7 +10622,7 @@ as you would with just wrapping stuff with a &lt;code&gt;lambda&lt;/code&gt; and
 &lt;p&gt;The package should be available in MELPA soon.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Yet another youtube-dl interface for Emacs</title>
    <link href="http://oremacs.com/2015/01/05/youtube-dl/"/>
@@ -10637,7 +10720,7 @@ I&amp;#39;ll see how it goes with &lt;a href=&quot;http://debbugs.gnu.org/cgi/bu
 So far it has been ignored, but it is only two days old as of now.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Start a process from dired</title>
    <link href="http://oremacs.com/2015/01/04/dired-nohup/"/>
@@ -10736,7 +10819,7 @@ by default in &lt;code&gt;dired&lt;/code&gt;:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dired-mode-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;r&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;dired-start-process&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
  </entry>
- 
+
  <entry>
    <title>Time flies</title>
    <link href="http://oremacs.com/2015/01/03/time-flies/"/>
@@ -10812,7 +10895,7 @@ the
 is absolutely excellent.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Wrap a region with a LaTeX environment</title>
    <link href="http://oremacs.com/2015/01/02/wrap-with-latex/"/>
@@ -10883,7 +10966,7 @@ the list, just post
 bite.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Three ansi-term tips</title>
    <link href="http://oremacs.com/2015/01/01/three-ansi-term-tips/"/>
@@ -10922,7 +11005,7 @@ more ergonomic way:&lt;/p&gt;
   &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;term-raw-map&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-c C-y&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;term-paste&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
  </entry>
- 
+
  <entry>
    <title>The keymap arms race</title>
    <link href="http://oremacs.com/2014/12/31/keymap-arms-race/"/>
@@ -11075,7 +11158,7 @@ respectively. I&amp;#39;ll see if there are more key bindings that need to
 yield. Happy coding in the New Year!&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Emacs Web Wowser (EWW) got ace-link</title>
    <link href="http://oremacs.com/2014/12/30/ace-link-eww/"/>
@@ -11182,7 +11265,7 @@ get only a polite &amp;quot;Could not load package ace-link&amp;quot; in my &lt;
 buffer.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Monkeying around with JavaScript</title>
    <link href="http://oremacs.com/2014/12/29/monkeying-around-with-javascript/"/>
@@ -11252,7 +11335,7 @@ everyone should learn JavaScript. All hail the mighty
 &lt;s&gt;HypnoToad&lt;/s&gt; JavaScript!&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Throwing abbrevs into the mix</title>
    <link href="http://oremacs.com/2014/12/28/trying-abbrevs/"/>
@@ -11386,7 +11469,7 @@ delete. In the end, there were only 56 abbrevs left out of 1600.&lt;/p&gt;
       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;atl&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;add-to-list&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;rris&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;replace-regexp-in-string&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
  </entry>
- 
+
  <entry>
    <title>Mmm... minty</title>
    <link href="http://oremacs.com/2014/12/27/mmm-minty/"/>
@@ -11435,7 +11518,7 @@ sudo ln -s /usr/local/texlive/2013/bin/x86_64-linux/pdflatex
         &lt;span class=&quot;s&quot;&gt;&amp;quot;pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
  </entry>
- 
+
  <entry>
    <title>tiny.el - the little package that could</title>
    <link href="http://oremacs.com/2014/12/26/the-little-package-that-could/"/>
@@ -11788,7 +11871,7 @@ implementing only one snippet that can be used in a variety of ways.&lt;/p&gt;
 &lt;/blockquote&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Ode to the toggle</title>
    <link href="http://oremacs.com/2014/12/25/ode-to-toggle/"/>
@@ -11899,7 +11982,7 @@ call the command once, there&amp;#39;s some machinery to remember the state
 and to toggle when called again.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Light it up! Pygments for Emacs Lisp.</title>
    <link href="http://oremacs.com/2014/12/24/light-it-up/"/>
@@ -12088,7 +12171,7 @@ Elisp highlighting. In fact, this blog is already using the new highlighter.&lt;
 &lt;p&gt;I don&amp;#39;t &lt;em&gt;want&lt;/em&gt; to become a &lt;a href=&quot;http://xkcd.com/1220/&quot;&gt;hipster&lt;/a&gt;, these things just happen.&lt;/p&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>upcase-word, you so silly</title>
    <link href="http://oremacs.com/2014/12/23/upcase-word-you-silly/"/>
@@ -12158,7 +12241,7 @@ In fact, I saw this gem today at Stack Overflow:&lt;/p&gt;
 &lt;/blockquote&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Sometimes things break</title>
    <link href="http://oremacs.com/2014/12/22/sometimes-things-break/"/>
@@ -12356,7 +12439,7 @@ script:
 &lt;/div&gt;
 </content>
  </entry>
- 
+
  <entry>
    <title>Easy helm improvement</title>
    <link href="http://oremacs.com/2014/12/21/helm-backspace/"/>
@@ -12386,7 +12469,7 @@ with:&lt;/p&gt;
 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;helm-map&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;DEL&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;helm-backspace&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
  </entry>
- 
+
  <entry>
    <title>Poyekhali!</title>
    <link href="http://oremacs.com/2014/12/20/poyekhali!/"/>
@@ -12453,6 +12536,6 @@ After the change that I&amp;#39;ve mentioned, the code to do this is dirt simple
 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-M-o&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ace-maximize-window&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
  </entry>
- 
+
 
 </feed>
