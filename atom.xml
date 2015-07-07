@@ -4,13 +4,56 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-07-02T19:53:27+02:00</updated>
+ <updated>2015-07-07T15:53:46+02:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Pause or resume the current Hydra</title>
+   <link href="http://oremacs.com/2015/07/07/hydra-resume/"/>
+   <updated>2015-07-07T00:00:00+02:00</updated>
+   <id>http://oremacs.com/2015/07/07/hydra-resume</id>
+   <content type="html">&lt;p&gt;Today I&amp;#39;d like to highlight a generic command recently added to
+&lt;a href=&quot;https://github.com/abo-abo/hydra&quot;&gt;hydra&lt;/a&gt;.  It&amp;#39;s kind of cute, and
+maybe something that you didn&amp;#39;t even know you wanted.  Basically, the
+&lt;code&gt;hydra-pause-resume&lt;/code&gt; command allows to pause and resume the current
+hydra with one key. And it works for all hydras at once, without any
+extra configuration. All you have to do is to bind it globally to
+whatever you like, for example:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-M-k&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;hydra-pause-resume&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;What it does:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;If a hydra is active, deactivate and push it on the stack.&lt;/li&gt;
+&lt;li&gt;If no hydra is active, pop one from the stack and call it.&lt;/li&gt;
+&lt;li&gt;If the stack is empty, call the last hydra.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Personally, I haven&amp;#39;t found too much use from the stack - resuming the
+last one is enough for me. But the stack comes at no extra cost, and
+might be useful to someone.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;If, for example, you have 2 hydras on the stack, how to resume the
+older one?&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;The way stacks work, you simply have to go through all elements one by one. So that&amp;#39;s:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;kbd&gt;C-M-k&lt;/kbd&gt; to resume the newer one.&lt;/li&gt;
+&lt;li&gt;Quit the current one with the appropriate shortcut, only not with &lt;kbd&gt;C-M-k&lt;/kbd&gt;, since that would just put it back on the stack.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;C-M-k&lt;/kbd&gt; to resume the only one remaining on the stack - the older one.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Thanks to &lt;a href=&quot;https://github.com/QiangF&quot;&gt;@QiangF&lt;/a&gt; for the suggestion in &lt;a href=&quot;https://github.com/abo-abo/hydra/issues/135&quot;&gt;#135&lt;/a&gt;.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Power up your locate command</title>
@@ -69,7 +112,7 @@ words.  So the input &lt;code&gt;fleet mp3$&lt;/code&gt; will result in:&lt;/p&g
 &lt;li&gt;Open it in Emacs (default).&lt;/li&gt;
 &lt;li&gt;Open it with &lt;code&gt;xdg-open&lt;/code&gt;, so that PDF files are forwarded to &lt;code&gt;evince&lt;/code&gt;
 and MP3 files are forwarded to &lt;code&gt;rhythmbox&lt;/code&gt; etc.&lt;/li&gt;
-&lt;li&gt;Open in in &lt;code&gt;dired&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Open it in &lt;code&gt;dired&lt;/code&gt;.&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;Here&amp;#39;s an example of how to do it. First I call &lt;code&gt;counsel-locate&lt;/code&gt;,

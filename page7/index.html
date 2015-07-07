@@ -259,6 +259,56 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/03/30/elisp-ert-travis/">
+        An update to my Elisp ERT / Travis CI setup
+      </a>
+    </h1>
+
+    <span class="post-date">30 Mar 2015</span>
+
+    <p>This post might be interesting to people who use Travis CI to test their Elisp packages.</p>
+
+<p>I&#39;ve noticed a few days ago that my tests on Travis CI started failing randomly.  Turns out that the
+widely used <a href="https://launchpad.net/%7Ecassou/+archive/ubuntu/emacs">ppa:cassou/emacs</a> has become
+deprecated. It still sort of works, but sometimes <code>apt-get update</code> just times out, and I get a build
+error.</p>
+
+<p>Since it was the only one that I was using, I had to find another one. I went with <code>emacs-snapshot</code>
+from <a href="https://launchpad.net/%7Eubuntu-elisp/+archive/ppa">ppa:ubuntu-elisp</a>.</p>
+
+<p>Here&#39;s my current <a href="https://github.com/abo-abo/lispy/blob/master/.travis.yml">.travis.yml</a>:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">language: emacs-lisp
+env:
+  matrix:
+    - emacs=emacs-snapshot
+
+before_install:
+  - sudo add-apt-repository -y ppa:ubuntu-elisp
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq $emacs
+  - curl -fsSkL --max-time 10 --retry 10 --retry-delay 10 https://raw.github.com/cask/cask/master/go | python
+
+script:
+  - make cask
+  - make test
+</code></pre></div>
+<p>I&#39;ve adopted one more change in the above code: <code>EMACS</code> is replaced by <code>emacs</code>.
+The reason for this is that both <code>ansi-term</code> and <code>compile</code>
+for legacy reasons set <code>EMACS</code> to <a href="https://lists.gnu.org/archive/html/emacs-devel/2015-03/msg00994.html">strange values</a>,
+like <code>&quot;24.4.91.2 (term:0.96)&quot;</code>.
+So if you have in your Makefile:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">EMACS ?= emacs
+</code></pre></div>
+<p>you&#39;re going to have a bad time. So I changed my <a href="https://github.com/abo-abo/lispy/blob/master/Makefile">Makefile</a> to:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">emacs ?= emacs
+</code></pre></div>
+<p>And now I can compile and test while inside Emacs with no issues.  The only issue left is that I
+don&#39;t yet know which PPA I should use for a stable Emacs. Maybe someone has a suggestion.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/03/28/recenter/">
         recenter-positions, that's not how gravity works!
       </a>
@@ -624,107 +674,6 @@ Here&#39;s an example result:</p>
 </pre>
 
 <p>If you don&#39;t mind the strange name, the output looks quite nice.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/03/22/hydra-0.12.0/">
-        Hydra 0.12.0 is out
-      </a>
-    </h1>
-
-    <span class="post-date">22 Mar 2015</span>
-
-    <p>With a month&#39;s time and almost 50 commits since that last one, a new version of Hydra has emerged.
-As usual, I&#39;ll just re-state the
-<a href="https://github.com/abo-abo/hydra/releases/tag/0.12.0">release notes</a>.</p>
-
-<h2 id="fixes">Fixes</h2>
-
-<ul>
-<li>Handling of heads with duplicate <code>cmd</code> was improved.</li>
-<li>Don&#39;t bind <code>nil</code> in outside keymaps.</li>
-<li>Work-around <code>golden-ratio-mode</code> in <code>lv-window</code>.</li>
-<li><kbd>C-g</kbd> (<code>hydra-keyboard-quit</code>) should run <code>:post</code>.</li>
-<li>Bind <code>[switch-frame]</code> to <code>hydra-keyboard-quit</code>.</li>
-<li><code>:post</code> is called for <code>:timeout</code>.</li>
-</ul>
-
-<h2 id="new-features">New Features</h2>
-
-<ul>
-<li><code>hydra-key-format-spec</code> is a new defcustom for the keys format in the docstring. It&#39;s <code>&quot;%s&quot;</code> by
-default, but you can set it to e.g. <code>&quot;%-4s&quot;</code> if you like.</li>
-<li>The key regex was extended to include most common key binding characters.</li>
-<li><code>hydra-repeat</code> is a hydra-specific <code>repeat</code> function. It behaves as you would expect <code>repeat</code> to behave.</li>
-<li>New body option - <code>:timeout</code>. Use e.g. <code>:timeout 2.0</code> to set the timer. After the first head is called,
-a timer is started to disable the hydra. Each new head call resets this timer, so the hydra won&#39;t disappear as long as you keep typing.</li>
-<li>Lines are truncated in <code>lv-message</code>. This is useful for large docstring not to become misaligned when the window
-becomes too small.</li>
-</ul>
-
-<h3 id="allow-for-a-%s(test)-spec-in-the-docstring">Allow for a <code>%s(test)</code> spec in the docstring</h3>
-
-<p>The spec that&#39;s used for e.g. <code>(test)</code> is <code>%S</code>. So if <code>(test)</code> returns a string, it will be quoted.
-This may not be desired, hence the new feature.
-Example:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-marked-items</span> <span class="p">(</span><span class="nv">dired-mode-map</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
-  <span class="s">&quot;</span>
-<span class="s">Number of marked items: %(length (dired-get-marked-files))</span>
-<span class="s">Directory size: %s(shell-command-to-string \&quot;du -hs\&quot;)</span>
-<span class="s">&quot;</span>
-  <span class="p">(</span><span class="s">&quot;m&quot;</span> <span class="nv">dired-mark</span> <span class="s">&quot;mark&quot;</span><span class="p">))</span>
-</code></pre></div>
-<h3 id="the-pink/amaranth-override-is-set-recursively">The pink/amaranth override is set recursively</h3>
-
-<p>This fixes the issue in this hydra:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-test</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">amaranth</span><span class="p">)</span>
-  <span class="s">&quot;foo&quot;</span>
-  <span class="p">(</span><span class="s">&quot;fo&quot;</span> <span class="p">(</span><span class="nf">message</span> <span class="s">&quot;yay&quot;</span><span class="p">))</span>
-  <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span><span class="p">))</span>
-</code></pre></div>
-<p>Before, pressing e.g. <kbd>fp</kbd> would not issue a warning, since <kbd>f</kbd> started its own
-keymap. This is now fixed.</p>
-
-<h3 id="an-option-to-specify-the-hint-for-all-heads-in-body">An option to specify the hint for all heads in body</h3>
-
-<p>When you write a large docstring, you usually pass <code>nil</code> as the hint for most heads.
-Now you can omit it, if you set <code>:hint nil</code> in body.
-Example:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-org-template</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">blue</span> <span class="nb">:hint</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="s">&quot;</span>
-<span class="s">_c_enter  _q_uote    _L_aTeX:</span>
-<span class="s">_l_atex   _e_xample  _i_ndex:</span>
-<span class="s">_a_scii   _v_erse    _I_NCLUDE:</span>
-<span class="s">_s_rc     ^ ^        _H_TML:</span>
-<span class="s">_h_tml    ^ ^        _A_SCII:</span>
-<span class="s">&quot;</span>
-  <span class="p">(</span><span class="s">&quot;s&quot;</span> <span class="p">(</span><span class="nv">hot-expand</span> <span class="s">&quot;&lt;s&quot;</span><span class="p">))</span>
-  <span class="p">(</span><span class="s">&quot;e&quot;</span> <span class="p">(</span><span class="nv">hot-expand</span> <span class="s">&quot;&lt;e&quot;</span><span class="p">))</span>
-  <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="p">(</span><span class="nv">hot-expand</span> <span class="s">&quot;&lt;q&quot;</span><span class="p">))</span>
-  <span class="p">(</span><span class="s">&quot;v&quot;</span> <span class="p">(</span><span class="nv">hot-expand</span> <span class="s">&quot;&lt;v&quot;</span><span class="p">))</span>
-  <span class="p">(</span><span class="s">&quot;c&quot;</span> <span class="p">(</span><span class="nv">hot-expand</span> <span class="s">&quot;&lt;c&quot;</span><span class="p">))</span>
-  <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="p">(</span><span class="nv">hot-expand</span> <span class="s">&quot;&lt;l&quot;</span><span class="p">))</span>
-  <span class="p">(</span><span class="s">&quot;h&quot;</span> <span class="p">(</span><span class="nv">hot-expand</span> <span class="s">&quot;&lt;h&quot;</span><span class="p">))</span>
-  <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="p">(</span><span class="nv">hot-expand</span> <span class="s">&quot;&lt;a&quot;</span><span class="p">))</span>
-  <span class="p">(</span><span class="s">&quot;L&quot;</span> <span class="p">(</span><span class="nv">hot-expand</span> <span class="s">&quot;&lt;L&quot;</span><span class="p">))</span>
-  <span class="p">(</span><span class="s">&quot;i&quot;</span> <span class="p">(</span><span class="nv">hot-expand</span> <span class="s">&quot;&lt;i&quot;</span><span class="p">))</span>
-  <span class="p">(</span><span class="s">&quot;I&quot;</span> <span class="p">(</span><span class="nv">hot-expand</span> <span class="s">&quot;&lt;I&quot;</span><span class="p">))</span>
-  <span class="p">(</span><span class="s">&quot;H&quot;</span> <span class="p">(</span><span class="nv">hot-expand</span> <span class="s">&quot;&lt;H&quot;</span><span class="p">))</span>
-  <span class="p">(</span><span class="s">&quot;A&quot;</span> <span class="p">(</span><span class="nv">hot-expand</span> <span class="s">&quot;&lt;A&quot;</span><span class="p">))</span>
-  <span class="p">(</span><span class="s">&quot;&lt;&quot;</span> <span class="nf">self-insert-command</span> <span class="s">&quot;ins&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;o&quot;</span> <span class="no">nil</span> <span class="s">&quot;quit&quot;</span><span class="p">))</span>
-</code></pre></div>
-<h3 id="emulate-org-mode-export-dispatch-with-hydra-ox">Emulate org-mode export dispatch with hydra-ox</h3>
-
-<p>You can also look at that code to see how nested hydras work.  Several other examples were added to
-hydra-examples.el.</p>
-
-<h2 id="outro">Outro</h2>
-
-<p>I hope that you enjoy all the new features/fixes, and thanks to all the people that contributed to
-them. Happy hacking!</p>
 
   </div>
   
