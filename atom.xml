@@ -4,13 +4,119 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-07-07T15:53:46+02:00</updated>
+ <updated>2015-07-09T18:52:23+02:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Command Rhythmbox from Emacs</title>
+   <link href="http://oremacs.com/2015/07/09/counsel-rhythmbox/"/>
+   <updated>2015-07-09T00:00:00+02:00</updated>
+   <id>http://oremacs.com/2015/07/09/counsel-rhythmbox</id>
+   <content type="html">&lt;p&gt;I might have mentioned before that I&amp;#39;m using GNU/Linux on all of my
+computers.  The particular flavor is Ubuntu, although it shouldn&amp;#39;t
+matter much, since I can count the graphical applications that I use
+at all, besides Emacs, on one hand. They are: Firefox, Evince,
+Rhythmbox and VLC. Of course, as most true Emacs-ers, I strive to
+reduce this number to zero. So I got quite excited when I saw
+&lt;a href=&quot;https://github.com/mrBliss/helm-rhythmbox&quot;&gt;helm-rhythmbox&lt;/a&gt; show up in
+my package list. It works great: you can play and enqueue tracks with
+completion without leaving Emacs. Big thanks to
+&lt;a href=&quot;https://github.com/mrBliss&quot;&gt;@mrBliss&lt;/a&gt;, and, of course, the authors
+for &lt;code&gt;dbus.el&lt;/code&gt; which makes interaction with D-Bus possible through
+Elisp.&lt;/p&gt;
+
+&lt;p&gt;I&amp;#39;m not as big a fan of Helm as I used to be, so I quickly implemented an Ivy equivalent:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;counsel-rhythmbox-enqueue-song&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;song&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Let Rhythmbox enqueue SONG.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;service&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;org.gnome.Rhythmbox3&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;path&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;/org/gnome/Rhythmbox3/PlayQueue&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;interface&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;org.gnome.Rhythmbox3.PlayQueue&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;dbus-call-method&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:session&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;service&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;path&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;interface&lt;/span&gt;
+                      &lt;span class=&quot;s&quot;&gt;&amp;quot;AddToQueue&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;rhythmbox-song-uri&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;song&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;;;;###autoload&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;counsel-rhythmbox&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Choose a song from the Rhythmbox library to play or enqueue.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;unless&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;helm-rhythmbox&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ne&quot;&gt;error&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Please install `helm-rhythmbox&amp;#39;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;unless&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;rhythmbox-library&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;rhythmbox-load-library&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;null&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;rhythmbox-library&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;sit-for&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ivy-read&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Rhythmbox: &amp;quot;&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;helm-rhythmbox-candidates&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;nb&quot;&gt;:action&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+              &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Play song&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;helm-rhythmbox-play-song&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+              &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Enqueue song&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;counsel-rhythmbox-enqueue-song&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;I listed the whole code just to show how easy it is to interact with
+D-Bus, and also to show-off the shiny new multi-action interface of
+&lt;code&gt;ivy-read&lt;/code&gt;.  Besides being discoverable via &lt;kbd&gt;C-o&lt;/kbd&gt;, the
+multi-action interface is extensible as well. Here&amp;#39;s how to add a
+&amp;quot;Dequeue&amp;quot; action without touching the original code:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;counsel-rhythmbox-dequeue-song&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;song&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Let Rhythmbox dequeue SONG.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;service&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;org.gnome.Rhythmbox3&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;path&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;/org/gnome/Rhythmbox3/PlayQueue&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;interface&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;org.gnome.Rhythmbox3.PlayQueue&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;dbus-call-method&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:session&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;service&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;path&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;interface&lt;/span&gt;
+                      &lt;span class=&quot;s&quot;&gt;&amp;quot;RemoveFromQueue&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;rhythmbox-song-uri&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;song&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ivy-set-actions&lt;/span&gt;
+ &lt;span class=&quot;ss&quot;&gt;&amp;#39;counsel-rhythmbox&lt;/span&gt;
+ &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Dequeue song&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;counsel-rhythmbox-dequeue-song&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Very simple, &lt;code&gt;counsel-rhythmbox-dequeue-song&lt;/code&gt; is a clone of
+&lt;code&gt;counsel-rhythmbox-enqueue-song&lt;/code&gt; with only the method change from
+&lt;code&gt;AddToQueue&lt;/code&gt; to &lt;code&gt;RemoveFromQueue&lt;/code&gt; (I blind-guessed the name, but there
+should be a reference somewhere).  If you got tired of having a whole
+three actions to choose from, you can revert to the initial two with:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ivy-set-actions&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;counsel-rhythmbox&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And here&amp;#39;s how the updated &lt;kbd&gt;C-o&lt;/kbd&gt; option panel now looks like:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/counsel-rhythmbox.png&quot; alt=&quot;counsel-rhythmbox.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;A bit of descriptions:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;j&lt;/kbd&gt; moves to the next one of the 18 current candidates.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;k&lt;/kbd&gt; moves to the previous candidate.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;h&lt;/kbd&gt; moves to the first candidate.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;l&lt;/kbd&gt; moves to the last candidate.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;g&lt;/kbd&gt; calls the current action without exiting.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;d&lt;/kbd&gt; calls the current action and exits.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;s&lt;/kbd&gt; moves to the next action.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;w&lt;/kbd&gt; moves to the previous action.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;i&lt;/kbd&gt; and &lt;kbd&gt;C-o&lt;/kbd&gt; close the options panel without exiting.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;o&lt;/kbd&gt; closes the panel and exits.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Similarly to &lt;code&gt;hydra&lt;/code&gt;, each action has a short docstring, like &lt;code&gt;&amp;quot;Play
+song&amp;quot;&lt;/code&gt; that should describe what it does.  Here are a few usage
+scenarios:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;If I wanted to play the first song and enqueue the third and the
+sixth and exit the minibuffer, I would press &lt;kbd&gt;gsjjgjjjd&lt;/kbd&gt;.&lt;/li&gt;
+&lt;li&gt;If I wanted to play the third and enqueue all the following, I would
+press &lt;kbd&gt;jjgsjcjjjjjjjjjjjo&lt;/kbd&gt;. The many &lt;kbd&gt;j&lt;/kbd&gt; is just
+me holding &lt;kbd&gt;j&lt;/kbd&gt; until the selection reaches the end, then I
+simply exit without doing anything else by pressing &lt;kbd&gt;o&lt;/kbd&gt;.
+The way &lt;kbd&gt;c&lt;/kbd&gt; works is that it toggles the &amp;quot;calling&amp;quot; state -
+a state where the current action is called whenever a different
+candidate is selected.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Almost forgot, if this little intro got you excited, the packages that you should install from MELPA are: &lt;code&gt;helm-rhythmbox&lt;/code&gt; and &lt;code&gt;counsel&lt;/code&gt;.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Pause or resume the current Hydra</title>
