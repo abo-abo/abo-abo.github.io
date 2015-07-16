@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Quitting to command loop in Elisp &middot; (or emacs
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="/public/css/octicons.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Scripts -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body class="layout-reverse theme-base-08">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <!-- <div class="sidebar-item"> -->
+  <!--   <p>unused</p> -->
+  <!-- </div> -->
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about/">About</a>
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/archive/">Archive</a>
+        
+      
+    
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+
+    <div id="github" class="sidebar-nav-item">
+      <button type="button"
+              class="btn btn-info"
+              data-toggle="collapse"
+              data-target="#github-projects">
+        <span class="octicon octicon-mark-github"></span> My Emacs Projects
+      </button>
+      <div id="github-projects" class="collapse">
+        <ul style="margin-bottom:0em;">
+          <li>
+            <a href="https://github.com/abo-abo/lispy">lispy</a>
+            <p>vi-like Paredit</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/worf">worf</a>
+            <p>vi-like bindings for org-mode</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-window">ace-window</a>
+            <p>switch windows with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-link">ace-link</a>
+            <p>follow links with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/function-args">function-args</a>
+            <p>enhance <code>CEDET</code> for C++</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/helm-make">helm-make</a>
+            <p>select a Makefile target with <code>helm</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/make-it-so">make-it-so</a>
+            <p>transform files with Makefile recipes</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/org-download">org-download</a>
+            <p>drag-and-drop images to <code>org-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo?tab=repositories">
+              <span class="octicon octicon-octoface"></span>
+              and more
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
+
+  <div class="sidebar-item">
+    <p>
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.0/">
+        <img alt="Creative Commons License"
+             style="border-width:0;opacity: 0.3;"
+             src="https://i.creativecommons.org/l/by-nc-sa/2.0/88x31.png"/>
+      </a>
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">(or emacs</a>
+            <small>irrelevant)</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Quitting to command loop in Elisp</h1>
+  <span class="post-date">16 Jul 2015</span>
+  <p>Today I&#39;d like to share an interesting bit of Elisp that comes up
+every now and then for me.  Imagine that you have this:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">useful-command</span> <span class="p">()</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">do-thing-1</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">do-thing-2</span> <span class="p">(</span><span class="nf">funcall</span> <span class="nv">callback-function</span><span class="p">))</span>
+  <span class="p">(</span><span class="nv">do-thing-3</span><span class="p">))</span>
+</code></pre></div>
+<p>Sometimes, when you are in <code>callback-function</code>, you might want to
+abandon the function that called you, <code>useful-command</code> in this case,
+and call a different function, with the current context.</p>
+
+<p>Here&#39;s what I&#39;ve come up with to do just that:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defmacro</span> <span class="nv">ivy-quit-and-run</span> <span class="p">(</span><span class="kp">&amp;rest</span> <span class="nv">body</span><span class="p">)</span>
+  <span class="s">&quot;Quit the minibuffer and run BODY afterwards.&quot;</span>
+  <span class="o">`</span><span class="p">(</span><span class="k">progn</span>
+     <span class="p">(</span><span class="nf">put</span> <span class="ss">&#39;quit</span> <span class="ss">&#39;error-message</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
+     <span class="p">(</span><span class="nv">run-at-time</span> <span class="no">nil</span> <span class="no">nil</span>
+                  <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span>
+                    <span class="p">(</span><span class="nf">put</span> <span class="ss">&#39;quit</span> <span class="ss">&#39;error-message</span> <span class="s">&quot;Quit&quot;</span><span class="p">)</span>
+                    <span class="o">,@</span><span class="nv">body</span><span class="p">))</span>
+     <span class="p">(</span><span class="nv">minibuffer-keyboard-quit</span><span class="p">)))</span>
+</code></pre></div>
+<p>To break it up into parts:</p>
+
+<ul>
+<li><p><code>minibuffer-keyboard-quit</code> will unwind the call stack all the way to
+the command loop, preventing e.g.  <code>do-thing-3</code> from being
+called. Note that the call stack can be as deep as you like, e.g.
+<code>useful-command</code> might be called by <code>utility-command</code> etc.</p></li>
+<li><p><code>run-at-time</code> with the argument <code>nil</code> will run the code as soon as
+possible, which is almost exactly after we&#39;re back into the command
+loop.</p></li>
+<li><p>The final trick is to prevent <code>Quit</code> from being displayed in the minibuffer.</p></li>
+</ul>
+
+<h2 id="sample-application">Sample application</h2>
+
+<p>Suppose that I&#39;ve called <code>find-file</code> when <code>ivy-mode</code> is
+active. Typically, I&#39;d select a file and press <kbd>C-m</kbd> to open
+it. However, sometimes I just want to see the selected file in <code>dired</code>
+instead of opening it. This code is from before
+<a href="http://oremacs.com/2015/07/09/counsel-rhythmbox/">ivy multi-action interface</a>,
+it plainly binds a command in <code>ivy-minibuffer-map</code>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">ivy-minibuffer-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-:&quot;</span><span class="p">)</span> <span class="ss">&#39;ivy-dired</span><span class="p">)</span>
+
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">ivy-dired</span> <span class="p">()</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">if</span> <span class="nv">ivy--directory</span>
+      <span class="p">(</span><span class="nv">ivy-quit-and-run</span>
+       <span class="p">(</span><span class="nv">dired</span> <span class="nv">ivy--directory</span><span class="p">)</span>
+       <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">re-search-forward</span>
+              <span class="p">(</span><span class="nf">regexp-quote</span>
+               <span class="p">(</span><span class="nf">substring</span> <span class="nv">ivy--current</span> <span class="mi">0</span> <span class="mi">-1</span><span class="p">))</span> <span class="no">nil</span> <span class="no">t</span><span class="p">)</span>
+         <span class="p">(</span><span class="nf">goto-char</span> <span class="p">(</span><span class="nf">match-beginning</span> <span class="mi">0</span><span class="p">))))</span>
+    <span class="p">(</span><span class="ne">user-error</span>
+     <span class="s">&quot;Not completing files currently&quot;</span><span class="p">)))</span>
+</code></pre></div>
+<p>So at the moment when <kbd>C-:</kbd> is pressed, the call stack is:</p>
+
+<ul>
+<li><kbd>C-x C-f</kbd> called <code>find-file</code>.</li>
+<li><code>find-file</code> called <code>completion-read-function</code> which is set to <code>ivy-completing-read</code>.</li>
+<li><code>ivy-completing-read</code> called <code>ivy-read</code>.</li>
+<li><code>ivy-read</code> called <code>read-from-minibuffer</code>.</li>
+</ul>
+
+<p>Thanks to the new macro, I can unwind all of that stuff, making sure
+nothing extra will be executed that was supposed to be executed after
+<code>read-from-minibuffer</code> had returned. In other words, the file will not
+be opened.  Instead, a <code>dired</code> buffer will be opened, centered on the
+selected candidate.</p>
+
+<p>What I described above can actually be a pretty common scenario, you
+could adapt it to <code>helm</code> or <code>avy</code> or <code>projectile</code>.  Basically to
+anything that includes some form of completion (i.e. commands that
+wait for input) and offers you a customizable keymap. Small
+disclaimer: the above code falls into the quick-and-dirty category, I
+don&#39;t recommend it if you can do something smarter instead. But if you
+can&#39;t do anything smarter due to being constrained by an interface you
+don&#39;t control, this macro could help you out.</p>
+
+</div>
+
+<div class="twitter-share">
+  <a href="https://twitter.com/share"
+     class="twitter-share-button"
+     data-via="_abo_abo"
+     data-dnt="true">
+    Tweet
+  </a>
+</div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'oremacs'; // required: replace example with your forum shortname
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+<script>
+  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+</script>
+<noscript>
+  Please enable JavaScript to view the
+  <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>

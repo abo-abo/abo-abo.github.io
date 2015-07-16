@@ -4,13 +4,102 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-07-09T18:52:23+02:00</updated>
+ <updated>2015-07-16T16:44:05+02:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Quitting to command loop in Elisp</title>
+   <link href="http://oremacs.com/2015/07/16/callback-quit/"/>
+   <updated>2015-07-16T00:00:00+02:00</updated>
+   <id>http://oremacs.com/2015/07/16/callback-quit</id>
+   <content type="html">&lt;p&gt;Today I&amp;#39;d like to share an interesting bit of Elisp that comes up
+every now and then for me.  Imagine that you have this:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;useful-command&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;do-thing-1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;do-thing-2&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;funcall&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;callback-function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;do-thing-3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Sometimes, when you are in &lt;code&gt;callback-function&lt;/code&gt;, you might want to
+abandon the function that called you, &lt;code&gt;useful-command&lt;/code&gt; in this case,
+and call a different function, with the current context.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;#39;s what I&amp;#39;ve come up with to do just that:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defmacro&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ivy-quit-and-run&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;&amp;amp;rest&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;body&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Quit the minibuffer and run BODY afterwards.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;progn&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;put&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;quit&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;error-message&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;run-at-time&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;
+                  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+                    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;put&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;quit&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;error-message&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Quit&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                    &lt;span class=&quot;o&quot;&gt;,@&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;body&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;minibuffer-keyboard-quit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;To break it up into parts:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;minibuffer-keyboard-quit&lt;/code&gt; will unwind the call stack all the way to
+the command loop, preventing e.g.  &lt;code&gt;do-thing-3&lt;/code&gt; from being
+called. Note that the call stack can be as deep as you like, e.g.
+&lt;code&gt;useful-command&lt;/code&gt; might be called by &lt;code&gt;utility-command&lt;/code&gt; etc.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;run-at-time&lt;/code&gt; with the argument &lt;code&gt;nil&lt;/code&gt; will run the code as soon as
+possible, which is almost exactly after we&amp;#39;re back into the command
+loop.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The final trick is to prevent &lt;code&gt;Quit&lt;/code&gt; from being displayed in the minibuffer.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;sample-application&quot;&gt;Sample application&lt;/h2&gt;
+
+&lt;p&gt;Suppose that I&amp;#39;ve called &lt;code&gt;find-file&lt;/code&gt; when &lt;code&gt;ivy-mode&lt;/code&gt; is
+active. Typically, I&amp;#39;d select a file and press &lt;kbd&gt;C-m&lt;/kbd&gt; to open
+it. However, sometimes I just want to see the selected file in &lt;code&gt;dired&lt;/code&gt;
+instead of opening it. This code is from before
+&lt;a href=&quot;http://oremacs.com/2015/07/09/counsel-rhythmbox/&quot;&gt;ivy multi-action interface&lt;/a&gt;,
+it plainly binds a command in &lt;code&gt;ivy-minibuffer-map&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ivy-minibuffer-map&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-:&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ivy-dired&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ivy-dired&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ivy--directory&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ivy-quit-and-run&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;dired&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ivy--directory&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;re-search-forward&lt;/span&gt;
+              &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;regexp-quote&lt;/span&gt;
+               &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;substring&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ivy--current&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;-1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;goto-char&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;match-beginning&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ne&quot;&gt;user-error&lt;/span&gt;
+     &lt;span class=&quot;s&quot;&gt;&amp;quot;Not completing files currently&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;So at the moment when &lt;kbd&gt;C-:&lt;/kbd&gt; is pressed, the call stack is:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;C-x C-f&lt;/kbd&gt; called &lt;code&gt;find-file&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;find-file&lt;/code&gt; called &lt;code&gt;completion-read-function&lt;/code&gt; which is set to &lt;code&gt;ivy-completing-read&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ivy-completing-read&lt;/code&gt; called &lt;code&gt;ivy-read&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ivy-read&lt;/code&gt; called &lt;code&gt;read-from-minibuffer&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Thanks to the new macro, I can unwind all of that stuff, making sure
+nothing extra will be executed that was supposed to be executed after
+&lt;code&gt;read-from-minibuffer&lt;/code&gt; had returned. In other words, the file will not
+be opened.  Instead, a &lt;code&gt;dired&lt;/code&gt; buffer will be opened, centered on the
+selected candidate.&lt;/p&gt;
+
+&lt;p&gt;What I described above can actually be a pretty common scenario, you
+could adapt it to &lt;code&gt;helm&lt;/code&gt; or &lt;code&gt;avy&lt;/code&gt; or &lt;code&gt;projectile&lt;/code&gt;.  Basically to
+anything that includes some form of completion (i.e. commands that
+wait for input) and offers you a customizable keymap. Small
+disclaimer: the above code falls into the quick-and-dirty category, I
+don&amp;#39;t recommend it if you can do something smarter instead. But if you
+can&amp;#39;t do anything smarter due to being constrained by an interface you
+don&amp;#39;t control, this macro could help you out.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Command Rhythmbox from Emacs</title>
