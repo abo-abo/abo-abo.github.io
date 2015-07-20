@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Easily arrange hydra into a matrix &middot; (or emacs
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="/public/css/octicons.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Scripts -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body class="layout-reverse theme-base-08">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <!-- <div class="sidebar-item"> -->
+  <!--   <p>unused</p> -->
+  <!-- </div> -->
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about/">About</a>
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/archive/">Archive</a>
+        
+      
+    
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+
+    <div id="github" class="sidebar-nav-item">
+      <button type="button"
+              class="btn btn-info"
+              data-toggle="collapse"
+              data-target="#github-projects">
+        <span class="octicon octicon-mark-github"></span> My Emacs Projects
+      </button>
+      <div id="github-projects" class="collapse">
+        <ul style="margin-bottom:0em;">
+          <li>
+            <a href="https://github.com/abo-abo/lispy">lispy</a>
+            <p>vi-like Paredit</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/worf">worf</a>
+            <p>vi-like bindings for org-mode</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-window">ace-window</a>
+            <p>switch windows with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-link">ace-link</a>
+            <p>follow links with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/function-args">function-args</a>
+            <p>enhance <code>CEDET</code> for C++</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/helm-make">helm-make</a>
+            <p>select a Makefile target with <code>helm</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/make-it-so">make-it-so</a>
+            <p>transform files with Makefile recipes</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/org-download">org-download</a>
+            <p>drag-and-drop images to <code>org-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo?tab=repositories">
+              <span class="octicon octicon-octoface"></span>
+              and more
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
+
+  <div class="sidebar-item">
+    <p>
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.0/">
+        <img alt="Creative Commons License"
+             style="border-width:0;opacity: 0.3;"
+             src="https://i.creativecommons.org/l/by-nc-sa/2.0/88x31.png"/>
+      </a>
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">(or emacs</a>
+            <small>irrelevant)</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Easily arrange hydra into a matrix</h1>
+  <span class="post-date">20 Jul 2015</span>
+  <h2 id="the-new-:columns-option">The new <code>:columns</code> option</h2>
+
+<p>Today I&#39;ll introduce a pretty cool new option that you can use to
+quickly create hydra docstrings arranged in a matrix.  This, of
+course, was already possible before, but you had to format the matrix
+by-hand like this (I cite just bit instead of the
+<a href="https://github.com/abo-abo/hydra/wiki/Projectile">full code</a>, it was
+cut to fit into the Jekyll code column restriction):</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-projectile</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">teal</span>
+                            <span class="nb">:hint</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="s">&quot;</span>
+<span class="s">     PROJECTILE:</span>
+
+<span class="s">     Find File            Search/Tags</span>
+<span class="s">-----------------------------------------</span>
+<span class="s">_s-f_: file            _a_: ag</span>
+<span class="s"> _ff_: file dwim       _g_: update gtags</span>
+<span class="s"> _fd_: file curr dir   _o_: multi-occur</span>
+<span class="s"> &quot;</span>
+  <span class="p">(</span><span class="s">&quot;s-f&quot;</span> <span class="nv">projectile-find-file</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="nv">projectile-ag</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;ff&quot;</span> <span class="nv">projectile-find-file-dwim</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;fd&quot;</span> <span class="nv">projectile-find-file-in-directory</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;g&quot;</span> <span class="nv">ggtags-update-tags</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;o&quot;</span> <span class="nv">projectile-multi-occur</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span> <span class="s">&quot;cancel&quot;</span><span class="p">))</span>
+</code></pre></div>
+<p>The syntax above is still very useful if you want to arrange every
+detail perfectly or need Ruby-style quoting.  But here&#39;s the new
+syntax that allows to get almost the
+<a href="https://github.com/abo-abo/hydra/wiki/Projectile">same docstring</a>
+much easier:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-projectile</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">blue</span>
+                            <span class="nb">:columns</span> <span class="mi">4</span><span class="p">)</span>
+  <span class="s">&quot;Projectile&quot;</span>
+  <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="nv">projectile-ag</span> <span class="s">&quot;ag&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;b&quot;</span> <span class="nv">projectile-switch-to-buffer</span> <span class="s">&quot;switch to buffer&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;c&quot;</span> <span class="nv">projectile-invalidate-cache</span> <span class="s">&quot;cache clear&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;d&quot;</span> <span class="nv">projectile-find-dir</span> <span class="s">&quot;dir&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;s-f&quot;</span> <span class="nv">projectile-find-file</span> <span class="s">&quot;file&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;ff&quot;</span> <span class="nv">projectile-find-file-dwim</span> <span class="s">&quot;file dwim&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;fd&quot;</span> <span class="nv">projectile-find-file-in-directory</span> <span class="s">&quot;file curr dir&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;g&quot;</span> <span class="nv">ggtags-update-tags</span> <span class="s">&quot;update gtags&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;i&quot;</span> <span class="nv">projectile-ibuffer</span> <span class="s">&quot;Ibuffer&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;K&quot;</span> <span class="nv">projectile-kill-buffers</span> <span class="s">&quot;Kill all buffers&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;o&quot;</span> <span class="nv">projectile-multi-occur</span> <span class="s">&quot;multi-occur&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;p&quot;</span> <span class="nv">projectile-switch-project</span> <span class="s">&quot;switch&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;r&quot;</span> <span class="nv">projectile-recentf</span> <span class="s">&quot;recent file&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;x&quot;</span> <span class="nv">projectile-remove-known-project</span> <span class="s">&quot;remove known&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;X&quot;</span> <span class="nv">projectile-cleanup-known-projects</span> <span class="s">&quot;cleanup non-existing&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;z&quot;</span> <span class="nv">projectile-cache-current-file</span> <span class="s">&quot;cache current&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span> <span class="s">&quot;cancel&quot;</span><span class="p">))</span>
+</code></pre></div>
+<p>It still looks pretty good, in my opinion:</p>
+
+<p><img src="/download/hydra-columns-projectile.png" alt="hydra-columns-projectile.png"></p>
+
+<p>Note how all redundant information has been removed. Another advantage
+is the you can easily:</p>
+
+<ul>
+<li>Add/remove heads.</li>
+<li>Update head hints.</li>
+<li>Change the number of columns.</li>
+</ul>
+
+<h2 id="a-bit-of-customization">A bit of customization</h2>
+
+<p>After each change, just re-eval the <code>defhydra</code> and you&#39;re done - no
+need to manually re-arrange the docstring.  Since there already is an
+interface that allows you to customize the docstring very precisely, I
+tried to make the new interface as automatic as possible: just specify
+the number of columns and you&#39;re done. But if you want just a little
+bit more customization, look at this code:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">defvar</span> <span class="nv">hydra-key-doc-function</span> <span class="ss">&#39;hydra-key-doc-function-default</span>
+  <span class="s">&quot;The function for formatting key-doc pairs.&quot;</span><span class="p">)</span>
+
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">hydra-key-doc-function-default</span> <span class="p">(</span><span class="nv">key</span> <span class="nv">key-width</span> <span class="nv">doc</span> <span class="nv">doc-width</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">format</span> <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;%%%ds: %%%ds&quot;</span> <span class="nv">key-width</span> <span class="p">(</span><span class="nf">-</span> <span class="mi">-1</span> <span class="nv">doc-width</span><span class="p">))</span>
+          <span class="nv">key</span> <span class="nv">doc</span><span class="p">))</span>
+</code></pre></div>
+<p>So if you want to add a little space here and there, or e.g. wrap key
+bindings in brackets, just clone <code>hydra-key-doc-function-default</code>,
+customize it a bit and set <code>hydra-key-doc-function</code> to the new
+function.</p>
+
+<h2 id="outro">Outro</h2>
+
+<p>If you&#39;ve been using just the plain style before and felt that you
+can&#39;t fit your docstring on one line, try the new style: it&#39;s just one
+line of change with respect to your old code.  And if you&#39;ve been
+building the docstring by-hand, see if it&#39;s possible to transform it
+to the new style: adding and removing new heads will become easier.
+Thanks to <a href="https://github.com/Fuco1">@Fuco1</a> for the suggestion in
+<a href="https://github.com/abo-abo/hydra/issues/140">#140</a>.</p>
+
+</div>
+
+<div class="twitter-share">
+  <a href="https://twitter.com/share"
+     class="twitter-share-button"
+     data-via="_abo_abo"
+     data-dnt="true">
+    Tweet
+  </a>
+</div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'oremacs'; // required: replace example with your forum shortname
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+<script>
+  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+</script>
+<noscript>
+  Please enable JavaScript to view the
+  <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>

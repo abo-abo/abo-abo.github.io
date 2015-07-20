@@ -4,13 +4,116 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-07-16T16:44:05+02:00</updated>
+ <updated>2015-07-20T14:38:00+02:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Easily arrange hydra into a matrix</title>
+   <link href="http://oremacs.com/2015/07/20/hydra-columns/"/>
+   <updated>2015-07-20T00:00:00+02:00</updated>
+   <id>http://oremacs.com/2015/07/20/hydra-columns</id>
+   <content type="html">&lt;h2 id=&quot;the-new-:columns-option&quot;&gt;The new &lt;code&gt;:columns&lt;/code&gt; option&lt;/h2&gt;
+
+&lt;p&gt;Today I&amp;#39;ll introduce a pretty cool new option that you can use to
+quickly create hydra docstrings arranged in a matrix.  This, of
+course, was already possible before, but you had to format the matrix
+by-hand like this (I cite just bit instead of the
+&lt;a href=&quot;https://github.com/abo-abo/hydra/wiki/Projectile&quot;&gt;full code&lt;/a&gt;, it was
+cut to fit into the Jekyll code column restriction):&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-projectile&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;teal&lt;/span&gt;
+                            &lt;span class=&quot;nb&quot;&gt;:hint&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;     PROJECTILE:&lt;/span&gt;
+
+&lt;span class=&quot;s&quot;&gt;     Find File            Search/Tags&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;-----------------------------------------&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;_s-f_: file            _a_: ag&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt; _ff_: file dwim       _g_: update gtags&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt; _fd_: file curr dir   _o_: multi-occur&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt; &amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;s-f&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;projectile-find-file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;a&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;projectile-ag&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;ff&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;projectile-find-file-dwim&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;fd&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;projectile-find-file-in-directory&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;g&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ggtags-update-tags&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;o&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;projectile-multi-occur&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;q&amp;quot;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;cancel&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The syntax above is still very useful if you want to arrange every
+detail perfectly or need Ruby-style quoting.  But here&amp;#39;s the new
+syntax that allows to get almost the
+&lt;a href=&quot;https://github.com/abo-abo/hydra/wiki/Projectile&quot;&gt;same docstring&lt;/a&gt;
+much easier:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-projectile&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;blue&lt;/span&gt;
+                            &lt;span class=&quot;nb&quot;&gt;:columns&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Projectile&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;a&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;projectile-ag&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;ag&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;b&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;projectile-switch-to-buffer&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;switch to buffer&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;c&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;projectile-invalidate-cache&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;cache clear&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;d&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;projectile-find-dir&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;dir&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;s-f&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;projectile-find-file&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;file&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;ff&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;projectile-find-file-dwim&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;file dwim&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;fd&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;projectile-find-file-in-directory&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;file curr dir&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;g&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ggtags-update-tags&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;update gtags&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;i&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;projectile-ibuffer&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Ibuffer&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;K&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;projectile-kill-buffers&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Kill all buffers&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;o&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;projectile-multi-occur&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;multi-occur&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;p&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;projectile-switch-project&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;switch&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;r&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;projectile-recentf&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;recent file&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;x&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;projectile-remove-known-project&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;remove known&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;X&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;projectile-cleanup-known-projects&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;cleanup non-existing&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;z&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;projectile-cache-current-file&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;cache current&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;q&amp;quot;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;cancel&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;It still looks pretty good, in my opinion:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/hydra-columns-projectile.png&quot; alt=&quot;hydra-columns-projectile.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Note how all redundant information has been removed. Another advantage
+is the you can easily:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Add/remove heads.&lt;/li&gt;
+&lt;li&gt;Update head hints.&lt;/li&gt;
+&lt;li&gt;Change the number of columns.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;a-bit-of-customization&quot;&gt;A bit of customization&lt;/h2&gt;
+
+&lt;p&gt;After each change, just re-eval the &lt;code&gt;defhydra&lt;/code&gt; and you&amp;#39;re done - no
+need to manually re-arrange the docstring.  Since there already is an
+interface that allows you to customize the docstring very precisely, I
+tried to make the new interface as automatic as possible: just specify
+the number of columns and you&amp;#39;re done. But if you want just a little
+bit more customization, look at this code:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defvar&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-key-doc-function&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;hydra-key-doc-function-default&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;The function for formatting key-doc pairs.&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-key-doc-function-default&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;key-width&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;doc&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;doc-width&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;%%%ds: %%%ds&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;key-width&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;-1&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;doc-width&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+          &lt;span class=&quot;nv&quot;&gt;key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;doc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;So if you want to add a little space here and there, or e.g. wrap key
+bindings in brackets, just clone &lt;code&gt;hydra-key-doc-function-default&lt;/code&gt;,
+customize it a bit and set &lt;code&gt;hydra-key-doc-function&lt;/code&gt; to the new
+function.&lt;/p&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;If you&amp;#39;ve been using just the plain style before and felt that you
+can&amp;#39;t fit your docstring on one line, try the new style: it&amp;#39;s just one
+line of change with respect to your old code.  And if you&amp;#39;ve been
+building the docstring by-hand, see if it&amp;#39;s possible to transform it
+to the new style: adding and removing new heads will become easier.
+Thanks to &lt;a href=&quot;https://github.com/Fuco1&quot;&gt;@Fuco1&lt;/a&gt; for the suggestion in
+&lt;a href=&quot;https://github.com/abo-abo/hydra/issues/140&quot;&gt;#140&lt;/a&gt;.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Quitting to command loop in Elisp</title>
