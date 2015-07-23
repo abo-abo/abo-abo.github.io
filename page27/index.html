@@ -11,7 +11,7 @@
 
   <title>
     
-      Pause or resume the current Hydra &middot; (or emacs
+      (or emacs &middot; irrelevant)
     
   </title>
 
@@ -259,75 +259,92 @@
       </div>
 
       <div class="container content">
-        <div class="post">
-  <h1 class="post-title">Pause or resume the current Hydra</h1>
-  <span class="post-date">07 Jul 2015</span>
-  <p>Today I&#39;d like to highlight a generic command recently added to
-<a href="https://github.com/abo-abo/hydra">hydra</a>.  It&#39;s kind of cute, and
-maybe something that you didn&#39;t even know you wanted.  Basically, the
-<code>hydra-pause-resume</code> command allows to pause and resume the current
-hydra with one key. And it works for all hydras at once, without any
-extra configuration. All you have to do is to bind it globally to
-whatever you like, for example:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-M-k&quot;</span><span class="p">)</span> <span class="ss">&#39;hydra-pause-resume</span><span class="p">)</span>
-</code></pre></div>
-<p>What it does:</p>
+        <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/2014/12/20/poyekhali!/">
+        Poyekhali!
+      </a>
+    </h1>
+
+    <span class="post-date">20 Dec 2014</span>
+
+    <p>Welcome to <b><code>(or emacs</code></b>!</p>
+
+<p>My name is Oleh and I&#39;ve been using Emacs for about 3 years now.  I
+think that it&#39;s an awesome editor, and I&#39;ve accumulated some know-how
+to make it even better (at least for me and people who think like me).
+Sharing is caring, so here we go.</p>
+
+<h2 id="ace-window-update"><code>ace-window</code> update</h2>
+
+<p>On this weekend I&#39;ve made a major update to my package
+<a href="https://github.com/abo-abo/ace-window">ace-window</a> that allows it to
+be used as a library. Luckily the change went smoothly, as there are
+no complaints in the github issues so far.  In case you don&#39;t know
+what the package does in the first place, a short blurb follows.</p>
+
+<h2 id="ace-window&#39;s-&quot;what-and-why&quot;"><code>ace-window</code>&#39;s &quot;what and why&quot;</h2>
+
+<p>I&#39;m sure you&#39;re aware of the <code>other-window</code> command. While it&#39;s great for
+two windows, it quickly loses its value when there are more windows:
+you need to call it many times, and since it&#39;s not easily predictable,
+you have to check each time if you&#39;re in the window that you wanted.</p>
+
+<p>Another approach is to use <code>windmove-left</code>, <code>windmove-up</code> etc.  These
+are fast and predictable. Their disadvantage is that they need 4 key
+bindings.  The default ones are shift+arrows, which are hard to reach.</p>
+
+<p>This package aims to take the speed and predictability of <code>windmove</code>
+and pack it into a single key binding, similar to <code>other-window</code>.  To
+achieve this, I&#39;m using the excellent
+<a href="https://github.com/winterTTr/ace-jump-mode">ace-jump-mode</a>.</p>
+
+<p>Here&#39;s how the package looks in action: <a href="/download/ace-window.gif">ace-window.gif</a></p>
+
+<p>Since switching windows is a frequently used operation, I recommend
+binding <code>ace-window</code> to something short, like <kbd>M-p</kbd>.</p>
+
+<p>By default, three actions are available:</p>
 
 <ul>
-<li>If a hydra is active, deactivate and push it on the stack.</li>
-<li>If no hydra is active, pop one from the stack and call it.</li>
-<li>If the stack is empty, call the last hydra.</li>
+<li><kbd>M-p</kbd> - select window</li>
+<li><kbd>C-u M-p</kbd> - swap the current window with the selected window</li>
+<li><kbd>C-u C-u M-p</kbd> - delete the selected window</li>
 </ul>
 
-<p>Personally, I haven&#39;t found too much use from the stack - resuming the
-last one is enough for me. But the stack comes at no extra cost, and
-might be useful to someone.</p>
+<h2 id="finally,-the-library-part">finally, the library part</h2>
 
-<blockquote>
-<p>If, for example, you have 2 hydras on the stack, how to resume the
-older one?</p>
-</blockquote>
+<p>So now, what if you want to select a window to maximize with <code>ace-window</code>?
+After the change that I&#39;ve mentioned, the code to do this is dirt simple:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">ace-maximize-window</span> <span class="p">()</span>
+  <span class="s">&quot;Ace maximize window.&quot;</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">setq</span> <span class="nv">aw--current-op</span>
+        <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">aj</span><span class="p">)</span>
+          <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">wnd</span> <span class="p">(</span><span class="nv">aj-position-window</span> <span class="nv">aj</span><span class="p">)))</span>
+            <span class="p">(</span><span class="nf">select-window</span> <span class="nv">wnd</span><span class="p">)</span>
+            <span class="p">(</span><span class="nv">delete-other-windows</span><span class="p">))))</span>
+  <span class="p">(</span><span class="nv">aw--doit</span> <span class="s">&quot; Ace - Maximize Window&quot;</span><span class="p">))</span>
 
-<p>The way stacks work, you simply have to go through all elements one by one. So that&#39;s:</p>
-
-<ol>
-<li><kbd>C-M-k</kbd> to resume the newer one.</li>
-<li>Quit the current one with the appropriate shortcut, only not with <kbd>C-M-k</kbd>, since that would just put it back on the stack.</li>
-<li><kbd>C-M-k</kbd> to resume the only one remaining on the stack - the older one.</li>
-</ol>
-
-<p>Thanks to <a href="https://github.com/QiangF">@QiangF</a> for the suggestion in <a href="https://github.com/abo-abo/hydra/issues/135">#135</a>.</p>
-
+<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-M-o&quot;</span><span class="p">)</span> <span class="ss">&#39;ace-maximize-window</span><span class="p">)</span>
+</code></pre></div>
+  </div>
+  
 </div>
 
-<div class="twitter-share">
-  <a href="https://twitter.com/share"
-     class="twitter-share-button"
-     data-via="_abo_abo"
-     data-dnt="true">
-    Tweet
-  </a>
+<div class="pagination">
+  
+    <span class="pagination-item older">Older</span>
+  
+  
+    
+      <a class="pagination-item newer" href="/page26">Newer</a>
+    
+  
 </div>
 
-<div id="disqus_thread"></div>
-<script type="text/javascript">
-  var disqus_shortname = 'oremacs'; // required: replace example with your forum shortname
-
-  /* * * DON'T EDIT BELOW THIS LINE * * */
-  (function() {
-  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-  })();
-</script>
-
-<script>
-  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
-</script>
-<noscript>
-  Please enable JavaScript to view the
-  <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
-</noscript>
 
       </div>
     </div>

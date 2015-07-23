@@ -4,13 +4,140 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-07-20T14:38:00+02:00</updated>
+ <updated>2015-07-24T08:56:35+02:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>New Ivy multi-action exit</title>
+   <link href="http://oremacs.com/2015/07/23/ivy-multiaction/"/>
+   <updated>2015-07-23T00:00:00+02:00</updated>
+   <id>http://oremacs.com/2015/07/23/ivy-multiaction</id>
+   <content type="html">&lt;p&gt;So many Emacs commands and bindings, but little time to learn them
+all.  That&amp;#39;s why many-in-one solutions like
+&lt;a href=&quot;https://github.com/abo-abo/hydra&quot;&gt;hydra&lt;/a&gt; are often a good deal: you
+only remember the base binding, and get more info along the way if you
+get lost.&lt;/p&gt;
+
+&lt;p&gt;I&amp;#39;ve wanted to optimize this approach when it comes to completion as
+well.  In
+&lt;a href=&quot;http://oremacs.com/2015/06/08/describe-variable-tip/&quot;&gt;last month&amp;#39;s post&lt;/a&gt;
+I described how you can get help / jump to definition / jump to info
+for the current &lt;kbd&gt;F1 v&lt;/kbd&gt; (&lt;code&gt;counsel-describe-variable&lt;/code&gt;)
+candidate with &lt;kbd&gt;C-m&lt;/kbd&gt; / &lt;kbd&gt;C-.&lt;/kbd&gt; / &lt;kbd&gt;C-,&lt;/kbd&gt;.
+While that approach can be viable, it has a few problems. The first
+problem is that it&amp;#39;s not discoverable: you may be using &lt;kbd&gt;C-m&lt;/kbd&gt;
+option for ages and not know that &lt;kbd&gt;C-.&lt;/kbd&gt; and &lt;kbd&gt;C-,&lt;/kbd&gt;
+exist. The second problem is that it&amp;#39;s not extensible: if you wanted
+more actions, there are hardly any good bindings left in the
+minibuffer to bind those actions.&lt;/p&gt;
+
+&lt;p&gt;In
+&lt;a href=&quot;http://oremacs.com/2015/07/09/counsel-rhythmbox/&quot;&gt;a more recent post&lt;/a&gt;,
+I described a solution that alleviates both problems. When you press
+&lt;kbd&gt;C-o&lt;/kbd&gt;, you see how many actions are
+available, and you can cycle them with &lt;kbd&gt;w&lt;/kbd&gt; and
+&lt;kbd&gt;s&lt;/kbd&gt;. However, while discoverable, this approach is cumbersome
+if you already know what you want to do. Especially cycling can&amp;#39;t be
+great when there are a lot of actions.&lt;/p&gt;
+
+&lt;p&gt;So today I&amp;#39;ve added a new approach in addition to the previous one.
+When you press &lt;kbd&gt;M-o&lt;/kbd&gt; (&lt;code&gt;ivy-dispatching-done&lt;/code&gt;), you get a hint
+showing you which actions are available.  It&amp;#39;s like &lt;kbd&gt;C-m&lt;/kbd&gt;
+(&lt;code&gt;ivy-done&lt;/code&gt;), only allows you to quickly select the
+action. Conveniently, the default action is bound to &lt;kbd&gt;o&lt;/kbd&gt;, so
+&lt;kbd&gt;M-o o&lt;/kbd&gt; is equivalent to &lt;kbd&gt;C-m&lt;/kbd&gt;.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;#39;s how I add one more action to the default one of &lt;code&gt;ivy-switch-buffer&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ivy-set-actions&lt;/span&gt;
+ &lt;span class=&quot;ss&quot;&gt;&amp;#39;ivy-switch-buffer&lt;/span&gt;
+ &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;k&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;kill-buffer&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ivy--reset-state&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ivy-last&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;&amp;quot;kill&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;So now:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;M-o o&lt;/kbd&gt; will still switch to selected buffer.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;M-o k&lt;/kbd&gt; will kill the selected buffer.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;If you&amp;#39;re familiar with &lt;code&gt;hydra&lt;/code&gt;, the format is the same: &lt;code&gt;(key cmd
+hint)&lt;/code&gt;.  This approach is very extensible: you can add actions and
+bindings to commands without changing the code of the original
+command. It&amp;#39;s really fast: you&amp;#39;re typing just one extra key to select
+an action. And you&amp;#39;ll hardly run out of keys to bind, with 25 lower
+case keys at your disposal (other bindings work as well, I just think
+that lower case keys are the fastest to press).&lt;/p&gt;
+
+&lt;p&gt;In case you wonder what &lt;code&gt;(ivy--reset-state ivy-last)&lt;/code&gt; does, it&amp;#39;s used
+to update the list of buffers, since one of them was deleted. This
+way, you can delete e.g. 4 buffers with &lt;kbd&gt;C-x b C-o s gggg&lt;/kbd&gt;,
+and have the buffer list update after each &lt;kbd&gt;g&lt;/kbd&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;new-functionality-in-action&quot;&gt;New functionality in action&lt;/h2&gt;
+
+&lt;p&gt;Let&amp;#39;s look at one package that has a multitude of actions available
+for each candidate - &lt;code&gt;projectile&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defvar&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;helm-projectile-projects-map&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;map&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;make-sparse-keymap&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;set-keymap-parent&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;map&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;helm-map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;helm-projectile-define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;map&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-d&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;#&amp;#39;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;dired&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;M-g&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;#&amp;#39;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;helm-projectile-vc&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;M-e&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;#&amp;#39;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;helm-projectile-switch-to-eshell&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-s&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;#&amp;#39;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;helm-find-files-grep&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;M-c&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;#&amp;#39;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;helm-projectile-compile-project&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;M-t&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;#&amp;#39;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;helm-projectile-test-project&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;M-r&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;#&amp;#39;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;helm-projectile-run-project&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;M-D&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;#&amp;#39;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;helm-projectile-remove-known-project&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Mapping for known projectile projects.&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Here&amp;#39;s the basic Ivy function for selecting a project:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ivy-switch-project&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ivy-read&lt;/span&gt;
+   &lt;span class=&quot;s&quot;&gt;&amp;quot;Switch to project: &amp;quot;&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;projectile-project-p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;cons&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;abbreviate-file-name&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;projectile-project-root&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+             &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;projectile-relevant-known-projects&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+     &lt;span class=&quot;nv&quot;&gt;projectile-known-projects&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;nb&quot;&gt;:action&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;#&amp;#39;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;projectile-switch-project-by-name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-c m&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ivy-switch-project&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And now let&amp;#39;s add all those actions:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ivy-set-actions&lt;/span&gt;
+ &lt;span class=&quot;ss&quot;&gt;&amp;#39;ivy-switch-project&lt;/span&gt;
+ &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;d&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dired&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Open Dired in project&amp;#39;s directory&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;v&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;helm-projectile-vc&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Open project root in vc-dir or magit&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;e&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;helm-projectile-switch-to-eshell&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Switch to Eshell&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;g&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;helm-do-grep-1&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;list&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;&amp;quot;Grep in projects&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;c&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;helm-projectile-compile-project&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Compile project&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;r&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;helm-projectile-remove-known-project&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Remove project(s)&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Here&amp;#39;s what I get now after pressing &lt;kbd&gt;M-o&lt;/kbd&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/ivy-multiaction.png&quot; alt=&quot;ivy-multiaction.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Looks pretty good, I think. I hope you find the new approach useful.
+The multi-action exit is currently enabled by default for
+&lt;code&gt;ivy-switch-buffer&lt;/code&gt;, &lt;code&gt;counsel-locate&lt;/code&gt; and &lt;code&gt;counsel-rhythmbox&lt;/code&gt;, but you
+can add actions yourself to almost any command that uses &lt;code&gt;ivy-read&lt;/code&gt;.
+In the rare case when &lt;code&gt;ivy-read&lt;/code&gt; isn&amp;#39;t in the tail position, you can
+use &lt;a href=&quot;http://oremacs.com/2015/07/16/callback-quit/&quot;&gt;ivy-quit-and-run&lt;/a&gt;
+inside the added action functions.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Easily arrange hydra into a matrix</title>
@@ -1403,8 +1530,8 @@ feature.&lt;/p&gt;
    <link href="http://oremacs.com/2015/05/22/define-word/"/>
    <updated>2015-05-22T00:00:00+02:00</updated>
    <id>http://oremacs.com/2015/05/22/define-word</id>
-   <content type="html">&lt;p&gt;Doing things in Emacs &lt;em&gt;superlatively&lt;/em&gt; better than having to switch to
-another application.&lt;/p&gt;
+   <content type="html">&lt;p&gt;Doing things in Emacs is &lt;em&gt;superlatively&lt;/em&gt; better than having to switch
+to another application.&lt;/p&gt;
 
 &lt;p&gt;In this case, &amp;quot;doing things&amp;quot; is getting the dictionary definition of
 word at point, and &amp;quot;&lt;em&gt;superlatively&lt;/em&gt;&amp;quot; is a word that I didn&amp;#39;t know - a

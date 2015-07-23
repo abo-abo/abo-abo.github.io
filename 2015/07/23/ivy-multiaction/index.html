@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      New Ivy multi-action exit &middot; (or emacs
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="/public/css/octicons.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Scripts -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body class="layout-reverse theme-base-08">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <!-- <div class="sidebar-item"> -->
+  <!--   <p>unused</p> -->
+  <!-- </div> -->
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about/">About</a>
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/archive/">Archive</a>
+        
+      
+    
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+
+    <div id="github" class="sidebar-nav-item">
+      <button type="button"
+              class="btn btn-info"
+              data-toggle="collapse"
+              data-target="#github-projects">
+        <span class="octicon octicon-mark-github"></span> My Emacs Projects
+      </button>
+      <div id="github-projects" class="collapse">
+        <ul style="margin-bottom:0em;">
+          <li>
+            <a href="https://github.com/abo-abo/lispy">lispy</a>
+            <p>vi-like Paredit</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/worf">worf</a>
+            <p>vi-like bindings for org-mode</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-window">ace-window</a>
+            <p>switch windows with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-link">ace-link</a>
+            <p>follow links with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/function-args">function-args</a>
+            <p>enhance <code>CEDET</code> for C++</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/helm-make">helm-make</a>
+            <p>select a Makefile target with <code>helm</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/make-it-so">make-it-so</a>
+            <p>transform files with Makefile recipes</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/org-download">org-download</a>
+            <p>drag-and-drop images to <code>org-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo?tab=repositories">
+              <span class="octicon octicon-octoface"></span>
+              and more
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
+
+  <div class="sidebar-item">
+    <p>
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.0/">
+        <img alt="Creative Commons License"
+             style="border-width:0;opacity: 0.3;"
+             src="https://i.creativecommons.org/l/by-nc-sa/2.0/88x31.png"/>
+      </a>
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">(or emacs</a>
+            <small>irrelevant)</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">New Ivy multi-action exit</h1>
+  <span class="post-date">23 Jul 2015</span>
+  <p>So many Emacs commands and bindings, but little time to learn them
+all.  That&#39;s why many-in-one solutions like
+<a href="https://github.com/abo-abo/hydra">hydra</a> are often a good deal: you
+only remember the base binding, and get more info along the way if you
+get lost.</p>
+
+<p>I&#39;ve wanted to optimize this approach when it comes to completion as
+well.  In
+<a href="http://oremacs.com/2015/06/08/describe-variable-tip/">last month&#39;s post</a>
+I described how you can get help / jump to definition / jump to info
+for the current <kbd>F1 v</kbd> (<code>counsel-describe-variable</code>)
+candidate with <kbd>C-m</kbd> / <kbd>C-.</kbd> / <kbd>C-,</kbd>.
+While that approach can be viable, it has a few problems. The first
+problem is that it&#39;s not discoverable: you may be using <kbd>C-m</kbd>
+option for ages and not know that <kbd>C-.</kbd> and <kbd>C-,</kbd>
+exist. The second problem is that it&#39;s not extensible: if you wanted
+more actions, there are hardly any good bindings left in the
+minibuffer to bind those actions.</p>
+
+<p>In
+<a href="http://oremacs.com/2015/07/09/counsel-rhythmbox/">a more recent post</a>,
+I described a solution that alleviates both problems. When you press
+<kbd>C-o</kbd>, you see how many actions are
+available, and you can cycle them with <kbd>w</kbd> and
+<kbd>s</kbd>. However, while discoverable, this approach is cumbersome
+if you already know what you want to do. Especially cycling can&#39;t be
+great when there are a lot of actions.</p>
+
+<p>So today I&#39;ve added a new approach in addition to the previous one.
+When you press <kbd>M-o</kbd> (<code>ivy-dispatching-done</code>), you get a hint
+showing you which actions are available.  It&#39;s like <kbd>C-m</kbd>
+(<code>ivy-done</code>), only allows you to quickly select the
+action. Conveniently, the default action is bound to <kbd>o</kbd>, so
+<kbd>M-o o</kbd> is equivalent to <kbd>C-m</kbd>.</p>
+
+<p>Here&#39;s how I add one more action to the default one of <code>ivy-switch-buffer</code>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">ivy-set-actions</span>
+ <span class="ss">&#39;ivy-switch-buffer</span>
+ <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;k&quot;</span>
+    <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+      <span class="p">(</span><span class="nf">kill-buffer</span> <span class="nv">x</span><span class="p">)</span>
+      <span class="p">(</span><span class="nv">ivy--reset-state</span> <span class="nv">ivy-last</span><span class="p">))</span>
+    <span class="s">&quot;kill&quot;</span><span class="p">)))</span>
+</code></pre></div>
+<p>So now:</p>
+
+<ul>
+<li><kbd>M-o o</kbd> will still switch to selected buffer.</li>
+<li><kbd>M-o k</kbd> will kill the selected buffer.</li>
+</ul>
+
+<p>If you&#39;re familiar with <code>hydra</code>, the format is the same: <code>(key cmd
+hint)</code>.  This approach is very extensible: you can add actions and
+bindings to commands without changing the code of the original
+command. It&#39;s really fast: you&#39;re typing just one extra key to select
+an action. And you&#39;ll hardly run out of keys to bind, with 25 lower
+case keys at your disposal (other bindings work as well, I just think
+that lower case keys are the fastest to press).</p>
+
+<p>In case you wonder what <code>(ivy--reset-state ivy-last)</code> does, it&#39;s used
+to update the list of buffers, since one of them was deleted. This
+way, you can delete e.g. 4 buffers with <kbd>C-x b C-o s gggg</kbd>,
+and have the buffer list update after each <kbd>g</kbd>.</p>
+
+<h2 id="new-functionality-in-action">New functionality in action</h2>
+
+<p>Let&#39;s look at one package that has a multitude of actions available
+for each candidate - <code>projectile</code>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">defvar</span> <span class="nv">helm-projectile-projects-map</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">map</span> <span class="p">(</span><span class="nf">make-sparse-keymap</span><span class="p">)))</span>
+    <span class="p">(</span><span class="nf">set-keymap-parent</span> <span class="nv">map</span> <span class="nv">helm-map</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">helm-projectile-define-key</span> <span class="nv">map</span>
+        <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-d&quot;</span><span class="p">)</span> <span class="nf">#&#39;</span><span class="nv">dired</span>
+        <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-g&quot;</span><span class="p">)</span> <span class="nf">#&#39;</span><span class="nv">helm-projectile-vc</span>
+        <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-e&quot;</span><span class="p">)</span> <span class="nf">#&#39;</span><span class="nv">helm-projectile-switch-to-eshell</span>
+        <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-s&quot;</span><span class="p">)</span> <span class="nf">#&#39;</span><span class="nv">helm-find-files-grep</span>
+        <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-c&quot;</span><span class="p">)</span> <span class="nf">#&#39;</span><span class="nv">helm-projectile-compile-project</span>
+        <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-t&quot;</span><span class="p">)</span> <span class="nf">#&#39;</span><span class="nv">helm-projectile-test-project</span>
+        <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-r&quot;</span><span class="p">)</span> <span class="nf">#&#39;</span><span class="nv">helm-projectile-run-project</span>
+        <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-D&quot;</span><span class="p">)</span> <span class="nf">#&#39;</span><span class="nv">helm-projectile-remove-known-project</span><span class="p">)</span>
+    <span class="nv">map</span><span class="p">)</span>
+  <span class="s">&quot;Mapping for known projectile projects.&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>Here&#39;s the basic Ivy function for selecting a project:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">ivy-switch-project</span> <span class="p">()</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">ivy-read</span>
+   <span class="s">&quot;Switch to project: &quot;</span>
+   <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">projectile-project-p</span><span class="p">)</span>
+       <span class="p">(</span><span class="nf">cons</span> <span class="p">(</span><span class="nv">abbreviate-file-name</span> <span class="p">(</span><span class="nv">projectile-project-root</span><span class="p">))</span>
+             <span class="p">(</span><span class="nv">projectile-relevant-known-projects</span><span class="p">))</span>
+     <span class="nv">projectile-known-projects</span><span class="p">)</span>
+   <span class="nb">:action</span> <span class="nf">#&#39;</span><span class="nv">projectile-switch-project-by-name</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c m&quot;</span><span class="p">)</span> <span class="ss">&#39;ivy-switch-project</span><span class="p">)</span>
+</code></pre></div>
+<p>And now let&#39;s add all those actions:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">ivy-set-actions</span>
+ <span class="ss">&#39;ivy-switch-project</span>
+ <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;d&quot;</span> <span class="nv">dired</span> <span class="s">&quot;Open Dired in project&#39;s directory&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;v&quot;</span> <span class="nv">helm-projectile-vc</span> <span class="s">&quot;Open project root in vc-dir or magit&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;e&quot;</span> <span class="nv">helm-projectile-switch-to-eshell</span> <span class="s">&quot;Switch to Eshell&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;g&quot;</span>
+    <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+      <span class="p">(</span><span class="nv">helm-do-grep-1</span> <span class="p">(</span><span class="nf">list</span> <span class="nv">x</span><span class="p">)))</span>
+    <span class="s">&quot;Grep in projects&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;c&quot;</span> <span class="nv">helm-projectile-compile-project</span> <span class="s">&quot;Compile project&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;r&quot;</span> <span class="nv">helm-projectile-remove-known-project</span> <span class="s">&quot;Remove project(s)&quot;</span><span class="p">)))</span>
+</code></pre></div>
+<p>Here&#39;s what I get now after pressing <kbd>M-o</kbd>:</p>
+
+<p><img src="/download/ivy-multiaction.png" alt="ivy-multiaction.png"></p>
+
+<p>Looks pretty good, I think. I hope you find the new approach useful.
+The multi-action exit is currently enabled by default for
+<code>ivy-switch-buffer</code>, <code>counsel-locate</code> and <code>counsel-rhythmbox</code>, but you
+can add actions yourself to almost any command that uses <code>ivy-read</code>.
+In the rare case when <code>ivy-read</code> isn&#39;t in the tail position, you can
+use <a href="http://oremacs.com/2015/07/16/callback-quit/">ivy-quit-and-run</a>
+inside the added action functions.</p>
+
+</div>
+
+<div class="twitter-share">
+  <a href="https://twitter.com/share"
+     class="twitter-share-button"
+     data-via="_abo_abo"
+     data-dnt="true">
+    Tweet
+  </a>
+</div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'oremacs'; // required: replace example with your forum shortname
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+<script>
+  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+</script>
+<noscript>
+  Please enable JavaScript to view the
+  <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>

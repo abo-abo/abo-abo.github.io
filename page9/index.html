@@ -176,6 +176,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -256,6 +260,137 @@
 
       <div class="container content">
         <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/2015/03/21/some-fun-with-hydra/">
+        Some fun with Hydra
+      </a>
+    </h1>
+
+    <span class="post-date">21 Mar 2015</span>
+
+    <p>The code from this post has very little application. But it&#39;s kind of fun, so I&#39;ll post it.  Star
+Trek: TNG is one of my favorite shows, so I&#39;ve added some TNG characters to one of the Hydra
+features that I&#39;m testing.</p>
+
+<h2 id="defhydradio-statement"><code>defhydradio</code> statement</h2>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;hydra</span><span class="p">)</span>
+<span class="p">(</span><span class="nv">defhydradio</span> <span class="nv">hydra-tng</span> <span class="p">()</span>
+  <span class="p">(</span><span class="nv">picard</span> <span class="s">&quot;_p_ Captain Jean Luc Picard:&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">riker</span> <span class="s">&quot;_r_ Commander William Riker:&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">data</span> <span class="s">&quot;_d_ Lieutenant Commander Data:&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">worf</span> <span class="s">&quot;_w_ Worf:&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">la-forge</span> <span class="s">&quot;_f_ Geordi La Forge:&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">troi</span> <span class="s">&quot;_t_ Deanna Troi:&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">dr-crusher</span> <span class="s">&quot;_c_ Doctor Beverly Crusher:&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">phaser</span> <span class="s">&quot;_h_ Set phasers to &quot;</span> <span class="nv">[stun</span> <span class="nv">kill]</span><span class="p">))</span>
+</code></pre></div>
+<p>The <code>defhydradio</code> macro is akin to a namespace construct that defines multiple variables that can
+assume only certain values (either <code>t</code> or <code>nil</code> by default), and functions to cycle those values.</p>
+
+<h2 id="defhydradio-implementation"><code>defhydradio</code> implementation</h2>
+
+<p>Here&#39;s what you may see after a <code>macroexpand</code>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">progn</span>
+  <span class="p">(</span><span class="k">defvar</span> <span class="nv">hydra-tng/picard</span> <span class="no">nil</span>
+    <span class="s">&quot;_p_ Captain Jean Luc Picard:&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">put</span> <span class="p">(</span><span class="k">quote</span> <span class="nv">hydra-tng/picard</span><span class="p">)</span>
+       <span class="p">(</span><span class="k">quote</span> <span class="nv">range</span><span class="p">)</span>
+       <span class="nv">[nil</span> <span class="nv">t]</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">defun</span> <span class="nv">hydra-tng/picard</span> <span class="no">nil</span>
+    <span class="p">(</span><span class="nv">hydra--cycle-radio</span> <span class="p">(</span><span class="k">quote</span> <span class="nv">hydra-tng/picard</span><span class="p">)))</span>
+  <span class="p">(</span><span class="k">defvar</span> <span class="nv">hydra-tng/riker</span> <span class="no">nil</span>
+    <span class="s">&quot;_r_ Commander William Riker:&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">put</span> <span class="p">(</span><span class="k">quote</span> <span class="nv">hydra-tng/riker</span><span class="p">)</span>
+       <span class="p">(</span><span class="k">quote</span> <span class="nv">range</span><span class="p">)</span>
+       <span class="nv">[nil</span> <span class="nv">t]</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">defun</span> <span class="nv">hydra-tng/riker</span> <span class="no">nil</span> <span class="p">(</span><span class="nv">hydra--cycle-radio</span> <span class="p">(</span><span class="k">quote</span> <span class="nv">hydra-tng/riker</span><span class="p">)))</span>
+  <span class="c1">;; ...</span>
+  <span class="p">(</span><span class="k">defvar</span> <span class="nv">hydra-tng/names</span>
+    <span class="o">&#39;</span><span class="p">(</span><span class="nv">hydra-tng/picard</span> <span class="nv">hydra-tng/riker</span>
+      <span class="nv">hydra-tng/data</span> <span class="nv">hydra-tng/worf</span> <span class="nv">hydra-tng/la-forge</span>
+      <span class="nv">hydra-tng/troi</span> <span class="nv">hydra-tng/dr-crusher</span> <span class="nv">hydra-tng/phaser</span><span class="p">)))</span>
+</code></pre></div>
+<p>As you can see, each list passed to <code>defhydradio</code>:</p>
+
+<ul>
+<li>gets a prefixed variable definition</li>
+<li>gets a <code>range</code> property for the prefixed symbol</li>
+<li>gets a prefixed function definition that cycles the variable value based on the <code>range</code> property</li>
+<li>gets added to <code>hydra-tng/names</code></li>
+</ul>
+
+<h2 id="defhydra-statement"><code>defhydra</code> statement</h2>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-tng</span> <span class="p">(</span><span class="nb">:foreign-keys</span> <span class="nv">run</span> <span class="nb">:hint</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">concat</span> <span class="p">(</span><span class="nv">hydra--table</span> <span class="nv">hydra-tng/names</span> <span class="mi">7</span> <span class="mi">2</span>
+                        <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;  % -30s %% -3`%s&quot;</span>
+                          <span class="s">&quot;%s %%`%s&quot;</span><span class="p">))</span>
+          <span class="s">&quot;\n\n&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;p&quot;</span> <span class="p">(</span><span class="nv">hydra-tng/picard</span><span class="p">))</span>
+  <span class="p">(</span><span class="s">&quot;r&quot;</span> <span class="p">(</span><span class="nv">hydra-tng/riker</span><span class="p">))</span>
+  <span class="p">(</span><span class="s">&quot;d&quot;</span> <span class="p">(</span><span class="nv">hydra-tng/data</span><span class="p">))</span>
+  <span class="p">(</span><span class="s">&quot;w&quot;</span> <span class="p">(</span><span class="nv">hydra-tng/worf</span><span class="p">))</span>
+  <span class="p">(</span><span class="s">&quot;f&quot;</span> <span class="p">(</span><span class="nv">hydra-tng/la-forge</span><span class="p">))</span>
+  <span class="p">(</span><span class="s">&quot;t&quot;</span> <span class="p">(</span><span class="nv">hydra-tng/troi</span><span class="p">))</span>
+  <span class="p">(</span><span class="s">&quot;c&quot;</span> <span class="p">(</span><span class="nv">hydra-tng/dr-crusher</span><span class="p">))</span>
+  <span class="p">(</span><span class="s">&quot;h&quot;</span> <span class="p">(</span><span class="nv">hydra-tng/phaser</span><span class="p">))</span>
+  <span class="p">(</span><span class="s">&quot;b&quot;</span> <span class="nv">beam-down</span> <span class="s">&quot;beam down&quot;</span> <span class="nb">:exit</span> <span class="no">t</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;o&quot;</span> <span class="p">(</span><span class="nv">hydra-reset-radios</span> <span class="nv">hydra-tng/names</span><span class="p">)</span> <span class="s">&quot;reset&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span> <span class="s">&quot;cancel&quot;</span><span class="p">))</span>
+</code></pre></div>
+<p>The interesting statement in place of the docstring will actually evaluate to this docstring:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="s">&quot;  _p_ Captain Jean Luc Picard:   % -3`hydra-tng/picard^^^^    _h_ Set phasers to  %`hydra-tng/phaser</span>
+<span class="s">  _r_ Commander William Riker:   % -3`hydra-tng/riker^^^^^</span>
+<span class="s">  _d_ Lieutenant Commander Data: % -3`hydra-tng/data^^^^^^</span>
+<span class="s">  _w_ Worf:                      % -3`hydra-tng/worf^^^^^^</span>
+<span class="s">  _f_ Geordi La Forge:           % -3`hydra-tng/la-forge^^</span>
+<span class="s">  _t_ Deanna Troi:               % -3`hydra-tng/troi^^^^^^</span>
+<span class="s">  _c_ Doctor Beverly Crusher:    % -3`hydra-tng/dr-crusher</span>
+
+<span class="s">&quot;</span>
+</code></pre></div>
+<p>The first line overflows a bit, but it&#39;s clear what it is. There&#39;s some flexibility in using
+<code>hydra--table</code>, since you can:</p>
+
+<ul>
+<li>redefine the row-column format (e.g. from 7x2 to 5x3)</li>
+<li>add more variables to <code>hydra-tng/names</code></li>
+</ul>
+
+<p>Note also, that since <code>hydra-tng/names</code> holds all the names, and all the names know their default
+values through <code>range</code>, it&#39;s possible to reset them all at once with <code>hydra-reset-radios</code>.</p>
+
+<p>Finally, here&#39;s a simple implementation of <code>beam-down</code>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">beam-down</span> <span class="p">()</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">message</span>
+   <span class="s">&quot;Beaming down: %s.&quot;</span>
+   <span class="p">(</span><span class="nf">mapconcat</span>
+    <span class="nf">#&#39;identity</span>
+    <span class="p">(</span><span class="nf">delq</span> <span class="no">nil</span>
+          <span class="p">(</span><span class="nf">mapcar</span>
+           <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">p</span><span class="p">)</span> <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">symbol-value</span> <span class="nv">p</span><span class="p">)</span>
+                    <span class="p">(</span><span class="nf">substring</span> <span class="p">(</span><span class="nf">symbol-name</span> <span class="nv">p</span><span class="p">)</span> <span class="mi">10</span><span class="p">)))</span>
+           <span class="o">&#39;</span><span class="p">(</span><span class="nv">hydra-tng/picard</span>
+             <span class="nv">hydra-tng/riker</span>
+             <span class="nv">hydra-tng/data</span>
+             <span class="nv">hydra-tng/worf</span>
+             <span class="nv">hydra-tng/la-forge</span>
+             <span class="nv">hydra-tng/troi</span>
+             <span class="nv">hydra-tng/dr-crusher</span><span class="p">)))</span>
+    <span class="s">&quot;, and &quot;</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c C-,&quot;</span><span class="p">)</span> <span class="ss">&#39;hydra-tng/body</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="outro">Outro</h2>
+
+<p>And that&#39;s it. There actually is an application of <code>defhydradio</code> in
+<a href="https://github.com/abo-abo/hydra/blob/master/hydra-ox.el">hydra-ox.el</a>.  It&#39;s not fully finished,
+but you can already try it as an alternative to <code>org-mode</code> export dispatch widget, most things are
+working.</p>
+
+  </div>
   
   <div class="post">
     <h1 class="post-title">
@@ -580,162 +715,6 @@ Then I just added this directory to the Info path:</p>
 
 <p>Reading Info is pleasant and educational. In case you&#39;re new to Info, there&#39;s Info for Info. In Info
 format! Just press <kbd>&lt;f1&gt; i h</kbd>.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/03/16/try-j/">
-        Try J
-      </a>
-    </h1>
-
-    <span class="post-date">16 Mar 2015</span>
-
-    <h2 id="intro">Intro</h2>
-
-<p>I imagine that if you&#39;re reading this blog, you like to tinker with Emacs.  And people who like to
-tinker with stuff probably also like to learn new programming languages, just for fun.  In that
-case, if you ever want to learn a non-mainstream language, I highly recommend J.</p>
-
-<p>From its homepage:</p>
-
-<blockquote>
-<p>J is a modern, high-level, general-purpose, high-performance programming language. J is portable
-and runs on Windows, Unix, Mac, both as a GUI and in a console. J systems can be installed and
-distributed for free.</p>
-</blockquote>
-
-<h2 id="the-appetizer">The Appetizer</h2>
-
-<p>Things J has going for it that are high on my list:</p>
-
-<ul>
-<li><a href="http://www.jsoftware.com/download/j701_b_source.tar.gz">GPL licensed source</a>
-(although it&#39;s gibberish to read)</li>
-<li>a REPL</li>
-<li>short code</li>
-<li>high performance</li>
-</ul>
-
-<p>What attracted me to J in the first place is that it consistently has the shortest solutions (and
-fast-running) on <a href="https://projecteuler.net/">Project Euler</a>.  What kept me going after the initial
-wow-effect, was the extremely elegant standard functions implementation dividing things into
-<a href="http://www.jsoftware.com/docs/help701/dictionary/partsofspeech.htm">verbs, adverbs, and conjunctions</a>.</p>
-
-<h3 id="something-impressive:-a-sudoku-solver">Something impressive: a Sudoku solver</h3>
-
-<p>This code is taken from the <a href="http://orgmode.org/worg/org-contrib/babel/languages/ob-doc-J.html">ob-J</a> page that I wrote some
-time ago (you can find a lot of additional info there):</p>
-
-<pre>
-<span class="org-block-begin-line">#+begin_src J :exports both
-</span><span class="variable-name">i</span> <span class="j-other">=:</span> <span class="j-verb">,</span>((<span class="j-verb">,|:</span>)<span class="j-verb">i.</span>9 9)<span class="j-verb">,,.</span><span class="j-adverb">/</span><span class="j-verb">,.</span><span class="j-adverb">/</span><span class="j-verb">i.</span>4<span class="j-verb">$</span>3
-<span class="variable-name">c</span> <span class="j-other">=:</span> (<span class="j-verb">#=[:#~.</span>)<span class="j-conjunction">@</span><span class="j-verb">-.</span><span class="j-conjunction">&amp;</span>0
-<span class="variable-name">t</span> <span class="j-other">=:</span> <span class="j-verb">[:</span>((<span class="j-verb">[:*</span><span class="j-adverb">/</span><span class="j-verb">_9:</span>c<span class="j-adverb">\</span><span class="j-verb">]</span>)<span class="j-conjunction">"</span>1<span class="j-verb">#]</span>)i<span class="j-conjunction">&amp;</span><span class="j-verb">{+</span><span class="j-conjunction">"</span>1 1(<span class="j-verb">&gt;:i.</span>9)<span class="j-verb">*</span><span class="j-adverb">/</span><span class="j-verb">[:</span>i<span class="j-conjunction">&amp;</span><span class="j-verb">=i.</span><span class="j-conjunction">&amp;</span>0
-<span class="variable-name">r</span> <span class="j-other">=:</span> <span class="j-verb">[:,</span><span class="j-conjunction">`</span><span class="j-verb">$:</span><span class="j-conjunction">@.</span>(0<span class="j-verb">:e.,</span>)<span class="j-verb">[:;</span>(<span class="j-verb">&lt;</span><span class="j-conjunction">@</span>t)<span class="j-conjunction">"</span>1
-<span class="variable-name">s</span> <span class="j-other">=:</span> 9 9<span class="j-conjunction">&amp;</span><span class="j-verb">$</span><span class="j-conjunction">@</span>r<span class="j-conjunction">@</span><span class="j-verb">,</span>
-<span class="j-verb">]</span><span class="variable-name">m</span> <span class="j-other">=:</span> 9 9 <span class="j-verb">$".</span><span class="j-conjunction">"</span>0<span class="string">'200370009009200007001004002050000800008000900006000040900100500800007600400089001'</span>
-s m
-<span class="org-block-end-line">#+end_src
-</span>
-<span class="org-meta-line">#+RESULTS:</span>
-<span class="org-block-begin-line">#+begin_example
-</span><span class="org-block">2 0 0 3 7 0 0 0 9
-0 0 9 2 0 0 0 0 7
-0 0 1 0 0 4 0 0 2
-0 5 0 0 0 0 8 0 0
-0 0 8 0 0 0 9 0 0
-0 0 6 0 0 0 0 4 0
-9 0 0 1 0 0 5 0 0
-8 0 0 0 0 7 6 0 0
-4 0 0 0 8 9 0 0 1
-
-2 8 4 3 7 5 1 6 9
-6 3 9 2 1 8 4 5 7
-5 7 1 9 6 4 3 8 2
-1 5 2 4 9 6 8 7 3
-3 4 8 7 5 2 9 1 6
-7 9 6 8 3 1 2 4 5
-9 6 7 1 4 3 5 2 8
-8 1 3 5 2 7 6 9 4
-4 2 5 6 8 9 7 3 1
-</span><span class="org-block-end-line">#+end_example
-</span>
-</pre>
-
-<p>It&#39;s pretty amazing that the whole implementation, not counting the example input matrix, takes only
-169 characters. You can also see how functional the language is.</p>
-
-<h3 id="something-simpler:-a-factorial">Something simpler: a factorial</h3>
-
-<p>To have a more simple example, here&#39;s how to write down incrementally the factorial of 20:</p>
-
-<pre>
-<span class="org-block-begin-line">#+begin_src J
-</span><span class="j-verb">i.</span>20
-<span class="org-block-end-line">#+end_src
-</span>
-<span class="org-meta-line">#+RESULTS:</span>
-<span class="org-code">: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
-</span>
-<span class="org-block-begin-line">#+begin_src J
-</span>1 <span class="j-verb">+</span> <span class="j-verb">i.</span>20
-<span class="org-block-end-line">#+end_src
-</span>
-<span class="org-meta-line">#+RESULTS:</span>
-<span class="org-code">: 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20
-</span>
-<span class="org-block-begin-line">#+begin_src J
-</span><span class="j-verb">*</span><span class="j-adverb">/</span> 1 <span class="j-verb">+</span> <span class="j-verb">i.</span>20
-<span class="org-block-end-line">#+end_src
-</span>
-<span class="org-meta-line">#+RESULTS:</span>
-<span class="org-code">: 2432902008176640000
-</span>
-</pre>
-
-<p>The spaces are optional, I&#39;ve only included them to make the code more clear.</p>
-
-<h3 id="something-visual:-a-sine-plot">Something visual: a sine plot</h3>
-
-<pre>
-<span class="org-block-begin-line">#+begin_src J
-</span>load <span class="string">'plot'</span>
-plot 1 <span class="j-verb">o.</span> 0<span class="j-adverb">.</span>1 <span class="j-verb">*</span> <span class="j-verb">i.</span>200
-<span class="org-block-end-line">#+end_src
-</span>
-</pre>
-
-<p>By simply pressing <kbd>C-c C-c</kbd> on this source block you get this image generated and opened in your browser:</p>
-
-<p><img src="/download/ob-J-sine.png" alt="ob-J-sine.png"></p>
-
-<h2 id="the-emacs-tooling">The Emacs Tooling</h2>
-
-<p>As mentioned above, there&#39;s <code>org-mode</code> babel support for J, including session interaction.  More
-importantly, there is <a href="https://github.com/zellio/j-mode">j-mode</a>.  The same package also provides a
-REPL via <code>jconsole</code>.</p>
-
-<p>Additionally, I wrote down a learning/assisting tool
-<a href="https://github.com/abo-abo/helm-j-cheatsheet">helm-j-cheatsheet</a>.
-Here&#39;s one of the screenshots:</p>
-
-<p><img src="https://camo.githubusercontent.com/f3da93fe7c2fb30ffa9b1a4106dd41a6d8ee88a0/68747470733a2f2f7261772e6769746875622e636f6d2f61626f2d61626f2f68656c6d2d6a2d636865617473686565742f6d61737465722f646f632f73637265656e73686f742d322e706e67" alt="helm-j-cheatsheet"></p>
-
-<p>It allows to:</p>
-
-<ul>
-<li>insert a function by English name</li>
-<li>look up the English name of the function by symbol</li>
-<li>open the <a href="http://www.jsoftware.com/docs/help701/dictionary/d010.htm">J documentation</a> for a function</li>
-</ul>
-
-<h2 id="outro">Outro</h2>
-
-<p>J is a very cool language to try and I hope you give it a go. I haven&#39;t yet managed to find a nice
-use for it, but you could say that, just as learning LISP, learning J can make you better at other
-languages.</p>
 
   </div>
   
