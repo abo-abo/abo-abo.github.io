@@ -4,13 +4,175 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-07-24T08:56:35+02:00</updated>
+ <updated>2015-07-27T17:43:57+02:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Using Recoll desktop search database with Emacs</title>
+   <link href="http://oremacs.com/2015/07/27/counsel-recoll/"/>
+   <updated>2015-07-27T00:00:00+02:00</updated>
+   <id>http://oremacs.com/2015/07/27/counsel-recoll</id>
+   <content type="html">&lt;p&gt;I know that most Emacs hackers love the simplicity and usability of
+grep, but sometimes it just doesn&amp;#39;t cut it.  A specific use case is my
+Org-mode directory, which includes a lot of org files and PDF
+files. There are just too many files for grep to be efficient, plus
+the structure of PDF doesn&amp;#39;t lend itself to grep, so another tool is
+required: a desktop database.&lt;/p&gt;
+
+&lt;p&gt;I got into the topic by reading John Kitchin&amp;#39;s post on
+&lt;a href=&quot;http://kitchingroup.cheme.cmu.edu/blog/2015/07/06/Indexing-headlines-in-org-files-with-swish-e-with-laser-sharp-results/&quot;&gt;swish-e&lt;/a&gt;,
+however, I just couldn&amp;#39;t get that software to work. But as a reply to
+his post, another tool -
+&lt;a href=&quot;https://en.wikipedia.org/wiki/Recoll&quot;&gt;recoll&lt;/a&gt; was mentioned on
+Org-mode&amp;#39;s mailing list. In this post, I&amp;#39;ll give step-by-step
+instructions to make Recoll work with Emacs.&lt;/p&gt;
+
+&lt;h2 id=&quot;building-recoll&quot;&gt;Building Recoll&lt;/h2&gt;
+
+&lt;p&gt;I&amp;#39;m assuming that you&amp;#39;re on a GNU/Linux system, since it&amp;#39;s my
+impression is that it&amp;#39;s the easiest system for building (as in &lt;code&gt;make
+...&lt;/code&gt;) software. Also, it&amp;#39;s the only system that I&amp;#39;ve got, so it would
+be hard for me to explain other systems.&lt;/p&gt;
+
+&lt;p&gt;If you want to toy around with the graphical back end of Recoll, you can install it with:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;sudo apt-get install recoll
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Unfortunately, the shell tool &lt;code&gt;recollq&lt;/code&gt; isn&amp;#39;t bundled with that
+package, so we need to download
+&lt;a href=&quot;http://www.lesbonscomptes.com/recoll/download.html&quot;&gt;the sources&lt;/a&gt;.
+The current version is &lt;a href=&quot;http://www.lesbonscomptes.com/recoll/recoll-1.20.6.tar.gz&quot;&gt;1.20.6&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;extract-the-archive&quot;&gt;Extract the archive&lt;/h3&gt;
+
+&lt;p&gt;After downloading the archive, I open &lt;code&gt;~/Downloads&lt;/code&gt; in &lt;code&gt;dired&lt;/code&gt; and
+press &lt;kbd&gt;&amp;amp;&lt;/kbd&gt; (&lt;code&gt;dired-do-async-shell-command&lt;/code&gt;).  It guesses from
+the tar.gz extension that the command should be &lt;code&gt;tar zxvf&lt;/code&gt;. By
+pressing &lt;kbd&gt;RET&lt;/kbd&gt;, I have the archive extracted to the current
+directory. I&amp;#39;ve actually allocated &lt;code&gt;~/Software/&lt;/code&gt; for installing stuff
+from tarballs, since I don&amp;#39;t want to put too much stuff in &lt;code&gt;~/Downloads&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;open-ansi-term&quot;&gt;Open ansi-term&lt;/h3&gt;
+
+&lt;p&gt;I navigate to the &lt;code&gt;recoll-1.20.6/&lt;/code&gt; directory using &lt;code&gt;dired&lt;/code&gt;, then press
+&lt;kbd&gt;&amp;#96;&lt;/kbd&gt; to open an &lt;code&gt;*ansi-term*&lt;/code&gt; buffer for the current
+directory.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;#39;s the setup for that (part of &lt;a href=&quot;https://github.com/abo-abo/oremacs&quot;&gt;my full config&lt;/a&gt;):&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ora-terminal&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Switch to terminal. Launch if nonexistent.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;get-buffer&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;*ansi-term*&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;switch-to-buffer&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;*ansi-term*&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ansi-term&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;/bin/bash&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;get-buffer-process&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;*ansi-term*&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ora-dired-open-term&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Open an `ansi-term&amp;#39; that corresponds to current directory.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;current-dir&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;dired-current-directory&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;term-send-string&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ora-terminal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;file-remote-p&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;current-dir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;v&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;tramp-dissect-file-name&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;current-dir&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+           &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;ssh %s@%s\n&amp;quot;&lt;/span&gt;
+                   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;aref&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;v&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;aref&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;v&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;cd &amp;#39;%s&amp;#39;\n&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;current-dir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;default-directory&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;current-dir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dired-mode-map&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;`&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ora-dired-open-term&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;configure-and-make&quot;&gt;Configure and make&lt;/h3&gt;
+
+&lt;p&gt;Here&amp;#39;s a typical sequence of shell commands. &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;./configure &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; make
+sudo make install
+&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;query &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; make
+which recoll
+sudo cp recollq /usr/local/bin/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;I was a total Linux newbie 5 years ago and had no idea about shell
+commands. Using only the first two lines, you can build and install a
+huge amount of software, so these are a great place to start if you
+want to learn these tools. I actually got by using only those two
+lines for a year a so.&lt;/p&gt;
+
+&lt;p&gt;After the first run or &lt;code&gt;./configure&lt;/code&gt; it turned out that I was missing
+one library, so I had to do this one and redo the &lt;code&gt;./configure&lt;/code&gt; step.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;sudo apt-get install libqt5webkit5-dev
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;I think this one would work as well:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;sudo apt-get build-dep recoll
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;configuring-recoll&quot;&gt;Configuring Recoll&lt;/h2&gt;
+
+&lt;p&gt;I only launched the graphical interface to select the indexing
+directory. It&amp;#39;s the home directory by default, I didn&amp;#39;t want that so I
+chose &lt;code&gt;~/Dropbox/org/&lt;/code&gt; instead. Apparently, there&amp;#39;s a way to make the
+indexing automatic via a cron job; you can even configure it via the
+graphical interface: it&amp;#39;s all good.&lt;/p&gt;
+
+&lt;h2 id=&quot;using-recoll-from-emacs&quot;&gt;Using Recoll from Emacs&lt;/h2&gt;
+
+&lt;p&gt;Emacs has great options for processing output from a shell command. So
+first I had to figure out how the shell command should look like. This
+should be good enough to produce a list of indexed files that contain the word &amp;quot;Haskell&amp;quot;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;recollq -b &lt;span class=&quot;s1&quot;&gt;&amp;#39;haskell&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And there&amp;#39;s how to adapt that command to the asynchronous &lt;code&gt;ivy-read&lt;/code&gt; interface:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;counsel-recoll-function&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;&amp;amp;rest&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;_unused&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Issue recallq for STRING.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;length&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;counsel-more-chars&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;counsel--async-command&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;recollq -b &amp;#39;%s&amp;#39;&amp;quot;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;counsel-recoll&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;&amp;amp;optional&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;initial-input&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Search for a string in the recoll database.&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;You&amp;#39;ll be given a list of files that match.&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;Selecting a file will launch `swiper&amp;#39; for that file.&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;INITIAL-INPUT can be given as the initial minibuffer input.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ivy-read&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;recoll: &amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;counsel-recoll-function&lt;/span&gt;
+            &lt;span class=&quot;nb&quot;&gt;:initial-input&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;initial-input&lt;/span&gt;
+            &lt;span class=&quot;nb&quot;&gt;:dynamic-collection&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;
+            &lt;span class=&quot;nb&quot;&gt;:history&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;counsel-git-grep-history&lt;/span&gt;
+            &lt;span class=&quot;nb&quot;&gt;:action&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;string-match&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;file://\\(.*\\)\\&amp;#39;&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;file-name&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;match-string&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+                          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;find-file&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;file-name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;unless&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;string-match&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;pdf$&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;swiper&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ivy-text&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The code here is pretty simple:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;I don&amp;#39;t start a search until at least 3 chars are entered, in order to not get too many results.&lt;/li&gt;
+&lt;li&gt;I mention &lt;code&gt;:dynamic-collection t&lt;/code&gt; which means that &lt;code&gt;recollq&lt;/code&gt; should be called after each new letter entered.&lt;/li&gt;
+&lt;li&gt;In &lt;code&gt;:action&lt;/code&gt;, I specify to open the selected file and start a &lt;code&gt;swiper&lt;/code&gt; with the current input in that file.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;I hope you found this info useful. It&amp;#39;s certainly pretty cool:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; ~/Dropbox/org &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; du -hs
+&lt;span class=&quot;c&quot;&gt;# 567M .&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;So there&amp;#39;s half of a gigabyte of stuff, all of it indexed, and I&amp;#39;m
+getting a file list update after each new key press in Emacs.&lt;/p&gt;
+
+&lt;p&gt;If you know of a better tool than recoll (I&amp;#39;m not too happy that match
+context that it gives via the &lt;code&gt;-A&lt;/code&gt; command option), please do share.
+Also, I&amp;#39;ve just learned that there&amp;#39;s
+&lt;a href=&quot;https://github.com/emacs-helm/helm-recoll&quot;&gt;helm-recoll&lt;/a&gt; out there, so
+you can use that if you like Helm.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>New Ivy multi-action exit</title>

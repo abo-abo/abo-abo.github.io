@@ -263,6 +263,172 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/07/27/counsel-recoll/">
+        Using Recoll desktop search database with Emacs
+      </a>
+    </h1>
+
+    <span class="post-date">27 Jul 2015</span>
+
+    <p>I know that most Emacs hackers love the simplicity and usability of
+grep, but sometimes it just doesn&#39;t cut it.  A specific use case is my
+Org-mode directory, which includes a lot of org files and PDF
+files. There are just too many files for grep to be efficient, plus
+the structure of PDF doesn&#39;t lend itself to grep, so another tool is
+required: a desktop database.</p>
+
+<p>I got into the topic by reading John Kitchin&#39;s post on
+<a href="http://kitchingroup.cheme.cmu.edu/blog/2015/07/06/Indexing-headlines-in-org-files-with-swish-e-with-laser-sharp-results/">swish-e</a>,
+however, I just couldn&#39;t get that software to work. But as a reply to
+his post, another tool -
+<a href="https://en.wikipedia.org/wiki/Recoll">recoll</a> was mentioned on
+Org-mode&#39;s mailing list. In this post, I&#39;ll give step-by-step
+instructions to make Recoll work with Emacs.</p>
+
+<h2 id="building-recoll">Building Recoll</h2>
+
+<p>I&#39;m assuming that you&#39;re on a GNU/Linux system, since it&#39;s my
+impression is that it&#39;s the easiest system for building (as in <code>make
+...</code>) software. Also, it&#39;s the only system that I&#39;ve got, so it would
+be hard for me to explain other systems.</p>
+
+<p>If you want to toy around with the graphical back end of Recoll, you can install it with:</p>
+<div class="highlight"><pre><code class="language-sh" data-lang="sh">sudo apt-get install recoll
+</code></pre></div>
+<p>Unfortunately, the shell tool <code>recollq</code> isn&#39;t bundled with that
+package, so we need to download
+<a href="http://www.lesbonscomptes.com/recoll/download.html">the sources</a>.
+The current version is <a href="http://www.lesbonscomptes.com/recoll/recoll-1.20.6.tar.gz">1.20.6</a>.</p>
+
+<h3 id="extract-the-archive">Extract the archive</h3>
+
+<p>After downloading the archive, I open <code>~/Downloads</code> in <code>dired</code> and
+press <kbd>&amp;</kbd> (<code>dired-do-async-shell-command</code>).  It guesses from
+the tar.gz extension that the command should be <code>tar zxvf</code>. By
+pressing <kbd>RET</kbd>, I have the archive extracted to the current
+directory. I&#39;ve actually allocated <code>~/Software/</code> for installing stuff
+from tarballs, since I don&#39;t want to put too much stuff in <code>~/Downloads</code>.</p>
+
+<h3 id="open-ansi-term">Open ansi-term</h3>
+
+<p>I navigate to the <code>recoll-1.20.6/</code> directory using <code>dired</code>, then press
+<kbd>&#96;</kbd> to open an <code>*ansi-term*</code> buffer for the current
+directory.</p>
+
+<p>Here&#39;s the setup for that (part of <a href="https://github.com/abo-abo/oremacs">my full config</a>):</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">ora-terminal</span> <span class="p">()</span>
+  <span class="s">&quot;Switch to terminal. Launch if nonexistent.&quot;</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">get-buffer</span> <span class="s">&quot;*ansi-term*&quot;</span><span class="p">)</span>
+      <span class="p">(</span><span class="nv">switch-to-buffer</span> <span class="s">&quot;*ansi-term*&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">ansi-term</span> <span class="s">&quot;/bin/bash&quot;</span><span class="p">))</span>
+    <span class="p">(</span><span class="nf">get-buffer-process</span> <span class="s">&quot;*ansi-term*&quot;</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">ora-dired-open-term</span> <span class="p">()</span>
+  <span class="s">&quot;Open an `ansi-term&#39; that corresponds to current directory.&quot;</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">current-dir</span> <span class="p">(</span><span class="nv">dired-current-directory</span><span class="p">)))</span>
+    <span class="p">(</span><span class="nv">term-send-string</span>
+     <span class="p">(</span><span class="nv">ora-terminal</span><span class="p">)</span>
+     <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">file-remote-p</span> <span class="nv">current-dir</span><span class="p">)</span>
+         <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">v</span> <span class="p">(</span><span class="nv">tramp-dissect-file-name</span> <span class="nv">current-dir</span> <span class="no">t</span><span class="p">)))</span>
+           <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;ssh %s@%s\n&quot;</span>
+                   <span class="p">(</span><span class="nf">aref</span> <span class="nv">v</span> <span class="mi">1</span><span class="p">)</span> <span class="p">(</span><span class="nf">aref</span> <span class="nv">v</span> <span class="mi">2</span><span class="p">)))</span>
+       <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;cd &#39;%s&#39;\n&quot;</span> <span class="nv">current-dir</span><span class="p">)))</span>
+    <span class="p">(</span><span class="k">setq</span> <span class="nv">default-directory</span> <span class="nv">current-dir</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;`&quot;</span><span class="p">)</span> <span class="ss">&#39;ora-dired-open-term</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="configure-and-make">Configure and make</h3>
+
+<p>Here&#39;s a typical sequence of shell commands. </p>
+<div class="highlight"><pre><code class="language-sh" data-lang="sh">./configure <span class="o">&amp;&amp;</span> make
+sudo make install
+<span class="nb">cd </span>query <span class="o">&amp;&amp;</span> make
+which recoll
+sudo cp recollq /usr/local/bin/
+</code></pre></div>
+<p>I was a total Linux newbie 5 years ago and had no idea about shell
+commands. Using only the first two lines, you can build and install a
+huge amount of software, so these are a great place to start if you
+want to learn these tools. I actually got by using only those two
+lines for a year a so.</p>
+
+<p>After the first run or <code>./configure</code> it turned out that I was missing
+one library, so I had to do this one and redo the <code>./configure</code> step.</p>
+<div class="highlight"><pre><code class="language-sh" data-lang="sh">sudo apt-get install libqt5webkit5-dev
+</code></pre></div>
+<p>I think this one would work as well:</p>
+<div class="highlight"><pre><code class="language-sh" data-lang="sh">sudo apt-get build-dep recoll
+</code></pre></div>
+<h2 id="configuring-recoll">Configuring Recoll</h2>
+
+<p>I only launched the graphical interface to select the indexing
+directory. It&#39;s the home directory by default, I didn&#39;t want that so I
+chose <code>~/Dropbox/org/</code> instead. Apparently, there&#39;s a way to make the
+indexing automatic via a cron job; you can even configure it via the
+graphical interface: it&#39;s all good.</p>
+
+<h2 id="using-recoll-from-emacs">Using Recoll from Emacs</h2>
+
+<p>Emacs has great options for processing output from a shell command. So
+first I had to figure out how the shell command should look like. This
+should be good enough to produce a list of indexed files that contain the word &quot;Haskell&quot;:</p>
+<div class="highlight"><pre><code class="language-sh" data-lang="sh">recollq -b <span class="s1">&#39;haskell&#39;</span>
+</code></pre></div>
+<p>And there&#39;s how to adapt that command to the asynchronous <code>ivy-read</code> interface:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel-recoll-function</span> <span class="p">(</span><span class="nf">string</span> <span class="kp">&amp;rest</span> <span class="nv">_unused</span><span class="p">)</span>
+  <span class="s">&quot;Issue recallq for STRING.&quot;</span>
+  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">&lt;</span> <span class="p">(</span><span class="nf">length</span> <span class="nf">string</span><span class="p">)</span> <span class="mi">3</span><span class="p">)</span>
+      <span class="p">(</span><span class="nv">counsel-more-chars</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">counsel--async-command</span>
+     <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;recollq -b &#39;%s&#39;&quot;</span> <span class="nf">string</span><span class="p">))</span>
+    <span class="no">nil</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel-recoll</span> <span class="p">(</span><span class="kp">&amp;optional</span> <span class="nv">initial-input</span><span class="p">)</span>
+  <span class="s">&quot;Search for a string in the recoll database.</span>
+<span class="s">You&#39;ll be given a list of files that match.</span>
+<span class="s">Selecting a file will launch `swiper&#39; for that file.</span>
+<span class="s">INITIAL-INPUT can be given as the initial minibuffer input.&quot;</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">ivy-read</span> <span class="s">&quot;recoll: &quot;</span> <span class="ss">&#39;counsel-recoll-function</span>
+            <span class="nb">:initial-input</span> <span class="nv">initial-input</span>
+            <span class="nb">:dynamic-collection</span> <span class="no">t</span>
+            <span class="nb">:history</span> <span class="ss">&#39;counsel-git-grep-history</span>
+            <span class="nb">:action</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+                      <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">string-match</span> <span class="s">&quot;file://\\(.*\\)\\&#39;&quot;</span> <span class="nv">x</span><span class="p">)</span>
+                        <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">file-name</span> <span class="p">(</span><span class="nv">match-string</span> <span class="mi">1</span> <span class="nv">x</span><span class="p">)))</span>
+                          <span class="p">(</span><span class="nv">find-file</span> <span class="nv">file-name</span><span class="p">)</span>
+                          <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nf">string-match</span> <span class="s">&quot;pdf$&quot;</span> <span class="nv">x</span><span class="p">)</span>
+                            <span class="p">(</span><span class="nv">swiper</span> <span class="nv">ivy-text</span><span class="p">)))))))</span>
+</code></pre></div>
+<p>The code here is pretty simple:</p>
+
+<ul>
+<li>I don&#39;t start a search until at least 3 chars are entered, in order to not get too many results.</li>
+<li>I mention <code>:dynamic-collection t</code> which means that <code>recollq</code> should be called after each new letter entered.</li>
+<li>In <code>:action</code>, I specify to open the selected file and start a <code>swiper</code> with the current input in that file.</li>
+</ul>
+
+<h2 id="outro">Outro</h2>
+
+<p>I hope you found this info useful. It&#39;s certainly pretty cool:</p>
+<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span class="nb">cd</span> ~/Dropbox/org <span class="o">&amp;&amp;</span> du -hs
+<span class="c"># 567M .</span>
+</code></pre></div>
+<p>So there&#39;s half of a gigabyte of stuff, all of it indexed, and I&#39;m
+getting a file list update after each new key press in Emacs.</p>
+
+<p>If you know of a better tool than recoll (I&#39;m not too happy that match
+context that it gives via the <code>-A</code> command option), please do share.
+Also, I&#39;ve just learned that there&#39;s
+<a href="https://github.com/emacs-helm/helm-recoll">helm-recoll</a> out there, so
+you can use that if you like Helm.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/07/23/ivy-multiaction/">
         New Ivy multi-action exit
       </a>
@@ -699,53 +865,6 @@ candidate is selected.</li>
 </ul>
 
 <p>Almost forgot, if this little intro got you excited, the packages that you should install from MELPA are: <code>helm-rhythmbox</code> and <code>counsel</code>.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/07/07/hydra-resume/">
-        Pause or resume the current Hydra
-      </a>
-    </h1>
-
-    <span class="post-date">07 Jul 2015</span>
-
-    <p>Today I&#39;d like to highlight a generic command recently added to
-<a href="https://github.com/abo-abo/hydra">hydra</a>.  It&#39;s kind of cute, and
-maybe something that you didn&#39;t even know you wanted.  Basically, the
-<code>hydra-pause-resume</code> command allows to pause and resume the current
-hydra with one key. And it works for all hydras at once, without any
-extra configuration. All you have to do is to bind it globally to
-whatever you like, for example:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-M-k&quot;</span><span class="p">)</span> <span class="ss">&#39;hydra-pause-resume</span><span class="p">)</span>
-</code></pre></div>
-<p>What it does:</p>
-
-<ul>
-<li>If a hydra is active, deactivate and push it on the stack.</li>
-<li>If no hydra is active, pop one from the stack and call it.</li>
-<li>If the stack is empty, call the last hydra.</li>
-</ul>
-
-<p>Personally, I haven&#39;t found too much use from the stack - resuming the
-last one is enough for me. But the stack comes at no extra cost, and
-might be useful to someone.</p>
-
-<blockquote>
-<p>If, for example, you have 2 hydras on the stack, how to resume the
-older one?</p>
-</blockquote>
-
-<p>The way stacks work, you simply have to go through all elements one by one. So that&#39;s:</p>
-
-<ol>
-<li><kbd>C-M-k</kbd> to resume the newer one.</li>
-<li>Quit the current one with the appropriate shortcut, only not with <kbd>C-M-k</kbd>, since that would just put it back on the stack.</li>
-<li><kbd>C-M-k</kbd> to resume the only one remaining on the stack - the older one.</li>
-</ol>
-
-<p>Thanks to <a href="https://github.com/QiangF">@QiangF</a> for the suggestion in <a href="https://github.com/abo-abo/hydra/issues/135">#135</a>.</p>
 
   </div>
   
