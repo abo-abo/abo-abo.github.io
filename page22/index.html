@@ -263,6 +263,122 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/01/17/setting-up-ediff/">
+        Setting up Ediff
+      </a>
+    </h1>
+
+    <span class="post-date">17 Jan 2015</span>
+
+    <p>Once you make Ediff bearable, it becomes wonderful.  At least this was
+my experience. It&#39;s a very good tool, but some of the defaults look
+very poor to me.</p>
+
+<h2 id="customizing-the-customize">Customizing the <code>customize</code></h2>
+
+<p>First of all, I&#39;ll list a macro that I&#39;ve started to use for setting
+custom variables:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defmacro</span> <span class="nv">csetq</span> <span class="p">(</span><span class="nv">variable</span> <span class="nv">value</span><span class="p">)</span>
+  <span class="o">`</span><span class="p">(</span><span class="nf">funcall</span> <span class="p">(</span><span class="k">or</span> <span class="p">(</span><span class="nf">get</span> <span class="ss">&#39;,variable</span> <span class="ss">&#39;custom-set</span><span class="p">)</span>
+                <span class="ss">&#39;set-default</span><span class="p">)</span>
+            <span class="ss">&#39;,variable</span> <span class="o">,</span><span class="nv">value</span><span class="p">))</span>
+</code></pre></div>
+<p>This macro I&#39;ve put together myself after searching though the code
+base and not finding something similar; <code>custom-set-variables</code> comes
+close to what I want, or maybe <code>custom-initialize-changed</code>.  Basically
+all I want is a <code>setq</code> that is aware of the <code>custom-set</code> property of a
+variable. If you know such a macro, please let me know.</p>
+
+<h2 id="changing-some-ediff-options">Changing some Ediff options</h2>
+
+<p>Now, that I&#39;ve explained the custom setter (by the way, using
+<code>custom-set-variables</code> is absolutely equivalent to <code>csetq</code>), here are
+my changes:</p>
+
+<ol>
+<li><p>Don&#39;t use the weird setup with the control panel in a separate
+frame.  I can manage windows in Emacs much better than my desktop
+(Unity or Gnome Shell) can manage the Emacs frames.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">(csetq ediff-window-setup-function &#39;ediff-setup-windows-plain)
+</code></pre></div></li>
+<li><p>Split the windows horizontally instead of vertically. This way, it&#39;s
+much easier to follow the changes.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">(csetq ediff-split-window-function &#39;split-window-horizontally)
+</code></pre></div></li>
+<li><p>Ignore white space. I don&#39;t write a lot of Python, so I don&#39;t care
+about the white space in the diffs. At the same time, I re-format any
+LISP code that I edit to my liking, and I want to see only the
+important changes in the diff, and not the whitespace nonsense.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">(csetq ediff-diff-options &quot;-w&quot;)
+</code></pre></div></li>
+</ol>
+
+<h2 id="changing-some-ediff-key-bindings">Changing some Ediff key bindings</h2>
+
+<p>This is just the standard stuff that I like to do for each mode that
+does not self-insert: assign <kbd>j</kbd> to move down, and
+<kbd>k</kbd> to move up.</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">ora-ediff-hook</span> <span class="p">()</span>
+  <span class="p">(</span><span class="nv">ediff-setup-keymap</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">ediff-mode-map</span> <span class="s">&quot;j&quot;</span> <span class="ss">&#39;ediff-next-difference</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">ediff-mode-map</span> <span class="s">&quot;k&quot;</span> <span class="ss">&#39;ediff-previous-difference</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;ediff-mode-hook</span> <span class="ss">&#39;ora-ediff-hook</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="restoring-the-windows-after-ediff-quits">Restoring the windows after Ediff quits</h2>
+
+<p>When you quit an Ediff session with <kbd>q</kbd>, it just leaves the
+two diff windows around, instead of restoring the window configuration
+from when Ediff was started. Here&#39;s the (slightly hacky) code to
+restore the old window configuration:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">winner-mode</span><span class="p">)</span>
+<span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;ediff-after-quit-hook-internal</span> <span class="ss">&#39;winner-undo</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="list-of-ways-that-i-use-to-invoke-ediff">List of ways that I use to invoke Ediff</h2>
+
+<h3 id="from-magit">from <code>magit</code></h3>
+
+<p>In 80% of the cases, I call Ediff with <kbd>e</kbd> (<code>magit-ediff</code>) from
+<code>magit-status-mode</code>. This gives me a better overview of the changes,
+especially when I want to revert stuff with either <kbd>a</kbd>
+(<code>ediff-copy-A-to-B</code>) or <kbd>b</kbd> (<code>ediff-copy-B-to-A</code>). Probably
+with <kbd>a</kbd>, since <a href="https://github.com/magit/magit">magit</a> seems
+to consistently put the <code>@{index}</code> file into the <code>A</code> diff window, and
+the current file into the <code>B</code> window.</p>
+
+<p>So if I&#39;m looking at a diff (to which I navigated with
+<kbd>j</kbd>/<kbd>k</kbd>), I can revert it with <kbd>a</kbd>. At this
+point, the diff region in the current file will become equal to that
+of the index file. But it will not be saved yet. If I want to save the
+current file in the <code>B</code> window, I can do it with <kbd>wb</kbd>
+(<code>ediff-save-buffer</code>). After a revert, it&#39;s also useful to call
+<kbd>!</kbd>(<code>ediff-update-diffs</code>), which will remove the zero-length
+diffs and update the diff-count in the mode-line.</p>
+
+<h3 id="other-methods">other methods</h3>
+
+<ol>
+<li><code>ediff-buffers</code> will diff two (different) buffers. If you happen to
+have only two windows open with the appropriate buffers, you get them
+as defaults and can choose them quickly with <kbd>RET</kbd> <kbd>RET</kbd>.</li>
+<li><code>ediff-files</code> is similar, but works on files instead. I like to just mark the appropriate files
+in <code>dired</code> with <kbd>m</kbd>, then they also get auto-selected by <code>ediff-files</code>.</li>
+<li><code>ediff-current-file</code> is useful to see the unsaved changes to the current file.
+I rarely use it, since I have a compulsion to save every file every chance I get. There is little hope
+to recover from this addiction, unless someone implements an analogue of <a href="https://github.com/bbatsov/guru-mode">guru-mode</a>
+that annoys you when you try to save a file. Actually, it&#39;s not a bad idea - <kbd>C-x C-s</kbd>:</li>
+</ol>
+
+<blockquote>
+<p>Oleh, you have saved this file <code>40 times</code> in the last hour; the last
+save was <code>0 minutes 34 seconds ago</code>; since then, you&#39;ve changed <code>27
+bytes</code> of information. Are you <strong>sure</strong> you want to save <code>[y/N]</code>?</p>
+</blockquote>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/01/16/compile-savely/">
         Save before compile
       </a>
@@ -525,58 +641,6 @@ that could happen, right?</p>
 <span class="diff-indicator-added">+  rm -rf /usr/lib/nvidia-current/xorg/xorg</span>
 </pre>
 
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/01/12/dired-file-size/">
-        File sizes in dired
-      </a>
-    </h1>
-
-    <span class="post-date">12 Jan 2015</span>
-
-    <p>Today, I&#39;ll continue with the trend of posting a small piece of my
-config when I don&#39;t have the time to post something more substantial.</p>
-
-<h2 id="some-code">Some code</h2>
-
-<p>This one looks nice, although it only works on systems with <code>/usr/bin/du</code>,
-which actually comprise 100% of the systems that I use:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">dired-get-size</span> <span class="p">()</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">files</span> <span class="p">(</span><span class="nv">dired-get-marked-files</span><span class="p">)))</span>
-    <span class="p">(</span><span class="nb">with-temp-buffer</span>
-      <span class="p">(</span><span class="nf">apply</span> <span class="ss">&#39;call-process</span> <span class="s">&quot;/usr/bin/du&quot;</span> <span class="no">nil</span> <span class="no">t</span> <span class="no">nil</span> <span class="s">&quot;-sch&quot;</span> <span class="nv">files</span><span class="p">)</span>
-      <span class="p">(</span><span class="nf">message</span>
-       <span class="s">&quot;Size of all marked files: %s&quot;</span>
-       <span class="p">(</span><span class="k">progn</span>
-         <span class="p">(</span><span class="nf">re-search-backward</span> <span class="s">&quot;\\(^[ 0-9.,]+[A-Za-z]+\\).*total$&quot;</span><span class="p">)</span>
-         <span class="p">(</span><span class="nv">match-string</span> <span class="mi">1</span><span class="p">))))))</span>
-</code></pre></div>
-<p>On doing a search, turns out that I got this code from
-<a href="http://www.emacswiki.org/emacs/DiredGetFileSize">the wiki</a> at some
-point.  I can confirm that, unlike some of the other code on the wiki,
-this one still works as advertised: you can use it on a directory or
-on a series of marked files and directories.</p>
-
-<h2 id="standard-dired-marking">Standard <code>dired</code> marking</h2>
-
-<p>In <code>dired</code>, you can:</p>
-
-<ul>
-<li>mark an item with <kbd>m</kbd></li>
-<li>unmark an item with <kbd>DEL</kbd></li>
-<li>inverse selection with <kbd>t</kbd></li>
-<li>unmark everything with <kbd>U</kbd></li>
-</ul>
-
-<p>Compared to this, the selection with the mouse and the control and
-shift keys that many file browsers use looks like kindergarten.</p>
-
-<p>This new action, getting the size of marked things, I&#39;ve bound to <kbd>z</kbd>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;z&quot;</span><span class="p">)</span> <span class="ss">&#39;dired-get-size</span><span class="p">)</span>
-</code></pre></div>
   </div>
   
 </div>

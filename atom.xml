@@ -4,13 +4,74 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-08-05T11:30:26+02:00</updated>
+ <updated>2015-08-14T17:42:32+02:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Store all current ivy candidates into the kill ring</title>
+   <link href="http://oremacs.com/2015/08/14/ivy-kill-ring-save/"/>
+   <updated>2015-08-14T00:00:00+02:00</updated>
+   <id>http://oremacs.com/2015/08/14/ivy-kill-ring-save</id>
+   <content type="html">&lt;p&gt;I&amp;#39;d like to highlight a new command added to
+&lt;a href=&quot;https://github.com/abo-abo/swiper&quot;&gt;ivy-mode&lt;/a&gt; today:
+&lt;code&gt;ivy-kill-ring-save&lt;/code&gt;.  It allows to store all current candidates to
+the kill ring. This could have a number of uses.&lt;/p&gt;
+
+&lt;h2 id=&quot;scenario-1&quot;&gt;Scenario 1&lt;/h2&gt;
+
+&lt;p&gt;Suppose you want to learn some Elisp, specifically all functions that
+start with &lt;code&gt;forward-&lt;/code&gt;. Then call &lt;code&gt;counsel-describe-function&lt;/code&gt; with
+&amp;quot;forward-&amp;quot; as input and press &lt;kbd&gt;M-w&lt;/kbd&gt;. Then just yank this into
+some buffer, &lt;code&gt;org-mode&lt;/code&gt; for instance, and go through the functions
+one-by-one takings notes on the way:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;forward-comment
+forward-paragraph
+forward-thing
+forward-symbol
+forward-visible-line
+forward-word
+forward-same-syntax
+forward-whitespace
+forward-button
+forward-line
+forward-list
+forward-sentence
+forward-point
+forward-to-indentation
+forward-ifdef
+forward-char
+forward-sexp
+forward-page
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;scenario-2&quot;&gt;Scenario 2&lt;/h2&gt;
+
+&lt;p&gt;Suppose you want to store a subset of &lt;code&gt;projectile-find-file&lt;/code&gt; names
+that match a pattern.  Just press &lt;kbd&gt;M-w&lt;/kbd&gt; and those file names
+will be on the top of the kill ring. Of course, you need to have this setting on:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;projectile-completion-system&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ivy&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This scenario should apply to basically any place where you&amp;#39;re
+completing file names, like &lt;code&gt;counsel-locate&lt;/code&gt; or
+&lt;code&gt;counsel-find-file&lt;/code&gt;. Also
+&lt;a href=&quot;https://github.com/technomancy/find-file-in-project&quot;&gt;find-file-in-project&lt;/a&gt;,
+which uses &lt;code&gt;ivy&lt;/code&gt; for completion if it&amp;#39;s installed.&lt;/p&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;Note also that the command comes for free, since normally nothing is
+done by &lt;kbd&gt;M-w&lt;/kbd&gt; when the region isn&amp;#39;t active. When the region
+is active, this command will store the selected text instead of
+matched candidates.&lt;/p&gt;
+
+&lt;p&gt;Thanks to &lt;a href=&quot;https://github.com/drorbemet&quot;&gt;@drorbemet&lt;/a&gt; for giving me the
+idea in &lt;a href=&quot;https://github.com/abo-abo/swiper/issues/197&quot;&gt;#197&lt;/a&gt;.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Ivy-mode 0.6.0 is out</title>
