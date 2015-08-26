@@ -263,6 +263,51 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/02/22/saving-match-data/">
+        Saving match data in-between Elisp evals
+      </a>
+    </h1>
+
+    <span class="post-date">22 Feb 2015</span>
+
+    <p>This is a new feature I&#39;ve added recently to <a href="https://github.com/abo-abo/lispy">lispy</a>
+that&#39;s useful when debugging regex-related code.</p>
+
+<p>The gist of it is that the match data is a single global object in Emacs.
+So if you call <code>string-match</code> with your <kbd>C-x C-e</kbd>, there&#39;s no
+guarantee that e.g. <code>match-beginning</code> will return the proper thing with another <kbd>C-x C-e</kbd>,
+since any package running in your Emacs could mess with the match data (packages that use timers
+or post-command hooks etc.).</p>
+
+<p>After getting annoyed by this a few times, I&#39;ve finally added a
+fail-safe to <kbd>e</kbd> (<code>lispy-eval</code>) and <kbd>p</kbd>
+(<code>lispy-eval-other-window</code>). Here&#39;s how it looks like:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">defvar</span> <span class="nv">lispy-eval-match-data</span> <span class="no">nil</span><span class="p">)</span>
+
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">lispy--eval-elisp-form</span> <span class="p">(</span><span class="nv">form</span> <span class="nv">lexical</span><span class="p">)</span>
+  <span class="s">&quot;Eval FORM and return its value.</span>
+<span class="s">If LEXICAL is t, evaluate using lexical scoping.</span>
+<span class="s">Restore and save `lispy-eval-match-data&#39; appropriately,</span>
+<span class="s">so that no other packages disturb the match data.&quot;</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">val</span><span class="p">)</span>
+    <span class="p">(</span><span class="nf">fset</span> <span class="ss">&#39;\,</span> <span class="nf">#&#39;identity</span><span class="p">)</span>
+    <span class="p">(</span><span class="nf">set-match-data</span> <span class="nv">lispy-eval-match-data</span><span class="p">)</span>
+    <span class="p">(</span><span class="k">setq</span> <span class="nv">val</span> <span class="p">(</span><span class="nf">eval</span> <span class="nv">form</span> <span class="nv">lexical</span><span class="p">))</span>
+    <span class="p">(</span><span class="k">setq</span> <span class="nv">lispy-eval-match-data</span> <span class="p">(</span><span class="nf">match-data</span><span class="p">))</span>
+    <span class="p">(</span><span class="nf">fset</span> <span class="ss">&#39;\,</span> <span class="no">nil</span><span class="p">)</span>
+    <span class="nv">val</span><span class="p">))</span>
+</code></pre></div>
+<p>There&#39;s also a little dance of ignoring comma operators in the rare
+case when I want to eval <em>inside</em> a backquoted list.  The two
+functions that you can take away from this exercise are <code>match-data</code>
+and <code>set-match-data</code> which appropriately return and store a list of
+integers. Keeping the string separate from the regex match is a neat
+way to improve performance.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/02/21/hydra-docstring-sexp/">
         Embedding sexps in Hydra docstrings
       </a>
@@ -591,81 +636,6 @@ Here&#39;s some Elisp for XML generation, if you&#39;re interested</p>
 <g><text x="305" y="140" style="font-size:10px;fill:#2b2828;font-family:Deja Vu Sans Mono">I</text></g>
 <g><text x="335" y="140" style="font-size:10px;fill:#2b2828;font-family:Deja Vu Sans Mono">O</text></g>
 <g><text x="365" y="140" style="font-size:10px;fill:#2b2828;font-family:Deja Vu Sans Mono">P</text></g>.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/02/17/hydra-0.10.0/">
-        Hydra 0.10.0 is out
-      </a>
-    </h1>
-
-    <span class="post-date">17 Feb 2015</span>
-
-    <p>As usual, I&#39;ll just re-state the
-<a href="https://github.com/abo-abo/hydra/releases/tag/0.10.0">release notes</a>,
-while maybe adding a bit of flavor.</p>
-
-<h2 id="new-features">New features</h2>
-
-<h3 id="define-hydra-heads-that-don&#39;t-show-up-in-the-hint-at-all">Define Hydra heads that don&#39;t show up in the hint at all</h3>
-
-<p>This can be done by setting the head&#39;s hint explicitly to <code>nil</code>, instead of the usual string. For
-instance, if you always tend to bind the arrows to <kbd>hjkl</kbd>, there&#39;s no point to show a hint
-for them.</p>
-
-<h3 id="use-a-dedicated-window-for-hydra-hints">Use a dedicated window for Hydra hints</h3>
-
-<p>Since version <code>0.10.0</code>, setting <code>hydra-lv</code> to <code>t</code> (the default setting) will make it use a dedicated
-window right above the Echo Area for hints. This has the advantage that you can immediately see any
-<code>message</code> output from the functions that you call, since Hydra no longer uses <code>message</code> to display
-the hint. You can still have the old behavior by setting <code>hydra-lv</code> to <code>nil</code>.</p>
-
-<p>How it looks like:</p>
-
-<p><img src="/download/hydra-lv.png" alt="hydra-lv"></p>
-
-<p>Here, an error was triggered by <code>previous-line</code> and the message is displayed without interrupting
-the hint.</p>
-
-<h3 id="allow-duplicate-functions-in-heads">Allow duplicate functions in heads</h3>
-
-<p>Duplicate functions will be concatenated in the hint.
-This was already covered in <a href="/2015/02/16/hydra-multi/">yesterday&#39;s post</a></p>
-
-<h3 id="add-option-to-font-lock-defhydra">Add option to font-lock <code>defhydra</code></h3>
-
-<p>If you want to nicely font-lock your <code>defhydra</code> statements, just add this to your config:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;hydra</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">hydra-add-font-lock</span><span class="p">)</span>
-</code></pre></div>
-<p>Additionally, <code>defhydra</code> is now to be indented as a <code>defun</code>, so it will be indented like this:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-goto-line</span> <span class="p">(</span><span class="nv">global-map</span> <span class="s">&quot;M-g&quot;</span>
-                           <span class="nb">:pre</span> <span class="p">(</span><span class="nv">linum-mode</span> <span class="mi">1</span><span class="p">)</span>
-                           <span class="nb">:post</span> <span class="p">(</span><span class="nv">linum-mode</span> <span class="mi">-1</span><span class="p">)</span>
-                           <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;g&quot;</span> <span class="nv">goto-line</span> <span class="s">&quot;line&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;c&quot;</span> <span class="nf">goto-char</span> <span class="s">&quot;char&quot;</span><span class="p">))</span>
-</code></pre></div>
-<p>Note that the indentation of the body argument is as if it was data
-and not code, i.e. the proper one. As you see, I even added <code>defhydra</code>
-to the blog&#39;s Pygments list for Elisp.</p>
-
-<h2 id="incompatible-changes">Incompatible changes</h2>
-
-<p>The macro <code>hydra-create</code>, as well as the variables that were supposed
-to be used with it (<code>hydra-example-text-scale</code>,
-<code>hydra-example-move-window-splitter</code>, <code>hydra-example-goto-error</code>,
-<code>hydra-example-windmove</code>) were removed. All the functionality is still
-there in hydra-examples.el with the better <code>defhydra</code> macro.</p>
-
-<h2 id="outro">Outro</h2>
-
-<p>I hope that you like the new changes. And if you&#39;re byte-compiling
-your code that uses <code>defhydra</code>, don&#39;t forget to re-compile. Also, the
-latest version of <code>ace-window</code> will ignore <code>*LV*</code> buffer while
-switching, as it did for <code>*Calc Trail*</code> before.</p>
 
   </div>
   

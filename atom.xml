@@ -4,13 +4,158 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-08-14T17:42:32+02:00</updated>
+ <updated>2015-08-26T14:17:40+02:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Complete Python symbols using Ivy</title>
+   <link href="http://oremacs.com/2015/08/26/counsel-jedi/"/>
+   <updated>2015-08-26T00:00:00+02:00</updated>
+   <id>http://oremacs.com/2015/08/26/counsel-jedi</id>
+   <content type="html">&lt;p&gt;I had a fascination with Python at one point, until I got too annoyed
+with the indentation rules.  I still have a few scripts left over, so
+I&amp;#39;m sympathetic to Python support in Emacs.  The reason for
+today&amp;#39;s post comes from
+&lt;a href=&quot;http://emacs.stackexchange.com/questions/15032/insert-parens-while-completing-functions-in-company-mode&quot;&gt;this question&lt;/a&gt;
+on Emacs StackExchange. Essentially, the user wants to insert parens
+automatically when a function name is completed.&lt;/p&gt;
+
+&lt;p&gt;The completion candidates come from
+&lt;a href=&quot;https://github.com/tkf/emacs-jedi&quot;&gt;jedi&lt;/a&gt; plugin.  To quickly see
+where the list of strings is coming from, I&amp;#39;ve examined &lt;code&gt;ac-sources&lt;/code&gt;
+variable and saw that it contains &lt;code&gt;ac-source-jedi-direct&lt;/code&gt;, which evaluates to:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;candidates&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;jedi:ac-direct-matches&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;prefix&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;jedi:ac-direct-prefix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;init&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;jedi:complete-request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;requires&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;-1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This means that &lt;code&gt;jedi:complete-request&lt;/code&gt; has to be called at point,
+followed by &lt;code&gt;jedi:ac-direct-matches&lt;/code&gt; to obtain the list of strings. So
+basically, this code:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;progn&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;deferred:sync!&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;jedi:complete-request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;jedi:ac-direct-matches&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Note the call to &lt;code&gt;deferred:sync!&lt;/code&gt;. I had to add that one to make sure
+that &lt;code&gt;jedi:complete-request&lt;/code&gt; completes before &lt;code&gt;jedi:ac-direct-matches&lt;/code&gt;
+is called.&lt;/p&gt;
+
+&lt;p&gt;Testing with some Python code, where &lt;code&gt;|&lt;/code&gt; is the point:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;n&quot;&gt;params&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;foo&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;bar&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;params&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The Elisp code above will return:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;#(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;items&amp;quot;&lt;/span&gt;
+   &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;summary&lt;/span&gt;
+        &lt;span class=&quot;s&quot;&gt;&amp;quot;function: __builtin__.dict.items&amp;quot;&lt;/span&gt;
+        &lt;span class=&quot;nv&quot;&gt;symbol&lt;/span&gt;
+        &lt;span class=&quot;s&quot;&gt;&amp;quot;f&amp;quot;&lt;/span&gt;
+        &lt;span class=&quot;nv&quot;&gt;document&lt;/span&gt;
+        &lt;span class=&quot;s&quot;&gt;&amp;quot;items(self)&lt;/span&gt;
+
+&lt;span class=&quot;s&quot;&gt;D.items() -&amp;gt; list of D&amp;#39;s (key, value) pairs, as 2-tuples&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;#(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;iteritems&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;9&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;summary&lt;/span&gt;
+         &lt;span class=&quot;s&quot;&gt;&amp;quot;function: __builtin__.dict.iteritems&amp;quot;&lt;/span&gt;
+         &lt;span class=&quot;nv&quot;&gt;symbol&lt;/span&gt;
+         &lt;span class=&quot;s&quot;&gt;&amp;quot;f&amp;quot;&lt;/span&gt;
+         &lt;span class=&quot;nv&quot;&gt;document&lt;/span&gt;
+         &lt;span class=&quot;s&quot;&gt;&amp;quot;iteritems(self)&lt;/span&gt;
+
+&lt;span class=&quot;s&quot;&gt;D.iteritems() -&amp;gt; an iterator over the (key, value) items of D&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;#(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;iterkeys&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;8&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;summary&lt;/span&gt;
+         &lt;span class=&quot;s&quot;&gt;&amp;quot;function: __builtin__.dict.iterkeys&amp;quot;&lt;/span&gt;
+         &lt;span class=&quot;nv&quot;&gt;symbol&lt;/span&gt;
+         &lt;span class=&quot;s&quot;&gt;&amp;quot;f&amp;quot;&lt;/span&gt;
+         &lt;span class=&quot;nv&quot;&gt;document&lt;/span&gt;
+         &lt;span class=&quot;s&quot;&gt;&amp;quot;iterkeys(self)&lt;/span&gt;
+
+&lt;span class=&quot;s&quot;&gt;D.iterkeys() -&amp;gt; an iterator over the keys of D&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;#(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;itervalues&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;summary&lt;/span&gt;
+          &lt;span class=&quot;s&quot;&gt;&amp;quot;function: __builtin__.dict.itervalues&amp;quot;&lt;/span&gt;
+          &lt;span class=&quot;nv&quot;&gt;symbol&lt;/span&gt;
+          &lt;span class=&quot;s&quot;&gt;&amp;quot;f&amp;quot;&lt;/span&gt;
+          &lt;span class=&quot;nv&quot;&gt;document&lt;/span&gt;
+          &lt;span class=&quot;s&quot;&gt;&amp;quot;itervalues(self)&lt;/span&gt;
+
+&lt;span class=&quot;s&quot;&gt;D.itervalues() -&amp;gt; an iterator over the values of D&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;So these strings come with the symbol documentation and symbol type
+encoded as string properties. After this, the rest of the Elisp code
+follows very easily, you can find it as part of
+&lt;a href=&quot;https://github.com/abo-abo/swiper/blob/master/counsel.el&quot;&gt;counsel&lt;/a&gt;
+package on MELPA:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;counsel-jedi&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Python completion at point.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;bnd&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;bounds-of-thing-at-point&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;symbol&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;bnd&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;progn&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;counsel-completion-beg&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;car&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;bnd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;counsel-completion-end&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;cdr&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;bnd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;counsel-completion-beg&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;counsel-completion-end&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;deferred:sync!&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;jedi:complete-request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ivy-read&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Symbol name: &amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;jedi:ac-direct-matches&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;nb&quot;&gt;:action&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;#&amp;#39;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;counsel--py-action&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;counsel--py-action&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;symbol&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Insert SYMBOL, erasing the previous one.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;stringp&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;symbol&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;with-ivy-window&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;counsel-completion-beg&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;delete-region&lt;/span&gt;
+         &lt;span class=&quot;nv&quot;&gt;counsel-completion-beg&lt;/span&gt;
+         &lt;span class=&quot;nv&quot;&gt;counsel-completion-end&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;counsel-completion-beg&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;move-marker&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;make-marker&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;point&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;insert&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;symbol&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;counsel-completion-end&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;move-marker&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;make-marker&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;point&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;equal&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;get-text-property&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;symbol&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;symbol&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;f&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;insert&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;()&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;counsel-completion-end&lt;/span&gt;
+              &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;move-marker&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;make-marker&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;point&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;backward-char&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Essentially, the last interesting part is &lt;code&gt;(equal (get-text-property 0
+&amp;#39;symbol symbol) &amp;quot;f&amp;quot;)&lt;/code&gt; which test if the string corresponds to a
+function or not. The rest of the code just fiddles with symbol markers
+with ensure that the previous symbol is erased before the new symbol
+is inserted if you press &lt;kbd&gt;C-M-n&lt;/kbd&gt; (&lt;code&gt;ivy-next-line-and-call&lt;/code&gt;),
+or use &lt;code&gt;ivy-resume&lt;/code&gt;. Just to describe how this would be useful for the
+Python code above: I call &lt;code&gt;counsel-jedi&lt;/code&gt;, followed by &lt;kbd&gt;C-M-n&lt;/kbd&gt;
+to get:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;n&quot;&gt;params&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;foo&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;bar&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;params&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;iteritems&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Pressing &lt;kbd&gt;C-M-n&lt;/kbd&gt; again will result in:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;n&quot;&gt;params&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;foo&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;bar&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;params&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;iterkeys&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Once I&amp;#39;m satisfied with my selected candidate, I can press either
+&lt;kbd&gt;C-m&lt;/kbd&gt; or &lt;kbd&gt;C-j&lt;/kbd&gt; or &lt;kbd&gt;C-g&lt;/kbd&gt;.  Most of the above
+code can be used almost verbatim if you&amp;#39;re a Helm fan and want to
+implement &lt;code&gt;helm-jedi&lt;/code&gt;. Basically, the approach I described (going
+through &lt;code&gt;ac-sources&lt;/code&gt;) can be used to implement alternative completion
+in a lot of cases where &lt;code&gt;auto-complete-mode&lt;/code&gt; completion is already
+available.&lt;/p&gt;
+
+&lt;p&gt;Finally, if you like the idea of auto-inserting parens with completion
+and are using C/C++, have a look at
+&lt;a href=&quot;https://github.com/abo-abo/function-args&quot;&gt;function-args&lt;/a&gt; - this
+package does that too, with Ivy, Ido and Helm as available back ends.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Store all current ivy candidates into the kill ring</title>

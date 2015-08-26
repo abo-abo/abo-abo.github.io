@@ -263,6 +263,54 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/01/13/dired-options/">
+        Even more dired options
+      </a>
+    </h1>
+
+    <span class="post-date">13 Jan 2015</span>
+
+    <p>I&#39;ve been posting a lot about <code>dired</code> lately, and with good cause.  A
+lot of people say that <code>org-mode</code> is the killer app of Emacs, but
+<code>dired</code> should be in that group as well, especially if you count
+<code>tramp</code> as part of <code>dired</code>. Below, I&#39;ll list a few dired options in my
+config that deviate from the defaults.</p>
+
+<h2 id="dired-listing-switches"><code>dired-listing-switches</code></h2>
+
+<p>This is the essence of what <code>dired</code> presents and how it presents it.
+A great thing about it is that these are just the <code>ls</code> switches, so
+you can look them up with <code>info ls</code>.</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">dired-listing-switches</span> <span class="s">&quot;-laGh1v --group-directories-first&quot;</span><span class="p">)</span>
+</code></pre></div>
+<ul>
+<li><code>l</code>: Is the only mandatory one.</li>
+<li><code>a</code>: Means to list invisible files.</li>
+<li><code>G</code>: Don&#39;t show group information. These days, when there are more
+laptops than people, the group info is rarely useful.</li>
+<li><code>h</code>: Human readable sizes, such as <strong>M</strong> for mebibytes.</li>
+<li><code>1v</code>: Affects the sorting of digits, hopefully in a positive way.</li>
+<li><code>--group-directories-first</code>: self-explanatory, I like to have the directories on the top,
+separate from the files.</li>
+</ul>
+
+<h2 id="on-recursion">On recursion</h2>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">dired-recursive-copies</span> <span class="ss">&#39;always</span><span class="p">)</span>
+<span class="p">(</span><span class="k">setq</span> <span class="nv">dired-recursive-deletes</span> <span class="ss">&#39;always</span><span class="p">)</span>
+</code></pre></div>
+<p>These settings make dired skip the confirmation when you copy or
+delete a directory that contains other directories.  What&#39;s the worse
+that could happen, right?</p>
+
+<pre>
+<span class="diff-indicator-removed">-  rm -rf /usr /lib/nvidia-current/xorg/xorg</span>
+<span class="diff-indicator-added">+  rm -rf /usr/lib/nvidia-current/xorg/xorg</span>
+</pre>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/01/12/dired-file-size/">
         File sizes in dired
       </a>
@@ -619,60 +667,6 @@ And <code>csetq</code> is just a <code>customize</code>-aware version of <code>s
   <span class="o">`</span><span class="p">(</span><span class="nf">funcall</span> <span class="p">(</span><span class="k">or</span> <span class="p">(</span><span class="nf">get</span> <span class="ss">&#39;,variable</span> <span class="ss">&#39;custom-set</span><span class="p">)</span> <span class="ss">&#39;set-default</span><span class="p">)</span>
             <span class="ss">&#39;,variable</span> <span class="o">,</span><span class="nv">value</span><span class="p">))</span>
 </code></pre></div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/01/08/org-protocol-2/">
-        My org-protocol setup, part 2.
-      </a>
-    </h1>
-
-    <span class="post-date">08 Jan 2015</span>
-
-    <p>This continues the code from <a href="/2015/01/07/org-protocol-1/">the part 1</a>.</p>
-
-<h2 id="org-handle-link-youtube"><code>org-handle-link-youtube</code></h2>
-
-<p>I tried to make the first call to <code>youtube-dl</code> asynchronous, but it
-wasn&#39;t working out.  So for the current code, there&#39;s still about a 2
-second delay before the capture buffer appears.</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;async</span><span class="p">)</span>
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">org-handle-link-youtube</span> <span class="p">(</span><span class="nv">link</span><span class="p">)</span>
-  <span class="p">(</span><span class="nb">lexical-let*</span>
-      <span class="p">((</span><span class="nv">file-name</span> <span class="p">(</span><span class="nv">org-trim</span>
-                   <span class="p">(</span><span class="nv">shell-command-to-string</span>
-                    <span class="p">(</span><span class="nf">concat</span>
-                     <span class="s">&quot;youtube-dl \&quot;&quot;</span>
-                     <span class="nv">link</span>
-                     <span class="s">&quot;\&quot;&quot;</span>
-                     <span class="s">&quot; -o \&quot;%(title)s.%(ext)s\&quot; --get-filename&quot;</span><span class="p">))))</span>
-       <span class="p">(</span><span class="nv">dir</span> <span class="s">&quot;~/Downloads/Videos&quot;</span><span class="p">)</span>
-       <span class="p">(</span><span class="nv">full-name</span>
-        <span class="p">(</span><span class="nf">expand-file-name</span> <span class="nv">file-name</span> <span class="nv">dir</span><span class="p">)))</span>
-    <span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;org-link-hook</span>
-              <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span>
-                <span class="p">(</span><span class="nf">concat</span>
-                 <span class="p">(</span><span class="nv">org-make-link-string</span> <span class="nv">dir</span> <span class="nv">dir</span><span class="p">)</span>
-                 <span class="s">&quot;\n&quot;</span>
-                 <span class="p">(</span><span class="nv">org-make-link-string</span> <span class="nv">full-name</span> <span class="nv">file-name</span><span class="p">))))</span>
-    <span class="p">(</span><span class="nv">async-shell-command</span>
-     <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;youtube-dl \&quot;%s\&quot; -o \&quot;%s\&quot;&quot;</span> <span class="nv">link</span> <span class="nv">full-name</span><span class="p">))</span>
-    <span class="p">(</span><span class="nv">find-file</span> <span class="p">(</span><span class="nv">org-expand</span> <span class="s">&quot;ent.org&quot;</span><span class="p">))</span>
-    <span class="p">(</span><span class="nf">goto-char</span> <span class="p">(</span><span class="nf">point-min</span><span class="p">))</span>
-    <span class="p">(</span><span class="nf">re-search-forward</span> <span class="s">&quot;^\\*+ +Videos&quot;</span> <span class="no">nil</span> <span class="no">t</span><span class="p">)))</span>
-</code></pre></div>
-<p>Some notes for people who want to learn more Elisp:</p>
-
-<ul>
-<li><code>lexical-let*</code> is needed to have <code>dir</code> and <code>full-name</code> visible in the <code>lambda</code>.</li>
-<li><code>org-make-link-string</code> is a nice utility command that escapes all sorts of
-characters that <code>org-mode</code> doesn&#39;t like, e.g. brackets etc.</li>
-</ul>
-
-<p>You can see my full <code>org-capture</code> and <code>org-protocol</code> setup
-<a href="https://github.com/abo-abo/org-fu">here</a>.</p>
-
   </div>
   
 </div>

@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Complete Python symbols using Ivy &middot; (or emacs
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="/public/css/octicons.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Scripts -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body class="layout-reverse theme-base-08">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <!-- <div class="sidebar-item"> -->
+  <!--   <p>unused</p> -->
+  <!-- </div> -->
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about/">About</a>
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/archive/">Archive</a>
+        
+      
+    
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+
+    <div id="github" class="sidebar-nav-item">
+      <button type="button"
+              class="btn btn-info"
+              data-toggle="collapse"
+              data-target="#github-projects">
+        <span class="octicon octicon-mark-github"></span> My Emacs Projects
+      </button>
+      <div id="github-projects" class="collapse">
+        <ul style="margin-bottom:0em;">
+          <li>
+            <a href="https://github.com/abo-abo/lispy">lispy</a>
+            <p>vi-like Paredit</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/worf">worf</a>
+            <p>vi-like bindings for org-mode</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-window">ace-window</a>
+            <p>switch windows with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-link">ace-link</a>
+            <p>follow links with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/function-args">function-args</a>
+            <p>enhance <code>CEDET</code> for C++</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/helm-make">helm-make</a>
+            <p>select a Makefile target with <code>helm</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/make-it-so">make-it-so</a>
+            <p>transform files with Makefile recipes</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/org-download">org-download</a>
+            <p>drag-and-drop images to <code>org-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo?tab=repositories">
+              <span class="octicon octicon-octoface"></span>
+              and more
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
+
+  <div class="sidebar-item">
+    <p>
+      <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
+        <img alt="Creative Commons License"
+             style="border-width:0;opacity: 0.3;"
+             src="https://licensebuttons.net/l/by-sa/4.0/88x31.png"/>
+      </a>
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">(or emacs</a>
+            <small>irrelevant)</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Complete Python symbols using Ivy</h1>
+  <span class="post-date">26 Aug 2015</span>
+  <p>I had a fascination with Python at one point, until I got too annoyed
+with the indentation rules.  I still have a few scripts left over, so
+I&#39;m sympathetic to Python support in Emacs.  The reason for
+today&#39;s post comes from
+<a href="http://emacs.stackexchange.com/questions/15032/insert-parens-while-completing-functions-in-company-mode">this question</a>
+on Emacs StackExchange. Essentially, the user wants to insert parens
+automatically when a function name is completed.</p>
+
+<p>The completion candidates come from
+<a href="https://github.com/tkf/emacs-jedi">jedi</a> plugin.  To quickly see
+where the list of strings is coming from, I&#39;ve examined <code>ac-sources</code>
+variable and saw that it contains <code>ac-source-jedi-direct</code>, which evaluates to:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">((</span><span class="nv">candidates</span> <span class="o">.</span> <span class="nv">jedi:ac-direct-matches</span><span class="p">)</span>
+ <span class="p">(</span><span class="nv">prefix</span> <span class="o">.</span> <span class="nv">jedi:ac-direct-prefix</span><span class="p">)</span>
+ <span class="p">(</span><span class="nv">init</span> <span class="o">.</span> <span class="nv">jedi:complete-request</span><span class="p">)</span>
+ <span class="p">(</span><span class="nv">requires</span> <span class="o">.</span> <span class="mi">-1</span><span class="p">))</span>
+</code></pre></div>
+<p>This means that <code>jedi:complete-request</code> has to be called at point,
+followed by <code>jedi:ac-direct-matches</code> to obtain the list of strings. So
+basically, this code:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">progn</span>
+  <span class="p">(</span><span class="nv">deferred:sync!</span>
+   <span class="p">(</span><span class="nv">jedi:complete-request</span><span class="p">))</span>
+  <span class="p">(</span><span class="nv">jedi:ac-direct-matches</span><span class="p">))</span>
+</code></pre></div>
+<p>Note the call to <code>deferred:sync!</code>. I had to add that one to make sure
+that <code>jedi:complete-request</code> completes before <code>jedi:ac-direct-matches</code>
+is called.</p>
+
+<p>Testing with some Python code, where <code>|</code> is the point:</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;foo&quot;</span><span class="p">:</span><span class="s">&quot;bar&quot;</span><span class="p">}</span>
+<span class="n">params</span><span class="o">.</span><span class="n">i</span>
+</code></pre></div>
+<p>The Elisp code above will return:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="o">#(</span><span class="s">&quot;items&quot;</span>
+   <span class="mi">0</span> <span class="mi">5</span> <span class="p">(</span><span class="nv">summary</span>
+        <span class="s">&quot;function: __builtin__.dict.items&quot;</span>
+        <span class="nv">symbol</span>
+        <span class="s">&quot;f&quot;</span>
+        <span class="nv">document</span>
+        <span class="s">&quot;items(self)</span>
+
+<span class="s">D.items() -&gt; list of D&#39;s (key, value) pairs, as 2-tuples&quot;</span><span class="p">))</span>
+  <span class="o">#(</span><span class="s">&quot;iteritems&quot;</span>
+    <span class="mi">0</span> <span class="mi">9</span> <span class="p">(</span><span class="nv">summary</span>
+         <span class="s">&quot;function: __builtin__.dict.iteritems&quot;</span>
+         <span class="nv">symbol</span>
+         <span class="s">&quot;f&quot;</span>
+         <span class="nv">document</span>
+         <span class="s">&quot;iteritems(self)</span>
+
+<span class="s">D.iteritems() -&gt; an iterator over the (key, value) items of D&quot;</span><span class="p">))</span>
+  <span class="o">#(</span><span class="s">&quot;iterkeys&quot;</span>
+    <span class="mi">0</span> <span class="mi">8</span> <span class="p">(</span><span class="nv">summary</span>
+         <span class="s">&quot;function: __builtin__.dict.iterkeys&quot;</span>
+         <span class="nv">symbol</span>
+         <span class="s">&quot;f&quot;</span>
+         <span class="nv">document</span>
+         <span class="s">&quot;iterkeys(self)</span>
+
+<span class="s">D.iterkeys() -&gt; an iterator over the keys of D&quot;</span><span class="p">))</span>
+  <span class="o">#(</span><span class="s">&quot;itervalues&quot;</span>
+    <span class="mi">0</span> <span class="mi">10</span> <span class="p">(</span><span class="nv">summary</span>
+          <span class="s">&quot;function: __builtin__.dict.itervalues&quot;</span>
+          <span class="nv">symbol</span>
+          <span class="s">&quot;f&quot;</span>
+          <span class="nv">document</span>
+          <span class="s">&quot;itervalues(self)</span>
+
+<span class="s">D.itervalues() -&gt; an iterator over the values of D&quot;</span><span class="p">)))</span>
+</code></pre></div>
+<p>So these strings come with the symbol documentation and symbol type
+encoded as string properties. After this, the rest of the Elisp code
+follows very easily, you can find it as part of
+<a href="https://github.com/abo-abo/swiper/blob/master/counsel.el">counsel</a>
+package on MELPA:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel-jedi</span> <span class="p">()</span>
+  <span class="s">&quot;Python completion at point.&quot;</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">bnd</span> <span class="p">(</span><span class="nv">bounds-of-thing-at-point</span> <span class="ss">&#39;symbol</span><span class="p">)))</span>
+    <span class="p">(</span><span class="k">if</span> <span class="nv">bnd</span>
+        <span class="p">(</span><span class="k">progn</span>
+          <span class="p">(</span><span class="k">setq</span> <span class="nv">counsel-completion-beg</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">bnd</span><span class="p">))</span>
+          <span class="p">(</span><span class="k">setq</span> <span class="nv">counsel-completion-end</span> <span class="p">(</span><span class="nf">cdr</span> <span class="nv">bnd</span><span class="p">)))</span>
+      <span class="p">(</span><span class="k">setq</span> <span class="nv">counsel-completion-beg</span> <span class="no">nil</span><span class="p">)</span>
+      <span class="p">(</span><span class="k">setq</span> <span class="nv">counsel-completion-end</span> <span class="no">nil</span><span class="p">)))</span>
+  <span class="p">(</span><span class="nv">deferred:sync!</span>
+   <span class="p">(</span><span class="nv">jedi:complete-request</span><span class="p">))</span>
+  <span class="p">(</span><span class="nv">ivy-read</span> <span class="s">&quot;Symbol name: &quot;</span> <span class="p">(</span><span class="nv">jedi:ac-direct-matches</span><span class="p">)</span>
+            <span class="nb">:action</span> <span class="nf">#&#39;</span><span class="nv">counsel--py-action</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel--py-action</span> <span class="p">(</span><span class="nv">symbol</span><span class="p">)</span>
+  <span class="s">&quot;Insert SYMBOL, erasing the previous one.&quot;</span>
+  <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">stringp</span> <span class="nv">symbol</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">with-ivy-window</span>
+      <span class="p">(</span><span class="nb">when</span> <span class="nv">counsel-completion-beg</span>
+        <span class="p">(</span><span class="nf">delete-region</span>
+         <span class="nv">counsel-completion-beg</span>
+         <span class="nv">counsel-completion-end</span><span class="p">))</span>
+      <span class="p">(</span><span class="k">setq</span> <span class="nv">counsel-completion-beg</span>
+            <span class="p">(</span><span class="nv">move-marker</span> <span class="p">(</span><span class="nf">make-marker</span><span class="p">)</span> <span class="p">(</span><span class="nf">point</span><span class="p">)))</span>
+      <span class="p">(</span><span class="nf">insert</span> <span class="nv">symbol</span><span class="p">)</span>
+      <span class="p">(</span><span class="k">setq</span> <span class="nv">counsel-completion-end</span>
+            <span class="p">(</span><span class="nv">move-marker</span> <span class="p">(</span><span class="nf">make-marker</span><span class="p">)</span> <span class="p">(</span><span class="nf">point</span><span class="p">)))</span>
+      <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">equal</span> <span class="p">(</span><span class="nf">get-text-property</span> <span class="mi">0</span> <span class="ss">&#39;symbol</span> <span class="nv">symbol</span><span class="p">)</span> <span class="s">&quot;f&quot;</span><span class="p">)</span>
+        <span class="p">(</span><span class="nf">insert</span> <span class="s">&quot;()&quot;</span><span class="p">)</span>
+        <span class="p">(</span><span class="k">setq</span> <span class="nv">counsel-completion-end</span>
+              <span class="p">(</span><span class="nv">move-marker</span> <span class="p">(</span><span class="nf">make-marker</span><span class="p">)</span> <span class="p">(</span><span class="nf">point</span><span class="p">)))</span>
+        <span class="p">(</span><span class="nf">backward-char</span> <span class="mi">1</span><span class="p">)))))</span>
+</code></pre></div>
+<p>Essentially, the last interesting part is <code>(equal (get-text-property 0
+&#39;symbol symbol) &quot;f&quot;)</code> which test if the string corresponds to a
+function or not. The rest of the code just fiddles with symbol markers
+with ensure that the previous symbol is erased before the new symbol
+is inserted if you press <kbd>C-M-n</kbd> (<code>ivy-next-line-and-call</code>),
+or use <code>ivy-resume</code>. Just to describe how this would be useful for the
+Python code above: I call <code>counsel-jedi</code>, followed by <kbd>C-M-n</kbd>
+to get:</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;foo&quot;</span><span class="p">:</span><span class="s">&quot;bar&quot;</span><span class="p">}</span>
+<span class="n">params</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="o">|</span><span class="p">)</span>
+</code></pre></div>
+<p>Pressing <kbd>C-M-n</kbd> again will result in:</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;foo&quot;</span><span class="p">:</span><span class="s">&quot;bar&quot;</span><span class="p">}</span>
+<span class="n">params</span><span class="o">.</span><span class="n">iterkeys</span><span class="p">(</span><span class="o">|</span><span class="p">)</span>
+</code></pre></div>
+<p>Once I&#39;m satisfied with my selected candidate, I can press either
+<kbd>C-m</kbd> or <kbd>C-j</kbd> or <kbd>C-g</kbd>.  Most of the above
+code can be used almost verbatim if you&#39;re a Helm fan and want to
+implement <code>helm-jedi</code>. Basically, the approach I described (going
+through <code>ac-sources</code>) can be used to implement alternative completion
+in a lot of cases where <code>auto-complete-mode</code> completion is already
+available.</p>
+
+<p>Finally, if you like the idea of auto-inserting parens with completion
+and are using C/C++, have a look at
+<a href="https://github.com/abo-abo/function-args">function-args</a> - this
+package does that too, with Ivy, Ido and Helm as available back ends.</p>
+
+</div>
+
+<div class="twitter-share">
+  <a href="https://twitter.com/share"
+     class="twitter-share-button"
+     data-via="_abo_abo"
+     data-dnt="true">
+    Tweet
+  </a>
+</div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'oremacs'; // required: replace example with your forum shortname
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+<script>
+  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+</script>
+<noscript>
+  Please enable JavaScript to view the
+  <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>
