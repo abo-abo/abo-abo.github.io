@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Fancy minibuffer faces for Ivy completion &middot; (or emacs
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="/public/css/octicons.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Scripts -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body class="layout-reverse theme-base-08">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <!-- <div class="sidebar-item"> -->
+  <!--   <p>unused</p> -->
+  <!-- </div> -->
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about/">About</a>
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/archive/">Archive</a>
+        
+      
+    
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+
+    <div id="github" class="sidebar-nav-item">
+      <button type="button"
+              class="btn btn-info"
+              data-toggle="collapse"
+              data-target="#github-projects">
+        <span class="octicon octicon-mark-github"></span> My Emacs Projects
+      </button>
+      <div id="github-projects" class="collapse">
+        <ul style="margin-bottom:0em;">
+          <li>
+            <a href="https://github.com/abo-abo/lispy">lispy</a>
+            <p>vi-like Paredit</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/worf">worf</a>
+            <p>vi-like bindings for org-mode</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-window">ace-window</a>
+            <p>switch windows with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-link">ace-link</a>
+            <p>follow links with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/function-args">function-args</a>
+            <p>enhance <code>CEDET</code> for C++</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/helm-make">helm-make</a>
+            <p>select a Makefile target with <code>helm</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/make-it-so">make-it-so</a>
+            <p>transform files with Makefile recipes</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/org-download">org-download</a>
+            <p>drag-and-drop images to <code>org-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo?tab=repositories">
+              <span class="octicon octicon-octoface"></span>
+              and more
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
+
+  <div class="sidebar-item">
+    <p>
+      <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
+        <img alt="Creative Commons License"
+             style="border-width:0;opacity: 0.3;"
+             src="https://licensebuttons.net/l/by-sa/4.0/88x31.png"/>
+      </a>
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">(or emacs</a>
+            <small>irrelevant)</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Fancy minibuffer faces for Ivy completion</h1>
+  <span class="post-date">04 Sep 2015</span>
+  <p>Today, I&#39;ll describe a recent improvement to the display of Ivy completion.
+To use it, add this code to your configuration:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-display-style</span> <span class="ss">&#39;fancy</span><span class="p">)</span>
+</code></pre></div>
+<p>After this, <a href="https://github.com/abo-abo/swiper">swiper</a> will look like this:</p>
+
+<p><img src="/download/ivy-display-style-1.png" alt="ivy-display-style-1.png"></p>
+
+<p>And <code>counsel-M-x</code> will look like this:</p>
+
+<p><img src="/download/ivy-display-style-2.png" alt="ivy-display-style-2.png"></p>
+
+<p>If you haven&#39;t used it before, <code>counsel-M-x</code> is part the counsel
+package on MELPA, or part of swiper package if you&#39;re installing from
+GNU ELPA. Basically, it&#39;s a <kbd>M-x</kbd> replacement (that I like to
+bind to <kbd>C-t</kbd> for efficiency reasons), that doubles as
+<code>find-function</code> (just press <kbd>C-.</kbd> instead of <kbd>RET</kbd>
+to find the function instead of calling it). If you&#39;re using
+<code>counsel-M-x</code> I highly recommend to also install <code>smex</code>, since then
+<code>counsel-M-x</code> will use <code>smex</code> for sorting the matched commands.</p>
+
+<p>The update will propertize the minibuffer contents with a new set of faces:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defcustom</span> <span class="nv">swiper-minibuffer-faces</span>
+  <span class="o">&#39;</span><span class="p">(</span><span class="nv">swiper-minibuffer-match-face-1</span>
+    <span class="nv">swiper-minibuffer-match-face-2</span>
+    <span class="nv">swiper-minibuffer-match-face-3</span>
+    <span class="nv">swiper-minibuffer-match-face-4</span><span class="p">)</span>
+  <span class="s">&quot;List of `swiper&#39; faces for minibuffer group matches.&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>Initially, when responding to
+<a href="https://github.com/abo-abo/swiper/issues/212">#212</a>, I used the
+original swiper faces in the minibuffer as well. But after some use,
+their brightness became a bit annoying.  So I introduced a new set of
+faces that can be customized separately.</p>
+
+<p>Here are the settings that I&#39;m currently using:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">custom-set-faces</span>
+ <span class="o">&#39;</span><span class="p">(</span><span class="nv">swiper-minibuffer-match-face-1</span>
+   <span class="p">((</span><span class="no">t</span> <span class="nb">:background</span> <span class="s">&quot;#dddddd&quot;</span><span class="p">)))</span>
+ <span class="o">&#39;</span><span class="p">(</span><span class="nv">swiper-minibuffer-match-face-2</span>
+   <span class="p">((</span><span class="no">t</span> <span class="nb">:background</span> <span class="s">&quot;#bbbbbb&quot;</span> <span class="nb">:weight</span> <span class="nv">bold</span><span class="p">)))</span>
+ <span class="o">&#39;</span><span class="p">(</span><span class="nv">swiper-minibuffer-match-face-3</span>
+   <span class="p">((</span><span class="no">t</span> <span class="nb">:background</span> <span class="s">&quot;#bbbbff&quot;</span> <span class="nb">:weight</span> <span class="nv">bold</span><span class="p">)))</span>
+ <span class="o">&#39;</span><span class="p">(</span><span class="nv">swiper-minibuffer-match-face-4</span>
+   <span class="p">((</span><span class="no">t</span> <span class="nb">:background</span> <span class="s">&quot;#ffbbff&quot;</span> <span class="nb">:weight</span> <span class="nv">bold</span><span class="p">))))</span>
+</code></pre></div>
+<p>It&#39;s similar to what the Firefox address bar uses: gray background and
+bold font. Additionally, the matching parts are highlighted with pale
+gray, blue and magenta colors. If you like the color scheme, it&#39;s part
+of <a href="https://github.com/abo-abo/eclipse-theme">eclipse-theme</a>.  Another
+choice, for even less distraction, could be to remove the background
+from these faces, only leaving the bold part on the matches.</p>
+
+<p>Thanks to <a href="https://github.com/Wilfred">@Wilfred</a> for nudging me to
+finally implement this feature.  It&#39;s been on my list for a long time,
+but I&#39;ve been putting it off.</p>
+
+</div>
+
+<div class="twitter-share">
+  <a href="https://twitter.com/share"
+     class="twitter-share-button"
+     data-via="_abo_abo"
+     data-dnt="true">
+    Tweet
+  </a>
+</div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'oremacs'; // required: replace example with your forum shortname
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+<script>
+  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+</script>
+<noscript>
+  Please enable JavaScript to view the
+  <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>

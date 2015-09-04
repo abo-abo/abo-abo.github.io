@@ -4,13 +4,77 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-08-26T14:17:40+02:00</updated>
+ <updated>2015-09-04T12:16:47+02:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Fancy minibuffer faces for Ivy completion</title>
+   <link href="http://oremacs.com/2015/09/04/ivy-fancy-minibuffer/"/>
+   <updated>2015-09-04T00:00:00+02:00</updated>
+   <id>http://oremacs.com/2015/09/04/ivy-fancy-minibuffer</id>
+   <content type="html">&lt;p&gt;Today, I&amp;#39;ll describe a recent improvement to the display of Ivy completion.
+To use it, add this code to your configuration:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ivy-display-style&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;fancy&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;After this, &lt;a href=&quot;https://github.com/abo-abo/swiper&quot;&gt;swiper&lt;/a&gt; will look like this:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/ivy-display-style-1.png&quot; alt=&quot;ivy-display-style-1.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;And &lt;code&gt;counsel-M-x&lt;/code&gt; will look like this:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/ivy-display-style-2.png&quot; alt=&quot;ivy-display-style-2.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;If you haven&amp;#39;t used it before, &lt;code&gt;counsel-M-x&lt;/code&gt; is part the counsel
+package on MELPA, or part of swiper package if you&amp;#39;re installing from
+GNU ELPA. Basically, it&amp;#39;s a &lt;kbd&gt;M-x&lt;/kbd&gt; replacement (that I like to
+bind to &lt;kbd&gt;C-t&lt;/kbd&gt; for efficiency reasons), that doubles as
+&lt;code&gt;find-function&lt;/code&gt; (just press &lt;kbd&gt;C-.&lt;/kbd&gt; instead of &lt;kbd&gt;RET&lt;/kbd&gt;
+to find the function instead of calling it). If you&amp;#39;re using
+&lt;code&gt;counsel-M-x&lt;/code&gt; I highly recommend to also install &lt;code&gt;smex&lt;/code&gt;, since then
+&lt;code&gt;counsel-M-x&lt;/code&gt; will use &lt;code&gt;smex&lt;/code&gt; for sorting the matched commands.&lt;/p&gt;
+
+&lt;p&gt;The update will propertize the minibuffer contents with a new set of faces:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defcustom&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;swiper-minibuffer-faces&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;swiper-minibuffer-match-face-1&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;swiper-minibuffer-match-face-2&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;swiper-minibuffer-match-face-3&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;swiper-minibuffer-match-face-4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;List of `swiper&amp;#39; faces for minibuffer group matches.&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Initially, when responding to
+&lt;a href=&quot;https://github.com/abo-abo/swiper/issues/212&quot;&gt;#212&lt;/a&gt;, I used the
+original swiper faces in the minibuffer as well. But after some use,
+their brightness became a bit annoying.  So I introduced a new set of
+faces that can be customized separately.&lt;/p&gt;
+
+&lt;p&gt;Here are the settings that I&amp;#39;m currently using:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;custom-set-faces&lt;/span&gt;
+ &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;swiper-minibuffer-match-face-1&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:background&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;#dddddd&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+ &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;swiper-minibuffer-match-face-2&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:background&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;#bbbbbb&amp;quot;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:weight&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;bold&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+ &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;swiper-minibuffer-match-face-3&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:background&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;#bbbbff&amp;quot;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:weight&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;bold&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+ &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;swiper-minibuffer-match-face-4&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:background&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;#ffbbff&amp;quot;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:weight&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;bold&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;It&amp;#39;s similar to what the Firefox address bar uses: gray background and
+bold font. Additionally, the matching parts are highlighted with pale
+gray, blue and magenta colors. If you like the color scheme, it&amp;#39;s part
+of &lt;a href=&quot;https://github.com/abo-abo/eclipse-theme&quot;&gt;eclipse-theme&lt;/a&gt;.  Another
+choice, for even less distraction, could be to remove the background
+from these faces, only leaving the bold part on the matches.&lt;/p&gt;
+
+&lt;p&gt;Thanks to &lt;a href=&quot;https://github.com/Wilfred&quot;&gt;@Wilfred&lt;/a&gt; for nudging me to
+finally implement this feature.  It&amp;#39;s been on my list for a long time,
+but I&amp;#39;ve been putting it off.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Complete Python symbols using Ivy</title>

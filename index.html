@@ -180,6 +180,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -260,6 +264,74 @@
 
       <div class="container content">
         <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/2015/09/04/ivy-fancy-minibuffer/">
+        Fancy minibuffer faces for Ivy completion
+      </a>
+    </h1>
+
+    <span class="post-date">04 Sep 2015</span>
+
+    <p>Today, I&#39;ll describe a recent improvement to the display of Ivy completion.
+To use it, add this code to your configuration:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-display-style</span> <span class="ss">&#39;fancy</span><span class="p">)</span>
+</code></pre></div>
+<p>After this, <a href="https://github.com/abo-abo/swiper">swiper</a> will look like this:</p>
+
+<p><img src="/download/ivy-display-style-1.png" alt="ivy-display-style-1.png"></p>
+
+<p>And <code>counsel-M-x</code> will look like this:</p>
+
+<p><img src="/download/ivy-display-style-2.png" alt="ivy-display-style-2.png"></p>
+
+<p>If you haven&#39;t used it before, <code>counsel-M-x</code> is part the counsel
+package on MELPA, or part of swiper package if you&#39;re installing from
+GNU ELPA. Basically, it&#39;s a <kbd>M-x</kbd> replacement (that I like to
+bind to <kbd>C-t</kbd> for efficiency reasons), that doubles as
+<code>find-function</code> (just press <kbd>C-.</kbd> instead of <kbd>RET</kbd>
+to find the function instead of calling it). If you&#39;re using
+<code>counsel-M-x</code> I highly recommend to also install <code>smex</code>, since then
+<code>counsel-M-x</code> will use <code>smex</code> for sorting the matched commands.</p>
+
+<p>The update will propertize the minibuffer contents with a new set of faces:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defcustom</span> <span class="nv">swiper-minibuffer-faces</span>
+  <span class="o">&#39;</span><span class="p">(</span><span class="nv">swiper-minibuffer-match-face-1</span>
+    <span class="nv">swiper-minibuffer-match-face-2</span>
+    <span class="nv">swiper-minibuffer-match-face-3</span>
+    <span class="nv">swiper-minibuffer-match-face-4</span><span class="p">)</span>
+  <span class="s">&quot;List of `swiper&#39; faces for minibuffer group matches.&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>Initially, when responding to
+<a href="https://github.com/abo-abo/swiper/issues/212">#212</a>, I used the
+original swiper faces in the minibuffer as well. But after some use,
+their brightness became a bit annoying.  So I introduced a new set of
+faces that can be customized separately.</p>
+
+<p>Here are the settings that I&#39;m currently using:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">custom-set-faces</span>
+ <span class="o">&#39;</span><span class="p">(</span><span class="nv">swiper-minibuffer-match-face-1</span>
+   <span class="p">((</span><span class="no">t</span> <span class="nb">:background</span> <span class="s">&quot;#dddddd&quot;</span><span class="p">)))</span>
+ <span class="o">&#39;</span><span class="p">(</span><span class="nv">swiper-minibuffer-match-face-2</span>
+   <span class="p">((</span><span class="no">t</span> <span class="nb">:background</span> <span class="s">&quot;#bbbbbb&quot;</span> <span class="nb">:weight</span> <span class="nv">bold</span><span class="p">)))</span>
+ <span class="o">&#39;</span><span class="p">(</span><span class="nv">swiper-minibuffer-match-face-3</span>
+   <span class="p">((</span><span class="no">t</span> <span class="nb">:background</span> <span class="s">&quot;#bbbbff&quot;</span> <span class="nb">:weight</span> <span class="nv">bold</span><span class="p">)))</span>
+ <span class="o">&#39;</span><span class="p">(</span><span class="nv">swiper-minibuffer-match-face-4</span>
+   <span class="p">((</span><span class="no">t</span> <span class="nb">:background</span> <span class="s">&quot;#ffbbff&quot;</span> <span class="nb">:weight</span> <span class="nv">bold</span><span class="p">))))</span>
+</code></pre></div>
+<p>It&#39;s similar to what the Firefox address bar uses: gray background and
+bold font. Additionally, the matching parts are highlighted with pale
+gray, blue and magenta colors. If you like the color scheme, it&#39;s part
+of <a href="https://github.com/abo-abo/eclipse-theme">eclipse-theme</a>.  Another
+choice, for even less distraction, could be to remove the background
+from these faces, only leaving the bold part on the matches.</p>
+
+<p>Thanks to <a href="https://github.com/Wilfred">@Wilfred</a> for nudging me to
+finally implement this feature.  It&#39;s been on my list for a long time,
+but I&#39;ve been putting it off.</p>
+
+  </div>
   
   <div class="post">
     <h1 class="post-title">
@@ -826,137 +898,6 @@ context that it gives via the <code>-A</code> command option), please do share.
 Also, I&#39;ve just learned that there&#39;s
 <a href="https://github.com/emacs-helm/helm-recoll">helm-recoll</a> out there, so
 you can use that if you like Helm.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/07/23/ivy-multiaction/">
-        New Ivy multi-action exit
-      </a>
-    </h1>
-
-    <span class="post-date">23 Jul 2015</span>
-
-    <p>So many Emacs commands and bindings, but little time to learn them
-all.  That&#39;s why many-in-one solutions like
-<a href="https://github.com/abo-abo/hydra">hydra</a> are often a good deal: you
-only remember the base binding, and get more info along the way if you
-get lost.</p>
-
-<p>I&#39;ve wanted to optimize this approach when it comes to completion as
-well.  In
-<a href="http://oremacs.com/2015/06/08/describe-variable-tip/">last month&#39;s post</a>
-I described how you can get help / jump to definition / jump to info
-for the current <kbd>F1 v</kbd> (<code>counsel-describe-variable</code>)
-candidate with <kbd>C-m</kbd> / <kbd>C-.</kbd> / <kbd>C-,</kbd>.
-While that approach can be viable, it has a few problems. The first
-problem is that it&#39;s not discoverable: you may be using <kbd>C-m</kbd>
-option for ages and not know that <kbd>C-.</kbd> and <kbd>C-,</kbd>
-exist. The second problem is that it&#39;s not extensible: if you wanted
-more actions, there are hardly any good bindings left in the
-minibuffer to bind those actions.</p>
-
-<p>In
-<a href="http://oremacs.com/2015/07/09/counsel-rhythmbox/">a more recent post</a>,
-I described a solution that alleviates both problems. When you press
-<kbd>C-o</kbd>, you see how many actions are
-available, and you can cycle them with <kbd>w</kbd> and
-<kbd>s</kbd>. However, while discoverable, this approach is cumbersome
-if you already know what you want to do. Especially cycling can&#39;t be
-great when there are a lot of actions.</p>
-
-<p>So today I&#39;ve added a new approach in addition to the previous one.
-When you press <kbd>M-o</kbd> (<code>ivy-dispatching-done</code>), you get a hint
-showing you which actions are available.  It&#39;s like <kbd>C-m</kbd>
-(<code>ivy-done</code>), only allows you to quickly select the
-action. Conveniently, the default action is bound to <kbd>o</kbd>, so
-<kbd>M-o o</kbd> is equivalent to <kbd>C-m</kbd>.</p>
-
-<p>Here&#39;s how I add one more action to the default one of <code>ivy-switch-buffer</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">ivy-set-actions</span>
- <span class="ss">&#39;ivy-switch-buffer</span>
- <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;k&quot;</span>
-    <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
-      <span class="p">(</span><span class="nf">kill-buffer</span> <span class="nv">x</span><span class="p">)</span>
-      <span class="p">(</span><span class="nv">ivy--reset-state</span> <span class="nv">ivy-last</span><span class="p">))</span>
-    <span class="s">&quot;kill&quot;</span><span class="p">)))</span>
-</code></pre></div>
-<p>So now:</p>
-
-<ul>
-<li><kbd>M-o o</kbd> will still switch to selected buffer.</li>
-<li><kbd>M-o k</kbd> will kill the selected buffer.</li>
-</ul>
-
-<p>If you&#39;re familiar with <code>hydra</code>, the format is the same: <code>(key cmd
-hint)</code>.  This approach is very extensible: you can add actions and
-bindings to commands without changing the code of the original
-command. It&#39;s really fast: you&#39;re typing just one extra key to select
-an action. And you&#39;ll hardly run out of keys to bind, with 25 lower
-case keys at your disposal (other bindings work as well, I just think
-that lower case keys are the fastest to press).</p>
-
-<p>In case you wonder what <code>(ivy--reset-state ivy-last)</code> does, it&#39;s used
-to update the list of buffers, since one of them was deleted. This
-way, you can delete e.g. 4 buffers with <kbd>C-x b C-o s gggg</kbd>,
-and have the buffer list update after each <kbd>g</kbd>.</p>
-
-<h2 id="new-functionality-in-action">New functionality in action</h2>
-
-<p>Let&#39;s look at one package that has a multitude of actions available
-for each candidate - <code>projectile</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">defvar</span> <span class="nv">helm-projectile-projects-map</span>
-  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">map</span> <span class="p">(</span><span class="nf">make-sparse-keymap</span><span class="p">)))</span>
-    <span class="p">(</span><span class="nf">set-keymap-parent</span> <span class="nv">map</span> <span class="nv">helm-map</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">helm-projectile-define-key</span> <span class="nv">map</span>
-        <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-d&quot;</span><span class="p">)</span> <span class="nf">#&#39;</span><span class="nv">dired</span>
-        <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-g&quot;</span><span class="p">)</span> <span class="nf">#&#39;</span><span class="nv">helm-projectile-vc</span>
-        <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-e&quot;</span><span class="p">)</span> <span class="nf">#&#39;</span><span class="nv">helm-projectile-switch-to-eshell</span>
-        <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-s&quot;</span><span class="p">)</span> <span class="nf">#&#39;</span><span class="nv">helm-find-files-grep</span>
-        <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-c&quot;</span><span class="p">)</span> <span class="nf">#&#39;</span><span class="nv">helm-projectile-compile-project</span>
-        <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-t&quot;</span><span class="p">)</span> <span class="nf">#&#39;</span><span class="nv">helm-projectile-test-project</span>
-        <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-r&quot;</span><span class="p">)</span> <span class="nf">#&#39;</span><span class="nv">helm-projectile-run-project</span>
-        <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-D&quot;</span><span class="p">)</span> <span class="nf">#&#39;</span><span class="nv">helm-projectile-remove-known-project</span><span class="p">)</span>
-    <span class="nv">map</span><span class="p">)</span>
-  <span class="s">&quot;Mapping for known projectile projects.&quot;</span><span class="p">)</span>
-</code></pre></div>
-<p>Here&#39;s the basic Ivy function for selecting a project:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">ivy-switch-project</span> <span class="p">()</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">ivy-read</span>
-   <span class="s">&quot;Switch to project: &quot;</span>
-   <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">projectile-project-p</span><span class="p">)</span>
-       <span class="p">(</span><span class="nf">cons</span> <span class="p">(</span><span class="nv">abbreviate-file-name</span> <span class="p">(</span><span class="nv">projectile-project-root</span><span class="p">))</span>
-             <span class="p">(</span><span class="nv">projectile-relevant-known-projects</span><span class="p">))</span>
-     <span class="nv">projectile-known-projects</span><span class="p">)</span>
-   <span class="nb">:action</span> <span class="nf">#&#39;</span><span class="nv">projectile-switch-project-by-name</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c m&quot;</span><span class="p">)</span> <span class="ss">&#39;ivy-switch-project</span><span class="p">)</span>
-</code></pre></div>
-<p>And now let&#39;s add all those actions:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">ivy-set-actions</span>
- <span class="ss">&#39;ivy-switch-project</span>
- <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;d&quot;</span> <span class="nv">dired</span> <span class="s">&quot;Open Dired in project&#39;s directory&quot;</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;v&quot;</span> <span class="nv">helm-projectile-vc</span> <span class="s">&quot;Open project root in vc-dir or magit&quot;</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;e&quot;</span> <span class="nv">helm-projectile-switch-to-eshell</span> <span class="s">&quot;Switch to Eshell&quot;</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;g&quot;</span>
-    <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
-      <span class="p">(</span><span class="nv">helm-do-grep-1</span> <span class="p">(</span><span class="nf">list</span> <span class="nv">x</span><span class="p">)))</span>
-    <span class="s">&quot;Grep in projects&quot;</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;c&quot;</span> <span class="nv">helm-projectile-compile-project</span> <span class="s">&quot;Compile project&quot;</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;r&quot;</span> <span class="nv">helm-projectile-remove-known-project</span> <span class="s">&quot;Remove project(s)&quot;</span><span class="p">)))</span>
-</code></pre></div>
-<p>Here&#39;s what I get now after pressing <kbd>M-o</kbd>:</p>
-
-<p><img src="/download/ivy-multiaction.png" alt="ivy-multiaction.png"></p>
-
-<p>Looks pretty good, I think. I hope you find the new approach useful.
-The multi-action exit is currently enabled by default for
-<code>ivy-switch-buffer</code>, <code>counsel-locate</code> and <code>counsel-rhythmbox</code>, but you
-can add actions yourself to almost any command that uses <code>ivy-read</code>.
-In the rare case when <code>ivy-read</code> isn&#39;t in the tail position, you can
-use <a href="http://oremacs.com/2015/07/16/callback-quit/">ivy-quit-and-run</a>
-inside the added action functions.</p>
 
   </div>
   

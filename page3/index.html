@@ -180,6 +180,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -260,6 +264,135 @@
 
       <div class="container content">
         <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/2015/07/02/counsel-locate/">
+        Power up your locate command
+      </a>
+    </h1>
+
+    <span class="post-date">02 Jul 2015</span>
+
+    <h2 id="locate"><code>locate</code></h2>
+
+<p>I&#39;m sure many people know that Emacs comes with a <code>locate</code>
+command. This command, if you&#39;re on a Linux system, will find all
+files on your system that match a particular pattern. The advantage of
+<code>locate</code> over <code>find</code> when searching the whole system, is that it is
+much faster, since it uses a pre-computed database.  This database is
+updated periodically, you can force an update with:</p>
+<div class="highlight"><pre><code class="language-sh" data-lang="sh">sudo updatedb
+</code></pre></div>
+<p>Of course <code>find</code> is faster if you need to search only a specific
+directory instead of the whole system, but sometimes you just don&#39;t
+know that directory.</p>
+
+<h2 id="counsel-locate"><code>counsel-locate</code></h2>
+
+<h3 id="dynamic">Dynamic</h3>
+
+<p>The way <code>locate</code> works it that it asks you for a query, which is
+glob-based instead of regex-based, and then prints the results to a
+static buffer.</p>
+
+<p>On the other hand, <code>counsel-locate</code> is dynamic: each time you input a
+new character a new <code>locate</code> query is ran, and the old one is
+terminated.  On my system, it takes around 2 seconds for a query to
+complete, so it requires a bit of patience.</p>
+
+<h3 id="regex-based">Regex-based</h3>
+
+<p>I like regex way more than globs for some reason. Here&#39;s the command
+called for the input <code>mp3$</code>:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">locate -i --regex mp3$
+</code></pre></div>
+<p>Of course, the standard <a href="https://github.com/abo-abo/swiper">ivy-mode</a>
+method is used to build the regex from a list of space separated
+words.  So the input <code>fleet mp3$</code> will result in:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">locate -i --regex \\(fleet\\).*?\\(mp3$\\)
+</code></pre></div>
+<p>You could go your own way and update the regex matcher to be
+<code>ivy--regex-fuzzy</code>, which results in:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">locate -i --regex f.*l.*e.*e.*t.* .*m.*p.*3$
+</code></pre></div>
+<p>But I think less matches is usually better than more matches.</p>
+
+<h3 id="multi-exit">Multi-exit</h3>
+
+<p>This is just the coolest feature. Basically, for each file you locate, you can easily:</p>
+
+<ul>
+<li>Open it in Emacs (default).</li>
+<li>Open it with <code>xdg-open</code>, so that PDF files are forwarded to <code>evince</code>
+and MP3 files are forwarded to <code>rhythmbox</code> etc.</li>
+<li>Open it in <code>dired</code>.</li>
+</ul>
+
+<p>Here&#39;s an example of how to do it. First I call <code>counsel-locate</code>,
+which I like to bind to <kbd>C-x l</kbd>.  Then I enter <code>emacs pdf$</code>
+and wait around 2 seconds for the 248 results to come up. Then I
+scroll to the 18th result and press <kbd>C-o</kbd> to open up the
+<a href="https://github.com/abo-abo/hydra">hydra</a>-based option panel:</p>
+
+<p><img src="/download/counsel-locate-1.png" alt="counsel-locate-1.png"></p>
+
+<p>The last column (Action) is newer than others. As you can see, it has
+3 exit points, which I can scroll with <kbd>w</kbd> and <kbd>s</kbd>.
+And currently I&#39;m on the default exit point, which would open the file
+in Emacs.</p>
+
+<p>For the next screenshot:</p>
+
+<ul>
+<li>I pressed <kbd>s</kbd> twice to change the action to <code>dired</code>.</li>
+<li>I pressed <kbd>c</kbd> to make the current action execute each time a new candidate is selected.</li>
+</ul>
+
+<p><img src="/download/counsel-locate-2.png" alt="counsel-locate-2.png"></p>
+
+<p>So now, I could just scroll through all my directories on my system
+that contain PDF files related to Emacs by just holding <kbd>j</kbd>.</p>
+
+<p>A similar thing can be done for music tracks:</p>
+
+<ul>
+<li><kbd>C-x l</kbd> <code>dire mp3$</code> to get the list of all Dire Straits tracks on my system.</li>
+<li><kbd>C-o s</kbd> to switch the action from &quot;open in Emacs&quot; to &quot;xdg-open&quot;.</li>
+<li>From here, I could open one track after another by pressing <kbd>C-M-n</kbd> repeatedly. Or I can press <kbd>c</kbd> and then <kbd>j</kbd> repeatedly.</li>
+</ul>
+
+<p>I&#39;ve been experimenting with opening EPS and PDF files in quick
+succession. It&#39;s still a work in progress, since I need to use a special
+<code>wmctrl</code> script to prevent the Emacs window from losing focus each
+time a new Evince instance is opened.</p>
+
+<h2 id="outro">Outro</h2>
+
+<p>You can check out the new feature by installing <code>counsel</code> from
+MELPA. It will automatically fetch <code>ivy-mode</code> as well. When you enable
+<code>ivy-mode</code>, besides doing all your completion, it will also remap
+<code>switch-to-buffer</code> to <code>ivy-switch-buffer</code>.  That command also has a
+multi-exit: pressing <kbd>C-o sd</kbd> instead of <kbd>C-m</kbd> will
+kill the selected buffer instead of switching to it.  It&#39;s a very
+minor optimization: instead of <kbd>C-m C-x k</kbd> you press <kbd>C-o
+sd</kbd>, however you could e.g.  use <kbd>C-o scjjjj</kbd> to kill
+five buffers at once.</p>
+
+<p>While the idea of multi-exits is powerful, it&#39;s hard to find places to
+use it efficiently. I think <code>counsel-locate</code> is a nice place for it,
+although it could work without it:</p>
+
+<ul>
+<li>Find file in Emacs with <kbd>C-m</kbd> in the completion interface.</li>
+<li>Call <code>dired-jump</code> with <kbd>C-x C-j</kbd>.</li>
+<li>Type <kbd>!</kbd> and <code>xdg-open</code> <kbd>RET</kbd>.</li>
+<li>Select and kill the unneeded file with <kbd>C-x k</kbd>.</li>
+</ul>
+
+<p>I hope you see now why I prefer <kbd>C-o sd</kbd>.</p>
+
+  </div>
   
   <div class="post">
     <h1 class="post-title">
@@ -619,40 +752,6 @@ with:</p>
 <div class="highlight"><pre><code class="language-sh" data-lang="sh">git clone https://github.com/abo-abo/avy.wiki.git
 </code></pre></div>
 <p>and push, or just <a href="https://github.com/abo-abo/avy/wiki/_new">edit</a> it using Github&#39;s widgets.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/06/09/lispy-case-to-cond/">
-        Transform a LISP case into a cond with lispy
-      </a>
-    </h1>
-
-    <span class="post-date">09 Jun 2015</span>
-
-    <p>Just a little extension to the old <kbd>xc</kbd> (<code>lispy-to-cond</code>)
-command that I&#39;ve added today to <a href="https://github.com/abo-abo/lispy">lispy</a>:</p>
-
-<p><img src="/download/lispy-case-to-cond.png" alt="lispy-case-to-cond.png"></p>
-
-<p>Previously, <kbd>xc</kbd> could only transform a series of nested <code>if</code>
-into a <code>cond</code>.  You can even chain <kbd>xcxi</kbd> to transform a
-<code>case</code> statement into equivalent <code>if</code> statements.</p>
-
-<p>Note also that unwanted whitespace is properly removed. What you see
-in the picture is actually an
-<a href="https://www.gnu.org/software/emacs/manual/html_node/ert/">ERT</a> test
-that&#39;s being run each time I commit new stuff. It makes sure that
-starting in the first buffer state and pressing <kbd>xc</kbd> really
-results in the second buffer state. With this test, it&#39;s reasonable to
-believe that <kbd>xc</kbd> will actually work the same way in an
-interactive scenario. Right now, there are 599 of these type of tests
-in lispy-test.el.  To view them like in the screenshot, you can press
-<kbd>xv</kbd>.</p>
-
-<p>Final note, I realize that it should be <code>eql</code> instead of <code>eq</code>, but I
-like <code>eq</code> more: it&#39;s 33% more efficient.</p>
 
   </div>
   
