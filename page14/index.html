@@ -267,6 +267,210 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/03/02/ace-window-without-ace/">
+        ace-window without ace
+      </a>
+    </h1>
+
+    <span class="post-date">02 Mar 2015</span>
+
+    <p>Today, <a href="https://github.com/abo-abo/ace-window">ace-window</a> is dropping
+the dependency on <code>ace-jump-mode</code>. Most of the dependency was already
+dropped in <code>0.7.0</code>, when I had to fix <code>ace-window</code> to work better with
+<code>defhydra</code>.</p>
+
+<p>The change will not be user-visible, unless you relied on some
+customizations of <code>ace-jump-mode</code> to transfer to <code>ace-window</code>. You&#39;ll
+be able to transfer your customizations to similarly named variables.</p>
+
+<p>The reason for the move is that, due to the implementation of
+<code>ace-jump-mode</code>, it&#39;s hard to wrap its calls, since the function exits
+before any of the red chars are selected by the user. Also,
+<code>ace-jump-mode</code> uses its own <code>defstruct</code>s for candidates while I&#39;d
+rather have plain lists, but that&#39;s a minor issue.</p>
+
+<h2 id="new-back-end:-avy.el">New back end: avy.el</h2>
+
+<p>I tried to pinpoint the most generic algorithm that <code>ace-jump-mode</code> implements and wrote it down
+in <code>avy</code>. Here&#39;s the core of the implementation:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">avy-subdiv</span> <span class="p">(</span><span class="nv">n</span> <span class="nv">b</span><span class="p">)</span>
+  <span class="s">&quot;Distribute N in B terms in a balanced way.&quot;</span>
+  <span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">p</span> <span class="p">(</span><span class="nf">1-</span> <span class="p">(</span><span class="nf">floor</span> <span class="p">(</span><span class="nf">log</span> <span class="nv">n</span> <span class="nv">b</span><span class="p">))))</span>
+         <span class="p">(</span><span class="nv">x1</span> <span class="p">(</span><span class="nf">expt</span> <span class="nv">b</span> <span class="nv">p</span><span class="p">))</span>
+         <span class="p">(</span><span class="nv">x2</span> <span class="p">(</span><span class="nf">*</span> <span class="nv">b</span> <span class="nv">x1</span><span class="p">))</span>
+         <span class="p">(</span><span class="nv">delta</span> <span class="p">(</span><span class="nf">-</span> <span class="nv">n</span> <span class="nv">x2</span><span class="p">))</span>
+         <span class="p">(</span><span class="nv">n2</span> <span class="p">(</span><span class="nf">/</span> <span class="nv">delta</span> <span class="p">(</span><span class="nf">-</span> <span class="nv">x2</span> <span class="nv">x1</span><span class="p">)))</span>
+         <span class="p">(</span><span class="nv">n1</span> <span class="p">(</span><span class="nf">-</span> <span class="nv">b</span> <span class="nv">n2</span> <span class="mi">1</span><span class="p">)))</span>
+    <span class="p">(</span><span class="nf">append</span>
+     <span class="p">(</span><span class="nf">make-list</span> <span class="nv">n1</span> <span class="nv">x1</span><span class="p">)</span>
+     <span class="p">(</span><span class="nf">list</span>
+      <span class="p">(</span><span class="nf">-</span> <span class="nv">n</span> <span class="p">(</span><span class="nf">*</span> <span class="nv">n1</span> <span class="nv">x1</span><span class="p">)</span> <span class="p">(</span><span class="nf">*</span> <span class="nv">n2</span> <span class="nv">x2</span><span class="p">)))</span>
+     <span class="p">(</span><span class="nf">make-list</span> <span class="nv">n2</span> <span class="nv">x2</span><span class="p">))))</span>
+
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">avy-tree</span> <span class="p">(</span><span class="nv">lst</span> <span class="nv">keys</span><span class="p">)</span>
+  <span class="s">&quot;Coerce LST into a balanced tree.</span>
+<span class="s">The degree of the tree is the length of KEYS.</span>
+<span class="s">KEYS are placed appropriately on internal nodes.&quot;</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">len</span> <span class="p">(</span><span class="nf">length</span> <span class="nv">keys</span><span class="p">)))</span>
+    <span class="p">(</span><span class="nb">cl-labels</span>
+        <span class="p">((</span><span class="nv">rd</span> <span class="p">(</span><span class="nv">ls</span><span class="p">)</span>
+           <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">ln</span> <span class="p">(</span><span class="nf">length</span> <span class="nv">ls</span><span class="p">)))</span>
+             <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">&lt;</span> <span class="nv">ln</span> <span class="nv">len</span><span class="p">)</span>
+                 <span class="p">(</span><span class="nv">cl-pairlis</span>
+                  <span class="nv">keys</span>
+                  <span class="p">(</span><span class="nf">mapcar</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nf">cons</span> <span class="ss">&#39;leaf</span> <span class="nv">x</span><span class="p">))</span> <span class="nv">ls</span><span class="p">))</span>
+               <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">ks</span> <span class="p">(</span><span class="nf">copy-sequence</span> <span class="nv">keys</span><span class="p">))</span>
+                     <span class="nv">res</span><span class="p">)</span>
+                 <span class="p">(</span><span class="nb">dolist</span> <span class="p">(</span><span class="nv">s</span> <span class="p">(</span><span class="nv">avy-subdiv</span> <span class="nv">ln</span> <span class="nv">len</span><span class="p">))</span>
+                   <span class="p">(</span><span class="nb">push</span> <span class="p">(</span><span class="nf">cons</span> <span class="p">(</span><span class="nb">pop</span> <span class="nv">ks</span><span class="p">)</span>
+                               <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">eq</span> <span class="nv">s</span> <span class="mi">1</span><span class="p">)</span>
+                                   <span class="p">(</span><span class="nf">cons</span> <span class="ss">&#39;leaf</span> <span class="p">(</span><span class="nb">pop</span> <span class="nv">ls</span><span class="p">))</span>
+                                 <span class="p">(</span><span class="nv">rd</span> <span class="p">(</span><span class="nv">avy-multipop</span> <span class="nv">ls</span> <span class="nv">s</span><span class="p">))))</span>
+                         <span class="nv">res</span><span class="p">))</span>
+                 <span class="p">(</span><span class="nf">nreverse</span> <span class="nv">res</span><span class="p">))))))</span>
+      <span class="p">(</span><span class="nv">rd</span> <span class="nv">lst</span><span class="p">))))</span>
+</code></pre></div>
+<p>The first function, <code>avy-subdiv</code>, tries to split a number in terms of the base in a way that
+the most leaves have the lowest level:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">avy-subdiv</span> <span class="mi">42</span> <span class="mi">5</span><span class="p">)</span>
+<span class="c1">;;=&gt; (5 5 5 5 22)</span>
+
+<span class="p">(</span><span class="nv">avy-subdiv</span> <span class="mi">42</span> <span class="mi">4</span><span class="p">)</span>
+<span class="c1">;;=&gt; (4 6 16 16)</span>
+
+<span class="p">(</span><span class="nv">avy-subdiv</span> <span class="mi">42</span> <span class="mi">3</span><span class="p">)</span>
+<span class="c1">;;=&gt; (9 9 24)</span>
+
+<span class="p">(</span><span class="nv">avy-subdiv</span> <span class="mi">42</span> <span class="mi">2</span><span class="p">)</span>
+<span class="c1">;;=&gt; (16 26)</span>
+</code></pre></div>
+<p>And here&#39;s an example of what <code>avy-tree</code> produces:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">avy-tree</span>
+ <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;Acid green&quot;</span> <span class="s">&quot;Aero blue&quot;</span> <span class="s">&quot;Almond&quot;</span> <span class="s">&quot;Amaranth&quot;</span>
+   <span class="s">&quot;Amber&quot;</span> <span class="s">&quot;Amethyst&quot;</span> <span class="s">&quot;Apple green&quot;</span> <span class="s">&quot;Aqua&quot;</span>
+   <span class="s">&quot;Aquamarine&quot;</span> <span class="s">&quot;Auburn&quot;</span> <span class="s">&quot;Aureolin&quot;</span> <span class="s">&quot;Azure&quot;</span>
+   <span class="s">&quot;Beige&quot;</span> <span class="s">&quot;Black&quot;</span> <span class="s">&quot;Bronze&quot;</span> <span class="s">&quot;Blue&quot;</span> <span class="s">&quot;Burgundy&quot;</span> <span class="s">&quot;Candy apple red&quot;</span><span class="p">)</span>
+ <span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span><span class="p">))</span>
+<span class="c1">;;=&gt;</span>
+<span class="p">((</span><span class="mi">1</span> <span class="p">(</span><span class="mi">1</span> <span class="nv">leaf</span> <span class="o">.</span> <span class="s">&quot;Acid green&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">2</span> <span class="nv">leaf</span> <span class="o">.</span> <span class="s">&quot;Aero blue&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">3</span> <span class="nv">leaf</span> <span class="o">.</span> <span class="s">&quot;Almond&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">4</span> <span class="nv">leaf</span> <span class="o">.</span> <span class="s">&quot;Amaranth&quot;</span><span class="p">))</span>
+ <span class="p">(</span><span class="mi">2</span> <span class="p">(</span><span class="mi">1</span> <span class="nv">leaf</span> <span class="o">.</span> <span class="s">&quot;Amber&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">2</span> <span class="nv">leaf</span> <span class="o">.</span> <span class="s">&quot;Amethyst&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">3</span> <span class="nv">leaf</span> <span class="o">.</span> <span class="s">&quot;Apple green&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">4</span> <span class="nv">leaf</span> <span class="o">.</span> <span class="s">&quot;Aqua&quot;</span><span class="p">))</span>
+ <span class="p">(</span><span class="mi">3</span> <span class="p">(</span><span class="mi">1</span> <span class="nv">leaf</span> <span class="o">.</span> <span class="s">&quot;Aquamarine&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">2</span> <span class="nv">leaf</span> <span class="o">.</span> <span class="s">&quot;Auburn&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">3</span> <span class="nv">leaf</span> <span class="o">.</span> <span class="s">&quot;Aureolin&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">4</span> <span class="nv">leaf</span> <span class="o">.</span> <span class="s">&quot;Azure&quot;</span><span class="p">))</span>
+ <span class="p">(</span><span class="mi">4</span> <span class="p">(</span><span class="mi">1</span> <span class="nv">leaf</span> <span class="o">.</span> <span class="s">&quot;Beige&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">2</span> <span class="nv">leaf</span> <span class="o">.</span> <span class="s">&quot;Black&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">3</span> <span class="nv">leaf</span> <span class="o">.</span> <span class="s">&quot;Bronze&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">4</span> <span class="p">(</span><span class="mi">1</span> <span class="nv">leaf</span> <span class="o">.</span> <span class="s">&quot;Blue&quot;</span><span class="p">)</span>
+       <span class="p">(</span><span class="mi">2</span> <span class="nv">leaf</span> <span class="o">.</span> <span class="s">&quot;Burgundy&quot;</span><span class="p">)</span>
+       <span class="p">(</span><span class="mi">3</span> <span class="nv">leaf</span> <span class="o">.</span> <span class="s">&quot;Candy apple red&quot;</span><span class="p">))))</span>
+</code></pre></div>
+<p>I think the library turned out to be pretty clean, since it knows
+nothing of points, buffers or overlays, and imposes no restrictions on
+the type of leaf items and keys.</p>
+
+<h2 id="some-cool-avy-based-commands">Some cool <code>avy</code>-based commands</h2>
+
+<p>I&#39;ll list them together with the code, so it&#39;s easier to see what they do.
+The basic customizable variable is this one:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defcustom</span> <span class="nv">avy-keys</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">?a</span> <span class="nv">?s</span> <span class="nv">?d</span> <span class="nv">?f</span> <span class="nv">?g</span> <span class="nv">?h</span> <span class="nv">?j</span> <span class="nv">?k</span> <span class="nv">?l</span><span class="p">)</span>
+  <span class="s">&quot;Keys for jumping.&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>Note that, while <code>ace-jump-mode</code> has 52 selection chars by default, I
+prefer to have only the 8 chars on the home row. This means that I&#39;ll
+usually have to go around one level deeper, but the characters are
+easy to find and press.</p>
+
+<h3 id="avy-jump-double-char"><code>avy-jump-double-char</code></h3>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">avy-jump-double-char</span> <span class="p">()</span>
+  <span class="s">&quot;Read two chars and jump to them in current window.&quot;</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">avy--process</span> <span class="p">(</span><span class="nv">avy--regex-candidates</span>
+                 <span class="p">(</span><span class="nf">string</span>
+                  <span class="p">(</span><span class="nf">read-char</span> <span class="s">&quot;char 1: &quot;</span><span class="p">)</span>
+                  <span class="p">(</span><span class="nf">read-char</span> <span class="s">&quot;char 2: &quot;</span><span class="p">))</span>
+                 <span class="p">(</span><span class="nf">selected-window</span><span class="p">))</span>
+                <span class="nf">#&#39;</span><span class="nv">avy--goto</span><span class="p">))</span>
+</code></pre></div>
+<p>This one will read two chars and then offer avy-selection for the
+matches. This is a pretty sensible approach for a pool of 8 keys,
+since usually 3 chars total will be necessary, with the first two
+being in natural succession.</p>
+
+<p>Here&#39;s a screenshot of me typing in a natural two-char sequence &quot;do&quot;:</p>
+
+<p><img src="/download/avy-jump-double-char.png" alt="avy-jump-double-char"></p>
+
+<p>As you see, with 8 keys, 8 candidates will have depth 1, and another 8
+candidates will have depth 2. The sorting preference is for the first
+candidates to have lower depth.</p>
+
+<h3 id="avy-jump-line"><code>avy-jump-line</code></h3>
+<div class="highlight"><pre><code class="language-Elisp" data-lang="Elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">avy-jump-line</span> <span class="p">()</span>
+  <span class="s">&quot;Jump to a line start in current buffer.&quot;</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">we</span> <span class="p">(</span><span class="nf">window-end</span><span class="p">))</span>
+        <span class="nv">candidates</span><span class="p">)</span>
+    <span class="p">(</span><span class="k">save-excursion</span>
+      <span class="p">(</span><span class="nf">goto-char</span> <span class="p">(</span><span class="nf">window-start</span><span class="p">))</span>
+      <span class="p">(</span><span class="k">while</span> <span class="p">(</span><span class="nf">&lt;</span> <span class="p">(</span><span class="nf">point</span><span class="p">)</span> <span class="nv">we</span><span class="p">)</span>
+        <span class="p">(</span><span class="nb">push</span> <span class="p">(</span><span class="nf">cons</span> <span class="p">(</span><span class="nf">point</span><span class="p">)</span> <span class="p">(</span><span class="nf">selected-window</span><span class="p">))</span>
+              <span class="nv">candidates</span><span class="p">)</span>
+        <span class="p">(</span><span class="nf">forward-line</span> <span class="mi">1</span><span class="p">)))</span>
+    <span class="p">(</span><span class="nv">avy--process</span> <span class="p">(</span><span class="nf">nreverse</span> <span class="nv">candidates</span><span class="p">)</span>
+                  <span class="nf">#&#39;</span><span class="nv">avy--goto</span>
+                  <span class="no">t</span><span class="p">)))</span>
+</code></pre></div>
+<p>This one is quite nice, since I always have less than <code>8*8=64</code> lines in any window.
+Here&#39;s how it looks like:</p>
+
+<p><img src="/download/avy-jump-line.png" alt="avy-jump-line"></p>
+
+<p>I removed the gray background, since the leading chars are always in an expected position.</p>
+
+<h3 id="avy-jump-isearch"><code>avy-jump-isearch</code></h3>
+
+<p>Saving the most clever one for last:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">avy-jump-isearch</span> <span class="p">()</span>
+  <span class="s">&quot;Jump to one of the current isearch candidates.&quot;</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">candidates</span>
+         <span class="p">(</span><span class="nf">mapcar</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nf">cons</span> <span class="p">(</span><span class="nf">1+</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">x</span><span class="p">))</span>
+                              <span class="p">(</span><span class="nf">cdr</span> <span class="nv">x</span><span class="p">)))</span>
+                 <span class="p">(</span><span class="nv">avy--regex-candidates</span> <span class="nv">isearch-string</span><span class="p">))))</span>
+    <span class="p">(</span><span class="nv">avy--process</span> <span class="nv">candidates</span> <span class="nf">#&#39;</span><span class="nv">avy--goto</span> <span class="no">t</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">isearch-done</span><span class="p">)))</span>
+<span class="p">(</span><span class="nf">define-key</span> <span class="nv">isearch-mode-map</span> <span class="s">&quot;&#39;&quot;</span> <span class="ss">&#39;avy-jump-isearch</span><span class="p">)</span>
+</code></pre></div>
+<p>I don&#39;t mind not being able to <code>isearch-forward-regexp</code> for a single
+quote without using <kbd>C-q</kbd> (<code>quoted-insert</code>).  In return, I
+get the ability to <em>very</em> quickly jump to a search candidate on
+screen. I like this command the most. In case when there&#39;s only one match, it&#39;s a faster way
+to call <code>isearch-done</code> (than <kbd>C-m</kbd>).
+Here&#39;s the result of <kbd>C-s</kbd> <code>sen</code> <kbd>&#39;</kbd>:</p>
+
+<p><img src="/download/avy-jump-isearch.png" alt="avy-jump-isearch"></p>
+
+<h2 id="outro">Outro</h2>
+
+<p>I&#39;ve used the new functionality for a few days already, so it
+shouldn&#39;t be fragile. If the newest MELPA version bugs out for you,
+you can fall back to version <code>0.7.1</code> on
+<a href="http://stable.melpa.org/#/ace-window">MELPA Stable</a> and post
+<a href="https://github.com/abo-abo/ace-window/issues">an issue</a>.  Finally, I
+hope that some people will take advantage of avy.el simplicity and
+come up with some cool new commands to share with me. Happy hacking!</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/02/28/hydra-repeat/">
         Hydra-repeat
       </a>
@@ -484,114 +688,6 @@ if you disabled it with <kbd>n</kbd> or <kbd>r</kbd>.</li>
 <li><kbd>u</kbd> calls <code>undo</code>.</li>
 <li><kbd>p</kbd> kills the rectangle; it&#39;s similar to <kbd>C-w</kbd>.</li>
 </ul>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/02/24/emacs-speed-test/">
-        Profile your Emacs start-up time
-      </a>
-    </h1>
-
-    <span class="post-date">24 Feb 2015</span>
-
-    <p>I bet I could compete for the shortest <code>~/.emacs</code> ever:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">(load &quot;~/Dropbox/source/site-lisp/init&quot;)
-</code></pre></div>
-<p>However, it being one line doesn&#39;t make it start up any faster.
-Here&#39;s what I have in my Makefile beside <code>init.el</code>:</p>
-<div class="highlight"><pre><code class="language-Makefile" data-lang="Makefile"><span class="nf">profile</span><span class="o">:</span>
-    emacs -Q -l git/profile-dotemacs/profile-dotemacs.el <span class="se">\</span>
-    --eval <span class="s2">&quot;(setq profile-dotemacs-file \</span>
-<span class="s2">        (setq load-file-name \&quot;</span><span class="k">$(</span>abspath init.el<span class="k">)</span><span class="s2">\&quot;))&quot;</span> <span class="se">\</span>
-    -f profile-dotemacs
-</code></pre></div>
-<p>The package that I&#39;m using,
-<a href="http://randomsample.de/profile-dotemacs.el">profile-dotemacs.el</a>
-comes from David Engster, one of the major contributors to CEDET, so
-you know it&#39;s got to be good.  Once you launch it as I showed above,
-it will give you the times that various sections took to load in an
-overlay.</p>
-
-<p>On very sunny days I can almost get Emacs to start under one second,
-although when I checked just now, it turned out to be <code>1.20s</code>.  I
-value short start up time very highly, since due to my messing with
-Elisp, the Emacs global state can become so messed up that it&#39;s a lot
-faster to just restart it, rather than spend 10 minutes surgically
-restoring the state. And, of course, it&#39;s a bonus for using Emacs on a
-laptop, which I do at home.</p>
-
-<p>I&#39;ve used two methods to shorten the boot time, I&#39;ll describe them below.</p>
-
-<h2 id="use-package-:idle-option"><code>use-package</code> <code>:idle</code> option</h2>
-
-<p>This one is a big time saver, since <code>org-mode</code> just takes so long to load:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">use-package</span> <span class="nv">org</span>
-    <span class="nb">:defer</span> <span class="no">t</span>
-    <span class="nb">:idle</span> <span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;oleh/org</span><span class="p">))</span>
-</code></pre></div>
-<p>I&#39;m cautious not to abuse <code>:idle</code>, since if it happens that I start
-Emacs and start frantically typing all over the place, Emacs will
-never get to be idle and the <code>:idle</code> statements won&#39;t load.  So I only
-use it for <code>org</code> and one or two other things.</p>
-
-<h2 id="autoloading-stuff">autoloading stuff</h2>
-
-<p>Here&#39;s some helper code for this:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">update-all-autoloads</span> <span class="p">()</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">cd</span> <span class="nv">emacs-d</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">generated-autoload-file</span>
-         <span class="p">(</span><span class="nf">expand-file-name</span> <span class="s">&quot;loaddefs.el&quot;</span><span class="p">)))</span>
-    <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nv">not</span> <span class="p">(</span><span class="nf">file-exists-p</span> <span class="nv">generated-autoload-file</span><span class="p">))</span>
-      <span class="p">(</span><span class="nb">with-current-buffer</span> <span class="p">(</span><span class="nv">find-file-noselect</span>
-                            <span class="nv">generated-autoload-file</span><span class="p">)</span>
-        <span class="p">(</span><span class="nf">insert</span> <span class="s">&quot;;;&quot;</span><span class="p">)</span>
-        <span class="p">(</span><span class="nv">save-buffer</span><span class="p">)))</span>
-    <span class="p">(</span><span class="nf">mapcar</span> <span class="nf">#&#39;</span><span class="nv">update-directory-autoloads</span>
-            <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;&quot;</span> <span class="s">&quot;oleh&quot;</span> <span class="s">&quot;oleh/modes&quot;</span><span class="p">))))</span>
-</code></pre></div>
-<p>Here, <code>emacs-d</code> is the directory of my <code>init.el</code>.
-The directory <code>modes</code> contains 44 Elisp files for each major mode or package that I customize.</p>
-
-<p>For instance, here are the contents of <code>Info.el</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">Info-mode-map</span> <span class="s">&quot;j&quot;</span> <span class="ss">&#39;ora-para-down</span><span class="p">)</span>
-<span class="p">(</span><span class="nf">define-key</span> <span class="nv">Info-mode-map</span> <span class="s">&quot;k&quot;</span> <span class="ss">&#39;ora-para-up</span><span class="p">)</span>
-<span class="p">(</span><span class="nf">define-key</span> <span class="nv">Info-mode-map</span> <span class="s">&quot;v&quot;</span> <span class="ss">&#39;recenter-top-bottom</span><span class="p">)</span>
-<span class="p">(</span><span class="nf">define-key</span> <span class="nv">Info-mode-map</span> <span class="s">&quot;h&quot;</span> <span class="ss">&#39;backward-char</span><span class="p">)</span>
-<span class="p">(</span><span class="nf">define-key</span> <span class="nv">Info-mode-map</span> <span class="s">&quot;l&quot;</span> <span class="ss">&#39;forward-char</span><span class="p">)</span>
-<span class="p">(</span><span class="nf">define-key</span> <span class="nv">Info-mode-map</span> <span class="s">&quot;w&quot;</span> <span class="ss">&#39;forward-word</span><span class="p">)</span>
-<span class="p">(</span><span class="nf">define-key</span> <span class="nv">Info-mode-map</span> <span class="s">&quot;b&quot;</span> <span class="ss">&#39;backward-word</span><span class="p">)</span>
-<span class="p">(</span><span class="nf">define-key</span> <span class="nv">Info-mode-map</span> <span class="s">&quot;a&quot;</span> <span class="ss">&#39;beginning-of-line</span><span class="p">)</span>
-<span class="p">(</span><span class="nf">define-key</span> <span class="nv">Info-mode-map</span> <span class="s">&quot;e&quot;</span> <span class="ss">&#39;end-of-line</span><span class="p">)</span>
-<span class="p">(</span><span class="nf">define-key</span> <span class="nv">Info-mode-map</span> <span class="s">&quot;A&quot;</span> <span class="ss">&#39;beginning-of-buffer</span><span class="p">)</span>
-<span class="p">(</span><span class="nf">define-key</span> <span class="nv">Info-mode-map</span> <span class="s">&quot;E&quot;</span> <span class="ss">&#39;end-of-buffer</span><span class="p">)</span>
-
-<span class="c1">;;;###autoload</span>
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">oleh-Info-hook</span> <span class="p">())</span>
-</code></pre></div>
-<p>This is one of the simpler ones, I think it would take around a week
-of posts to cover what I have in <code>magit.el</code>. The file <code>Info.el</code> never
-gets loaded until I open a buffer in <code>Info-mode</code>.
-Here&#39;s what gets loaded every time:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">load</span> <span class="p">(</span><span class="nf">concat</span> <span class="nv">emacs-d</span> <span class="s">&quot;loaddefs.el&quot;</span><span class="p">)</span> <span class="no">nil</span> <span class="no">t</span><span class="p">)</span>
-<span class="c1">;; ...</span>
-<span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;Info-mode-hook</span> <span class="ss">&#39;oleh-Info-hook</span><span class="p">)</span>
-</code></pre></div>
-<p>My <code>loaddefs.el</code> is just over 1000 lines and is automatically
-generated by <code>update-all-autoloads</code>. And here are the lines in
-<code>loaddefs.el</code> responsible for loading <code>Info.el</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">autoload</span> <span class="ss">&#39;oleh-Info-hook</span> <span class="s">&quot;oleh/modes/Info&quot;</span> <span class="s">&quot;\</span>
-
-
-<span class="s">\(fn)&quot;</span> <span class="no">nil</span> <span class="no">nil</span><span class="p">)</span>
-</code></pre></div>
-<p>So the statements above are cheap to load.  Actually, the largest
-chunk of my start up time, 28 percent, is taken by:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;eclipse-theme</span><span class="p">)</span>
-</code></pre></div>
-<p>I don&#39;t know why it takes so long to call <code>custom-theme-set-faces</code>, it&#39;s a mystery.</p>
 
   </div>
   

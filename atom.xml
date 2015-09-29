@@ -4,13 +4,58 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-09-04T12:16:47+02:00</updated>
+ <updated>2015-09-29T15:43:47+02:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>More tweaks to Ivy minibuffer faces</title>
+   <link href="http://oremacs.com/2015/09/29/tweak-ivy-faces/"/>
+   <updated>2015-09-29T00:00:00+02:00</updated>
+   <id>http://oremacs.com/2015/09/29/tweak-ivy-faces</id>
+   <content type="html">&lt;p&gt;This is a continuation of the thought that I started in the
+&lt;a href=&quot;http://oremacs.com/2015/09/04/ivy-fancy-minibuffer/&quot;&gt;last post&lt;/a&gt; a few
+weeks ago.  I don&amp;#39;t fancy myself a graphical designer, but I kind of
+have a feeling of what I like - I certainly know it when I see it.&lt;/p&gt;
+
+&lt;p&gt;I wasn&amp;#39;t quite happy with the color of the current selection in the
+minibuffer.  Then it hit me that I like the way the Firefox address
+bar does it: invert the selected text foreground to white and add a
+flashy background. After that, it was only a matter of going though a
+few random color permutations in the GIMP color selector to arrive to
+a nice state:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/counsel-M-x.png&quot; alt=&quot;counsel-M-x.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;I did add something similar for dark background themes, although I
+rarely use them myself, since they contrast too much with Firefox,
+with most websites having a light background:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defface&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ivy-current-match&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;color&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;background&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;light&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+     &lt;span class=&quot;nb&quot;&gt;:background&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;#1a4b77&amp;quot;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:foreground&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;white&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;color&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;background&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dark&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+     &lt;span class=&quot;nb&quot;&gt;:background&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;#65a7e2&amp;quot;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:foreground&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;black&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Face used by Ivy for highlighting first match.&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Of course, the standard recommendation follows to use
+&lt;a href=&quot;https://elpa.gnu.org/packages/rainbow-mode.html&quot;&gt;rainbow-mode&lt;/a&gt; in
+buffers that deal with colors - it&amp;#39;s great.&lt;/p&gt;
+
+&lt;p&gt;Finally, &lt;code&gt;counsel-git-grep&lt;/code&gt; and &lt;code&gt;counsel-ag&lt;/code&gt; now also add the proper
+minibuffer coloring if you have it turned on:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ivy-display-style&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;fancy&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;img src=&quot;/download/counsel-ag.png&quot; alt=&quot;counsel-ag&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;If you&amp;#39;re interested in how the face backgrounds are combined, you can
+read my older article on
+&lt;a href=&quot;http://oremacs.com/2015/04/28/blending-faces/&quot;&gt;color blending in Elisp&lt;/a&gt;.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Fancy minibuffer faces for Ivy completion</title>

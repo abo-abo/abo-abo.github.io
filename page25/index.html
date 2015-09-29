@@ -267,6 +267,108 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/01/05/youtube-dl/">
+        Yet another youtube-dl interface for Emacs
+      </a>
+    </h1>
+
+    <span class="post-date">05 Jan 2015</span>
+
+    <p>If you haven&#39;t been living under a rock, you already know what
+<a href="https://www.youtube.com/">Youtube</a> is.  It&#39;s a repository with videos of
+varying degree of usefulness with a terrible media player tacked on.
+Instead, I like to watch my videos in
+<a href="http://www.videolan.org/vlc/index.html">VLC</a>, which comes closest to
+providing an Emacs-like experience among video players.</p>
+
+<h2 id="useful-vlc-shortcuts">Useful VLC shortcuts</h2>
+
+<p>Here is a list of shortcuts that really make me stick with VLC:</p>
+
+<ul>
+<li><kbd>f</kbd> - toggle full-screen</li>
+<li><kbd>b</kbd> - toggle audio track</li>
+<li><kbd>n</kbd> - toggle subtitle track</li>
+<li><kbd>&#93;</kbd> - speed up play by <code>0.1</code></li>
+<li><kbd>&#91;</kbd> - slow down play by <code>0.1</code></li>
+<li><kbd>M-right</kbd> - forward by 15 seconds</li>
+<li><kbd>M-left</kbd> - backward by 15 seconds</li>
+<li><kbd>C-right</kbd> - forward by 60 seconds</li>
+<li><kbd>C-left</kbd> - backward by 60 seconds</li>
+<li><kbd>M-1</kbd> - quarter of video size</li>
+<li><kbd>M-2</kbd> - half of video size</li>
+<li><kbd>M-3</kbd> - full video size</li>
+<li><kbd>M-4</kbd> - double video size</li>
+<li><kbd>C-h</kbd> - toggle mouse buttons</li>
+</ul>
+
+<p>So if you&#39;re not watching instructional videos at <code>1.6</code> speed,
+or skipping the Simpsons intro sequence with <kbd>M-right</kbd>, you&#39;re missing out.</p>
+
+<h2 id="from-youtube-to-vlc">From Youtube to VLC</h2>
+
+<p><a href="https://github.com/rg3/youtube-dl/">youtube-dl</a> is an excellent command-line tool
+for saving the videos from Youtube. It downloads the highest resolution at a usually
+higher speed than Youtube&#39;s player buffers. I&#39;ve discovered it when I had to download
+a bunch of lecture videos from <a href="https://www.edx.org/">edX</a>.
+You can install it with:</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">sudo pip install youtube-dl
+</code></pre></div>
+<h2 id="one-emacs-script-to-rule-them-all">One Emacs script to rule them all</h2>
+
+<p>I quickly tired of opening a shell, setting the directory, entering
+the command, and pasting the link. So I wrote some Elisp code that does it for me.
+It&#39;s nothing too sophisticated, but I&#39;ve been using this version for a couple months:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">youtube-dl</span> <span class="p">()</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">str</span> <span class="p">(</span><span class="nv">current-kill</span> <span class="mi">0</span><span class="p">))</span>
+         <span class="p">(</span><span class="nv">default-directory</span> <span class="s">&quot;~/Downloads&quot;</span><span class="p">)</span>
+         <span class="p">(</span><span class="nv">proc</span> <span class="p">(</span><span class="nf">get-buffer-process</span> <span class="p">(</span><span class="nv">ansi-term</span> <span class="s">&quot;/bin/bash&quot;</span><span class="p">))))</span>
+    <span class="p">(</span><span class="nv">term-send-string</span>
+     <span class="nv">proc</span>
+     <span class="p">(</span><span class="nf">concat</span> <span class="s">&quot;cd ~/Downloads &amp;&amp; youtube-dl &quot;</span> <span class="nv">str</span> <span class="s">&quot;\n&quot;</span><span class="p">))))</span>
+</code></pre></div>
+<p>How it works:</p>
+
+<ol>
+<li>Copy the link in Firefox</li>
+<li><kbd>M-x</kbd> <code>youtube-dl</code>.</li>
+</ol>
+
+<p>That&#39;s it. A new <code>*ansi-term*</code> will open with the task of downloading the video from the link
+in the clipboard to <code>~/Downloads</code>.
+I don&#39;t have to wait for the download to finish and can immediately open the video from <code>dired</code>.
+See <a href="/2015/01/04/dired-nohup/">the previous post</a> for the description of
+<code>dired</code> process-starting setup. I can stack up multiple downloads at once if I wish in different
+<code>*ansi-term*</code>s.</p>
+
+<blockquote>
+<p>This is my script. There are many like it, but this one is mine.</p>
+</blockquote>
+
+<p>I did an internet search before writing this post. Apparently many
+others had the same idea of integrating <code>youtube-dl</code> into Emacs.  You
+can use mine or any other code to generate a setup that works for you.
+For instance, for a while, instead of copy-pasting the URL and calling
+<code>youtube-dl</code> I used to just click the
+<a href="https://addons.mozilla.org/en-US/firefox/addon/org-mode-capture/">org-mode capture</a>
+button in Firefox, and it would automatically create a <code>TODO</code> item,
+download the video, and put the link to the downloaded video in the
+<code>TODO</code>.</p>
+
+<p>I&#39;ve dropped this workflow when
+<a href="http://debbugs.gnu.org/cgi/bugreport.cgi?bug=16737">the yank bug</a>
+surfaced. I don&#39;t yet have enough experience of working with Emacs&#39;s C
+code to fix it.  Although, according to this
+<a href="https://plus.google.com/u/0/+JorgenSch%C3%A4fer/posts/ZaZcunihGqc">excellent rant</a>,
+fixing the bug is only half of the problem: getting it merged is hard.
+I&#39;ll see how it goes with <a href="http://debbugs.gnu.org/cgi/bugreport.cgi?bug=19493">my latest tiny patch</a>.
+So far it has been ignored, but it is only two days old as of now.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/01/04/dired-nohup/">
         Start a process from dired
       </a>
@@ -564,163 +666,6 @@ more ergonomic way:</p>
 <div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">eval-after-load</span> <span class="s">&quot;term&quot;</span>
   <span class="o">&#39;</span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">term-raw-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c C-y&quot;</span><span class="p">)</span> <span class="ss">&#39;term-paste</span><span class="p">))</span>
 </code></pre></div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2014/12/31/keymap-arms-race/">
-        The keymap arms race
-      </a>
-    </h1>
-
-    <span class="post-date">31 Dec 2014</span>
-
-    <p>Sometimes new Emacs packages have to fight for their place in the sun,
-as all the good bindings and huge keymap areas are already taken by
-the older packages. This post will cover some practical problems that
-you may encounter when your package needs to be aware of another
-active package.</p>
-
-<h2 id="ace-window-vs.-helm"><code>ace-window</code> vs. <code>helm</code></h2>
-
-<p><a href="https://github.com/emacs-helm/helm">helm</a> is a wonderful package,
-it&#39;s my goto-package when I need completion. All of the following
-packages use it:</p>
-
-<ul>
-<li><a href="https://github.com/abo-abo/lispy">lispy</a></li>
-<li><a href="https://github.com/abo-abo/function-args">function-args</a></li>
-<li><a href="https://github.com/abo-abo/helm-make">helm-make</a></li>
-<li><a href="https://github.com/abo-abo/worf">worf</a></li>
-<li><a href="https://github.com/abo-abo/helm-j-cheatsheet">helm-j-cheatsheet</a></li>
-</ul>
-
-<p>But <code>helm</code> is super-greedy: once you&#39;re in the <code>helm</code>-minibuffer,
-there&#39;s no way out except either a successful completion or a cancel.
-But exiting the minibuffer for a short while may be useful. For
-instance, you could copy some text and yank it in the
-<code>helm</code>-minibuffer.  The default minibuffer functions, as well as <code>ido</code>
-easily allow it.</p>
-
-<p>I started to investigate into this when I got
-<a href="https://github.com/abo-abo/ace-window/issues/15">issue #15: Does not work with helm in minibuffer</a>
-for <code>ace-window</code>. I checked it, and indeed you could not <code>ace-window</code>
-out of a <code>helm</code>-minibuffer. In fact, it was not possible to exit with
-<code>other-window</code> either. This looked like good news, since I had an
-inkling that it used to work at some point. So I checked out a
-year-old version of <code>helm</code> and it did work.</p>
-
-<h3 id="magit-bisect-to-the-rescue!"><code>magit-bisect</code> to the rescue!</h3>
-
-<p>It&#39;s very simple:</p>
-
-<ol>
-<li>Check out the master of <code>helm</code></li>
-<li>Call <code>magit-bisect-start</code> and mark <code>HEAD</code> as <em>bad</em></li>
-<li><code>magit</code> will automatically check out a revision that is halfway
-between a <em>bad</em> state and the initial commit. Now I exit Emacs and try
-<code>helm</code> again to see if I can exit from the minibuffer.
-It&#39;s kind of lame to have to exit Emacs, but somehow I don&#39;t trust
-<code>unload-feature</code> to do the right thing. Anyway, if the thing works,
-move to <code>helm</code>&#39;s repository and call <code>magit-bisect-good</code>, otherwise
-call <code>magit-bisect-bad</code>.</li>
-<li>Continue this process until termination. I needed 10 iterations
-in this case.</li>
-</ol>
-
-<p>The culprit commit was <a href="https://github.com/emacs-helm/helm/commit/61e85df">this one</a>:</p>
-
-<pre>
-<span class="diff-context"><span class="region">     (let* ((source (helm-get-current-source))
-            (kmap (and (listp source) ; Check if source is empty.
-                       (assoc-default 'keymap source))))
-</span></span><span class="diff-indicator-removed"><span class="region">-</span></span><span class="diff-removed"><span class="region">      (when kmap (setq overriding-local-map kmap)))))
-</span></span><span class="diff-indicator-added"><span class="region">+</span></span><span class="diff-added"><span class="region">      (when kmap (set-transient-map kmap)))))</span></span></pre>
-
-<h3 id="the-priority-of-maps">the priority of maps</h3>
-
-<p>In Emacs, <code>set-transient-map</code> has priority over
-<code>overriding-local-map</code>, which was exactly what <code>ace-window</code> was using.
-It&#39;s also funny that <code>ace-window</code> used to work with <code>helm</code> for a week,
-since it was published on <code>Mar 26</code> and <code>helm</code> switched to
-<code>set-transient-map</code> on <code>Apr 2</code>. And I found out that it&#39;s not working only
-now.</p>
-
-<p>Here&#39;s what <code>helm</code> is using currently:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">fboundp</span> <span class="ss">&#39;set-transient-map</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">set-transient-map</span> <span class="nv">it</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">set-temporary-overlay-map</span> <span class="nv">it</span><span class="p">))</span>
-</code></pre></div>
-<p>So I&#39;ve amended <code>ace-window</code> with similar code. The way
-<code>set-transient-map</code> works, the last call to it overrides the previous
-one, so I thought that it would work out since <code>ace-window</code> is always
-called after <code>helm</code>.</p>
-
-<p>It didn&#39;t work out, because <code>helm</code> adds the code that calls
-<code>set-transient-map</code> to <code>post-command-hook</code>.
-In the end, this finally worked:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">remove-hook</span> <span class="ss">&#39;post-command-hook</span> <span class="ss">&#39;helm--maybe-update-keymap</span><span class="p">)</span>
-</code></pre></div>
-<h2 id="lispy-vs.-slime-and-cider"><code>lispy</code> vs. <code>SLIME</code> and <code>CIDER</code></h2>
-
-<p>I thought that enabling <code>lispy-mode</code> for <code>slime-repl-mode</code> and
-<code>cider-repl-mode</code> might be a good idea.
-Extra navigation options are always good, and the ability to
-call <code>raise</code> is just so useful.</p>
-
-<p>For instance, you start with:</p>
-
-<pre>
-; SLIME 2014-11-28
-<span class="slime-repl-prompt">CL-USER&gt; </span><span class="slime-repl-old">(expt (expt 2 10) 3)</span>
-<span class="slime-repl-result"><span class="slime-repl-inputed-output">1073741824</span></span><span class="slime-repl-result">
-</span><span class="slime-repl-prompt">CL-USER&gt; <cursor> </cursor></span></pre>
-
-<p>With <code>lispy-mode</code> on you can: </p>
-
-<ol>
-<li><kbd>M-p</kbd> to get the previous input</li>
-<li><kbd>f</kbd> to move the cursor after <code>(expt 2 10)</code></li>
-<li><kbd>r</kbd> to raise <code>(expt 2 10)</code></li>
-</ol>
-
-<p>Here&#39;s the final state:</p>
-
-<pre>
-; SLIME 2014-11-28
-<span class="slime-repl-prompt">CL-USER&gt; </span><span class="slime-repl-old">(expt (expt 2 10) 3)</span>
-<span class="slime-repl-result"><span class="slime-repl-inputed-output">1073741824</span></span><span class="slime-repl-result">
-</span><span class="slime-repl-prompt">CL-USER&gt;</span> (expt 2 10)<cursor> </cursor></pre>
-
-<p>But the problem was that SLIME has <code>slime-repl-map-mode</code> minor mode on
-that competes for <code>lispy</code>&#39;s shortcuts, and CIDER has something similar
-as well.</p>
-
-<blockquote>
-<p>When two minor modes bind the same keys, which one wins?</p>
-</blockquote>
-
-<p>The answer is the first one on <code>minor-mode-map-alist</code>.
-This function I&#39;ve found on the <a href="http://www.emacswiki.org/emacs/minor-mode-hack.el">wiki</a>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">lispy-raise-minor-mode</span> <span class="p">(</span><span class="nv">mode</span><span class="p">)</span>
-  <span class="s">&quot;Make MODE the first on `minor-mode-map-alist&#39;.&quot;</span>
-  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">x</span> <span class="p">(</span><span class="nf">assq</span> <span class="nv">mode</span> <span class="nv">minor-mode-map-alist</span><span class="p">)))</span>
-      <span class="p">(</span><span class="nb">when</span> <span class="nv">x</span>
-        <span class="p">(</span><span class="k">setq</span> <span class="nv">minor-mode-map-alist</span>
-              <span class="p">(</span><span class="nf">cons</span> <span class="nv">x</span> <span class="p">(</span><span class="nf">delq</span> <span class="nv">mode</span> <span class="nv">minor-mode-map-alist</span><span class="p">))))))</span>
-</code></pre></div>
-<p>I didn&#39;t want <code>lispy-mode</code> to mess with <code>minor-mode-map-alist</code> too
-actively, so I went with this approach: if <code>lispy-mode</code> is called
-interactively, i.e. via a key binding or <kbd>M-x</kbd>, put it ahead:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="k">and</span> <span class="nv">lispy-mode</span> <span class="p">(</span><span class="nv">called-interactively-p</span> <span class="ss">&#39;any</span><span class="p">))</span>
-    <span class="p">(</span><span class="nf">mapc</span> <span class="nf">#&#39;</span><span class="nv">lispy-raise-minor-mode</span>
-          <span class="p">(</span><span class="nf">cons</span> <span class="ss">&#39;lispy-mode</span> <span class="nv">lispy-known-verbs</span><span class="p">)))</span>
-</code></pre></div>
-<p>It&#39;s still a work in progress, currently only <code>lispy</code>&#39;s <kbd>RET</kbd>
-properly yields to call <code>cider-repl-return</code> and <code>slime-repl-return</code>
-respectively. I&#39;ll see if there are more key bindings that need to
-yield. Happy coding in the New Year!</p>
-
   </div>
   
 </div>
