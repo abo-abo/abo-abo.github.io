@@ -267,6 +267,139 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/04/24/oremacs-config/">
+        Oremacs config is on Github
+      </a>
+    </h1>
+
+    <span class="post-date">24 Apr 2015</span>
+
+    <p>I noticed that the packages that I&#39;ve published on
+<a href="https://github.com/abo-abo">Github</a> in the last year did get a nice
+boost in quality just from being published, viewed, used and commented
+on.</p>
+
+<p>So it makes sense to do the same for my full Emacs config, which lives in the <a href="https://github.com/abo-abo/oremacs">oremacs</a> repository as of today.</p>
+
+<p>The config is personal in the sense that I&#39;m actually using it
+verbatim, but it&#39;s been configured in a way that&#39;s it&#39;s easy to
+replicate and modify it.</p>
+
+<h2 id="who-can-benefit-from-this-config">Who can benefit from this config</h2>
+
+<p>The audience is people like me, who like to tinker with Elisp just for
+fun of it.  If you want things to just work, or you find learning
+Elisp a chore, it&#39;s not for you.</p>
+
+<p>The config won&#39;t work initially, it won&#39;t work always, but when it
+finally does work (hopefully), it will be glorious!</p>
+
+<h2 id="installation-and-running">Installation and Running</h2>
+
+<h3 id="requirements">Requirements</h3>
+
+<p>Emacs 24 is required. Obviously, newer versions are better, but the
+default <code>emacs24</code> that you get from the package manager should work.</p>
+
+<p>I&#39;m currently switching between Emacs 24.5.2 built from source and the
+current master from <a href="https://savannah.gnu.org/git/?group=emacs">git</a>.</p>
+
+<h3 id="install-command">Install command</h3>
+
+<p>This config doesn&#39;t assume to become your main config when you install
+it.  It installs in-place in the git directory and will start from
+there without touching your main config.  But you still get access to
+all your stuff, like bookmarks stored in your actual <code>~/.emacs.d/</code>
+etc.</p>
+<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span class="nb">cd</span> ~/git
+git clone https://github.com/abo-abo/oremacs
+<span class="nb">cd </span>oremacs
+make install
+</code></pre></div>
+<h3 id="run-command">Run command</h3>
+
+<p>Run without updating:</p>
+<div class="highlight"><pre><code class="language-sh" data-lang="sh">make run
+</code></pre></div>
+<p>Run with an upstream + ELPA update:</p>
+<div class="highlight"><pre><code class="language-sh" data-lang="sh">make up
+</code></pre></div>
+<p>Run with an upstream + ELPA + org-mode + CEDET update:</p>
+<div class="highlight"><pre><code class="language-sh" data-lang="sh">make install
+</code></pre></div>
+<h2 id="perks">Perks</h2>
+
+<h3 id="standalone">Standalone</h3>
+
+<p>You can try it without messing up your current Emacs config.  I actually have multiple versions of this on my system to work-around incompatibility between versions. This way, I can use my full setup even in case I get a bug report for an older Emacs version.</p>
+
+<h3 id="fast-start-up">Fast start up</h3>
+
+<p>With a SSD, it starts in 1 second. Most features are autoloaded and it&#39;s easy to add new autoloaded features.</p>
+
+<h3 id="tracks-the-most-recent-org-mode-and-cedet">Tracks the most recent org-mode and CEDET</h3>
+
+<p>Since these packages take a long time to byte compile, they are updated not with <code>make up</code> but with <code>make install</code>. They are actually git submodules, which means that they won&#39;t update if I don&#39;t update them in the upstream.</p>
+
+<h3 id="bankruptcy-proof">Bankruptcy-proof</h3>
+
+<p>It&#39;s hard to become Emacs-bankrupt with this config, since the config is composed of many independent pieces that you can simply ignore if you don&#39;t need them.</p>
+
+<h3 id="anti-rsi-qwerty-mod">Anti-RSI QWERTY mod</h3>
+
+<p>The config comes with its own <code>.Xmodmap</code> that makes <kbd>;</kbd> into an additional modifier. RSI savers:</p>
+
+<ul>
+<li><kbd>;-v</kbd> instead of <kbd>Enter</kbd>.</li>
+<li><kbd>;-o</kbd> instead of <kbd>Backspace</kbd>.</li>
+<li><kbd>;-f</kbd> instead of <kbd>Shift-9</kbd> and <kbd>Shift-0</kbd>.</li>
+<li><kbd>;-a</kbd> instead of <kbd>-</kbd>.</li>
+<li><kbd>;-s</kbd> instead of <kbd>Shift--</kbd>.</li>
+<li><kbd>;-q</kbd> instead of <kbd>Shift-&#39;</kbd>.</li>
+<li><kbd>;-e</kbd> instead of <kbd>=</kbd>.</li>
+<li><kbd>;-u</kbd> in addition / instead of <kbd>C-u</kbd>.</li>
+</ul>
+
+<p>And obviously the replacements for the two keys that the mod takes away:</p>
+
+<ul>
+<li><kbd>;-j</kbd> instead of <kbd>;</kbd>.</li>
+<li><kbd>;-d</kbd> instead of <kbd>Shift-;</kbd>.</li>
+</ul>
+
+<p>One more Elisp-level RSI-saver is the swap between <kbd>C-p</kbd> and <kbd>C-h</kbd>. Moving up/down line is very important, and it&#39;s nice to have these keys close, which <kbd>C-n</kbd> and <kbd>C-h</kbd> are.</p>
+
+<p>It also includes:</p>
+
+<ul>
+<li>a bunch of Hydras that save you key strokes.</li>
+<li><code>lispy-mode</code> which quickens any LISP mode, especially Elisp.</li>
+<li><code>worf-mode</code> which quickens <code>org-mode</code>.</li>
+<li><code>ivy-mode</code> which quickens all completion.</li>
+<li><code>swiper</code> which quickens <code>isearch</code> (by replacing it).</li>
+<li>C/C++ is customized with <code>function-args-mode</code> and a bunch of hacks.</li>
+</ul>
+
+<h3 id="org-mode-starter">Org mode starter</h3>
+
+<p>The config starts you off with a fully configured <code>org-mode</code> setup that includes:</p>
+
+<ul>
+<li>gtd.org for getting things done.</li>
+<li>ent.org to track entertainment.</li>
+<li>wiki folder for quickly starting and selecting wikis.</li>
+</ul>
+
+<h2 id="outro">Outro</h2>
+
+<p>I hope that you try and enjoy the new config. Perhaps not verbatim,
+but if you find the tips on this blog helpful, this config is their
+actual implementation that you can use for reference.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/04/22/swiper-0.3.0/">
         Swiper 0.3.0 is out, with ivy-mode.
       </a>
@@ -686,104 +819,6 @@ hydra.</p>
 
 <p>Anyway, thanks for the contributions. Enjoy the new feature, and keep
 those good ideas coming!</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/04/14/hydra-org-mode/">
-        Org-mode Hydras incoming!
-      </a>
-    </h1>
-
-    <span class="post-date">14 Apr 2015</span>
-
-    <h2 id="a-hydra-for-org-mode-time/clock/capture">A hydra for org-mode time/clock/capture</h2>
-
-<p>This is a categorized version of the hydra that <a href="https://github.com/WorldsEndless">@WorldsEndless</a> contributed
-today to the <a href="https://github.com/abo-abo/hydra/wiki/Hydras-by-Topic">wiki</a>.</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-global-org</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">blue</span>
-                            <span class="nb">:hint</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="s">&quot;</span>
-<span class="s">Timer^^        ^Clock^         ^Capture^</span>
-<span class="s">--------------------------------------------------</span>
-<span class="s">s_t_art        _w_ clock in    _c_apture</span>
-<span class="s"> _s_top        _o_ clock out   _l_ast capture</span>
-<span class="s">_r_eset        _j_ clock goto</span>
-<span class="s">_p_rint</span>
-<span class="s">&quot;</span>
-  <span class="p">(</span><span class="s">&quot;t&quot;</span> <span class="nv">org-timer-start</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;s&quot;</span> <span class="nv">org-timer-stop</span><span class="p">)</span>
-  <span class="c1">;; Need to be at timer</span>
-  <span class="p">(</span><span class="s">&quot;r&quot;</span> <span class="nv">org-timer-set-timer</span><span class="p">)</span>
-  <span class="c1">;; Print timer value to buffer</span>
-  <span class="p">(</span><span class="s">&quot;p&quot;</span> <span class="nv">org-timer</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;w&quot;</span> <span class="p">(</span><span class="nv">org-clock-in</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">4</span><span class="p">)))</span>
-  <span class="p">(</span><span class="s">&quot;o&quot;</span> <span class="nv">org-clock-out</span><span class="p">)</span>
-  <span class="c1">;; Visit the clocked task from any buffer</span>
-  <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">org-clock-goto</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;c&quot;</span> <span class="nv">org-capture</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nv">org-capture-goto-last-stored</span><span class="p">))</span>
-</code></pre></div>
-<p>I&#39;ve bound it like this:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="nv">[f11]</span> <span class="ss">&#39;hydra-global-org/body</span><span class="p">)</span>
-</code></pre></div>
-<p>Previously, I had <kbd>f11</kbd> bound to <code>org-clock-goto</code>, thanks to
-the <a href="http://doc.norang.ca/org-mode.html">Org Mode - Organize Your Life In Plain Text!</a>
-post.  I kind of recommend that post, as it has a tonne of useful
-stuff. At the same time, it resulted in me copying too much stuff that I didn&#39;t understand into my config,
-ultimately discouraging me from using <code>org-mode</code>. YMMV.</p>
-
-<p>Screenshot:</p>
-
-<p><img src="/download/hydra-org-global.png" alt="hydra-org-global.png"></p>
-
-<h2 id="a-hydra-for-refile/archive">A hydra for refile/archive</h2>
-
-<p>Inspired by the previous one, I wanted to write a hydra of my own.  As
-it happened, I was just about to clean up my git notes. So I wanted a
-nice refile hydra to speed up the process.</p>
-
-<p>Here&#39;s the hydra&#39;s code, which is now part of
-<a href="https://github.com/abo-abo/worf">worf</a>.  Worf is a package for
-quickly navigating around an <code>org-mode</code> buffer, you can get it from
-MELPA.</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-refile</span> <span class="p">(</span><span class="nb">:hint</span> <span class="no">nil</span>
-                        <span class="nb">:color</span> <span class="nv">teal</span><span class="p">)</span>
-  <span class="s">&quot;</span>
-<span class="s">Refile:^^   _k_eep: %`org-refile-keep</span>
-<span class="s">----------------------------------</span>
-<span class="s">_l_ast      _a_rchive</span>
-<span class="s">_o_ther</span>
-<span class="s">_t_his</span>
-
-<span class="s">&quot;</span>
-  <span class="p">(</span><span class="s">&quot;t&quot;</span> <span class="nv">worf-refile-this</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;o&quot;</span> <span class="nv">worf-refile-other</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nv">worf-refile-last</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;k&quot;</span> <span class="p">(</span><span class="k">setq</span> <span class="nv">org-refile-keep</span> <span class="p">(</span><span class="nv">not</span> <span class="nv">org-refile-keep</span><span class="p">))</span>
-       <span class="nb">:exit</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="p">(</span><span class="nv">org-archive-subtree</span><span class="p">))</span>
-  <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span> <span class="s">&quot;quit&quot;</span><span class="p">))</span>
-</code></pre></div>
-<p>Some explanations:</p>
-
-<ul>
-<li><code>worf-refile-this</code> will give you a choice of this file&#39;s headings for refiling.</li>
-<li><code>worf-refile-other</code> will give you a choice of your <code>org-refile-targets</code> except the current file.</li>
-<li><code>worf-refile-last</code> will refile to the last refile location without prompting.</li>
-<li><kbd>k</kbd> will toggle <code>org-refile-keep</code>, which decides if refiling moves or copies the text.</li>
-</ul>
-
-<p>And here&#39;s how it looks like:</p>
-
-<p><img src="/download/hydra-refile.png" alt="hydra-refile.png"></p>
-
-<h2 id="outro">Outro</h2>
-
-<p>Thanks for the contribution, enjoy the new stuff.
-Also, if you ever want to dig around someone&#39;s git notes, you can read <a href="/public/git-notes/git.html">mine</a>,
-courtesy of <code>org-mode</code> export.</p>
 
   </div>
   

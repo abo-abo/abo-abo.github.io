@@ -4,13 +4,75 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-09-29T15:43:47+02:00</updated>
+ <updated>2015-10-02T14:51:47+02:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Swiper and visual-line-mode</title>
+   <link href="http://oremacs.com/2015/10/02/swiper-visual-line/"/>
+   <updated>2015-10-02T00:00:00+02:00</updated>
+   <id>http://oremacs.com/2015/10/02/swiper-visual-line</id>
+   <content type="html">&lt;p&gt;In case you encounter files with very long lines, the built-in
+&lt;kbd&gt;M-x&lt;/kbd&gt; &lt;code&gt;visual-line-mode&lt;/code&gt; might come in handy.  Although 1MB
+long one-line files are a disaster for Emacs, there&amp;#39;s no problem
+handling smaller files with long lines that result from bad markdown
+renderers (notably Github).  They way &lt;code&gt;visual-line-mode&lt;/code&gt; works, is it
+inserts virtual newlines in appropriate positions, so that no line is
+truncated.  The advantage is that these newlines aren&amp;#39;t written to the
+file when the buffer is saved (otherwise, a simple &lt;kbd&gt;M-q&lt;/kbd&gt;
+(&lt;code&gt;fill-paragraph&lt;/code&gt;) would work too).&lt;/p&gt;
+
+&lt;p&gt;Today I&amp;#39;ve added &lt;code&gt;visual-line-mode&lt;/code&gt; support to
+&lt;a href=&quot;https://github.com/abo-abo/swiper&quot;&gt;swiper&lt;/a&gt;, so handling these files
+should be even easier now. The change was surprisingly simple: just
+two checks for &lt;code&gt;visual-line-mode&lt;/code&gt; variable and these basic
+replacements:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;forward-line&lt;/code&gt; -&amp;gt; &lt;code&gt;line-move&lt;/code&gt;,&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;line-beginning-position&lt;/code&gt; -&amp;gt; &lt;code&gt;beginning-of-visual-line&lt;/code&gt;,&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;line-end-position&lt;/code&gt; -&amp;gt; &lt;code&gt;end-of-visual-line&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;By the way, &lt;code&gt;visual-line-mode&lt;/code&gt; is one of the small number of commands
+that I call by name instead of by key chord. But thanks to
+&lt;code&gt;counsel-M-x&lt;/code&gt; and &lt;code&gt;smex&lt;/code&gt; calling this command by name is as short as
+&lt;kbd&gt;C-t v RET&lt;/kbd&gt;.  To explain a bit more, here&amp;#39;s my setup:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;c1&quot;&gt;;; make sure to install smex&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-t&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;counsel-M-x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The default command bound to &lt;kbd&gt;C-t&lt;/kbd&gt; is &lt;code&gt;transpose-chars&lt;/code&gt; - a
+highly situational and ultimately counter-productive command
+(&lt;kbd&gt;M-DEL&lt;/kbd&gt; and re-typing the word is faster than surgically
+navigating to the transpose point and calling &lt;code&gt;transpose-chars&lt;/code&gt;, plus
+it trains the hands to type the word correctly next time).  Anyway,
+&lt;kbd&gt;C-t&lt;/kbd&gt; is a prime binding for launching interactive commands.
+And since &lt;code&gt;smex&lt;/code&gt; is installed it remembers that my most used command
+that starts with &amp;quot;v&amp;quot; is &lt;code&gt;visual-line-mode&lt;/code&gt; - so it&amp;#39;s the first one
+that gets selected after &lt;kbd&gt;C-t v&lt;/kbd&gt;. This means that I can just
+press &lt;kbd&gt;RET&lt;/kbd&gt; and be done with it.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/swiper-visual-line-mode.png&quot; alt=&quot;swiper-visual-line-mode.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Finally, related to &lt;code&gt;visual-line-mode&lt;/code&gt;, here&amp;#39;s a command I use to
+negate &lt;kbd&gt;M-q&lt;/kbd&gt; (&lt;code&gt;fill-paragraph&lt;/code&gt;) (&lt;a href=&quot;http://www.emacswiki.org/emacs/UnfillParagraph&quot;&gt;source&lt;/a&gt;):&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-M-q&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ora-unfill-paragraph&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ora-unfill-paragraph&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Transform a paragraph into a single line.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;fill-column&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;point-max&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;fill-paragraph&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Thanks to &lt;a href=&quot;https://github.com/joostkremers&quot;&gt;@joostkremers&lt;/a&gt; for the
+suggestion in &lt;a href=&quot;https://github.com/abo-abo/swiper/issues/227&quot;&gt;#227&lt;/a&gt;.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>More tweaks to Ivy minibuffer faces</title>
