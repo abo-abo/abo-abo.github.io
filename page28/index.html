@@ -267,6 +267,80 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2014/12/23/upcase-word-you-silly/">
+        upcase-word, you so silly
+      </a>
+    </h1>
+
+    <span class="post-date">23 Dec 2014</span>
+
+    <p>Do you know what the
+<a href="http://ergoemacs.org/emacs/command-frequency.html">most frequently used</a>
+Emacs commands are? I can confirm by my own experience that they are
+<code>next-line</code> and <code>previous-line</code> (in that order).
+So why do <kbd>M-u</kbd> - <code>upcase-word</code>, <kbd>M-l</kbd> - <code>downcase-word</code>, and
+<kbd>M-c</kbd> - <code>capitalize-word</code> have such terrible synergy with Emacs&#39;s best commands?</p>
+
+<p>No, <code>upcase-word</code>, this is not what I had in mind:</p>
+
+<table><tbody><tr><td>
+<pre style="font-size: 0.6em">
+Learn basic key<cursor>s</cursor>troke commands
+Overview of Emacs features at gnu.org
+</pre>
+</td><td>
+<kbd>M-u</kbd>
+</td><td>
+<pre style="font-size: 0.6em">
+Learn basic keySTROKE<cursor> </cursor>commands
+Overview of Emacs features at gnu.org
+</pre>
+</td></tr></tbody></table>
+
+<p>If you say:</p>
+
+<blockquote>
+<p>But how did you get the cursor in such a crazy position in the first
+place? You should have used <kbd>M-b</kbd>/<kbd>M-f</kbd>.</p>
+</blockquote>
+
+<p>Well, I got there with <code>previous-line</code> - one of the best Emacs commands!</p>
+
+<h2 id="resolve-the-*-word-malarkey-with-defadvice">Resolve the <code>*-word</code> malarkey with <code>defadvice</code></h2>
+
+<p>Here are some simple advice commands that I&#39;ve just rolled:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defadvice</span> <span class="nf">upcase-word</span> <span class="p">(</span><span class="nv">before</span> <span class="nv">upcase-word-advice</span> <span class="nv">activate</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nv">looking-back</span> <span class="s">&quot;\\b&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">backward-word</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="nb">defadvice</span> <span class="nf">downcase-word</span> <span class="p">(</span><span class="nv">before</span> <span class="nv">downcase-word-advice</span> <span class="nv">activate</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nv">looking-back</span> <span class="s">&quot;\\b&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">backward-word</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="nb">defadvice</span> <span class="nf">capitalize-word</span> <span class="p">(</span><span class="nv">before</span> <span class="nv">capitalize-word-advice</span> <span class="nv">activate</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nv">looking-back</span> <span class="s">&quot;\\b&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">backward-word</span><span class="p">)))</span>
+</code></pre></div>
+<p>Small explanation to the Elisp novices:</p>
+
+<ol>
+<li>before <code>upcase-word</code> is called, execute the body of <code>upcase-word-advice</code></li>
+<li><code>unless</code> we are at the beginning of the word</li>
+<li><code>backward-word</code> once to move to the beginning of the word</li>
+</ol>
+
+<p>I&#39;m intentionally not using the newest advice system here, since not everyone
+has yet upgraded to Emacs 24.4.
+In fact, I saw this gem today at Stack Overflow:</p>
+
+<blockquote>
+<p>I am using Emacs 23 and cedet 1.0.1 ...</p>
+</blockquote>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2014/12/22/sometimes-things-break/">
         Sometimes things break
       </a>
