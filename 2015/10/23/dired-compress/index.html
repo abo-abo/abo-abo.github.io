@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      New in Emacs 25 - convenient compression/decompression in Dired &middot; (or emacs
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="/public/css/octicons.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Scripts -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body class="layout-reverse theme-base-08">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <!-- <div class="sidebar-item"> -->
+  <!--   <p>unused</p> -->
+  <!-- </div> -->
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about/">About</a>
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/archive/">Archive</a>
+        
+      
+    
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+
+    <div id="github" class="sidebar-nav-item">
+      <button type="button"
+              class="btn btn-info"
+              data-toggle="collapse"
+              data-target="#github-projects">
+        <span class="octicon octicon-mark-github"></span> My Emacs Projects
+      </button>
+      <div id="github-projects" class="collapse">
+        <ul style="margin-bottom:0em;">
+          <li>
+            <a href="https://github.com/abo-abo/lispy">lispy</a>
+            <p>vi-like Paredit</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/worf">worf</a>
+            <p>vi-like bindings for org-mode</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-window">ace-window</a>
+            <p>switch windows with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-link">ace-link</a>
+            <p>follow links with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/function-args">function-args</a>
+            <p>enhance <code>CEDET</code> for C++</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/helm-make">helm-make</a>
+            <p>select a Makefile target with <code>helm</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/make-it-so">make-it-so</a>
+            <p>transform files with Makefile recipes</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/org-download">org-download</a>
+            <p>drag-and-drop images to <code>org-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo?tab=repositories">
+              <span class="octicon octicon-octoface"></span>
+              and more
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
+
+  <div class="sidebar-item">
+    <p>
+      <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
+        <img alt="Creative Commons License"
+             style="border-width:0;opacity: 0.3;"
+             src="https://licensebuttons.net/l/by-sa/4.0/88x31.png"/>
+      </a>
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">(or emacs</a>
+            <small>irrelevant)</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">New in Emacs 25 - convenient compression/decompression in Dired</h1>
+  <span class="post-date">23 Oct 2015</span>
+  <p>Today I&#39;ll describe my past and current workflows for compressing
+files and directories in Dired.  In my opinion, Dired is one of the
+best features of Emacs - a great abstraction of <code>cd</code>+<code>ls</code> that lets
+you get things done much faster. The default binding for <code>dired</code> is
+<kbd>C-x d</kbd> (I bind it to <kbd>C-;-d</kbd> though, see my
+<a href="http://oremacs.com/2015/02/14/semi-xmodmap/">xmodmap post</a>).</p>
+
+<h2 id="my-previous-workflow">My previous workflow</h2>
+
+<p>To compress several files in Dired, first I compile a list of files to
+work on by marking them with <kbd>m</kbd> (<code>dired-mark</code>), navigating
+to ones that you want with <kbd>n</kbd> (<code>dired-next-line</code>) and
+<kbd>p</kbd> (<code>dired-previous-line</code>).</p>
+
+<p>Once a list is ready, I press <kbd>&amp;</kbd> (<code>dired-do-async-shell-command</code>), which allows me to run an arbitrary shell command.
+I enter:</p>
+<div class="highlight"><pre><code class="language-sh" data-lang="sh">tar -czf ~/tmp/path/foo.tar.gz *
+</code></pre></div>
+<p>into the minibuffer, press <kbd>RET</kbd> and I&#39;m done. It&#39;s a
+standard shell command with 2 advantages:</p>
+
+<ol>
+<li>I get <kbd>TAB</kbd> completion for the directory of the created archive.</li>
+<li><code>*</code> means the selected file list, so I don&#39;t enter them by hand.</li>
+</ol>
+
+<h2 id="my-current-workflow">My current workflow</h2>
+
+<p>Since I often forget the command for <code>tar</code>, and I really don&#39;t want to
+remember the commands for <code>zip</code> etc, I&#39;ve implemented a more convenient approach:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="s">&quot;c&quot;</span> <span class="ss">&#39;dired-do-compress-to</span><span class="p">)</span>
+</code></pre></div>
+<p>This new command <code>dired-do-compress-to</code>, bound to <kbd>c</kbd>, will
+prompt me for a file name of the output archive. So now it&#39;s easier to
+type in that file name, if you use <code>ido-mode</code> / <code>ivy-mode</code> /
+<code>helm-mode</code>. What&#39;s more, the command will be automatically determined
+from the archive extension and executed. Here&#39;s the corresponding
+customization variable:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">defvar</span> <span class="nv">dired-compress-files-alist</span>
+  <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;\\.tar\\.gz\\&#39;&quot;</span> <span class="o">.</span> <span class="s">&quot;tar -c %i | gzip -c9 &gt; %o&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="s">&quot;\\.zip\\&#39;&quot;</span> <span class="o">.</span> <span class="s">&quot;zip %o -r --filesync %i&quot;</span><span class="p">))</span>
+  <span class="s">&quot;Control the compression shell command for `dired-do-compress-to&#39;.</span>
+
+<span class="s">Each element is (REGEXP . CMD), where REGEXP is the name of the</span>
+<span class="s">archive to which you want to compress, and CMD the the</span>
+<span class="s">corresponding command.</span>
+
+<span class="s">Within CMD, %i denotes the input file(s), and %o denotes the</span>
+<span class="s">output file. %i path(s) are relative, while %o is absolute.&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>This thing is pretty self-explanatory. It currently only supports
+<code>*.tar.gz</code> and <code>*.zip</code>, use <kbd>M-x</kbd> <code>report-emacs-bug</code> if you
+want to add more options.</p>
+
+<h2 id="other-improvements-in-compression/decompression">Other improvements in compression/decompression</h2>
+
+<p>I improved the good-old <kbd>Z</kbd> (<code>dired-do-compress</code>) as
+well. Now it can compress directories to <code>*.tar.gz</code>, as well as
+decompress <code>*.tar.gz</code> and <code>*.zip</code> to directories.  It&#39;s all automatic,
+you only have to press <kbd>Z</kbd>, either on an archive to
+decompress, or on a directory to compress.</p>
+
+<h2 id="easy-way-to-have-a-bleeding-edge-emacs">Easy way to have a bleeding edge Emacs</h2>
+
+<p>If you want to get these improvements right now and are on a Debian
+type system (I use Ubuntu), you can use:</p>
+<div class="highlight"><pre><code class="language-sh" data-lang="sh">sudo apt-add-repository ppa:ubuntu-elisp/ppa
+sudo apt-get update
+sudo apt-get install emacs-snapshot
+</code></pre></div>
+<p>Then just use <code>emacs-snapshot</code> executable. It updates every few days.</p>
+
+<p>Myself, I track the Emacs master from
+<a href="http://savannah.gnu.org/projects/emacs">git</a>. But <code>emacs-snapshot</code> is
+very useful for CI tests, and can also be used by people who don&#39;t
+want to build the executable from git.</p>
+
+<h2 id="how-to-get-your-improvements-into-emacs">How to get your improvements into Emacs</h2>
+
+<p>If you&#39;d like to contribute code to the Emacs core yourself, it takes
+two steps:</p>
+
+<ol>
+<li><p>Sign the Copyright Assignment
+(<a href="http://orgmode.org/w/org-mode.git?p=org-mode.git;a=blob_plain;f=request-assign-future.txt;hb=HEAD">CA</a>).
+This gives the Copyright for your changes to Emacs to the Free
+Software Foundation. This is useful so that the FSF can defend your
+rights in court, in case the GPL regarding your contribution is broken
+by someone.</p></li>
+<li><p><kbd>M-x</kbd> <code>report-emacs-bug</code> and attach a patch.</p></li>
+</ol>
+
+<p>It seems that some people could have a moral objection to the CA. I
+see no reason for it whatsoever.  Since Elisp libraries make calls to
+GPL code and are GPL themselves, you have to publish Elisp code under
+GPL, there&#39;s no choice there.  GPL means basically that, while you&#39;re
+still acknowledged as the author, everyone else has about as much
+right to your code as you do. No one can hide or restrict access to
+it, but neither can you. The CA is a further step, which makes the FSF
+own the Copyright to your <em>changes</em> to Emacs. You submit these changes
+yourself, and the Copyright over these changes isn&#39;t really that
+useful: they&#39;re only changes - they do nothing on their own, outside
+of Emacs. Besides, with the FSF owning the Copyright, the range of
+things that you can do to your code stays exactly the same as if you
+owned the Copyright, as long as you publish under GPL.</p>
+
+<p>To illustrate, the FSF CA is very polite and benign, compared to the
+CA that I have to give to Elsevier when I publish an article.  That CA
+means that a multi-billion dollar corporation owns the right to my
+paper until the end of time, and can charge people to view it
+(including myself and my peers) as much as they see fit (currently,
+$30). Of course, I don&#39;t receive a dime of that money, but hey - I get
+published, and at least I can share my article <em>for free</em> for the
+first 50 days of the publish date. And if that one doesn&#39;t seem
+draconian enough for you, just think of the NDAs in commercial
+companies: out there, you can&#39;t even publish or mention anything
+related to your work. So please, if you&#39;re hating on the FSF, do
+reconsider, they&#39;re the good guys in my book.</p>
+
+<p>Eventually, after a few submitted patches, you&#39;ll be granted commit
+access. This is a great way to implement small improvements faster.
+However, the larger issues that aren&#39;t simple improvements still need
+to be discussed with other developers, either on debbugs or on
+emacs-devel. For example, initially I went with the <code>tar -czf</code>
+command. But it turns out that it can&#39;t be used on Solaris 10 or AIX
+7.1. Whatever those things are, people still use Emacs on them, and
+it&#39;s important that the core features are usable on all supported
+systems.</p>
+
+</div>
+
+<div class="twitter-share">
+  <a href="https://twitter.com/share"
+     class="twitter-share-button"
+     data-via="_abo_abo"
+     data-dnt="true">
+    Tweet
+  </a>
+</div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'oremacs'; // required: replace example with your forum shortname
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+<script>
+  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+</script>
+<noscript>
+  Please enable JavaScript to view the
+  <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>

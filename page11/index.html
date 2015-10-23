@@ -267,6 +267,127 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/03/20/managing-emacs-packages/">
+        Emacs package management
+      </a>
+    </h1>
+
+    <span class="post-date">20 Mar 2015</span>
+
+    <p>Lately, I&#39;ve been spending some time to automate and publish my Emacs config.  Being able to quickly
+reproduce your config has many advantages, the main one being that you no longer have to spend time
+to make your config reproducible.</p>
+
+<p>Happily, most of my config is already published in many packages, I only have to figure out a nice
+layer to glue them together. Below, I&#39;ll show some automation for the packages managed by
+<code>package.el</code>.</p>
+
+<h2 id="step-1:-get-the-main-directory">Step 1: get the main directory</h2>
+
+<p>This is an important step that many other peoples&#39; configs miss, even the ones that are designed to
+be distributed. You can&#39;t just assume that the config will be located in <code>~/.emacs.d</code> and rely on
+Emacs defaults. Instead, it&#39;s nice to be able to clone the config into a random directory and launch
+an Emacs from there, without messing with the currently installed Emacs.</p>
+
+<p>It&#39;s also useful for having multiple repositories for different versions of Emacs. ELPA packages are
+byte-compiled, and the byte code can be incompatible between versions (for instance, 24.3 and 24.4).
+Having two independent checkouts with ELPA directory auto-generated really helps in that case.</p>
+
+<p>So here is the code to get the main directory and define an ELPA directory with respect to that:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">defconst</span> <span class="nv">emacs-d</span>
+  <span class="p">(</span><span class="nf">file-name-directory</span>
+   <span class="p">(</span><span class="nv">file-chase-links</span> <span class="nv">load-file-name</span><span class="p">))</span>
+  <span class="s">&quot;The giant turtle on which the world rests.&quot;</span><span class="p">)</span>
+
+<span class="p">(</span><span class="k">setq</span> <span class="nv">package-user-dir</span>
+      <span class="p">(</span><span class="nf">expand-file-name</span> <span class="s">&quot;elpa&quot;</span> <span class="nv">emacs-d</span><span class="p">))</span>
+</code></pre></div>
+<h2 id="step-2:-decide-what-you-like">Step 2: decide what you like</h2>
+
+<p>Next, I initialize the package and define some of the packages that I like, omitting the
+dependencies that they bring. Note that the code of the whole post is stored in a separate file
+<code>packages.el</code> that is not intended to be loaded on start up, so it&#39;s fine to call
+<code>package-refresh-contents</code> here:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">package-initialize</span><span class="p">)</span>
+<span class="p">(</span><span class="k">setq</span> <span class="nv">package-archives</span>
+      <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;melpa&quot;</span> <span class="o">.</span> <span class="s">&quot;http://melpa.milkbox.net/packages/&quot;</span><span class="p">)</span>
+        <span class="p">(</span><span class="s">&quot;gnu&quot;</span> <span class="o">.</span> <span class="s">&quot;http://elpa.gnu.org/packages/&quot;</span><span class="p">)))</span>
+<span class="p">(</span><span class="nv">package-refresh-contents</span><span class="p">)</span>
+
+<span class="p">(</span><span class="k">defconst</span> <span class="nv">ora-packages</span>
+  <span class="o">&#39;</span><span class="p">(</span><span class="nv">auto-compile</span> <span class="nv">auto-yasnippet</span> <span class="nv">ace-link</span> <span class="nv">ace-window</span>
+    <span class="nv">company</span> <span class="nv">eclipse-theme</span> <span class="nv">flx-ido</span> <span class="nv">function-args</span>
+    <span class="nv">headlong</span> <span class="nv">ido-occasional</span> <span class="nv">ido-vertical-mode</span> <span class="nv">lispy</span>
+    <span class="nv">magit</span> <span class="nv">smex</span> <span class="nv">swiper</span> <span class="nb">use-package</span> <span class="nv">guide-key</span>
+    <span class="nv">powerline</span> <span class="nv">projectile</span> <span class="nv">slime</span> <span class="nv">cider</span> <span class="nv">worf</span>
+    <span class="nv">org-download</span> <span class="nv">make-it-so</span> <span class="nv">ukrainian-holidays</span>
+    <span class="nv">netherlands-holidays</span> <span class="nv">j-mode</span><span class="p">)</span>
+  <span class="s">&quot;List of packages that I like.&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="step-3:-install-and-upgrade">Step 3: install and upgrade</h2>
+
+<p>The install step is pretty straightforward: install a package unless it&#39;s already installed.
+I tried to do something fancier for the upgrade, but in the end it was much more simple to
+just call the interactive interface. The last two lines are basically equivalent to pressing
+<kbd>Uxy</kbd> interactively:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="c1">;; install required</span>
+<span class="p">(</span><span class="nb">dolist</span> <span class="p">(</span><span class="nv">package</span> <span class="nv">ora-packages</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nv">package-installed-p</span> <span class="nv">package</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">package-install</span> <span class="nv">package</span><span class="p">)))</span>
+
+<span class="c1">;; upgrade installed</span>
+<span class="p">(</span><span class="nb">save-window-excursion</span>
+  <span class="p">(</span><span class="nv">package-list-packages</span> <span class="no">t</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">package-menu-mark-upgrades</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">package-menu-execute</span> <span class="no">t</span><span class="p">))</span>
+</code></pre></div>
+<h2 id="step-4:-make-it-callable">Step 4: make it callable</h2>
+
+<p>Finally, I just create a Makefile with the following contents:</p>
+<div class="highlight"><pre><code class="language-Makefile" data-lang="Makefile"><span class="nv">emacs</span> <span class="o">?=</span> emacs
+<span class="nf">upgrade</span><span class="o">:</span>
+    <span class="k">$(</span>emacs<span class="k">)</span> -batch -l packages.el
+
+<span class="nf">run</span><span class="o">:</span>
+    <span class="k">$(</span>emacs<span class="k">)</span> -Q -l init.el
+
+<span class="nf">up</span><span class="o">:</span> <span class="n">upgrade</span> <span class="n">run</span>
+</code></pre></div>
+<p>Thanks to the first line, I can issue stuff like this on the shell:</p>
+<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span class="nv">emacs</span><span class="o">=</span>emacs24 make up
+</code></pre></div>
+<p>This will use the <code>emacs24</code> executable, instead of whatever <code>emacs</code> points to.  Since the <code>up</code>
+target depends on <code>upgrade</code> and <code>run</code> targets, they will be executed in that order:</p>
+
+<ul>
+<li>the <code>upgrade</code> will install / upgrade all packages in a non-interactive Emacs</li>
+<li>the <code>run</code> target will start an interactive Emacs with already updated packages</li>
+</ul>
+
+<p>I really like putting stuff in Makefiles, since they are very flexible, yet so easy to call.  In the
+very same Makefile, I have a <code>profile</code> target from
+<a href="http://oremacs.com/2015/02/24/emacs-speed-test/">the post on profiling Emacs start up</a>.  I also
+wrote two packages related to Makefiles: <a href="https://github.com/abo-abo/helm-make">helm-make</a> and
+<a href="https://github.com/abo-abo/make-it-so">make-it-so</a>. The latter one is actually very interesting and
+deserves its own post, I should maybe just clean it up a bit.</p>
+
+<h2 id="outro">Outro</h2>
+
+<p>I&#39;ll just cite Gall&#39;s law here:</p>
+
+<blockquote>
+<p>A complex system that works is invariably found to have evolved from a simple system that
+worked. A complex system designed from scratch never works and cannot be patched up to make it
+work. You have to start over with a working simple system.</p>
+</blockquote>
+
+<p>I think it applies from both sides w.r.t. my Emacs config: it kind of works, but I really wish it
+was reproducible from the start, before making it complex.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/03/19/swiper-on-youtubes/">
         A new Swiper demo on Youtube
       </a>
@@ -623,63 +744,6 @@ Here&#39;s one of the screenshots:</p>
 <p>J is a very cool language to try and I hope you give it a go. I haven&#39;t yet managed to find a nice
 use for it, but you could say that, just as learning LISP, learning J can make you better at other
 languages.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/03/15/search-with-apropos/">
-        Search for things with apropos
-      </a>
-    </h1>
-
-    <span class="post-date">15 Mar 2015</span>
-
-    <p>Until recently, I didn&#39;t even know that <code>apropos</code> was an actual word. I thought that it was just
-some gibberish that Emacs hackers invented to name a command. Turns out, it actually has a very
-appropriate meaning:</p>
-
-<blockquote>
-<p><strong>apropos</strong></p>
-
-<p><em>preposition</em></p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">with reference to; concerning.
-</code></pre></div></blockquote>
-
-<h2 id="an-apropos-hydra">An apropos Hydra</h2>
-
-<p>I&#39;ve just added this one to <a href="https://github.com/abo-abo/hydra/blob/master/hydra-examples.el">hydra-examples.el</a>.</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-apropos</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">blue</span>
-                         <span class="nb">:hint</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="s">&quot;</span>
-<span class="s">_a_propos        _c_ommand</span>
-<span class="s">_d_ocumentation  _l_ibrary</span>
-<span class="s">_v_ariable       _u_ser-option</span>
-<span class="s">^ ^          valu_e_&quot;</span>
-  <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="nv">apropos</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;d&quot;</span> <span class="nv">apropos-documentation</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;v&quot;</span> <span class="nv">apropos-variable</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;c&quot;</span> <span class="nv">apropos-command</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nv">apropos-library</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;u&quot;</span> <span class="nv">apropos-user-option</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;e&quot;</span> <span class="nv">apropos-value</span><span class="p">))</span>
-</code></pre></div>
-<p>I recommend to bind it like this:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c h&quot;</span><span class="p">)</span> <span class="ss">&#39;hydra-apropos/body</span><span class="p">)</span>
-</code></pre></div>
-<p>Customary screenshot:</p>
-
-<p><img src="/download/hydra-apropos.png" alt="hydra-apropos.png"></p>
-
-<p>As you can see, there are a total of 7 apropos functions available.  The most useful ones are
-<code>apropos</code>, <code>apropos-command</code> and <code>apropos-variable</code>.  But <code>apropos-value</code> is very interesting as
-well: it will not match an object name with the input, but instead search for all objects whose
-contents match input. So, for instance, if you see something like <code>&quot;error 42&quot;</code> come up, and you
-don&#39;t know where it&#39;s coming from, it&#39;s likely that some variable holds the value <code>42</code>.  And that&#39;s
-when you use <code>apropos-variable</code>.</p>
-
-<p>Apropos is like old-school googling, and I find it highly useful in finding the Emacs information
-that I need. I hope that you will find it useful as well. Happy hacking!</p>
 
   </div>
   

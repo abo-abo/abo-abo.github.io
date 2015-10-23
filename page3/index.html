@@ -267,6 +267,113 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/07/20/hydra-columns/">
+        Easily arrange hydra into a matrix
+      </a>
+    </h1>
+
+    <span class="post-date">20 Jul 2015</span>
+
+    <h2 id="the-new-:columns-option">The new <code>:columns</code> option</h2>
+
+<p>Today I&#39;ll introduce a pretty cool new option that you can use to
+quickly create hydra docstrings arranged in a matrix.  This, of
+course, was already possible before, but you had to format the matrix
+by-hand like this (I cite just bit instead of the
+<a href="https://github.com/abo-abo/hydra/wiki/Projectile">full code</a>, it was
+cut to fit into the Jekyll code column restriction):</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-projectile</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">teal</span>
+                            <span class="nb">:hint</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="s">&quot;</span>
+<span class="s">     PROJECTILE:</span>
+
+<span class="s">     Find File            Search/Tags</span>
+<span class="s">-----------------------------------------</span>
+<span class="s">_s-f_: file            _a_: ag</span>
+<span class="s"> _ff_: file dwim       _g_: update gtags</span>
+<span class="s"> _fd_: file curr dir   _o_: multi-occur</span>
+<span class="s"> &quot;</span>
+  <span class="p">(</span><span class="s">&quot;s-f&quot;</span> <span class="nv">projectile-find-file</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="nv">projectile-ag</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;ff&quot;</span> <span class="nv">projectile-find-file-dwim</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;fd&quot;</span> <span class="nv">projectile-find-file-in-directory</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;g&quot;</span> <span class="nv">ggtags-update-tags</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;o&quot;</span> <span class="nv">projectile-multi-occur</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span> <span class="s">&quot;cancel&quot;</span><span class="p">))</span>
+</code></pre></div>
+<p>The syntax above is still very useful if you want to arrange every
+detail perfectly or need Ruby-style quoting.  But here&#39;s the new
+syntax that allows to get almost the
+<a href="https://github.com/abo-abo/hydra/wiki/Projectile">same docstring</a>
+much easier:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-projectile</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">blue</span>
+                            <span class="nb">:columns</span> <span class="mi">4</span><span class="p">)</span>
+  <span class="s">&quot;Projectile&quot;</span>
+  <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="nv">projectile-ag</span> <span class="s">&quot;ag&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;b&quot;</span> <span class="nv">projectile-switch-to-buffer</span> <span class="s">&quot;switch to buffer&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;c&quot;</span> <span class="nv">projectile-invalidate-cache</span> <span class="s">&quot;cache clear&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;d&quot;</span> <span class="nv">projectile-find-dir</span> <span class="s">&quot;dir&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;s-f&quot;</span> <span class="nv">projectile-find-file</span> <span class="s">&quot;file&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;ff&quot;</span> <span class="nv">projectile-find-file-dwim</span> <span class="s">&quot;file dwim&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;fd&quot;</span> <span class="nv">projectile-find-file-in-directory</span> <span class="s">&quot;file curr dir&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;g&quot;</span> <span class="nv">ggtags-update-tags</span> <span class="s">&quot;update gtags&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;i&quot;</span> <span class="nv">projectile-ibuffer</span> <span class="s">&quot;Ibuffer&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;K&quot;</span> <span class="nv">projectile-kill-buffers</span> <span class="s">&quot;Kill all buffers&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;o&quot;</span> <span class="nv">projectile-multi-occur</span> <span class="s">&quot;multi-occur&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;p&quot;</span> <span class="nv">projectile-switch-project</span> <span class="s">&quot;switch&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;r&quot;</span> <span class="nv">projectile-recentf</span> <span class="s">&quot;recent file&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;x&quot;</span> <span class="nv">projectile-remove-known-project</span> <span class="s">&quot;remove known&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;X&quot;</span> <span class="nv">projectile-cleanup-known-projects</span> <span class="s">&quot;cleanup non-existing&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;z&quot;</span> <span class="nv">projectile-cache-current-file</span> <span class="s">&quot;cache current&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span> <span class="s">&quot;cancel&quot;</span><span class="p">))</span>
+</code></pre></div>
+<p>It still looks pretty good, in my opinion:</p>
+
+<p><img src="/download/hydra-columns-projectile.png" alt="hydra-columns-projectile.png"></p>
+
+<p>Note how all redundant information has been removed. Another advantage
+is the you can easily:</p>
+
+<ul>
+<li>Add/remove heads.</li>
+<li>Update head hints.</li>
+<li>Change the number of columns.</li>
+</ul>
+
+<h2 id="a-bit-of-customization">A bit of customization</h2>
+
+<p>After each change, just re-eval the <code>defhydra</code> and you&#39;re done - no
+need to manually re-arrange the docstring.  Since there already is an
+interface that allows you to customize the docstring very precisely, I
+tried to make the new interface as automatic as possible: just specify
+the number of columns and you&#39;re done. But if you want just a little
+bit more customization, look at this code:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">defvar</span> <span class="nv">hydra-key-doc-function</span> <span class="ss">&#39;hydra-key-doc-function-default</span>
+  <span class="s">&quot;The function for formatting key-doc pairs.&quot;</span><span class="p">)</span>
+
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">hydra-key-doc-function-default</span> <span class="p">(</span><span class="nv">key</span> <span class="nv">key-width</span> <span class="nv">doc</span> <span class="nv">doc-width</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">format</span> <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;%%%ds: %%%ds&quot;</span> <span class="nv">key-width</span> <span class="p">(</span><span class="nf">-</span> <span class="mi">-1</span> <span class="nv">doc-width</span><span class="p">))</span>
+          <span class="nv">key</span> <span class="nv">doc</span><span class="p">))</span>
+</code></pre></div>
+<p>So if you want to add a little space here and there, or e.g. wrap key
+bindings in brackets, just clone <code>hydra-key-doc-function-default</code>,
+customize it a bit and set <code>hydra-key-doc-function</code> to the new
+function.</p>
+
+<h2 id="outro">Outro</h2>
+
+<p>If you&#39;ve been using just the plain style before and felt that you
+can&#39;t fit your docstring on one line, try the new style: it&#39;s just one
+line of change with respect to your old code.  And if you&#39;ve been
+building the docstring by-hand, see if it&#39;s possible to transform it
+to the new style: adding and removing new heads will become easier.
+Thanks to <a href="https://github.com/Fuco1">@Fuco1</a> for the suggestion in
+<a href="https://github.com/abo-abo/hydra/issues/140">#140</a>.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/07/16/callback-quit/">
         Quitting to command loop in Elisp
       </a>
@@ -641,93 +748,6 @@ although it could work without it:</p>
 </ul>
 
 <p>I hope you see now why I prefer <kbd>C-o sd</kbd>.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/06/30/context-aware-hydra/">
-        Context aware hydra
-      </a>
-    </h1>
-
-    <span class="post-date">30 Jun 2015</span>
-
-    <p>In this post, I&#39;ll demonstrate a snippet that came up this week in a
-conversation over John Kitchin&#39;s
-<a href="http://kitchingroup.cheme.cmu.edu/blog/2015/06/24/Conditional-hydra-menus/">post</a>.
-While the following snippet isn&#39;t inherently useful, it might help a creative
-user to understand Hydra a bit more and accomplish more advanced
-things.</p>
-
-<p>This hydra demonstrates that the hint and even the key bindings aren&#39;t
-set in stone: you can modify them depending on the current state of
-your Emacs, in this case the current line number.</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-vi</span> <span class="p">(</span><span class="nb">:hint</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="s">&quot;vi&quot;</span>
-  <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">next-line</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;k&quot;</span> <span class="nv">previous-line</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;n&quot;</span> <span class="nv">next-line</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;p&quot;</span> <span class="nv">previous-line</span><span class="p">))</span>
-
-<span class="p">(</span><span class="k">setq</span> <span class="nv">hydra-vi/hint</span>
-  <span class="o">&#39;</span><span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">evenp</span> <span class="p">(</span><span class="nv">line-number-at-pos</span><span class="p">))</span>
-    <span class="p">(</span><span class="k">prog1</span> <span class="p">(</span><span class="nf">eval</span>
-            <span class="p">(</span><span class="nv">hydra--format</span> <span class="no">nil</span> <span class="o">&#39;</span><span class="p">(</span><span class="no">nil</span> <span class="no">nil</span> <span class="nb">:hint</span> <span class="no">nil</span><span class="p">)</span>
-                           <span class="s">&quot;\neven: _j_ _k_\n&quot;</span> <span class="nv">hydra-vi/heads</span><span class="p">))</span>
-      <span class="p">(</span><span class="nf">define-key</span> <span class="nv">hydra-vi/keymap</span> <span class="s">&quot;n&quot;</span> <span class="no">nil</span><span class="p">)</span>
-      <span class="p">(</span><span class="nf">define-key</span> <span class="nv">hydra-vi/keymap</span> <span class="s">&quot;p&quot;</span> <span class="no">nil</span><span class="p">)</span>
-      <span class="p">(</span><span class="nf">define-key</span> <span class="nv">hydra-vi/keymap</span> <span class="s">&quot;j&quot;</span> <span class="ss">&#39;hydra-vi/next-line</span><span class="p">)</span>
-      <span class="p">(</span><span class="nf">define-key</span> <span class="nv">hydra-vi/keymap</span> <span class="s">&quot;k&quot;</span> <span class="ss">&#39;hydra-vi/previous-line</span><span class="p">))</span>
-    <span class="p">(</span><span class="k">prog1</span> <span class="p">(</span><span class="nf">eval</span>
-            <span class="p">(</span><span class="nv">hydra--format</span> <span class="no">nil</span> <span class="o">&#39;</span><span class="p">(</span><span class="no">nil</span> <span class="no">nil</span> <span class="nb">:hint</span> <span class="no">nil</span><span class="p">)</span>
-                           <span class="s">&quot;\nodd: _n_ _p_\n&quot;</span> <span class="nv">hydra-vi/heads</span><span class="p">))</span>
-      <span class="p">(</span><span class="nf">define-key</span> <span class="nv">hydra-vi/keymap</span> <span class="s">&quot;j&quot;</span> <span class="no">nil</span><span class="p">)</span>
-      <span class="p">(</span><span class="nf">define-key</span> <span class="nv">hydra-vi/keymap</span> <span class="s">&quot;k&quot;</span> <span class="no">nil</span><span class="p">)</span>
-      <span class="p">(</span><span class="nf">define-key</span> <span class="nv">hydra-vi/keymap</span> <span class="s">&quot;n&quot;</span> <span class="ss">&#39;hydra-vi/next-line</span><span class="p">)</span>
-      <span class="p">(</span><span class="nf">define-key</span> <span class="nv">hydra-vi/keymap</span> <span class="s">&quot;p&quot;</span> <span class="ss">&#39;hydra-vi/previous-line</span><span class="p">))))</span>
-</code></pre></div>
-<p>The first statement is one of the most elementary <code>defhydra</code>
-calls. The only extra thing is that it sets the <code>:hint</code> to nil.</p>
-
-<p>The <code>defhydra</code> statement generates a bunch of function and variable
-definitions. You can examine them closely by evaluating:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">macroexpand</span>
- <span class="o">&#39;</span><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-vi</span> <span class="p">(</span><span class="nb">:hint</span> <span class="no">nil</span><span class="p">)</span>
-   <span class="s">&quot;vi&quot;</span>
-   <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">next-line</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;k&quot;</span> <span class="nv">previous-line</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;n&quot;</span> <span class="nv">next-line</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;p&quot;</span> <span class="nv">previous-line</span><span class="p">)))</span>
-</code></pre></div>
-<p>Just paste that code into <code>*scratch*</code>, and press <kbd>C-j</kbd>. If
-you want pretty output (153 lines of code instead of 26), turn on
-<a href="https://github.com/abo-abo/lispy">lispy-mode</a> and press <kbd>E</kbd>
-instead of <kbd>C-j</kbd>.</p>
-
-<p>Anyway, among these defined variables is <code>hydra-vi/hint</code> which is
-evaluated each time to display the hint. So now we can just redefine
-<code>hydra-vi/hint</code> to make it so that on even lines <kbd>n</kbd> calls
-<code>next-line</code>, while on odd lines it&#39;s <kbd>j</kbd>, with the
-appropriate changes in the doc. The change in bindings, modifying
-<code>hydra-vi/keymap</code> - also one of the defined variables, needs to be a
-side-effect, since <code>hydra-vi/hint</code> is expected to evaluate to a
-string.</p>
-
-<p>Just to give you some idea of how it could be used: you can have a
-context-aware &quot;open&quot; command that, for instance, delegates to
-<code>open-in-pdf-tools</code> or <code>open-in-firefox</code> or <code>open-in-emacs</code> when it
-detects that the point is on a link. And of course all these commands
-would have their own key binding that works only if the command makes
-sense.</p>
-
-<p>This approach is described on
-<a href="https://github.com/abo-abo/hydra/wiki/Conditional-Hydra">the wiki</a>,
-in case you read this post much later and want to see an up-to-date
-code, or even update it yourself. In case something cool comes out of
-this snippet, I can try to implement a more palatable API for
-<code>defhydra</code>, most likely an option to supply a function name in the
-<code>docstring</code> argument position.</p>
 
   </div>
   
