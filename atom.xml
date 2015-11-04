@@ -4,13 +4,149 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-10-23T16:12:38+02:00</updated>
+ <updated>2015-11-04T20:08:11+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>New feature in Ivy - ivy-occur</title>
+   <link href="http://oremacs.com/2015/11/04/ivy-occur/"/>
+   <updated>2015-11-04T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/11/04/ivy-occur</id>
+   <content type="html">&lt;p&gt;I&amp;#39;ve had an idea with this feature for quite some time, and only
+recently got to finally implement it.  So here it goes: with
+&lt;code&gt;ivy-occur&lt;/code&gt;, bound to &lt;kbd&gt;C-c o&lt;/kbd&gt; while in the minibuffer, you
+can store almost &lt;a href=&quot;https://github.com/abo-abo/swiper&quot;&gt;Ivy&lt;/a&gt; any
+completion session in progress, and you can have as many of them as
+you like.&lt;/p&gt;
+
+&lt;h2 id=&quot;example-1&quot;&gt;Example 1&lt;/h2&gt;
+
+&lt;p&gt;This is where the command name originates from: &lt;code&gt;swiper&lt;/code&gt; + &lt;code&gt;ivy-occur&lt;/code&gt;
+= &lt;code&gt;occur&lt;/code&gt;. You can store all of swiper&amp;#39;s matching lines into a
+separate buffer. This doesn&amp;#39;t give too much advantage over the
+good-old &lt;code&gt;occur&lt;/code&gt;, the only thing is that you can use ivy-style regexps
+with wild spaces, and have an interactive preview beforehand. Having
+said that, it actually sounds pretty good!&lt;/p&gt;
+
+&lt;h2 id=&quot;example-2&quot;&gt;Example 2&lt;/h2&gt;
+
+&lt;p&gt;I press &lt;kbd&gt;C-S-o&lt;/kbd&gt;, bound to &lt;code&gt;counsel-rhythmbox&lt;/code&gt;, and enter
+&lt;code&gt;u2&lt;/code&gt;.  After pressing &lt;kbd&gt;C-c o&lt;/kbd&gt;, bound to &lt;code&gt;ivy-occur&lt;/code&gt;, the
+completion session is closed (effectively &lt;kbd&gt;C-g&lt;/kbd&gt;), and a new
+buffer &lt;code&gt;*ivy-occur counsel-rhythmbox &amp;quot;u2&amp;quot;*&lt;/code&gt; is generated with all
+songs that match &lt;code&gt;u2&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;As a reminder, &lt;code&gt;counsel-rhythmbox&lt;/code&gt; has two actions: &lt;code&gt;play&lt;/code&gt; (the
+default) and &lt;code&gt;enqueue&lt;/code&gt;. In this new buffer, pressing &lt;kbd&gt;RET&lt;/kbd&gt; or
+&lt;code&gt;mouse-1&lt;/code&gt; will call the &lt;code&gt;play&lt;/code&gt; action (since it was active at the
+moment &lt;code&gt;ivy-occur&lt;/code&gt; was called) for the current candidate. So I&amp;#39;ve
+effectively added a playlist functionality to &lt;code&gt;counsel-rhythmbox&lt;/code&gt;
+through a generic command.&lt;/p&gt;
+
+&lt;p&gt;Note that it&amp;#39;s very easy to identify a completion session by the
+command name and input.  So I can distinguish e.g. &lt;code&gt;*ivy-occur
+counsel-rhythmbox &amp;quot;u2&amp;quot;*&lt;/code&gt; and &lt;code&gt;*ivy-occur counsel-rhythmbox &amp;quot;скря&amp;quot;*&lt;/code&gt;,
+and quickly select them with &lt;code&gt;ivy-switch-buffer&lt;/code&gt;: just input &lt;code&gt;rhy&lt;/code&gt;,
+usually only these two and similar buffers will match.&lt;/p&gt;
+
+&lt;h2 id=&quot;example-3&quot;&gt;Example 3&lt;/h2&gt;
+
+&lt;p&gt;Suppose I want to go through the documentation of all variables that end in &lt;code&gt;-function&lt;/code&gt;.
+Easy:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;kbd&gt;&amp;lt;f1&amp;gt; v&lt;/kbd&gt; (&lt;code&gt;counsel-describe-variable&lt;/code&gt;) with input
+&lt;code&gt;function$&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;C-c o&lt;/kbd&gt; (&lt;code&gt;ivy-occur&lt;/code&gt;).&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;I get a new buffer named &lt;code&gt;*ivy-occur cousnel-describe-variable
+&amp;quot;function$*&amp;quot;&lt;/code&gt; with 346 candidates. I can go through them at my own
+pace, possibly doing other completion stuff in between without
+disturbing my process. It&amp;#39;s also convenient to navigate these buffers
+with &lt;code&gt;swiper&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;example-4&quot;&gt;Example 4&lt;/h2&gt;
+
+&lt;p&gt;Let&amp;#39;s tweak the previous one. After inputting &lt;code&gt;function$&lt;/code&gt; I can press
+&lt;kbd&gt;C-M-a&lt;/kbd&gt; (&lt;code&gt;ivy-read-action&lt;/code&gt;) followed by &lt;kbd&gt;d&lt;/kbd&gt; to
+select the &lt;code&gt;definition&lt;/code&gt; action. Then again &lt;kbd&gt;C-c o&lt;/kbd&gt;
+(&lt;code&gt;ivy-occur&lt;/code&gt;).  Pressing &lt;kbd&gt;RET&lt;/kbd&gt; in the resulting buffer will
+take me to that variable&amp;#39;s definition, instead of describing it as
+before. A similar thing could be done for &lt;code&gt;counsel-rhythmbox&lt;/code&gt; to get
+the &lt;code&gt;enqueue&lt;/code&gt; action in &lt;code&gt;*ivy-occur*&lt;/code&gt; buffer, instead of &lt;code&gt;play&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;example-5&quot;&gt;Example 5&lt;/h2&gt;
+
+&lt;p&gt;This is an improvement to my workflow for quickly looking at a new
+package&amp;#39;s features.  This can be done with &lt;kbd&gt;oge&lt;/kbd&gt;
+(&lt;code&gt;lispy-goto-elisp-commands&lt;/code&gt;) from
+&lt;a href=&quot;https://github.com/abo-abo/lispy&quot;&gt;lispy&lt;/a&gt;, which scans the source for
+&lt;code&gt;(interactive)&lt;/code&gt; tags and allows to jump to their definition.&lt;/p&gt;
+
+&lt;p&gt;It&amp;#39;s a pretty cool optimization, compared to looking at all tags. For
+example, &lt;a href=&quot;https://github.com/bbatsov/projectile&quot;&gt;projectile&lt;/a&gt; currently
+has 375 top-level tags (functions and variables).  But with
+&lt;code&gt;lispy-goto-elisp-commands&lt;/code&gt; I only get 48 tags. And now I can have
+them in a convenient permanent list too.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/ivy-occur-1.png&quot; alt=&quot;ivy-occur-1.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Alternatively, if &lt;code&gt;projectile&lt;/code&gt; is already loaded, I can use
+&lt;code&gt;counsel-M-x&lt;/code&gt; with input &lt;code&gt;projectile-&lt;/code&gt;, followed by &lt;kbd&gt;C-M-a d&lt;/kbd&gt;
+to select the &lt;code&gt;definition&lt;/code&gt; action, followed by &lt;kbd&gt;C-c o&lt;/kbd&gt;.&lt;/p&gt;
+
+&lt;p&gt;As a reminder of how it works, &lt;code&gt;counsel-M-x&lt;/code&gt; is defined with a single
+action that calls the selected command. But then, I&amp;#39;ve also added this
+statement at top-level of counsel.el:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ivy-set-actions&lt;/span&gt;
+ &lt;span class=&quot;ss&quot;&gt;&amp;#39;counsel-M-x&lt;/span&gt;
+ &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;d&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;counsel--find-symbol&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;definition&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This means that you can add as many actions as you like to &lt;code&gt;ivy-read&lt;/code&gt;
+commands. And of course customize the binding and the hint, which are
+in this case &lt;kbd&gt;d&lt;/kbd&gt; and &lt;code&gt;definition&lt;/code&gt; respectively.&lt;/p&gt;
+
+&lt;h2 id=&quot;limitations&quot;&gt;Limitations&lt;/h2&gt;
+
+&lt;p&gt;Unfortunately, since the &lt;code&gt;*ivy-occur*&lt;/code&gt; buffer needs to know the action
+to execute, it only works for commands that explicitly pass &lt;code&gt;:action&lt;/code&gt;
+to &lt;code&gt;ivy-read&lt;/code&gt;. For instance, it won&amp;#39;t work for &lt;code&gt;package-install&lt;/code&gt; with
+&lt;code&gt;ivy-mode&lt;/code&gt; on: the buffer will be properly generated, but pressing
+&lt;kbd&gt;RET&lt;/kbd&gt; won&amp;#39;t install a package.&lt;/p&gt;
+
+&lt;p&gt;Fortunately, it&amp;#39;s not hard to write a version that works:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;counsel-package-install&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ivy-read&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Install package: &amp;quot;&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;delq&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;
+                  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;mapcar&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;elt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;unless&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;package-installed-p&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;car&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;elt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+                              &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;symbol-name&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;car&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;elt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+                          &lt;span class=&quot;nv&quot;&gt;package-archive-contents&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+            &lt;span class=&quot;nb&quot;&gt;:action&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;package-install&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;intern&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+            &lt;span class=&quot;nb&quot;&gt;:caller&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;counsel-package-install&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Here&amp;#39;s a buffer with a list of packages matching &amp;quot;ga&amp;quot;; pressing
+&lt;kbd&gt;RET&lt;/kbd&gt; will install the selected package:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/ivy-occur-2.png&quot; alt=&quot;ivy-occur-2.png&quot;&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;I think &lt;code&gt;ivy-occur&lt;/code&gt; is a very powerful command that shouldn&amp;#39;t be
+overlooked.  Just as &lt;code&gt;ivy-resume&lt;/code&gt; implements a sort of &lt;kbd&gt;DEL&lt;/kbd&gt;
+or &lt;kbd&gt;C-u&lt;/kbd&gt; key for completion, &lt;code&gt;ivy-occur&lt;/code&gt; implements a
+convenient way to switch and store the completion context, a sort of
+&lt;kbd&gt;C-x o&lt;/kbd&gt; or &lt;kbd&gt;C-x b&lt;/kbd&gt; for completion.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>New in Emacs 25 - convenient compression/decompression in Dired</title>

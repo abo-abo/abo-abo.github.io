@@ -184,6 +184,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -264,6 +268,146 @@
 
       <div class="container content">
         <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/2015/11/04/ivy-occur/">
+        New feature in Ivy - ivy-occur
+      </a>
+    </h1>
+
+    <span class="post-date">04 Nov 2015</span>
+
+    <p>I&#39;ve had an idea with this feature for quite some time, and only
+recently got to finally implement it.  So here it goes: with
+<code>ivy-occur</code>, bound to <kbd>C-c o</kbd> while in the minibuffer, you
+can store almost <a href="https://github.com/abo-abo/swiper">Ivy</a> any
+completion session in progress, and you can have as many of them as
+you like.</p>
+
+<h2 id="example-1">Example 1</h2>
+
+<p>This is where the command name originates from: <code>swiper</code> + <code>ivy-occur</code>
+= <code>occur</code>. You can store all of swiper&#39;s matching lines into a
+separate buffer. This doesn&#39;t give too much advantage over the
+good-old <code>occur</code>, the only thing is that you can use ivy-style regexps
+with wild spaces, and have an interactive preview beforehand. Having
+said that, it actually sounds pretty good!</p>
+
+<h2 id="example-2">Example 2</h2>
+
+<p>I press <kbd>C-S-o</kbd>, bound to <code>counsel-rhythmbox</code>, and enter
+<code>u2</code>.  After pressing <kbd>C-c o</kbd>, bound to <code>ivy-occur</code>, the
+completion session is closed (effectively <kbd>C-g</kbd>), and a new
+buffer <code>*ivy-occur counsel-rhythmbox &quot;u2&quot;*</code> is generated with all
+songs that match <code>u2</code>.</p>
+
+<p>As a reminder, <code>counsel-rhythmbox</code> has two actions: <code>play</code> (the
+default) and <code>enqueue</code>. In this new buffer, pressing <kbd>RET</kbd> or
+<code>mouse-1</code> will call the <code>play</code> action (since it was active at the
+moment <code>ivy-occur</code> was called) for the current candidate. So I&#39;ve
+effectively added a playlist functionality to <code>counsel-rhythmbox</code>
+through a generic command.</p>
+
+<p>Note that it&#39;s very easy to identify a completion session by the
+command name and input.  So I can distinguish e.g. <code>*ivy-occur
+counsel-rhythmbox &quot;u2&quot;*</code> and <code>*ivy-occur counsel-rhythmbox &quot;скря&quot;*</code>,
+and quickly select them with <code>ivy-switch-buffer</code>: just input <code>rhy</code>,
+usually only these two and similar buffers will match.</p>
+
+<h2 id="example-3">Example 3</h2>
+
+<p>Suppose I want to go through the documentation of all variables that end in <code>-function</code>.
+Easy:</p>
+
+<ol>
+<li><kbd>&lt;f1&gt; v</kbd> (<code>counsel-describe-variable</code>) with input
+<code>function$</code>.</li>
+<li><kbd>C-c o</kbd> (<code>ivy-occur</code>).</li>
+</ol>
+
+<p>I get a new buffer named <code>*ivy-occur cousnel-describe-variable
+&quot;function$*&quot;</code> with 346 candidates. I can go through them at my own
+pace, possibly doing other completion stuff in between without
+disturbing my process. It&#39;s also convenient to navigate these buffers
+with <code>swiper</code>.</p>
+
+<h2 id="example-4">Example 4</h2>
+
+<p>Let&#39;s tweak the previous one. After inputting <code>function$</code> I can press
+<kbd>C-M-a</kbd> (<code>ivy-read-action</code>) followed by <kbd>d</kbd> to
+select the <code>definition</code> action. Then again <kbd>C-c o</kbd>
+(<code>ivy-occur</code>).  Pressing <kbd>RET</kbd> in the resulting buffer will
+take me to that variable&#39;s definition, instead of describing it as
+before. A similar thing could be done for <code>counsel-rhythmbox</code> to get
+the <code>enqueue</code> action in <code>*ivy-occur*</code> buffer, instead of <code>play</code>.</p>
+
+<h2 id="example-5">Example 5</h2>
+
+<p>This is an improvement to my workflow for quickly looking at a new
+package&#39;s features.  This can be done with <kbd>oge</kbd>
+(<code>lispy-goto-elisp-commands</code>) from
+<a href="https://github.com/abo-abo/lispy">lispy</a>, which scans the source for
+<code>(interactive)</code> tags and allows to jump to their definition.</p>
+
+<p>It&#39;s a pretty cool optimization, compared to looking at all tags. For
+example, <a href="https://github.com/bbatsov/projectile">projectile</a> currently
+has 375 top-level tags (functions and variables).  But with
+<code>lispy-goto-elisp-commands</code> I only get 48 tags. And now I can have
+them in a convenient permanent list too.</p>
+
+<p><img src="/download/ivy-occur-1.png" alt="ivy-occur-1.png"></p>
+
+<p>Alternatively, if <code>projectile</code> is already loaded, I can use
+<code>counsel-M-x</code> with input <code>projectile-</code>, followed by <kbd>C-M-a d</kbd>
+to select the <code>definition</code> action, followed by <kbd>C-c o</kbd>.</p>
+
+<p>As a reminder of how it works, <code>counsel-M-x</code> is defined with a single
+action that calls the selected command. But then, I&#39;ve also added this
+statement at top-level of counsel.el:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">ivy-set-actions</span>
+ <span class="ss">&#39;counsel-M-x</span>
+ <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;d&quot;</span> <span class="nv">counsel--find-symbol</span> <span class="s">&quot;definition&quot;</span><span class="p">)))</span>
+</code></pre></div>
+<p>This means that you can add as many actions as you like to <code>ivy-read</code>
+commands. And of course customize the binding and the hint, which are
+in this case <kbd>d</kbd> and <code>definition</code> respectively.</p>
+
+<h2 id="limitations">Limitations</h2>
+
+<p>Unfortunately, since the <code>*ivy-occur*</code> buffer needs to know the action
+to execute, it only works for commands that explicitly pass <code>:action</code>
+to <code>ivy-read</code>. For instance, it won&#39;t work for <code>package-install</code> with
+<code>ivy-mode</code> on: the buffer will be properly generated, but pressing
+<kbd>RET</kbd> won&#39;t install a package.</p>
+
+<p>Fortunately, it&#39;s not hard to write a version that works:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel-package-install</span> <span class="p">()</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">ivy-read</span> <span class="s">&quot;Install package: &quot;</span>
+            <span class="p">(</span><span class="nf">delq</span> <span class="no">nil</span>
+                  <span class="p">(</span><span class="nf">mapcar</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nf">elt</span><span class="p">)</span>
+                            <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nv">package-installed-p</span> <span class="p">(</span><span class="nf">car</span> <span class="nf">elt</span><span class="p">))</span>
+                              <span class="p">(</span><span class="nf">symbol-name</span> <span class="p">(</span><span class="nf">car</span> <span class="nf">elt</span><span class="p">))))</span>
+                          <span class="nv">package-archive-contents</span><span class="p">))</span>
+            <span class="nb">:action</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+                      <span class="p">(</span><span class="nv">package-install</span> <span class="p">(</span><span class="nf">intern</span> <span class="nv">x</span><span class="p">)))</span>
+            <span class="nb">:caller</span> <span class="ss">&#39;counsel-package-install</span><span class="p">))</span>
+</code></pre></div>
+<p>Here&#39;s a buffer with a list of packages matching &quot;ga&quot;; pressing
+<kbd>RET</kbd> will install the selected package:</p>
+
+<p><img src="/download/ivy-occur-2.png" alt="ivy-occur-2.png"></p>
+
+<h2 id="outro">Outro</h2>
+
+<p>I think <code>ivy-occur</code> is a very powerful command that shouldn&#39;t be
+overlooked.  Just as <code>ivy-resume</code> implements a sort of <kbd>DEL</kbd>
+or <kbd>C-u</kbd> key for completion, <code>ivy-occur</code> implements a
+convenient way to switch and store the completion context, a sort of
+<kbd>C-x o</kbd> or <kbd>C-x b</kbd> for completion.</p>
+
+  </div>
   
   <div class="post">
     <h1 class="post-title">
@@ -593,74 +737,6 @@ minibuffer coloring if you have it turned on:</p>
 <p>If you&#39;re interested in how the face backgrounds are combined, you can
 read my older article on
 <a href="http://oremacs.com/2015/04/28/blending-faces/">color blending in Elisp</a>.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/09/04/ivy-fancy-minibuffer/">
-        Fancy minibuffer faces for Ivy completion
-      </a>
-    </h1>
-
-    <span class="post-date">04 Sep 2015</span>
-
-    <p>Today, I&#39;ll describe a recent improvement to the display of Ivy completion.
-To use it, add this code to your configuration:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-display-style</span> <span class="ss">&#39;fancy</span><span class="p">)</span>
-</code></pre></div>
-<p>After this, <a href="https://github.com/abo-abo/swiper">swiper</a> will look like this:</p>
-
-<p><img src="/download/ivy-display-style-1.png" alt="ivy-display-style-1.png"></p>
-
-<p>And <code>counsel-M-x</code> will look like this:</p>
-
-<p><img src="/download/ivy-display-style-2.png" alt="ivy-display-style-2.png"></p>
-
-<p>If you haven&#39;t used it before, <code>counsel-M-x</code> is part the counsel
-package on MELPA, or part of swiper package if you&#39;re installing from
-GNU ELPA. Basically, it&#39;s a <kbd>M-x</kbd> replacement (that I like to
-bind to <kbd>C-t</kbd> for efficiency reasons), that doubles as
-<code>find-function</code> (just press <kbd>C-.</kbd> instead of <kbd>RET</kbd>
-to find the function instead of calling it). If you&#39;re using
-<code>counsel-M-x</code> I highly recommend to also install <code>smex</code>, since then
-<code>counsel-M-x</code> will use <code>smex</code> for sorting the matched commands.</p>
-
-<p>The update will propertize the minibuffer contents with a new set of faces:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defcustom</span> <span class="nv">swiper-minibuffer-faces</span>
-  <span class="o">&#39;</span><span class="p">(</span><span class="nv">swiper-minibuffer-match-face-1</span>
-    <span class="nv">swiper-minibuffer-match-face-2</span>
-    <span class="nv">swiper-minibuffer-match-face-3</span>
-    <span class="nv">swiper-minibuffer-match-face-4</span><span class="p">)</span>
-  <span class="s">&quot;List of `swiper&#39; faces for minibuffer group matches.&quot;</span><span class="p">)</span>
-</code></pre></div>
-<p>Initially, when responding to
-<a href="https://github.com/abo-abo/swiper/issues/212">#212</a>, I used the
-original swiper faces in the minibuffer as well. But after some use,
-their brightness became a bit annoying.  So I introduced a new set of
-faces that can be customized separately.</p>
-
-<p>Here are the settings that I&#39;m currently using:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">custom-set-faces</span>
- <span class="o">&#39;</span><span class="p">(</span><span class="nv">swiper-minibuffer-match-face-1</span>
-   <span class="p">((</span><span class="no">t</span> <span class="nb">:background</span> <span class="s">&quot;#dddddd&quot;</span><span class="p">)))</span>
- <span class="o">&#39;</span><span class="p">(</span><span class="nv">swiper-minibuffer-match-face-2</span>
-   <span class="p">((</span><span class="no">t</span> <span class="nb">:background</span> <span class="s">&quot;#bbbbbb&quot;</span> <span class="nb">:weight</span> <span class="nv">bold</span><span class="p">)))</span>
- <span class="o">&#39;</span><span class="p">(</span><span class="nv">swiper-minibuffer-match-face-3</span>
-   <span class="p">((</span><span class="no">t</span> <span class="nb">:background</span> <span class="s">&quot;#bbbbff&quot;</span> <span class="nb">:weight</span> <span class="nv">bold</span><span class="p">)))</span>
- <span class="o">&#39;</span><span class="p">(</span><span class="nv">swiper-minibuffer-match-face-4</span>
-   <span class="p">((</span><span class="no">t</span> <span class="nb">:background</span> <span class="s">&quot;#ffbbff&quot;</span> <span class="nb">:weight</span> <span class="nv">bold</span><span class="p">))))</span>
-</code></pre></div>
-<p>It&#39;s similar to what the Firefox address bar uses: gray background and
-bold font. Additionally, the matching parts are highlighted with pale
-gray, blue and magenta colors. If you like the color scheme, it&#39;s part
-of <a href="https://github.com/abo-abo/eclipse-theme">eclipse-theme</a>.  Another
-choice, for even less distraction, could be to remove the background
-from these faces, only leaving the bold part on the matches.</p>
-
-<p>Thanks to <a href="https://github.com/Wilfred">@Wilfred</a> for nudging me to
-finally implement this feature.  It&#39;s been on my list for a long time,
-but I&#39;ve been putting it off.</p>
 
   </div>
   
