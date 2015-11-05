@@ -280,7 +280,7 @@
 
     <p>I&#39;ve had an idea with this feature for quite some time, and only
 recently got to finally implement it.  So here it goes: with
-<code>ivy-occur</code>, bound to <kbd>C-c o</kbd> while in the minibuffer, you
+<code>ivy-occur</code>, bound to <kbd>C-c C-o</kbd> while in the minibuffer, you
 can store almost <a href="https://github.com/abo-abo/swiper">Ivy</a> any
 completion session in progress, and you can have as many of them as
 you like.</p>
@@ -297,7 +297,7 @@ said that, it actually sounds pretty good!</p>
 <h2 id="example-2">Example 2</h2>
 
 <p>I press <kbd>C-S-o</kbd>, bound to <code>counsel-rhythmbox</code>, and enter
-<code>u2</code>.  After pressing <kbd>C-c o</kbd>, bound to <code>ivy-occur</code>, the
+<code>u2</code>.  After pressing <kbd>C-c C-o</kbd>, bound to <code>ivy-occur</code>, the
 completion session is closed (effectively <kbd>C-g</kbd>), and a new
 buffer <code>*ivy-occur counsel-rhythmbox &quot;u2&quot;*</code> is generated with all
 songs that match <code>u2</code>.</p>
@@ -317,13 +317,13 @@ usually only these two and similar buffers will match.</p>
 
 <h2 id="example-3">Example 3</h2>
 
-<p>Suppose I want to go through the documentation of all variables that end in <code>-function</code>.
-Easy:</p>
+<p>Suppose I want to go through the documentation of all variables that
+end in <code>-function</code>.  Easy:</p>
 
 <ol>
 <li><kbd>&lt;f1&gt; v</kbd> (<code>counsel-describe-variable</code>) with input
 <code>function$</code>.</li>
-<li><kbd>C-c o</kbd> (<code>ivy-occur</code>).</li>
+<li><kbd>C-c C-o</kbd> (<code>ivy-occur</code>).</li>
 </ol>
 
 <p>I get a new buffer named <code>*ivy-occur cousnel-describe-variable
@@ -336,7 +336,7 @@ with <code>swiper</code>.</p>
 
 <p>Let&#39;s tweak the previous one. After inputting <code>function$</code> I can press
 <kbd>C-M-a</kbd> (<code>ivy-read-action</code>) followed by <kbd>d</kbd> to
-select the <code>definition</code> action. Then again <kbd>C-c o</kbd>
+select the <code>definition</code> action. Then again <kbd>C-c C-o</kbd>
 (<code>ivy-occur</code>).  Pressing <kbd>RET</kbd> in the resulting buffer will
 take me to that variable&#39;s definition, instead of describing it as
 before. A similar thing could be done for <code>counsel-rhythmbox</code> to get
@@ -360,7 +360,7 @@ them in a convenient permanent list too.</p>
 
 <p>Alternatively, if <code>projectile</code> is already loaded, I can use
 <code>counsel-M-x</code> with input <code>projectile-</code>, followed by <kbd>C-M-a d</kbd>
-to select the <code>definition</code> action, followed by <kbd>C-c o</kbd>.</p>
+to select the <code>definition</code> action, followed by <kbd>C-c C-o</kbd>.</p>
 
 <p>As a reminder of how it works, <code>counsel-M-x</code> is defined with a single
 action that calls the selected command. But then, I&#39;ve also added this
@@ -398,6 +398,17 @@ to <code>ivy-read</code>. For instance, it won&#39;t work for <code>package-inst
 <kbd>RET</kbd> will install the selected package:</p>
 
 <p><img src="/download/ivy-occur-2.png" alt="ivy-occur-2.png"></p>
+
+<h2 id="small-note-on-key-bindings">Small note on key bindings</h2>
+
+<p>In the initial post, I wanted to bind <code>ivy-occur</code> to <kbd>C-c o</kbd>
+instead of <kbd>C-c C-o</kbd>. But I was reminded that <kbd>C-c LETTER</kbd> are
+<a href="http://www.gnu.org/software/emacs/manual/html_node/elisp/Key-Binding-Conventions.html">reserved</a>.
+I still think it&#39;s a better binding. If you agree, you can add it to your config:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">ivy-minibuffer-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c o&quot;</span><span class="p">)</span> <span class="ss">&#39;ivy-occur</span><span class="p">)</span>
+</code></pre></div>
+<p>Additionally, <code>ivy-occur</code> is also available on <kbd>C-o u</kbd>,
+through the <kbd>C-o</kbd> hydra.</p>
 
 <h2 id="outro">Outro</h2>
 

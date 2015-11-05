@@ -4,7 +4,7 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-11-04T20:08:11+01:00</updated>
+ <updated>2015-11-05T08:50:57+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
@@ -19,7 +19,7 @@
    <id>http://oremacs.com/2015/11/04/ivy-occur</id>
    <content type="html">&lt;p&gt;I&amp;#39;ve had an idea with this feature for quite some time, and only
 recently got to finally implement it.  So here it goes: with
-&lt;code&gt;ivy-occur&lt;/code&gt;, bound to &lt;kbd&gt;C-c o&lt;/kbd&gt; while in the minibuffer, you
+&lt;code&gt;ivy-occur&lt;/code&gt;, bound to &lt;kbd&gt;C-c C-o&lt;/kbd&gt; while in the minibuffer, you
 can store almost &lt;a href=&quot;https://github.com/abo-abo/swiper&quot;&gt;Ivy&lt;/a&gt; any
 completion session in progress, and you can have as many of them as
 you like.&lt;/p&gt;
@@ -36,7 +36,7 @@ said that, it actually sounds pretty good!&lt;/p&gt;
 &lt;h2 id=&quot;example-2&quot;&gt;Example 2&lt;/h2&gt;
 
 &lt;p&gt;I press &lt;kbd&gt;C-S-o&lt;/kbd&gt;, bound to &lt;code&gt;counsel-rhythmbox&lt;/code&gt;, and enter
-&lt;code&gt;u2&lt;/code&gt;.  After pressing &lt;kbd&gt;C-c o&lt;/kbd&gt;, bound to &lt;code&gt;ivy-occur&lt;/code&gt;, the
+&lt;code&gt;u2&lt;/code&gt;.  After pressing &lt;kbd&gt;C-c C-o&lt;/kbd&gt;, bound to &lt;code&gt;ivy-occur&lt;/code&gt;, the
 completion session is closed (effectively &lt;kbd&gt;C-g&lt;/kbd&gt;), and a new
 buffer &lt;code&gt;*ivy-occur counsel-rhythmbox &amp;quot;u2&amp;quot;*&lt;/code&gt; is generated with all
 songs that match &lt;code&gt;u2&lt;/code&gt;.&lt;/p&gt;
@@ -56,13 +56,13 @@ usually only these two and similar buffers will match.&lt;/p&gt;
 
 &lt;h2 id=&quot;example-3&quot;&gt;Example 3&lt;/h2&gt;
 
-&lt;p&gt;Suppose I want to go through the documentation of all variables that end in &lt;code&gt;-function&lt;/code&gt;.
-Easy:&lt;/p&gt;
+&lt;p&gt;Suppose I want to go through the documentation of all variables that
+end in &lt;code&gt;-function&lt;/code&gt;.  Easy:&lt;/p&gt;
 
 &lt;ol&gt;
 &lt;li&gt;&lt;kbd&gt;&amp;lt;f1&amp;gt; v&lt;/kbd&gt; (&lt;code&gt;counsel-describe-variable&lt;/code&gt;) with input
 &lt;code&gt;function$&lt;/code&gt;.&lt;/li&gt;
-&lt;li&gt;&lt;kbd&gt;C-c o&lt;/kbd&gt; (&lt;code&gt;ivy-occur&lt;/code&gt;).&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;C-c C-o&lt;/kbd&gt; (&lt;code&gt;ivy-occur&lt;/code&gt;).&lt;/li&gt;
 &lt;/ol&gt;
 
 &lt;p&gt;I get a new buffer named &lt;code&gt;*ivy-occur cousnel-describe-variable
@@ -75,7 +75,7 @@ with &lt;code&gt;swiper&lt;/code&gt;.&lt;/p&gt;
 
 &lt;p&gt;Let&amp;#39;s tweak the previous one. After inputting &lt;code&gt;function$&lt;/code&gt; I can press
 &lt;kbd&gt;C-M-a&lt;/kbd&gt; (&lt;code&gt;ivy-read-action&lt;/code&gt;) followed by &lt;kbd&gt;d&lt;/kbd&gt; to
-select the &lt;code&gt;definition&lt;/code&gt; action. Then again &lt;kbd&gt;C-c o&lt;/kbd&gt;
+select the &lt;code&gt;definition&lt;/code&gt; action. Then again &lt;kbd&gt;C-c C-o&lt;/kbd&gt;
 (&lt;code&gt;ivy-occur&lt;/code&gt;).  Pressing &lt;kbd&gt;RET&lt;/kbd&gt; in the resulting buffer will
 take me to that variable&amp;#39;s definition, instead of describing it as
 before. A similar thing could be done for &lt;code&gt;counsel-rhythmbox&lt;/code&gt; to get
@@ -99,7 +99,7 @@ them in a convenient permanent list too.&lt;/p&gt;
 
 &lt;p&gt;Alternatively, if &lt;code&gt;projectile&lt;/code&gt; is already loaded, I can use
 &lt;code&gt;counsel-M-x&lt;/code&gt; with input &lt;code&gt;projectile-&lt;/code&gt;, followed by &lt;kbd&gt;C-M-a d&lt;/kbd&gt;
-to select the &lt;code&gt;definition&lt;/code&gt; action, followed by &lt;kbd&gt;C-c o&lt;/kbd&gt;.&lt;/p&gt;
+to select the &lt;code&gt;definition&lt;/code&gt; action, followed by &lt;kbd&gt;C-c C-o&lt;/kbd&gt;.&lt;/p&gt;
 
 &lt;p&gt;As a reminder of how it works, &lt;code&gt;counsel-M-x&lt;/code&gt; is defined with a single
 action that calls the selected command. But then, I&amp;#39;ve also added this
@@ -137,6 +137,17 @@ to &lt;code&gt;ivy-read&lt;/code&gt;. For instance, it won&amp;#39;t work for &l
 &lt;kbd&gt;RET&lt;/kbd&gt; will install the selected package:&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/download/ivy-occur-2.png&quot; alt=&quot;ivy-occur-2.png&quot;&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;small-note-on-key-bindings&quot;&gt;Small note on key bindings&lt;/h2&gt;
+
+&lt;p&gt;In the initial post, I wanted to bind &lt;code&gt;ivy-occur&lt;/code&gt; to &lt;kbd&gt;C-c o&lt;/kbd&gt;
+instead of &lt;kbd&gt;C-c C-o&lt;/kbd&gt;. But I was reminded that &lt;kbd&gt;C-c LETTER&lt;/kbd&gt; are
+&lt;a href=&quot;http://www.gnu.org/software/emacs/manual/html_node/elisp/Key-Binding-Conventions.html&quot;&gt;reserved&lt;/a&gt;.
+I still think it&amp;#39;s a better binding. If you agree, you can add it to your config:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ivy-minibuffer-map&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-c o&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ivy-occur&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Additionally, &lt;code&gt;ivy-occur&lt;/code&gt; is also available on &lt;kbd&gt;C-o u&lt;/kbd&gt;,
+through the &lt;kbd&gt;C-o&lt;/kbd&gt; hydra.&lt;/p&gt;
 
 &lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
 
