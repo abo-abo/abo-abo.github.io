@@ -4,13 +4,57 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-11-05T08:50:57+01:00</updated>
+ <updated>2015-11-30T13:38:53+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>I move my s-expressions back and forth</title>
+   <link href="http://oremacs.com/2015/11/30/hydra-lispy-move/"/>
+   <updated>2015-11-30T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/11/30/hydra-lispy-move</id>
+   <content type="html">&lt;p&gt;Some people find &lt;a href=&quot;https://github.com/abo-abo/lispy&quot;&gt;lispy&lt;/a&gt; too weird
+and/or complex to try, quite possibly because of it&amp;#39;s sort-of-modal
+key binding structure. Which is a shame, since out of 7k lines of
+lispy&amp;#39;s code, only 500 lines do key bindings, the rest do all sorts of
+useful stuff, like sexp navigation/modification, outlines and REPL
+interaction.&lt;/p&gt;
+
+&lt;p&gt;In this post, I&amp;#39;ll show a short example of using lispy&amp;#39;s functions
+outside of &lt;code&gt;lispy-mode&lt;/code&gt;, and compare it with the default approach.&lt;/p&gt;
+
+&lt;h2 id=&quot;moving-s-expressions-while-the-point-is-anywhere&quot;&gt;Moving s-expressions while the point is anywhere&lt;/h2&gt;
+
+&lt;p&gt;Using this simple &lt;a href=&quot;https://github.com/abo-abo/hydra&quot;&gt;hydra&lt;/a&gt;, and the
+key sequence &lt;kbd&gt;C-c m sss www&lt;/kbd&gt; I got the following GIF:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/hydra-lispy-move-1.gif&quot; alt=&quot;hydra-lispy-move-1.gif&quot;&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;doing-the-same-lispy-way&quot;&gt;Doing the same lispy-way&lt;/h2&gt;
+
+&lt;p&gt;To do it the lispy-way, I move the point before the list that I wish
+to operate on (with
+&lt;kbd&gt;[&lt;/kbd&gt; key), and press &lt;kbd&gt;sss www&lt;/kbd&gt; to get the following GIF:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/hydra-lispy-move-2.gif&quot; alt=&quot;hydra-lispy-move-2.gif&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;The difference here is that no hydra is necessary in the second case,
+the key bindings come only from &lt;code&gt;lispy-mode&lt;/code&gt;.  But the first case will
+also work if &lt;code&gt;lispy-mode&lt;/code&gt; is off.&lt;/p&gt;
+
+&lt;h2 id=&quot;which-way-is-better?&quot;&gt;Which way is better?&lt;/h2&gt;
+
+&lt;p&gt;I think the second way is better, since it&amp;#39;s faster and more clear,
+but you can decide for yourself. By the way, you can also move
+symbols, comments and sub-words (if that makes sense) with
+&lt;kbd&gt;w&lt;/kbd&gt; and &lt;kbd&gt;s&lt;/kbd&gt;, provided you mark them with a region
+first.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>New feature in Ivy - ivy-occur</title>
