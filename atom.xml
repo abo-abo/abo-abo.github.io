@@ -4,13 +4,181 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-11-30T13:38:53+01:00</updated>
+ <updated>2015-12-08T10:38:52+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Ivy-mode 0.7.0 is out</title>
+   <link href="http://oremacs.com/2015/12/07/ivy-0.7.0/"/>
+   <updated>2015-12-07T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2015/12/07/ivy-0.7.0</id>
+   <content type="html">&lt;h2 id=&quot;intro&quot;&gt;Intro&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/abo-abo/swiper&quot;&gt;Ivy-mode&lt;/a&gt; is a completion method
+that&amp;#39;s similar to &lt;code&gt;Ido&lt;/code&gt;, but with emphasis on simplicity and
+customizability.  Currently, there are two related packages on MELPA:
+&lt;code&gt;swiper&lt;/code&gt; and &lt;code&gt;counsel&lt;/code&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;swiper&lt;/code&gt; provides an &lt;code&gt;isearch&lt;/code&gt; replacement, using &lt;code&gt;ivy-read&lt;/code&gt; for
+completion, as well as the basic &lt;code&gt;ivy-mode&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;counsel&lt;/code&gt; provides some extra commands that use &lt;code&gt;ivy-read&lt;/code&gt;, like &lt;code&gt;-M-x&lt;/code&gt;, &lt;code&gt;-ag&lt;/code&gt;,
+&lt;code&gt;-load-theme&lt;/code&gt; etc.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;release-notes&quot;&gt;Release Notes&lt;/h2&gt;
+
+&lt;p&gt;The release notes are available at the
+&lt;a href=&quot;https://github.com/abo-abo/swiper/releases/tag/0.7.0&quot;&gt;homepage&lt;/a&gt; as usual.
+There are 220 commits since the last release, which was on Aug 5, roughly
+4 months ago.  Slowly but surely, the
+&lt;a href=&quot;https://github.com/abo-abo/swiper/graphs/contributors&quot;&gt;contributors list&lt;/a&gt;
+has grown to 20 people, besides me. A few people even got their Emacs
+Copyright Assignment just to make large contributions. Statistically,
+Org-mode is probably the prime package that leads to the most CA, but
+I&amp;#39;m glad that Ivy is there as well, contributing in a small way.&lt;/p&gt;
+
+&lt;p&gt;The release notes are made in
+&lt;a href=&quot;https://github.com/abo-abo/swiper/blob/master/doc/Changelog.org#070&quot;&gt;Org-mode&lt;/a&gt;,
+each new version is a level 1 heading.  With time, hopefully, their
+parts will make their way into the
+&lt;a href=&quot;https://github.com/abo-abo/swiper/blob/master/doc/ivy.org&quot;&gt;manual&lt;/a&gt;,
+which is also in Org-mode.&lt;/p&gt;
+
+&lt;p&gt;In addition, I also export each new release notes to
+&lt;a href=&quot;https://github.com/abo-abo/swiper/releases/tag/0.7.0&quot;&gt;Markdown&lt;/a&gt; using
+&lt;a href=&quot;http://pandoc.org/&quot;&gt;pandoc&lt;/a&gt;, since that&amp;#39;s what Github prefers.&lt;/p&gt;
+
+&lt;h2 id=&quot;release-process&quot;&gt;Release Process&lt;/h2&gt;
+
+&lt;p&gt;Since the release notes for &lt;code&gt;0.7.0&lt;/code&gt; are huge, I don&amp;#39;t embed them into
+the post, they&amp;#39;re listed separately.  You can go through them at your
+own pace, or wait until I make some highlights for each piece either
+or the blog or in the manual. The manual, by the way, is a work in
+progress but is already distributed in MELPA. Use &lt;kbd&gt;C-h i&lt;/kbd&gt;
+followed by &lt;kbd&gt;g&lt;/kbd&gt; &lt;code&gt;(ivy)&lt;/code&gt; to read it. If you&amp;#39;re new to reading
+the info pages, there&amp;#39;s info on info in info format: use &lt;kbd&gt;dg&lt;/kbd&gt;
+&lt;code&gt;(info)&lt;/code&gt; to access it.&lt;/p&gt;
+
+&lt;p&gt;Today, I&amp;#39;ll describe some cool stuff that I used to generate the
+Markdown notes from &lt;code&gt;Changelog.org&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;org-mode&amp;#39;s-org-narrow-to-subtree&quot;&gt;Org-mode&amp;#39;s &lt;code&gt;org-narrow-to-subtree&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;Since &lt;code&gt;Changelog.org&lt;/code&gt; already has a &lt;code&gt;0.6.0&lt;/code&gt; branch that I didn&amp;#39;t want
+to see, I&amp;#39;ve narrowed the buffer to only the &lt;code&gt;0.7.0&lt;/code&gt; branch.  This is
+possible to do thanks to Emacs&amp;#39; narrowing feature and
+&lt;code&gt;org-narrow-to-subtree&lt;/code&gt;.  After this command, the buffer behaves as if
+the &lt;code&gt;0.6.0&lt;/code&gt; branch isn&amp;#39;t there and the only content is &lt;code&gt;0.7.0&lt;/code&gt; branch.
+But if I perform any edits and save the file, everything that was
+hidden is still there.&lt;/p&gt;
+
+&lt;p&gt;As a shortcut, I&amp;#39;m using my &lt;a href=&quot;https://github.com/abo-abo/worf&quot;&gt;worf&lt;/a&gt; to narrow faster.
+Pressing &lt;kbd&gt;[&lt;/kbd&gt; while &lt;code&gt;worf-mode&lt;/code&gt; is active goes back to the current heading start.
+While at heading start, pressing alphanumeric keys calls commands instead of self-inserting:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;N&lt;/kbd&gt; calls &lt;code&gt;org-narrow-to-subtree&lt;/code&gt;,&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;W&lt;/kbd&gt; calls &lt;code&gt;widen&lt;/code&gt;, which turns narrowing off.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;There are, of course, many more commands and bindings in &lt;code&gt;worf&lt;/code&gt;. Check
+it out if you like Org&amp;#39;s Speed Keys feature, but feel like it could
+use more structure.&lt;/p&gt;
+
+&lt;h3 id=&quot;pandoc-mode&quot;&gt;&lt;code&gt;pandoc-mode&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/joostkremers/pandoc-mode&quot;&gt;pandoc-mode&lt;/a&gt; is an Emacs
+interface to &lt;a href=&quot;http://pandoc.org/&quot;&gt;pandoc&lt;/a&gt; - a tool that allows to
+export documents from one format to another.
+The Elisp package is available in MELPA.
+And I installed &lt;a href=&quot;https://github.com/jgm/pandoc/releases/download/1.15.2/pandoc-1.15.2-1-amd64.deb&quot;&gt;pandoc-1.15.2-1-amd64.deb&lt;/a&gt; from
+its &lt;a href=&quot;https://github.com/jgm/pandoc/releases/tag/1.15.2&quot;&gt;homepage&lt;/a&gt; with:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;sudo dpkg -i pandoc-1.15.2-1-amd64.deb
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;After that, &lt;kbd&gt;M-x&lt;/kbd&gt; &lt;code&gt;pandoc-mode&lt;/code&gt; and I&amp;#39;m on easy street: &lt;kbd&gt;C-c /&lt;/kbd&gt; calls &lt;code&gt;pandoc-main-hydra/body&lt;/code&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Set the output format to Github-flavored Markdown with &lt;kbd&gt;OG&lt;/kbd&gt;.&lt;/li&gt;
+&lt;li&gt;Set the input format to Org-mode with &lt;kbd&gt;bIo&lt;/kbd&gt;.&lt;/li&gt;
+&lt;li&gt;Export with &lt;kbd&gt;C-c / r&lt;/kbd&gt;.&lt;/li&gt;
+&lt;li&gt;View the resulting buffer with &lt;kbd&gt;C-c / V&lt;/kbd&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;add-table-of-contents-to-markdown&quot;&gt;Add table of contents to Markdown&lt;/h3&gt;
+
+&lt;p&gt;I used &lt;kbd&gt;M-x&lt;/kbd&gt; &lt;code&gt;markdown-toc/generate-toc&lt;/code&gt; for this. The MELPA
+package &lt;a href=&quot;https://github.com/ardumont/markdown-toc&quot;&gt;markdown-toc&lt;/a&gt;
+provides this function.  The resulting table of contents is a list
+with a bunch of links, which turned out to be dead, because of the way
+Github renders Markdown for releases.&lt;/p&gt;
+
+&lt;h3 id=&quot;use-swiper-to-replace-each-markdown-link-with-its-title&quot;&gt;Use &lt;code&gt;swiper&lt;/code&gt; to replace each Markdown link with its title&lt;/h3&gt;
+
+&lt;p&gt;Since &lt;code&gt;swiper&lt;/code&gt; works with regexps, here&amp;#39;s what I input to match each link:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;\[\(.*?\)\](.*?)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This matches anything in brackets (non-greedy), followed by anything
+in parens; the bracket&amp;#39;s content is captured in a group.&lt;/p&gt;
+
+&lt;p&gt;Then I press &lt;kbd&gt;M-q&lt;/kbd&gt; (&lt;code&gt;swiper-query-replace&lt;/code&gt;) and enter &lt;code&gt;\1&lt;/code&gt; as
+replacement - the first captured group. After this, I confirm each
+replacement with &lt;kbd&gt;y&lt;/kbd&gt; or confirm them all at once with
+&lt;kbd&gt;!&lt;/kbd&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;use-rectangle-mark-mode-to-promote-toc-one-level&quot;&gt;Use &lt;code&gt;rectangle-mark-mode&lt;/code&gt; to promote TOC one level&lt;/h3&gt;
+
+&lt;p&gt;Since all entries in the TOC were children to a single &lt;code&gt;0.7.0&lt;/code&gt; entry,
+I wanted to remove that entry and promote its children one level.
+This can be done with &lt;code&gt;rectangle-mark-mode&lt;/code&gt;, bound by default to &lt;kbd&gt;C-x SPC&lt;/kbd&gt;.&lt;/p&gt;
+
+&lt;p&gt;In my config, I use this instead:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-x SPC&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;hydra-rectangle/body&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Where, &lt;code&gt;hydra-rectangle/body&lt;/code&gt; is provided by &lt;code&gt;hydra-examples.el&lt;/code&gt; and
+is also described in
+&lt;a href=&quot;http://oremacs.com/2015/02/25/rectangle-hydra/&quot;&gt;an earlier post&lt;/a&gt;.  I
+really liked the &lt;code&gt;hydra-rectangle/body&lt;/code&gt; idea and use it all the time.
+Here&amp;#39;s a key sequence I used to delete a &lt;code&gt;4x95&lt;/code&gt; rectangle in order to
+promote the list items: &lt;kbd&gt;C-x SPC 4l95jdo&lt;/kbd&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;use-basic-elisp-to-turn-each-bug-reference-into-an-org-mode-link&quot;&gt;Use basic Elisp to turn each bug reference into an Org-mode link&lt;/h3&gt;
+
+&lt;p&gt;When copy-pasting from the commit log into &lt;code&gt;Changelog.org&lt;/code&gt;, I quickly
+tired of putting the each issue link as
+e.g. &lt;code&gt;[[https://github.com/abo-abo/swiper/issues/244][#244]]&lt;/code&gt;.  So I
+wrote e.g. &lt;code&gt;#244&lt;/code&gt; instead, and used this code in the end to make the
+transformation:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ora-quote-github-issues&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;base&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;https://github.com/abo-abo/swiper/issues/&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;goto-char&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;point-min&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;re-search-forward&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;\\([^[]\\)#\\([0-9]+\\)&amp;quot;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;replace-match&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;%s[[%s%s][#%s]]&amp;quot;&lt;/span&gt;
+               &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;match-string&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+               &lt;span class=&quot;nv&quot;&gt;base&lt;/span&gt;
+               &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;match-string&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+               &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;match-string&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;If anyone reading the blog wants to start with some basic Elisp, the
+above function is a nice intro to a lot of useful functions.  And I
+expect that many people face this sort of automation scenario pretty
+often. I&amp;#39;m pretty sure that &lt;kbd&gt;M-%&lt;/kbd&gt; &lt;code&gt;query-replace-regexp&lt;/code&gt;
+could work here as well, but it&amp;#39;s easier for me to just write out the
+code and save it for later.&lt;/p&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;Thanks to everyone who contributed issues, code and
+documentation. Enjoy the new release.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>I move my s-expressions back and forth</title>

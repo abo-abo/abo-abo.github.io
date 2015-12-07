@@ -271,6 +271,178 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/12/07/ivy-0.7.0/">
+        Ivy-mode 0.7.0 is out
+      </a>
+    </h1>
+
+    <span class="post-date">07 Dec 2015</span>
+
+    <h2 id="intro">Intro</h2>
+
+<p><a href="https://github.com/abo-abo/swiper">Ivy-mode</a> is a completion method
+that&#39;s similar to <code>Ido</code>, but with emphasis on simplicity and
+customizability.  Currently, there are two related packages on MELPA:
+<code>swiper</code> and <code>counsel</code>:</p>
+
+<ul>
+<li><code>swiper</code> provides an <code>isearch</code> replacement, using <code>ivy-read</code> for
+completion, as well as the basic <code>ivy-mode</code>.</li>
+<li><code>counsel</code> provides some extra commands that use <code>ivy-read</code>, like <code>-M-x</code>, <code>-ag</code>,
+<code>-load-theme</code> etc.</li>
+</ul>
+
+<h2 id="release-notes">Release Notes</h2>
+
+<p>The release notes are available at the
+<a href="https://github.com/abo-abo/swiper/releases/tag/0.7.0">homepage</a> as usual.
+There are 220 commits since the last release, which was on Aug 5, roughly
+4 months ago.  Slowly but surely, the
+<a href="https://github.com/abo-abo/swiper/graphs/contributors">contributors list</a>
+has grown to 20 people, besides me. A few people even got their Emacs
+Copyright Assignment just to make large contributions. Statistically,
+Org-mode is probably the prime package that leads to the most CA, but
+I&#39;m glad that Ivy is there as well, contributing in a small way.</p>
+
+<p>The release notes are made in
+<a href="https://github.com/abo-abo/swiper/blob/master/doc/Changelog.org#070">Org-mode</a>,
+each new version is a level 1 heading.  With time, hopefully, their
+parts will make their way into the
+<a href="https://github.com/abo-abo/swiper/blob/master/doc/ivy.org">manual</a>,
+which is also in Org-mode.</p>
+
+<p>In addition, I also export each new release notes to
+<a href="https://github.com/abo-abo/swiper/releases/tag/0.7.0">Markdown</a> using
+<a href="http://pandoc.org/">pandoc</a>, since that&#39;s what Github prefers.</p>
+
+<h2 id="release-process">Release Process</h2>
+
+<p>Since the release notes for <code>0.7.0</code> are huge, I don&#39;t embed them into
+the post, they&#39;re listed separately.  You can go through them at your
+own pace, or wait until I make some highlights for each piece either
+or the blog or in the manual. The manual, by the way, is a work in
+progress but is already distributed in MELPA. Use <kbd>C-h i</kbd>
+followed by <kbd>g</kbd> <code>(ivy)</code> to read it. If you&#39;re new to reading
+the info pages, there&#39;s info on info in info format: use <kbd>dg</kbd>
+<code>(info)</code> to access it.</p>
+
+<p>Today, I&#39;ll describe some cool stuff that I used to generate the
+Markdown notes from <code>Changelog.org</code>.</p>
+
+<h3 id="org-mode&#39;s-org-narrow-to-subtree">Org-mode&#39;s <code>org-narrow-to-subtree</code></h3>
+
+<p>Since <code>Changelog.org</code> already has a <code>0.6.0</code> branch that I didn&#39;t want
+to see, I&#39;ve narrowed the buffer to only the <code>0.7.0</code> branch.  This is
+possible to do thanks to Emacs&#39; narrowing feature and
+<code>org-narrow-to-subtree</code>.  After this command, the buffer behaves as if
+the <code>0.6.0</code> branch isn&#39;t there and the only content is <code>0.7.0</code> branch.
+But if I perform any edits and save the file, everything that was
+hidden is still there.</p>
+
+<p>As a shortcut, I&#39;m using my <a href="https://github.com/abo-abo/worf">worf</a> to narrow faster.
+Pressing <kbd>[</kbd> while <code>worf-mode</code> is active goes back to the current heading start.
+While at heading start, pressing alphanumeric keys calls commands instead of self-inserting:</p>
+
+<ul>
+<li><kbd>N</kbd> calls <code>org-narrow-to-subtree</code>,</li>
+<li><kbd>W</kbd> calls <code>widen</code>, which turns narrowing off.</li>
+</ul>
+
+<p>There are, of course, many more commands and bindings in <code>worf</code>. Check
+it out if you like Org&#39;s Speed Keys feature, but feel like it could
+use more structure.</p>
+
+<h3 id="pandoc-mode"><code>pandoc-mode</code></h3>
+
+<p><a href="https://github.com/joostkremers/pandoc-mode">pandoc-mode</a> is an Emacs
+interface to <a href="http://pandoc.org/">pandoc</a> - a tool that allows to
+export documents from one format to another.
+The Elisp package is available in MELPA.
+And I installed <a href="https://github.com/jgm/pandoc/releases/download/1.15.2/pandoc-1.15.2-1-amd64.deb">pandoc-1.15.2-1-amd64.deb</a> from
+its <a href="https://github.com/jgm/pandoc/releases/tag/1.15.2">homepage</a> with:</p>
+<div class="highlight"><pre><code class="language-sh" data-lang="sh">sudo dpkg -i pandoc-1.15.2-1-amd64.deb
+</code></pre></div>
+<p>After that, <kbd>M-x</kbd> <code>pandoc-mode</code> and I&#39;m on easy street: <kbd>C-c /</kbd> calls <code>pandoc-main-hydra/body</code>:</p>
+
+<ul>
+<li>Set the output format to Github-flavored Markdown with <kbd>OG</kbd>.</li>
+<li>Set the input format to Org-mode with <kbd>bIo</kbd>.</li>
+<li>Export with <kbd>C-c / r</kbd>.</li>
+<li>View the resulting buffer with <kbd>C-c / V</kbd>.</li>
+</ul>
+
+<h3 id="add-table-of-contents-to-markdown">Add table of contents to Markdown</h3>
+
+<p>I used <kbd>M-x</kbd> <code>markdown-toc/generate-toc</code> for this. The MELPA
+package <a href="https://github.com/ardumont/markdown-toc">markdown-toc</a>
+provides this function.  The resulting table of contents is a list
+with a bunch of links, which turned out to be dead, because of the way
+Github renders Markdown for releases.</p>
+
+<h3 id="use-swiper-to-replace-each-markdown-link-with-its-title">Use <code>swiper</code> to replace each Markdown link with its title</h3>
+
+<p>Since <code>swiper</code> works with regexps, here&#39;s what I input to match each link:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">\[\(.*?\)\](.*?)
+</code></pre></div>
+<p>This matches anything in brackets (non-greedy), followed by anything
+in parens; the bracket&#39;s content is captured in a group.</p>
+
+<p>Then I press <kbd>M-q</kbd> (<code>swiper-query-replace</code>) and enter <code>\1</code> as
+replacement - the first captured group. After this, I confirm each
+replacement with <kbd>y</kbd> or confirm them all at once with
+<kbd>!</kbd>.</p>
+
+<h3 id="use-rectangle-mark-mode-to-promote-toc-one-level">Use <code>rectangle-mark-mode</code> to promote TOC one level</h3>
+
+<p>Since all entries in the TOC were children to a single <code>0.7.0</code> entry,
+I wanted to remove that entry and promote its children one level.
+This can be done with <code>rectangle-mark-mode</code>, bound by default to <kbd>C-x SPC</kbd>.</p>
+
+<p>In my config, I use this instead:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-x SPC&quot;</span><span class="p">)</span> <span class="ss">&#39;hydra-rectangle/body</span><span class="p">)</span>
+</code></pre></div>
+<p>Where, <code>hydra-rectangle/body</code> is provided by <code>hydra-examples.el</code> and
+is also described in
+<a href="http://oremacs.com/2015/02/25/rectangle-hydra/">an earlier post</a>.  I
+really liked the <code>hydra-rectangle/body</code> idea and use it all the time.
+Here&#39;s a key sequence I used to delete a <code>4x95</code> rectangle in order to
+promote the list items: <kbd>C-x SPC 4l95jdo</kbd>.</p>
+
+<h3 id="use-basic-elisp-to-turn-each-bug-reference-into-an-org-mode-link">Use basic Elisp to turn each bug reference into an Org-mode link</h3>
+
+<p>When copy-pasting from the commit log into <code>Changelog.org</code>, I quickly
+tired of putting the each issue link as
+e.g. <code>[[https://github.com/abo-abo/swiper/issues/244][#244]]</code>.  So I
+wrote e.g. <code>#244</code> instead, and used this code in the end to make the
+transformation:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">ora-quote-github-issues</span> <span class="p">()</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">base</span> <span class="s">&quot;https://github.com/abo-abo/swiper/issues/&quot;</span><span class="p">))</span>
+    <span class="p">(</span><span class="nf">goto-char</span> <span class="p">(</span><span class="nf">point-min</span><span class="p">))</span>
+    <span class="p">(</span><span class="k">while</span> <span class="p">(</span><span class="nf">re-search-forward</span> <span class="s">&quot;\\([^[]\\)#\\([0-9]+\\)&quot;</span> <span class="no">nil</span> <span class="no">t</span><span class="p">)</span>
+      <span class="p">(</span><span class="nf">replace-match</span>
+       <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;%s[[%s%s][#%s]]&quot;</span>
+               <span class="p">(</span><span class="nv">match-string</span> <span class="mi">1</span><span class="p">)</span>
+               <span class="nv">base</span>
+               <span class="p">(</span><span class="nv">match-string</span> <span class="mi">2</span><span class="p">)</span>
+               <span class="p">(</span><span class="nv">match-string</span> <span class="mi">2</span><span class="p">))))))</span>
+</code></pre></div>
+<p>If anyone reading the blog wants to start with some basic Elisp, the
+above function is a nice intro to a lot of useful functions.  And I
+expect that many people face this sort of automation scenario pretty
+often. I&#39;m pretty sure that <kbd>M-%</kbd> <code>query-replace-regexp</code>
+could work here as well, but it&#39;s easier for me to just write out the
+code and save it for later.</p>
+
+<h2 id="outro">Outro</h2>
+
+<p>Thanks to everyone who contributed issues, code and
+documentation. Enjoy the new release.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/11/30/hydra-lispy-move/">
         I move my s-expressions back and forth
       </a>
@@ -681,72 +853,6 @@ remove all comments.</p>
 <code>mc/mark-all-like-this</code>. Except you know the result ahead of time
 (number and position of matches), and you can use a regex instead of a
 literal string.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/10/02/swiper-visual-line/">
-        Swiper and visual-line-mode
-      </a>
-    </h1>
-
-    <span class="post-date">02 Oct 2015</span>
-
-    <p>In case you encounter files with very long lines, the built-in
-<kbd>M-x</kbd> <code>visual-line-mode</code> might come in handy.  Although 1MB
-long one-line files are a disaster for Emacs, there&#39;s no problem
-handling smaller files with long lines that result from bad markdown
-renderers (notably Github).  They way <code>visual-line-mode</code> works, is it
-inserts virtual newlines in appropriate positions, so that no line is
-truncated.  The advantage is that these newlines aren&#39;t written to the
-file when the buffer is saved (otherwise, a simple <kbd>M-q</kbd>
-(<code>fill-paragraph</code>) would work too).</p>
-
-<p>Today I&#39;ve added <code>visual-line-mode</code> support to
-<a href="https://github.com/abo-abo/swiper">swiper</a>, so handling these files
-should be even easier now. The change was surprisingly simple: just
-two checks for <code>visual-line-mode</code> variable and these basic
-replacements:</p>
-
-<ul>
-<li><code>forward-line</code> -&gt; <code>line-move</code>,</li>
-<li><code>line-beginning-position</code> -&gt; <code>beginning-of-visual-line</code>,</li>
-<li><code>line-end-position</code> -&gt; <code>end-of-visual-line</code>.</li>
-</ul>
-
-<p>By the way, <code>visual-line-mode</code> is one of the small number of commands
-that I call by name instead of by key chord. But thanks to
-<code>counsel-M-x</code> and <code>smex</code> calling this command by name is as short as
-<kbd>C-t v RET</kbd>.  To explain a bit more, here&#39;s my setup:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="c1">;; make sure to install smex</span>
-<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-t&quot;</span><span class="p">)</span> <span class="ss">&#39;counsel-M-x</span><span class="p">)</span>
-</code></pre></div>
-<p>The default command bound to <kbd>C-t</kbd> is <code>transpose-chars</code> - a
-highly situational and ultimately counter-productive command
-(<kbd>M-DEL</kbd> and re-typing the word is faster than surgically
-navigating to the transpose point and calling <code>transpose-chars</code>, plus
-it trains the hands to type the word correctly next time).  Anyway,
-<kbd>C-t</kbd> is a prime binding for launching interactive commands.
-And since <code>smex</code> is installed it remembers that my most used command
-that starts with &quot;v&quot; is <code>visual-line-mode</code> - so it&#39;s the first one
-that gets selected after <kbd>C-t v</kbd>. This means that I can just
-press <kbd>RET</kbd> and be done with it.</p>
-
-<p><img src="/download/swiper-visual-line-mode.png" alt="swiper-visual-line-mode.png"></p>
-
-<p>Finally, related to <code>visual-line-mode</code>, here&#39;s a command I use to
-negate <kbd>M-q</kbd> (<code>fill-paragraph</code>) (<a href="http://www.emacswiki.org/emacs/UnfillParagraph">source</a>):</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-M-q&quot;</span><span class="p">)</span> <span class="ss">&#39;ora-unfill-paragraph</span><span class="p">)</span>
-
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">ora-unfill-paragraph</span> <span class="p">()</span>
-  <span class="s">&quot;Transform a paragraph into a single line.&quot;</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">fill-column</span> <span class="p">(</span><span class="nf">point-max</span><span class="p">)))</span>
-    <span class="p">(</span><span class="nv">fill-paragraph</span> <span class="no">nil</span> <span class="no">t</span><span class="p">)))</span>
-</code></pre></div>
-<p>Thanks to <a href="https://github.com/joostkremers">@joostkremers</a> for the
-suggestion in <a href="https://github.com/abo-abo/swiper/issues/227">#227</a>.</p>
 
   </div>
   
