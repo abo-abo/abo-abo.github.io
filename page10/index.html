@@ -324,7 +324,7 @@ before the start of the line, will delete the whole comment.</p>
 
 <p><kbd>xf</kbd> (<code>lispy-flatten</code>) now also works for Clojure, before it was only for Elisp.</p>
 
-<h4 id="example-1-(flatten-a-macro):">Example 1 (flatten a macro):</h4>
+<h4 id="example-1-flatten-a-macro">Example 1 (flatten a macro):</h4>
 <div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="err">|</span><span class="p">(</span><span class="nf">-&gt;&gt;</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">]</span>
      <span class="p">(</span><span class="nb">map </span><span class="nv">sqr</span><span class="p">)</span>
      <span class="p">(</span><span class="nb">filter </span><span class="nv">odd?</span><span class="p">))</span>
@@ -332,7 +332,7 @@ before the start of the line, will delete the whole comment.</p>
 <p>When you press <kbd>xf</kbd> you get this:</p>
 <div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="err">|</span><span class="p">(</span><span class="nb">filter </span><span class="nv">odd?</span> <span class="p">(</span><span class="nb">map </span><span class="nv">sqr</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">]))</span>
 </code></pre></div>
-<h4 id="example-2-(flatten-a-standard-function):">Example 2 (flatten a standard function):</h4>
+<h4 id="example-2-flatten-a-standard-function">Example 2 (flatten a standard function):</h4>
 
 <p>Start with:</p>
 <div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="err">|</span><span class="p">(</span><span class="nb">map </span><span class="nv">odd?</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">])</span>
@@ -353,7 +353,7 @@ before the start of the line, will delete the whole comment.</p>
 </code></pre></div>
 <p>A bit of a gibberish, but at least we can confirm that <code>map</code> is indeed lazy.</p>
 
-<h4 id="example-3-(flatten-your-own-function):">Example 3 (flatten your own function):</h4>
+<h4 id="example-3-flatten-your-own-function">Example 3 (flatten your own function):</h4>
 
 <p>Example function:</p>
 <div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="kd">defn </span><span class="nv">sqr</span> <span class="p">[</span><span class="nv">x</span><span class="p">]</span>
@@ -421,7 +421,7 @@ eval will be performed.</p>
 It means that you first have to mark the symbol <code>*MODULES*</code> with a region.
 A convenient function to mark the current symbol is <kbd>M-m</kbd> (<code>lispy-mark-symbol</code>).</p>
 
-<h3 id="y-(lispy-occur)-now-has-an-ivy-back-end"><kbd>y</kbd> (<code>lispy-occur</code>) now has an <code>ivy</code> back end</h3>
+<h3 id="y-lispy-occur-now-has-an-ivy-back-end"><kbd>y</kbd> (<code>lispy-occur</code>) now has an <code>ivy</code> back end</h3>
 
 <p><code>lispy-occur</code> launches an interactive search within the current top-level expression, usually a
 defun. This is useful to see where a variable is used in a function, or to quickly navigate to a
@@ -738,7 +738,7 @@ know and I&#39;ll add it to the list.</p>
 <p>The hidden overlays revealed during the search will be re-hidden if you cancel the search with
 <kbd>C-g</kbd>.</p>
 
-<h3 id="ensure-that-candidates-don&#39;t-have-read-only-property">Ensure that candidates don&#39;t have read-only property</h3>
+<h3 id="ensure-that-candidates-don-39-t-have-read-only-property">Ensure that candidates don&#39;t have read-only property</h3>
 
 <p>This issue was causing a bug while using <code>swiper</code> in <code>erc-mode</code>, since it marks all of the buffer
 content to <code>read-only</code>. So once a string with <code>read-only</code> property is inserted into the minibuffer,
@@ -786,7 +786,7 @@ to what <code>isearch</code> is doing.</p>
 current line (going forwards) is selected. This is important for not losing the context of what
 you&#39;re searching.</p>
 
-<h3 id="don&#39;t-recenter-unless-necessary">Don&#39;t recenter unless necessary</h3>
+<h3 id="don-39-t-recenter-unless-necessary">Don&#39;t recenter unless necessary</h3>
 
 <p>This is similar to the behavior of <code>isearch</code>: a scroll is performed only if the candidate is out of
 the window bounds. An alternate strategy of keeping the current candidate always centered in the

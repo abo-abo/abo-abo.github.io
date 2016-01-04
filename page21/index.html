@@ -558,7 +558,7 @@ similar in spirit to <kbd>M-w</kbd> (<code>kill-ring-save</code>):</p>
 <li><code>open-line</code></li>
 </ul>
 
-<h3 id="example-1:-javascript">Example 1: JavaScript</h3>
+<h3 id="example-1-javascript">Example 1: JavaScript</h3>
 
 <p>Let&#39;s say that you have this code and want to generate more like it:</p>
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">field1</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;field1&quot;</span><span class="p">);</span>
@@ -581,7 +581,7 @@ line when there&#39;s no region. Your code becomes the initial one without <code
 a file, since the situation where you need to use it may not come up
 again.</p>
 
-<h3 id="example-2:-java">Example 2: Java</h3>
+<h3 id="example-2-java">Example 2: Java</h3>
 
 <p>Here&#39;s the starting code, with fields and mirrors already in place
 (note one mirror named <code>~On</code>, one field named <code>~on</code> and one field
@@ -618,7 +618,7 @@ copy-paste stuff with <code>auto-yasnippet</code>. In fact, I should probably
 emphasize that when describing <code>auto-yasnippet</code>: it&#39;s just an advanced
 copy-paste tool.</p>
 
-<h3 id="example-3:-c++">Example 3: C++</h3>
+<h3 id="example-3-c">Example 3: C++</h3>
 
 <p>Suppose that I want to generate <code>curl</code> from the <code>grad</code>. I can start with this template:</p>
 <div class="highlight"><pre><code class="language-c++" data-lang="c++"><span class="k">const</span> <span class="n">Point</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">curl</span><span class="p">(</span><span class="n">grad</span><span class="p">[</span><span class="o">~</span><span class="mi">2</span><span class="p">][</span><span class="o">~</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">grad</span><span class="p">[</span><span class="o">~</span><span class="mi">1</span><span class="p">][</span><span class="o">~</span><span class="mi">2</span><span class="p">],</span>
@@ -631,7 +631,7 @@ copy-paste tool.</p>
 <p>Note how annoying it would be to triple check that the indices match.
 This time, I just had to check the first line.</p>
 
-<h3 id="example-4:-taking-~-out-of-the-equation">Example 4: taking <code>~</code> out of the equation</h3>
+<h3 id="example-4-taking-out-of-the-equation">Example 4: taking <code>~</code> out of the equation</h3>
 
 <p>This works only for one-line snippets with a single mirror parameter.
 In the JavaScript example, you can leave a <code>$</code> instead of each
@@ -667,7 +667,7 @@ become obsolete.</p>
 explaining her window bindings, that combine both <code>ace-window</code> and <code>windmove</code>.
 So I wrote down an update to Hydra in order to get a similar setup.</p>
 
-<h2 id="sacha&#39;s-code">Sacha&#39;s code</h2>
+<h2 id="sacha-39-s-code">Sacha&#39;s code</h2>
 
 <p>Here it is:</p>
 <div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">key-chord-define-global</span>
@@ -891,7 +891,7 @@ obsolete functions.</p>
 
 <p>Taking advantage of the repository setup, I can:</p>
 
-<h3 id="step-1:-call-rgrep">Step 1: call <code>rgrep</code></h3>
+<h3 id="step-1-call-rgrep">Step 1: call <code>rgrep</code></h3>
 
 <p><code>rgrep</code> is a fine function, I wonder why it&#39;s not bound by default; I
 bind it to <kbd>C-&lt;</kbd>, taking advantage of my weird key
@@ -913,7 +913,7 @@ searched for files that match the file pattern; the default
 <code>~/git/lispy/</code> is fine here, <kbd>RET</kbd>.</li>
 </ol>
 
-<h3 id="step-2:-call-wgrep">Step 2: call <code>wgrep</code></h3>
+<h3 id="step-2-call-wgrep">Step 2: call <code>wgrep</code></h3>
 
 <p><a href="https://github.com/mhayashi1120/Emacs-wgrep">wgrep</a> is a fine
 package, I wonder why it&#39;s not more popular. Since it&#39;s so similar to
@@ -928,7 +928,7 @@ as well:</p>
   <span class="o">&#39;</span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">grep-mode-map</span>
     <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c C-c&quot;</span><span class="p">)</span> <span class="ss">&#39;wgrep-finish-edit</span><span class="p">))</span>
 </code></pre></div>
-<h3 id="step-3:-call-iedit">Step 3: call <code>iedit</code></h3>
+<h3 id="step-3-call-iedit">Step 3: call <code>iedit</code></h3>
 
 <p><a href="https://github.com/victorhge/iedit">iedit</a> is an amazing package, it&#39;s crazy-good.
 Here&#39;s how I bind it, since once <code>iedit-mode</code> is on, you can move to the next occurrence with <kbd>C-i</kbd>:</p>
@@ -944,7 +944,7 @@ feature, actually), so that e.g. <code>=lispy-out-forward=</code> will not match
 The experience is similar to the popular <a href="https://github.com/magnars/multiple-cursors.el">multiple-cursors</a>,
 which I also like to use, just for different purposes.</p>
 
-<h3 id="step-4:-exiting">Step 4: exiting</h3>
+<h3 id="step-4-exiting">Step 4: exiting</h3>
 
 <p>When I&#39;m done:</p>
 

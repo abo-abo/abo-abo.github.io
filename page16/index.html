@@ -297,10 +297,10 @@ and made all keys into plain letters.</p>
                            <span class="nb">:color</span> <span class="nv">pink</span>
                            <span class="nb">:post</span> <span class="p">(</span><span class="nv">deactivate-mark</span><span class="p">))</span>
   <span class="s">&quot;</span>
-<span class="s">  ^_k_^     _d_elete    _s_tring     |\\     _,,,--,,_</span>
-<span class="s">_h_   _l_   _o_k        _y_ank       /,`.-&#39;`&#39;   ._  \-;;,_</span>
-<span class="s">  ^_j_^     _n_ew-copy  _r_eset     |,4-  ) )_   .;.(  `&#39;-&#39;</span>
-<span class="s">^^^^        _e_xchange  _u_ndo     &#39;---&#39;&#39;(_/._)-&#39;(_\_)</span>
+<span class="s">  ^_k_^     _d_elete    _s_tring     |\\     ‗,,,--,,‗</span>
+<span class="s">_h_   _l_   _o_k        _y_ank       /,`.-&#39;`&#39;   .‗  \-;;,‗</span>
+<span class="s">  ^_j_^     _n_ew-copy  _r_eset     |,4-  ) )‗   .;.(  `&#39;-&#39;</span>
+<span class="s">^^^^        _e_xchange  _u_ndo     &#39;---&#39;&#39;(‗/.‗)-&#39;(‗\‗)</span>
 <span class="s">^^^^        ^ ^         _p_aste</span>
 <span class="s">&quot;</span>
   <span class="p">(</span><span class="s">&quot;h&quot;</span> <span class="nf">backward-char</span> <span class="no">nil</span><span class="p">)</span>
@@ -318,6 +318,7 @@ and made all keys into plain letters.</p>
   <span class="p">(</span><span class="s">&quot;s&quot;</span> <span class="nv">string-rectangle</span> <span class="no">nil</span><span class="p">)</span>
   <span class="p">(</span><span class="s">&quot;p&quot;</span> <span class="nv">kill-rectangle</span> <span class="no">nil</span><span class="p">)</span>
   <span class="p">(</span><span class="s">&quot;o&quot;</span> <span class="no">nil</span> <span class="no">nil</span><span class="p">))</span>
+
 <span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-x SPC&quot;</span><span class="p">)</span> <span class="ss">&#39;hydra-rectangle/body</span><span class="p">)</span>
 </code></pre></div>
 <p>There was a lot of screen estate left over, so I added some ASCII-art. I wanted something
@@ -390,7 +391,7 @@ laptop, which I do at home.</p>
 
 <p>I&#39;ve used two methods to shorten the boot time, I&#39;ll describe them below.</p>
 
-<h2 id="use-package-:idle-option"><code>use-package</code> <code>:idle</code> option</h2>
+<h2 id="use-package-idle-option"><code>use-package</code> <code>:idle</code> option</h2>
 
 <p>This one is a big time saver, since <code>org-mode</code> just takes so long to load:</p>
 <div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">use-package</span> <span class="nv">org</span>
@@ -591,7 +592,7 @@ syntax for variables is such that you can auto-complete them with <code>company-
 and sexps can use <code>format</code> style width specifiers. See the documentation of <code>format</code> for more
 details.</p>
 
-<h3 id="examples-7-9-added-to-hydra-examples.el">Examples 7-9 added to hydra-examples.el</h3>
+<h3 id="examples-7-9-added-to-hydra-examples-el">Examples 7-9 added to hydra-examples.el</h3>
 
 <p>These examples explain Ruby-style interpolation.</p>
 
@@ -619,7 +620,7 @@ taste.</p>
          <span class="s">&quot;[%s]&quot;</span>
        <span class="s">&quot;(%s)&quot;</span><span class="p">)</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">head</span><span class="p">))))</span>
 </code></pre></div>
-<h3 id="new-switch-:body-pre">New switch :body-pre</h3>
+<h3 id="new-switch-body-pre">New switch :body-pre</h3>
 
 <p>This sexp or function will be prepended to the prefix/body function.
 Here&#39;s an example of use:</p>

@@ -350,7 +350,7 @@ algorithm.</p>
 
 <p>The algorithm has a safety check implemented for Elisp: if <code>read</code> on the transformed expression returns something different than <code>read</code> on the original expression, an error will be signaled and no change will be made. For expressions that can&#39;t be <code>read</code>, like buffers/markers/windows/cyclic lists/overlays, only a warning will be issued (<code>lispy</code> can read them, unlike <code>read</code>).</p>
 
-<h3 id="d-and-&gt;-give-priority-to-lispy-right"><kbd>d</kbd> and <kbd>&gt;</kbd> give priority to <code>lispy-right</code></h3>
+<h3 id="d-and-gt-give-priority-to-lispy-right"><kbd>d</kbd> and <kbd>&gt;</kbd> give priority to <code>lispy-right</code></h3>
 
 <p>For the expression <code>(a)|(b)</code>, <code>(a)</code> will be considered the sexp at point, instead of <code>(b)</code>. This is consistent with <code>show-paren-mode</code>.  If a space is present, all ambiguities are resolved anyway.</p>
 
@@ -387,7 +387,7 @@ algorithm.</p>
 
 <p>I normally use a light background, so I didn&#39;t notice before that the faces looked horrible with a dark background.</p>
 
-<h3 id="the-&#96;-will-quote-the-region">The <kbd>&#96;</kbd> will quote the region</h3>
+<h3 id="the-96-will-quote-the-region">The <kbd>&#96;</kbd> will quote the region</h3>
 
 <p>If you have a region selected, pressing <kbd>&#96;</kbd> will result in:</p>
 <div class="highlight"><pre><code class="language-text" data-lang="text">`symbol&#39;
@@ -401,7 +401,7 @@ Now it uses <code>find-file-in-project</code> by default, with the option to cus
 
 <p>Apparently, <code>looking-back</code> isn&#39;t very efficient, so it&#39;s preferable to avoid it or at least add a search bound to improve efficiency. Also the bound became mandatory in 25, while it was optional before.</p>
 
-<h3 id="m-m-will-work-better-in-strings-and-comments."><kbd>M-m</kbd> will work better in strings and comments.</h3>
+<h3 id="m-m-will-work-better-in-strings-and-comments"><kbd>M-m</kbd> will work better in strings and comments.</h3>
 
 <p>See the relevant test:</p>
 <div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">should</span> <span class="p">(</span><span class="nv">string=</span> <span class="p">(</span><span class="nv">lispy-with</span> <span class="s">&quot;\&quot;See `plu|mage&#39;.\&quot;&quot;</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-m&quot;</span><span class="p">))</span>
@@ -451,7 +451,7 @@ it&#39;s lightning fast on smaller code bases (<code>lispy</code> has only 651 t
 <p>It&#39;s OK to pass a larger arg than the length of the current list. In
 that case, the paste will be made into the last element of the list.</p>
 
-<h3 id="update-the-way-/-(lispy-splice)-works">Update the way <kbd>/</kbd> (<code>lispy-splice</code>) works</h3>
+<h3 id="update-the-way-lispy-splice-works">Update the way <kbd>/</kbd> (<code>lispy-splice</code>) works</h3>
 
 <p>When there&#39;s no next element within parent, jump to parent from
 appropriate side. When the region is active, don&#39;t deactivate it. When

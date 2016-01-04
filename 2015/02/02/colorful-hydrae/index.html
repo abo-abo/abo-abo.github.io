@@ -337,7 +337,7 @@ Here&#39;s a more verbose Hydra that&#39;s largely equivalent to the one above:<
    <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span> <span class="s">&quot;cancel&quot;</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">))</span>
 <span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c C-v&quot;</span><span class="p">)</span> <span class="ss">&#39;hydra-toggle/body</span><span class="p">)</span>
 </code></pre></div>
-<h3 id="first-argument:-hydra-name">First argument: Hydra name</h3>
+<h3 id="first-argument-hydra-name">First argument: Hydra name</h3>
 
 <p>This argument decides the prefix to all the functions that will be generated.
 In this case the following functions will be generated:</p>
@@ -354,7 +354,7 @@ In this case the following functions will be generated:</p>
 the transient map. It&#39;s the return result of <code>defhydra</code>, that&#39;s why it was possible to pass it
 to <code>global-set-key</code> in the first example.</p>
 
-<h3 id="second-argument:-hydra-body">Second argument: Hydra body</h3>
+<h3 id="second-argument-hydra-body">Second argument: Hydra body</h3>
 
 <p>The Hydra body consists of:</p>
 
@@ -370,13 +370,13 @@ which in turn can be either red (the old behavior) or blue.</li>
 doesn&#39;t make sense to omit one but not the other), or just pass <code>()</code>
 if you want to get a red Hydra body that you can bind yourself.</p>
 
-<h3 id="third-argument:-hydra-hint">Third argument: Hydra hint</h3>
+<h3 id="third-argument-hydra-hint">Third argument: Hydra hint</h3>
 
 <p>This string will be used in the echo area to distinguish the current
 Hydra. This is optional, it case you don&#39;t provide it, it will default
 to <code>&quot;hydra&quot;</code>.</p>
 
-<h3 id="fourth-argument:-hydra-heads">Fourth argument: Hydra heads</h3>
+<h3 id="fourth-argument-hydra-heads">Fourth argument: Hydra heads</h3>
 
 <p>Each Hydra head is a list of:</p>
 

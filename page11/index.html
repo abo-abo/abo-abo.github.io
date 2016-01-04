@@ -336,7 +336,7 @@ a timer is started to disable the hydra. Each new head call resets this timer, s
 becomes too small.</li>
 </ul>
 
-<h3 id="allow-for-a-%s(test)-spec-in-the-docstring">Allow for a <code>%s(test)</code> spec in the docstring</h3>
+<h3 id="allow-for-a-s-test-spec-in-the-docstring">Allow for a <code>%s(test)</code> spec in the docstring</h3>
 
 <p>The spec that&#39;s used for e.g. <code>(test)</code> is <code>%S</code>. So if <code>(test)</code> returns a string, it will be quoted.
 This may not be desired, hence the new feature.
@@ -348,7 +348,7 @@ Example:</p>
 <span class="s">&quot;</span>
   <span class="p">(</span><span class="s">&quot;m&quot;</span> <span class="nv">dired-mark</span> <span class="s">&quot;mark&quot;</span><span class="p">))</span>
 </code></pre></div>
-<h3 id="the-pink/amaranth-override-is-set-recursively">The pink/amaranth override is set recursively</h3>
+<h3 id="the-pink-amaranth-override-is-set-recursively">The pink/amaranth override is set recursively</h3>
 
 <p>This fixes the issue in this hydra:</p>
 <div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-test</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">amaranth</span><span class="p">)</span>
@@ -548,7 +548,7 @@ to make your config reproducible.</p>
 layer to glue them together. Below, I&#39;ll show some automation for the packages managed by
 <code>package.el</code>.</p>
 
-<h2 id="step-1:-get-the-main-directory">Step 1: get the main directory</h2>
+<h2 id="step-1-get-the-main-directory">Step 1: get the main directory</h2>
 
 <p>This is an important step that many other peoples&#39; configs miss, even the ones that are designed to
 be distributed. You can&#39;t just assume that the config will be located in <code>~/.emacs.d</code> and rely on
@@ -568,7 +568,7 @@ Having two independent checkouts with ELPA directory auto-generated really helps
 <span class="p">(</span><span class="k">setq</span> <span class="nv">package-user-dir</span>
       <span class="p">(</span><span class="nf">expand-file-name</span> <span class="s">&quot;elpa&quot;</span> <span class="nv">emacs-d</span><span class="p">))</span>
 </code></pre></div>
-<h2 id="step-2:-decide-what-you-like">Step 2: decide what you like</h2>
+<h2 id="step-2-decide-what-you-like">Step 2: decide what you like</h2>
 
 <p>Next, I initialize the package and define some of the packages that I like, omitting the
 dependencies that they bring. Note that the code of the whole post is stored in a separate file
@@ -590,7 +590,7 @@ dependencies that they bring. Note that the code of the whole post is stored in 
     <span class="nv">netherlands-holidays</span> <span class="nv">j-mode</span><span class="p">)</span>
   <span class="s">&quot;List of packages that I like.&quot;</span><span class="p">)</span>
 </code></pre></div>
-<h2 id="step-3:-install-and-upgrade">Step 3: install and upgrade</h2>
+<h2 id="step-3-install-and-upgrade">Step 3: install and upgrade</h2>
 
 <p>The install step is pretty straightforward: install a package unless it&#39;s already installed.
 I tried to do something fancier for the upgrade, but in the end it was much more simple to
@@ -607,7 +607,7 @@ just call the interactive interface. The last two lines are basically equivalent
   <span class="p">(</span><span class="nv">package-menu-mark-upgrades</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">package-menu-execute</span> <span class="no">t</span><span class="p">))</span>
 </code></pre></div>
-<h2 id="step-4:-make-it-callable">Step 4: make it callable</h2>
+<h2 id="step-4-make-it-callable">Step 4: make it callable</h2>
 
 <p>Finally, I just create a Makefile with the following contents:</p>
 <div class="highlight"><pre><code class="language-Makefile" data-lang="Makefile"><span class="nv">emacs</span> <span class="o">?=</span> emacs

@@ -276,7 +276,7 @@ the older packages. This post will cover some practical problems that
 you may encounter when your package needs to be aware of another
 active package.</p>
 
-<h2 id="ace-window-vs.-helm"><code>ace-window</code> vs. <code>helm</code></h2>
+<h2 id="ace-window-vs-helm"><code>ace-window</code> vs. <code>helm</code></h2>
 
 <p><a href="https://github.com/emacs-helm/helm">helm</a> is a wonderful package,
 it&#39;s my goto-package when I need completion. All of the following
@@ -305,7 +305,7 @@ out of a <code>helm</code>-minibuffer. In fact, it was not possible to exit with
 inkling that it used to work at some point. So I checked out a
 year-old version of <code>helm</code> and it did work.</p>
 
-<h3 id="magit-bisect-to-the-rescue!"><code>magit-bisect</code> to the rescue!</h3>
+<h3 id="magit-bisect-to-the-rescue"><code>magit-bisect</code> to the rescue!</h3>
 
 <p>It&#39;s very simple:</p>
 
@@ -356,7 +356,7 @@ called after <code>helm</code>.</p>
 In the end, this finally worked:</p>
 <div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">remove-hook</span> <span class="ss">&#39;post-command-hook</span> <span class="ss">&#39;helm--maybe-update-keymap</span><span class="p">)</span>
 </code></pre></div>
-<h2 id="lispy-vs.-slime-and-cider"><code>lispy</code> vs. <code>SLIME</code> and <code>CIDER</code></h2>
+<h2 id="lispy-vs-slime-and-cider"><code>lispy</code> vs. <code>SLIME</code> and <code>CIDER</code></h2>
 
 <p>I thought that enabling <code>lispy-mode</code> for <code>slime-repl-mode</code> and
 <code>cider-repl-mode</code> might be a good idea.

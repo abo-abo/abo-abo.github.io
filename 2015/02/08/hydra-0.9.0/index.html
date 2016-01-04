@@ -277,12 +277,12 @@
 <p><code>hydra-keyboard-quit</code> set to <code>&quot;C-g&quot;</code> means that it&#39;s possible to quit an amaranth Hydra
 with <kbd>C-g</kbd>. You can customize this variable.</p>
 
-<h2 id=":pre-and-:post-refinement"><code>:pre</code> and <code>:post</code> refinement</h2>
+<h2 id="pre-and-post-refinement"><code>:pre</code> and <code>:post</code> refinement</h2>
 
 <p><code>:post</code> and <code>:pre</code> keys in the body <code>PLIST</code> can be either a single
 sexp or a function name. The function doesn&#39;t need to be interactive.</p>
 
-<h2 id="support-for-local-hydra-heads-via-:bind-property">Support for local Hydra heads via <code>:bind</code> property</h2>
+<h2 id="support-for-local-hydra-heads-via-bind-property">Support for local Hydra heads via <code>:bind</code> property</h2>
 
 <p>Example:</p>
 <div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-next-error</span> <span class="p">(</span><span class="nv">global-map</span> <span class="s">&quot;C-x&quot;</span><span class="p">)</span>
@@ -301,7 +301,7 @@ sexp or a function name. The function doesn&#39;t need to be interactive.</p>
 
 <p>Thanks, <a href="https://github.com/ffevotte">@ffevotte</a>.</p>
 
-<h2 id="support-for-:bind-property-in-hydra-body">Support for <code>:bind</code> property in Hydra body</h2>
+<h2 id="support-for-bind-property-in-hydra-body">Support for <code>:bind</code> property in Hydra body</h2>
 
 <p>The body, like the heads will recognize the <code>:bind</code> property in <code>PLIST</code>.
 The heads will inherit it, just like they do with <code>:color</code>.
@@ -327,7 +327,7 @@ was overridden in the <kbd>g</kbd> head.</p>
 whole <code>BODY</code> argument, as was advertised before. Just put it on
 <code>:bind</code> now.</p>
 
-<h2 id="hydra/body-will-pass-the-initial-current-prefix-arg-along"><code>hydra/body</code> will pass the initial <code>current-prefix-arg</code> along</h2>
+<h2 id="hydra-body-will-pass-the-initial-current-prefix-arg-along"><code>hydra/body</code> will pass the initial <code>current-prefix-arg</code> along</h2>
 
 <p>Example:</p>
 <div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span>
@@ -341,7 +341,7 @@ whole <code>BODY</code> argument, as was advertised before. Just put it on
 will normally call <code>(forward-char 1)</code>, unless an additional prefix is given.  The previous
 behavior allowed only for <kbd>C-z C-u l</kbd> to get <code>(forward-char 4)</code>.</p>
 
-<h2 id="allow-a-sexp-as-head&#39;s-cmd-parameter">Allow a sexp as head&#39;s CMD parameter</h2>
+<h2 id="allow-a-sexp-as-head-39-s-cmd-parameter">Allow a sexp as head&#39;s CMD parameter</h2>
 
 <p>Example:</p>
 <div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-launcher</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>

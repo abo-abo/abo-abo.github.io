@@ -316,7 +316,7 @@ before the start of the line, will delete the whole comment.</p>
 
 <p><kbd>xf</kbd> (<code>lispy-flatten</code>) now also works for Clojure, before it was only for Elisp.</p>
 
-<h4 id="example-1-(flatten-a-macro):">Example 1 (flatten a macro):</h4>
+<h4 id="example-1-flatten-a-macro">Example 1 (flatten a macro):</h4>
 <div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="err">|</span><span class="p">(</span><span class="nf">-&gt;&gt;</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">]</span>
      <span class="p">(</span><span class="nb">map </span><span class="nv">sqr</span><span class="p">)</span>
      <span class="p">(</span><span class="nb">filter </span><span class="nv">odd?</span><span class="p">))</span>
@@ -324,7 +324,7 @@ before the start of the line, will delete the whole comment.</p>
 <p>When you press <kbd>xf</kbd> you get this:</p>
 <div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="err">|</span><span class="p">(</span><span class="nb">filter </span><span class="nv">odd?</span> <span class="p">(</span><span class="nb">map </span><span class="nv">sqr</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">]))</span>
 </code></pre></div>
-<h4 id="example-2-(flatten-a-standard-function):">Example 2 (flatten a standard function):</h4>
+<h4 id="example-2-flatten-a-standard-function">Example 2 (flatten a standard function):</h4>
 
 <p>Start with:</p>
 <div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="err">|</span><span class="p">(</span><span class="nb">map </span><span class="nv">odd?</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">])</span>
@@ -345,7 +345,7 @@ before the start of the line, will delete the whole comment.</p>
 </code></pre></div>
 <p>A bit of a gibberish, but at least we can confirm that <code>map</code> is indeed lazy.</p>
 
-<h4 id="example-3-(flatten-your-own-function):">Example 3 (flatten your own function):</h4>
+<h4 id="example-3-flatten-your-own-function">Example 3 (flatten your own function):</h4>
 
 <p>Example function:</p>
 <div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="kd">defn </span><span class="nv">sqr</span> <span class="p">[</span><span class="nv">x</span><span class="p">]</span>
@@ -413,7 +413,7 @@ eval will be performed.</p>
 It means that you first have to mark the symbol <code>*MODULES*</code> with a region.
 A convenient function to mark the current symbol is <kbd>M-m</kbd> (<code>lispy-mark-symbol</code>).</p>
 
-<h3 id="y-(lispy-occur)-now-has-an-ivy-back-end"><kbd>y</kbd> (<code>lispy-occur</code>) now has an <code>ivy</code> back end</h3>
+<h3 id="y-lispy-occur-now-has-an-ivy-back-end"><kbd>y</kbd> (<code>lispy-occur</code>) now has an <code>ivy</code> back end</h3>
 
 <p><code>lispy-occur</code> launches an interactive search within the current top-level expression, usually a
 defun. This is useful to see where a variable is used in a function, or to quickly navigate to a

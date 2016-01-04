@@ -355,7 +355,7 @@ I was able to quickly wrap words like this:</p>
     <p>Only three commits happened since <code>0.6.1</code>, but already <a href="https://github.com/abo-abo/hydra/releases/tag/0.7.0">0.7.0</a> has to
 be released, since the behavior has changed slightly.</p>
 
-<h2 id="the-ultimate-window-switching-setup,-revised">The ultimate window switching setup, revised</h2>
+<h2 id="the-ultimate-window-switching-setup-revised">The ultimate window switching setup, revised</h2>
 
 <p>The code from the <a href="/2015/02/03/one-hydra-two-hydra/">last post</a> had to be changed.
 Note that only <code>ace-window</code>-related heads are affected, since <code>ace-window</code> uses <code>set-transient-map</code> as well.
@@ -487,7 +487,7 @@ This version adds prefix arguments to all Hydras.</p>
 
 <h2 id="some-examples">Some Examples</h2>
 
-<h3 id="look-ma,-no-modifiers!">Look ma, no modifiers!</h3>
+<h3 id="look-ma-no-modifiers">Look ma, no modifiers!</h3>
 
 <p>Now it&#39;s possible to write this:</p>
 <div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span>
@@ -681,7 +681,7 @@ Here&#39;s a more verbose Hydra that&#39;s largely equivalent to the one above:<
    <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span> <span class="s">&quot;cancel&quot;</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">))</span>
 <span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c C-v&quot;</span><span class="p">)</span> <span class="ss">&#39;hydra-toggle/body</span><span class="p">)</span>
 </code></pre></div>
-<h3 id="first-argument:-hydra-name">First argument: Hydra name</h3>
+<h3 id="first-argument-hydra-name">First argument: Hydra name</h3>
 
 <p>This argument decides the prefix to all the functions that will be generated.
 In this case the following functions will be generated:</p>
@@ -698,7 +698,7 @@ In this case the following functions will be generated:</p>
 the transient map. It&#39;s the return result of <code>defhydra</code>, that&#39;s why it was possible to pass it
 to <code>global-set-key</code> in the first example.</p>
 
-<h3 id="second-argument:-hydra-body">Second argument: Hydra body</h3>
+<h3 id="second-argument-hydra-body">Second argument: Hydra body</h3>
 
 <p>The Hydra body consists of:</p>
 
@@ -714,13 +714,13 @@ which in turn can be either red (the old behavior) or blue.</li>
 doesn&#39;t make sense to omit one but not the other), or just pass <code>()</code>
 if you want to get a red Hydra body that you can bind yourself.</p>
 
-<h3 id="third-argument:-hydra-hint">Third argument: Hydra hint</h3>
+<h3 id="third-argument-hydra-hint">Third argument: Hydra hint</h3>
 
 <p>This string will be used in the echo area to distinguish the current
 Hydra. This is optional, it case you don&#39;t provide it, it will default
 to <code>&quot;hydra&quot;</code>.</p>
 
-<h3 id="fourth-argument:-hydra-heads">Fourth argument: Hydra heads</h3>
+<h3 id="fourth-argument-hydra-heads">Fourth argument: Hydra heads</h3>
 
 <p>Each Hydra head is a list of:</p>
 
@@ -799,7 +799,7 @@ markdown. But after a few posts, I&#39;ve experienced a drastic decrease
 in refresh time: it went from under a second to 15 seconds. Below, I&#39;ll show how I&#39;ve managed
 to speed it back up.</p>
 
-<h2 id="no-posts---no-problem">No posts - no problem</h2>
+<h2 id="no-posts-no-problem">No posts - no problem</h2>
 
 <p>Thanks to <code>(require &#39;dired-x)</code> I can jump from the current post to the
 posts directory with <kbd>C-x C-j</kbd>. It even puts the point on the current file. Now:</p>
@@ -843,7 +843,7 @@ as well wrap it in some Elisp. Elisp is like frosting - it makes everything bett
 <li>open <code>localhost:4000</code> in Firefox</li>
 </ul>
 
-<h2 id="one-post-isn&#39;t-a-blog">One post isn&#39;t a blog</h2>
+<h2 id="one-post-isn-39-t-a-blog">One post isn&#39;t a blog</h2>
 
 <p>Here&#39;s how to quickly bring back the deleted posts.</p>
 

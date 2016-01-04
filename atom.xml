@@ -4,7 +4,7 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2015-12-08T10:38:52+01:00</updated>
+ <updated>2016-01-04T20:44:01+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
@@ -68,7 +68,7 @@ the info pages, there&amp;#39;s info on info in info format: use &lt;kbd&gt;dg&l
 &lt;p&gt;Today, I&amp;#39;ll describe some cool stuff that I used to generate the
 Markdown notes from &lt;code&gt;Changelog.org&lt;/code&gt;.&lt;/p&gt;
 
-&lt;h3 id=&quot;org-mode&amp;#39;s-org-narrow-to-subtree&quot;&gt;Org-mode&amp;#39;s &lt;code&gt;org-narrow-to-subtree&lt;/code&gt;&lt;/h3&gt;
+&lt;h3 id=&quot;org-mode-39-s-org-narrow-to-subtree&quot;&gt;Org-mode&amp;#39;s &lt;code&gt;org-narrow-to-subtree&lt;/code&gt;&lt;/h3&gt;
 
 &lt;p&gt;Since &lt;code&gt;Changelog.org&lt;/code&gt; already has a &lt;code&gt;0.6.0&lt;/code&gt; branch that I didn&amp;#39;t want
 to see, I&amp;#39;ve narrowed the buffer to only the &lt;code&gt;0.7.0&lt;/code&gt; branch.  This is
@@ -214,7 +214,7 @@ to operate on (with
 the key bindings come only from &lt;code&gt;lispy-mode&lt;/code&gt;.  But the first case will
 also work if &lt;code&gt;lispy-mode&lt;/code&gt; is off.&lt;/p&gt;
 
-&lt;h2 id=&quot;which-way-is-better?&quot;&gt;Which way is better?&lt;/h2&gt;
+&lt;h2 id=&quot;which-way-is-better&quot;&gt;Which way is better?&lt;/h2&gt;
 
 &lt;p&gt;I think the second way is better, since it&amp;#39;s faster and more clear,
 but you can decide for yourself. By the way, you can also move
@@ -430,7 +430,7 @@ customization variable:&lt;/p&gt;
 &lt;code&gt;*.tar.gz&lt;/code&gt; and &lt;code&gt;*.zip&lt;/code&gt;, use &lt;kbd&gt;M-x&lt;/kbd&gt; &lt;code&gt;report-emacs-bug&lt;/code&gt; if you
 want to add more options.&lt;/p&gt;
 
-&lt;h2 id=&quot;other-improvements-in-compression/decompression&quot;&gt;Other improvements in compression/decompression&lt;/h2&gt;
+&lt;h2 id=&quot;other-improvements-in-compression-decompression&quot;&gt;Other improvements in compression/decompression&lt;/h2&gt;
 
 &lt;p&gt;I improved the good-old &lt;kbd&gt;Z&lt;/kbd&gt; (&lt;code&gt;dired-do-compress&lt;/code&gt;) as
 well. Now it can compress directories to &lt;code&gt;*.tar.gz&lt;/code&gt;, as well as
@@ -1434,7 +1434,7 @@ inside the added action functions.&lt;/p&gt;
    <link href="http://oremacs.com/2015/07/20/hydra-columns/"/>
    <updated>2015-07-20T00:00:00+02:00</updated>
    <id>http://oremacs.com/2015/07/20/hydra-columns</id>
-   <content type="html">&lt;h2 id=&quot;the-new-:columns-option&quot;&gt;The new &lt;code&gt;:columns&lt;/code&gt; option&lt;/h2&gt;
+   <content type="html">&lt;h2 id=&quot;the-new-columns-option&quot;&gt;The new &lt;code&gt;:columns&lt;/code&gt; option&lt;/h2&gt;
 
 &lt;p&gt;Today I&amp;#39;ll introduce a pretty cool new option that you can use to
 quickly create hydra docstrings arranged in a matrix.  This, of
@@ -2052,7 +2052,7 @@ the word at point into the minibuffer.  Think of it as the mirror of
 &lt;kbd&gt;C-w&lt;/kbd&gt; in &lt;code&gt;isearch&lt;/code&gt;. It could not be &lt;kbd&gt;C-w&lt;/kbd&gt;, since I
 like &lt;kbd&gt;C-w&lt;/kbd&gt; being bound to &lt;code&gt;kill-region&lt;/code&gt;.&lt;/p&gt;
 
-&lt;h2 id=&quot;the-command/insert-mode-split&quot;&gt;The command/insert mode split&lt;/h2&gt;
+&lt;h2 id=&quot;the-command-insert-mode-split&quot;&gt;The command/insert mode split&lt;/h2&gt;
 
 &lt;p&gt;&lt;img src=&quot;/download/counsel-load-theme.png&quot; alt=&quot;counsel-load-theme.png&quot;&gt;&lt;/p&gt;
 
@@ -2495,7 +2495,7 @@ algorithm.&lt;/p&gt;
 
 &lt;p&gt;The algorithm has a safety check implemented for Elisp: if &lt;code&gt;read&lt;/code&gt; on the transformed expression returns something different than &lt;code&gt;read&lt;/code&gt; on the original expression, an error will be signaled and no change will be made. For expressions that can&amp;#39;t be &lt;code&gt;read&lt;/code&gt;, like buffers/markers/windows/cyclic lists/overlays, only a warning will be issued (&lt;code&gt;lispy&lt;/code&gt; can read them, unlike &lt;code&gt;read&lt;/code&gt;).&lt;/p&gt;
 
-&lt;h3 id=&quot;d-and-&amp;gt;-give-priority-to-lispy-right&quot;&gt;&lt;kbd&gt;d&lt;/kbd&gt; and &lt;kbd&gt;&amp;gt;&lt;/kbd&gt; give priority to &lt;code&gt;lispy-right&lt;/code&gt;&lt;/h3&gt;
+&lt;h3 id=&quot;d-and-gt-give-priority-to-lispy-right&quot;&gt;&lt;kbd&gt;d&lt;/kbd&gt; and &lt;kbd&gt;&amp;gt;&lt;/kbd&gt; give priority to &lt;code&gt;lispy-right&lt;/code&gt;&lt;/h3&gt;
 
 &lt;p&gt;For the expression &lt;code&gt;(a)|(b)&lt;/code&gt;, &lt;code&gt;(a)&lt;/code&gt; will be considered the sexp at point, instead of &lt;code&gt;(b)&lt;/code&gt;. This is consistent with &lt;code&gt;show-paren-mode&lt;/code&gt;.  If a space is present, all ambiguities are resolved anyway.&lt;/p&gt;
 
@@ -2532,7 +2532,7 @@ algorithm.&lt;/p&gt;
 
 &lt;p&gt;I normally use a light background, so I didn&amp;#39;t notice before that the faces looked horrible with a dark background.&lt;/p&gt;
 
-&lt;h3 id=&quot;the-&amp;#96;-will-quote-the-region&quot;&gt;The &lt;kbd&gt;&amp;#96;&lt;/kbd&gt; will quote the region&lt;/h3&gt;
+&lt;h3 id=&quot;the-96-will-quote-the-region&quot;&gt;The &lt;kbd&gt;&amp;#96;&lt;/kbd&gt; will quote the region&lt;/h3&gt;
 
 &lt;p&gt;If you have a region selected, pressing &lt;kbd&gt;&amp;#96;&lt;/kbd&gt; will result in:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;`symbol&amp;#39;
@@ -2546,7 +2546,7 @@ Now it uses &lt;code&gt;find-file-in-project&lt;/code&gt; by default, with the o
 
 &lt;p&gt;Apparently, &lt;code&gt;looking-back&lt;/code&gt; isn&amp;#39;t very efficient, so it&amp;#39;s preferable to avoid it or at least add a search bound to improve efficiency. Also the bound became mandatory in 25, while it was optional before.&lt;/p&gt;
 
-&lt;h3 id=&quot;m-m-will-work-better-in-strings-and-comments.&quot;&gt;&lt;kbd&gt;M-m&lt;/kbd&gt; will work better in strings and comments.&lt;/h3&gt;
+&lt;h3 id=&quot;m-m-will-work-better-in-strings-and-comments&quot;&gt;&lt;kbd&gt;M-m&lt;/kbd&gt; will work better in strings and comments.&lt;/h3&gt;
 
 &lt;p&gt;See the relevant test:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;should&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;string=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;lispy-with&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;\&amp;quot;See `plu|mage&amp;#39;.\&amp;quot;&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;M-m&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
@@ -2596,7 +2596,7 @@ it&amp;#39;s lightning fast on smaller code bases (&lt;code&gt;lispy&lt;/code&gt
 &lt;p&gt;It&amp;#39;s OK to pass a larger arg than the length of the current list. In
 that case, the paste will be made into the last element of the list.&lt;/p&gt;
 
-&lt;h3 id=&quot;update-the-way-/-(lispy-splice)-works&quot;&gt;Update the way &lt;kbd&gt;/&lt;/kbd&gt; (&lt;code&gt;lispy-splice&lt;/code&gt;) works&lt;/h3&gt;
+&lt;h3 id=&quot;update-the-way-lispy-splice-works&quot;&gt;Update the way &lt;kbd&gt;/&lt;/kbd&gt; (&lt;code&gt;lispy-splice&lt;/code&gt;) works&lt;/h3&gt;
 
 &lt;p&gt;When there&amp;#39;s no next element within parent, jump to parent from
 appropriate side. When the region is active, don&amp;#39;t deactivate it. When
@@ -2681,7 +2681,7 @@ repository: &lt;code&gt;counsel-git-grep&lt;/code&gt; works much better this way
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;&lt;code&gt;ivy-re-builders-alist&lt;/code&gt; is the flexible way to customize the regex builders per-collection.  Using &lt;code&gt;t&lt;/code&gt; here, means to use this regex builder for everything. You could choose to have in-order for files, and out-of-order for buffers and so on.&lt;/p&gt;
 
-&lt;h3 id=&quot;new-defcustom:-ivy-tab-space&quot;&gt;New defcustom: &lt;code&gt;ivy-tab-space&lt;/code&gt;&lt;/h3&gt;
+&lt;h3 id=&quot;new-defcustom-ivy-tab-space&quot;&gt;New defcustom: &lt;code&gt;ivy-tab-space&lt;/code&gt;&lt;/h3&gt;
 
 &lt;p&gt;Use this to have a space inserted each time you press &lt;kbd&gt;TAB&lt;/kbd&gt;:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ivy-tab-space&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
@@ -2690,7 +2690,7 @@ repository: &lt;code&gt;counsel-git-grep&lt;/code&gt; works much better this way
 
 &lt;p&gt;&amp;quot;pub&amp;quot; can expand to &amp;quot;Public License&amp;quot;.&lt;/p&gt;
 
-&lt;h3 id=&quot;new-command:-counsel-load-library&quot;&gt;New command: &lt;code&gt;counsel-load-library&lt;/code&gt;&lt;/h3&gt;
+&lt;h3 id=&quot;new-command-counsel-load-library&quot;&gt;New command: &lt;code&gt;counsel-load-library&lt;/code&gt;&lt;/h3&gt;
 
 &lt;p&gt;This command is much better than the standard &lt;code&gt;load-libary&lt;/code&gt; that it
 upgrades.  It applies a sort of &lt;code&gt;uniquify&lt;/code&gt; effect to all your
@@ -2710,18 +2710,18 @@ name and no way to distinguish them), you can simply use
 &lt;p&gt;Here&amp;#39;s another scenario: first load the library, then call
 &lt;code&gt;ivy-resume&lt;/code&gt; and immediately open the library file.&lt;/p&gt;
 
-&lt;h3 id=&quot;new-command:-ivy-partial&quot;&gt;New command: &lt;code&gt;ivy-partial&lt;/code&gt;&lt;/h3&gt;
+&lt;h3 id=&quot;new-command-ivy-partial&quot;&gt;New command: &lt;code&gt;ivy-partial&lt;/code&gt;&lt;/h3&gt;
 
 &lt;p&gt;Does a partial complete without exiting. Use this code to replace
 &lt;code&gt;ivy-partial-or-done&lt;/code&gt; with this command:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ivy-minibuffer-map&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;TAB&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ivy-partial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3 id=&quot;allow-to-use-^-in-swiper&quot;&gt;Allow to use &lt;code&gt;^&lt;/code&gt; in &lt;code&gt;swiper&lt;/code&gt;&lt;/h3&gt;
+&lt;h3 id=&quot;allow-to-use-in-swiper&quot;&gt;Allow to use &lt;code&gt;^&lt;/code&gt; in &lt;code&gt;swiper&lt;/code&gt;&lt;/h3&gt;
 
 &lt;p&gt;In regex terms, &lt;code&gt;^&lt;/code&gt; is the beginning of line. You can now use this in
 &lt;code&gt;swiper&lt;/code&gt; to filter your matches.&lt;/p&gt;
 
-&lt;h3 id=&quot;new-command:-swiper-avy&quot;&gt;New command: &lt;code&gt;swiper-avy&lt;/code&gt;&lt;/h3&gt;
+&lt;h3 id=&quot;new-command-swiper-avy&quot;&gt;New command: &lt;code&gt;swiper-avy&lt;/code&gt;&lt;/h3&gt;
 
 &lt;p&gt;This command is crazy good: it combines the best features of &lt;code&gt;swiper&lt;/code&gt;
 (all buffer an once, flexible input length) and &lt;code&gt;avy&lt;/code&gt; (quickly select
@@ -2768,7 +2768,7 @@ the minibuffer display to look like this:&lt;/p&gt;
 &amp;gt; file3
   file4
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3 id=&quot;when-completing-file-names,-tab-should-defer-to-minibuffer-complete&quot;&gt;When completing file names, &lt;kbd&gt;TAB&lt;/kbd&gt; should defer to &lt;code&gt;minibuffer-complete&lt;/code&gt;&lt;/h3&gt;
+&lt;h3 id=&quot;when-completing-file-names-tab-should-defer-to-minibuffer-complete&quot;&gt;When completing file names, &lt;kbd&gt;TAB&lt;/kbd&gt; should defer to &lt;code&gt;minibuffer-complete&lt;/code&gt;&lt;/h3&gt;
 
 &lt;p&gt;Thanks to this, you can &lt;kbd&gt;TAB&lt;/kbd&gt;-complete your ssh hosts, e.g.:&lt;/p&gt;
 
@@ -3027,7 +3027,7 @@ describe the newest exciting feature in more detail, see
 advantage of always being aware which window corresponds to which
 char.&lt;/p&gt;
 
-&lt;h3 id=&quot;new-defcustom:-aw-ignore-current&quot;&gt;New defcustom: &lt;code&gt;aw-ignore-current&lt;/code&gt;&lt;/h3&gt;
+&lt;h3 id=&quot;new-defcustom-aw-ignore-current&quot;&gt;New defcustom: &lt;code&gt;aw-ignore-current&lt;/code&gt;&lt;/h3&gt;
 
 &lt;p&gt;This is off by default. When t, &lt;code&gt;ace-window&lt;/code&gt; will ignore
 &lt;code&gt;selected-window&lt;/code&gt;.&lt;/p&gt;
@@ -3271,20 +3271,20 @@ on the first candidate.&lt;/p&gt;
 &lt;code&gt;swiper-match-face-4&lt;/code&gt; inherit from &lt;code&gt;isearch-fail&lt;/code&gt;. It&amp;#39;s important to
 have all 4 faces be different.&lt;/p&gt;
 
-&lt;h3 id=&quot;don&amp;#39;t-error-on-bad-regex&quot;&gt;Don&amp;#39;t error on bad regex&lt;/h3&gt;
+&lt;h3 id=&quot;don-39-t-error-on-bad-regex&quot;&gt;Don&amp;#39;t error on bad regex&lt;/h3&gt;
 
 &lt;p&gt;When the current input is a bad regex, just display no candidates and
 continue. Don&amp;#39;t throw an error.&lt;/p&gt;
 
 &lt;h2 id=&quot;new-features&quot;&gt;New Features&lt;/h2&gt;
 
-&lt;h3 id=&quot;use-//-instead-of-/-to-move-to-root&quot;&gt;Use &lt;kbd&gt;//&lt;/kbd&gt; instead of &lt;kbd&gt;/&lt;/kbd&gt; to move to root&lt;/h3&gt;
+&lt;h3 id=&quot;use-instead-of-to-move-to-root&quot;&gt;Use &lt;kbd&gt;//&lt;/kbd&gt; instead of &lt;kbd&gt;/&lt;/kbd&gt; to move to root&lt;/h3&gt;
 
 &lt;p&gt;While completing file names, you can enter &lt;kbd&gt;//&lt;/kbd&gt; to move to
 the root directory.  This change was necessary in order to make it
 possible to enter e.g. &lt;code&gt;/sudo:&lt;/code&gt; or &lt;code&gt;/ssh:&lt;/code&gt;.&lt;/p&gt;
 
-&lt;h3 id=&quot;host-completion-for-/sudo:-and-/ssh:&quot;&gt;Host completion for &lt;code&gt;/sudo:&lt;/code&gt; and &lt;code&gt;/ssh:&lt;/code&gt;&lt;/h3&gt;
+&lt;h3 id=&quot;host-completion-for-sudo-and-ssh&quot;&gt;Host completion for &lt;code&gt;/sudo:&lt;/code&gt; and &lt;code&gt;/ssh:&lt;/code&gt;&lt;/h3&gt;
 
 &lt;p&gt;This feature is a bit flaky for now. But it works well on my
 machine. It should get better after a few bug reports. You can start
@@ -3817,7 +3817,7 @@ The most important part of this release is &lt;code&gt;ivy-mode&lt;/code&gt;, wh
 I&amp;#39;ve mentioned it already in &lt;a href=&quot;http://oremacs.com/2015/04/16/ivy-mode/&quot;&gt;an earlier post&lt;/a&gt;,
 I&amp;#39;ll just review all the little details, changes and customizations here.&lt;/p&gt;
 
-&lt;h2 id=&quot;important:-remove-the-old-ivy-package&quot;&gt;Important: remove the old &lt;code&gt;ivy&lt;/code&gt; package&lt;/h2&gt;
+&lt;h2 id=&quot;important-remove-the-old-ivy-package&quot;&gt;Important: remove the old &lt;code&gt;ivy&lt;/code&gt; package&lt;/h2&gt;
 
 &lt;p&gt;One important change related to MELPA is that the &lt;code&gt;ivy&lt;/code&gt; package was merged into &lt;code&gt;swiper&lt;/code&gt; package. So if you still have a stand-alone &lt;code&gt;ivy&lt;/code&gt; package, you should delete it, or you&amp;#39;ll get incompatibility problems.&lt;/p&gt;
 
@@ -3836,7 +3836,7 @@ which mostly shows off the new &lt;code&gt;counsel-git-grep&lt;/code&gt; functio
 
 &lt;p&gt;&lt;kbd&gt;C-h v&lt;/kbd&gt; and &lt;kbd&gt;C-h f&lt;/kbd&gt; should select thing-at-point properly.&lt;/p&gt;
 
-&lt;h3 id=&quot;don&amp;#39;t-try-to-fontify-huge-buffers&quot;&gt;Don&amp;#39;t try to fontify huge buffers&lt;/h3&gt;
+&lt;h3 id=&quot;don-39-t-try-to-fontify-huge-buffers&quot;&gt;Don&amp;#39;t try to fontify huge buffers&lt;/h3&gt;
 
 &lt;p&gt;It&amp;#39;s a nice feature of swiper that everything in the minibuffer is fontified.  However, this can cause a slowdown for buffers with x10000 lines. So this feature is automatically turned off for these large buffers.&lt;/p&gt;
 
@@ -3851,7 +3851,7 @@ which mostly shows off the new &lt;code&gt;counsel-git-grep&lt;/code&gt; functio
 
 &lt;h2 id=&quot;new-features&quot;&gt;New Features&lt;/h2&gt;
 
-&lt;h3 id=&quot;ivy-mode:-complete-everything-with-ivy&quot;&gt;&lt;code&gt;ivy-mode&lt;/code&gt;: complete everything with Ivy&lt;/h3&gt;
+&lt;h3 id=&quot;ivy-mode-complete-everything-with-ivy&quot;&gt;&lt;code&gt;ivy-mode&lt;/code&gt;: complete everything with Ivy&lt;/h3&gt;
 
 &lt;p&gt;&lt;code&gt;ivy-mode&lt;/code&gt; uses swiper&amp;#39;s approach to completion for almost all completion in Emacs, like:&lt;/p&gt;
 
@@ -3896,7 +3896,7 @@ which mostly shows off the new &lt;code&gt;counsel-git-grep&lt;/code&gt; functio
 
 &lt;p&gt;You can use these bindings to speed up your minibuffer scrolling.&lt;/p&gt;
 
-&lt;h3 id=&quot;allow-c-.-to-jump-to-definition&quot;&gt;Allow &lt;kbd&gt;C-.&lt;/kbd&gt; to jump-to-definition&lt;/h3&gt;
+&lt;h3 id=&quot;allow-c-to-jump-to-definition&quot;&gt;Allow &lt;kbd&gt;C-.&lt;/kbd&gt; to jump-to-definition&lt;/h3&gt;
 
 &lt;p&gt;For &lt;code&gt;counsel-describe-variable&lt;/code&gt; and &lt;code&gt;counsel-describe-function&lt;/code&gt;:&lt;/p&gt;
 
@@ -4119,7 +4119,7 @@ but if the candidate is a perfect match, it will act like
 &lt;li&gt;&lt;kbd&gt;C-n&lt;/kbd&gt; and &lt;kbd&gt;C-p&lt;/kbd&gt; naturally select the next and the previous candidate.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&quot;what&amp;#39;s-it-all-for?&quot;&gt;What&amp;#39;s it all for?&lt;/h2&gt;
+&lt;h2 id=&quot;what-39-s-it-all-for&quot;&gt;What&amp;#39;s it all for?&lt;/h2&gt;
 
 &lt;p&gt;Well, for me the advantage is obvious: I get my completion just the
 way I like it.  You can use it as well if you find that you like it
@@ -4220,7 +4220,7 @@ those good ideas coming!&lt;/p&gt;
    <link href="http://oremacs.com/2015/04/14/hydra-org-mode/"/>
    <updated>2015-04-14T00:00:00+02:00</updated>
    <id>http://oremacs.com/2015/04/14/hydra-org-mode</id>
-   <content type="html">&lt;h2 id=&quot;a-hydra-for-org-mode-time/clock/capture&quot;&gt;A hydra for org-mode time/clock/capture&lt;/h2&gt;
+   <content type="html">&lt;h2 id=&quot;a-hydra-for-org-mode-time-clock-capture&quot;&gt;A hydra for org-mode time/clock/capture&lt;/h2&gt;
 
 &lt;p&gt;This is a categorized version of the hydra that &lt;a href=&quot;https://github.com/WorldsEndless&quot;&gt;@WorldsEndless&lt;/a&gt; contributed
 today to the &lt;a href=&quot;https://github.com/abo-abo/hydra/wiki/Hydras-by-Topic&quot;&gt;wiki&lt;/a&gt;.&lt;/p&gt;
@@ -4260,7 +4260,7 @@ ultimately discouraging me from using &lt;code&gt;org-mode&lt;/code&gt;. YMMV.&l
 
 &lt;p&gt;&lt;img src=&quot;/download/hydra-org-global.png&quot; alt=&quot;hydra-org-global.png&quot;&gt;&lt;/p&gt;
 
-&lt;h2 id=&quot;a-hydra-for-refile/archive&quot;&gt;A hydra for refile/archive&lt;/h2&gt;
+&lt;h2 id=&quot;a-hydra-for-refile-archive&quot;&gt;A hydra for refile/archive&lt;/h2&gt;
 
 &lt;p&gt;Inspired by the previous one, I wanted to write a hydra of my own.  As
 it happened, I was just about to clean up my git notes. So I wanted a
@@ -4362,7 +4362,7 @@ and raise an &lt;a href=&quot;https://github.com/abo-abo/hydra/issues&quot;&gt;i
 
 &lt;h2 id=&quot;fixes&quot;&gt;Fixes&lt;/h2&gt;
 
-&lt;h3 id=&quot;single-command-red/blue-issue&quot;&gt;single command red/blue issue&lt;/h3&gt;
+&lt;h3 id=&quot;single-command-red-blue-issue&quot;&gt;single command red/blue issue&lt;/h3&gt;
 
 &lt;p&gt;Fix the uniqueness issue, when a single command is assigned to both a
 red and a blue head.&lt;/p&gt;
@@ -4387,7 +4387,7 @@ red and a blue head.&lt;/p&gt;
 &lt;p&gt;The latter two call &lt;code&gt;hydra-zoom/lambda-0-and-exit&lt;/code&gt;, while &lt;kbd&gt;r&lt;/kbd&gt;
 calls &lt;code&gt;hydra-zoom/lambda-r&lt;/code&gt;.&lt;/p&gt;
 
-&lt;h3 id=&quot;don&amp;#39;t-default-hydra-repeast--prefix-arg-to-1&quot;&gt;Don&amp;#39;t default &lt;code&gt;hydra-repeast--prefix-arg&lt;/code&gt; to 1&lt;/h3&gt;
+&lt;h3 id=&quot;don-39-t-default-hydra-repeast-prefix-arg-to-1&quot;&gt;Don&amp;#39;t default &lt;code&gt;hydra-repeast--prefix-arg&lt;/code&gt; to 1&lt;/h3&gt;
 
 &lt;p&gt;See &lt;a href=&quot;https://github.com/abo-abo/hydra/issues/61&quot;&gt;#61&lt;/a&gt; for more info.&lt;/p&gt;
 
@@ -4428,7 +4428,7 @@ won&amp;#39;t call the &lt;kbd&gt;jj&lt;/kbd&gt; key chord by accident with &lt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Previously, it would only work for &lt;code&gt;%s(foo)&lt;/code&gt; forms.&lt;/p&gt;
 
-&lt;h3 id=&quot;:bind-property-can-also-be-a-keymap&quot;&gt;&lt;code&gt;:bind&lt;/code&gt; property can also be a keymap&lt;/h3&gt;
+&lt;h3 id=&quot;bind-property-can-also-be-a-keymap&quot;&gt;&lt;code&gt;:bind&lt;/code&gt; property can also be a keymap&lt;/h3&gt;
 
 &lt;p&gt;If you remember, you can set &lt;code&gt;:bind&lt;/code&gt; in the body to define in which way the
 heads should be bound &lt;em&gt;outside&lt;/em&gt; the Hydra. You also assign/override &lt;code&gt;:bind&lt;/code&gt; for
@@ -4629,7 +4629,7 @@ that I&amp;#39;m still using are &lt;code&gt;ido-switch-buffer&lt;/code&gt; and 
    <link href="http://oremacs.com/2015/04/06/lispy-multiline/"/>
    <updated>2015-04-06T00:00:00+02:00</updated>
    <id>http://oremacs.com/2015/04/06/lispy-multiline</id>
-   <content type="html">&lt;h2 id=&quot;where-do-one-line-expressions-come-from?&quot;&gt;Where do one-line expressions come from?&lt;/h2&gt;
+   <content type="html">&lt;h2 id=&quot;where-do-one-line-expressions-come-from&quot;&gt;Where do one-line expressions come from?&lt;/h2&gt;
 
 &lt;p&gt;When programming LISP, especially with &lt;a href=&quot;https://github.com/abo-abo/lispy&quot;&gt;lispy&lt;/a&gt;, it&amp;#39;s easy to
 generate random one-line expressions. This is, of course, because the results of &lt;code&gt;read&lt;/code&gt; or &lt;code&gt;eval&lt;/code&gt;
@@ -4939,7 +4939,7 @@ before the start of the line, will delete the whole comment.&lt;/p&gt;
 
 &lt;p&gt;&lt;kbd&gt;xf&lt;/kbd&gt; (&lt;code&gt;lispy-flatten&lt;/code&gt;) now also works for Clojure, before it was only for Elisp.&lt;/p&gt;
 
-&lt;h4 id=&quot;example-1-(flatten-a-macro):&quot;&gt;Example 1 (flatten a macro):&lt;/h4&gt;
+&lt;h4 id=&quot;example-1-flatten-a-macro&quot;&gt;Example 1 (flatten a macro):&lt;/h4&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;err&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;-&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;map &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;sqr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;filter &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;odd?&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
@@ -4947,7 +4947,7 @@ before the start of the line, will delete the whole comment.&lt;/p&gt;
 &lt;p&gt;When you press &lt;kbd&gt;xf&lt;/kbd&gt; you get this:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;err&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;filter &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;odd?&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;map &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;sqr&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h4 id=&quot;example-2-(flatten-a-standard-function):&quot;&gt;Example 2 (flatten a standard function):&lt;/h4&gt;
+&lt;h4 id=&quot;example-2-flatten-a-standard-function&quot;&gt;Example 2 (flatten a standard function):&lt;/h4&gt;
 
 &lt;p&gt;Start with:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;err&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;map &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;odd?&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
@@ -4968,7 +4968,7 @@ before the start of the line, will delete the whole comment.&lt;/p&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;A bit of a gibberish, but at least we can confirm that &lt;code&gt;map&lt;/code&gt; is indeed lazy.&lt;/p&gt;
 
-&lt;h4 id=&quot;example-3-(flatten-your-own-function):&quot;&gt;Example 3 (flatten your own function):&lt;/h4&gt;
+&lt;h4 id=&quot;example-3-flatten-your-own-function&quot;&gt;Example 3 (flatten your own function):&lt;/h4&gt;
 
 &lt;p&gt;Example function:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defn &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;sqr&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
@@ -5036,7 +5036,7 @@ eval will be performed.&lt;/p&gt;
 It means that you first have to mark the symbol &lt;code&gt;*MODULES*&lt;/code&gt; with a region.
 A convenient function to mark the current symbol is &lt;kbd&gt;M-m&lt;/kbd&gt; (&lt;code&gt;lispy-mark-symbol&lt;/code&gt;).&lt;/p&gt;
 
-&lt;h3 id=&quot;y-(lispy-occur)-now-has-an-ivy-back-end&quot;&gt;&lt;kbd&gt;y&lt;/kbd&gt; (&lt;code&gt;lispy-occur&lt;/code&gt;) now has an &lt;code&gt;ivy&lt;/code&gt; back end&lt;/h3&gt;
+&lt;h3 id=&quot;y-lispy-occur-now-has-an-ivy-back-end&quot;&gt;&lt;kbd&gt;y&lt;/kbd&gt; (&lt;code&gt;lispy-occur&lt;/code&gt;) now has an &lt;code&gt;ivy&lt;/code&gt; back end&lt;/h3&gt;
 
 &lt;p&gt;&lt;code&gt;lispy-occur&lt;/code&gt; launches an interactive search within the current top-level expression, usually a
 defun. This is useful to see where a variable is used in a function, or to quickly navigate to a
@@ -5337,7 +5337,7 @@ know and I&amp;#39;ll add it to the list.&lt;/p&gt;
 &lt;p&gt;The hidden overlays revealed during the search will be re-hidden if you cancel the search with
 &lt;kbd&gt;C-g&lt;/kbd&gt;.&lt;/p&gt;
 
-&lt;h3 id=&quot;ensure-that-candidates-don&amp;#39;t-have-read-only-property&quot;&gt;Ensure that candidates don&amp;#39;t have read-only property&lt;/h3&gt;
+&lt;h3 id=&quot;ensure-that-candidates-don-39-t-have-read-only-property&quot;&gt;Ensure that candidates don&amp;#39;t have read-only property&lt;/h3&gt;
 
 &lt;p&gt;This issue was causing a bug while using &lt;code&gt;swiper&lt;/code&gt; in &lt;code&gt;erc-mode&lt;/code&gt;, since it marks all of the buffer
 content to &lt;code&gt;read-only&lt;/code&gt;. So once a string with &lt;code&gt;read-only&lt;/code&gt; property is inserted into the minibuffer,
@@ -5385,7 +5385,7 @@ to what &lt;code&gt;isearch&lt;/code&gt; is doing.&lt;/p&gt;
 current line (going forwards) is selected. This is important for not losing the context of what
 you&amp;#39;re searching.&lt;/p&gt;
 
-&lt;h3 id=&quot;don&amp;#39;t-recenter-unless-necessary&quot;&gt;Don&amp;#39;t recenter unless necessary&lt;/h3&gt;
+&lt;h3 id=&quot;don-39-t-recenter-unless-necessary&quot;&gt;Don&amp;#39;t recenter unless necessary&lt;/h3&gt;
 
 &lt;p&gt;This is similar to the behavior of &lt;code&gt;isearch&lt;/code&gt;: a scroll is performed only if the candidate is out of
 the window bounds. An alternate strategy of keeping the current candidate always centered in the
@@ -5528,7 +5528,7 @@ a timer is started to disable the hydra. Each new head call resets this timer, s
 becomes too small.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&quot;allow-for-a-%s(test)-spec-in-the-docstring&quot;&gt;Allow for a &lt;code&gt;%s(test)&lt;/code&gt; spec in the docstring&lt;/h3&gt;
+&lt;h3 id=&quot;allow-for-a-s-test-spec-in-the-docstring&quot;&gt;Allow for a &lt;code&gt;%s(test)&lt;/code&gt; spec in the docstring&lt;/h3&gt;
 
 &lt;p&gt;The spec that&amp;#39;s used for e.g. &lt;code&gt;(test)&lt;/code&gt; is &lt;code&gt;%S&lt;/code&gt;. So if &lt;code&gt;(test)&lt;/code&gt; returns a string, it will be quoted.
 This may not be desired, hence the new feature.
@@ -5540,7 +5540,7 @@ Example:&lt;/p&gt;
 &lt;span class=&quot;s&quot;&gt;&amp;quot;&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;m&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dired-mark&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;mark&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3 id=&quot;the-pink/amaranth-override-is-set-recursively&quot;&gt;The pink/amaranth override is set recursively&lt;/h3&gt;
+&lt;h3 id=&quot;the-pink-amaranth-override-is-set-recursively&quot;&gt;The pink/amaranth override is set recursively&lt;/h3&gt;
 
 &lt;p&gt;This fixes the issue in this hydra:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-test&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;amaranth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
@@ -5732,7 +5732,7 @@ to make your config reproducible.&lt;/p&gt;
 layer to glue them together. Below, I&amp;#39;ll show some automation for the packages managed by
 &lt;code&gt;package.el&lt;/code&gt;.&lt;/p&gt;
 
-&lt;h2 id=&quot;step-1:-get-the-main-directory&quot;&gt;Step 1: get the main directory&lt;/h2&gt;
+&lt;h2 id=&quot;step-1-get-the-main-directory&quot;&gt;Step 1: get the main directory&lt;/h2&gt;
 
 &lt;p&gt;This is an important step that many other peoples&amp;#39; configs miss, even the ones that are designed to
 be distributed. You can&amp;#39;t just assume that the config will be located in &lt;code&gt;~/.emacs.d&lt;/code&gt; and rely on
@@ -5752,7 +5752,7 @@ Having two independent checkouts with ELPA directory auto-generated really helps
 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;package-user-dir&lt;/span&gt;
       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;expand-file-name&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;elpa&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;emacs-d&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id=&quot;step-2:-decide-what-you-like&quot;&gt;Step 2: decide what you like&lt;/h2&gt;
+&lt;h2 id=&quot;step-2-decide-what-you-like&quot;&gt;Step 2: decide what you like&lt;/h2&gt;
 
 &lt;p&gt;Next, I initialize the package and define some of the packages that I like, omitting the
 dependencies that they bring. Note that the code of the whole post is stored in a separate file
@@ -5774,7 +5774,7 @@ dependencies that they bring. Note that the code of the whole post is stored in 
     &lt;span class=&quot;nv&quot;&gt;netherlands-holidays&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;j-mode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
   &lt;span class=&quot;s&quot;&gt;&amp;quot;List of packages that I like.&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id=&quot;step-3:-install-and-upgrade&quot;&gt;Step 3: install and upgrade&lt;/h2&gt;
+&lt;h2 id=&quot;step-3-install-and-upgrade&quot;&gt;Step 3: install and upgrade&lt;/h2&gt;
 
 &lt;p&gt;The install step is pretty straightforward: install a package unless it&amp;#39;s already installed.
 I tried to do something fancier for the upgrade, but in the end it was much more simple to
@@ -5791,7 +5791,7 @@ just call the interactive interface. The last two lines are basically equivalent
   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;package-menu-mark-upgrades&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;package-menu-execute&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id=&quot;step-4:-make-it-callable&quot;&gt;Step 4: make it callable&lt;/h2&gt;
+&lt;h2 id=&quot;step-4-make-it-callable&quot;&gt;Step 4: make it callable&lt;/h2&gt;
 
 &lt;p&gt;Finally, I just create a Makefile with the following contents:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-Makefile&quot; data-lang=&quot;Makefile&quot;&gt;&lt;span class=&quot;nv&quot;&gt;emacs&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;?=&lt;/span&gt; emacs
@@ -5981,7 +5981,7 @@ corresponding &lt;code&gt;ac-source&lt;/code&gt; and see where it gets its list 
 where he describes how to open several &lt;code&gt;*info*&lt;/code&gt; buffers for the most commonly used manuals.
 However, as I tried to call one of these functions today, I forgot the key binding.&lt;/p&gt;
 
-&lt;h2 id=&quot;hydra-to-the-rescue!&quot;&gt;Hydra to the rescue!&lt;/h2&gt;
+&lt;h2 id=&quot;hydra-to-the-rescue&quot;&gt;Hydra to the rescue!&lt;/h2&gt;
 
 &lt;p&gt;Here&amp;#39;s what I&amp;#39;ve come up with:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ora-open-info&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;topic&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;bname&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
@@ -6065,7 +6065,7 @@ fast-running) on &lt;a href=&quot;https://projecteuler.net/&quot;&gt;Project Eul
 wow-effect, was the extremely elegant standard functions implementation dividing things into
 &lt;a href=&quot;http://www.jsoftware.com/docs/help701/dictionary/partsofspeech.htm&quot;&gt;verbs, adverbs, and conjunctions&lt;/a&gt;.&lt;/p&gt;
 
-&lt;h3 id=&quot;something-impressive:-a-sudoku-solver&quot;&gt;Something impressive: a Sudoku solver&lt;/h3&gt;
+&lt;h3 id=&quot;something-impressive-a-sudoku-solver&quot;&gt;Something impressive: a Sudoku solver&lt;/h3&gt;
 
 &lt;p&gt;This code is taken from the &lt;a href=&quot;http://orgmode.org/worg/org-contrib/babel/languages/ob-doc-J.html&quot;&gt;ob-J&lt;/a&gt; page that I wrote some
 time ago (you can find a lot of additional info there):&lt;/p&gt;
@@ -6077,7 +6077,7 @@ time ago (you can find a lot of additional info there):&lt;/p&gt;
 &lt;span class=&quot;variable-name&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;j-other&quot;&gt;=:&lt;/span&gt; &lt;span class=&quot;j-verb&quot;&gt;[:&lt;/span&gt;((&lt;span class=&quot;j-verb&quot;&gt;[:*&lt;/span&gt;&lt;span class=&quot;j-adverb&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;j-verb&quot;&gt;_9:&lt;/span&gt;c&lt;span class=&quot;j-adverb&quot;&gt;\&lt;/span&gt;&lt;span class=&quot;j-verb&quot;&gt;]&lt;/span&gt;)&lt;span class=&quot;j-conjunction&quot;&gt;&quot;&lt;/span&gt;1&lt;span class=&quot;j-verb&quot;&gt;#]&lt;/span&gt;)i&lt;span class=&quot;j-conjunction&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;j-verb&quot;&gt;{+&lt;/span&gt;&lt;span class=&quot;j-conjunction&quot;&gt;&quot;&lt;/span&gt;1 1(&lt;span class=&quot;j-verb&quot;&gt;&amp;gt;:i.&lt;/span&gt;9)&lt;span class=&quot;j-verb&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;j-adverb&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;j-verb&quot;&gt;[:&lt;/span&gt;i&lt;span class=&quot;j-conjunction&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;j-verb&quot;&gt;=i.&lt;/span&gt;&lt;span class=&quot;j-conjunction&quot;&gt;&amp;amp;&lt;/span&gt;0
 &lt;span class=&quot;variable-name&quot;&gt;r&lt;/span&gt; &lt;span class=&quot;j-other&quot;&gt;=:&lt;/span&gt; &lt;span class=&quot;j-verb&quot;&gt;[:,&lt;/span&gt;&lt;span class=&quot;j-conjunction&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;j-verb&quot;&gt;$:&lt;/span&gt;&lt;span class=&quot;j-conjunction&quot;&gt;@.&lt;/span&gt;(0&lt;span class=&quot;j-verb&quot;&gt;:e.,&lt;/span&gt;)&lt;span class=&quot;j-verb&quot;&gt;[:;&lt;/span&gt;(&lt;span class=&quot;j-verb&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;j-conjunction&quot;&gt;@&lt;/span&gt;t)&lt;span class=&quot;j-conjunction&quot;&gt;&quot;&lt;/span&gt;1
 &lt;span class=&quot;variable-name&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;j-other&quot;&gt;=:&lt;/span&gt; 9 9&lt;span class=&quot;j-conjunction&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;j-verb&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;j-conjunction&quot;&gt;@&lt;/span&gt;r&lt;span class=&quot;j-conjunction&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;j-verb&quot;&gt;,&lt;/span&gt;
-&lt;span class=&quot;j-verb&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;variable-name&quot;&gt;m&lt;/span&gt; &lt;span class=&quot;j-other&quot;&gt;=:&lt;/span&gt; 9 9 &lt;span class=&quot;j-verb&quot;&gt;$&quot;.&lt;/span&gt;&lt;span class=&quot;j-conjunction&quot;&gt;&quot;&lt;/span&gt;0&lt;span class=&quot;string&quot;&gt;'200370009009200007001004002050000800008000900006000040900100500800007600400089001'&lt;/span&gt;
+&lt;span class=&quot;j-verb&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;variable-name&quot;&gt;m&lt;/span&gt; &lt;span class=&quot;j-other&quot;&gt;=:&lt;/span&gt; 9 9 &lt;span class=&quot;j-verb&quot;&gt;$&quot;.&lt;/span&gt;&lt;span class=&quot;j-conjunction&quot;&gt;&quot;&lt;/span&gt;0&lt;span class=&quot;string&quot;&gt;&#39;200370009009200007001004002050000800008000900006000040900100500800007600400089001&#39;&lt;/span&gt;
 s m
 &lt;span class=&quot;org-block-end-line&quot;&gt;#+end_src
 &lt;/span&gt;
@@ -6109,7 +6109,7 @@ s m
 &lt;p&gt;It&amp;#39;s pretty amazing that the whole implementation, not counting the example input matrix, takes only
 169 characters. You can also see how functional the language is.&lt;/p&gt;
 
-&lt;h3 id=&quot;something-simpler:-a-factorial&quot;&gt;Something simpler: a factorial&lt;/h3&gt;
+&lt;h3 id=&quot;something-simpler-a-factorial&quot;&gt;Something simpler: a factorial&lt;/h3&gt;
 
 &lt;p&gt;To have a more simple example, here&amp;#39;s how to write down incrementally the factorial of 20:&lt;/p&gt;
 
@@ -6139,11 +6139,11 @@ s m
 
 &lt;p&gt;The spaces are optional, I&amp;#39;ve only included them to make the code more clear.&lt;/p&gt;
 
-&lt;h3 id=&quot;something-visual:-a-sine-plot&quot;&gt;Something visual: a sine plot&lt;/h3&gt;
+&lt;h3 id=&quot;something-visual-a-sine-plot&quot;&gt;Something visual: a sine plot&lt;/h3&gt;
 
 &lt;pre&gt;
 &lt;span class=&quot;org-block-begin-line&quot;&gt;#+begin_src J
-&lt;/span&gt;load &lt;span class=&quot;string&quot;&gt;'plot'&lt;/span&gt;
+&lt;/span&gt;load &lt;span class=&quot;string&quot;&gt;&#39;plot&#39;&lt;/span&gt;
 plot 1 &lt;span class=&quot;j-verb&quot;&gt;o.&lt;/span&gt; 0&lt;span class=&quot;j-adverb&quot;&gt;.&lt;/span&gt;1 &lt;span class=&quot;j-verb&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;j-verb&quot;&gt;i.&lt;/span&gt;200
 &lt;span class=&quot;org-block-end-line&quot;&gt;#+end_src
 &lt;/span&gt;
@@ -6243,7 +6243,7 @@ that I need. I hope that you will find it useful as well. Happy hacking!&lt;/p&g
 within the day. Although you can install them separately from MELPA, they still live in a single git
 repository.&lt;/p&gt;
 
-&lt;h2 id=&quot;swiper-/-ivy-faces-now-inherit-the-standard-ones&quot;&gt;&lt;code&gt;swiper&lt;/code&gt; / &lt;code&gt;ivy&lt;/code&gt; faces now inherit the standard ones&lt;/h2&gt;
+&lt;h2 id=&quot;swiper-ivy-faces-now-inherit-the-standard-ones&quot;&gt;&lt;code&gt;swiper&lt;/code&gt; / &lt;code&gt;ivy&lt;/code&gt; faces now inherit the standard ones&lt;/h2&gt;
 
 &lt;p&gt;It&amp;#39;s a good idea by &lt;a href=&quot;https://github.com/purcell&quot;&gt;@purcell&lt;/a&gt;, and I tend to agree. So now, there are
 six faces that inherit &lt;code&gt;highlight&lt;/code&gt;, &lt;code&gt;isearch-lazy-highlight-face&lt;/code&gt;, &lt;code&gt;isearch&lt;/code&gt; and &lt;code&gt;match&lt;/code&gt; faces
@@ -6503,7 +6503,7 @@ for selecting window and setting &lt;code&gt;mode-line-format&lt;/code&gt;.&lt;/
    <id>http://oremacs.com/2015/03/11/git-tricks</id>
    <content type="html">&lt;p&gt;Of course, I mean &lt;em&gt;illusions&lt;/em&gt; not tricks.&lt;/p&gt;
 
-&lt;h2 id=&quot;illusion-1:-jump-to-a-magit-repository&quot;&gt;Illusion 1: jump to a magit repository&lt;/h2&gt;
+&lt;h2 id=&quot;illusion-1-jump-to-a-magit-repository&quot;&gt;Illusion 1: jump to a magit repository&lt;/h2&gt;
 
 &lt;p&gt;This is just a copy-paste of the code from
 &lt;a href=&quot;http://iqbalansari.github.io/blog/2014/02/22/switching-repositories-with-magit/&quot;&gt;this post&lt;/a&gt; by
@@ -6540,7 +6540,7 @@ And don&amp;#39;t forget to choose &lt;code&gt;ido&lt;/code&gt; completion:&lt;/
 &lt;p&gt;If you&amp;#39;re wondering what the letter in &lt;code&gt;global-set-key&lt;/code&gt; is, it&amp;#39;s the Greek letter &lt;code&gt;kappa&lt;/code&gt;
 (see &lt;a href=&quot;http://oremacs.com/2015/02/14/semi-xmodmap/&quot;&gt;the post on my Xmodmap setup&lt;/a&gt;).&lt;/p&gt;
 
-&lt;h2 id=&quot;illusion-2:-quickly-get-github-pull-requests-on-your-system&quot;&gt;Illusion 2: quickly get Github pull requests on your system&lt;/h2&gt;
+&lt;h2 id=&quot;illusion-2-quickly-get-github-pull-requests-on-your-system&quot;&gt;Illusion 2: quickly get Github pull requests on your system&lt;/h2&gt;
 
 &lt;p&gt;I learned this from some HN post that I can&amp;#39;t find now. Basically, you have to open
 your &lt;code&gt;.git/config&lt;/code&gt; file and find the following contents:&lt;/p&gt;
@@ -6565,7 +6565,7 @@ all that jazz to see what the change is actually about.  Before I learned this, 
 add remotes with &lt;code&gt;magit-add-remote&lt;/code&gt;.  And even before that, I was just clicking the merge button
 after thoughtfully browsing the diff in Firefox. Trust me, &lt;code&gt;ediff&lt;/code&gt; is orders of magnitude better.&lt;/p&gt;
 
-&lt;h2 id=&quot;illusion-3:-edit-a-github-wiki-in-emacs&quot;&gt;Illusion 3: edit a Github wiki in Emacs&lt;/h2&gt;
+&lt;h2 id=&quot;illusion-3-edit-a-github-wiki-in-emacs&quot;&gt;Illusion 3: edit a Github wiki in Emacs&lt;/h2&gt;
 
 &lt;p&gt;Of course, I was always editing it in Emacs with
 &lt;a href=&quot;https://addons.mozilla.org/en-us/firefox/addon/its-all-text/&quot;&gt;It&amp;#39;s All Text&lt;/a&gt; Firefox plugin.
@@ -6793,7 +6793,7 @@ function with a test.&lt;/li&gt;
 
 &lt;h2 id=&quot;new-features&quot;&gt;New features&lt;/h2&gt;
 
-&lt;h3 id=&quot;p-can-now-iterate-dolist-variables-in-elisp.&quot;&gt;&lt;kbd&gt;p&lt;/kbd&gt; can now iterate &lt;code&gt;dolist&lt;/code&gt; variables in Elisp.&lt;/h3&gt;
+&lt;h3 id=&quot;p-can-now-iterate-dolist-variables-in-elisp&quot;&gt;&lt;kbd&gt;p&lt;/kbd&gt; can now iterate &lt;code&gt;dolist&lt;/code&gt; variables in Elisp.&lt;/h3&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-cl&quot; data-lang=&quot;cl&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;range&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;message&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;called range&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;number-sequence&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
@@ -7240,7 +7240,7 @@ before any of the red chars are selected by the user. Also,
 &lt;code&gt;ace-jump-mode&lt;/code&gt; uses its own &lt;code&gt;defstruct&lt;/code&gt;s for candidates while I&amp;#39;d
 rather have plain lists, but that&amp;#39;s a minor issue.&lt;/p&gt;
 
-&lt;h2 id=&quot;new-back-end:-avy.el&quot;&gt;New back end: avy.el&lt;/h2&gt;
+&lt;h2 id=&quot;new-back-end-avy-el&quot;&gt;New back end: avy.el&lt;/h2&gt;
 
 &lt;p&gt;I tried to pinpoint the most generic algorithm that &lt;code&gt;ace-jump-mode&lt;/code&gt; implements and wrote it down
 in &lt;code&gt;avy&lt;/code&gt;. Here&amp;#39;s the core of the implementation:&lt;/p&gt;
@@ -7570,10 +7570,10 @@ and made all keys into plain letters.&lt;/p&gt;
                            &lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;pink&lt;/span&gt;
                            &lt;span class=&quot;nb&quot;&gt;:post&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;deactivate-mark&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
   &lt;span class=&quot;s&quot;&gt;&amp;quot;&lt;/span&gt;
-&lt;span class=&quot;s&quot;&gt;  ^_k_^     _d_elete    _s_tring     |\\     _,,,--,,_&lt;/span&gt;
-&lt;span class=&quot;s&quot;&gt;_h_   _l_   _o_k        _y_ank       /,`.-&amp;#39;`&amp;#39;   ._  \-;;,_&lt;/span&gt;
-&lt;span class=&quot;s&quot;&gt;  ^_j_^     _n_ew-copy  _r_eset     |,4-  ) )_   .;.(  `&amp;#39;-&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;s&quot;&gt;^^^^        _e_xchange  _u_ndo     &amp;#39;---&amp;#39;&amp;#39;(_/._)-&amp;#39;(_\_)&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;  ^_k_^     _d_elete    _s_tring     |\\     ‗,,,--,,‗&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;_h_   _l_   _o_k        _y_ank       /,`.-&amp;#39;`&amp;#39;   .‗  \-;;,‗&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;  ^_j_^     _n_ew-copy  _r_eset     |,4-  ) )‗   .;.(  `&amp;#39;-&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;^^^^        _e_xchange  _u_ndo     &amp;#39;---&amp;#39;&amp;#39;(‗/.‗)-&amp;#39;(‗\‗)&lt;/span&gt;
 &lt;span class=&quot;s&quot;&gt;^^^^        ^ ^         _p_aste&lt;/span&gt;
 &lt;span class=&quot;s&quot;&gt;&amp;quot;&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;h&amp;quot;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;backward-char&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
@@ -7591,6 +7591,7 @@ and made all keys into plain letters.&lt;/p&gt;
   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;s&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;string-rectangle&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;p&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;kill-rectangle&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;o&amp;quot;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-x SPC&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;hydra-rectangle/body&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;There was a lot of screen estate left over, so I added some ASCII-art. I wanted something
@@ -7659,7 +7660,7 @@ laptop, which I do at home.&lt;/p&gt;
 
 &lt;p&gt;I&amp;#39;ve used two methods to shorten the boot time, I&amp;#39;ll describe them below.&lt;/p&gt;
 
-&lt;h2 id=&quot;use-package-:idle-option&quot;&gt;&lt;code&gt;use-package&lt;/code&gt; &lt;code&gt;:idle&lt;/code&gt; option&lt;/h2&gt;
+&lt;h2 id=&quot;use-package-idle-option&quot;&gt;&lt;code&gt;use-package&lt;/code&gt; &lt;code&gt;:idle&lt;/code&gt; option&lt;/h2&gt;
 
 &lt;p&gt;This one is a big time saver, since &lt;code&gt;org-mode&lt;/code&gt; just takes so long to load:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;use-package&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org&lt;/span&gt;
@@ -7856,7 +7857,7 @@ syntax for variables is such that you can auto-complete them with &lt;code&gt;co
 and sexps can use &lt;code&gt;format&lt;/code&gt; style width specifiers. See the documentation of &lt;code&gt;format&lt;/code&gt; for more
 details.&lt;/p&gt;
 
-&lt;h3 id=&quot;examples-7-9-added-to-hydra-examples.el&quot;&gt;Examples 7-9 added to hydra-examples.el&lt;/h3&gt;
+&lt;h3 id=&quot;examples-7-9-added-to-hydra-examples-el&quot;&gt;Examples 7-9 added to hydra-examples.el&lt;/h3&gt;
 
 &lt;p&gt;These examples explain Ruby-style interpolation.&lt;/p&gt;
 
@@ -7884,7 +7885,7 @@ taste.&lt;/p&gt;
          &lt;span class=&quot;s&quot;&gt;&amp;quot;[%s]&amp;quot;&lt;/span&gt;
        &lt;span class=&quot;s&quot;&gt;&amp;quot;(%s)&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;car&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3 id=&quot;new-switch-:body-pre&quot;&gt;New switch :body-pre&lt;/h3&gt;
+&lt;h3 id=&quot;new-switch-body-pre&quot;&gt;New switch :body-pre&lt;/h3&gt;
 
 &lt;p&gt;This sexp or function will be prepended to the prefix/body function.
 Here&amp;#39;s an example of use:&lt;/p&gt;
@@ -8071,7 +8072,7 @@ I should carefully restate what they do to avoid confusion.&lt;/p&gt;
 
 &lt;p&gt;Seriously though, see below.&lt;/p&gt;
 
-&lt;h3 id=&quot;rule-1:-hydra-heads-are-either-red-or-blue&quot;&gt;Rule 1: Hydra heads are either red or blue&lt;/h3&gt;
+&lt;h3 id=&quot;rule-1-hydra-heads-are-either-red-or-blue&quot;&gt;Rule 1: Hydra heads are either red or blue&lt;/h3&gt;
 
 &lt;p&gt;Once you&amp;#39;re in a Hydra state:&lt;/p&gt;
 
@@ -8083,7 +8084,7 @@ I should carefully restate what they do to avoid confusion.&lt;/p&gt;
 &lt;p&gt;They may have a reddish or a bluish face that isn&amp;#39;t exactly red or
 blue, but that&amp;#39;s what they are underneath. I hope you get what I mean.&lt;/p&gt;
 
-&lt;h3 id=&quot;rule-2:-red-or-blue-is-inherited-from-the-body-color&quot;&gt;Rule 2: red or blue is inherited from the body color&lt;/h3&gt;
+&lt;h3 id=&quot;rule-2-red-or-blue-is-inherited-from-the-body-color&quot;&gt;Rule 2: red or blue is inherited from the body color&lt;/h3&gt;
 
 &lt;p&gt;This is merely a convenience, you can still explicitly override each
 head to be blue or red:&lt;/p&gt;
@@ -8093,7 +8094,7 @@ head to be blue or red:&lt;/p&gt;
 &lt;li&gt;if the body is blue or teal, the heads inherit blue&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&quot;rule-3:&quot;&gt;Rule 3:&lt;/h3&gt;
+&lt;h3 id=&quot;rule-3&quot;&gt;Rule 3:&lt;/h3&gt;
 
 &lt;p&gt;When you call a binding which isn&amp;#39;t a head:&lt;/p&gt;
 
@@ -8289,7 +8290,7 @@ while maybe adding a bit of flavor.&lt;/p&gt;
 
 &lt;h2 id=&quot;new-features&quot;&gt;New features&lt;/h2&gt;
 
-&lt;h3 id=&quot;define-hydra-heads-that-don&amp;#39;t-show-up-in-the-hint-at-all&quot;&gt;Define Hydra heads that don&amp;#39;t show up in the hint at all&lt;/h3&gt;
+&lt;h3 id=&quot;define-hydra-heads-that-don-39-t-show-up-in-the-hint-at-all&quot;&gt;Define Hydra heads that don&amp;#39;t show up in the hint at all&lt;/h3&gt;
 
 &lt;p&gt;This can be done by setting the head&amp;#39;s hint explicitly to &lt;code&gt;nil&lt;/code&gt;, instead of the usual string. For
 instance, if you always tend to bind the arrows to &lt;kbd&gt;hjkl&lt;/kbd&gt;, there&amp;#39;s no point to show a hint
@@ -8385,7 +8386,7 @@ head: it will be wrapped in &lt;code&gt;(lambda () (interactive) ...)&lt;/code&g
 owned by me. Below, I&amp;#39;ll describe a solution to get rid of them based
 on &lt;code&gt;dired&lt;/code&gt; and &lt;code&gt;tramp&lt;/code&gt;.&lt;/p&gt;
 
-&lt;h2 id=&quot;step-one:-open-the-directory-with-sudo-privileges&quot;&gt;Step one: open the directory with sudo privileges&lt;/h2&gt;
+&lt;h2 id=&quot;step-one-open-the-directory-with-sudo-privileges&quot;&gt;Step one: open the directory with sudo privileges&lt;/h2&gt;
 
 &lt;p&gt;I&amp;#39;ll obviously need the sudo privilege to change the owner of a file owned
 by root. Might as well start with that.&lt;/p&gt;
@@ -8406,7 +8407,7 @@ seems strictly better than &lt;kbd&gt;!&lt;/kbd&gt;. The function will ask you f
 the password once.  Afterwards, you can open other directories without
 having to enter the password.&lt;/p&gt;
 
-&lt;h2 id=&quot;step-two:-find-dired&quot;&gt;Step two: &lt;code&gt;find-dired&lt;/code&gt;&lt;/h2&gt;
+&lt;h2 id=&quot;step-two-find-dired&quot;&gt;Step two: &lt;code&gt;find-dired&lt;/code&gt;&lt;/h2&gt;
 
 &lt;p&gt;So now, while in sudo mode of the directory in question:&lt;/p&gt;
 
@@ -9014,12 +9015,12 @@ gets merged.&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;hydra-keyboard-quit&lt;/code&gt; set to &lt;code&gt;&amp;quot;C-g&amp;quot;&lt;/code&gt; means that it&amp;#39;s possible to quit an amaranth Hydra
 with &lt;kbd&gt;C-g&lt;/kbd&gt;. You can customize this variable.&lt;/p&gt;
 
-&lt;h2 id=&quot;:pre-and-:post-refinement&quot;&gt;&lt;code&gt;:pre&lt;/code&gt; and &lt;code&gt;:post&lt;/code&gt; refinement&lt;/h2&gt;
+&lt;h2 id=&quot;pre-and-post-refinement&quot;&gt;&lt;code&gt;:pre&lt;/code&gt; and &lt;code&gt;:post&lt;/code&gt; refinement&lt;/h2&gt;
 
 &lt;p&gt;&lt;code&gt;:post&lt;/code&gt; and &lt;code&gt;:pre&lt;/code&gt; keys in the body &lt;code&gt;PLIST&lt;/code&gt; can be either a single
 sexp or a function name. The function doesn&amp;#39;t need to be interactive.&lt;/p&gt;
 
-&lt;h2 id=&quot;support-for-local-hydra-heads-via-:bind-property&quot;&gt;Support for local Hydra heads via &lt;code&gt;:bind&lt;/code&gt; property&lt;/h2&gt;
+&lt;h2 id=&quot;support-for-local-hydra-heads-via-bind-property&quot;&gt;Support for local Hydra heads via &lt;code&gt;:bind&lt;/code&gt; property&lt;/h2&gt;
 
 &lt;p&gt;Example:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-next-error&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-x&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
@@ -9038,7 +9039,7 @@ sexp or a function name. The function doesn&amp;#39;t need to be interactive.&lt
 
 &lt;p&gt;Thanks, &lt;a href=&quot;https://github.com/ffevotte&quot;&gt;@ffevotte&lt;/a&gt;.&lt;/p&gt;
 
-&lt;h2 id=&quot;support-for-:bind-property-in-hydra-body&quot;&gt;Support for &lt;code&gt;:bind&lt;/code&gt; property in Hydra body&lt;/h2&gt;
+&lt;h2 id=&quot;support-for-bind-property-in-hydra-body&quot;&gt;Support for &lt;code&gt;:bind&lt;/code&gt; property in Hydra body&lt;/h2&gt;
 
 &lt;p&gt;The body, like the heads will recognize the &lt;code&gt;:bind&lt;/code&gt; property in &lt;code&gt;PLIST&lt;/code&gt;.
 The heads will inherit it, just like they do with &lt;code&gt;:color&lt;/code&gt;.
@@ -9064,7 +9065,7 @@ was overridden in the &lt;kbd&gt;g&lt;/kbd&gt; head.&lt;/p&gt;
 whole &lt;code&gt;BODY&lt;/code&gt; argument, as was advertised before. Just put it on
 &lt;code&gt;:bind&lt;/code&gt; now.&lt;/p&gt;
 
-&lt;h2 id=&quot;hydra/body-will-pass-the-initial-current-prefix-arg-along&quot;&gt;&lt;code&gt;hydra/body&lt;/code&gt; will pass the initial &lt;code&gt;current-prefix-arg&lt;/code&gt; along&lt;/h2&gt;
+&lt;h2 id=&quot;hydra-body-will-pass-the-initial-current-prefix-arg-along&quot;&gt;&lt;code&gt;hydra/body&lt;/code&gt; will pass the initial &lt;code&gt;current-prefix-arg&lt;/code&gt; along&lt;/h2&gt;
 
 &lt;p&gt;Example:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt;
@@ -9078,7 +9079,7 @@ whole &lt;code&gt;BODY&lt;/code&gt; argument, as was advertised before. Just put
 will normally call &lt;code&gt;(forward-char 1)&lt;/code&gt;, unless an additional prefix is given.  The previous
 behavior allowed only for &lt;kbd&gt;C-z C-u l&lt;/kbd&gt; to get &lt;code&gt;(forward-char 4)&lt;/code&gt;.&lt;/p&gt;
 
-&lt;h2 id=&quot;allow-a-sexp-as-head&amp;#39;s-cmd-parameter&quot;&gt;Allow a sexp as head&amp;#39;s CMD parameter&lt;/h2&gt;
+&lt;h2 id=&quot;allow-a-sexp-as-head-39-s-cmd-parameter&quot;&gt;Allow a sexp as head&amp;#39;s CMD parameter&lt;/h2&gt;
 
 &lt;p&gt;Example:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-launcher&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
@@ -9165,7 +9166,7 @@ has also grown to six.&lt;/p&gt;
    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;m&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;headlong-bookmark-jump&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;bmk&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;q&amp;quot;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;cancel&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id=&quot;ace-window-0.7.0-is-out&quot;&gt;&lt;code&gt;ace-window 0.7.0&lt;/code&gt; is out&lt;/h2&gt;
+&lt;h2 id=&quot;ace-window-0-7-0-is-out&quot;&gt;&lt;code&gt;ace-window 0.7.0&lt;/code&gt; is out&lt;/h2&gt;
 
 &lt;p&gt;You can see the release notes &lt;a href=&quot;https://github.com/abo-abo/ace-window/releases/tag/0.7.0&quot;&gt;here&lt;/a&gt;.
 There&amp;#39;s not a whole lot of user-visible changes, but a large portion of the code was re-written
@@ -9207,7 +9208,7 @@ I think to myself that either:&lt;/p&gt;
 Here is such a &lt;a href=&quot;http://emacs.stackexchange.com/questions/8006/&quot;&gt;question&lt;/a&gt;:&lt;/p&gt;
 
 &lt;blockquote&gt;
-&lt;h3 id=&quot;is-there-a-yasnippet-producing-a-prepopulated-doxygen-comment?&quot;&gt;Is there a yasnippet producing a prepopulated doxygen comment?&lt;/h3&gt;
+&lt;h3 id=&quot;is-there-a-yasnippet-producing-a-prepopulated-doxygen-comment&quot;&gt;Is there a yasnippet producing a prepopulated doxygen comment?&lt;/h3&gt;
 
 &lt;p&gt;For the following C++ function:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;bool importantStuff(double a, double b);
@@ -9395,7 +9396,7 @@ I was able to quickly wrap words like this:&lt;/p&gt;
    <content type="html">&lt;p&gt;Only three commits happened since &lt;code&gt;0.6.1&lt;/code&gt;, but already &lt;a href=&quot;https://github.com/abo-abo/hydra/releases/tag/0.7.0&quot;&gt;0.7.0&lt;/a&gt; has to
 be released, since the behavior has changed slightly.&lt;/p&gt;
 
-&lt;h2 id=&quot;the-ultimate-window-switching-setup,-revised&quot;&gt;The ultimate window switching setup, revised&lt;/h2&gt;
+&lt;h2 id=&quot;the-ultimate-window-switching-setup-revised&quot;&gt;The ultimate window switching setup, revised&lt;/h2&gt;
 
 &lt;p&gt;The code from the &lt;a href=&quot;/2015/02/03/one-hydra-two-hydra/&quot;&gt;last post&lt;/a&gt; had to be changed.
 Note that only &lt;code&gt;ace-window&lt;/code&gt;-related heads are affected, since &lt;code&gt;ace-window&lt;/code&gt; uses &lt;code&gt;set-transient-map&lt;/code&gt; as well.
@@ -9523,7 +9524,7 @@ This version adds prefix arguments to all Hydras.&lt;/p&gt;
 
 &lt;h2 id=&quot;some-examples&quot;&gt;Some Examples&lt;/h2&gt;
 
-&lt;h3 id=&quot;look-ma,-no-modifiers!&quot;&gt;Look ma, no modifiers!&lt;/h3&gt;
+&lt;h3 id=&quot;look-ma-no-modifiers&quot;&gt;Look ma, no modifiers!&lt;/h3&gt;
 
 &lt;p&gt;Now it&amp;#39;s possible to write this:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt;
@@ -9713,7 +9714,7 @@ Here&amp;#39;s a more verbose Hydra that&amp;#39;s largely equivalent to the one
    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;q&amp;quot;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;cancel&amp;quot;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-c C-v&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;hydra-toggle/body&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3 id=&quot;first-argument:-hydra-name&quot;&gt;First argument: Hydra name&lt;/h3&gt;
+&lt;h3 id=&quot;first-argument-hydra-name&quot;&gt;First argument: Hydra name&lt;/h3&gt;
 
 &lt;p&gt;This argument decides the prefix to all the functions that will be generated.
 In this case the following functions will be generated:&lt;/p&gt;
@@ -9730,7 +9731,7 @@ In this case the following functions will be generated:&lt;/p&gt;
 the transient map. It&amp;#39;s the return result of &lt;code&gt;defhydra&lt;/code&gt;, that&amp;#39;s why it was possible to pass it
 to &lt;code&gt;global-set-key&lt;/code&gt; in the first example.&lt;/p&gt;
 
-&lt;h3 id=&quot;second-argument:-hydra-body&quot;&gt;Second argument: Hydra body&lt;/h3&gt;
+&lt;h3 id=&quot;second-argument-hydra-body&quot;&gt;Second argument: Hydra body&lt;/h3&gt;
 
 &lt;p&gt;The Hydra body consists of:&lt;/p&gt;
 
@@ -9746,13 +9747,13 @@ which in turn can be either red (the old behavior) or blue.&lt;/li&gt;
 doesn&amp;#39;t make sense to omit one but not the other), or just pass &lt;code&gt;()&lt;/code&gt;
 if you want to get a red Hydra body that you can bind yourself.&lt;/p&gt;
 
-&lt;h3 id=&quot;third-argument:-hydra-hint&quot;&gt;Third argument: Hydra hint&lt;/h3&gt;
+&lt;h3 id=&quot;third-argument-hydra-hint&quot;&gt;Third argument: Hydra hint&lt;/h3&gt;
 
 &lt;p&gt;This string will be used in the echo area to distinguish the current
 Hydra. This is optional, it case you don&amp;#39;t provide it, it will default
 to &lt;code&gt;&amp;quot;hydra&amp;quot;&lt;/code&gt;.&lt;/p&gt;
 
-&lt;h3 id=&quot;fourth-argument:-hydra-heads&quot;&gt;Fourth argument: Hydra heads&lt;/h3&gt;
+&lt;h3 id=&quot;fourth-argument-hydra-heads&quot;&gt;Fourth argument: Hydra heads&lt;/h3&gt;
 
 &lt;p&gt;Each Hydra head is a list of:&lt;/p&gt;
 
@@ -9827,7 +9828,7 @@ markdown. But after a few posts, I&amp;#39;ve experienced a drastic decrease
 in refresh time: it went from under a second to 15 seconds. Below, I&amp;#39;ll show how I&amp;#39;ve managed
 to speed it back up.&lt;/p&gt;
 
-&lt;h2 id=&quot;no-posts---no-problem&quot;&gt;No posts - no problem&lt;/h2&gt;
+&lt;h2 id=&quot;no-posts-no-problem&quot;&gt;No posts - no problem&lt;/h2&gt;
 
 &lt;p&gt;Thanks to &lt;code&gt;(require &amp;#39;dired-x)&lt;/code&gt; I can jump from the current post to the
 posts directory with &lt;kbd&gt;C-x C-j&lt;/kbd&gt;. It even puts the point on the current file. Now:&lt;/p&gt;
@@ -9871,7 +9872,7 @@ as well wrap it in some Elisp. Elisp is like frosting - it makes everything bett
 &lt;li&gt;open &lt;code&gt;localhost:4000&lt;/code&gt; in Firefox&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&quot;one-post-isn&amp;#39;t-a-blog&quot;&gt;One post isn&amp;#39;t a blog&lt;/h2&gt;
+&lt;h2 id=&quot;one-post-isn-39-t-a-blog&quot;&gt;One post isn&amp;#39;t a blog&lt;/h2&gt;
 
 &lt;p&gt;Here&amp;#39;s how to quickly bring back the deleted posts.&lt;/p&gt;
 
@@ -10177,7 +10178,7 @@ similar in spirit to &lt;kbd&gt;M-w&lt;/kbd&gt; (&lt;code&gt;kill-ring-save&lt;/
 &lt;li&gt;&lt;code&gt;open-line&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&quot;example-1:-javascript&quot;&gt;Example 1: JavaScript&lt;/h3&gt;
+&lt;h3 id=&quot;example-1-javascript&quot;&gt;Example 1: JavaScript&lt;/h3&gt;
 
 &lt;p&gt;Let&amp;#39;s say that you have this code and want to generate more like it:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span class=&quot;nx&quot;&gt;field1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;document&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;getElementById&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;field1&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
@@ -10200,7 +10201,7 @@ line when there&amp;#39;s no region. Your code becomes the initial one without &
 a file, since the situation where you need to use it may not come up
 again.&lt;/p&gt;
 
-&lt;h3 id=&quot;example-2:-java&quot;&gt;Example 2: Java&lt;/h3&gt;
+&lt;h3 id=&quot;example-2-java&quot;&gt;Example 2: Java&lt;/h3&gt;
 
 &lt;p&gt;Here&amp;#39;s the starting code, with fields and mirrors already in place
 (note one mirror named &lt;code&gt;~On&lt;/code&gt;, one field named &lt;code&gt;~on&lt;/code&gt; and one field
@@ -10237,7 +10238,7 @@ copy-paste stuff with &lt;code&gt;auto-yasnippet&lt;/code&gt;. In fact, I should
 emphasize that when describing &lt;code&gt;auto-yasnippet&lt;/code&gt;: it&amp;#39;s just an advanced
 copy-paste tool.&lt;/p&gt;
 
-&lt;h3 id=&quot;example-3:-c++&quot;&gt;Example 3: C++&lt;/h3&gt;
+&lt;h3 id=&quot;example-3-c&quot;&gt;Example 3: C++&lt;/h3&gt;
 
 &lt;p&gt;Suppose that I want to generate &lt;code&gt;curl&lt;/code&gt; from the &lt;code&gt;grad&lt;/code&gt;. I can start with this template:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c++&quot; data-lang=&quot;c++&quot;&gt;&lt;span class=&quot;k&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Point&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;curl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;grad&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;grad&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
@@ -10250,7 +10251,7 @@ copy-paste tool.&lt;/p&gt;
 &lt;p&gt;Note how annoying it would be to triple check that the indices match.
 This time, I just had to check the first line.&lt;/p&gt;
 
-&lt;h3 id=&quot;example-4:-taking-~-out-of-the-equation&quot;&gt;Example 4: taking &lt;code&gt;~&lt;/code&gt; out of the equation&lt;/h3&gt;
+&lt;h3 id=&quot;example-4-taking-out-of-the-equation&quot;&gt;Example 4: taking &lt;code&gt;~&lt;/code&gt; out of the equation&lt;/h3&gt;
 
 &lt;p&gt;This works only for one-line snippets with a single mirror parameter.
 In the JavaScript example, you can leave a &lt;code&gt;$&lt;/code&gt; instead of each
@@ -10282,7 +10283,7 @@ become obsolete.&lt;/p&gt;
 explaining her window bindings, that combine both &lt;code&gt;ace-window&lt;/code&gt; and &lt;code&gt;windmove&lt;/code&gt;.
 So I wrote down an update to Hydra in order to get a similar setup.&lt;/p&gt;
 
-&lt;h2 id=&quot;sacha&amp;#39;s-code&quot;&gt;Sacha&amp;#39;s code&lt;/h2&gt;
+&lt;h2 id=&quot;sacha-39-s-code&quot;&gt;Sacha&amp;#39;s code&lt;/h2&gt;
 
 &lt;p&gt;Here it is:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;key-chord-define-global&lt;/span&gt;
@@ -10498,7 +10499,7 @@ obsolete functions.&lt;/p&gt;
 
 &lt;p&gt;Taking advantage of the repository setup, I can:&lt;/p&gt;
 
-&lt;h3 id=&quot;step-1:-call-rgrep&quot;&gt;Step 1: call &lt;code&gt;rgrep&lt;/code&gt;&lt;/h3&gt;
+&lt;h3 id=&quot;step-1-call-rgrep&quot;&gt;Step 1: call &lt;code&gt;rgrep&lt;/code&gt;&lt;/h3&gt;
 
 &lt;p&gt;&lt;code&gt;rgrep&lt;/code&gt; is a fine function, I wonder why it&amp;#39;s not bound by default; I
 bind it to &lt;kbd&gt;C-&amp;lt;&lt;/kbd&gt;, taking advantage of my weird key
@@ -10520,7 +10521,7 @@ searched for files that match the file pattern; the default
 &lt;code&gt;~/git/lispy/&lt;/code&gt; is fine here, &lt;kbd&gt;RET&lt;/kbd&gt;.&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;h3 id=&quot;step-2:-call-wgrep&quot;&gt;Step 2: call &lt;code&gt;wgrep&lt;/code&gt;&lt;/h3&gt;
+&lt;h3 id=&quot;step-2-call-wgrep&quot;&gt;Step 2: call &lt;code&gt;wgrep&lt;/code&gt;&lt;/h3&gt;
 
 &lt;p&gt;&lt;a href=&quot;https://github.com/mhayashi1120/Emacs-wgrep&quot;&gt;wgrep&lt;/a&gt; is a fine
 package, I wonder why it&amp;#39;s not more popular. Since it&amp;#39;s so similar to
@@ -10535,7 +10536,7 @@ as well:&lt;/p&gt;
   &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;grep-mode-map&lt;/span&gt;
     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-c C-c&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;wgrep-finish-edit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3 id=&quot;step-3:-call-iedit&quot;&gt;Step 3: call &lt;code&gt;iedit&lt;/code&gt;&lt;/h3&gt;
+&lt;h3 id=&quot;step-3-call-iedit&quot;&gt;Step 3: call &lt;code&gt;iedit&lt;/code&gt;&lt;/h3&gt;
 
 &lt;p&gt;&lt;a href=&quot;https://github.com/victorhge/iedit&quot;&gt;iedit&lt;/a&gt; is an amazing package, it&amp;#39;s crazy-good.
 Here&amp;#39;s how I bind it, since once &lt;code&gt;iedit-mode&lt;/code&gt; is on, you can move to the next occurrence with &lt;kbd&gt;C-i&lt;/kbd&gt;:&lt;/p&gt;
@@ -10551,7 +10552,7 @@ feature, actually), so that e.g. &lt;code&gt;=lispy-out-forward=&lt;/code&gt; wi
 The experience is similar to the popular &lt;a href=&quot;https://github.com/magnars/multiple-cursors.el&quot;&gt;multiple-cursors&lt;/a&gt;,
 which I also like to use, just for different purposes.&lt;/p&gt;
 
-&lt;h3 id=&quot;step-4:-exiting&quot;&gt;Step 4: exiting&lt;/h3&gt;
+&lt;h3 id=&quot;step-4-exiting&quot;&gt;Step 4: exiting&lt;/h3&gt;
 
 &lt;p&gt;When I&amp;#39;m done:&lt;/p&gt;
 
@@ -10867,7 +10868,7 @@ to.&lt;/p&gt;
            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;model-description-geometry&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
   &lt;span class=&quot;s&quot;&gt;&amp;quot;\\printbibliography&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id=&quot;why-this?&quot;&gt;Why this?&lt;/h2&gt;
+&lt;h2 id=&quot;why-this&quot;&gt;Why this?&lt;/h2&gt;
 
 &lt;p&gt;Well, why not? At one point I was frustrated with LaTeX not allowing
 me to define mathematically rich entities. I did hack up a few TeX
@@ -11008,7 +11009,7 @@ the garbage produced by a LaTeX run:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dired-garbage-files-regexp&lt;/span&gt;
       &lt;span class=&quot;s&quot;&gt;&amp;quot;\\.idx\\|\\.run\\.xml$\\|\\.bbl$\\|\\.bcf$\\|.blg$\\|-blx.bib$\\|.nav$\\|.snm$\\|.out$\\|.synctex.gz$\\|\\(?:\\.\\(?:aux\\|bak\\|dvi\\|log\\|orig\\|rej\\|toc\\|pyg\\)\\)\\&amp;#39;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id=&quot;emacs&amp;#39;-adaptation-of-find&quot;&gt;Emacs&amp;#39; adaptation of &lt;code&gt;find&lt;/code&gt;&lt;/h2&gt;
+&lt;h2 id=&quot;emacs-39-adaptation-of-find&quot;&gt;Emacs&amp;#39; adaptation of &lt;code&gt;find&lt;/code&gt;&lt;/h2&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dired-mode-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;F&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;find-name-dired&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;This little function is essential if you want to do perform some
@@ -11111,7 +11112,7 @@ e.g. &lt;kbd&gt;&amp;lt;f2&amp;gt; f&lt;/kbd&gt;: the Hydra &lt;em&gt;does not&l
 &lt;p&gt;Call the head: &lt;code&gt;text-scale-increase&lt;/code&gt;.&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;h2 id=&quot;an-exciting-new-hydra:-move-window-splitter&quot;&gt;An exciting new Hydra: move window splitter&lt;/h2&gt;
+&lt;h2 id=&quot;an-exciting-new-hydra-move-window-splitter&quot;&gt;An exciting new Hydra: move window splitter&lt;/h2&gt;
 
 &lt;p&gt;Zooming is old news, Hydra bundles a new application:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;hydra-examples&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
@@ -11310,7 +11311,7 @@ lower case letters on the home row&lt;/li&gt;
 considering to obsolete some of them, just to keep things simpler.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&quot;add:-the-annoyance-driven-development&quot;&gt;ADD: the Annoyance-Driven Development&lt;/h2&gt;
+&lt;h2 id=&quot;add-the-annoyance-driven-development&quot;&gt;ADD: the Annoyance-Driven Development&lt;/h2&gt;
 
 &lt;p&gt;The other part of evolving and refining the commands, consisted of
 noticing small annoyances for when some generic command wasn&amp;#39;t working
@@ -11375,7 +11376,7 @@ value of &lt;code&gt;auto-mode-alist&lt;/code&gt;. Here&amp;#39;s how to deciphe
 &lt;p&gt;As you see from the screenshot, I have &lt;code&gt;show-paren-mode&lt;/code&gt; always
 on. It&amp;#39;s even on in the tests visualization!&lt;/p&gt;
 
-&lt;h2 id=&quot;the-most-basic-lispy-commands:-the-arrows&quot;&gt;The most basic &lt;code&gt;lispy&lt;/code&gt; commands: the arrows&lt;/h2&gt;
+&lt;h2 id=&quot;the-most-basic-lispy-commands-the-arrows&quot;&gt;The most basic &lt;code&gt;lispy&lt;/code&gt; commands: the arrows&lt;/h2&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;kbd&gt;h&lt;/kbd&gt; is left&lt;/li&gt;
@@ -11527,7 +11528,7 @@ an &lt;code&gt;org-mode&lt;/code&gt; buffer. With a few hacks and some advice an
 contributions from more experienced hackers, &lt;code&gt;org-download&lt;/code&gt; came to
 be.&lt;/p&gt;
 
-&lt;h2 id=&quot;today&amp;#39;s-commits&quot;&gt;Today&amp;#39;s commits&lt;/h2&gt;
+&lt;h2 id=&quot;today-39-s-commits&quot;&gt;Today&amp;#39;s commits&lt;/h2&gt;
 
 &lt;p&gt;The main contribution from today&amp;#39;s commits was adding the code that
 un-aliases images that point to HTML. I see a lot of these from the
@@ -11885,7 +11886,7 @@ the transient map to call the first and other commands.  The way the
 transient map works, it takes priority over almost all maps, but
 disappears as soon as you press something that doesn&amp;#39;t belong to it.&lt;/p&gt;
 
-&lt;h2 id=&quot;the-zoom-in-/-zoom-out-use-case&quot;&gt;The zoom-in / zoom-out use case&lt;/h2&gt;
+&lt;h2 id=&quot;the-zoom-in-zoom-out-use-case&quot;&gt;The zoom-in / zoom-out use case&lt;/h2&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;f2&amp;gt; g&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
                 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;def-rep-command&lt;/span&gt;
                     &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;g&amp;quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;text-scale-increase&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
@@ -12062,7 +12063,7 @@ the tips that I gave. While it&amp;#39;s nice and all, and you should check it
 out if you&amp;#39;re looking for something like that, it&amp;#39;s not really for
 me. I will describe the system that I&amp;#39;m currently using below.&lt;/p&gt;
 
-&lt;h2 id=&quot;what-is-the-best-list-length-for-cycling?&quot;&gt;What is the best list length for cycling?&lt;/h2&gt;
+&lt;h2 id=&quot;what-is-the-best-list-length-for-cycling&quot;&gt;What is the best list length for cycling?&lt;/h2&gt;
 
 &lt;p&gt;In my opinion, it&amp;#39;s one or two. If it&amp;#39;s one, you&amp;#39;re not really
 cycling, if it&amp;#39;s two, it&amp;#39;s fine. Anything more than that causes
@@ -12087,7 +12088,7 @@ a command even better suited for that binding, which was
 command isn&amp;#39;t bound right now, I just launch it from &lt;code&gt;smex&lt;/code&gt; on very
 rare occasions.&lt;/p&gt;
 
-&lt;h2 id=&quot;how-i-launch-terminal-95%-of-the-time&quot;&gt;How I launch terminal 95% of the time&lt;/h2&gt;
+&lt;h2 id=&quot;how-i-launch-terminal-95-of-the-time&quot;&gt;How I launch terminal 95% of the time&lt;/h2&gt;
 
 &lt;p&gt;From &lt;code&gt;dired&lt;/code&gt; of course. The shell&amp;#39;s natural way of switching the
 directory with &lt;code&gt;cd&lt;/code&gt; is extremely inefficient compared to &lt;code&gt;dired&lt;/code&gt;.  So
@@ -12121,7 +12122,7 @@ time instead.&lt;/p&gt;
              &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;expand-file-name&lt;/span&gt;
               &lt;span class=&quot;nv&quot;&gt;default-directory&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id=&quot;how-i-launch-dired-100%-of-the-time&quot;&gt;How I launch &lt;code&gt;dired&lt;/code&gt; 100% of the time&lt;/h2&gt;
+&lt;h2 id=&quot;how-i-launch-dired-100-of-the-time&quot;&gt;How I launch &lt;code&gt;dired&lt;/code&gt; 100% of the time&lt;/h2&gt;
 
 &lt;p&gt;With &lt;code&gt;dired-jump&lt;/code&gt;, of course. This command will examine your current
 buffer&amp;#39;s &lt;code&gt;default-directory&lt;/code&gt; and open a &lt;code&gt;dired&lt;/code&gt; buffer there. All you
@@ -12439,7 +12440,7 @@ perceptible delay when capturing.&lt;/p&gt;
 &lt;p&gt;I&amp;#39;ve finally wrapped a piece of config that I was using for a while in
 a package called &lt;a href=&quot;https://github.com/abo-abo/headlong&quot;&gt;headlong&lt;/a&gt;.&lt;/p&gt;
 
-&lt;h2 id=&quot;what-does-it-do?&quot;&gt;What does it do?&lt;/h2&gt;
+&lt;h2 id=&quot;what-does-it-do&quot;&gt;What does it do?&lt;/h2&gt;
 
 &lt;p&gt;It provides a macro called &lt;code&gt;headlong-with&lt;/code&gt; that modifies minibuffer
 completion for the forms within it, making it faster in some
@@ -12457,7 +12458,7 @@ efficiently: &lt;code&gt;headlong-bookmark-jump&lt;/code&gt; and
 as the first one, except it opens the bookmark with &lt;code&gt;pop-to-buffer&lt;/code&gt;,
 i.e. in other window.&lt;/p&gt;
 
-&lt;h2 id=&quot;how-does-this-completion-work?&quot;&gt;How does this completion work?&lt;/h2&gt;
+&lt;h2 id=&quot;how-does-this-completion-work&quot;&gt;How does this completion work?&lt;/h2&gt;
 
 &lt;p&gt;It&amp;#39;s nothing fancy, you will just exit the minibuffer automatically as
 soon as there is only one completion candidate left.
@@ -12482,7 +12483,7 @@ two methods:&lt;/p&gt;
 even more, since pressing &lt;kbd&gt;RET&lt;/kbd&gt; is harder than it should be
 on most keyboards.&lt;/p&gt;
 
-&lt;h2 id=&quot;why-is-this-cool?&quot;&gt;Why is this cool?&lt;/h2&gt;
+&lt;h2 id=&quot;why-is-this-cool&quot;&gt;Why is this cool?&lt;/h2&gt;
 
 &lt;p&gt;This is cool because you can implement your bookmarks as efficiently
 as you would with just wrapping stuff with a &lt;code&gt;lambda&lt;/code&gt; and using
@@ -12712,7 +12713,7 @@ by default in &lt;code&gt;dired&lt;/code&gt;:&lt;/p&gt;
 the 13th one or anything.  So I&amp;#39;ll commemorate it with a post on
 dealing with dates in &lt;code&gt;calc&lt;/code&gt;.&lt;/p&gt;
 
-&lt;h2 id=&quot;how-much-time-has-passed-since-i-started-this-blog?&quot;&gt;How much time has passed since I started this blog?&lt;/h2&gt;
+&lt;h2 id=&quot;how-much-time-has-passed-since-i-started-this-blog&quot;&gt;How much time has passed since I started this blog?&lt;/h2&gt;
 
 &lt;ol&gt;
 &lt;li&gt;&lt;p&gt;Open &lt;code&gt;calc&lt;/code&gt; with &lt;kbd&gt;C-x **&lt;/kbd&gt;:&lt;/p&gt;
@@ -12742,7 +12743,7 @@ still have half of a day to post this. Unfortunately, I have only an
 old version of the blog repository on this machine, and the current
 one is on a laptop at home. So I&amp;#39;ll post this in the evening.&lt;/p&gt;
 
-&lt;h2 id=&quot;did-you-know-what-2015-looks-like-in-binary?&quot;&gt;Did you know what 2015 looks like in binary?&lt;/h2&gt;
+&lt;h2 id=&quot;did-you-know-what-2015-looks-like-in-binary&quot;&gt;Did you know what 2015 looks like in binary?&lt;/h2&gt;
 
 &lt;p&gt;In your current &lt;code&gt;calc&lt;/code&gt; session,&lt;/p&gt;
 
@@ -12789,7 +12790,7 @@ I wrote down a new package called &lt;a href=&quot;https://github.com/abo-abo/la
 It&amp;#39;s only a few hours old, but I like it a lot.
 I&amp;#39;ve grepped the sources of AUCTeX, and it doesn&amp;#39;t seem to have this functionality.&lt;/p&gt;
 
-&lt;h2 id=&quot;here&amp;#39;s-how-it-works&quot;&gt;Here&amp;#39;s how it works&lt;/h2&gt;
+&lt;h2 id=&quot;here-39-s-how-it-works&quot;&gt;Here&amp;#39;s how it works&lt;/h2&gt;
 
 &lt;p&gt;You start with an active region:&lt;/p&gt;
 
@@ -12855,13 +12856,13 @@ bite.&lt;/p&gt;
    <link href="http://oremacs.com/2015/01/01/three-ansi-term-tips/"/>
    <updated>2015-01-01T00:00:00+01:00</updated>
    <id>http://oremacs.com/2015/01/01/three-ansi-term-tips</id>
-   <content type="html">&lt;h2 id=&quot;tip-#1&quot;&gt;Tip #1&lt;/h2&gt;
+   <content type="html">&lt;h2 id=&quot;tip-1&quot;&gt;Tip #1&lt;/h2&gt;
 
 &lt;p&gt;There&amp;#39;s no reason not to have &lt;code&gt;/bin/bash&lt;/code&gt; instead of &lt;code&gt;/bin/sh&lt;/code&gt; as the
 default choice when you &lt;kbd&gt;M-x&lt;/kbd&gt; &lt;code&gt;term&lt;/code&gt;.&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;explicit-shell-file-name&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;/bin/bash&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id=&quot;tip-#2&quot;&gt;Tip #2&lt;/h2&gt;
+&lt;h2 id=&quot;tip-2&quot;&gt;Tip #2&lt;/h2&gt;
 
 &lt;p&gt;After you close the terminal, you get a useless buffer with no
 process. It&amp;#39;s probably left there for you to have a history of what
@@ -12878,7 +12879,7 @@ automatically:&lt;/p&gt;
 
 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;add-hook&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;term-exec-hook&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;oleh-term-exec-hook&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id=&quot;tip-#3&quot;&gt;Tip #3&lt;/h2&gt;
+&lt;h2 id=&quot;tip-3&quot;&gt;Tip #3&lt;/h2&gt;
 
 &lt;p&gt;By default, &lt;kbd&gt;C-y&lt;/kbd&gt; calls term&amp;#39;s own &lt;code&gt;yank&lt;/code&gt;, which is different
 from Emacs&amp;#39;s &lt;code&gt;yank&lt;/code&gt;.  So, until recently, I was using
@@ -12900,7 +12901,7 @@ the older packages. This post will cover some practical problems that
 you may encounter when your package needs to be aware of another
 active package.&lt;/p&gt;
 
-&lt;h2 id=&quot;ace-window-vs.-helm&quot;&gt;&lt;code&gt;ace-window&lt;/code&gt; vs. &lt;code&gt;helm&lt;/code&gt;&lt;/h2&gt;
+&lt;h2 id=&quot;ace-window-vs-helm&quot;&gt;&lt;code&gt;ace-window&lt;/code&gt; vs. &lt;code&gt;helm&lt;/code&gt;&lt;/h2&gt;
 
 &lt;p&gt;&lt;a href=&quot;https://github.com/emacs-helm/helm&quot;&gt;helm&lt;/a&gt; is a wonderful package,
 it&amp;#39;s my goto-package when I need completion. All of the following
@@ -12929,7 +12930,7 @@ out of a &lt;code&gt;helm&lt;/code&gt;-minibuffer. In fact, it was not possible 
 inkling that it used to work at some point. So I checked out a
 year-old version of &lt;code&gt;helm&lt;/code&gt; and it did work.&lt;/p&gt;
 
-&lt;h3 id=&quot;magit-bisect-to-the-rescue!&quot;&gt;&lt;code&gt;magit-bisect&lt;/code&gt; to the rescue!&lt;/h3&gt;
+&lt;h3 id=&quot;magit-bisect-to-the-rescue&quot;&gt;&lt;code&gt;magit-bisect&lt;/code&gt; to the rescue!&lt;/h3&gt;
 
 &lt;p&gt;It&amp;#39;s very simple:&lt;/p&gt;
 
@@ -12952,7 +12953,7 @@ in this case.&lt;/li&gt;
 &lt;pre&gt;
 &lt;span class=&quot;diff-context&quot;&gt;&lt;span class=&quot;region&quot;&gt;     (let* ((source (helm-get-current-source))
             (kmap (and (listp source) ; Check if source is empty.
-                       (assoc-default 'keymap source))))
+                       (assoc-default &#39;keymap source))))
 &lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;diff-indicator-removed&quot;&gt;&lt;span class=&quot;region&quot;&gt;-&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;diff-removed&quot;&gt;&lt;span class=&quot;region&quot;&gt;      (when kmap (setq overriding-local-map kmap)))))
 &lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;diff-indicator-added&quot;&gt;&lt;span class=&quot;region&quot;&gt;+&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;diff-added&quot;&gt;&lt;span class=&quot;region&quot;&gt;      (when kmap (set-transient-map kmap)))))&lt;/span&gt;&lt;/span&gt;&lt;/pre&gt;
 
@@ -12980,7 +12981,7 @@ called after &lt;code&gt;helm&lt;/code&gt;.&lt;/p&gt;
 In the end, this finally worked:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;remove-hook&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;post-command-hook&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;helm--maybe-update-keymap&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id=&quot;lispy-vs.-slime-and-cider&quot;&gt;&lt;code&gt;lispy&lt;/code&gt; vs. &lt;code&gt;SLIME&lt;/code&gt; and &lt;code&gt;CIDER&lt;/code&gt;&lt;/h2&gt;
+&lt;h2 id=&quot;lispy-vs-slime-and-cider&quot;&gt;&lt;code&gt;lispy&lt;/code&gt; vs. &lt;code&gt;SLIME&lt;/code&gt; and &lt;code&gt;CIDER&lt;/code&gt;&lt;/h2&gt;
 
 &lt;p&gt;I thought that enabling &lt;code&gt;lispy-mode&lt;/code&gt; for &lt;code&gt;slime-repl-mode&lt;/code&gt; and
 &lt;code&gt;cider-repl-mode&lt;/code&gt; might be a good idea.
@@ -13056,7 +13057,7 @@ that I mentioned yesterday, this one is pretty self-contained, i.e. it
 doesn&amp;#39;t link to many external information sources.  So I thought that
 it&amp;#39;s perfect for trying EWW to read it.&lt;/p&gt;
 
-&lt;h2 id=&quot;not-so-fast!-configure-first.&quot;&gt;Not so fast! Configure first.&lt;/h2&gt;
+&lt;h2 id=&quot;not-so-fast-configure-first&quot;&gt;Not so fast! Configure first.&lt;/h2&gt;
 
 &lt;p&gt;For modes that don&amp;#39;t require to self-insert (and even for some that
 do), I like to navigate with
@@ -13181,7 +13182,7 @@ foreground and magenta links. Plus the RSS was kind of quirky, and I
 couldn&amp;#39;t just feed all of it into
 &lt;a href=&quot;https://github.com/skeeto/elfeed&quot;&gt;Elfeed&lt;/a&gt;.&lt;/p&gt;
 
-&lt;h2 id=&quot;greasemonkey-to-the-rescue!&quot;&gt;Greasemonkey to the rescue!&lt;/h2&gt;
+&lt;h2 id=&quot;greasemonkey-to-the-rescue&quot;&gt;Greasemonkey to the rescue!&lt;/h2&gt;
 
 &lt;p&gt;In the previous post I&amp;#39;ve mentioned that, in addition to using
 &lt;a href=&quot;http://www.gnu.org/software/emacs/&quot;&gt;the best editor&lt;/a&gt;, I&amp;#39;m using
@@ -14092,7 +14093,7 @@ place? You should have used &lt;kbd&gt;M-b&lt;/kbd&gt;/&lt;kbd&gt;M-f&lt;/kbd&gt
 
 &lt;p&gt;Well, I got there with &lt;code&gt;previous-line&lt;/code&gt; - one of the best Emacs commands!&lt;/p&gt;
 
-&lt;h2 id=&quot;resolve-the-*-word-malarkey-with-defadvice&quot;&gt;Resolve the &lt;code&gt;*-word&lt;/code&gt; malarkey with &lt;code&gt;defadvice&lt;/code&gt;&lt;/h2&gt;
+&lt;h2 id=&quot;resolve-the-word-malarkey-with-defadvice&quot;&gt;Resolve the &lt;code&gt;*-word&lt;/code&gt; malarkey with &lt;code&gt;defadvice&lt;/code&gt;&lt;/h2&gt;
 
 &lt;p&gt;Here are some simple advice commands that I&amp;#39;ve just rolled:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defadvice&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;upcase-word&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;before&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;upcase-word-advice&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;activate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
@@ -14182,7 +14183,7 @@ doing this refactor operation feels like you&amp;#39;re doing the 15-number puzz
 &lt;p&gt;And that&amp;#39;s fun in my book. But let me get back to the short overview
 of the Emacs testing tools that lead me to this post, mainly &lt;code&gt;cask&lt;/code&gt;.&lt;/p&gt;
 
-&lt;h2 id=&quot;cask:-what-does-it-do?&quot;&gt;&lt;code&gt;cask&lt;/code&gt;: what does it do?&lt;/h2&gt;
+&lt;h2 id=&quot;cask-what-does-it-do&quot;&gt;&lt;code&gt;cask&lt;/code&gt;: what does it do?&lt;/h2&gt;
 
 &lt;p&gt;According to &lt;a href=&quot;http://cask.readthedocs.org/en/latest/&quot;&gt;its own documentation&lt;/a&gt;:&lt;/p&gt;
 
@@ -14373,7 +14374,7 @@ be used as a library. Luckily the change went smoothly, as there are
 no complaints in the github issues so far.  In case you don&amp;#39;t know
 what the package does in the first place, a short blurb follows.&lt;/p&gt;
 
-&lt;h2 id=&quot;ace-window&amp;#39;s-&amp;quot;what-and-why&amp;quot;&quot;&gt;&lt;code&gt;ace-window&lt;/code&gt;&amp;#39;s &amp;quot;what and why&amp;quot;&lt;/h2&gt;
+&lt;h2 id=&quot;ace-window-39-s-quot-what-and-why-quot&quot;&gt;&lt;code&gt;ace-window&lt;/code&gt;&amp;#39;s &amp;quot;what and why&amp;quot;&lt;/h2&gt;
 
 &lt;p&gt;I&amp;#39;m sure you&amp;#39;re aware of the &lt;code&gt;other-window&lt;/code&gt; command. While it&amp;#39;s great for
 two windows, it quickly loses its value when there are more windows:
@@ -14402,7 +14403,7 @@ binding &lt;code&gt;ace-window&lt;/code&gt; to something short, like &lt;kbd&gt;
 &lt;li&gt;&lt;kbd&gt;C-u C-u M-p&lt;/kbd&gt; - delete the selected window&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&quot;finally,-the-library-part&quot;&gt;finally, the library part&lt;/h2&gt;
+&lt;h2 id=&quot;finally-the-library-part&quot;&gt;finally, the library part&lt;/h2&gt;
 
 &lt;p&gt;So now, what if you want to select a window to maximize with &lt;code&gt;ace-window&lt;/code&gt;?
 After the change that I&amp;#39;ve mentioned, the code to do this is dirt simple:&lt;/p&gt;
