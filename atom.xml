@@ -4,13 +4,73 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2016-01-04T20:44:01+01:00</updated>
+ <updated>2016-01-10T15:30:54+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Better fuzzy matching support in Ivy</title>
+   <link href="http://oremacs.com/2016/01/06/ivy-flx/"/>
+   <updated>2016-01-06T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2016/01/06/ivy-flx</id>
+   <content type="html">&lt;p&gt;Recently, I wrote some code to add better highlighting for
+&lt;a href=&quot;https://github.com/abo-abo/swiper&quot;&gt;Ivy&lt;/a&gt;&amp;#39;s fuzzy matcher. Here&amp;#39;s a
+quick step-by-step to get an equivalent of
+&lt;a href=&quot;https://github.com/lewang/flx&quot;&gt;flx-ido-mode&lt;/a&gt; working with Ivy.&lt;/p&gt;
+
+&lt;h2 id=&quot;step-1-install-the-packages&quot;&gt;Step 1: install the packages&lt;/h2&gt;
+
+&lt;p&gt;&lt;kbd&gt;M-x&lt;/kbd&gt; &lt;code&gt;package-install&lt;/code&gt; - &lt;code&gt;counsel&lt;/code&gt; and &lt;code&gt;flx&lt;/code&gt; (MELPA should be configured).&lt;/p&gt;
+
+&lt;h2 id=&quot;step-2-configure-ivy-re-builders-alist&quot;&gt;Step 2: configure &lt;code&gt;ivy-re-builders-alist&lt;/code&gt;&lt;/h2&gt;
+
+&lt;p&gt;Here&amp;#39;s the default setting:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ivy-re-builders-alist&lt;/span&gt;
+      &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ivy--regex-plus&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The default matcher will use a &lt;code&gt;.*&lt;/code&gt; regex wild card in place of each
+single space in the input.  If you want to use the fuzzy matcher,
+which instead uses a &lt;code&gt;.*&lt;/code&gt; regex wild card between each input letter,
+write this in your config:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ivy-re-builders-alist&lt;/span&gt;
+      &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ivy--regex-fuzzy&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;You can also mix the two regex builders, for example:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ivy-re-builders-alist&lt;/span&gt;
+      &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ivy-switch-buffer&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ivy--regex-plus&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ivy--regex-fuzzy&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The &lt;code&gt;t&lt;/code&gt; key is used for all fall-through cases, otherwise the key is
+the command or collection name.&lt;/p&gt;
+
+&lt;p&gt;The fuzzy matcher often results in substantially more matching
+candidates than the regular one for similar input. That&amp;#39;s why some
+kind of sorting is important to bring the more relevant matching
+candidates to the start of the list. Luckily, that&amp;#39;s already been
+figured out in &lt;code&gt;flx&lt;/code&gt;, so to have it working just make sure that the
+&lt;code&gt;flx&lt;/code&gt; package is installed.&lt;/p&gt;
+
+&lt;h2 id=&quot;step-3-optionally-configure-ivy-initial-inputs-alist&quot;&gt;Step 3: optionally configure &lt;code&gt;ivy-initial-inputs-alist&lt;/code&gt;&lt;/h2&gt;
+
+&lt;p&gt;The &lt;code&gt;ivy-initial-inputs-alist&lt;/code&gt; variable is pretty useful in
+conjunction with the default matcher. It&amp;#39;s usually used to insert &lt;code&gt;^&lt;/code&gt;
+into the input area for certain commands.&lt;/p&gt;
+
+&lt;p&gt;If you&amp;#39;re going fuzzy all the way, you can do without the initial &lt;code&gt;^&lt;/code&gt;,
+and simply let &lt;code&gt;flx&lt;/code&gt; (hopefully) sort the matches in a nice way:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ivy-initial-inputs-alist&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;the-result&quot;&gt;The result&lt;/h2&gt;
+
+&lt;p&gt;Here&amp;#39;s how &lt;kbd&gt;M-x&lt;/kbd&gt; &lt;code&gt;counsel-M-x&lt;/code&gt; looks like now:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/ivy-flx-highlight.png&quot; alt=&quot;ivy-flx-highlight.png&quot;&gt;&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Ivy-mode 0.7.0 is out</title>

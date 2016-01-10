@@ -271,6 +271,124 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/06/23/counsel-load-theme/">
+        New video demo - counsel-load-theme
+      </a>
+    </h1>
+
+    <span class="post-date">23 Jun 2015</span>
+
+    <p>Without further ado, here&#39;s the <a href="https://youtu.be/V_whk214fec">video link</a>.</p>
+
+<h2 id="the-code">The code</h2>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel--load-theme-action</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+  <span class="s">&quot;Disable current themes and load theme X.&quot;</span>
+  <span class="p">(</span><span class="k">condition-case</span> <span class="no">nil</span>
+      <span class="p">(</span><span class="k">progn</span>
+        <span class="p">(</span><span class="nf">mapc</span> <span class="nf">#&#39;</span><span class="nv">disable-theme</span> <span class="nv">custom-enabled-themes</span><span class="p">)</span>
+        <span class="p">(</span><span class="nv">load-theme</span> <span class="p">(</span><span class="nf">intern</span> <span class="nv">x</span><span class="p">))</span>
+        <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">fboundp</span> <span class="ss">&#39;powerline-reset</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">powerline-reset</span><span class="p">)))</span>
+    <span class="p">(</span><span class="ne">error</span> <span class="s">&quot;Problem loading theme %s&quot;</span> <span class="nv">x</span><span class="p">)))</span>
+
+<span class="c1">;;;###autoload</span>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel-load-theme</span> <span class="p">()</span>
+  <span class="s">&quot;Forward to `load-theme&#39;.</span>
+<span class="s">Usable with `ivy-resume&#39;, `ivy-next-line-and-call&#39; and</span>
+<span class="s">`ivy-previous-line-and-call&#39;.&quot;</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">ivy-read</span> <span class="s">&quot;Load custom theme: &quot;</span>
+            <span class="p">(</span><span class="nf">mapcar</span> <span class="ss">&#39;symbol-name</span>
+                    <span class="p">(</span><span class="nv">custom-available-themes</span><span class="p">))</span>
+            <span class="nb">:action</span> <span class="nf">#&#39;</span><span class="nv">counsel--load-theme-action</span><span class="p">))</span>
+</code></pre></div>
+<p>It looks almost trivial, the main idea is to disable all current
+themes and load the new one. Additionally, try to reset the
+<code>powerline</code>, since it has to match the <code>mode-line</code> face, which most
+themes customize.</p>
+
+<h2 id="the-interface">The Interface</h2>
+
+<p>The interface of <code>ivy-read</code> is the same as the built-in
+<code>completing-read</code> in first two arguments. The difference is that it
+also accepts a callback through the <code>:action</code> argument.  This callback
+will make the completion engine aware of what needs to be done with
+the completion result. The presence of the callback allows these completion engine features to work:</p>
+
+<ul>
+<li><code>ivy-resume</code> will resume the last completion. Very useful if you
+change your mind on the candidate, or want to examine a related
+candidate.<br></li>
+<li><code>ivy-next-line-and-call</code> selects the next matching candidate and executes the callback for it.</li>
+<li><code>ivy-previous-line-and-call</code> selects the previous matching candidate and executes the callback for it.</li>
+</ul>
+
+<p>I like to think of <code>ivy-resume</code> as a <kbd>DEL</kbd> or
+<kbd>&lt;left&gt;</kbd> for completion. As you can erase or go back
+one character with the same <kbd>DEL</kbd> binding, regardless of the
+last character inputted (<kbd>a</kbd> or <kbd>B</kbd> etc), in the
+same way you can call the completion again with the same
+<kbd>&lt;f6&gt;</kbd> binding, regardless of the command that required
+completion (<code>counsel-git-grep</code> or <code>counsel-load-theme</code> or
+<code>counsel-load-library</code> etc). <code>ivy-resume</code> isn&#39;t bound by default,
+since it needs to be a global binding. I just use this in my config:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="nv">[f6]</span> <span class="ss">&#39;ivy-resume</span><span class="p">)</span>
+</code></pre></div>
+<p>For the functions that execute the callback while changing the
+candidate, the idea is:</p>
+
+<ul>
+<li><kbd>C-M-n</kbd> (<code>ivy-next-line-and-call</code>) corresponds to <kbd>C-n</kbd> (<code>ivy-next-line</code>),</li>
+<li><kbd>C-M-p</kbd> (<code>ivy-previous-line-and-call</code>) corresponds to <kbd>C-n</kbd> (<code>ivy-previous-line</code>).</li>
+</ul>
+
+<p>I&#39;ve also showed off a generic <code>ivy</code> feature: <kbd>M-j</kbd> will yank
+the word at point into the minibuffer.  Think of it as the mirror of
+<kbd>C-w</kbd> in <code>isearch</code>. It could not be <kbd>C-w</kbd>, since I
+like <kbd>C-w</kbd> being bound to <code>kill-region</code>.</p>
+
+<h2 id="the-command-insert-mode-split">The command/insert mode split</h2>
+
+<p><img src="/download/counsel-load-theme.png" alt="counsel-load-theme.png"></p>
+
+<p>Finally, I show off the equivalent
+<a href="https://github.com/abo-abo/hydra">hydra</a>-based modal selection
+method.  So instead of pressing <kbd>C-M-n C-M-n C-M-n C-M-p
+C-M-p</kbd>, you can press the equivalent <kbd>C-o c jjjkk</kbd>.
+Luckily, you don&#39;t need to remember a lot of bindings for this <code>hydra</code>
+mode: just press <kbd>C-o</kbd> and read the hints. I&#39;ll just list the
+exit points, since that&#39;s usually the more important stuff:</p>
+
+<ul>
+<li>To exit the &quot;command-mode&quot; completely, press <kbd>o</kbd> or the standard <kbd>C-g</kbd>.</li>
+<li>To exit the &quot;command-mode&quot; with the current candidate, press <kbd>f</kbd> or <kbd>d</kbd>.</li>
+<li>To exit the &quot;command-mode&quot; and once again edit the minibuffer, press <kbd>i</kbd>.</li>
+</ul>
+
+<p>You might ask why <kbd>f</kbd> and <kbd>d</kbd> do the same. They
+actually mirror <kbd>C-j</kbd> (<code>ivy-alt-done</code>) and <kbd>C-m</kbd>
+(<code>ivy-done</code>). And if you ask what the difference between those two is,
+the answer is that <code>ivy-alt-done</code> will not exit the completion when
+selecting directories during file name completion. It may be possible
+to extend this to other types of completion where it makes sense to
+select something but not to exit the minibuffer.</p>
+
+<h2 id="outro">Outro</h2>
+
+<p>If you&#39;re using <code>ivy-mode</code>, make sure to try the new features: the
+action-using commands should work for any command that starts with
+<code>counsel-</code>. For other commands, like <code>package-install</code>, you can only
+select one candidate with <kbd>C-m</kbd>.</p>
+
+<p>Also do try <kbd>C-M-n</kbd> with <code>counsel-find-file</code>: you&#39;ll be able
+to cycle through all files in a directory without exiting the
+completion. Same goes for <code>ivy-switch-buffer</code>, which should probably
+be renamed to <code>counsel-switch-buffer</code> for consistency.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/06/22/debug-clojure/">
         Debug Clojure with CIDER and lispy
       </a>
@@ -516,95 +634,6 @@ In the end, I decided not to provide such an explicit example and shorten the do
 <span class="s">For example, to make SPC do the same as ?a, use</span>
 <span class="s">\(lambda (c) (if (= c 32) ?a c)).&quot;</span><span class="p">)</span>
 </code></pre></div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/06/04/git-grep-ivy-2/">
-        counsel-git-grep, in async
-      </a>
-    </h1>
-
-    <span class="post-date">04 Jun 2015</span>
-
-    <h2 id="introduction">Introduction</h2>
-
-<p>It took me quite a while to figure out, but finally
-<code>counsel-git-grep</code>, which I&#39;ve described
-<a href="http://oremacs.com/2015/04/19/git-grep-ivy/">before</a> works completely
-asynchronously, which means it&#39;s very fast and smooth even for huge
-repositories.</p>
-
-<p>If you don&#39;t know what <code>git grep</code> is: it allows you to search for a
-regular expression in your Git repository. In a way, it&#39;s just a
-<code>find</code> / <code>grep</code> combo, but very concise and fast.  It&#39;s particularly
-great for finding all uses and references to a symbol.</p>
-
-<p>It can be useful even for non-programmers. One great application is to
-stick all your org-mode files into a Git repository. Then you can
-search all your files at once very fast: all my org stuff takes more
-than 1000,000 lines and there&#39;s no lag while searching. I really
-should remove some pdfs from the repository at some point.</p>
-
-<h2 id="the-video-demo">The Video Demo</h2>
-
-<p>Check out the speed and the various command in this <a href="https://www.youtube.com/watch?v=OEmXQNS7ofo">Video Demo</a>. Each key stroke starts two asynchronous shell calls, while canceling the current ones if they are still running.  Here are the example calls:</p>
-<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span class="nv">$ </span>git --no-pager grep --full-name -n --no-color <span class="se">\</span>
-    -i -e <span class="s2">&quot;forward-line 1&quot;</span> <span class="p">|</span> head -n 200
-<span class="nv">$ </span>git grep -i -c <span class="s1">&#39;forward-line 1&#39;</span> <span class="se">\</span>
-    <span class="p">|</span> sed <span class="s1">&#39;s/.*:\\(.*\\)/\\1/g&#39;</span> <span class="se">\</span>
-    <span class="p">|</span> awk <span class="s1">&#39;{s+=$1} END {print s}&#39;</span>
-</code></pre></div>
-<h2 id="the-elisp-side">The Elisp side</h2>
-
-<p>I figure since I was interested in this topic, probably a few more people are as well.
-So I&#39;ll explain below how async processing is done (in this case):</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel--gg-count</span> <span class="p">(</span><span class="nv">regex</span> <span class="kp">&amp;optional</span> <span class="nv">no-async</span><span class="p">)</span>
-  <span class="s">&quot;Quickly count the amount of git grep REGEX matches.</span>
-<span class="s">When NO-ASYNC is non-nil, do it synchronously.&quot;</span>
-  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">default-directory</span> <span class="nv">counsel--git-grep-dir</span><span class="p">)</span>
-        <span class="p">(</span><span class="nv">cmd</span> <span class="p">(</span><span class="nf">concat</span> <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;git grep -i -c &#39;%s&#39;&quot;</span>
-                             <span class="nv">regex</span><span class="p">)</span>
-                     <span class="s">&quot; | sed &#39;s/.*:\\(.*\\)/\\1/g&#39;&quot;</span>
-                     <span class="s">&quot; | awk &#39;{s+=$1} END {print s}&#39;&quot;</span><span class="p">))</span>
-        <span class="p">(</span><span class="nv">counsel-ggc-process</span> <span class="s">&quot; *counsel-gg-count*&quot;</span><span class="p">))</span>
-    <span class="p">(</span><span class="k">if</span> <span class="nv">no-async</span>
-        <span class="p">(</span><span class="nf">string-to-number</span> <span class="p">(</span><span class="nv">shell-command-to-string</span> <span class="nv">cmd</span><span class="p">))</span>
-      <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">proc</span> <span class="p">(</span><span class="nf">get-process</span> <span class="nv">counsel-ggc-process</span><span class="p">))</span>
-            <span class="p">(</span><span class="nv">buff</span> <span class="p">(</span><span class="nf">get-buffer</span> <span class="nv">counsel-ggc-process</span><span class="p">)))</span>
-        <span class="p">(</span><span class="nb">when</span> <span class="nv">proc</span>
-          <span class="p">(</span><span class="nf">delete-process</span> <span class="nv">proc</span><span class="p">))</span>
-        <span class="p">(</span><span class="nb">when</span> <span class="nv">buff</span>
-          <span class="p">(</span><span class="nf">kill-buffer</span> <span class="nv">buff</span><span class="p">))</span>
-        <span class="p">(</span><span class="k">setq</span> <span class="nv">proc</span> <span class="p">(</span><span class="nv">start-process-shell-command</span>
-                    <span class="nv">counsel-ggc-process</span>
-                    <span class="nv">counsel-ggc-process</span>
-                    <span class="nv">cmd</span><span class="p">))</span>
-        <span class="p">(</span><span class="nf">set-process-sentinel</span>
-         <span class="nv">proc</span>
-         <span class="nf">#&#39;</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">process</span> <span class="nv">event</span><span class="p">)</span>
-             <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nv">string=</span> <span class="nv">event</span> <span class="s">&quot;finished\n&quot;</span><span class="p">)</span>
-               <span class="p">(</span><span class="nb">with-current-buffer</span>
-                   <span class="p">(</span><span class="nf">process-buffer</span> <span class="nv">process</span><span class="p">)</span>
-                 <span class="p">(</span><span class="k">setq</span> <span class="nv">ivy--full-length</span>
-                       <span class="p">(</span><span class="nf">string-to-number</span>
-                        <span class="p">(</span><span class="nf">buffer-string</span><span class="p">))))</span>
-               <span class="p">(</span><span class="nv">ivy--insert-minibuffer</span>
-                <span class="p">(</span><span class="nv">ivy--format</span> <span class="nv">ivy--all-candidates</span><span class="p">)))))))))</span>
-</code></pre></div>
-<ol>
-<li>Since we&#39;re calling a shell command, it&#39;s important to set <code>default-directory</code> to a proper value: the shell command will be run there.</li>
-<li>The output from the process will be channeled into a buffer. I start the buffer name with a space to make it hidden: it will not be shown in the buffer list and <code>switch-to-buffer</code> completion.</li>
-<li>I leave the sync option and use <code>shell-command-to-string</code> for that. Sometimes it&#39;s necessary to know the amount of candidates without a delay.</li>
-<li>If <code>get-process</code> and <code>get-buffer</code> return something it means that the shell command is still running from the previous input. But the input has changed and that data has become useless, so I kill both the process and the buffer.</li>
-<li>Then I start a new process with <code>start-process-shell-command</code>- a convenience wrapper around the basic <code>start-process</code> that&#39;s useful for passing a full shell command with arguments.</li>
-<li>Finally, I let <code>counsel--gg-count</code> return without waiting for <code>git grep</code> to finish. But something needs to be done when it finishes, so I use <code>set-process-sentinel</code>. Emacs will call my lambda when there&#39;s a new event from the process.</li>
-</ol>
-
-<h2 id="outro">Outro</h2>
-
-<p>To check out the new stuff, just install or upgrade <code>counsel</code> from MELPA. Or clone <a href="https://github.com/abo-abo/swiper">the source</a>. I hope that my Elisp explanations were useful, async stuff is awesome, and I hope to see more of it in future Emacs packages.</p>
-
   </div>
   
 </div>
