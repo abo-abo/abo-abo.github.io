@@ -4,13 +4,97 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2016-01-10T15:30:54+01:00</updated>
+ <updated>2016-01-18T21:01:44+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Using Emacs as system-wide Rhythmbox interface</title>
+   <link href="http://oremacs.com/2016/01/18/emacs-rhythmbox/"/>
+   <updated>2016-01-18T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2016/01/18/emacs-rhythmbox</id>
+   <content type="html">&lt;p&gt;In an
+&lt;a href=&quot;http://oremacs.com/2015/07/09/counsel-rhythmbox/&quot;&gt;earlier post&lt;/a&gt;, I
+described how I&amp;#39;ve been managing Rhythmbox from Emacs. I&amp;#39;ve bound the
+entry point to &lt;kbd&gt;C-S-o&lt;/kbd&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-S-o&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;counsel-rhythmbox&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Obviously, this entry point won&amp;#39;t work while outside Emacs. Today,
+I&amp;#39;ll describe how I&amp;#39;ve made it work everywhere. Everywhere on Ubuntu
+14.04, that is, although a similar approach should work for other
+distributions.&lt;/p&gt;
+
+&lt;h2 id=&quot;step-1-make-sure-the-emacs-server-is-running&quot;&gt;Step 1: Make sure the Emacs server is running&lt;/h2&gt;
+
+&lt;p&gt;Here&amp;#39;s the relevant part of my &lt;a href=&quot;https://github.com/abo-abo/oremacs/blob/github/init.el&quot;&gt;init.el&lt;/a&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;server&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;or&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;server-running-p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;server-start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Using &lt;code&gt;emacsclient&lt;/code&gt; is essential to avoiding the extra startup time:
+even a startup time of one second feels sluggish when all I need is to
+open a menu with a song playlist.&lt;/p&gt;
+
+&lt;h2 id=&quot;step-2-install-the-relevant-x-window-tool&quot;&gt;Step 2: Install the relevant X window tool&lt;/h2&gt;
+
+&lt;p&gt;Initially, I only wrote a call to &lt;code&gt;emacsclient&lt;/code&gt;, which resulted in the
+Emacs window gaining focus in the end.  Then I thought it would be
+nice to give the focus back the original window after the end of
+selection, and raise it as well.&lt;/p&gt;
+
+&lt;p&gt;I wanted to do something with &lt;code&gt;wmctrl&lt;/code&gt;, but I found that
+&lt;a href=&quot;http://superuser.com/questions/382616/detecting-currently-active-window&quot;&gt;xdotool&lt;/a&gt;
+can do what I want in a simple way.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;sudo apt-get install xdotool
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;step-3-write-a-shell-script&quot;&gt;Step 3: Write a shell script&lt;/h2&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;wnd_id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;xdotool getwindowfocus&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;
+emacsclient --eval &lt;span class=&quot;s2&quot;&gt;&amp;quot;(progn (x-focus-frame nil) (counsel-rhythmbox))&amp;quot;&lt;/span&gt;
+xdotool windowfocus &lt;span class=&quot;nv&quot;&gt;$wnd_id&lt;/span&gt;
+xdotool windowraise &lt;span class=&quot;nv&quot;&gt;$wnd_id&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Here, &lt;code&gt;(x-focus-frame nil)&lt;/code&gt; will raise the Emacs window and give the
+keyboard input focus.  &lt;code&gt;emacsclient&lt;/code&gt; will return as soon as I select
+something or press &lt;kbd&gt;C-g&lt;/kbd&gt;. At that point the keyboard focus
+will be returned to whatever window had it when the script was
+invoked.&lt;/p&gt;
+
+&lt;p&gt;By the way, here&amp;#39;s a cool configuration that automatically makes a
+file executable if it starts with &lt;code&gt;#!&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;add-hook&lt;/span&gt;
+ &lt;span class=&quot;ss&quot;&gt;&amp;#39;after-save-hook&lt;/span&gt;
+ &lt;span class=&quot;ss&quot;&gt;&amp;#39;executable-make-buffer-file-executable-if-script-p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;step-4-bind-the-shell-script-to-a-key&quot;&gt;Step 4: Bind the shell script to a key&lt;/h2&gt;
+
+&lt;p&gt;Open this (possibly using &lt;code&gt;gnome-control-center&lt;/code&gt; instead, if applicable):&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;unity-control-center keyboard
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And add a new shortcut in &lt;code&gt;Shortcuts&lt;/code&gt;/&lt;code&gt;Custom Shortcuts&lt;/code&gt;. I&amp;#39;ve bound
+that one to &lt;kbd&gt;C-S-o&lt;/kbd&gt; as well.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-final-result&quot;&gt;The final result&lt;/h2&gt;
+
+&lt;p&gt;It&amp;#39;s pretty convenient: as I&amp;#39;m scrolling something I&amp;#39;m reading in
+Firefox with &lt;kbd&gt;j&lt;/kbd&gt; (via
+&lt;a href=&quot;https://addons.mozilla.org/en-US/firefox/addon/firemacs/&quot;&gt;Firemacs&lt;/a&gt;),
+I can seamlessly press &lt;kbd&gt;C-S-o moo RET&lt;/kbd&gt; to play &amp;quot;Sisters of
+the Moon&amp;quot;, and continue scrolling the web page with &lt;kbd&gt;j&lt;/kbd&gt;.&lt;/p&gt;
+
+&lt;p&gt;What&amp;#39;s more, Emacs has very nice support for input methods with
+&lt;kbd&gt;C-\&lt;/kbd&gt; (&lt;code&gt;toggle-input-method&lt;/code&gt;), so I can also quickly select
+Ukrainian-titled songs, while still keeping shortcuts like
+&lt;kbd&gt;C-n&lt;/kbd&gt; and &lt;kbd&gt;C-m&lt;/kbd&gt; (&lt;em&gt;without&lt;/em&gt; having to switch the
+input method back).&lt;/p&gt;
+
+&lt;p&gt;The whole experience is similar to &lt;code&gt;gnome-do&lt;/code&gt;/&lt;code&gt;synapse&lt;/code&gt;, which I was
+using a few years back, except better because now it&amp;#39;s in Emacs.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Better fuzzy matching support in Ivy</title>

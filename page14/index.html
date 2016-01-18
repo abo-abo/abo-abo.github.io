@@ -271,6 +271,66 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/03/10/no-swiping/">
+        Introducing Swiper
+      </a>
+    </h1>
+
+    <span class="post-date">10 Mar 2015</span>
+
+    <p>I like the idea of
+<a href="https://github.com/ShingoFukuyama/helm-swoop">helm-swoop</a>, but it
+somehow has minor annoyances that stop me from using it, like
+automatic <code>helm-input</code>, and especially the circular candidates. Or maybe it&#39;s just NIH talking.
+Anyway, I&#39;m rolling my own, and it&#39;s called <a href="https://github.com/abo-abo/swiper">swiper</a>.</p>
+
+<p><img src="/download/swiper.png" alt="swiper.png"></p>
+
+<h2 id="swiper-in-action">Swiper in action</h2>
+
+<p>Here&#39;s how it looks like:</p>
+
+<p><img src="/download/swiper-1.png" alt="swiper-1.png"></p>
+
+<p>As you can see, the search string <code>&quot;dec fun pro&quot;</code> is transformed into
+a regex <code>&quot;\\(dec\\).*\\(fun\\).*\\(pro\\)&quot;</code>, and each group in the
+matches is highlighted with a different face.  This is quite similar
+to the way <code>re-builder</code> does it. In fact it&#39;s possible to use <code>swiper</code>
+as a poor man&#39;s <code>re-builder</code> (since it matches only single lines).</p>
+
+<p>I&#39;m doing my own matching this time, as the part-swapping behavior of
+<code>helm-match-plugin</code> is more annoying than useful.</p>
+
+<p>Also note that:</p>
+
+<ul>
+<li>The whole <code>*swiper*</code> buffer is fully syntax highlighted.</li>
+<li>The appropriate parts of the matches are highlighted as well.</li>
+</ul>
+
+<h2 id="swiper-in-a-dired-buffer">Swiper in a <code>dired</code> buffer</h2>
+
+<p>Here&#39;s another screenshot:</p>
+
+<p><img src="/download/swiper-2.png" alt="swiper-2.png"></p>
+
+<p>It appears that <code>helm</code> is ignoring the display of file attributes, since they have
+a sort of <code>invisible</code> property set. I kind of like this behavior.</p>
+
+<h2 id="see-how-the-faces-are-recycled">See how the faces are recycled</h2>
+
+<p>I&#39;ve defined only 4 faces currently (foxes aren&#39;t unicorns, the
+palette is quite limited), so they loop about if you have many groups:</p>
+
+<p><img src="/download/swiper-3.png" alt="swiper-3.png"></p>
+
+<p>Yup, the technology is there. Although a <code>powerline</code> theme for the
+<code>helm</code> mode line is still missing.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/03/09/lispy-point-history/">
         lispy point history
       </a>
@@ -642,67 +702,6 @@ anything with one chord, e.g. <kbd>C-f</kbd>, is acceptable.</p>
 
 <p>Thanks to <a href="https://github.com/luciferasm">@luciferasm</a> for the idea, I
 hope you&#39;ll enjoy the new feature.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/03/05/testing-init-sanity/">
-        Testing your .emacs sanity
-      </a>
-    </h1>
-
-    <span class="post-date">05 Mar 2015</span>
-
-    <p>Here&#39;s a little snippet that came up as a Stack Overflow answer once:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">ora-test-emacs</span> <span class="p">()</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;async</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">async-start</span>
-   <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span> <span class="p">(</span><span class="nv">shell-command-to-string</span>
-          <span class="s">&quot;emacs --batch --eval \&quot;</span>
-<span class="s">(condition-case e</span>
-<span class="s">    (progn</span>
-<span class="s">      (load \\\&quot;~/.emacs\\\&quot;)</span>
-<span class="s">      (message \\\&quot;-OK-\\\&quot;))</span>
-<span class="s">  (error</span>
-<span class="s">   (message \\\&quot;ERROR!\\\&quot;)</span>
-<span class="s">   (signal (car e) (cdr e))))\&quot;&quot;</span><span class="p">))</span>
-   <span class="o">`</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">output</span><span class="p">)</span>
-      <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">string-match</span> <span class="s">&quot;-OK-&quot;</span> <span class="nv">output</span><span class="p">)</span>
-          <span class="p">(</span><span class="nb">when</span> <span class="o">,</span><span class="p">(</span><span class="nv">called-interactively-p</span> <span class="ss">&#39;any</span><span class="p">)</span>
-            <span class="p">(</span><span class="nf">message</span> <span class="s">&quot;All is well&quot;</span><span class="p">))</span>
-        <span class="p">(</span><span class="nv">switch-to-buffer-other-window</span> <span class="s">&quot;*startup error*&quot;</span><span class="p">)</span>
-        <span class="p">(</span><span class="nf">delete-region</span> <span class="p">(</span><span class="nf">point-min</span><span class="p">)</span> <span class="p">(</span><span class="nf">point-max</span><span class="p">))</span>
-        <span class="p">(</span><span class="nf">insert</span> <span class="nv">output</span><span class="p">)</span>
-        <span class="p">(</span><span class="nf">search-backward</span> <span class="s">&quot;ERROR!&quot;</span><span class="p">)))))</span>
-</code></pre></div>
-<p>This function will quietly run a batch Emacs with your current config
-to see if it errors out or not.</p>
-
-<ul>
-<li>in case that there were no start up errors, it will echo &quot;All is well&quot;</li>
-<li>when there&#39;s an error, it will pop to a <code>*startup error*</code> buffer with the error description</li>
-</ul>
-
-<p>The nice thing about this is that in case of an error you have a
-functional Emacs to fix that error, since fixing errors with <code>emacs
--Q</code> is quite painful.</p>
-
-<p>Another approach could be to just start a new Emacs instance, and
-close the window in case there isn&#39;t an error.  So all that the code
-above does is automate closing the window (sort of, since the window
-never opens). Still, I think it&#39;s pretty cool. And you could attach it
-to the <code>after-save-hook</code> of your .emacs, or a timer.</p>
-
-<p>You could even configure Emacs to send you an email in case it notices
-that there will be an error on the next start up. Or add the test to
-<code>before-save-hook</code> and abort the save in case it results in an
-error. That&#39;s some HAL 9000 level stuff right there:</p>
-
-<blockquote>
-<p>I&#39;m sorry Dave, I&#39;m afraid I can&#39;t do that.</p>
-</blockquote>
 
   </div>
   

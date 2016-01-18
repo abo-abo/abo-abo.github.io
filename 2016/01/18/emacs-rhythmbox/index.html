@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Using Emacs as system-wide Rhythmbox interface &middot; (or emacs
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="/public/css/octicons.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Scripts -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body class="layout-reverse theme-base-08">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <!-- <div class="sidebar-item"> -->
+  <!--   <p>unused</p> -->
+  <!-- </div> -->
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about/">About</a>
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/archive/">Archive</a>
+        
+      
+    
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+
+    <div id="github" class="sidebar-nav-item">
+      <button type="button"
+              class="btn btn-info"
+              data-toggle="collapse"
+              data-target="#github-projects">
+        <span class="octicon octicon-mark-github"></span> My Emacs Projects
+      </button>
+      <div id="github-projects" class="collapse">
+        <ul style="margin-bottom:0em;">
+          <li>
+            <a href="https://github.com/abo-abo/lispy">lispy</a>
+            <p>vi-like Paredit</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/worf">worf</a>
+            <p>vi-like bindings for org-mode</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-window">ace-window</a>
+            <p>switch windows with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-link">ace-link</a>
+            <p>follow links with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/function-args">function-args</a>
+            <p>enhance <code>CEDET</code> for C++</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/helm-make">helm-make</a>
+            <p>select a Makefile target with <code>helm</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/make-it-so">make-it-so</a>
+            <p>transform files with Makefile recipes</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/org-download">org-download</a>
+            <p>drag-and-drop images to <code>org-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo?tab=repositories">
+              <span class="octicon octicon-octoface"></span>
+              and more
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
+
+  <div class="sidebar-item">
+    <p>
+      <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
+        <img alt="Creative Commons License"
+             style="border-width:0;opacity: 0.3;"
+             src="https://licensebuttons.net/l/by-sa/4.0/88x31.png"/>
+      </a>
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">(or emacs</a>
+            <small>irrelevant)</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Using Emacs as system-wide Rhythmbox interface</h1>
+  <span class="post-date">18 Jan 2016</span>
+  <p>In an
+<a href="http://oremacs.com/2015/07/09/counsel-rhythmbox/">earlier post</a>, I
+described how I&#39;ve been managing Rhythmbox from Emacs. I&#39;ve bound the
+entry point to <kbd>C-S-o</kbd>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-S-o&quot;</span><span class="p">)</span> <span class="ss">&#39;counsel-rhythmbox</span><span class="p">)</span>
+</code></pre></div>
+<p>Obviously, this entry point won&#39;t work while outside Emacs. Today,
+I&#39;ll describe how I&#39;ve made it work everywhere. Everywhere on Ubuntu
+14.04, that is, although a similar approach should work for other
+distributions.</p>
+
+<h2 id="step-1-make-sure-the-emacs-server-is-running">Step 1: Make sure the Emacs server is running</h2>
+
+<p>Here&#39;s the relevant part of my <a href="https://github.com/abo-abo/oremacs/blob/github/init.el">init.el</a>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;server</span><span class="p">)</span>
+<span class="p">(</span><span class="k">or</span> <span class="p">(</span><span class="nv">server-running-p</span><span class="p">)</span> <span class="p">(</span><span class="nv">server-start</span><span class="p">))</span>
+</code></pre></div>
+<p>Using <code>emacsclient</code> is essential to avoiding the extra startup time:
+even a startup time of one second feels sluggish when all I need is to
+open a menu with a song playlist.</p>
+
+<h2 id="step-2-install-the-relevant-x-window-tool">Step 2: Install the relevant X window tool</h2>
+
+<p>Initially, I only wrote a call to <code>emacsclient</code>, which resulted in the
+Emacs window gaining focus in the end.  Then I thought it would be
+nice to give the focus back the original window after the end of
+selection, and raise it as well.</p>
+
+<p>I wanted to do something with <code>wmctrl</code>, but I found that
+<a href="http://superuser.com/questions/382616/detecting-currently-active-window">xdotool</a>
+can do what I want in a simple way.</p>
+<div class="highlight"><pre><code class="language-sh" data-lang="sh">sudo apt-get install xdotool
+</code></pre></div>
+<h2 id="step-3-write-a-shell-script">Step 3: Write a shell script</h2>
+<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span class="c">#!/bin/bash</span>
+<span class="nv">wnd_id</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>xdotool getwindowfocus<span class="k">)</span><span class="s2">&quot;</span>
+emacsclient --eval <span class="s2">&quot;(progn (x-focus-frame nil) (counsel-rhythmbox))&quot;</span>
+xdotool windowfocus <span class="nv">$wnd_id</span>
+xdotool windowraise <span class="nv">$wnd_id</span>
+</code></pre></div>
+<p>Here, <code>(x-focus-frame nil)</code> will raise the Emacs window and give the
+keyboard input focus.  <code>emacsclient</code> will return as soon as I select
+something or press <kbd>C-g</kbd>. At that point the keyboard focus
+will be returned to whatever window had it when the script was
+invoked.</p>
+
+<p>By the way, here&#39;s a cool configuration that automatically makes a
+file executable if it starts with <code>#!</code>.</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">add-hook</span>
+ <span class="ss">&#39;after-save-hook</span>
+ <span class="ss">&#39;executable-make-buffer-file-executable-if-script-p</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="step-4-bind-the-shell-script-to-a-key">Step 4: Bind the shell script to a key</h2>
+
+<p>Open this (possibly using <code>gnome-control-center</code> instead, if applicable):</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">unity-control-center keyboard
+</code></pre></div>
+<p>And add a new shortcut in <code>Shortcuts</code>/<code>Custom Shortcuts</code>. I&#39;ve bound
+that one to <kbd>C-S-o</kbd> as well.</p>
+
+<h2 id="the-final-result">The final result</h2>
+
+<p>It&#39;s pretty convenient: as I&#39;m scrolling something I&#39;m reading in
+Firefox with <kbd>j</kbd> (via
+<a href="https://addons.mozilla.org/en-US/firefox/addon/firemacs/">Firemacs</a>),
+I can seamlessly press <kbd>C-S-o moo RET</kbd> to play &quot;Sisters of
+the Moon&quot;, and continue scrolling the web page with <kbd>j</kbd>.</p>
+
+<p>What&#39;s more, Emacs has very nice support for input methods with
+<kbd>C-\</kbd> (<code>toggle-input-method</code>), so I can also quickly select
+Ukrainian-titled songs, while still keeping shortcuts like
+<kbd>C-n</kbd> and <kbd>C-m</kbd> (<em>without</em> having to switch the
+input method back).</p>
+
+<p>The whole experience is similar to <code>gnome-do</code>/<code>synapse</code>, which I was
+using a few years back, except better because now it&#39;s in Emacs.</p>
+
+</div>
+
+<div class="twitter-share">
+  <a href="https://twitter.com/share"
+     class="twitter-share-button"
+     data-via="_abo_abo"
+     data-dnt="true">
+    Tweet
+  </a>
+</div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'oremacs'; // required: replace example with your forum shortname
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+<script>
+  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+</script>
+<noscript>
+  Please enable JavaScript to view the
+  <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>
