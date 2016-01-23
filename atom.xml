@@ -4,13 +4,81 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2016-01-18T21:01:44+01:00</updated>
+ <updated>2016-01-23T14:41:21+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>avy 0.4.0 is out</title>
+   <link href="http://oremacs.com/2016/01/23/avy-0.4.0/"/>
+   <updated>2016-01-23T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2016/01/23/avy-0.4.0</id>
+   <content type="html">&lt;p&gt;This release consists of 77 commits done over the course of the last 7
+months by me and many
+&lt;a href=&quot;https://github.com/abo-abo/avy/graphs/contributors&quot;&gt;contributors&lt;/a&gt;. Similarly
+to the &lt;code&gt;0.3.0&lt;/code&gt; release, the release notes are in
+&lt;a href=&quot;https://github.com/abo-abo/avy/blob/master/doc/Changelog.org&quot;&gt;Changelog.org&lt;/a&gt;.
+You can read them either at
+&lt;a href=&quot;https://github.com/abo-abo/avy/releases/tag/0.4.0&quot;&gt;github&lt;/a&gt; or
+&lt;a href=&quot;https://raw.githubusercontent.com/abo-abo/avy/master/doc/Changelog.org&quot;&gt;inside Emacs&lt;/a&gt;.
+Big thanks to all contributors.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/wiki/abo-abo/avy/images/avy-avatar-1.png&quot; alt=&quot;avy.png&quot;&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;highlights&quot;&gt;Highlights&lt;/h2&gt;
+
+&lt;p&gt;A lot of new code is just straight upgrades, you don&amp;#39;t need to do
+anything extra to use them. Below, I&amp;#39;ll describe the other part of the
+new code, which is new commands and custom vars.&lt;/p&gt;
+
+&lt;h3 id=&quot;avy-goto-char-timer&quot;&gt;&lt;code&gt;avy-goto-char-timer&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;This command now allows as many characters as you like, which makes it
+similar to a &lt;code&gt;isearch&lt;/code&gt; + &lt;code&gt;avy-isearch&lt;/code&gt; combination.  As you type, you
+get an &lt;code&gt;isearch&lt;/code&gt;-like highlight, then after a short delay you
+automatically get the &lt;code&gt;avy&lt;/code&gt; selection.&lt;/p&gt;
+
+&lt;h3 id=&quot;switch-the-action-midway-from-goto-to-kill-mark-copy&quot;&gt;Switch the action midway from goto to kill/mark/copy&lt;/h3&gt;
+
+&lt;p&gt;This is similar to the cool feature of
+&lt;a href=&quot;http://oremacs.com/2015/05/13/ace-window-0.9.0/&quot;&gt;ace-window&lt;/a&gt; that
+allows you to switch the action after you get the avy prompt.&lt;/p&gt;
+
+&lt;p&gt;For example, suppose you have:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;M-t&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;avy-goto-word-1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Here&amp;#39;s what you can do now to a word that starts with a &amp;quot;w&amp;quot; and is
+select-able with &amp;quot;a&amp;quot;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;To jump there: &lt;kbd&gt;M-t w a&lt;/kbd&gt;.&lt;/li&gt;
+&lt;li&gt;To copy the word instead of jumping to it: &lt;kbd&gt;M-t w na&lt;/kbd&gt;&lt;/li&gt;
+&lt;li&gt;To mark the word after jumping to it: &lt;kbd&gt;M-t w ma&lt;/kbd&gt;.&lt;/li&gt;
+&lt;li&gt;To kill the word after jumping to it: &lt;kbd&gt;M-t w xa&lt;/kbd&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;You can customize &lt;code&gt;avy-dispatch-alist&lt;/code&gt; to modify these actions, and
+also ensure that it plays nicely with your &lt;code&gt;avy-keys&lt;/code&gt;, if you
+customized them.  By default, it works fine, since &lt;code&gt;avy-keys&lt;/code&gt; is &lt;code&gt;&amp;#39;(?a
+?s ?d ?f ?g ?h ?j ?k ?l)&lt;/code&gt; and the keys on &lt;code&gt;avy-dispatch-alist&lt;/code&gt; are
+&lt;code&gt;&amp;#39;(?x ?m ?n)&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;avy-pop-mark&quot;&gt;&lt;code&gt;avy-pop-mark&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;This command reverses &lt;code&gt;avy-push-mark&lt;/code&gt; which most of avy commands call.
+It has its own history and works across multiple windows and frames.
+I&amp;#39;m using it currently as an upgrade to my old &lt;code&gt;(set-mark-command 4)&lt;/code&gt;
+lambda:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;M-p&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;avy-pop-mark&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Here&amp;#39;s a line to make &lt;code&gt;avy-pop-mark&lt;/code&gt; work also for &lt;code&gt;swiper&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;advice-add&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;swiper&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:before&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;avy-push-mark&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
+ </entry>
  
  <entry>
    <title>Using Emacs as system-wide Rhythmbox interface</title>

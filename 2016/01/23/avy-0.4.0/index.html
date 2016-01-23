@@ -11,7 +11,7 @@
 
   <title>
     
-      ace-window full path &middot; (or emacs
+      avy 0.4.0 is out &middot; (or emacs
     
   </title>
 
@@ -272,118 +272,69 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">ace-window full path</h1>
-  <span class="post-date">03 Mar 2015</span>
-  <p>I just closed a really helpful
-<a href="https://github.com/abo-abo/ace-window/issues/21">issue</a> for
-<code>ace-window</code>.  Turns out that there&#39;s a plugin for vim called
-Easymotion that&#39;s very similar to <code>ace-jump-mode</code>.  And that plugin
-doesn&#39;t highlight the leading chars one by one, but instead gives them
-all at once.  Which is a pretty good idea, since it&#39;s more convenient
-to read the whole path at once and type it in at once rather than:</p>
+  <h1 class="post-title">avy 0.4.0 is out</h1>
+  <span class="post-date">23 Jan 2016</span>
+  <p>This release consists of 77 commits done over the course of the last 7
+months by me and many
+<a href="https://github.com/abo-abo/avy/graphs/contributors">contributors</a>. Similarly
+to the <code>0.3.0</code> release, the release notes are in
+<a href="https://github.com/abo-abo/avy/blob/master/doc/Changelog.org">Changelog.org</a>.
+You can read them either at
+<a href="https://github.com/abo-abo/avy/releases/tag/0.4.0">github</a> or
+<a href="https://raw.githubusercontent.com/abo-abo/avy/master/doc/Changelog.org">inside Emacs</a>.
+Big thanks to all contributors.</p>
+
+<p><img src="https://raw.githubusercontent.com/wiki/abo-abo/avy/images/avy-avatar-1.png" alt="avy.png"></p>
+
+<h2 id="highlights">Highlights</h2>
+
+<p>A lot of new code is just straight upgrades, you don&#39;t need to do
+anything extra to use them. Below, I&#39;ll describe the other part of the
+new code, which is new commands and custom vars.</p>
+
+<h3 id="avy-goto-char-timer"><code>avy-goto-char-timer</code></h3>
+
+<p>This command now allows as many characters as you like, which makes it
+similar to a <code>isearch</code> + <code>avy-isearch</code> combination.  As you type, you
+get an <code>isearch</code>-like highlight, then after a short delay you
+automatically get the <code>avy</code> selection.</p>
+
+<h3 id="switch-the-action-midway-from-goto-to-kill-mark-copy">Switch the action midway from goto to kill/mark/copy</h3>
+
+<p>This is similar to the cool feature of
+<a href="http://oremacs.com/2015/05/13/ace-window-0.9.0/">ace-window</a> that
+allows you to switch the action after you get the avy prompt.</p>
+
+<p>For example, suppose you have:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-t&quot;</span><span class="p">)</span> <span class="ss">&#39;avy-goto-word-1</span><span class="p">)</span>
+</code></pre></div>
+<p>Here&#39;s what you can do now to a word that starts with a &quot;w&quot; and is
+select-able with &quot;a&quot;:</p>
 
 <ul>
-<li>read one char</li>
-<li>type one char</li>
-<li>read one more char</li>
-<li>type one more char</li>
-<li>... (maybe more steps)</li>
+<li>To jump there: <kbd>M-t w a</kbd>.</li>
+<li>To copy the word instead of jumping to it: <kbd>M-t w na</kbd></li>
+<li>To mark the word after jumping to it: <kbd>M-t w ma</kbd>.</li>
+<li>To kill the word after jumping to it: <kbd>M-t w xa</kbd>.</li>
 </ul>
 
-<p>To turn on the new behavior:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">aw-leading-char-style</span> <span class="ss">&#39;path</span><span class="p">)</span>
+<p>You can customize <code>avy-dispatch-alist</code> to modify these actions, and
+also ensure that it plays nicely with your <code>avy-keys</code>, if you
+customized them.  By default, it works fine, since <code>avy-keys</code> is <code>&#39;(?a
+?s ?d ?f ?g ?h ?j ?k ?l)</code> and the keys on <code>avy-dispatch-alist</code> are
+<code>&#39;(?x ?m ?n)</code>.</p>
+
+<h3 id="avy-pop-mark"><code>avy-pop-mark</code></h3>
+
+<p>This command reverses <code>avy-push-mark</code> which most of avy commands call.
+It has its own history and works across multiple windows and frames.
+I&#39;m using it currently as an upgrade to my old <code>(set-mark-command 4)</code>
+lambda:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-p&quot;</span><span class="p">)</span> <span class="ss">&#39;avy-pop-mark</span><span class="p">)</span>
 </code></pre></div>
-<p>Although this will only have an effect once you have more than 10 windows.
-But this method really improves the functions from avy-jump.el.
-I&#39;ve added some more commands and renamed the old ones since yesterday.</p>
-
-<h2 id="avy-jump-demos">avy-jump demos</h2>
-
-<h3 id="avi-goto-char-2"><code>avi-goto-char-2</code></h3>
-
-<p>Here&#39;s how I like to bind <code>avi-goto-char-2</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-&#39;&quot;</span><span class="p">)</span> <span class="ss">&#39;avi-goto-char-2</span><span class="p">)</span>
+<p>Here&#39;s a line to make <code>avy-pop-mark</code> work also for <code>swiper</code>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">advice-add</span> <span class="ss">&#39;swiper</span> <span class="nb">:before</span> <span class="ss">&#39;avy-push-mark</span><span class="p">)</span>
 </code></pre></div>
-<p>And here&#39;s the result of <kbd>C-&#39; bu</kbd>:</p>
-
-<p><img src="/download/avi-goto-char-2.png" alt="avi-goto-char-2"></p>
-
-<p>As you can see, nothing is overwritten by the overlay - it&#39;s appended
-after the search chars. In the screenshot above, I have <code>avi-background</code> at nil; you can set it to
-t if you want a gray background.</p>
-
-<h3 id="avi-goto-char"><code>avi-goto-char</code></h3>
-
-<p>After binding <code>avi-goto-char</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;π&quot;</span><span class="p">)</span> <span class="ss">&#39;avi-goto-char</span><span class="p">)</span>
-</code></pre></div>
-<p>Here&#39;s the result of <kbd>π b</kbd>:</p>
-
-<p><img src="/download/avi-goto-char.png" alt="avi-goto-char"></p>
-
-<h3 id="avi-goto-line"><code>avi-goto-line</code></h3>
-
-<p>After binding <code>avi-goto-line</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-g f&quot;</span><span class="p">)</span> <span class="ss">&#39;avi-goto-line</span><span class="p">)</span>
-</code></pre></div>
-<p>Here&#39;s the result of <kbd>M-g f</kbd>:</p>
-
-<p><img src="/download/avi-goto-line.png" alt="avi-goto-line"></p>
-
-<p>I&#39;ve also added:</p>
-
-<ul>
-<li><code>avi-copy-line</code></li>
-<li><code>avi-move-line</code></li>
-<li><code>avi-copy-region</code></li>
-</ul>
-
-<p>These functions use the method of <code>avi-goto-line</code> to copy/move stuff.
-It might be useful for line-based text.</p>
-
-<h3 id="avi-goto-word-0"><code>avi-goto-word-0</code></h3>
-
-<p>Here&#39;s the simple definition and the binding:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">avi-goto-word-0</span> <span class="p">()</span>
-  <span class="s">&quot;Jump to a word start in current window.&quot;</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">avi-keys</span> <span class="p">(</span><span class="nv">number-sequence</span> <span class="nv">?a</span> <span class="nv">?z</span><span class="p">))</span>
-         <span class="p">(</span><span class="nv">candidates</span> <span class="p">(</span><span class="nv">avi--regex-candidates</span> <span class="s">&quot;\\b\\sw&quot;</span><span class="p">)))</span>
-    <span class="p">(</span><span class="nv">avi--goto</span>
-     <span class="p">(</span><span class="nv">avi--process</span> <span class="nv">candidates</span> <span class="nf">#&#39;</span><span class="nv">avi--overlay-pre</span><span class="p">))))</span>
-<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-g e&quot;</span><span class="p">)</span> <span class="ss">&#39;avi-goto-word-0</span><span class="p">)</span>
-</code></pre></div>
-<p>There might be quite a lot of candidates for this one, but there&#39;s no call to <code>read-char</code>.
-Here&#39;s what happens after <kbd>M-g e</kbd>:</p>
-
-<p><img src="/download/avi-goto-word-0.png" alt="avi-goto-word-0"></p>
-
-<h3 id="avi-goto-word-1"><code>avi-goto-word-1</code></h3>
-
-<p>Here&#39;s a version of it that reads one char:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">avi-goto-word-1</span> <span class="p">()</span>
-  <span class="s">&quot;Jump to a word start in current window.</span>
-<span class="s">Read one char with which the word should start.&quot;</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">candidates</span> <span class="p">(</span><span class="nv">avi--regex-candidates</span>
-                     <span class="p">(</span><span class="nf">concat</span>
-                      <span class="s">&quot;\\b&quot;</span>
-                      <span class="p">(</span><span class="nf">string</span> <span class="p">(</span><span class="nf">read-char</span> <span class="s">&quot;char: &quot;</span><span class="p">))))))</span>
-    <span class="p">(</span><span class="nv">avi--goto</span>
-     <span class="p">(</span><span class="nv">avi--process</span> <span class="nv">candidates</span> <span class="nf">#&#39;</span><span class="nv">avi--overlay-pre</span><span class="p">))))</span>
-<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-g w&quot;</span><span class="p">)</span> <span class="ss">&#39;avi-goto-word-1</span><span class="p">)</span>
-</code></pre></div>
-<p>Here&#39;s what happens after <kbd>M-g w b</kbd>:</p>
-
-<p><img src="/download/avi-goto-word-1.png" alt="avi-goto-word-1"></p>
-
-<h2 id="outro">Outro</h2>
-
-<p>Give the new functions a go and see if you like them. New ideas are
-welcome, especially pertaining to ripping off vim plugins. I did the
-vimtutor once, but I have no idea how vim plugins work. But it turns
-out that I like Easymotion.</p>
-
 </div>
 
 <div class="twitter-share">
