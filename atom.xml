@@ -4,13 +4,88 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2016-01-23T14:41:21+01:00</updated>
+ <updated>2016-02-15T21:02:33+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Visiting URLs and issues with counsel-find-file</title>
+   <link href="http://oremacs.com/2016/02/15/counsel-ffap/"/>
+   <updated>2016-02-15T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2016/02/15/counsel-ffap</id>
+   <content type="html">&lt;p&gt;Many experienced Emacs users are aware of &lt;code&gt;ffap&lt;/code&gt; command:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Find FILENAME, guessing a default from text around point.
+If &lt;code&gt;ffap-url-regexp&lt;/code&gt; is not nil, the FILENAME may also be an URL.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;It&amp;#39;s a great way to open an link, if you plan things in advance. But
+for me it was usually &lt;kbd&gt;C-x C-f&lt;/kbd&gt; (annoyed grunt) &lt;kbd&gt;C-g M-x
+ffap RET&lt;/kbd&gt;.&lt;/p&gt;
+
+&lt;p&gt;Now, thanks to &lt;a href=&quot;https://github.com/abo-abo/swiper&quot;&gt;counsel-find-file&lt;/a&gt;,
+it&amp;#39;s &lt;kbd&gt;C-x C-f&lt;/kbd&gt; (anticipated annoyance, followed by a sigh of
+relief) &lt;kbd&gt;M-n&lt;/kbd&gt;.&lt;/p&gt;
+
+&lt;p&gt;With Ivy completion, &lt;kbd&gt;M-n&lt;/kbd&gt; calls &lt;code&gt;ivy-next-history-element&lt;/code&gt;,
+which tries to
+&lt;a href=&quot;http://endlessparentheses.com/predicting-the-future-with-the-m-n-key.html&quot;&gt;predict the history element&lt;/a&gt;
+in case you&amp;#39;ve reached history&amp;#39;s edge. The prediction usually simply
+inserts thing-at-point into the minibuffer. My favorite applications
+of this are:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;C-s M-n&lt;/kbd&gt; - &lt;code&gt;swiper&lt;/code&gt; thing-at-point, to get the occurrences
+of the current symbol in the current file.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;C-c j M-n&lt;/kbd&gt; - &lt;code&gt;counsel-git-grep&lt;/code&gt; thing-at-point, to get the
+mentions withing the current project.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;C-c g M-n&lt;/kbd&gt; - &lt;code&gt;counsel-git&lt;/code&gt; thing-at-point to open a file
+to which the current symbol links.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;One thing I&amp;#39;ve recently added is the &lt;code&gt;\_&amp;lt;...\_&amp;gt;&lt;/code&gt; wrapper for when
+&lt;code&gt;major-mode&lt;/code&gt; derives from &lt;code&gt;prog-mode&lt;/code&gt;. Since the &lt;code&gt;\_&amp;lt;&lt;/code&gt; regex matches
+the symbol start, and &lt;code&gt;\_&amp;gt;&lt;/code&gt; matches the symbol end, there&amp;#39;s no chance
+of getting partial matches. You can call &lt;code&gt;undo&lt;/code&gt; or press
+&lt;kbd&gt;M-n&lt;/kbd&gt; again in case the symbol bounds aren&amp;#39;t useful.&lt;/p&gt;
+
+&lt;p&gt;Finally, &lt;kbd&gt;C-x C-f M-n&lt;/kbd&gt; can be used to open URLs. Recently,
+I&amp;#39;ve added functionality to &lt;code&gt;counsel-find-file&lt;/code&gt; that allows me to also
+visit Github issues by simply pointing at the plain issue number,
+e.g. &lt;code&gt;#123&lt;/code&gt; in either a version-controlled file or in a Magit buffer.
+The command will query:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git remote get-url origin
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;and fill in all the details. So I no longer bother with
+&lt;code&gt;bug-reference-url-format&lt;/code&gt; and &lt;code&gt;bug-reference-mode&lt;/code&gt; - now it&amp;#39;s all
+automatic.&lt;/p&gt;
+
+&lt;p&gt;It&amp;#39;s also possible to make it work for places other than Github, for
+instance this code (already included in
+&lt;a href=&quot;http://melpa.org/#/counsel&quot;&gt;counsel&lt;/a&gt;) makes it work for the Emacs Git
+repository:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;counsel-emacs-url-p&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Return a Debbugs issue URL at point.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;and&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;looking-at&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;#[0-9]+&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+             &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;or&lt;/span&gt;
+              &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;eq&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;vc-backend&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;buffer-file-name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;Git&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+              &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;memq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;major-mode&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;magit-commit-mode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;url&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;match-string-no-properties&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;origin&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;shell-command-to-string&lt;/span&gt;
+                   &lt;span class=&quot;s&quot;&gt;&amp;quot;git remote get-url origin&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;string-match&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;git.sv.gnu.org:/srv/git/emacs.git&amp;quot;&lt;/span&gt;
+                          &lt;span class=&quot;nv&quot;&gt;origin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;http://debbugs.gnu.org/cgi/bugreport.cgi?bug=%s&amp;quot;&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;substring&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;url&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;add-to-list&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ivy-ffap-url-functions&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;counsel-emacs-url-p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
+ </entry>
  
  <entry>
    <title>avy 0.4.0 is out</title>

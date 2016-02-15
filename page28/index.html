@@ -275,6 +275,163 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2014/12/31/keymap-arms-race/">
+        The keymap arms race
+      </a>
+    </h1>
+
+    <span class="post-date">31 Dec 2014</span>
+
+    <p>Sometimes new Emacs packages have to fight for their place in the sun,
+as all the good bindings and huge keymap areas are already taken by
+the older packages. This post will cover some practical problems that
+you may encounter when your package needs to be aware of another
+active package.</p>
+
+<h2 id="ace-window-vs-helm"><code>ace-window</code> vs. <code>helm</code></h2>
+
+<p><a href="https://github.com/emacs-helm/helm">helm</a> is a wonderful package,
+it&#39;s my goto-package when I need completion. All of the following
+packages use it:</p>
+
+<ul>
+<li><a href="https://github.com/abo-abo/lispy">lispy</a></li>
+<li><a href="https://github.com/abo-abo/function-args">function-args</a></li>
+<li><a href="https://github.com/abo-abo/helm-make">helm-make</a></li>
+<li><a href="https://github.com/abo-abo/worf">worf</a></li>
+<li><a href="https://github.com/abo-abo/helm-j-cheatsheet">helm-j-cheatsheet</a></li>
+</ul>
+
+<p>But <code>helm</code> is super-greedy: once you&#39;re in the <code>helm</code>-minibuffer,
+there&#39;s no way out except either a successful completion or a cancel.
+But exiting the minibuffer for a short while may be useful. For
+instance, you could copy some text and yank it in the
+<code>helm</code>-minibuffer.  The default minibuffer functions, as well as <code>ido</code>
+easily allow it.</p>
+
+<p>I started to investigate into this when I got
+<a href="https://github.com/abo-abo/ace-window/issues/15">issue #15: Does not work with helm in minibuffer</a>
+for <code>ace-window</code>. I checked it, and indeed you could not <code>ace-window</code>
+out of a <code>helm</code>-minibuffer. In fact, it was not possible to exit with
+<code>other-window</code> either. This looked like good news, since I had an
+inkling that it used to work at some point. So I checked out a
+year-old version of <code>helm</code> and it did work.</p>
+
+<h3 id="magit-bisect-to-the-rescue"><code>magit-bisect</code> to the rescue!</h3>
+
+<p>It&#39;s very simple:</p>
+
+<ol>
+<li>Check out the master of <code>helm</code></li>
+<li>Call <code>magit-bisect-start</code> and mark <code>HEAD</code> as <em>bad</em></li>
+<li><code>magit</code> will automatically check out a revision that is halfway
+between a <em>bad</em> state and the initial commit. Now I exit Emacs and try
+<code>helm</code> again to see if I can exit from the minibuffer.
+It&#39;s kind of lame to have to exit Emacs, but somehow I don&#39;t trust
+<code>unload-feature</code> to do the right thing. Anyway, if the thing works,
+move to <code>helm</code>&#39;s repository and call <code>magit-bisect-good</code>, otherwise
+call <code>magit-bisect-bad</code>.</li>
+<li>Continue this process until termination. I needed 10 iterations
+in this case.</li>
+</ol>
+
+<p>The culprit commit was <a href="https://github.com/emacs-helm/helm/commit/61e85df">this one</a>:</p>
+
+<pre>
+<span class="diff-context"><span class="region">     (let* ((source (helm-get-current-source))
+            (kmap (and (listp source) ; Check if source is empty.
+                       (assoc-default 'keymap source))))
+</span></span><span class="diff-indicator-removed"><span class="region">-</span></span><span class="diff-removed"><span class="region">      (when kmap (setq overriding-local-map kmap)))))
+</span></span><span class="diff-indicator-added"><span class="region">+</span></span><span class="diff-added"><span class="region">      (when kmap (set-transient-map kmap)))))</span></span></pre>
+
+<h3 id="the-priority-of-maps">the priority of maps</h3>
+
+<p>In Emacs, <code>set-transient-map</code> has priority over
+<code>overriding-local-map</code>, which was exactly what <code>ace-window</code> was using.
+It&#39;s also funny that <code>ace-window</code> used to work with <code>helm</code> for a week,
+since it was published on <code>Mar 26</code> and <code>helm</code> switched to
+<code>set-transient-map</code> on <code>Apr 2</code>. And I found out that it&#39;s not working only
+now.</p>
+
+<p>Here&#39;s what <code>helm</code> is using currently:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">fboundp</span> <span class="ss">&#39;set-transient-map</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">set-transient-map</span> <span class="nv">it</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">set-temporary-overlay-map</span> <span class="nv">it</span><span class="p">))</span>
+</code></pre></div>
+<p>So I&#39;ve amended <code>ace-window</code> with similar code. The way
+<code>set-transient-map</code> works, the last call to it overrides the previous
+one, so I thought that it would work out since <code>ace-window</code> is always
+called after <code>helm</code>.</p>
+
+<p>It didn&#39;t work out, because <code>helm</code> adds the code that calls
+<code>set-transient-map</code> to <code>post-command-hook</code>.
+In the end, this finally worked:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">remove-hook</span> <span class="ss">&#39;post-command-hook</span> <span class="ss">&#39;helm--maybe-update-keymap</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="lispy-vs-slime-and-cider"><code>lispy</code> vs. <code>SLIME</code> and <code>CIDER</code></h2>
+
+<p>I thought that enabling <code>lispy-mode</code> for <code>slime-repl-mode</code> and
+<code>cider-repl-mode</code> might be a good idea.
+Extra navigation options are always good, and the ability to
+call <code>raise</code> is just so useful.</p>
+
+<p>For instance, you start with:</p>
+
+<pre>
+; SLIME 2014-11-28
+<span class="slime-repl-prompt">CL-USER&gt; </span><span class="slime-repl-old">(expt (expt 2 10) 3)</span>
+<span class="slime-repl-result"><span class="slime-repl-inputed-output">1073741824</span></span><span class="slime-repl-result">
+</span><span class="slime-repl-prompt">CL-USER&gt; <cursor> </cursor></span></pre>
+
+<p>With <code>lispy-mode</code> on you can: </p>
+
+<ol>
+<li><kbd>M-p</kbd> to get the previous input</li>
+<li><kbd>f</kbd> to move the cursor after <code>(expt 2 10)</code></li>
+<li><kbd>r</kbd> to raise <code>(expt 2 10)</code></li>
+</ol>
+
+<p>Here&#39;s the final state:</p>
+
+<pre>
+; SLIME 2014-11-28
+<span class="slime-repl-prompt">CL-USER&gt; </span><span class="slime-repl-old">(expt (expt 2 10) 3)</span>
+<span class="slime-repl-result"><span class="slime-repl-inputed-output">1073741824</span></span><span class="slime-repl-result">
+</span><span class="slime-repl-prompt">CL-USER&gt;</span> (expt 2 10)<cursor> </cursor></pre>
+
+<p>But the problem was that SLIME has <code>slime-repl-map-mode</code> minor mode on
+that competes for <code>lispy</code>&#39;s shortcuts, and CIDER has something similar
+as well.</p>
+
+<blockquote>
+<p>When two minor modes bind the same keys, which one wins?</p>
+</blockquote>
+
+<p>The answer is the first one on <code>minor-mode-map-alist</code>.
+This function I&#39;ve found on the <a href="http://www.emacswiki.org/emacs/minor-mode-hack.el">wiki</a>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">lispy-raise-minor-mode</span> <span class="p">(</span><span class="nv">mode</span><span class="p">)</span>
+  <span class="s">&quot;Make MODE the first on `minor-mode-map-alist&#39;.&quot;</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">x</span> <span class="p">(</span><span class="nf">assq</span> <span class="nv">mode</span> <span class="nv">minor-mode-map-alist</span><span class="p">)))</span>
+      <span class="p">(</span><span class="nb">when</span> <span class="nv">x</span>
+        <span class="p">(</span><span class="k">setq</span> <span class="nv">minor-mode-map-alist</span>
+              <span class="p">(</span><span class="nf">cons</span> <span class="nv">x</span> <span class="p">(</span><span class="nf">delq</span> <span class="nv">mode</span> <span class="nv">minor-mode-map-alist</span><span class="p">))))))</span>
+</code></pre></div>
+<p>I didn&#39;t want <code>lispy-mode</code> to mess with <code>minor-mode-map-alist</code> too
+actively, so I went with this approach: if <code>lispy-mode</code> is called
+interactively, i.e. via a key binding or <kbd>M-x</kbd>, put it ahead:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="k">and</span> <span class="nv">lispy-mode</span> <span class="p">(</span><span class="nv">called-interactively-p</span> <span class="ss">&#39;any</span><span class="p">))</span>
+    <span class="p">(</span><span class="nf">mapc</span> <span class="nf">#&#39;</span><span class="nv">lispy-raise-minor-mode</span>
+          <span class="p">(</span><span class="nf">cons</span> <span class="ss">&#39;lispy-mode</span> <span class="nv">lispy-known-verbs</span><span class="p">)))</span>
+</code></pre></div>
+<p>It&#39;s still a work in progress, currently only <code>lispy</code>&#39;s <kbd>RET</kbd>
+properly yields to call <code>cider-repl-return</code> and <code>slime-repl-return</code>
+respectively. I&#39;ll see if there are more key bindings that need to
+yield. Happy coding in the New Year!</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2014/12/30/ace-link-eww/">
         Emacs Web Wowser (EWW) got ace-link
       </a>
@@ -647,363 +804,6 @@ sudo ln -s /usr/local/texlive/2013/bin/x86_64-linux/pdflatex
         <span class="s">&quot;pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f&quot;</span>
         <span class="s">&quot;pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f&quot;</span><span class="p">))</span>
 </code></pre></div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2014/12/26/the-little-package-that-could/">
-        tiny.el - the little package that could
-      </a>
-    </h1>
-
-    <span class="post-date">26 Dec 2014</span>
-
-    <h2 id="the-challenge">The Challenge</h2>
-
-<p>It all started with a heated discussion with the author of
-<a href="https://github.com/capitaomorte/yasnippet">yasnippet</a> over some minor
-nonsense. In the end, we agreed to disagree, but not before he suggested:</p>
-
-<blockquote>
-<p>So I hereby challenge you to create this stripped down, no-crap,
-version of yasnippet. Dub it &quot; tiny is not yasnippet &quot; after your
-grandiose views and in the glorious unix tradition of recursive
-acronyms</p>
-</blockquote>
-
-<h2 id="the-thought-process">The Thought Process</h2>
-
-<p>Well, doing exactly that would probably be lame, but I really loved
-the acronym. Somewhere around that time I saw some post about using
-eval-and-replace, i.e. inserting some Elisp in your non-Elisp buffer
-and then replacing that code in-place with the result of the eval.</p>
-
-<p>Here&#39;s the type of code that I was playing around with:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">mapcar</span>
- <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nf">*</span> <span class="nv">x</span> <span class="nv">x</span><span class="p">))</span>
- <span class="p">(</span><span class="nv">number-sequence</span> <span class="mi">1</span> <span class="mi">7</span><span class="p">))</span>
-</code></pre></div>
-<p>Then I realized that the code should probably produce a string.
-Here&#39;s a more refined version:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">mapconcat</span>
- <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
-   <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;hex: 0x%x&quot;</span>
-           <span class="p">(</span><span class="nf">*</span> <span class="nv">x</span> <span class="nv">x</span><span class="p">)))</span>
- <span class="p">(</span><span class="nv">number-sequence</span> <span class="mi">1</span> <span class="mi">7</span><span class="p">)</span>
- <span class="s">&quot;;\n&quot;</span><span class="p">)</span>
-</code></pre></div>
-<p>Loops are a useful thing to have, they are a blind spot of
-<code>yasnippet</code>, and looping is exactly what the code above does.  The
-parameters for this loop expansion are:</p>
-
-<ul>
-<li>integer range start: <code>1</code></li>
-<li>integer range end: <code>7</code></li>
-<li>separator to join the expressions: <code>&quot;;\n&quot;</code></li>
-<li>Elisp expression to transform the linear range: <code>(* x x)</code></li>
-<li><code>format</code> expression for the result: <code>&quot;hex: 0x%x&quot;</code></li>
-</ul>
-
-<p>So ideally, in order to have a package called <code>tiny</code>, I&#39;d like to
-keep only the parameters and throw away everything else.</p>
-
-<h2 id="the-result">The Result</h2>
-
-<p>Here&#39;s the final result of the shortening, and what <code>tiny-expand</code> would produce:</p>
-
-<ul><li><button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo-1"><code>m1;\n7*xx|hex: 0x%x</code></button>
-<div id="demo-1" class="collapse">
-<pre><code>
-hex: 0x1;
-hex: 0x4;
-hex: 0x9;
-hex: 0x10;
-hex: 0x19;
-hex: 0x24;
-hex: 0x31
-</pre></code>
-</div></li></ul>
-
-<p>As you see, it&#39;s pretty compact, with only two characters which are not
-actually the parameters of the template:</p>
-
-<ul>
-<li><code>m</code> signifies the start of the template. I think this way is much
-better than something like having to mark the template body with a
-region before expanding. <code>tiny-expand</code> should be called from the end
-of the snippet, so there&#39;s no need to mark the end position.</li>
-<li><code>|</code> signifies the end of the Elisp expression and the start of the format string.
-It can be omitted if your format string starts with a <code>%</code>.</li>
-</ul>
-
-<p>Note also the use of shortened Elisp. You can still use the full thing
-if you want.  Or just use only the closing parens to resolve the
-ambiguities.</p>
-
-<h2 id="the-demos">The Demos</h2>
-
-<p>Here are some more snippets, you can click on them to see what they
-expand to. You can also find them and more in the comments section of
-the source code:
-<li><button type="button" class="btn btn-info"
-data-toggle="collapse" data-target="#demo-2"> <code>m10</code>
-</button> <div id="demo-2" class="collapse"></p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">0 1 2 3 4 5 6 7 8 9 10
-</code></pre></div>
-<p></div></li>
-<li><button type="button" class="btn btn-info"
-data-toggle="collapse" data-target="#demo-3"><code>m5 10</code></button>
-<div id="demo-3" class="collapse"></p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">5 6 7 8 9 10
-</code></pre></div>
-<p></div></li>
-<li><button type="button" class="btn btn-info"
-data-toggle="collapse" data-target="#demo-4"><code>m5,10</code></button>
-<div id="demo-4" class="collapse"></p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">5,6,7,8,9,10
-</code></pre></div>
-<p></div></li>
-<li><button type="button" class="btn btn-info"
-data-toggle="collapse" data-target="#demo-5"><code>m5 10*xx</code></button>
-<div id="demo-5" class="collapse"></p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">25 36 49 64 81 100
-</code></pre></div>
-<p></div></li>
-<li><button type="button" class="btn btn-info"
-data-toggle="collapse" data-target="#demo-6"><code>m5 10*xx%x</code></button>
-<div id="demo-6" class="collapse"></p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">19 24 31 40 51 64
-</code></pre></div>
-<p></div></li>
-<li><button type="button" class="btn btn-info"
-data-toggle="collapse" data-target="#demo-7"><code>m5 10*xx|0x%x</code></button>
-<div id="demo-7" class="collapse"></p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">0x19 0x24 0x31 0x40 0x51 0x64
-</code></pre></div>
-<p></div></li>
-<li><button type="button" class="btn btn-info"
-data-toggle="collapse" data-target="#demo-8">
-<code>m25+x?a%c</code>
-</button>
-<div id="demo-8" class="collapse"></p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">a b c d e f g h i j k l m n o p q r s t u v w x y z
-</code></pre></div>
-<p></div></li>
-<li><button type="button" class="btn btn-info"
-data-toggle="collapse" data-target="#demo-9">
-<code>m25+x?A%c</code>
-</button>
-<div id="demo-9" class="collapse"></p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
-</code></pre></div>
-<p></div></li>
-<li><button type="button" class="btn btn-info"
-data-toggle="collapse" data-target="#demo-10">
-<code>m97,122(string x)</code>
-</button>
-<div id="demo-10" class="collapse"></p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z
-</code></pre></div>
-<p></div></li>
-<li><button type="button" class="btn btn-info"
-data-toggle="collapse" data-target="#demo-11">
-<code>m97,122stringxx</code>
-</button>
-<div id="demo-11" class="collapse"></p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">aa,bb,cc,dd,ee,ff,gg,hh,ii,jj,kk,ll,mm,nn,oo,pp,qq,rr,ss,tt,uu,vv,ww,xx,yy,zz
-</code></pre></div>
-<p></div></li>
-<li><button type="button" class="btn btn-info"
-data-toggle="collapse" data-target="#demo-12">
-<code>m97,120stringxupcasex</code>
-</button>
-<div id="demo-12" class="collapse"></p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">aA,bB,cC,dD,eE,fF,gG,hH,iI,jJ,kK,lL,mM,nN,oO,pP,qQ,rR,sS,tT,uU,vV,wW,xX
-</code></pre></div>
-<p></div></li>
-<li><button type="button" class="btn btn-info"
-data-toggle="collapse" data-target="#demo-13">
-<code>m97,120stringxupcasex)x</code>
-</button>
-<div id="demo-13" class="collapse"></p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">aAa,bBb,cCc,dDd,eEe,fFf,gGg,hHh,iIi,jJj,kKk,lLl,mMm,nNn,oOo,pPp,qQq,rRr,sSs,tTt,uUu,vVv,wWw,xXx
-</code></pre></div>
-<p></div></li>
-<li><button type="button" class="btn btn-info"
-data-toggle="collapse" data-target="#demo-14">
-<code>m\n10|%(+ x x) and %(* x x) and %s</code>
-</button>
-<div id="demo-14" class="collapse"></p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">0 and 0 and 0
-2 and 1 and 1
-4 and 4 and 2
-6 and 9 and 3
-8 and 16 and 4
-10 and 25 and 5
-12 and 36 and 6
-14 and 49 and 7
-16 and 64 and 8
-18 and 81 and 9
-20 and 100 and 10
-</code></pre></div>
-<p></div></li>
-<li><button type="button" class="btn btn-info"
-data-toggle="collapse" data-target="#demo-15">
-<code>m10*2+3x</code>
-</button>
-<div id="demo-15" class="collapse"></p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">6 8 10 12 14 16 18 20 22 24 26
-</code></pre></div>
-<p></div></li>
-<li><button type="button" class="btn btn-info"
-data-toggle="collapse" data-target="#demo-16">
-<code>m\n10expx</code>
-</button>
-<div id="demo-16" class="collapse"></p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">1.0
-2.718281828459045
-7.38905609893065
-20.085536923187668
-54.598150033144236
-148.4131591025766
-403.4287934927351
-1096.6331584284585
-2980.9579870417283
-8103.083927575384
-22026.465794806718
-</code></pre></div>
-<p></div></li>
-<li><button type="button" class="btn btn-info"
-data-toggle="collapse" data-target="#demo-17">
-<code>m1\n20expx%014.2f</code>
-</button>
-<div id="demo-17" class="collapse"></p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">00000000002.72
-00000000007.39
-00000000020.09
-00000000054.60
-00000000148.41
-00000000403.43
-00000001096.63
-00000002980.96
-00000008103.08
-00000022026.47
-00000059874.14
-00000162754.79
-00000442413.39
-00001202604.28
-00003269017.37
-00008886110.52
-00024154952.75
-00065659969.14
-00178482300.96
-00485165195.41
-</code></pre></div>
-<p></div></li>
-<li><button type="button" class="btn btn-info"
-data-toggle="collapse" data-target="#demo-18">
-<code>m7|%(expt 2 x)</code>
-</button>
-<div id="demo-18" class="collapse"></p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">1 2 4 8 16 32 64 128
-</code></pre></div>
-<p></div></li>
-<li><button type="button" class="btn btn-info"
-data-toggle="collapse" data-target="#demo-19">
-<code>m, 7|0x%02x</code>
-</button>
-<div id="demo-19" class="collapse"></p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07
-</code></pre></div>
-<p></div></li>
-<li><button type="button" class="btn btn-info"
-data-toggle="collapse" data-target="#demo-20">
-<code>m10|%0.2f</code>
-</button>
-<div id="demo-20" class="collapse"></p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">0.00 1.00 2.00 3.00 4.00 5.00 6.00 7.00 8.00 9.00 10.00
-</code></pre></div>
-<p></div></li>
-<li><button type="button" class="btn btn-info"
-data-toggle="collapse" data-target="#demo-21">
-<code>m1\n14|* TODO http://emacsrocks.com/e%02d.html</code>
-</button>
-<div id="demo-21" class="collapse"></p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">* TODO http://emacsrocks.com/e01.html
-* TODO http://emacsrocks.com/e02.html
-* TODO http://emacsrocks.com/e03.html
-* TODO http://emacsrocks.com/e04.html
-* TODO http://emacsrocks.com/e05.html
-* TODO http://emacsrocks.com/e06.html
-* TODO http://emacsrocks.com/e07.html
-* TODO http://emacsrocks.com/e08.html
-* TODO http://emacsrocks.com/e09.html
-* TODO http://emacsrocks.com/e10.html
-* TODO http://emacsrocks.com/e11.html
-* TODO http://emacsrocks.com/e12.html
-* TODO http://emacsrocks.com/e13.html
-* TODO http://emacsrocks.com/e14.html
-</code></pre></div>
-<p></div></li>
-<li><button type="button" class="btn btn-info"
-data-toggle="collapse" data-target="#demo-22">
-<code>m\n8|* TODO Wash dog %(+ x 2) \nDEADLINE: &lt;%(date &quot;Jan 1&quot; (* x 5))&gt;</code>
-</button>
-<div id="demo-22" class="collapse"></p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">* TODO Wash dog 2
-DEADLINE: &lt;2015-01-01 Thu&gt;
-* TODO Wash dog 3
-DEADLINE: &lt;2015-01-06 Tue&gt;
-* TODO Wash dog 4
-DEADLINE: &lt;2015-01-11 Sun&gt;
-* TODO Wash dog 5
-DEADLINE: &lt;2015-01-16 Fri&gt;
-* TODO Wash dog 6
-DEADLINE: &lt;2015-01-21 Wed&gt;
-* TODO Wash dog 7
-DEADLINE: &lt;2015-01-26 Mon&gt;
-* TODO Wash dog 8
-DEADLINE: &lt;2015-01-31 Sat&gt;
-* TODO Wash dog 9
-DEADLINE: &lt;2015-02-05 Thu&gt;
-* TODO Wash dog 10
-DEADLINE: &lt;2015-02-10 Tue&gt;
-</code></pre></div>
-<p></div></p>
-
-<p>You can expand them one-by-one to see what they do.  As you can see,
-Ruby-style interpolation is available in the format string.  There&#39;s
-also one special function called <code>date</code> that you can use there.  It
-takes the start date as a string (<code>&quot;Jan 1&quot;</code> in the example) and an
-integer shift and prints an <code>org</code>-style date.</p>
-
-<h2 id="the-full-syntax">The full syntax</h2>
-
-<p>The full syntax for the snippet is:</p>
-
-<pre style="font-size: 0.6em"><code>m{range start:=0}{separator:= }{range end}{Lisp expr:=indentity}|{format expr:=%d}</code></pre>
-
-<ul>
-<li>You always start with <code>m</code>.</li>
-<li>Then optional <code>range start</code> that defaults to <code>0</code>.</li>
-<li>Then optional <code>separator</code> that defaults to a single space.</li>
-<li>Then mandatory <code>range end</code>.</li>
-<li>Then optional <code>Lisp expr</code>, that defaults to <code>identity</code>.</li>
-<li>Then optional <code>format</code>-style string, that defaults to <code>%d</code>. You have
-to separate it with <code>|</code> if the format string does not start with
-<code>%</code>. You can also Ruby-style interpolation here, e.g. <code>%(* x x)</code>.</li>
-<li>With the point at the end of the snippet, <kbd>M-x</kbd><code>tiny-expand</code>.</li>
-</ul>
-
-<h2 id="the-summary">The Summary</h2>
-
-<p>In the end, <a href="https://github.com/abo-abo/tiny">tiny</a> lives up to the name,
-implementing only one snippet that can be used in a variety of ways.</p>
-
-<blockquote>
-<p>tiny is not yasnippet</p>
-</blockquote>
-
   </div>
   
 </div>
