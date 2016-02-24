@@ -275,6 +275,127 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/03/03/ace-window-full-path/">
+        ace-window full path
+      </a>
+    </h1>
+
+    <span class="post-date">03 Mar 2015</span>
+
+    <p>I just closed a really helpful
+<a href="https://github.com/abo-abo/ace-window/issues/21">issue</a> for
+<code>ace-window</code>.  Turns out that there&#39;s a plugin for vim called
+Easymotion that&#39;s very similar to <code>ace-jump-mode</code>.  And that plugin
+doesn&#39;t highlight the leading chars one by one, but instead gives them
+all at once.  Which is a pretty good idea, since it&#39;s more convenient
+to read the whole path at once and type it in at once rather than:</p>
+
+<ul>
+<li>read one char</li>
+<li>type one char</li>
+<li>read one more char</li>
+<li>type one more char</li>
+<li>... (maybe more steps)</li>
+</ul>
+
+<p>To turn on the new behavior:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">aw-leading-char-style</span> <span class="ss">&#39;path</span><span class="p">)</span>
+</code></pre></div>
+<p>Although this will only have an effect once you have more than 10 windows.
+But this method really improves the functions from avy-jump.el.
+I&#39;ve added some more commands and renamed the old ones since yesterday.</p>
+
+<h2 id="avy-jump-demos">avy-jump demos</h2>
+
+<h3 id="avi-goto-char-2"><code>avi-goto-char-2</code></h3>
+
+<p>Here&#39;s how I like to bind <code>avi-goto-char-2</code>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-&#39;&quot;</span><span class="p">)</span> <span class="ss">&#39;avi-goto-char-2</span><span class="p">)</span>
+</code></pre></div>
+<p>And here&#39;s the result of <kbd>C-&#39; bu</kbd>:</p>
+
+<p><img src="/download/avi-goto-char-2.png" alt="avi-goto-char-2"></p>
+
+<p>As you can see, nothing is overwritten by the overlay - it&#39;s appended
+after the search chars. In the screenshot above, I have <code>avi-background</code> at nil; you can set it to
+t if you want a gray background.</p>
+
+<h3 id="avi-goto-char"><code>avi-goto-char</code></h3>
+
+<p>After binding <code>avi-goto-char</code>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;π&quot;</span><span class="p">)</span> <span class="ss">&#39;avi-goto-char</span><span class="p">)</span>
+</code></pre></div>
+<p>Here&#39;s the result of <kbd>π b</kbd>:</p>
+
+<p><img src="/download/avi-goto-char.png" alt="avi-goto-char"></p>
+
+<h3 id="avi-goto-line"><code>avi-goto-line</code></h3>
+
+<p>After binding <code>avi-goto-line</code>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-g f&quot;</span><span class="p">)</span> <span class="ss">&#39;avi-goto-line</span><span class="p">)</span>
+</code></pre></div>
+<p>Here&#39;s the result of <kbd>M-g f</kbd>:</p>
+
+<p><img src="/download/avi-goto-line.png" alt="avi-goto-line"></p>
+
+<p>I&#39;ve also added:</p>
+
+<ul>
+<li><code>avi-copy-line</code></li>
+<li><code>avi-move-line</code></li>
+<li><code>avi-copy-region</code></li>
+</ul>
+
+<p>These functions use the method of <code>avi-goto-line</code> to copy/move stuff.
+It might be useful for line-based text.</p>
+
+<h3 id="avi-goto-word-0"><code>avi-goto-word-0</code></h3>
+
+<p>Here&#39;s the simple definition and the binding:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">avi-goto-word-0</span> <span class="p">()</span>
+  <span class="s">&quot;Jump to a word start in current window.&quot;</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">avi-keys</span> <span class="p">(</span><span class="nv">number-sequence</span> <span class="nv">?a</span> <span class="nv">?z</span><span class="p">))</span>
+         <span class="p">(</span><span class="nv">candidates</span> <span class="p">(</span><span class="nv">avi--regex-candidates</span> <span class="s">&quot;\\b\\sw&quot;</span><span class="p">)))</span>
+    <span class="p">(</span><span class="nv">avi--goto</span>
+     <span class="p">(</span><span class="nv">avi--process</span> <span class="nv">candidates</span> <span class="nf">#&#39;</span><span class="nv">avi--overlay-pre</span><span class="p">))))</span>
+<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-g e&quot;</span><span class="p">)</span> <span class="ss">&#39;avi-goto-word-0</span><span class="p">)</span>
+</code></pre></div>
+<p>There might be quite a lot of candidates for this one, but there&#39;s no call to <code>read-char</code>.
+Here&#39;s what happens after <kbd>M-g e</kbd>:</p>
+
+<p><img src="/download/avi-goto-word-0.png" alt="avi-goto-word-0"></p>
+
+<h3 id="avi-goto-word-1"><code>avi-goto-word-1</code></h3>
+
+<p>Here&#39;s a version of it that reads one char:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">avi-goto-word-1</span> <span class="p">()</span>
+  <span class="s">&quot;Jump to a word start in current window.</span>
+<span class="s">Read one char with which the word should start.&quot;</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">candidates</span> <span class="p">(</span><span class="nv">avi--regex-candidates</span>
+                     <span class="p">(</span><span class="nf">concat</span>
+                      <span class="s">&quot;\\b&quot;</span>
+                      <span class="p">(</span><span class="nf">string</span> <span class="p">(</span><span class="nf">read-char</span> <span class="s">&quot;char: &quot;</span><span class="p">))))))</span>
+    <span class="p">(</span><span class="nv">avi--goto</span>
+     <span class="p">(</span><span class="nv">avi--process</span> <span class="nv">candidates</span> <span class="nf">#&#39;</span><span class="nv">avi--overlay-pre</span><span class="p">))))</span>
+<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-g w&quot;</span><span class="p">)</span> <span class="ss">&#39;avi-goto-word-1</span><span class="p">)</span>
+</code></pre></div>
+<p>Here&#39;s what happens after <kbd>M-g w b</kbd>:</p>
+
+<p><img src="/download/avi-goto-word-1.png" alt="avi-goto-word-1"></p>
+
+<h2 id="outro">Outro</h2>
+
+<p>Give the new functions a go and see if you like them. New ideas are
+welcome, especially pertaining to ripping off vim plugins. I did the
+vimtutor once, but I have no idea how vim plugins work. But it turns
+out that I like Easymotion.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/03/02/ace-window-without-ace/">
         ace-window without ace
       </a>
@@ -612,91 +733,6 @@ there&#39;s no reason not to have <code>check-declare-ext-errors</code> always t
 </code></pre></div>
 <p>As you see, I first find where slime.el is located using <code>locate-library</code>, and then add the
 contrib sub-directory to the <code>load-path</code>. After this, it&#39;s finally possible to <code>(require &#39;slime-repl)</code>.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/02/25/rectangle-hydra/">
-        Rectangle-mode Hydra
-      </a>
-    </h1>
-
-    <span class="post-date">25 Feb 2015</span>
-
-    <p>Today, I&#39;ll show a very useful hydra that I found yesterday on the
-<a href="https://github.com/abo-abo/hydra/wiki/Rectangle-Operations">hydra wiki</a>.
-The idea is by <a href="https://github.com/zhaojiangbin">@zhaojiangbin</a>, I&#39;ve
-made some minor changes to get the arrows to work the way that I like,
-and made all keys into plain letters.</p>
-
-<h2 id="the-code">The code</h2>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">ora-ex-point-mark</span> <span class="p">()</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">if</span> <span class="nv">rectangle-mark-mode</span>
-      <span class="p">(</span><span class="nv">exchange-point-and-mark</span><span class="p">)</span>
-    <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">mk</span> <span class="p">(</span><span class="nv">mark</span><span class="p">)))</span>
-      <span class="p">(</span><span class="nv">rectangle-mark-mode</span> <span class="mi">1</span><span class="p">)</span>
-      <span class="p">(</span><span class="nf">goto-char</span> <span class="nv">mk</span><span class="p">))))</span>
-
-<span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-rectangle</span> <span class="p">(</span><span class="nb">:body-pre</span> <span class="p">(</span><span class="nv">rectangle-mark-mode</span> <span class="mi">1</span><span class="p">)</span>
-                           <span class="nb">:color</span> <span class="nv">pink</span>
-                           <span class="nb">:post</span> <span class="p">(</span><span class="nv">deactivate-mark</span><span class="p">))</span>
-  <span class="s">&quot;</span>
-<span class="s">  ^_k_^     _d_elete    _s_tring     |\\     ‗,,,--,,‗</span>
-<span class="s">_h_   _l_   _o_k        _y_ank       /,`.-&#39;`&#39;   .‗  \-;;,‗</span>
-<span class="s">  ^_j_^     _n_ew-copy  _r_eset     |,4-  ) )‗   .;.(  `&#39;-&#39;</span>
-<span class="s">^^^^        _e_xchange  _u_ndo     &#39;---&#39;&#39;(‗/.‗)-&#39;(‗\‗)</span>
-<span class="s">^^^^        ^ ^         _p_aste</span>
-<span class="s">&quot;</span>
-  <span class="p">(</span><span class="s">&quot;h&quot;</span> <span class="nf">backward-char</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nf">forward-char</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;k&quot;</span> <span class="nv">previous-line</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">next-line</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;e&quot;</span> <span class="nv">ora-ex-point-mark</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;n&quot;</span> <span class="nv">copy-rectangle-as-kill</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;d&quot;</span> <span class="nv">delete-rectangle</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;r&quot;</span> <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">region-active-p</span><span class="p">)</span>
-           <span class="p">(</span><span class="nv">deactivate-mark</span><span class="p">)</span>
-         <span class="p">(</span><span class="nv">rectangle-mark-mode</span> <span class="mi">1</span><span class="p">))</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;y&quot;</span> <span class="nv">yank-rectangle</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;u&quot;</span> <span class="nv">undo</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;s&quot;</span> <span class="nv">string-rectangle</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;p&quot;</span> <span class="nv">kill-rectangle</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;o&quot;</span> <span class="no">nil</span> <span class="no">nil</span><span class="p">))</span>
-
-<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-x SPC&quot;</span><span class="p">)</span> <span class="ss">&#39;hydra-rectangle/body</span><span class="p">)</span>
-</code></pre></div>
-<p>There was a lot of screen estate left over, so I added some ASCII-art. I wanted something
-related to syrup, or at least pancakes, but instead I found a cat. Apparently, it&#39;s very
-easy to find pictures of cats on the internet. Who knew.</p>
-
-<p>Here&#39;s how it looks like in-action:</p>
-
-<p><img src="/download/hydra-rectangle.png" alt="hydra-rectangle"></p>
-
-<p>The pink variation is pretty useful here, since it doesn&#39;t get in the
-way of e.g. <kbd>DEL</kbd> or <kbd>C-n</kbd> or <kbd>C-e</kbd> or inserting spaces.</p>
-
-<p>I&#39;ve been using it today for editing some table data in <code>org-mode</code>,
-and it feels pretty efficient.</p>
-
-<h2 id="some-explanations">Some explanations</h2>
-
-<p>What does what:</p>
-
-<ul>
-<li><kbd>d</kbd> deletes rectangle; it&#39;s similar to <kbd>C-d</kbd>.</li>
-<li><kbd>n</kbd> copies rectangle; it&#39;s similar to <kbd>M-w</kbd>.</li>
-<li><kbd>o</kbd> exits; it&#39;s very easy to press.</li>
-<li><kbd>e</kbd> exchanges the point and mark; it&#39;s also quite useful to re-activate the region
-if you disabled it with <kbd>n</kbd> or <kbd>r</kbd>.</li>
-<li><kbd>s</kbd> fills the selected rectangle with a string.</li>
-<li><kbd>y</kbd> yanks the rectangle that you saved before with <kbd>n</kbd>.</li>
-<li><kbd>r</kbd> deactivates or activates the rectangle at point.</li>
-<li><kbd>u</kbd> calls <code>undo</code>.</li>
-<li><kbd>p</kbd> kills the rectangle; it&#39;s similar to <kbd>C-w</kbd>.</li>
-</ul>
 
   </div>
   

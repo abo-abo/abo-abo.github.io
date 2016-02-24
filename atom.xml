@@ -4,13 +4,61 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2016-02-15T21:13:19+01:00</updated>
+ <updated>2016-02-24T21:58:50+01:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Using rsync in dired</title>
+   <link href="http://oremacs.com/2016/02/24/dired-rsync/"/>
+   <updated>2016-02-24T00:00:00+01:00</updated>
+   <id>http://oremacs.com/2016/02/24/dired-rsync</id>
+   <content type="html">&lt;p&gt;Here&amp;#39;s a code snippet I&amp;#39;ve found long ago on the internet (the source
+seems to be no longer accessible), that has proven valuable time and
+time again:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;c1&quot;&gt;;;;###autoload&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ora-dired-rsync&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;dest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;list&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;expand-file-name&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;read-file-name&lt;/span&gt;
+      &lt;span class=&quot;s&quot;&gt;&amp;quot;Rsync to:&amp;quot;&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;dired-dwim-target-directory&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;;; store all selected files into &amp;quot;files&amp;quot; list&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;files&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;dired-get-marked-files&lt;/span&gt;
+                &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;current-prefix-arg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;;; the rsync command&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;tmtxt/rsync-command&lt;/span&gt;
+         &lt;span class=&quot;s&quot;&gt;&amp;quot;rsync -arvz --progress &amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;;; add all selected file names as arguments&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;;; to the rsync command&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;dolist&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;file&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;files&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tmtxt/rsync-command&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;concat&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tmtxt/rsync-command&lt;/span&gt;
+                    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;shell-quote-argument&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                    &lt;span class=&quot;s&quot;&gt;&amp;quot; &amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;;; append the destination&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tmtxt/rsync-command&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;concat&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tmtxt/rsync-command&lt;/span&gt;
+                  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;shell-quote-argument&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;;; run the async shell command&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;async-shell-command&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tmtxt/rsync-command&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;*rsync*&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;;; finally, switch to that window&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;other-window&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dired-mode-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Y&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ora-dired-rsync&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Lets you copy huge files and directories without Emacs freezing up and
+with convenient progress bar updates. That is all.&lt;/p&gt;
+
+&lt;p&gt;Thanks to &lt;code&gt;tmtxt&lt;/code&gt;, the mysterious hacker-person from whom the snippet
+likely originated .  Good luck with getting your blog back up.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Visiting URLs and issues with counsel-find-file</title>
