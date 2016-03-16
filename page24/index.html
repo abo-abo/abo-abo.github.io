@@ -275,6 +275,74 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/01/22/clojure-sugar-for-elisp/">
+        Adding a bit of Clojure's sugar to Elisp
+      </a>
+    </h1>
+
+    <span class="post-date">22 Jan 2015</span>
+
+    <p>I just wanted to highlight my latest
+<a href="http://comments.gmane.org/gmane.emacs.devel/181534">submission to emacs-devel</a>.</p>
+
+<h2 id="the-patch">The patch</h2>
+
+<p>The attached
+<a href="http://lists.gnu.org/archive/html/emacs-devel/2015-01/txtqCl_ExSFYV.txt">patch</a>,
+together with the macro
+<a href="https://github.com/abo-abo/short-lambda">short-lambda</a> will add a
+shorthand for defining <code>lambda</code>s in Emacs Lisp.</p>
+
+<p>Here&#39;s an excerpt from <a href="http://clojure.org/reader">the Clojure reader docs</a></p>
+
+<blockquote>
+<p>Anonymous function literal (<code>#()</code>)</p>
+
+<p><code>#(...)</code> =&gt; <code>(fn [args] (...))</code></p>
+
+<p>where args are determined by the presence of argument literals
+taking the form <code>%</code>, <code>%n</code> or <code>%&amp;</code>. <code>%</code> is a synonym for <code>%1</code>, <code>%n</code> designates
+the nth arg (1-based), and <code>%&amp;</code> designates a rest arg. This is not a
+replacement for <code>fn</code> - idiomatic used would be for very short one-off
+mapping/filter fns and the like.</p>
+
+<p><code>#()</code> forms cannot be nested.</p>
+</blockquote>
+
+<h2 id="what-the-patch-does">What the patch does</h2>
+
+<p>It makes it possible to write this in Elisp:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">mapc</span> <span class="o">#(</span><span class="nf">put</span> <span class="nf">%</span> <span class="ss">&#39;disabled</span> <span class="no">nil</span><span class="p">)</span>
+      <span class="o">&#39;</span><span class="p">(</span><span class="nf">upcase-region</span> <span class="nf">downcase-region</span> <span class="nf">narrow-to-region</span><span class="p">))</span>
+</code></pre></div>
+<p>You can also do this and other things that you would expect, if you&#39;re
+familiar with Clojure:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">cl-mapcar</span> <span class="o">#(</span><span class="nf">concat</span> <span class="nv">%1</span> <span class="s">&quot; are &quot;</span> <span class="nv">%2</span><span class="p">)</span>
+           <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;roses&quot;</span> <span class="s">&quot;violets&quot;</span><span class="p">)</span>
+           <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;red&quot;</span> <span class="s">&quot;blue&quot;</span><span class="p">))</span>
+<span class="c1">;; =&gt; (&quot;roses are red&quot; &quot;violets are blue&quot;)</span>
+</code></pre></div>
+<p>Or you could replace this snippet from <code>org-mode</code>&#39;s code:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">mapcar</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+          <span class="p">(</span><span class="k">and</span> <span class="p">(</span><span class="nf">member</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">x</span><span class="p">)</span> <span class="nv">matchers</span><span class="p">)</span> <span class="p">(</span><span class="nf">nth</span> <span class="mi">1</span> <span class="nv">x</span><span class="p">)))</span>
+        <span class="nv">org-latex-regexps</span><span class="p">)</span>
+</code></pre></div>
+<p>with this sugar-coated code:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">mapcar</span> <span class="o">#(</span><span class="k">and</span> <span class="p">(</span><span class="nf">member</span> <span class="p">(</span><span class="nf">car</span> <span class="nf">%</span><span class="p">)</span> <span class="nv">matchers</span><span class="p">)</span> <span class="p">(</span><span class="nf">nth</span> <span class="mi">1</span> <span class="nf">%</span><span class="p">))</span>
+        <span class="nv">org-latex-regexps</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="outro">Outro</h2>
+
+<p>I hope that this gets accepted, although there are some conservative
+people that protest against this change.  Let me know if you would
+like to have this option for your Elisp setups.  And remember that you
+can try out the patch if you&#39;re familiar with
+<a href="http://www.emacswiki.org/emacs/BuildingEmacs">building Emacs from source</a>.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/01/21/dired-shortcuts/">
         Even more dired key bindings
       </a>
@@ -905,122 +973,6 @@ out, here&#39;s a link to
 <a href="https://www.youtube.com/watch?v=dAojpHR-6Uo">a Youtube demo</a> of the
 fast clickety-clicking (the mouse usage), that comes after some
 clackety-clacking (the customization).</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/01/17/setting-up-ediff/">
-        Setting up Ediff
-      </a>
-    </h1>
-
-    <span class="post-date">17 Jan 2015</span>
-
-    <p>Once you make Ediff bearable, it becomes wonderful.  At least this was
-my experience. It&#39;s a very good tool, but some of the defaults look
-very poor to me.</p>
-
-<h2 id="customizing-the-customize">Customizing the <code>customize</code></h2>
-
-<p>First of all, I&#39;ll list a macro that I&#39;ve started to use for setting
-custom variables:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defmacro</span> <span class="nv">csetq</span> <span class="p">(</span><span class="nv">variable</span> <span class="nv">value</span><span class="p">)</span>
-  <span class="o">`</span><span class="p">(</span><span class="nf">funcall</span> <span class="p">(</span><span class="k">or</span> <span class="p">(</span><span class="nf">get</span> <span class="ss">&#39;,variable</span> <span class="ss">&#39;custom-set</span><span class="p">)</span>
-                <span class="ss">&#39;set-default</span><span class="p">)</span>
-            <span class="ss">&#39;,variable</span> <span class="o">,</span><span class="nv">value</span><span class="p">))</span>
-</code></pre></div>
-<p>This macro I&#39;ve put together myself after searching though the code
-base and not finding something similar; <code>custom-set-variables</code> comes
-close to what I want, or maybe <code>custom-initialize-changed</code>.  Basically
-all I want is a <code>setq</code> that is aware of the <code>custom-set</code> property of a
-variable. If you know such a macro, please let me know.</p>
-
-<h2 id="changing-some-ediff-options">Changing some Ediff options</h2>
-
-<p>Now, that I&#39;ve explained the custom setter (by the way, using
-<code>custom-set-variables</code> is absolutely equivalent to <code>csetq</code>), here are
-my changes:</p>
-
-<ol>
-<li><p>Don&#39;t use the weird setup with the control panel in a separate
-frame.  I can manage windows in Emacs much better than my desktop
-(Unity or Gnome Shell) can manage the Emacs frames.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">(csetq ediff-window-setup-function &#39;ediff-setup-windows-plain)
-</code></pre></div></li>
-<li><p>Split the windows horizontally instead of vertically. This way, it&#39;s
-much easier to follow the changes.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">(csetq ediff-split-window-function &#39;split-window-horizontally)
-</code></pre></div></li>
-<li><p>Ignore white space. I don&#39;t write a lot of Python, so I don&#39;t care
-about the white space in the diffs. At the same time, I re-format any
-LISP code that I edit to my liking, and I want to see only the
-important changes in the diff, and not the whitespace nonsense.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">(csetq ediff-diff-options &quot;-w&quot;)
-</code></pre></div></li>
-</ol>
-
-<h2 id="changing-some-ediff-key-bindings">Changing some Ediff key bindings</h2>
-
-<p>This is just the standard stuff that I like to do for each mode that
-does not self-insert: assign <kbd>j</kbd> to move down, and
-<kbd>k</kbd> to move up.</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">ora-ediff-hook</span> <span class="p">()</span>
-  <span class="p">(</span><span class="nv">ediff-setup-keymap</span><span class="p">)</span>
-  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">ediff-mode-map</span> <span class="s">&quot;j&quot;</span> <span class="ss">&#39;ediff-next-difference</span><span class="p">)</span>
-  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">ediff-mode-map</span> <span class="s">&quot;k&quot;</span> <span class="ss">&#39;ediff-previous-difference</span><span class="p">))</span>
-
-<span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;ediff-mode-hook</span> <span class="ss">&#39;ora-ediff-hook</span><span class="p">)</span>
-</code></pre></div>
-<h2 id="restoring-the-windows-after-ediff-quits">Restoring the windows after Ediff quits</h2>
-
-<p>When you quit an Ediff session with <kbd>q</kbd>, it just leaves the
-two diff windows around, instead of restoring the window configuration
-from when Ediff was started. Here&#39;s the (slightly hacky) code to
-restore the old window configuration:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">winner-mode</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;ediff-after-quit-hook-internal</span> <span class="ss">&#39;winner-undo</span><span class="p">)</span>
-</code></pre></div>
-<h2 id="list-of-ways-that-i-use-to-invoke-ediff">List of ways that I use to invoke Ediff</h2>
-
-<h3 id="from-magit">from <code>magit</code></h3>
-
-<p>In 80% of the cases, I call Ediff with <kbd>e</kbd> (<code>magit-ediff</code>) from
-<code>magit-status-mode</code>. This gives me a better overview of the changes,
-especially when I want to revert stuff with either <kbd>a</kbd>
-(<code>ediff-copy-A-to-B</code>) or <kbd>b</kbd> (<code>ediff-copy-B-to-A</code>). Probably
-with <kbd>a</kbd>, since <a href="https://github.com/magit/magit">magit</a> seems
-to consistently put the <code>@{index}</code> file into the <code>A</code> diff window, and
-the current file into the <code>B</code> window.</p>
-
-<p>So if I&#39;m looking at a diff (to which I navigated with
-<kbd>j</kbd>/<kbd>k</kbd>), I can revert it with <kbd>a</kbd>. At this
-point, the diff region in the current file will become equal to that
-of the index file. But it will not be saved yet. If I want to save the
-current file in the <code>B</code> window, I can do it with <kbd>wb</kbd>
-(<code>ediff-save-buffer</code>). After a revert, it&#39;s also useful to call
-<kbd>!</kbd>(<code>ediff-update-diffs</code>), which will remove the zero-length
-diffs and update the diff-count in the mode-line.</p>
-
-<h3 id="other-methods">other methods</h3>
-
-<ol>
-<li><code>ediff-buffers</code> will diff two (different) buffers. If you happen to
-have only two windows open with the appropriate buffers, you get them
-as defaults and can choose them quickly with <kbd>RET</kbd> <kbd>RET</kbd>.</li>
-<li><code>ediff-files</code> is similar, but works on files instead. I like to just mark the appropriate files
-in <code>dired</code> with <kbd>m</kbd>, then they also get auto-selected by <code>ediff-files</code>.</li>
-<li><code>ediff-current-file</code> is useful to see the unsaved changes to the current file.
-I rarely use it, since I have a compulsion to save every file every chance I get. There is little hope
-to recover from this addiction, unless someone implements an analogue of <a href="https://github.com/bbatsov/guru-mode">guru-mode</a>
-that annoys you when you try to save a file. Actually, it&#39;s not a bad idea - <kbd>C-x C-s</kbd>:</li>
-</ol>
-
-<blockquote>
-<p>Oleh, you have saved this file <code>40 times</code> in the last hour; the last
-save was <code>0 minutes 34 seconds ago</code>; since then, you&#39;ve changed <code>27
-bytes</code> of information. Are you <strong>sure</strong> you want to save <code>[y/N]</code>?</p>
-</blockquote>
 
   </div>
   
