@@ -11,7 +11,7 @@
 
   <title>
     
-      (or emacs &middot; irrelevant)
+      Extended syntax for hydra docstrings &middot; (or emacs
     
   </title>
 
@@ -48,7 +48,7 @@
   <!-- </div> -->
 
   <nav class="sidebar-nav">
-    <a class="sidebar-nav-item active" href="/">Home</a>
+    <a class="sidebar-nav-item" href="/">Home</a>
 
     
 
@@ -271,18 +271,10 @@
       </div>
 
       <div class="container content">
-        <div class="posts">
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2016/04/04/hydra-doc-syntax/">
-        Extended syntax for hydra docstrings
-      </a>
-    </h1>
-
-    <span class="post-date">04 Apr 2016</span>
-
-    <p>I&#39;ve been getting more and more organized in tracking my tasks and
+        <div class="post">
+  <h1 class="post-title">Extended syntax for hydra docstrings</h1>
+  <span class="post-date">04 Apr 2016</span>
+  <p>I&#39;ve been getting more and more organized in tracking my tasks and
 time with Org-mode. Still using the usual suspects, of course: GTD and
 Pomodoro, I&#39;m just getting more diligent with them than in the
 previous years.</p>
@@ -386,250 +378,36 @@ _y_: ?y? year       _q_: quit          _L__l__c_: ?l?
 </code></pre></div>
 <p>Doesn&#39;t that look simple?</p>
 
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2016/03/16/counsel-linux-app/">
-        Emacs completion for launching Linux desktop apps.
-      </a>
-    </h1>
-
-    <span class="post-date">16 Mar 2016</span>
-
-    <p>I&#39;d like to highlight the new command <code>counsel-linux-app</code> that I
-recently added to the <a href="https://github.com/abo-abo/swiper">counsel</a>
-package:</p>
-
-<p><img src="/download/counsel-linux-app-1.png" alt="counsel-linux-app-1.png"></p>
-
-<p>This command looks through your <code>/usr/share/applications/*.desktop</code>
-and offers to launch them, just like the launcher that you normally
-get when you press the super key. My current system is Ubuntu, and the
-launcher here is really horrible, so I&#39;m glad to have a much faster
-and reliable replacement.</p>
-
-<p>Here&#39;s another screenshot, I open the keyboard settings quite often:</p>
-
-<p><img src="/download/counsel-linux-app-2.png" alt="counsel-linux-app-2.png"></p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2016/02/24/dired-rsync/">
-        Using rsync in dired
-      </a>
-    </h1>
-
-    <span class="post-date">24 Feb 2016</span>
-
-    <p>Here&#39;s a code snippet I&#39;ve found long ago on the internet (the source
-seems to be no longer accessible), that has proven valuable time and
-time again:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="c1">;;;###autoload</span>
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">ora-dired-rsync</span> <span class="p">(</span><span class="nv">dest</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">interactive</span>
-   <span class="p">(</span><span class="nf">list</span>
-    <span class="p">(</span><span class="nf">expand-file-name</span>
-     <span class="p">(</span><span class="nv">read-file-name</span>
-      <span class="s">&quot;Rsync to:&quot;</span>
-      <span class="p">(</span><span class="nv">dired-dwim-target-directory</span><span class="p">)))))</span>
-  <span class="c1">;; store all selected files into &quot;files&quot; list</span>
-  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">files</span> <span class="p">(</span><span class="nv">dired-get-marked-files</span>
-                <span class="no">nil</span> <span class="nv">current-prefix-arg</span><span class="p">))</span>
-        <span class="c1">;; the rsync command</span>
-        <span class="p">(</span><span class="nv">tmtxt/rsync-command</span>
-         <span class="s">&quot;rsync -arvz --progress &quot;</span><span class="p">))</span>
-    <span class="c1">;; add all selected file names as arguments</span>
-    <span class="c1">;; to the rsync command</span>
-    <span class="p">(</span><span class="nb">dolist</span> <span class="p">(</span><span class="nv">file</span> <span class="nv">files</span><span class="p">)</span>
-      <span class="p">(</span><span class="k">setq</span> <span class="nv">tmtxt/rsync-command</span>
-            <span class="p">(</span><span class="nf">concat</span> <span class="nv">tmtxt/rsync-command</span>
-                    <span class="p">(</span><span class="nv">shell-quote-argument</span> <span class="nv">file</span><span class="p">)</span>
-                    <span class="s">&quot; &quot;</span><span class="p">)))</span>
-    <span class="c1">;; append the destination</span>
-    <span class="p">(</span><span class="k">setq</span> <span class="nv">tmtxt/rsync-command</span>
-          <span class="p">(</span><span class="nf">concat</span> <span class="nv">tmtxt/rsync-command</span>
-                  <span class="p">(</span><span class="nv">shell-quote-argument</span> <span class="nv">dest</span><span class="p">)))</span>
-    <span class="c1">;; run the async shell command</span>
-    <span class="p">(</span><span class="nv">async-shell-command</span> <span class="nv">tmtxt/rsync-command</span> <span class="s">&quot;*rsync*&quot;</span><span class="p">)</span>
-    <span class="c1">;; finally, switch to that window</span>
-    <span class="p">(</span><span class="nv">other-window</span> <span class="mi">1</span><span class="p">)))</span>
-
-<span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="s">&quot;Y&quot;</span> <span class="ss">&#39;ora-dired-rsync</span><span class="p">)</span>
-</code></pre></div>
-<p>Lets you copy huge files and directories without Emacs freezing up and
-with convenient progress bar updates. That is all.</p>
-
-<p>Thanks to <code>tmtxt</code>, the mysterious hacker-person from whom the snippet
-likely originated .  Good luck with getting your blog back up.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2016/02/15/counsel-ffap/">
-        Visiting URLs and issues with counsel-find-file
-      </a>
-    </h1>
-
-    <span class="post-date">15 Feb 2016</span>
-
-    <p>Many experienced Emacs users are aware of <code>ffap</code> command:</p>
-
-<blockquote>
-<p>Find FILENAME, guessing a default from text around point.
-If <code>ffap-url-regexp</code> is not nil, the FILENAME may also be an URL.</p>
-</blockquote>
-
-<p>It&#39;s a great way to open an link, if you plan things in advance. But
-for me it was usually <kbd>C-x C-f</kbd> (annoyed grunt) <kbd>C-g M-x
-ffap RET</kbd>.</p>
-
-<p>Now, thanks to <a href="https://github.com/abo-abo/swiper">counsel-find-file</a>,
-it&#39;s <kbd>C-x C-f</kbd> (anticipated annoyance, followed by a sigh of
-relief) <kbd>M-n</kbd>.</p>
-
-<p>With Ivy completion, <kbd>M-n</kbd> calls <code>ivy-next-history-element</code>,
-which tries to</p>
-
-<p><a href="http://endlessparentheses.com/predicting-the-future-with-the-m-n-key.html">predict the history element</a>
-in case you&#39;ve reached history&#39;s edge. The prediction usually simply
-inserts thing-at-point into the minibuffer. My favorite applications
-of this are:</p>
-
-<ul>
-<li><kbd>C-s M-n</kbd> - <code>swiper</code> thing-at-point, to get the occurrences
-of the current symbol in the current file.</li>
-<li><kbd>C-c j M-n</kbd> - <code>counsel-git-grep</code> thing-at-point, to get the
-mentions within the current project.</li>
-<li><kbd>C-c g M-n</kbd> - <code>counsel-git</code> thing-at-point to open a file
-to which the current symbol links.</li>
-</ul>
-
-<p>One thing I&#39;ve recently added is the <code>\_&lt;...\_&gt;</code> wrapper for when
-<code>major-mode</code> derives from <code>prog-mode</code>. Since the <code>\_&lt;</code> regex matches
-the symbol start, and <code>\_&gt;</code> matches the symbol end, there&#39;s no chance
-of getting partial matches. You can call <code>undo</code> or press
-<kbd>M-n</kbd> again in case the symbol bounds aren&#39;t useful.</p>
-
-<p>Finally, <kbd>C-x C-f M-n</kbd> can be used to open URLs. Recently,
-I&#39;ve added functionality to <code>counsel-find-file</code> that allows me to also
-visit Github issues by simply pointing at the plain issue number,
-e.g. <code>#123</code> in either a version-controlled file or in a Magit buffer.
-The command will query:</p>
-<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span class="nv">$ </span>git remote get-url origin
-</code></pre></div>
-<p>and fill in all the details. So I no longer bother with
-<code>bug-reference-url-format</code> and <code>bug-reference-mode</code> - now it&#39;s all
-automatic.</p>
-
-<p>It&#39;s also possible to make it work for places other than Github, for
-instance this code (already included in
-<a href="http://melpa.org/#/counsel">counsel</a>) makes it work for the Emacs Git
-repository:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel-emacs-url-p</span> <span class="p">()</span>
-  <span class="s">&quot;Return a Debbugs issue URL at point.&quot;</span>
-  <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="k">and</span> <span class="p">(</span><span class="nf">looking-at</span> <span class="s">&quot;#[0-9]+&quot;</span><span class="p">)</span>
-             <span class="p">(</span><span class="k">or</span>
-              <span class="p">(</span><span class="nf">eq</span> <span class="p">(</span><span class="nv">vc-backend</span> <span class="p">(</span><span class="nf">buffer-file-name</span><span class="p">))</span> <span class="ss">&#39;Git</span><span class="p">)</span>
-              <span class="p">(</span><span class="nf">memq</span> <span class="nv">major-mode</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">magit-commit-mode</span><span class="p">))))</span>
-    <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">url</span> <span class="p">(</span><span class="nv">match-string-no-properties</span> <span class="mi">0</span><span class="p">))</span>
-          <span class="p">(</span><span class="nv">origin</span> <span class="p">(</span><span class="nv">shell-command-to-string</span>
-                   <span class="s">&quot;git remote get-url origin&quot;</span><span class="p">)))</span>
-      <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">string-match</span> <span class="s">&quot;git.sv.gnu.org:/srv/git/emacs.git&quot;</span>
-                          <span class="nv">origin</span><span class="p">)</span>
-        <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;http://debbugs.gnu.org/cgi/bugreport.cgi?bug=%s&quot;</span>
-                <span class="p">(</span><span class="nf">substring</span> <span class="nv">url</span> <span class="mi">1</span><span class="p">))))))</span>
-
-<span class="p">(</span><span class="nv">add-to-list</span> <span class="ss">&#39;ivy-ffap-url-functions</span> <span class="ss">&#39;counsel-emacs-url-p</span><span class="p">)</span>
-</code></pre></div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2016/01/23/avy-0.4.0/">
-        avy 0.4.0 is out
-      </a>
-    </h1>
-
-    <span class="post-date">23 Jan 2016</span>
-
-    <p>This release consists of 77 commits done over the course of the last 7
-months by me and many
-<a href="https://github.com/abo-abo/avy/graphs/contributors">contributors</a>. Similarly
-to the <code>0.3.0</code> release, the release notes are in
-<a href="https://github.com/abo-abo/avy/blob/master/doc/Changelog.org">Changelog.org</a>.
-You can read them either at
-<a href="https://github.com/abo-abo/avy/releases/tag/0.4.0">github</a> or
-<a href="https://raw.githubusercontent.com/abo-abo/avy/master/doc/Changelog.org">inside Emacs</a>.
-Big thanks to all contributors.</p>
-
-<p><img src="https://raw.githubusercontent.com/wiki/abo-abo/avy/images/avy-avatar-1.png" alt="avy.png"></p>
-
-<h2 id="highlights">Highlights</h2>
-
-<p>A lot of new code is just straight upgrades, you don&#39;t need to do
-anything extra to use them. Below, I&#39;ll describe the other part of the
-new code, which is new commands and custom vars.</p>
-
-<h3 id="avy-goto-char-timer"><code>avy-goto-char-timer</code></h3>
-
-<p>This command now allows as many characters as you like, which makes it
-similar to a <code>isearch</code> + <code>avy-isearch</code> combination.  As you type, you
-get an <code>isearch</code>-like highlight, then after a short delay you
-automatically get the <code>avy</code> selection.</p>
-
-<h3 id="switch-the-action-midway-from-goto-to-kill-mark-copy">Switch the action midway from goto to kill/mark/copy</h3>
-
-<p>This is similar to the cool feature of
-<a href="http://oremacs.com/2015/05/13/ace-window-0.9.0/">ace-window</a> that
-allows you to switch the action after you get the avy prompt.</p>
-
-<p>For example, suppose you have:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-t&quot;</span><span class="p">)</span> <span class="ss">&#39;avy-goto-word-1</span><span class="p">)</span>
-</code></pre></div>
-<p>Here&#39;s what you can do now to a word that starts with a &quot;w&quot; and is
-select-able with &quot;a&quot;:</p>
-
-<ul>
-<li>To jump there: <kbd>M-t w a</kbd>.</li>
-<li>To copy the word instead of jumping to it: <kbd>M-t w na</kbd></li>
-<li>To mark the word after jumping to it: <kbd>M-t w ma</kbd>.</li>
-<li>To kill the word after jumping to it: <kbd>M-t w xa</kbd>.</li>
-</ul>
-
-<p>You can customize <code>avy-dispatch-alist</code> to modify these actions, and
-also ensure that it plays nicely with your <code>avy-keys</code>, if you
-customized them.  By default, it works fine, since <code>avy-keys</code> is <code>&#39;(?a
-?s ?d ?f ?g ?h ?j ?k ?l)</code> and the keys on <code>avy-dispatch-alist</code> are
-<code>&#39;(?x ?m ?n)</code>.</p>
-
-<h3 id="avy-pop-mark"><code>avy-pop-mark</code></h3>
-
-<p>This command reverses <code>avy-push-mark</code> which most of avy commands call.
-It has its own history and works across multiple windows and frames.
-I&#39;m using it currently as an upgrade to my old <code>(set-mark-command 4)</code>
-lambda:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-p&quot;</span><span class="p">)</span> <span class="ss">&#39;avy-pop-mark</span><span class="p">)</span>
-</code></pre></div>
-<p>Here&#39;s a line to make <code>avy-pop-mark</code> work also for <code>swiper</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">advice-add</span> <span class="ss">&#39;swiper</span> <span class="nb">:before</span> <span class="ss">&#39;avy-push-mark</span><span class="p">)</span>
-</code></pre></div>
-  </div>
-  
 </div>
 
-<div class="pagination">
-  
-    <a class="pagination-item older" href="/page2">Older</a>
-  
-  
-    <span class="pagination-item newer">Newer</span>
-  
+<div class="twitter-share">
+  <a href="https://twitter.com/share"
+     class="twitter-share-button"
+     data-via="_abo_abo"
+     data-dnt="true">
+    Tweet
+  </a>
 </div>
 
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'oremacs'; // required: replace example with your forum shortname
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+<script>
+  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+</script>
+<noscript>
+  Please enable JavaScript to view the
+  <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
 
       </div>
     </div>

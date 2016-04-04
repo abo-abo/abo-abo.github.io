@@ -4,13 +4,124 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2016-03-16T22:21:23+01:00</updated>
+ <updated>2016-04-04T19:57:32+02:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Extended syntax for hydra docstrings</title>
+   <link href="http://oremacs.com/2016/04/04/hydra-doc-syntax/"/>
+   <updated>2016-04-04T00:00:00+02:00</updated>
+   <id>http://oremacs.com/2016/04/04/hydra-doc-syntax</id>
+   <content type="html">&lt;p&gt;I&amp;#39;ve been getting more and more organized in tracking my tasks and
+time with Org-mode. Still using the usual suspects, of course: GTD and
+Pomodoro, I&amp;#39;m just getting more diligent with them than in the
+previous years.&lt;/p&gt;
+
+&lt;p&gt;So today I wanted to prettify the good old
+&lt;code&gt;org-agenda-view-mode-dispatch&lt;/code&gt;, which is bound to &lt;kbd&gt;v&lt;/kbd&gt; in
+&lt;code&gt;org-agenda-mode&lt;/code&gt;. Currently, it&amp;#39;s just a boring static &lt;code&gt;message&lt;/code&gt; and
+&lt;code&gt;read-char&lt;/code&gt; combination. Why not do it with a
+&lt;a href=&quot;https://github.com/abo-abo/hydra&quot;&gt;hydra&lt;/a&gt; instead?&lt;/p&gt;
+
+&lt;p&gt;Here&amp;#39;s the current full code, that uses the newly extended doc syntax:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-agenda-mode-map&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;&amp;quot;v&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;hydra-org-agenda-view/body&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-agenda-cts&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;args&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;get-text-property&lt;/span&gt;
+               &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;min&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;1-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;point-max&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;point&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+               &lt;span class=&quot;ss&quot;&gt;&amp;#39;org-last-args&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;nth&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-org-agenda-view&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:hint&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;_d_: ?d? day        _g_: time grid=?g? _a_: arch-trees&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;_w_: ?w? week       _[_: inactive      _A_: arch-files&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;_t_: ?t? fortnight  _f_: follow=?f?    _r_: report=?r?&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;_m_: ?m? month      _e_: entry =?e?    _D_: diary=?D?&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;_y_: ?y? year       _q_: quit          _L__l__c_: ?l?&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;SPC&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-agenda-reset-view&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;d&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-agenda-day-view&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;eq&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;day&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;org-agenda-cts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+           &lt;span class=&quot;s&quot;&gt;&amp;quot;[x]&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;[ ]&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;w&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-agenda-week-view&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;eq&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;week&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;org-agenda-cts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+           &lt;span class=&quot;s&quot;&gt;&amp;quot;[x]&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;[ ]&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;t&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-agenda-fortnight-view&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;eq&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;fortnight&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;org-agenda-cts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+           &lt;span class=&quot;s&quot;&gt;&amp;quot;[x]&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;[ ]&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;m&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-agenda-month-view&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;eq&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;month&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;org-agenda-cts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;[x]&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;[ ]&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;y&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-agenda-year-view&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;eq&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;year&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;org-agenda-cts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;[x]&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;[ ]&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;l&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-agenda-log-mode&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;% -3S&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-agenda-show-log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;L&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;org-agenda-log-mode&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;c&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;org-agenda-log-mode&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;clockcheck&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;f&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-agenda-follow-mode&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;% -3S&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-agenda-follow-mode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;a&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-agenda-archives-mode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;A&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;org-agenda-archives-mode&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;files&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;r&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-agenda-clockreport-mode&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;% -3S&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-agenda-clockreport-mode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;e&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-agenda-entry-text-mode&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;% -3S&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-agenda-entry-text-mode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;g&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-agenda-toggle-time-grid&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;% -3S&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-agenda-use-time-grid&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;D&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-agenda-toggle-diary&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;% -3S&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-agenda-include-diary&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;!&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-agenda-toggle-deadlines&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;[&amp;quot;&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;org-agenda-include-inactive-timestamps&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;org-agenda-check-type&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;timeline&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;agenda&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;org-agenda-redo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;q&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;message&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Abort&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:exit&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And here&amp;#39;s how it looks like in action, I simply pressed &lt;kbd&gt;v&lt;/kbd&gt; while in the agenda:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/hydra-sexp-docstring.png&quot; alt=&quot;hydra-sexp-docstring.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Since many functions that &lt;code&gt;org-agenda-view-mode-dispatch&lt;/code&gt; calls are
+toggles, it makes sense for &lt;code&gt;hydra-org-agenda-view&lt;/code&gt; to display the
+status of these toggles.&lt;/p&gt;
+
+&lt;p&gt;And it&amp;#39;s actually convenient to toggle a whole lot of things at once,
+and the default red hydra keys really come in handy here.&lt;/p&gt;
+
+&lt;h2 id=&quot;quick-explanation-of-the-syntax&quot;&gt;Quick explanation of the syntax&lt;/h2&gt;
+
+&lt;p&gt;Each head of a hydra looks like:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;(key cmd &amp;amp;optional doc &amp;amp;rest plist)&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;The fairly new bit that I&amp;#39;m using here is the ability to use a sexp
+instead of a plain string in the &lt;code&gt;doc&lt;/code&gt; part.  This sexp will be
+evaluated each time the doc is re-displayed. This means that it can
+represent a changing variable, for instance the state of a minor mode
+or a variable.&lt;/p&gt;
+
+&lt;p&gt;And here&amp;#39;s the best part: the doc of each head can be quoted in the
+hydra&amp;#39;s docstring by using the corresponding key, e.g. &lt;code&gt;?g?&lt;/code&gt;.  This
+allows to have very complex docstrings while keeping them easily
+aligned in a tabular format.&lt;/p&gt;
+
+&lt;p&gt;Here is only the hydra&amp;#39;s docstring, copied from the above code:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;_d_: ?d? day        _g_: time grid=?g? _a_: arch-trees
+_w_: ?w? week       _[_: inactive      _A_: arch-files
+_t_: ?t? fortnight  _f_: follow=?f?    _r_: report=?r?
+_m_: ?m? month      _e_: entry =?e?    _D_: diary=?D?
+_y_: ?y? year       _q_: quit          _L__l__c_: ?l?
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Doesn&amp;#39;t that look simple?&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Emacs completion for launching Linux desktop apps.</title>

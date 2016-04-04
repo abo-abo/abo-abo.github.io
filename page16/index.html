@@ -275,6 +275,67 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/03/05/testing-init-sanity/">
+        Testing your .emacs sanity
+      </a>
+    </h1>
+
+    <span class="post-date">05 Mar 2015</span>
+
+    <p>Here&#39;s a little snippet that came up as a Stack Overflow answer once:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">ora-test-emacs</span> <span class="p">()</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;async</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">async-start</span>
+   <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span> <span class="p">(</span><span class="nv">shell-command-to-string</span>
+          <span class="s">&quot;emacs --batch --eval \&quot;</span>
+<span class="s">(condition-case e</span>
+<span class="s">    (progn</span>
+<span class="s">      (load \\\&quot;~/.emacs\\\&quot;)</span>
+<span class="s">      (message \\\&quot;-OK-\\\&quot;))</span>
+<span class="s">  (error</span>
+<span class="s">   (message \\\&quot;ERROR!\\\&quot;)</span>
+<span class="s">   (signal (car e) (cdr e))))\&quot;&quot;</span><span class="p">))</span>
+   <span class="o">`</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">output</span><span class="p">)</span>
+      <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">string-match</span> <span class="s">&quot;-OK-&quot;</span> <span class="nv">output</span><span class="p">)</span>
+          <span class="p">(</span><span class="nb">when</span> <span class="o">,</span><span class="p">(</span><span class="nv">called-interactively-p</span> <span class="ss">&#39;any</span><span class="p">)</span>
+            <span class="p">(</span><span class="nf">message</span> <span class="s">&quot;All is well&quot;</span><span class="p">))</span>
+        <span class="p">(</span><span class="nv">switch-to-buffer-other-window</span> <span class="s">&quot;*startup error*&quot;</span><span class="p">)</span>
+        <span class="p">(</span><span class="nf">delete-region</span> <span class="p">(</span><span class="nf">point-min</span><span class="p">)</span> <span class="p">(</span><span class="nf">point-max</span><span class="p">))</span>
+        <span class="p">(</span><span class="nf">insert</span> <span class="nv">output</span><span class="p">)</span>
+        <span class="p">(</span><span class="nf">search-backward</span> <span class="s">&quot;ERROR!&quot;</span><span class="p">)))))</span>
+</code></pre></div>
+<p>This function will quietly run a batch Emacs with your current config
+to see if it errors out or not.</p>
+
+<ul>
+<li>in case that there were no start up errors, it will echo &quot;All is well&quot;</li>
+<li>when there&#39;s an error, it will pop to a <code>*startup error*</code> buffer with the error description</li>
+</ul>
+
+<p>The nice thing about this is that in case of an error you have a
+functional Emacs to fix that error, since fixing errors with <code>emacs
+-Q</code> is quite painful.</p>
+
+<p>Another approach could be to just start a new Emacs instance, and
+close the window in case there isn&#39;t an error.  So all that the code
+above does is automate closing the window (sort of, since the window
+never opens). Still, I think it&#39;s pretty cool. And you could attach it
+to the <code>after-save-hook</code> of your .emacs, or a timer.</p>
+
+<p>You could even configure Emacs to send you an email in case it notices
+that there will be an error on the next start up. Or add the test to
+<code>before-save-hook</code> and abort the save in case it results in an
+error. That&#39;s some HAL 9000 level stuff right there:</p>
+
+<blockquote>
+<p>I&#39;m sorry Dave, I&#39;m afraid I can&#39;t do that.</p>
+</blockquote>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/03/04/eclipse-theme/">
         Eclipse theme
       </a>
@@ -674,39 +735,6 @@ work. So I&#39;ve added <code>hydra-repeat</code> that&#39;s supposed to work in
 <li>other two times, with the same prefix 4, from <kbd>..</kbd></li>
 </ul>
 
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/02/27/ace-window-leading-char/">
-        Customizing ace-window leading char
-      </a>
-    </h1>
-
-    <span class="post-date">27 Feb 2015</span>
-
-    <p>With a recent change, it&#39;s now possible to customize
-<a href="https://github.com/abo-abo/ace-window">ace-window</a> like this:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">custom-set-faces</span>
- <span class="o">&#39;</span><span class="p">(</span><span class="nv">aw-leading-char-face</span>
-   <span class="p">((</span><span class="no">t</span> <span class="p">(</span><span class="nb">:inherit</span> <span class="nv">ace-jump-face-foreground</span> <span class="nb">:height</span> <span class="mf">3.0</span><span class="p">)))))</span>
-</code></pre></div>
-<p>Here&#39;s how it will look like:</p>
-
-<p><img src="/download/ace-window-lead.png" alt="ace-window-lead.png"></p>
-
-<p>It&#39;s slightly annoying that the buffer contents have to shift to
-accommodate for a larger character, but there&#39;s no way around it.
-Besides, you can customize the face features other than height, like
-foreground and background colors etc.</p>
-
-<p>Note that in the screenshot, I&#39;m using my usual <code>ace-window</code> setup,
-i.e. home row keys and no background:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">use-package</span> <span class="nv">ace-window</span>
-    <span class="nb">:init</span>
-    <span class="p">(</span><span class="k">setq</span> <span class="nv">aw-keys</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">?a</span> <span class="nv">?s</span> <span class="nv">?d</span> <span class="nv">?f</span> <span class="nv">?g</span> <span class="nv">?h</span> <span class="nv">?j</span> <span class="nv">?k</span> <span class="nv">?l</span><span class="p">))</span>
-    <span class="p">(</span><span class="k">setq</span> <span class="nv">aw-background</span> <span class="no">nil</span><span class="p">))</span>
-</code></pre></div>
   </div>
   
 </div>
