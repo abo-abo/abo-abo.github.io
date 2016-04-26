@@ -192,6 +192,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -272,6 +276,240 @@
 
       <div class="container content">
         <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/2016/04/26/ivy-0.8.0/">
+        Ivy 0.8.0 is out
+      </a>
+    </h1>
+
+    <span class="post-date">26 Apr 2016</span>
+
+    <h2 id="intro">Intro</h2>
+
+<p><a href="https://github.com/abo-abo/swiper">Ivy</a> is a completion method that&#39;s
+similar to <code>Ido</code>, but with emphasis on simplicity and customizability.</p>
+
+<h2 id="new-package-names">New package names</h2>
+
+<h3 id="changes-on-melpa">Changes on MELPA</h3>
+
+<p>Due to multiple requests, in an attempt to simplify things a new
+package <code>ivy</code> has been released on MELPA. The old package <code>swiper</code>,
+which used to provide most of the <code>ivy</code> features, now only provides
+<code>swiper.el</code> and depends on <code>ivy</code>. The third package <code>counsel</code>, which
+provides most of the goodies using <code>ivy</code> hasn&#39;t been changed and is
+still on MELPA. All three packages have the version <code>0.8.0</code> currently.</p>
+
+<p>To reiterate the dependencies:</p>
+
+<ul>
+<li><code>ivy</code> depends on Emacs version larger than 24.1, preferably at least 24.3 (the most common one bundled currently with Linux distributions).</li>
+<li><code>swiper</code> depends on <code>ivy</code> and provides basically 3 commands: <code>swiper</code>, <code>swiper-multi</code> and <code>swiper-all</code>.</li>
+<li><code>counsel</code> depends on <code>swiper</code> and provides around 50 commands for all kinds of stuff. My favorites are <code>counsel-M-x</code>, <code>counsel-git-grep</code>, <code>counsel-rhythmbox</code> and <code>counsel-grep-or-swiper</code>.</li>
+</ul>
+
+<h3 id="changes-on-gnu-elpa">Changes on GNU ELPA</h3>
+
+<p>On <a href="http://elpa.gnu.org/packages/">GNU ELPA</a>, a single package
+<code>ivy-0.8.0</code> has replaced the previous stable version <code>swiper-0.7.0</code>.
+This package provides all the files combined of the three separate
+MELPA packages.</p>
+
+<h2 id="release-summary">Release summary</h2>
+
+<p>The release consists of 282 commits over 5 months by 15 authors. The
+detailed Changelog is available
+<a href="http://oremacs.com/swiper/Changelog.html#0.8.0">here</a>, thanks to the
+ever useful Org mode export. The raw Org file is in
+<a href="https://github.com/abo-abo/swiper/blob/master/doc/Changelog.org#080">doc/Changelog.org</a>
+in the main repository.</p>
+
+<p>The detailed documentation is available as an <code>(ivy)</code> Info node and
+also in HTML form <a href="http://oremacs.com/swiper/">here</a>. If anyone wants
+to document something that&#39;s missing there, I&#39;d appreciate the help:
+simply edit
+<a href="https://github.com/abo-abo/swiper/blob/master/doc/ivy.org">doc/ivy.org</a>
+and send me a PR.</p>
+
+<h2 id="release-highlights">Release highlights</h2>
+
+<p>Below, I&#39;ll highlight some of the new features.</p>
+
+<h3 id="allow-to-compose-collections">Allow to compose collections</h3>
+
+<p>For example, to stack the top 10 elements of <code>recentf</code> on top of <code>counsel-locate</code>, use this code:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">small-test</span> <span class="p">()</span>
+  <span class="p">(</span><span class="nv">cl-subseq</span> <span class="nv">recentf-list</span> <span class="mi">0</span> <span class="mi">10</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nv">ivy-set-sources</span>
+ <span class="ss">&#39;counsel-locate</span>
+ <span class="o">&#39;</span><span class="p">((</span><span class="nv">small-test</span><span class="p">)</span>
+   <span class="p">(</span><span class="nv">original-source</span><span class="p">)))</span>
+</code></pre></div>
+<p>Here, <code>(original-source)</code> represents the async candidates of
+counsel-locate. All extra sources are static - each function is called
+once to generate a list of strings, which will be filtered later.</p>
+
+<p>See <a href="https://github.com/abo-abo/swiper/issues/373">#373</a> for more info.</p>
+
+<h3 id="improved-documentation">Improved documentation</h3>
+
+<p>If you&#39;re not yet familiar with Ivy, you can get a quick reference
+card by pressing <kbd>C-h m</kbd> during any completion session.  It
+will pop up an Org-mode buffer that describes most of the minibuffer
+key bindings.</p>
+
+<p>Additionally, <kbd>C-o</kbd> (<code>hydra-ivy/body</code>), which serves a quick
+reference as well, received a small restructuring and a new
+binding. Press <kbd>D</kbd> to go to the definition of this
+hydra. This is useful to see what each key does, you might even want
+to customize some of it.</p>
+
+<h3 id="completion-in-region">Completion in region</h3>
+
+<p>From now on, <code>ivy-mode</code> will also set
+<code>completion-in-region-function</code>. This means that functions like:</p>
+
+<ul>
+<li><kbd>C-M-i</kbd> <code>complete-symbol</code> in many major modes, </li>
+<li><kbd>TAB</kbd> while in the <kbd>M-:</kbd> (<code>eval-expression</code>) minibuffer,</li>
+<li><kbd>TAB</kbd> in a <code>shell</code> buffer,</li>
+</ul>
+
+<p>will use <code>ivy</code> for completion.</p>
+
+<h3 id="many-improvements-to-ivy-occur-mode">Many improvements to <code>ivy-occur-mode</code></h3>
+
+<p>You can &quot;permanently&quot; save any completion session by pressing <kbd>C-c
+C-o</kbd> (<code>ivy-occur</code>).  This will generate a new buffer in
+<code>ivy-occur-mode</code> with all your current candidates inserted there.
+Clicking or pressing <kbd>f</kbd> on any of the candidates in that
+buffer will result in the appropriate action being called with that
+candidate.</p>
+
+<p><img src="/download/ivy-occur-mode.png" alt="ivy-occur-mode.png"></p>
+
+<p>The <code>*ivy-occur ...*</code> buffers can actually be customized per
+collection type. Specifically for <code>swiper</code>, <code>counsel-git-grep</code>,
+<code>counsel-grep</code> and <code>counsel-ag</code>, the customizations are already in
+place that allow you to:</p>
+
+<ul>
+<li>Edit the buffer with <code>wgrep</code> by pressing <kbd>C-x C-q</kbd>
+(<code>ivy-wgrep-change-to-wgrep-mode</code>).</li>
+<li>Refresh the buffer due to the original files being changed by pressing <kbd>g</kbd> (<code>ivy-occur-revert-buffer</code>).</li>
+</ul>
+
+<p>The second feature is often useful to me when I want to somehow change
+a symbol throughout the project. First I make a list of all
+occurrences via e.g. <code>swiper</code> and <code>ivy-occur</code>. After I went through
+some of the occurrences, I can press <kbd>g</kbd> to refresh the
+search for the same symbol and see how many I still have left.</p>
+
+<p>Yet another cool feature is to press <kbd>c</kbd>
+(<code>ivy-occur-toggle-calling</code>) to toggle calling the action after each
+line movement and cycle through candidates by holding either
+<kbd>j</kbd> (<code>ivy-occur-next-line</code>) or <kbd>k</kbd>
+(<code>ivy-occur-previous-line</code>).</p>
+
+<h3 id="ivy-set-action-can-work-on-all-commands"><code>ivy-set-action</code> can work on all commands</h3>
+
+<p>Here&#39;s the code I&#39;m using currently in my config:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">ivy-insert-action</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">with-ivy-window</span>
+    <span class="p">(</span><span class="nf">insert</span> <span class="nv">x</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="nv">ivy-set-actions</span>
+ <span class="no">t</span>
+ <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;I&quot;</span> <span class="nv">ivy-insert-action</span> <span class="s">&quot;insert&quot;</span><span class="p">)))</span>
+</code></pre></div>
+<p>This allows me to press <kbd>M-o I</kbd> to insert the current
+candidate into the buffer. For instance, if I want to quote an Emacs
+command, I can <kbd>M-x</kbd> (<code>counsel-M-x</code>), select the command I
+want and press <kbd>M-o I</kbd> to insert it instead of calling it.</p>
+
+<h3 id="virtual-views-in-ivy-switch-buffer">Virtual views in <code>ivy-switch-buffer</code></h3>
+
+<p>Here, &quot;virtual&quot; buffer means something that&#39;s close to a buffer but
+not an actual buffer. If you were using the setting
+<code>ivy-use-virtual-buffers</code>, you&#39;d have your bookmarks and <code>recentf</code>
+items available to you as virtual buffers.</p>
+
+<p>The new feature allows to select a whole window configuration with
+many buffers inside nested horizontal and vertical splits from
+<code>ivy-switch-buffer</code>.</p>
+
+<p>To use it, set <code>ivy-views</code>, since it&#39;s nil by default. For instance,
+here&#39;s what I have in my config:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-views</span>
+      <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;dutch + notes {}&quot;</span>
+         <span class="p">(</span><span class="nv">vert</span>
+          <span class="p">(</span><span class="nv">file</span> <span class="s">&quot;dutch.org&quot;</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">buffer</span> <span class="s">&quot;notes&quot;</span><span class="p">)))</span>
+        <span class="p">(</span><span class="s">&quot;ivy {}&quot;</span>
+         <span class="p">(</span><span class="nv">horz</span>
+          <span class="p">(</span><span class="nv">file</span> <span class="s">&quot;ivy.el&quot;</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">buffer</span> <span class="s">&quot;*scratch*&quot;</span><span class="p">)))))</span>
+</code></pre></div>
+<p>For a more elaborate and detailed use, see
+<a href="http://informatica.boccaperta.com/m-x-emacs-piu-rapidi-con-ivy-views/">this post</a>
+by Manuel Uberti.</p>
+
+<h3 id="magic-slash-in-file-name-completion">Magic slash in file name completion</h3>
+
+<p>From now on, if you want to enter a directory, simply select a
+candidate which is a directory and press <kbd>/</kbd>. You can still
+use the old binding <kbd>C-j</kbd> (<code>ivy-alt-done</code>), but <kbd>/</kbd>
+is shorter and easier to get used to if you&#39;re switching from Ido.</p>
+
+<p>Note that this does not prevent the use of old functionality like:</p>
+
+<ul>
+<li><kbd>//</kbd> to enter the root directory,</li>
+<li><code>/ssh:</code> <kbd>RET</kbd> to connect via TRAMP.</li>
+</ul>
+
+<h3 id="a-better-way-to-search-with-counsel-grep-or-swiper">A better way to search with <code>counsel-grep-or-swiper</code></h3>
+
+<p>If you&#39;ve ever been annoyed with the long start-up time of <code>swiper</code> in
+huge buffers, switch to this setting:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="s">&quot;\C-s&quot;</span> <span class="ss">&#39;counsel-grep-or-swiper</span><span class="p">)</span>
+</code></pre></div>
+<p>This command will use <code>swiper</code> for small buffers, and <code>counsel-grep</code> for large buffers.</p>
+
+<p>Something very similar to this command was highlighted in
+<a href="http://karl-voit.at/2016/04/09/chosing-emacs-search-method/">this post</a>
+by Karl Voit.</p>
+
+<p>Just to give you an idea of how fast <code>counsel-grep</code> is:</p>
+
+<ul>
+<li>It has 0s start-up time, since it&#39;s async.</li>
+<li>For a two million line file weighing 50MB produced by copying
+<code>org.el</code> a few times, it takes 0.2s to find the 17,664 occurrences
+of the word <code>hook</code>. It still takes 7.5s to search for <code>org</code> in that
+file, simply because there are 500,000 candidates and it takes time
+for Emacs to simply receive that input.</li>
+</ul>
+
+<h3 id="a-list-of-all-new-commands">A list of all new commands</h3>
+
+<p>The new commands since <code>0.7.0</code> are: <code>counsel-tmm</code>, <code>counsel-imenu</code>,
+<code>counsel-decbinds</code>, <code>counsel-list-processes</code>,
+<code>ivy-switch-buffer-other-window</code>, <code>counsel-git-stash</code>,
+<code>counsel-git-log</code>, <code>counsel-pt</code>, <code>counsel-linux-app</code>,
+<code>counsel-ace-link</code>, <code>counsel-esh-history</code>, <code>counsel-shell-history</code>,
+<code>counsel-grep-or-swiper</code>.</p>
+
+<p>If any of those sound interesting, go ahead and try them out.</p>
+
+<h2 id="outro">Outro</h2>
+
+<p>Thanks to all the contributors. Happy hacking!</p>
+
+  </div>
   
   <div class="post">
     <h1 class="post-title">
@@ -544,78 +782,6 @@ repository:</p>
                 <span class="p">(</span><span class="nf">substring</span> <span class="nv">url</span> <span class="mi">1</span><span class="p">))))))</span>
 
 <span class="p">(</span><span class="nv">add-to-list</span> <span class="ss">&#39;ivy-ffap-url-functions</span> <span class="ss">&#39;counsel-emacs-url-p</span><span class="p">)</span>
-</code></pre></div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2016/01/23/avy-0.4.0/">
-        avy 0.4.0 is out
-      </a>
-    </h1>
-
-    <span class="post-date">23 Jan 2016</span>
-
-    <p>This release consists of 77 commits done over the course of the last 7
-months by me and many
-<a href="https://github.com/abo-abo/avy/graphs/contributors">contributors</a>. Similarly
-to the <code>0.3.0</code> release, the release notes are in
-<a href="https://github.com/abo-abo/avy/blob/master/doc/Changelog.org">Changelog.org</a>.
-You can read them either at
-<a href="https://github.com/abo-abo/avy/releases/tag/0.4.0">github</a> or
-<a href="https://raw.githubusercontent.com/abo-abo/avy/master/doc/Changelog.org">inside Emacs</a>.
-Big thanks to all contributors.</p>
-
-<p><img src="https://raw.githubusercontent.com/wiki/abo-abo/avy/images/avy-avatar-1.png" alt="avy.png"></p>
-
-<h2 id="highlights">Highlights</h2>
-
-<p>A lot of new code is just straight upgrades, you don&#39;t need to do
-anything extra to use them. Below, I&#39;ll describe the other part of the
-new code, which is new commands and custom vars.</p>
-
-<h3 id="avy-goto-char-timer"><code>avy-goto-char-timer</code></h3>
-
-<p>This command now allows as many characters as you like, which makes it
-similar to a <code>isearch</code> + <code>avy-isearch</code> combination.  As you type, you
-get an <code>isearch</code>-like highlight, then after a short delay you
-automatically get the <code>avy</code> selection.</p>
-
-<h3 id="switch-the-action-midway-from-goto-to-kill-mark-copy">Switch the action midway from goto to kill/mark/copy</h3>
-
-<p>This is similar to the cool feature of
-<a href="http://oremacs.com/2015/05/13/ace-window-0.9.0/">ace-window</a> that
-allows you to switch the action after you get the avy prompt.</p>
-
-<p>For example, suppose you have:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-t&quot;</span><span class="p">)</span> <span class="ss">&#39;avy-goto-word-1</span><span class="p">)</span>
-</code></pre></div>
-<p>Here&#39;s what you can do now to a word that starts with a &quot;w&quot; and is
-select-able with &quot;a&quot;:</p>
-
-<ul>
-<li>To jump there: <kbd>M-t w a</kbd>.</li>
-<li>To copy the word instead of jumping to it: <kbd>M-t w na</kbd></li>
-<li>To mark the word after jumping to it: <kbd>M-t w ma</kbd>.</li>
-<li>To kill the word after jumping to it: <kbd>M-t w xa</kbd>.</li>
-</ul>
-
-<p>You can customize <code>avy-dispatch-alist</code> to modify these actions, and
-also ensure that it plays nicely with your <code>avy-keys</code>, if you
-customized them.  By default, it works fine, since <code>avy-keys</code> is <code>&#39;(?a
-?s ?d ?f ?g ?h ?j ?k ?l)</code> and the keys on <code>avy-dispatch-alist</code> are
-<code>&#39;(?x ?m ?n)</code>.</p>
-
-<h3 id="avy-pop-mark"><code>avy-pop-mark</code></h3>
-
-<p>This command reverses <code>avy-push-mark</code> which most of avy commands call.
-It has its own history and works across multiple windows and frames.
-I&#39;m using it currently as an upgrade to my old <code>(set-mark-command 4)</code>
-lambda:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-p&quot;</span><span class="p">)</span> <span class="ss">&#39;avy-pop-mark</span><span class="p">)</span>
-</code></pre></div>
-<p>Here&#39;s a line to make <code>avy-pop-mark</code> work also for <code>swiper</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">advice-add</span> <span class="ss">&#39;swiper</span> <span class="nb">:before</span> <span class="ss">&#39;avy-push-mark</span><span class="p">)</span>
 </code></pre></div>
   </div>
   

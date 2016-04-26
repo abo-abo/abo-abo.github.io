@@ -4,13 +4,243 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2016-04-04T19:57:32+02:00</updated>
+ <updated>2016-04-26T20:42:13+02:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Ivy 0.8.0 is out</title>
+   <link href="http://oremacs.com/2016/04/26/ivy-0.8.0/"/>
+   <updated>2016-04-26T00:00:00+02:00</updated>
+   <id>http://oremacs.com/2016/04/26/ivy-0.8.0</id>
+   <content type="html">&lt;h2 id=&quot;intro&quot;&gt;Intro&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/abo-abo/swiper&quot;&gt;Ivy&lt;/a&gt; is a completion method that&amp;#39;s
+similar to &lt;code&gt;Ido&lt;/code&gt;, but with emphasis on simplicity and customizability.&lt;/p&gt;
+
+&lt;h2 id=&quot;new-package-names&quot;&gt;New package names&lt;/h2&gt;
+
+&lt;h3 id=&quot;changes-on-melpa&quot;&gt;Changes on MELPA&lt;/h3&gt;
+
+&lt;p&gt;Due to multiple requests, in an attempt to simplify things a new
+package &lt;code&gt;ivy&lt;/code&gt; has been released on MELPA. The old package &lt;code&gt;swiper&lt;/code&gt;,
+which used to provide most of the &lt;code&gt;ivy&lt;/code&gt; features, now only provides
+&lt;code&gt;swiper.el&lt;/code&gt; and depends on &lt;code&gt;ivy&lt;/code&gt;. The third package &lt;code&gt;counsel&lt;/code&gt;, which
+provides most of the goodies using &lt;code&gt;ivy&lt;/code&gt; hasn&amp;#39;t been changed and is
+still on MELPA. All three packages have the version &lt;code&gt;0.8.0&lt;/code&gt; currently.&lt;/p&gt;
+
+&lt;p&gt;To reiterate the dependencies:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;ivy&lt;/code&gt; depends on Emacs version larger than 24.1, preferably at least 24.3 (the most common one bundled currently with Linux distributions).&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;swiper&lt;/code&gt; depends on &lt;code&gt;ivy&lt;/code&gt; and provides basically 3 commands: &lt;code&gt;swiper&lt;/code&gt;, &lt;code&gt;swiper-multi&lt;/code&gt; and &lt;code&gt;swiper-all&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;counsel&lt;/code&gt; depends on &lt;code&gt;swiper&lt;/code&gt; and provides around 50 commands for all kinds of stuff. My favorites are &lt;code&gt;counsel-M-x&lt;/code&gt;, &lt;code&gt;counsel-git-grep&lt;/code&gt;, &lt;code&gt;counsel-rhythmbox&lt;/code&gt; and &lt;code&gt;counsel-grep-or-swiper&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;changes-on-gnu-elpa&quot;&gt;Changes on GNU ELPA&lt;/h3&gt;
+
+&lt;p&gt;On &lt;a href=&quot;http://elpa.gnu.org/packages/&quot;&gt;GNU ELPA&lt;/a&gt;, a single package
+&lt;code&gt;ivy-0.8.0&lt;/code&gt; has replaced the previous stable version &lt;code&gt;swiper-0.7.0&lt;/code&gt;.
+This package provides all the files combined of the three separate
+MELPA packages.&lt;/p&gt;
+
+&lt;h2 id=&quot;release-summary&quot;&gt;Release summary&lt;/h2&gt;
+
+&lt;p&gt;The release consists of 282 commits over 5 months by 15 authors. The
+detailed Changelog is available
+&lt;a href=&quot;http://oremacs.com/swiper/Changelog.html#0.8.0&quot;&gt;here&lt;/a&gt;, thanks to the
+ever useful Org mode export. The raw Org file is in
+&lt;a href=&quot;https://github.com/abo-abo/swiper/blob/master/doc/Changelog.org#080&quot;&gt;doc/Changelog.org&lt;/a&gt;
+in the main repository.&lt;/p&gt;
+
+&lt;p&gt;The detailed documentation is available as an &lt;code&gt;(ivy)&lt;/code&gt; Info node and
+also in HTML form &lt;a href=&quot;http://oremacs.com/swiper/&quot;&gt;here&lt;/a&gt;. If anyone wants
+to document something that&amp;#39;s missing there, I&amp;#39;d appreciate the help:
+simply edit
+&lt;a href=&quot;https://github.com/abo-abo/swiper/blob/master/doc/ivy.org&quot;&gt;doc/ivy.org&lt;/a&gt;
+and send me a PR.&lt;/p&gt;
+
+&lt;h2 id=&quot;release-highlights&quot;&gt;Release highlights&lt;/h2&gt;
+
+&lt;p&gt;Below, I&amp;#39;ll highlight some of the new features.&lt;/p&gt;
+
+&lt;h3 id=&quot;allow-to-compose-collections&quot;&gt;Allow to compose collections&lt;/h3&gt;
+
+&lt;p&gt;For example, to stack the top 10 elements of &lt;code&gt;recentf&lt;/code&gt; on top of &lt;code&gt;counsel-locate&lt;/code&gt;, use this code:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;small-test&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;cl-subseq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;recentf-list&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ivy-set-sources&lt;/span&gt;
+ &lt;span class=&quot;ss&quot;&gt;&amp;#39;counsel-locate&lt;/span&gt;
+ &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;small-test&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;original-source&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Here, &lt;code&gt;(original-source)&lt;/code&gt; represents the async candidates of
+counsel-locate. All extra sources are static - each function is called
+once to generate a list of strings, which will be filtered later.&lt;/p&gt;
+
+&lt;p&gt;See &lt;a href=&quot;https://github.com/abo-abo/swiper/issues/373&quot;&gt;#373&lt;/a&gt; for more info.&lt;/p&gt;
+
+&lt;h3 id=&quot;improved-documentation&quot;&gt;Improved documentation&lt;/h3&gt;
+
+&lt;p&gt;If you&amp;#39;re not yet familiar with Ivy, you can get a quick reference
+card by pressing &lt;kbd&gt;C-h m&lt;/kbd&gt; during any completion session.  It
+will pop up an Org-mode buffer that describes most of the minibuffer
+key bindings.&lt;/p&gt;
+
+&lt;p&gt;Additionally, &lt;kbd&gt;C-o&lt;/kbd&gt; (&lt;code&gt;hydra-ivy/body&lt;/code&gt;), which serves a quick
+reference as well, received a small restructuring and a new
+binding. Press &lt;kbd&gt;D&lt;/kbd&gt; to go to the definition of this
+hydra. This is useful to see what each key does, you might even want
+to customize some of it.&lt;/p&gt;
+
+&lt;h3 id=&quot;completion-in-region&quot;&gt;Completion in region&lt;/h3&gt;
+
+&lt;p&gt;From now on, &lt;code&gt;ivy-mode&lt;/code&gt; will also set
+&lt;code&gt;completion-in-region-function&lt;/code&gt;. This means that functions like:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;C-M-i&lt;/kbd&gt; &lt;code&gt;complete-symbol&lt;/code&gt; in many major modes, &lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;TAB&lt;/kbd&gt; while in the &lt;kbd&gt;M-:&lt;/kbd&gt; (&lt;code&gt;eval-expression&lt;/code&gt;) minibuffer,&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;TAB&lt;/kbd&gt; in a &lt;code&gt;shell&lt;/code&gt; buffer,&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;will use &lt;code&gt;ivy&lt;/code&gt; for completion.&lt;/p&gt;
+
+&lt;h3 id=&quot;many-improvements-to-ivy-occur-mode&quot;&gt;Many improvements to &lt;code&gt;ivy-occur-mode&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;You can &amp;quot;permanently&amp;quot; save any completion session by pressing &lt;kbd&gt;C-c
+C-o&lt;/kbd&gt; (&lt;code&gt;ivy-occur&lt;/code&gt;).  This will generate a new buffer in
+&lt;code&gt;ivy-occur-mode&lt;/code&gt; with all your current candidates inserted there.
+Clicking or pressing &lt;kbd&gt;f&lt;/kbd&gt; on any of the candidates in that
+buffer will result in the appropriate action being called with that
+candidate.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/ivy-occur-mode.png&quot; alt=&quot;ivy-occur-mode.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;*ivy-occur ...*&lt;/code&gt; buffers can actually be customized per
+collection type. Specifically for &lt;code&gt;swiper&lt;/code&gt;, &lt;code&gt;counsel-git-grep&lt;/code&gt;,
+&lt;code&gt;counsel-grep&lt;/code&gt; and &lt;code&gt;counsel-ag&lt;/code&gt;, the customizations are already in
+place that allow you to:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Edit the buffer with &lt;code&gt;wgrep&lt;/code&gt; by pressing &lt;kbd&gt;C-x C-q&lt;/kbd&gt;
+(&lt;code&gt;ivy-wgrep-change-to-wgrep-mode&lt;/code&gt;).&lt;/li&gt;
+&lt;li&gt;Refresh the buffer due to the original files being changed by pressing &lt;kbd&gt;g&lt;/kbd&gt; (&lt;code&gt;ivy-occur-revert-buffer&lt;/code&gt;).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The second feature is often useful to me when I want to somehow change
+a symbol throughout the project. First I make a list of all
+occurrences via e.g. &lt;code&gt;swiper&lt;/code&gt; and &lt;code&gt;ivy-occur&lt;/code&gt;. After I went through
+some of the occurrences, I can press &lt;kbd&gt;g&lt;/kbd&gt; to refresh the
+search for the same symbol and see how many I still have left.&lt;/p&gt;
+
+&lt;p&gt;Yet another cool feature is to press &lt;kbd&gt;c&lt;/kbd&gt;
+(&lt;code&gt;ivy-occur-toggle-calling&lt;/code&gt;) to toggle calling the action after each
+line movement and cycle through candidates by holding either
+&lt;kbd&gt;j&lt;/kbd&gt; (&lt;code&gt;ivy-occur-next-line&lt;/code&gt;) or &lt;kbd&gt;k&lt;/kbd&gt;
+(&lt;code&gt;ivy-occur-previous-line&lt;/code&gt;).&lt;/p&gt;
+
+&lt;h3 id=&quot;ivy-set-action-can-work-on-all-commands&quot;&gt;&lt;code&gt;ivy-set-action&lt;/code&gt; can work on all commands&lt;/h3&gt;
+
+&lt;p&gt;Here&amp;#39;s the code I&amp;#39;m using currently in my config:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ivy-insert-action&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;with-ivy-window&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;insert&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ivy-set-actions&lt;/span&gt;
+ &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;
+ &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;I&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ivy-insert-action&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;insert&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This allows me to press &lt;kbd&gt;M-o I&lt;/kbd&gt; to insert the current
+candidate into the buffer. For instance, if I want to quote an Emacs
+command, I can &lt;kbd&gt;M-x&lt;/kbd&gt; (&lt;code&gt;counsel-M-x&lt;/code&gt;), select the command I
+want and press &lt;kbd&gt;M-o I&lt;/kbd&gt; to insert it instead of calling it.&lt;/p&gt;
+
+&lt;h3 id=&quot;virtual-views-in-ivy-switch-buffer&quot;&gt;Virtual views in &lt;code&gt;ivy-switch-buffer&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;Here, &amp;quot;virtual&amp;quot; buffer means something that&amp;#39;s close to a buffer but
+not an actual buffer. If you were using the setting
+&lt;code&gt;ivy-use-virtual-buffers&lt;/code&gt;, you&amp;#39;d have your bookmarks and &lt;code&gt;recentf&lt;/code&gt;
+items available to you as virtual buffers.&lt;/p&gt;
+
+&lt;p&gt;The new feature allows to select a whole window configuration with
+many buffers inside nested horizontal and vertical splits from
+&lt;code&gt;ivy-switch-buffer&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;To use it, set &lt;code&gt;ivy-views&lt;/code&gt;, since it&amp;#39;s nil by default. For instance,
+here&amp;#39;s what I have in my config:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ivy-views&lt;/span&gt;
+      &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;dutch + notes {}&amp;quot;&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;vert&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;file&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;dutch.org&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;buffer&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;notes&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;ivy {}&amp;quot;&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;horz&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;file&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;ivy.el&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;buffer&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;*scratch*&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;For a more elaborate and detailed use, see
+&lt;a href=&quot;http://informatica.boccaperta.com/m-x-emacs-piu-rapidi-con-ivy-views/&quot;&gt;this post&lt;/a&gt;
+by Manuel Uberti.&lt;/p&gt;
+
+&lt;h3 id=&quot;magic-slash-in-file-name-completion&quot;&gt;Magic slash in file name completion&lt;/h3&gt;
+
+&lt;p&gt;From now on, if you want to enter a directory, simply select a
+candidate which is a directory and press &lt;kbd&gt;/&lt;/kbd&gt;. You can still
+use the old binding &lt;kbd&gt;C-j&lt;/kbd&gt; (&lt;code&gt;ivy-alt-done&lt;/code&gt;), but &lt;kbd&gt;/&lt;/kbd&gt;
+is shorter and easier to get used to if you&amp;#39;re switching from Ido.&lt;/p&gt;
+
+&lt;p&gt;Note that this does not prevent the use of old functionality like:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;//&lt;/kbd&gt; to enter the root directory,&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;/ssh:&lt;/code&gt; &lt;kbd&gt;RET&lt;/kbd&gt; to connect via TRAMP.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;a-better-way-to-search-with-counsel-grep-or-swiper&quot;&gt;A better way to search with &lt;code&gt;counsel-grep-or-swiper&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;If you&amp;#39;ve ever been annoyed with the long start-up time of &lt;code&gt;swiper&lt;/code&gt; in
+huge buffers, switch to this setting:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;\C-s&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;counsel-grep-or-swiper&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This command will use &lt;code&gt;swiper&lt;/code&gt; for small buffers, and &lt;code&gt;counsel-grep&lt;/code&gt; for large buffers.&lt;/p&gt;
+
+&lt;p&gt;Something very similar to this command was highlighted in
+&lt;a href=&quot;http://karl-voit.at/2016/04/09/chosing-emacs-search-method/&quot;&gt;this post&lt;/a&gt;
+by Karl Voit.&lt;/p&gt;
+
+&lt;p&gt;Just to give you an idea of how fast &lt;code&gt;counsel-grep&lt;/code&gt; is:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;It has 0s start-up time, since it&amp;#39;s async.&lt;/li&gt;
+&lt;li&gt;For a two million line file weighing 50MB produced by copying
+&lt;code&gt;org.el&lt;/code&gt; a few times, it takes 0.2s to find the 17,664 occurrences
+of the word &lt;code&gt;hook&lt;/code&gt;. It still takes 7.5s to search for &lt;code&gt;org&lt;/code&gt; in that
+file, simply because there are 500,000 candidates and it takes time
+for Emacs to simply receive that input.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;a-list-of-all-new-commands&quot;&gt;A list of all new commands&lt;/h3&gt;
+
+&lt;p&gt;The new commands since &lt;code&gt;0.7.0&lt;/code&gt; are: &lt;code&gt;counsel-tmm&lt;/code&gt;, &lt;code&gt;counsel-imenu&lt;/code&gt;,
+&lt;code&gt;counsel-decbinds&lt;/code&gt;, &lt;code&gt;counsel-list-processes&lt;/code&gt;,
+&lt;code&gt;ivy-switch-buffer-other-window&lt;/code&gt;, &lt;code&gt;counsel-git-stash&lt;/code&gt;,
+&lt;code&gt;counsel-git-log&lt;/code&gt;, &lt;code&gt;counsel-pt&lt;/code&gt;, &lt;code&gt;counsel-linux-app&lt;/code&gt;,
+&lt;code&gt;counsel-ace-link&lt;/code&gt;, &lt;code&gt;counsel-esh-history&lt;/code&gt;, &lt;code&gt;counsel-shell-history&lt;/code&gt;,
+&lt;code&gt;counsel-grep-or-swiper&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;If any of those sound interesting, go ahead and try them out.&lt;/p&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;Thanks to all the contributors. Happy hacking!&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Extended syntax for hydra docstrings</title>
