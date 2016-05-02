@@ -357,7 +357,7 @@ for <a href="http://angelic-sedition.github.io/blog/2015/02/03/a-more-evil-helm/
 <div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">ivy-dired-mark</span> <span class="p">(</span><span class="nv">arg</span><span class="p">)</span>
   <span class="p">(</span><span class="k">interactive</span> <span class="s">&quot;p&quot;</span><span class="p">)</span>
   <span class="p">(</span><span class="nb">dotimes</span> <span class="p">(</span><span class="nv">_i</span> <span class="nv">arg</span><span class="p">)</span>
-    <span class="p">(</span><span class="nb">with-selected-window</span> <span class="nv">swiper--window</span>
+    <span class="p">(</span><span class="nv">with-ivy-window</span>
       <span class="p">(</span><span class="nv">dired-mark</span> <span class="mi">1</span><span class="p">))</span>
     <span class="p">(</span><span class="nv">ivy-next-line</span> <span class="mi">1</span><span class="p">)</span>
     <span class="p">(</span><span class="nv">ivy--exhibit</span><span class="p">)))</span>
@@ -365,14 +365,14 @@ for <a href="http://angelic-sedition.github.io/blog/2015/02/03/a-more-evil-helm/
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">ivy-dired-unmark</span> <span class="p">(</span><span class="nv">arg</span><span class="p">)</span>
   <span class="p">(</span><span class="k">interactive</span> <span class="s">&quot;p&quot;</span><span class="p">)</span>
   <span class="p">(</span><span class="nb">dotimes</span> <span class="p">(</span><span class="nv">_i</span> <span class="nv">arg</span><span class="p">)</span>
-    <span class="p">(</span><span class="nb">with-selected-window</span> <span class="nv">swiper--window</span>
+    <span class="p">(</span><span class="nv">with-ivy-window</span>
       <span class="p">(</span><span class="nv">dired-unmark</span> <span class="mi">1</span><span class="p">))</span>
     <span class="p">(</span><span class="nv">ivy-next-line</span> <span class="mi">1</span><span class="p">)</span>
     <span class="p">(</span><span class="nv">ivy--exhibit</span><span class="p">)))</span>
 
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">ivy-replace</span> <span class="p">()</span>
   <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">from</span> <span class="p">(</span><span class="nb">with-selected-window</span> <span class="nv">swiper--window</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">from</span> <span class="p">(</span><span class="nv">with-ivy-window</span>
                 <span class="p">(</span><span class="nv">move-beginning-of-line</span> <span class="no">nil</span><span class="p">)</span>
                 <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">re-search-forward</span>
                        <span class="p">(</span><span class="nv">ivy--regex</span> <span class="nv">ivy-text</span><span class="p">)</span> <span class="p">(</span><span class="nf">line-end-position</span><span class="p">)</span> <span class="no">t</span><span class="p">)</span>
@@ -386,7 +386,7 @@ for <a href="http://angelic-sedition.github.io/blog/2015/02/03/a-more-evil-helm/
 
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">ivy-undo</span> <span class="p">()</span>
   <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="nb">with-selected-window</span> <span class="nv">swiper--window</span>
+  <span class="p">(</span><span class="nv">with-ivy-window</span>
     <span class="p">(</span><span class="nv">undo</span><span class="p">)))</span>
 </code></pre></div>
 <h2 id="the-dired-operations">The dired operations</h2>
