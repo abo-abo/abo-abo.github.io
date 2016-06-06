@@ -279,6 +279,112 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2016/06/06/counsel-set-variable/">
+        Set an Emacs variable with double completion
+      </a>
+    </h1>
+
+    <span class="post-date">06 Jun 2016</span>
+
+    <p>I&#39;d like to show off a certain Elisp productivity booster that I&#39;ve
+had in an unfinished state for a while and finished just today.  </p>
+
+<p>A large part of tweaking Elisp is simply setting variables. The new
+command, <a href="https://github.com/abo-abo/swiper">counsel-set-variable</a>,
+allows to set them quite a bit faster.</p>
+
+<h2 id="completion-stage-1">Completion stage 1:</h2>
+
+<p>First of all, you get completion for all variables that you have defined:</p>
+
+<p><img src="/download/counsel-set-variable-1.png" alt="counsel-set-variable-1.png"></p>
+
+<h2 id="completion-stage-2">Completion stage 2:</h2>
+
+<p>Once a symbol is selected, the code checks whether the symbol is a
+<code>defcustom</code> with type <code>&#39;boolean</code> or <code>&#39;radio</code>. Since then it is
+possible to offer all values that the symbol is allowed to become for
+completion.</p>
+
+<p>For example, here&#39;s a typical <code>&#39;radio</code>-type definition:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defcustom</span> <span class="nv">avy-style</span> <span class="ss">&#39;at-full</span>
+  <span class="s">&quot;The default method of displaying the overlays.</span>
+<span class="s">Use `avy-styles-alist&#39; to customize this per-command.&quot;</span>
+  <span class="nb">:type</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">choice</span>
+          <span class="p">(</span><span class="nv">const</span> <span class="nb">:tag</span> <span class="s">&quot;Pre&quot;</span> <span class="nv">pre</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">const</span> <span class="nb">:tag</span> <span class="s">&quot;At&quot;</span> <span class="nv">at</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">const</span> <span class="nb">:tag</span> <span class="s">&quot;At Full&quot;</span> <span class="nv">at-full</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">const</span> <span class="nb">:tag</span> <span class="s">&quot;Post&quot;</span> <span class="nv">post</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">const</span> <span class="nb">:tag</span> <span class="s">&quot;De Bruijn&quot;</span> <span class="nv">de-bruijn</span><span class="p">)))</span>
+</code></pre></div>
+<p>And here&#39;s a completion screen offered for this variable:</p>
+
+<p><img src="/download/counsel-set-variable-2.png" alt="counsel-set-variable-2.png"></p>
+
+<p>It is worth noting that the current value of the variable is
+pre-selected, to give a nice reference point for the new setting.</p>
+
+<h3 id="in-case-the-symbol-isn-39-t-a-boolean-or-a-radio">In case the symbol isn&#39;t a boolean or a radio</h3>
+
+<p>Then you get a completion session similar to <kbd>M-x</kbd>
+<code>read-expression</code>, but with the initial contents already filled
+in. For example:</p>
+
+<p><img src="/download/counsel-set-variable-3.png" alt="counsel-set-variable-3.png"></p>
+
+<p>The <code>read-expression</code> part combines well with this setting in my config:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">conditionally-enable-lispy</span> <span class="p">()</span>
+  <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">eq</span> <span class="nv">this-command</span> <span class="ss">&#39;eval-expression</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">lispy-mode</span> <span class="mi">1</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="nv">add-hook</span>
+ <span class="ss">&#39;minibuffer-setup-hook</span>
+ <span class="ss">&#39;conditionally-enable-lispy</span><span class="p">)</span>
+</code></pre></div>
+<p>Here&#39;s a series of commands using
+<a href="https://github.com/abo-abo/lispy">lispy-mode</a> that I would typically
+use for the screenshot above, to set <code>ivy-re-builders-alist</code> to a new
+value:</p>
+
+<ol>
+<li><kbd>C-f</kbd> (<code>forward-char</code>) to get into special.</li>
+<li><kbd>-e</kbd> (<code>lispy-ace-subword</code>) to mark the <code>plus</code> part of the code.</li>
+<li><kbd>C-d</kbd> (<code>lispy-delete</code>) to delete the active region.</li>
+</ol>
+
+<p>After the <kbd>C-f -e C-d</kbd> chain of bindings, the minibuffer contents become:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-re-builders-alist</span> <span class="o">&#39;</span><span class="p">((</span><span class="no">t</span> <span class="o">.</span> <span class="nv">ivy--regex-</span><span class="err">|</span><span class="p">)))</span>
+</code></pre></div>
+<p>I press <kbd>C-M-i</kbd> (<code>completion-at-point</code>) to get completion for
+all symbols that start with <code>ivy--regex-</code>. Since I have <code>ivy-mode</code> on,
+<kbd>C-M-i</kbd> starts a recursive completion session. I highly
+recommend adding these settings to your config:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="c1">;; Allow to read from minibuffer while in minibuffer.</span>
+<span class="p">(</span><span class="k">setq</span> <span class="nv">enable-recursive-minibuffers</span> <span class="no">t</span><span class="p">)</span>
+
+<span class="c1">;; Show the minibuffer depth (when larger than 1)</span>
+<span class="p">(</span><span class="nv">minibuffer-depth-indicate-mode</span> <span class="mi">1</span><span class="p">)</span>
+</code></pre></div>
+<p>Finally, I would e.g. select e.g. <code>ivy--regex-fuzzy</code> and <kbd>RET
+RET</kbd> to finalize the eval. The first <kbd>RET</kbd> exits from
+<code>completion-at-point</code> and the second <kbd>RET</kbd> exits from
+<code>counsel-set-variable</code>.</p>
+
+<h2 id="outro">Outro</h2>
+
+<p>I think this command, especially the newly added <code>read-expression</code>
+part, is quite a bit faster than what I did before. That is switching
+to <code>*scratch*</code> and typing in the <code>setq</code> manually and evaluating with
+<kbd>C-j</kbd>. Here&#39;s my binding for the new command:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;&lt;f2&gt; j&quot;</span><span class="p">)</span> <span class="ss">&#39;counsel-set-variable</span><span class="p">)</span>
+</code></pre></div>
+<p>It&#39;s not very mnemonic, but it&#39;s really fast. Just a suggestion, in
+case you don&#39;t know where to bind it. Happy hacking!</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2016/04/26/ivy-0.8.0/">
         Ivy 0.8.0 is out
       </a>
@@ -703,86 +809,6 @@ with convenient progress bar updates. That is all.</p>
 <p>Thanks to <code>tmtxt</code>, the mysterious hacker-person from whom the snippet
 likely originated .  Good luck with getting your blog back up.</p>
 
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2016/02/15/counsel-ffap/">
-        Visiting URLs and issues with counsel-find-file
-      </a>
-    </h1>
-
-    <span class="post-date">15 Feb 2016</span>
-
-    <p>Many experienced Emacs users are aware of <code>ffap</code> command:</p>
-
-<blockquote>
-<p>Find FILENAME, guessing a default from text around point.
-If <code>ffap-url-regexp</code> is not nil, the FILENAME may also be an URL.</p>
-</blockquote>
-
-<p>It&#39;s a great way to open an link, if you plan things in advance. But
-for me it was usually <kbd>C-x C-f</kbd> (annoyed grunt) <kbd>C-g M-x
-ffap RET</kbd>.</p>
-
-<p>Now, thanks to <a href="https://github.com/abo-abo/swiper">counsel-find-file</a>,
-it&#39;s <kbd>C-x C-f</kbd> (anticipated annoyance, followed by a sigh of
-relief) <kbd>M-n</kbd>.</p>
-
-<p>With Ivy completion, <kbd>M-n</kbd> calls <code>ivy-next-history-element</code>,
-which tries to</p>
-
-<p><a href="http://endlessparentheses.com/predicting-the-future-with-the-m-n-key.html">predict the history element</a>
-in case you&#39;ve reached history&#39;s edge. The prediction usually simply
-inserts thing-at-point into the minibuffer. My favorite applications
-of this are:</p>
-
-<ul>
-<li><kbd>C-s M-n</kbd> - <code>swiper</code> thing-at-point, to get the occurrences
-of the current symbol in the current file.</li>
-<li><kbd>C-c j M-n</kbd> - <code>counsel-git-grep</code> thing-at-point, to get the
-mentions within the current project.</li>
-<li><kbd>C-c g M-n</kbd> - <code>counsel-git</code> thing-at-point to open a file
-to which the current symbol links.</li>
-</ul>
-
-<p>One thing I&#39;ve recently added is the <code>\_&lt;...\_&gt;</code> wrapper for when
-<code>major-mode</code> derives from <code>prog-mode</code>. Since the <code>\_&lt;</code> regex matches
-the symbol start, and <code>\_&gt;</code> matches the symbol end, there&#39;s no chance
-of getting partial matches. You can call <code>undo</code> or press
-<kbd>M-n</kbd> again in case the symbol bounds aren&#39;t useful.</p>
-
-<p>Finally, <kbd>C-x C-f M-n</kbd> can be used to open URLs. Recently,
-I&#39;ve added functionality to <code>counsel-find-file</code> that allows me to also
-visit Github issues by simply pointing at the plain issue number,
-e.g. <code>#123</code> in either a version-controlled file or in a Magit buffer.
-The command will query:</p>
-<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span class="nv">$ </span>git remote get-url origin
-</code></pre></div>
-<p>and fill in all the details. So I no longer bother with
-<code>bug-reference-url-format</code> and <code>bug-reference-mode</code> - now it&#39;s all
-automatic.</p>
-
-<p>It&#39;s also possible to make it work for places other than Github, for
-instance this code (already included in
-<a href="http://melpa.org/#/counsel">counsel</a>) makes it work for the Emacs Git
-repository:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel-emacs-url-p</span> <span class="p">()</span>
-  <span class="s">&quot;Return a Debbugs issue URL at point.&quot;</span>
-  <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="k">and</span> <span class="p">(</span><span class="nf">looking-at</span> <span class="s">&quot;#[0-9]+&quot;</span><span class="p">)</span>
-             <span class="p">(</span><span class="k">or</span>
-              <span class="p">(</span><span class="nf">eq</span> <span class="p">(</span><span class="nv">vc-backend</span> <span class="p">(</span><span class="nf">buffer-file-name</span><span class="p">))</span> <span class="ss">&#39;Git</span><span class="p">)</span>
-              <span class="p">(</span><span class="nf">memq</span> <span class="nv">major-mode</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">magit-commit-mode</span><span class="p">))))</span>
-    <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">url</span> <span class="p">(</span><span class="nv">match-string-no-properties</span> <span class="mi">0</span><span class="p">))</span>
-          <span class="p">(</span><span class="nv">origin</span> <span class="p">(</span><span class="nv">shell-command-to-string</span>
-                   <span class="s">&quot;git remote get-url origin&quot;</span><span class="p">)))</span>
-      <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">string-match</span> <span class="s">&quot;git.sv.gnu.org:/srv/git/emacs.git&quot;</span>
-                          <span class="nv">origin</span><span class="p">)</span>
-        <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;http://debbugs.gnu.org/cgi/bugreport.cgi?bug=%s&quot;</span>
-                <span class="p">(</span><span class="nf">substring</span> <span class="nv">url</span> <span class="mi">1</span><span class="p">))))))</span>
-
-<span class="p">(</span><span class="nv">add-to-list</span> <span class="ss">&#39;ivy-ffap-url-functions</span> <span class="ss">&#39;counsel-emacs-url-p</span><span class="p">)</span>
-</code></pre></div>
   </div>
   
 </div>

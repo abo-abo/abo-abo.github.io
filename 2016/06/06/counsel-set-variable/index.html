@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Set an Emacs variable with double completion &middot; (or emacs
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="/public/css/octicons.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Scripts -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body class="layout-reverse theme-base-08">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <!-- <div class="sidebar-item"> -->
+  <!--   <p>unused</p> -->
+  <!-- </div> -->
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about/">About</a>
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/archive/">Archive</a>
+        
+      
+    
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+
+    <div id="github" class="sidebar-nav-item">
+      <button type="button"
+              class="btn btn-info"
+              data-toggle="collapse"
+              data-target="#github-projects">
+        <span class="octicon octicon-mark-github"></span> My Emacs Projects
+      </button>
+      <div id="github-projects" class="collapse">
+        <ul style="margin-bottom:0em;">
+          <li>
+            <a href="https://github.com/abo-abo/lispy">lispy</a>
+            <p>vi-like Paredit</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/worf">worf</a>
+            <p>vi-like bindings for org-mode</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-window">ace-window</a>
+            <p>switch windows with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-link">ace-link</a>
+            <p>follow links with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/function-args">function-args</a>
+            <p>enhance <code>CEDET</code> for C++</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/helm-make">helm-make</a>
+            <p>select a Makefile target with <code>helm</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/make-it-so">make-it-so</a>
+            <p>transform files with Makefile recipes</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/org-download">org-download</a>
+            <p>drag-and-drop images to <code>org-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo?tab=repositories">
+              <span class="octicon octicon-octoface"></span>
+              and more
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
+
+  <div class="sidebar-item">
+    <p>
+      <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
+        <img alt="Creative Commons License"
+             style="border-width:0;opacity: 0.3;"
+             src="https://licensebuttons.net/l/by-sa/4.0/88x31.png"/>
+      </a>
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">(or emacs</a>
+            <small>irrelevant)</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Set an Emacs variable with double completion</h1>
+  <span class="post-date">06 Jun 2016</span>
+  <p>I&#39;d like to show off a certain Elisp productivity booster that I&#39;ve
+had in an unfinished state for a while and finished just today.  </p>
+
+<p>A large part of tweaking Elisp is simply setting variables. The new
+command, <a href="https://github.com/abo-abo/swiper">counsel-set-variable</a>,
+allows to set them quite a bit faster.</p>
+
+<h2 id="completion-stage-1">Completion stage 1:</h2>
+
+<p>First of all, you get completion for all variables that you have defined:</p>
+
+<p><img src="/download/counsel-set-variable-1.png" alt="counsel-set-variable-1.png"></p>
+
+<h2 id="completion-stage-2">Completion stage 2:</h2>
+
+<p>Once a symbol is selected, the code checks whether the symbol is a
+<code>defcustom</code> with type <code>&#39;boolean</code> or <code>&#39;radio</code>. Since then it is
+possible to offer all values that the symbol is allowed to become for
+completion.</p>
+
+<p>For example, here&#39;s a typical <code>&#39;radio</code>-type definition:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defcustom</span> <span class="nv">avy-style</span> <span class="ss">&#39;at-full</span>
+  <span class="s">&quot;The default method of displaying the overlays.</span>
+<span class="s">Use `avy-styles-alist&#39; to customize this per-command.&quot;</span>
+  <span class="nb">:type</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">choice</span>
+          <span class="p">(</span><span class="nv">const</span> <span class="nb">:tag</span> <span class="s">&quot;Pre&quot;</span> <span class="nv">pre</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">const</span> <span class="nb">:tag</span> <span class="s">&quot;At&quot;</span> <span class="nv">at</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">const</span> <span class="nb">:tag</span> <span class="s">&quot;At Full&quot;</span> <span class="nv">at-full</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">const</span> <span class="nb">:tag</span> <span class="s">&quot;Post&quot;</span> <span class="nv">post</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">const</span> <span class="nb">:tag</span> <span class="s">&quot;De Bruijn&quot;</span> <span class="nv">de-bruijn</span><span class="p">)))</span>
+</code></pre></div>
+<p>And here&#39;s a completion screen offered for this variable:</p>
+
+<p><img src="/download/counsel-set-variable-2.png" alt="counsel-set-variable-2.png"></p>
+
+<p>It is worth noting that the current value of the variable is
+pre-selected, to give a nice reference point for the new setting.</p>
+
+<h3 id="in-case-the-symbol-isn-39-t-a-boolean-or-a-radio">In case the symbol isn&#39;t a boolean or a radio</h3>
+
+<p>Then you get a completion session similar to <kbd>M-x</kbd>
+<code>read-expression</code>, but with the initial contents already filled
+in. For example:</p>
+
+<p><img src="/download/counsel-set-variable-3.png" alt="counsel-set-variable-3.png"></p>
+
+<p>The <code>read-expression</code> part combines well with this setting in my config:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">conditionally-enable-lispy</span> <span class="p">()</span>
+  <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">eq</span> <span class="nv">this-command</span> <span class="ss">&#39;eval-expression</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">lispy-mode</span> <span class="mi">1</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="nv">add-hook</span>
+ <span class="ss">&#39;minibuffer-setup-hook</span>
+ <span class="ss">&#39;conditionally-enable-lispy</span><span class="p">)</span>
+</code></pre></div>
+<p>Here&#39;s a series of commands using
+<a href="https://github.com/abo-abo/lispy">lispy-mode</a> that I would typically
+use for the screenshot above, to set <code>ivy-re-builders-alist</code> to a new
+value:</p>
+
+<ol>
+<li><kbd>C-f</kbd> (<code>forward-char</code>) to get into special.</li>
+<li><kbd>-e</kbd> (<code>lispy-ace-subword</code>) to mark the <code>plus</code> part of the code.</li>
+<li><kbd>C-d</kbd> (<code>lispy-delete</code>) to delete the active region.</li>
+</ol>
+
+<p>After the <kbd>C-f -e C-d</kbd> chain of bindings, the minibuffer contents become:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-re-builders-alist</span> <span class="o">&#39;</span><span class="p">((</span><span class="no">t</span> <span class="o">.</span> <span class="nv">ivy--regex-</span><span class="err">|</span><span class="p">)))</span>
+</code></pre></div>
+<p>I press <kbd>C-M-i</kbd> (<code>completion-at-point</code>) to get completion for
+all symbols that start with <code>ivy--regex-</code>. Since I have <code>ivy-mode</code> on,
+<kbd>C-M-i</kbd> starts a recursive completion session. I highly
+recommend adding these settings to your config:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="c1">;; Allow to read from minibuffer while in minibuffer.</span>
+<span class="p">(</span><span class="k">setq</span> <span class="nv">enable-recursive-minibuffers</span> <span class="no">t</span><span class="p">)</span>
+
+<span class="c1">;; Show the minibuffer depth (when larger than 1)</span>
+<span class="p">(</span><span class="nv">minibuffer-depth-indicate-mode</span> <span class="mi">1</span><span class="p">)</span>
+</code></pre></div>
+<p>Finally, I would e.g. select e.g. <code>ivy--regex-fuzzy</code> and <kbd>RET
+RET</kbd> to finalize the eval. The first <kbd>RET</kbd> exits from
+<code>completion-at-point</code> and the second <kbd>RET</kbd> exits from
+<code>counsel-set-variable</code>.</p>
+
+<h2 id="outro">Outro</h2>
+
+<p>I think this command, especially the newly added <code>read-expression</code>
+part, is quite a bit faster than what I did before. That is switching
+to <code>*scratch*</code> and typing in the <code>setq</code> manually and evaluating with
+<kbd>C-j</kbd>. Here&#39;s my binding for the new command:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;&lt;f2&gt; j&quot;</span><span class="p">)</span> <span class="ss">&#39;counsel-set-variable</span><span class="p">)</span>
+</code></pre></div>
+<p>It&#39;s not very mnemonic, but it&#39;s really fast. Just a suggestion, in
+case you don&#39;t know where to bind it. Happy hacking!</p>
+
+</div>
+
+<div class="twitter-share">
+  <a href="https://twitter.com/share"
+     class="twitter-share-button"
+     data-via="_abo_abo"
+     data-dnt="true">
+    Tweet
+  </a>
+</div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'oremacs'; // required: replace example with your forum shortname
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+<script>
+  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+</script>
+<noscript>
+  Please enable JavaScript to view the
+  <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>
