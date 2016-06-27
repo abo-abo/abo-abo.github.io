@@ -279,6 +279,116 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/07/09/counsel-rhythmbox/">
+        Command Rhythmbox from Emacs
+      </a>
+    </h1>
+
+    <span class="post-date">09 Jul 2015</span>
+
+    <p>I might have mentioned before that I&#39;m using GNU/Linux on all of my
+computers.  The particular flavor is Ubuntu, although it shouldn&#39;t
+matter much, since I can count the graphical applications that I use
+at all, besides Emacs, on one hand. They are: Firefox, Evince,
+Rhythmbox and VLC. Of course, as most true Emacs-ers, I strive to
+reduce this number to zero. So I got quite excited when I saw
+<a href="https://github.com/mrBliss/helm-rhythmbox">helm-rhythmbox</a> show up in
+my package list. It works great: you can play and enqueue tracks with
+completion without leaving Emacs. Big thanks to
+<a href="https://github.com/mrBliss">@mrBliss</a>, and, of course, the authors
+for <code>dbus.el</code> which makes interaction with D-Bus possible through
+Elisp.</p>
+
+<p>I&#39;m not as big a fan of Helm as I used to be, so I quickly implemented an Ivy equivalent:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel-rhythmbox-enqueue-song</span> <span class="p">(</span><span class="nv">song</span><span class="p">)</span>
+  <span class="s">&quot;Let Rhythmbox enqueue SONG.&quot;</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">service</span> <span class="s">&quot;org.gnome.Rhythmbox3&quot;</span><span class="p">)</span>
+        <span class="p">(</span><span class="nv">path</span> <span class="s">&quot;/org/gnome/Rhythmbox3/PlayQueue&quot;</span><span class="p">)</span>
+        <span class="p">(</span><span class="nv">interface</span> <span class="s">&quot;org.gnome.Rhythmbox3.PlayQueue&quot;</span><span class="p">))</span>
+    <span class="p">(</span><span class="nv">dbus-call-method</span> <span class="nb">:session</span> <span class="nv">service</span> <span class="nv">path</span> <span class="nv">interface</span>
+                      <span class="s">&quot;AddToQueue&quot;</span> <span class="p">(</span><span class="nv">rhythmbox-song-uri</span> <span class="nv">song</span><span class="p">))))</span>
+
+<span class="c1">;;;###autoload</span>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel-rhythmbox</span> <span class="p">()</span>
+  <span class="s">&quot;Choose a song from the Rhythmbox library to play or enqueue.&quot;</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;helm-rhythmbox</span> <span class="no">nil</span> <span class="no">t</span><span class="p">)</span>
+    <span class="p">(</span><span class="ne">error</span> <span class="s">&quot;Please install `helm-rhythmbox&#39;&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="nb">unless</span> <span class="nv">rhythmbox-library</span>
+    <span class="p">(</span><span class="nv">rhythmbox-load-library</span><span class="p">)</span>
+    <span class="p">(</span><span class="k">while</span> <span class="p">(</span><span class="nf">null</span> <span class="nv">rhythmbox-library</span><span class="p">)</span>
+      <span class="p">(</span><span class="nv">sit-for</span> <span class="mf">0.1</span><span class="p">)))</span>
+  <span class="p">(</span><span class="nv">ivy-read</span> <span class="s">&quot;Rhythmbox: &quot;</span>
+            <span class="p">(</span><span class="nv">helm-rhythmbox-candidates</span><span class="p">)</span>
+            <span class="nb">:action</span>
+            <span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span>
+              <span class="p">(</span><span class="s">&quot;Play song&quot;</span> <span class="nv">helm-rhythmbox-play-song</span><span class="p">)</span>
+              <span class="p">(</span><span class="s">&quot;Enqueue song&quot;</span> <span class="nv">counsel-rhythmbox-enqueue-song</span><span class="p">))))</span>
+</code></pre></div>
+<p>I listed the whole code just to show how easy it is to interact with
+D-Bus, and also to show-off the shiny new multi-action interface of
+<code>ivy-read</code>.  Besides being discoverable via <kbd>C-o</kbd>, the
+multi-action interface is extensible as well. Here&#39;s how to add a
+&quot;Dequeue&quot; action without touching the original code:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel-rhythmbox-dequeue-song</span> <span class="p">(</span><span class="nv">song</span><span class="p">)</span>
+  <span class="s">&quot;Let Rhythmbox dequeue SONG.&quot;</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">service</span> <span class="s">&quot;org.gnome.Rhythmbox3&quot;</span><span class="p">)</span>
+        <span class="p">(</span><span class="nv">path</span> <span class="s">&quot;/org/gnome/Rhythmbox3/PlayQueue&quot;</span><span class="p">)</span>
+        <span class="p">(</span><span class="nv">interface</span> <span class="s">&quot;org.gnome.Rhythmbox3.PlayQueue&quot;</span><span class="p">))</span>
+    <span class="p">(</span><span class="nv">dbus-call-method</span> <span class="nb">:session</span> <span class="nv">service</span> <span class="nv">path</span> <span class="nv">interface</span>
+                      <span class="s">&quot;RemoveFromQueue&quot;</span> <span class="p">(</span><span class="nv">rhythmbox-song-uri</span> <span class="nv">song</span><span class="p">))))</span>
+<span class="p">(</span><span class="nv">ivy-set-actions</span>
+ <span class="ss">&#39;counsel-rhythmbox</span>
+ <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;Dequeue song&quot;</span> <span class="nv">counsel-rhythmbox-dequeue-song</span><span class="p">)))</span>
+</code></pre></div>
+<p>Very simple, <code>counsel-rhythmbox-dequeue-song</code> is a clone of
+<code>counsel-rhythmbox-enqueue-song</code> with only the method change from
+<code>AddToQueue</code> to <code>RemoveFromQueue</code> (I blind-guessed the name, but there
+should be a reference somewhere).  If you got tired of having a whole
+three actions to choose from, you can revert to the initial two with:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">ivy-set-actions</span> <span class="ss">&#39;counsel-rhythmbox</span> <span class="no">nil</span><span class="p">)</span>
+</code></pre></div>
+<p>And here&#39;s how the updated <kbd>C-o</kbd> option panel now looks like:</p>
+
+<p><img src="/download/counsel-rhythmbox.png" alt="counsel-rhythmbox.png"></p>
+
+<p>A bit of descriptions:</p>
+
+<ul>
+<li><kbd>j</kbd> moves to the next one of the 18 current candidates.</li>
+<li><kbd>k</kbd> moves to the previous candidate.</li>
+<li><kbd>h</kbd> moves to the first candidate.</li>
+<li><kbd>l</kbd> moves to the last candidate.</li>
+<li><kbd>g</kbd> calls the current action without exiting.</li>
+<li><kbd>d</kbd> calls the current action and exits.</li>
+<li><kbd>s</kbd> moves to the next action.</li>
+<li><kbd>w</kbd> moves to the previous action.</li>
+<li><kbd>i</kbd> and <kbd>C-o</kbd> close the options panel without exiting.</li>
+<li><kbd>o</kbd> closes the panel and exits.</li>
+</ul>
+
+<p>Similarly to <code>hydra</code>, each action has a short docstring, like <code>&quot;Play
+song&quot;</code> that should describe what it does.  Here are a few usage
+scenarios:</p>
+
+<ul>
+<li>If I wanted to play the first song and enqueue the third and the
+sixth and exit the minibuffer, I would press <kbd>gsjjgjjjd</kbd>.</li>
+<li>If I wanted to play the third and enqueue all the following, I would
+press <kbd>jjgsjcjjjjjjjjjjjo</kbd>. The many <kbd>j</kbd> is just
+me holding <kbd>j</kbd> until the selection reaches the end, then I
+simply exit without doing anything else by pressing <kbd>o</kbd>.
+The way <kbd>c</kbd> works is that it toggles the &quot;calling&quot; state -
+a state where the current action is called whenever a different
+candidate is selected.</li>
+</ul>
+
+<p>Almost forgot, if this little intro got you excited, the packages that you should install from MELPA are: <code>helm-rhythmbox</code> and <code>counsel</code>.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/07/07/hydra-resume/">
         Pause or resume the current Hydra
       </a>
@@ -655,109 +765,6 @@ select one candidate with <kbd>C-m</kbd>.</p>
 to cycle through all files in a directory without exiting the
 completion. Same goes for <code>ivy-switch-buffer</code>, which should probably
 be renamed to <code>counsel-switch-buffer</code> for consistency.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/06/22/debug-clojure/">
-        Debug Clojure with CIDER and lispy
-      </a>
-    </h1>
-
-    <span class="post-date">22 Jun 2015</span>
-
-    <p>To commemorate the release of <a href="http://batsov.com/articles/2015/06/16/cider-0-dot-9/">CIDER 0.9.0</a>, I&#39;ve just
-added the ability to debug-step-in Clojure expressions to <a href="https://github.com/abo-abo/lispy">lispy</a>.</p>
-
-<p>This ability was present for Elisp for a very long time, and it&#39;s
-instrumental to
-<a href="https://github.com/abo-abo?tab=repositories">my Elisp output</a>. So now
-I&#39;ve added exactly the same thing to Clojure.</p>
-
-<h2 id="how-it-works">How it works</h2>
-
-<p>Suppose that you have this function (borrowed from <a href="http://www.manning.com/fogus2/">The Joy of Clojure</a>):</p>
-<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="kd">defn </span><span class="nv">l-&gt;rfix</span>
-  <span class="p">([</span><span class="nv">a</span> <span class="nv">op</span> <span class="nv">b</span><span class="p">]</span>
-   <span class="p">(</span><span class="nf">op</span> <span class="nv">a</span> <span class="nv">b</span><span class="p">))</span>
-  <span class="p">([</span><span class="nv">a</span> <span class="nv">op1</span> <span class="nv">b</span> <span class="nv">op2</span> <span class="nv">c</span><span class="p">]</span>
-   <span class="p">(</span><span class="nf">op2</span> <span class="nv">c</span> <span class="p">(</span><span class="nf">op1</span> <span class="nv">a</span> <span class="nv">b</span><span class="p">)))</span>
-  <span class="p">([</span><span class="nv">a</span> <span class="nv">op1</span> <span class="nv">b</span> <span class="nv">op2</span> <span class="nv">c</span> <span class="nv">op3</span> <span class="nv">d</span><span class="p">]</span>
-   <span class="p">(</span><span class="nf">op3</span> <span class="nv">d</span> <span class="p">(</span><span class="nf">op2</span> <span class="nv">c</span> <span class="p">(</span><span class="nf">op1</span> <span class="nv">a</span> <span class="nv">b</span><span class="p">)))))</span>
-</code></pre></div>
-<p>An important thing is that the function needs to be loaded (probably
-with <code>cider-load-file</code>), in order for Clojure to know its location. If
-you only evaluate the function with <kbd>C-x C-e</kbd>, it won&#39;t
-work. Actually, the same applies to Elisp.</p>
-
-<p>And then you have the corresponding function call (<code>|</code> is the point, as usual):</p>
-<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="err">|</span><span class="p">(</span><span class="nf">l-&gt;rfix</span> <span class="mi">10</span> <span class="nb">* </span><span class="mi">2</span> <span class="nb">+ </span><span class="mi">3</span><span class="p">)</span>
-</code></pre></div>
-<p>As you press <kbd>xj</kbd> (<code>lispy-debug-step-in</code>), the following code is evaluated on the Clojure side:</p>
-<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="nf">do</span>
-  <span class="p">(</span><span class="k">def </span><span class="nv">a</span> <span class="mi">10</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">def </span><span class="nv">op1</span> <span class="nv">*</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">def </span><span class="nv">b</span> <span class="mi">2</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">def </span><span class="nv">op2</span> <span class="nv">+</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">def </span><span class="nv">c</span> <span class="mi">3</span><span class="p">))</span>
-</code></pre></div>
-<p>At the same time, you are taken to the second branch of the body of
-<code>l-&gt;rfix</code> - exactly the one that corresponds to 5 arguments.  And
-that&#39;s it: you now have <code>a</code>, <code>op1</code> etc defined to their proper
-values. You can now continue within the function body with many
-possible follow-ups. I&#39;ll just list the eval-related ones:</p>
-
-<ul>
-<li>Use <kbd>e</kbd> to evaluate expression at point.</li>
-<li>If you want to evaluate a symbol, mark it with <kbd>M-m</kbd>, end
-evaluate with <kbd>e</kbd>. Actually, I prefer to mark stuff with
-<kbd>m</kbd> and <kbd>hjkl</kbd> arrows, using <kbd>i</kbd> to mark
-the first element of the region. It&#39;s also possible to mark with
-<kbd>a</kbd>, and <kbd>2m</kbd>, <kbd>3m</kbd> etc.</li>
-<li>If you want to bind a symbol in a <code>let</code> binding, mark both the
-symbol and its value, and press <kbd>e</kbd>. If there are many
-<code>let</code> bindings, you can navigate to the next one with either
-<kbd>jj</kbd> or <kbd>2j</kbd>.</li>
-<li>You can debug-step-in again if needed with <kbd>xj</kbd>.</li>
-<li>You can flatten a function or a macro call with <kbd>xf</kbd>.</li>
-<li>You can eval-and-insert with <kbd>E</kbd>.</li>
-<li>You can eval-and-commented-insert with <kbd>2e</kbd>.</li>
-</ul>
-
-<p>Just to add, any of these will work properly and switch to an appropriate body branch:</p>
-<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="nf">l-&gt;rfix</span> <span class="mi">1</span> <span class="nb">* </span><span class="mi">1</span> <span class="nb">+ </span><span class="mi">1</span><span class="p">)</span>
-<span class="p">(</span><span class="nf">l-&gt;rfix</span> <span class="mi">2</span> <span class="nb">+ </span><span class="mi">7</span><span class="p">)</span>
-<span class="p">(</span><span class="nf">l-&gt;rfix</span> <span class="mi">1</span> <span class="nb">+ </span><span class="mi">2</span> <span class="nb">+ </span><span class="mi">3</span> <span class="nb">+ </span><span class="mi">4</span><span class="p">)</span>
-<span class="p">(</span><span class="nf">l-&gt;rfix</span> <span class="p">(</span><span class="nb">str </span><span class="s">&quot;a&quot;</span> <span class="s">&quot;b&quot;</span> <span class="s">&quot;c&quot;</span><span class="p">)</span> <span class="nb">+ </span><span class="mi">7</span><span class="p">)</span>
-</code></pre></div>
-<h2 id="outro">Outro</h2>
-
-<p>Enjoy the new code, but be mindful that it&#39;s really fresh, so it will
-certainly have some quirks.  For instance, function arguments as a map
-won&#39;t work since I haven&#39;t programmed for that yet.  Big thanks to
-<a href="https://github.com/bbatsov">@bbatsov</a> and all CIDER contributors.</p>
-
-<p>A really cool thing that I hope to get in the future, is to make
-<kbd>Z</kbd> (<code>lispy-edebug-stop</code>) also work in Clojure.  What it does
-currently for Elisp, is to use <code>edebug</code> to setup the function
-arguments. It may be possible to use
-<a href="https://github.com/Malabarba">@Malabarba</a>&#39;s new debugger
-implementation for the same thing.</p>
-
-<p>The advantages of using <code>lispy</code>-style debugger are the following:</p>
-
-<ul>
-<li>You can navigate your code the way you want, not just in a way that
-the debugger allows you to.</li>
-<li>You can multi-debug, and have sessions last for days.</li>
-<li>You can edit the code as you debug. For this new code, I started
-debugging when there was only a function name.  I added the body code
-expression-by-expression, simultaneously debugging it.</li>
-</ul>
-
-<p>The disadvantage is a bit of namespace pollution, but I think it&#39;s
-more or less acceptable.</p>
 
   </div>
   

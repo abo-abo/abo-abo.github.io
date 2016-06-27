@@ -4,13 +4,134 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2016-06-06T22:10:17+02:00</updated>
+ <updated>2016-06-27T22:24:46+02:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Bookmark the current window layout with Ivy</title>
+   <link href="http://oremacs.com/2016/06/27/ivy-push-view/"/>
+   <updated>2016-06-27T00:00:00+02:00</updated>
+   <id>http://oremacs.com/2016/06/27/ivy-push-view</id>
+   <content type="html">&lt;p&gt;Today&amp;#39;s post is about the newest feature related to the
+&lt;a href=&quot;https://github.com/abo-abo/swiper&quot;&gt;ivy-switch-buffer&lt;/a&gt; command. If you
+use &lt;code&gt;ivy-mode&lt;/code&gt;, you&amp;#39;re probably already using &lt;code&gt;ivy-switch-buffer&lt;/code&gt;
+since it overwrites the built-in &lt;code&gt;switch-to-buffer&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;The cool thing about &lt;code&gt;ivy-switch-buffer&lt;/code&gt; is that it&amp;#39;s not only buffers
+that are offered for completion. Other buffer-like entities can be
+there as well: bookmarks, recently opened files (&lt;code&gt;recentf&lt;/code&gt;), and
+finally, window layouts. Since all of those are relatively the same
+concept, it&amp;#39;s very convenient to have them all in one place available
+for completion.&lt;/p&gt;
+
+&lt;p&gt;Here are the relevant settings:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;c1&quot;&gt;;; Enable bookmarks and recentf&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ivy-use-virtual-buffers&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;;; Example setting for ivy-views&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ivy-views&lt;/span&gt;
+      &lt;span class=&quot;o&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;dutch + notes {}&amp;quot;&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;vert&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;file&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;dutch.org&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;buffer&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;notes&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;ivy.el {}&amp;quot;&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;horz&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;file&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;find-library-name&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;ivy&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;buffer&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;*scratch*&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;I did mention &lt;code&gt;ivy-views&lt;/code&gt; before in the
+&lt;a href=&quot;http://oremacs.com/2016/04/26/ivy-0.8.0/&quot;&gt;ivy-0.8.0 release&lt;/a&gt; post.
+But now, instead of setting &lt;code&gt;ivy-views&lt;/code&gt; by hand, you can also bind
+&lt;code&gt;ivy-push-view&lt;/code&gt; to a key and store as many window configurations as
+you like, really fast. &lt;/p&gt;
+
+&lt;p&gt;What gets stored:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The window list - all windows open on the current frame.&lt;/li&gt;
+&lt;li&gt;The window splits relative to each other as a tree. Currently, the
+size of the split isn&amp;#39;t saved, all windows are split equally.&lt;/li&gt;
+&lt;li&gt;The point positions in each window. If you use just one window,
+you&amp;#39;ve got something similar to &lt;code&gt;bookmark-set&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;recommended-key-bindings&quot;&gt;Recommended key bindings&lt;/h2&gt;
+
+&lt;p&gt;Here&amp;#39;s what I use currently:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-c v&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ivy-push-view&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-c V&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ivy-pop-view&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;typical-workflow&quot;&gt;Typical workflow&lt;/h2&gt;
+
+&lt;p&gt;Suppose I have two files open: the file &lt;code&gt;2016-06-23-ivy-push-view.md&lt;/code&gt;
+and the &lt;code&gt;_posts&lt;/code&gt; directory. By pressing &lt;kbd&gt;C-c v&lt;/kbd&gt; I am prompted
+for a view name with the default being e.g. 
+&lt;code&gt;{} 2016-06-23-ivy-push-view.md _posts 2&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;I can still name the view however I want, but I typically just press
+&lt;kbd&gt;RET&lt;/kbd&gt;.  The parts of the automatic view name are:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;{}&lt;/code&gt; - this is a simple string marker to distinguish the views in
+the buffer view. If I enter only &lt;code&gt;{}&lt;/code&gt; into &lt;code&gt;ivy-switch-buffer&lt;/code&gt;
+prompt, the candidates will normally filter to only views, since
+very rarely will a file or a buffer name match &lt;code&gt;{}&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;2016-06-23-ivy-push-view.md _posts&lt;/code&gt; is the list of buffers stored
+in the view. This view has only two buffers, but &lt;code&gt;ivy-push-view&lt;/code&gt; can
+handle as many windows as you can cram into a single frame.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;2&lt;/code&gt; means that I already have two views with the same buffers, each
+new view with the same buffers gets an increased number for the
+suggested name. And it&amp;#39;s not useless to have many views for the same
+buffers, since the views also store point positions, not just the
+window list.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Here&amp;#39;s the beauty of it for me: when I type &lt;code&gt;_posts&lt;/code&gt; into
+&lt;code&gt;ivy-switch-buffer&lt;/code&gt; I can chose to open the &lt;code&gt;_posts&lt;/code&gt; directory in a
+variety of ways:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;If the buffer is currently open, I can just switch there.&lt;/li&gt;
+&lt;li&gt;If the buffer is currently closed, I can re-open it, thanks to &lt;code&gt;recentf&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;I can open the buffer as part of a stored view(s) in &lt;code&gt;ivy-views&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Finally, if I decide that I don&amp;#39;t need a particular view any more, I
+can delete it with &lt;kbd&gt;C-c V&lt;/kbd&gt; (&lt;code&gt;ivy-pop-view&lt;/code&gt;). It&amp;#39;s possible to
+delete many views at once by pressing &lt;kbd&gt;C-M-m&lt;/kbd&gt; (&lt;code&gt;ivy-call&lt;/code&gt;),
+as usual with most &lt;code&gt;ivy&lt;/code&gt; completion functions.&lt;/p&gt;
+
+&lt;h2 id=&quot;breaking-api-change&quot;&gt;Breaking API change&lt;/h2&gt;
+
+&lt;p&gt;While implementing &lt;code&gt;ivy-set-view&lt;/code&gt; I decided that the current way alist
+collections are handled together with actions is sub-optimal.  Here&amp;#39;s
+the new way of working:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ivy-with&lt;/span&gt;
+   &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ivy-read&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;test: &amp;quot;&lt;/span&gt;
+     &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;one&amp;quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;three&amp;quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+     &lt;span class=&quot;nb&quot;&gt;:action&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;res&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+   &lt;span class=&quot;s&quot;&gt;&amp;quot;t C-m&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;nv&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;;; =&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;;; (&amp;quot;three&amp;quot; . 3)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Previously, the return result would be &lt;code&gt;3&lt;/code&gt;, i.e. the &lt;code&gt;cdr&lt;/code&gt; of the
+selected candidate. Any code using &lt;code&gt;ivy-read&lt;/code&gt; with an alist-type
+collection will break. I fixed all instances in &lt;code&gt;counsel.el&lt;/code&gt;, and
+there actually aren&amp;#39;t too many uses in the published third party
+packages.&lt;/p&gt;
+
+&lt;p&gt;A simple fix to the problem is to use &lt;code&gt;cdr&lt;/code&gt; in the action function.
+Additionally, having more information available in the action function
+will serve to improve the code.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Set an Emacs variable with double completion</title>

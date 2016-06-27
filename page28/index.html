@@ -279,6 +279,91 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/01/06/rushing-headlong/">
+        Rushing headlong
+      </a>
+    </h1>
+
+    <span class="post-date">06 Jan 2015</span>
+
+    <blockquote>
+<p>And you&#39;re rushing headlong out of control...</p>
+
+<p>-- <cite>Brian May</cite></p>
+</blockquote>
+
+<p>I&#39;ve finally wrapped a piece of config that I was using for a while in
+a package called <a href="https://github.com/abo-abo/headlong">headlong</a>.</p>
+
+<h2 id="what-does-it-do">What does it do?</h2>
+
+<p>It provides a macro called <code>headlong-with</code> that modifies minibuffer
+completion for the forms within it, making it faster in some
+situations.  For instance:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">headlong-with</span>
+ <span class="p">(</span><span class="nf">completing-read</span> <span class="s">&quot;Jump to bookmark: &quot;</span>
+                  <span class="nv">bookmark-alist</span> <span class="no">nil</span> <span class="no">t</span><span class="p">))</span>
+</code></pre></div>
+<p>or:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">headlong-with</span> <span class="p">(</span><span class="nv">read-extended-command</span><span class="p">))</span>
+</code></pre></div>
+<p>But more importantly, it provides two commands that can use it
+efficiently: <code>headlong-bookmark-jump</code> and
+<code>headlong-bookmark-jump-other</code>. The second one is basically the same
+as the first one, except it opens the bookmark with <code>pop-to-buffer</code>,
+i.e. in other window.</p>
+
+<h2 id="how-does-this-completion-work">How does this completion work?</h2>
+
+<p>It&#39;s nothing fancy, you will just exit the minibuffer automatically as
+soon as there is only one completion candidate left.
+So it saves you <strong>one</strong> keystroke, namely <kbd>RET</kbd>.
+How much is <em>one</em> keystroke worth? It depends.</p>
+
+<p>If you arrange your bookmarks in a way that I do, with each one
+starting with a different letter, it saves you 33% of the total
+keystrokes.  For example, suppose I have:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-p&quot;</span><span class="p">)</span> <span class="ss">&#39;bookmark-jump</span><span class="p">)</span>
+<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-o&quot;</span><span class="p">)</span> <span class="ss">&#39;headlong-bookmark-jump</span><span class="p">)</span>
+</code></pre></div>
+<p>Then I can jump to my bookmarked directory named <code>&quot;s: sources&quot;</code> with
+two methods:</p>
+
+<ul>
+<li><kbd>M-p</kbd><kbd>s</kbd><kbd>RET</kbd> </li>
+<li><kbd>M-o</kbd><kbd>s</kbd></li>
+</ul>
+
+<p>The second method looks like it&#39;s 33% shorter, but it feels like it&#39;s
+even more, since pressing <kbd>RET</kbd> is harder than it should be
+on most keyboards.</p>
+
+<h2 id="why-is-this-cool">Why is this cool?</h2>
+
+<p>This is cool because you can implement your bookmarks as efficiently
+as you would with just wrapping stuff with a <code>lambda</code> and using
+<code>global-set-key</code>, except that you can view and edit the bindings with
+<code>bookmark-bmenu-list</code>, and quickly the update bookmark positions with
+<code>bookmark-set</code>.</p>
+
+<p>Here&#39;s what I get when I call <kbd>M-x</kbd> <code>bookmark-bmenu-list</code>:</p>
+
+<p><img src="/download/bookmarks.png" alt="bookmarks"></p>
+
+<p>In the list above:</p>
+
+<ul>
+<li>black bookmarks are files</li>
+<li>blue bookmarks are directories</li>
+<li>pink bookmarks are functions (you need <code>bookmark+</code> for them)</li>
+</ul>
+
+<p>The package should be available in MELPA soon.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/01/05/youtube-dl/">
         Yet another youtube-dl interface for Emacs
       </a>
@@ -635,49 +720,6 @@ the list, just post
 <a href="https://github.com/abo-abo/latex-wrap/issues">an issue</a>, I don&#39;t
 bite.</p>
 
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/01/01/three-ansi-term-tips/">
-        Three ansi-term tips
-      </a>
-    </h1>
-
-    <span class="post-date">01 Jan 2015</span>
-
-    <h2 id="tip-1">Tip #1</h2>
-
-<p>There&#39;s no reason not to have <code>/bin/bash</code> instead of <code>/bin/sh</code> as the
-default choice when you <kbd>M-x</kbd> <code>term</code>.</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">explicit-shell-file-name</span> <span class="s">&quot;/bin/bash&quot;</span><span class="p">)</span>
-</code></pre></div>
-<h2 id="tip-2">Tip #2</h2>
-
-<p>After you close the terminal, you get a useless buffer with no
-process. It&#39;s probably left there for you to have a history of what
-you did. I find it not useful, so here&#39;s a way to kill that buffer
-automatically:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">oleh-term-exec-hook</span> <span class="p">()</span>
-  <span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">buff</span> <span class="p">(</span><span class="nf">current-buffer</span><span class="p">))</span>
-         <span class="p">(</span><span class="nv">proc</span> <span class="p">(</span><span class="nf">get-buffer-process</span> <span class="nv">buff</span><span class="p">)))</span>
-    <span class="p">(</span><span class="nf">set-process-sentinel</span>
-     <span class="nv">proc</span>
-     <span class="o">`</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">process</span> <span class="nv">event</span><span class="p">)</span>
-        <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">string=</span> <span class="nv">event</span> <span class="s">&quot;finished\n&quot;</span><span class="p">)</span>
-            <span class="p">(</span><span class="nf">kill-buffer</span> <span class="o">,</span><span class="nv">buff</span><span class="p">))))))</span>
-
-<span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;term-exec-hook</span> <span class="ss">&#39;oleh-term-exec-hook</span><span class="p">)</span>
-</code></pre></div>
-<h2 id="tip-3">Tip #3</h2>
-
-<p>By default, <kbd>C-y</kbd> calls term&#39;s own <code>yank</code>, which is different
-from Emacs&#39;s <code>yank</code>.  So, until recently, I was using
-<kbd>S-&lt;insert&gt;</kbd> to paste stuff into <code>*term*</code>. Here&#39;s a
-more ergonomic way:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">eval-after-load</span> <span class="s">&quot;term&quot;</span>
-  <span class="o">&#39;</span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">term-raw-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c C-y&quot;</span><span class="p">)</span> <span class="ss">&#39;term-paste</span><span class="p">))</span>
-</code></pre></div>
   </div>
   
 </div>

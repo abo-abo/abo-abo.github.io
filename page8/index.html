@@ -279,6 +279,241 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/05/29/lispy-0.26.0/">
+        lispy 0.26.0 is out
+      </a>
+    </h1>
+
+    <span class="post-date">29 May 2015</span>
+
+    <p>Lispy 0.25.0 came out 2 months ago; 177 commits later, comes version
+0.26.0.  The release notes are stored
+<a href="https://github.com/abo-abo/lispy/releases/tag/0.26.0">at Github</a>, and
+I&#39;ll post them here as well.</p>
+
+<p>The coolest changes are the new reader-based <kbd>M</kbd>, which:</p>
+
+<ul>
+<li>Gives out very pretty output, with minor diffs for actual code,
+which is quite impressive considering all newline information is
+discarded and then reconstructed.</li>
+<li>Works for things that Elisp can&#39;t read, like <code>#&lt;marker ...&gt;</code> etc, very useful for debugging.</li>
+<li>Customizable rule sets; rules for Elisp and Clojure come with the package.</li>
+</ul>
+
+<p>The improvements to <kbd>g</kbd> and <kbd>G</kbd> also great:</p>
+
+<ul>
+<li>Because of caching, the prettified tags can be displayed in less
+than <code>0.15s</code> on Emacs&#39; <code>lisp/</code> directory, which has 21256 tags in 252 files.</li>
+<li>The tags collector looks at file modification time, so you get the updated tags right after you save.</li>
+</ul>
+
+<p>The details for these and other features follow below.</p>
+
+<h2 id="fixes">Fixes</h2>
+
+<ul>
+<li><kbd>C-k</kbd> should delete the whole multi-line string.</li>
+<li><kbd>y</kbd> should work for all parens, not just <code>(</code>.</li>
+<li><kbd>p</kbd> should actually eval in other window for <code>dolist</code>.</li>
+<li>Prevent pairs inserting an extra space when at minibuffer start.</li>
+<li><kbd>ol</kbd> works properly for active region.</li>
+</ul>
+
+<h2 id="new-features">New Features</h2>
+
+<h3 id="misc">Misc</h3>
+
+<ul>
+<li><kbd>xf</kbd> will pretty-print the macros for Elisp.</li>
+<li><kbd>M-m</kbd> works better when before <code>)</code>.</li>
+<li>Fix <kbd>&#39;</kbd>, <kbd>^</kbd> after a <code>,</code>.</li>
+<li>Improve <kbd>/</kbd> (splice) for quoted regions.</li>
+<li><kbd>Z</kbd> works with <code>&amp;key</code> arguments.</li>
+<li>The new <kbd>M</kbd> is used in <kbd>xf</kbd>.</li>
+<li>Allow to flatten Elisp <code>defsubst</code>.</li>
+<li><kbd>c</kbd> should insert an extra newline for top-level sexps.</li>
+</ul>
+
+<h3 id="paredit-key-bindings">Paredit key bindings</h3>
+
+<p>You can have only Paredit + special key bindings by using this composition of key themes:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">lispy-set-key-theme</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">special</span> <span class="nv">paredit</span><span class="p">))</span>
+</code></pre></div>
+<p>The default setting is:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">lispy-set-key-theme</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">special</span> <span class="nv">lispy</span> <span class="nv">c-digits</span><span class="p">))</span>
+</code></pre></div>
+<h3 id="new-algorithm-for-multi-lining">New algorithm for multi-lining</h3>
+
+<p><kbd>M</kbd> is now bound to <code>lispy-alt-multiline</code> instead of
+<code>lispy-multiline</code>.  It has a much better and more customizable
+algorithm.</p>
+
+<p>See these variables for customization:</p>
+
+<ul>
+<li><code>lispy-multiline-threshold</code></li>
+<li><code>lispy--multiline-take-3</code></li>
+<li><code>lispy--multiline-take-3-arg</code></li>
+<li><code>lispy--multiline-take-2</code></li>
+<li><code>lispy--multiline-take-2-arg</code></li>
+</ul>
+
+<p>They are set to reasonable defaults. But you can customize them if you feel that a particular form should be multi-lined in a different way.</p>
+
+<p><code>lispy-multiline-threshold</code> is a bit of ad-hoc to make things nice. Set this to nil if you want a completely rigorous multi-line. With the default setting of 32, expressions shorter than this won&#39;t be multi-lined. This makes 95% of the code look really good.</p>
+
+<p>The algorithm has a safety check implemented for Elisp: if <code>read</code> on the transformed expression returns something different than <code>read</code> on the original expression, an error will be signaled and no change will be made. For expressions that can&#39;t be <code>read</code>, like buffers/markers/windows/cyclic lists/overlays, only a warning will be issued (<code>lispy</code> can read them, unlike <code>read</code>).</p>
+
+<h3 id="d-and-gt-give-priority-to-lispy-right"><kbd>d</kbd> and <kbd>&gt;</kbd> give priority to <code>lispy-right</code></h3>
+
+<p>For the expression <code>(a)|(b)</code>, <code>(a)</code> will be considered the sexp at point, instead of <code>(b)</code>. This is consistent with <code>show-paren-mode</code>.  If a space is present, all ambiguities are resolved anyway.</p>
+
+<h3 id="b-works-fine-even-if-the-buffer-changes"><kbd>b</kbd> works fine even if the buffer changes</h3>
+
+<p>I&#39;ve switched the point and mark history to markers instead of points. When the buffer is changed, the markers are updated, so <kbd>b</kbd> will work fine.</p>
+
+<h3 id="extend-clojure-reader">Extend Clojure reader</h3>
+
+<p>In order for <kbd>i</kbd> (prettify code) to work for Clojure, it must be able to read the current expression. I&#39;ve been extending the Elisp reader to understand Clojure.  In the past commits, support was added for:</p>
+
+<ul>
+<li>empty sets</li>
+<li>commas</li>
+<li>auto-symbols, like <code>p1__7041#</code></li>
+</ul>
+
+<h3 id="extend-elisp-reader">Extend Elisp reader</h3>
+
+<p>It should be possible to read any <code>#&lt;...&gt;</code> form, as well as <code>#1</code>-type forms.</p>
+
+<h3 id="g-and-g-get-a-persistent-action-for-ivy"><kbd>g</kbd> and <kbd>G</kbd> get a persistent action for <code>ivy</code></h3>
+
+<p>This is a powerful feature that the <code>helm</code> back end has had for a long time.  When you press <kbd>g</kbd>, <kbd>C-n</kbd> and <kbd>C-p</kbd> will change the current selection.  But <kbd>C-M-n</kbd> and <kbd>C-M-p</kbd> will change the current selection <em>and</em> move there, without exiting the completion.</p>
+
+<p>This also means that you can call <code>ivy-resume</code> to resume either <kbd>g</kbd> (<code>lispy-goto</code>) or
+<kbd>G</kbd> (<code>lispy-goto-local</code>).</p>
+
+<h3 id="e-works-with-defvar-local"><kbd>e</kbd> works with <code>defvar-local</code></h3>
+
+<p>As you might know, the regular <kbd>C-x C-e</kbd> or <code>eval-buffer</code> will not reset the values of <code>defvar</code>, <code>defcustom</code> and such (you need <kbd>C-M-x</kbd> instead). But <kbd>e</kbd> does it, now also for <code>defvar-local</code>.</p>
+
+<h3 id="improve-faces-for-dark-backgrounds">Improve faces for dark backgrounds</h3>
+
+<p>I normally use a light background, so I didn&#39;t notice before that the faces looked horrible with a dark background.</p>
+
+<h3 id="the-96-will-quote-the-region">The <kbd>&#96;</kbd> will quote the region</h3>
+
+<p>If you have a region selected, pressing <kbd>&#96;</kbd> will result in:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">`symbol&#39;
+</code></pre></div>
+<h3 id="customize-the-file-selection-back-end-for-v">Customize the file selection back end for <kbd>V</kbd></h3>
+
+<p><kbd>V</kbd> (<code>lispy-visit</code>) allows to open a file in current project. Previously, it used <code>projectile</code>.
+Now it uses <code>find-file-in-project</code> by default, with the option to customize to <code>projectile</code>.</p>
+
+<h3 id="fixup-calls-to-looking-back">Fixup calls to <code>looking-back</code></h3>
+
+<p>Apparently, <code>looking-back</code> isn&#39;t very efficient, so it&#39;s preferable to avoid it or at least add a search bound to improve efficiency. Also the bound became mandatory in 25, while it was optional before.</p>
+
+<h3 id="m-m-will-work-better-in-strings-and-comments"><kbd>M-m</kbd> will work better in strings and comments.</h3>
+
+<p>See the relevant test:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">should</span> <span class="p">(</span><span class="nv">string=</span> <span class="p">(</span><span class="nv">lispy-with</span> <span class="s">&quot;\&quot;See `plu|mage&#39;.\&quot;&quot;</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-m&quot;</span><span class="p">))</span>
+                 <span class="s">&quot;\&quot;See ~`plumage&#39;|.\&quot;&quot;</span><span class="p">))</span>
+</code></pre></div>
+<p>Thanks to this, to e.g. get the value of a quoted var in a docstring or a comment, or jump to its definition, you can <kbd>M-m</kbd>. Then, you can step-in with <kbd>i</kbd> to select the symbol without quotes.</p>
+
+<h3 id="update-the-tags-strategy">Update the tags strategy</h3>
+
+<p>A much better algorithm with caching an examining of file modification time is used now.  This means that the tags should be up-to-date 99% of the time, even immediately after a save, and no necessary re-parsing will be done. And it all works fine with the <code>lispy-tag-arity</code> modifications.</p>
+
+<p>1% of the time, <code>lispy-tag-arity</code> stops working, I don&#39;t know why, since it&#39;s hard to reproduce. You can then pass a prefix arg to refresh tags bypassing the cache, e.g <kbd>2g</kbd> or <kbd>2G</kbd>.</p>
+
+<p>Also a bug is fixed in Clojure tag navigation, where the tag start positions were off by one char.</p>
+
+<p>The fetched tags retrieval is fast: less than <code>0.15s</code> on Emacs&#39;
+<code>lisp/</code> directory to retrieve 21256 tags from 252 files.  Which means
+it&#39;s lightning fast on smaller code bases (<code>lispy</code> has only 651 tags).</p>
+
+<h3 id="xj-can-also-step-into-macros"><kbd>xj</kbd> can also step into macros</h3>
+
+<p><code>lispy-debug-step-in</code>, bound to <kbd>xj</kbd> locally and <kbd>C-x C-j</kbd> globally can now step into macros, as well as into functions. This command is very useful for Edebug-less debugging.  Stepping into macros with <code>&amp;rest</code> parameters should work fine as well.</p>
+
+<h3 id="p-can-now-lax-eval-function-and-macro-arguments"><kbd>p</kbd> can now lax-eval function and macro arguments</h3>
+
+<p>When positioned at function or macro args, <kbd>p</kbd> will set them as if the function or macro was called with empty args, or the appropriate amount of nils. If the function is interned and interactive, use its interactive form to set the arguments appropriately.</p>
+
+<p>Again, this is very useful for debugging.</p>
+
+<h3 id="allow-to-paste-anywhere-in-the-list-using-a-numeric-arg">Allow to paste anywhere in the list using a numeric arg</h3>
+
+<p>As you might know, <kbd>P</kbd> (<code>lispy-paste</code>) is a powerful command that:</p>
+
+<ul>
+<li>Replaces selection with current kill when the region is active.</li>
+<li>Yanks the current kill before or after the current list otherwise.</li>
+</ul>
+
+<p>Now, you can:</p>
+
+<ul>
+<li>Yank the current kill to become the second element of the list with <kbd>2P</kbd></li>
+<li>Yank the current kill to become the third element of the list with <kbd>3P</kbd></li>
+<li>...</li>
+</ul>
+
+<p>It&#39;s OK to pass a larger arg than the length of the current list. In
+that case, the paste will be made into the last element of the list.</p>
+
+<h3 id="update-the-way-lispy-splice-works">Update the way <kbd>/</kbd> (<code>lispy-splice</code>) works</h3>
+
+<p>When there&#39;s no next element within parent, jump to parent from
+appropriate side. When the region is active, don&#39;t deactivate it. When
+splicing region, remove random quotes at region bounds.</p>
+
+<p>This change makes the splice a lot more manageable. For example,
+starting with this Clojure code, with <code>|</code> marking the current point:</p>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="kd">defn </span><span class="nv">read-resource</span>
+  <span class="s">&quot;Read a resource into a string&quot;</span>
+  <span class="p">[</span><span class="nv">path</span><span class="p">]</span>
+  <span class="p">(</span><span class="nf">read-string</span>
+   <span class="err">|</span><span class="p">(</span><span class="nb">slurp </span><span class="p">(</span><span class="nf">clojure.java.io/resource</span> <span class="nv">path</span><span class="p">))))</span>
+</code></pre></div>
+<p>A double splice <kbd>//</kbd> will result in:</p>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="kd">defn </span><span class="nv">read-resource</span>
+  <span class="s">&quot;Read a resource into a string&quot;</span>
+  <span class="p">[</span><span class="nv">path</span><span class="p">]</span>
+  <span class="err">|</span><span class="p">(</span><span class="nf">read-string</span>
+   <span class="nb">slurp </span><span class="nv">clojure.java.io/resource</span> <span class="nv">path</span><span class="p">))</span>
+</code></pre></div>
+<p>After <kbd>xR</kbd> (reverse list), <kbd>2 SPC</kbd> (same as
+<kbd>C-f</kbd>), <code>-&gt;</code> (plain insert),
+<kbd>[M</kbd> (back to parent and multi-line), the final result:</p>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="kd">defn </span><span class="nv">read-resource</span>
+  <span class="s">&quot;Read a resource into a string&quot;</span>
+  <span class="p">[</span><span class="nv">path</span><span class="p">]</span>
+  <span class="err">|</span><span class="p">(</span><span class="nb">-&gt; </span><span class="nv">path</span>
+      <span class="nv">clojure.java.io/resource</span>
+      <span class="nv">slurp</span>
+      <span class="nv">read-string</span><span class="p">))</span>
+</code></pre></div>
+<p>This also shows off <kbd>xR</kbd> - <code>lispy-reverse</code>, which reverses
+the current list.  Finally, reverting from the last code to the
+initial one can be done simply with <kbd>xf</kbd> - it will flatten
+the <code>-&gt;</code> macro call.</p>
+
+<h2 id="outro">Outro</h2>
+
+<p>Thanks to all who contributed, enjoy the new stuff. Would also be nice
+to get some more feedback and bug reports. Currently, it might seem
+that a large part of the features are either perfect or unused.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/05/23/swiper-0.5.0/">
         Ivy-mode 0.5.0 is out
       </a>
@@ -651,125 +886,6 @@ light-show with each call:</p>
 the way the overlays are displayed.  See the
 <a href="https://github.com/abo-abo/avy/wiki/defcustom">new wiki page</a> on
 customization for more info.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/05/13/ace-window-0.9.0/">
-        ace-window 0.9.0 is out
-      </a>
-    </h1>
-
-    <span class="post-date">13 May 2015</span>
-
-    <p><img src="https://cloud.githubusercontent.com/assets/390964/7583437/86180fa6-f895-11e4-80ef-c24a7bdf9bf6.png" alt="ace-window-keys.png"></p>
-
-<p>I kind of forgot to tag the <code>0.8.0</code> release on Github, so it&#39;s been a
-whole 3 months since the last release. In this post, I&#39;ll only
-describe the newest exciting feature in more detail, see
-<a href="http://oremacs.com/archive/">the archive</a> for
-<a href="http://oremacs.com/2015/02/27/ace-window-leading-char/">older</a>
-<a href="http://oremacs.com/2015/03/02/ace-window-without-ace/">posts</a>
-<a href="http://oremacs.com/2015/03/03/ace-window-full-path/">on</a>
-<a href="http://oremacs.com/2015/03/06/ace-window-toggle/">ace</a>
-<a href="http://oremacs.com/2015/03/12/ace-window-display-mode/">window</a>.</p>
-
-<h2 id="new-features">New Features</h2>
-
-<h3 id="display-the-window-decision-chars-in-the-mode-line">Display the window decision chars in the mode line</h3>
-
-<p>Enable <code>ace-window-display-mode</code> for this. This gives you the
-advantage of always being aware which window corresponds to which
-char.</p>
-
-<h3 id="new-defcustom-aw-ignore-current">New defcustom: <code>aw-ignore-current</code></h3>
-
-<p>This is off by default. When t, <code>ace-window</code> will ignore
-<code>selected-window</code>.</p>
-
-<h3 id="allow-to-switch-the-window-action-midway">Allow to switch the window action midway</h3>
-
-<p>Ace-window has many commands available, like:</p>
-
-<ul>
-<li><code>ace-select-window</code></li>
-<li><code>ace-delete-window</code></li>
-<li><code>ace-swap-window</code></li>
-<li>...</li>
-</ul>
-
-<p>But did you wish sometimes when you called <code>ace-select-window</code> that
-you should have called <code>ace-delete-window</code>? In the old way, you would
-cancel <code>ace-select-window</code> with <kbd>C-g</kbd> and call
-<code>ace-delete-window</code>.</p>
-
-<p>With the new way, you can, just press <kbd>x</kbd> followed by the
-decision char.  All keys are customizable through <code>aw-dispatch-alist</code>.</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">defvar</span> <span class="nv">aw-dispatch-alist</span>
-  <span class="o">&#39;</span><span class="p">((</span><span class="nv">?x</span> <span class="nv">aw-delete-window</span> <span class="s">&quot; Ace - Delete Window&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">?m</span> <span class="nv">aw-swap-window</span> <span class="s">&quot; Ace - Swap Window&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">?n</span> <span class="nv">aw-flip-window</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">?v</span> <span class="nv">aw-split-window-vert</span> <span class="s">&quot; Ace - Split Vert Window&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">?b</span> <span class="nv">aw-split-window-horz</span> <span class="s">&quot; Ace - Split Horz Window&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">?i</span> <span class="nv">delete-other-windows</span> <span class="s">&quot; Ace - Maximize Window&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">?o</span> <span class="nv">delete-other-windows</span><span class="p">))</span>
-  <span class="s">&quot;List of actions for `aw-dispatch-default&#39;.&quot;</span><span class="p">)</span>
-</code></pre></div>
-<p>The strings beside each command are important: they are used to update
-the mode line when you press a char. They also mean that a window
-should be selected using <code>aw-keys</code> for the corresponding command. If
-there&#39;s no string, the command is just called straight away, with no
-arguments.  To reiterate, for each entry without a string, its command
-will be called immediately, and for others the window will be selected
-first.</p>
-
-<p>Also, take note of <code>aw-flip-window</code>. Suppose the you have a lot (say
-7) windows, but you only want to cycle between the most recent
-two. You can do so with <kbd>n</kbd>, with no need to press the
-decision char.</p>
-
-<p>I call this feature &quot;the dispatch&quot;. The dispatch normally happens when:</p>
-
-<ol>
-<li>you&#39;re prompted for <code>aw-keys</code></li>
-<li>you press a char that isn&#39;t in <code>aw-keys</code></li>
-<li>there&#39;s an entry in <code>aw-dispatch-alist</code> for this char</li>
-</ol>
-
-<p>If you want to skip step 1 always (since, by default, you&#39;re not
-prompted for <code>aw-keys</code> when you have 2 or less windows), use:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">aw-dispatch-always</span> <span class="no">t</span><span class="p">)</span>
-</code></pre></div>
-<p>Be careful though, setting this means that you&#39;ll always have to
-select a window with <code>aw-keys</code>, even if there are only two. This is a
-large toll on the muscle memory. On the other hand, even with one
-window, assuming you&#39;ve bound <code>ace-window</code> to <kbd>M-p</kbd>, you get:</p>
-
-<ul>
-<li><code>split-window-vertically</code> on <kbd>M-p v</kbd></li>
-<li><code>split-window-horizontally</code> on <kbd>M-p b</kbd></li>
-<li><code>delete-other-windows</code> on <kbd>M-p o</kbd></li>
-</ul>
-
-<p>What&#39;s also nice is that these commands scale with the amount of
-windows: if you have only one window, you get no prompt for <kbd>M-p
-v</kbd>, so it acts just like <kbd>C-x 2</kbd>. But if you have more
-windows, you don&#39;t have to select the window that you want to split
-beforehand: you can select it after you decided to issue a split
-operation.</p>
-
-<p>See <a href="https://github.com/abo-abo/ace-window/wiki">the wiki</a> for a nice
-customization setup by <a href="https://github.com/joedicastro">@joedicastro</a>.</p>
-
-<h2 id="outro">Outro</h2>
-
-<p>Give the new feature a try. The jump in utility between the new and
-old <code>ace-window</code>, I feel, is of the same magnitude as the jump between
-<code>other-window</code> and <code>ace-window</code>. However, it doesn&#39;t come for free and
-the muscle memory needs to be readjusted slightly.</p>
-
-<p>Big thanks to all who contributed, especially to <a href="https://github.com/joedicastro">@joedicastro</a>.</p>
 
   </div>
   

@@ -279,6 +279,63 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/02/15/sudo-stuffs/">
+        Doing sudo stuff with tramp
+      </a>
+    </h1>
+
+    <span class="post-date">15 Feb 2015</span>
+
+    <p>Somehow, I accumulated a few files owned by root that should have been
+owned by me. Below, I&#39;ll describe a solution to get rid of them based
+on <code>dired</code> and <code>tramp</code>.</p>
+
+<h2 id="step-one-open-the-directory-with-sudo-privileges">Step one: open the directory with sudo privileges</h2>
+
+<p>I&#39;ll obviously need the sudo privilege to change the owner of a file owned
+by root. Might as well start with that.</p>
+
+<p>Thankfully, I do have a shortcut:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">sudired</span> <span class="p">()</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;tramp</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">dir</span> <span class="p">(</span><span class="nf">expand-file-name</span> <span class="nv">default-directory</span><span class="p">)))</span>
+    <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">string-match</span> <span class="s">&quot;^/sudo:&quot;</span> <span class="nv">dir</span><span class="p">)</span>
+        <span class="p">(</span><span class="ne">user-error</span> <span class="s">&quot;Already in sudo&quot;</span><span class="p">)</span>
+      <span class="p">(</span><span class="nv">dired</span> <span class="p">(</span><span class="nf">concat</span> <span class="s">&quot;/sudo::&quot;</span> <span class="nv">dir</span><span class="p">)))))</span>
+<span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="s">&quot;!&quot;</span> <span class="ss">&#39;sudired</span><span class="p">)</span>
+</code></pre></div>
+<p>The function above will open the current directory in sudo mode. I
+decided to bind it to <kbd>!</kbd>, since the default <kbd>&amp;</kbd>
+seems strictly better than <kbd>!</kbd>. The function will ask you for
+the password once.  Afterwards, you can open other directories without
+having to enter the password.</p>
+
+<h2 id="step-two-find-dired">Step two: <code>find-dired</code></h2>
+
+<p>So now, while in sudo mode of the directory in question:</p>
+
+<ol>
+<li>Call <kbd>M-x</kbd> <code>find-dired</code>. It&#39;s not bound by default, and I
+don&#39;t bind it myself since it&#39;s quite situational (I do bind
+<code>find-name-dired</code> to <kbd>F</kbd> in <code>dired-mode</code> though).</li>
+<li>It prompts you for the directory. I just press <kbd>RET</kbd>, since the default one is what I need.</li>
+<li>Next, it prompts for <code>find</code> args. These are the arguments to the
+UNIX command <code>find</code>. Here, I need to pass <code>-user root</code>.</li>
+<li>The command has finished and I can see the results. I can select
+some of them by pressing <kbd>m</kbd> (<code>dired-mark</code>) a few times, or
+mark them all at once with <kbd>t</kbd> (<code>dired-toggle-marks</code>).</li>
+<li>Finally, call <kbd>O</kbd> (<code>dired-do-chown</code>) on the marked files and enter <code>oleh</code>.</li>
+</ol>
+
+<p>Done. I&#39;m sure that the admin types can cook up some <code>find</code>-<code>exec</code>-<code>chown</code> combo to do the same thing,
+but the <code>find-dired</code> approach is both simpler and more flexible, since I can confirm and edit the list
+of files being changed.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/02/14/semi-xmodmap/">
         Semimap - .Xmodmap with semicolon as an additional modifier
       </a>
@@ -750,58 +807,6 @@ the end.</p>
 <p>The output of <code>keys-describe-prefixes</code> can be used to learn some
 bindings that you didn&#39;t know about, and also as a template to
 redefine some bindings that you don&#39;t need.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/02/10/ido-backspace/">
-        Easy ido improvement
-      </a>
-    </h1>
-
-    <span class="post-date">10 Feb 2015</span>
-
-    <p>Heh, I guess I was so busy at work that I missed the opportunity to
-make an especially good post for the 50-post landmark. At least
-according to <kbd>M-=</kbd> (<code>count-words-region</code>) in my <strong>_posts</strong>&#39;
-<code>dired</code> buffer, this is the 53rd post.</p>
-
-<h2 id="ido-backspace"><code>ido-backspace</code></h2>
-
-<p>This echoes to my very second post,
-<a href="/2014/12/21/helm-backspace/">easy helm improvement</a>,
-which was about implementing a similar function for <code>helm</code>.
-So here it is:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">ido-mode</span><span class="p">)</span>
-<span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;delsel</span><span class="p">)</span>
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">ido-backspace</span> <span class="p">()</span>
-  <span class="s">&quot;Forward to `backward-delete-char&#39;.</span>
-<span class="s">On error (read-only), quit without selecting.&quot;</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">condition-case</span> <span class="no">nil</span>
-      <span class="p">(</span><span class="nv">backward-delete-char</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="p">(</span><span class="ne">error</span>
-     <span class="p">(</span><span class="nv">minibuffer-keyboard-quit</span><span class="p">))))</span>
-<span class="p">(</span><span class="nf">define-key</span> <span class="nv">ido-common-completion-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;DEL&quot;</span><span class="p">)</span> <span class="ss">&#39;ido-backspace</span><span class="p">)</span>
-</code></pre></div>
-<p>With this setup, when e.g. calling <code>ido-switch-buffer</code>, you can cancel
-with <kbd>DEL</kbd>.  This, of course, will also work for
-<a href="https://github.com/nonsequitur/smex">smex</a> and
-<a href="https://github.com/magit/magit">some</a>
-<a href="https://github.com/abo-abo/lispy">other</a> packages that allow for
-<code>ido</code> completion:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">magit-completing-read-function</span> <span class="nf">#&#39;</span><span class="nv">magit-ido-completing-read</span><span class="p">)</span>
-<span class="p">(</span><span class="k">setq</span> <span class="nv">lispy-completion-method</span> <span class="ss">&#39;ido</span><span class="p">)</span>
-</code></pre></div>
-<p>Note that the <code>define-key</code> part of the code takes an advantage of a
-recent patch to <code>ido</code> that&#39;s available in the trunk.  You can find the
-old way of binding keys for <code>ido</code> in an earlier post,
-<a href="/2015/01/09/ido-find-file-tilde/">tilde in ido-find-file</a>.
-That post actually played a small role in speeding up the patch, for
-which we should thank <a href="https://github.com/tarsius">@tarsius</a>.</p>
-
-<p>Note that this behavior will not affect <code>ido-find-file</code>, since it has its own map.</p>
 
   </div>
   
