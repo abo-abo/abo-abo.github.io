@@ -279,6 +279,67 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/02/26/compilation-check-declare/">
+        Compilation-style check-declare-file
+      </a>
+    </h1>
+
+    <span class="post-date">26 Feb 2015</span>
+
+    <p>As a follow-up to my older post on <a href="/2015/02/13/elisp-linting/">Elisp linting options</a>,
+I&#39;ve made <code>check-declare-file</code> and <code>check-declare-directory</code> give out warnings similar to those
+that e.g. <code>byte-compile-file</code> gives:</p>
+
+<ul>
+<li>each warning now has a location in a file-line-column format</li>
+<li>you can click on the link to jump to the warning location</li>
+<li><code>first-error</code> / <code>next-error</code> / <code>previous-error</code> work as well</li>
+<li>the warning line blinks momentarily with each jump</li>
+</ul>
+
+<p>Here&#39;s how it looks like:</p>
+
+<p><img src="/download/check-declare.png" alt="check-declare"></p>
+
+<p>You can already use this feature if you&#39;re on Emacs trunk, otherwise
+you&#39;ll have to wait for 25.1 to come out.</p>
+
+<p>There&#39;s also a new custom variable that you can set to get a more strict check:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">check-declare-ext-errors</span> <span class="no">t</span><span class="p">)</span>
+</code></pre></div>
+<p>Unless you set it, the standard behavior is to issue a <code>&quot;skipping
+external file&quot;</code> message when checking a statement like the one above.
+The reason is that the external package might not be loaded or
+something.  As long as I&#39;m checking, I prefer to check everything, so
+there&#39;s no reason not to have <code>check-declare-ext-errors</code> always true.</p>
+
+<h2 id="a-trick-to-actually-load-slime-repl">A trick to actually load <code>slime-repl</code></h2>
+
+<p>Here&#39;s the Makefile target for <code>check-declare</code>:</p>
+<div class="highlight"><pre><code class="language-Makefile" data-lang="Makefile"><span class="nf">check-declare</span><span class="o">:</span>
+    <span class="k">$(</span>CASKEMACS<span class="k">)</span> -batch <span class="k">$(</span>LOAD<span class="k">)</span> -l check-declare.elt
+</code></pre></div>
+<p>And here are the contents of check-declare.elt:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">check-declare-ext-errors</span> <span class="no">t</span><span class="p">)</span>
+<span class="p">(</span><span class="k">setq</span> <span class="nv">files</span> <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;lispy.el&quot;</span>
+              <span class="s">&quot;lispy-inline.el&quot;</span>
+              <span class="s">&quot;le-clojure.el&quot;</span>
+              <span class="s">&quot;le-scheme.el&quot;</span>
+              <span class="s">&quot;le-lisp.el&quot;</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">add-to-list</span> <span class="ss">&#39;load-path</span>
+             <span class="p">(</span><span class="nf">concat</span> <span class="p">(</span><span class="nf">file-name-directory</span>
+                      <span class="p">(</span><span class="nv">locate-library</span> <span class="s">&quot;slime&quot;</span><span class="p">))</span>
+                     <span class="s">&quot;contrib/&quot;</span><span class="p">))</span>
+<span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;slime-repl</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">apply</span> <span class="nf">#&#39;</span><span class="nv">check-declare-files</span> <span class="nv">files</span><span class="p">)</span>
+</code></pre></div>
+<p>As you see, I first find where slime.el is located using <code>locate-library</code>, and then add the
+contrib sub-directory to the <code>load-path</code>. After this, it&#39;s finally possible to <code>(require &#39;slime-repl)</code>.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/02/25/rectangle-hydra/">
         Rectangle-mode Hydra
       </a>
@@ -706,42 +767,6 @@ functions that you can take away from this exercise are <code>match-data</code>
 and <code>set-match-data</code> which appropriately return and store a list of
 integers. Keeping the string separate from the regex match is a neat
 way to improve performance.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/02/21/hydra-docstring-sexp/">
-        Embedding sexps in Hydra docstrings
-      </a>
-    </h1>
-
-    <span class="post-date">21 Feb 2015</span>
-
-    <p>In <a href="/2015/02/20/buffer-menu-hydra/">yesterday&#39;s post</a>
-I showed how to embed variable values into the docstring, among other
-things. Today, I&#39;ve extended this approach to work with s-expressions.
-Here&#39;s how it looks like:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-marked-items</span> <span class="p">(</span><span class="nv">dired-mode-map</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
-      <span class="s">&quot;</span>
-<span class="s">Number of marked items: %(length (dired-get-marked-files))</span>
-<span class="s">&quot;</span>
-      <span class="p">(</span><span class="s">&quot;m&quot;</span> <span class="nv">dired-mark</span> <span class="s">&quot;mark&quot;</span><span class="p">))</span>
-</code></pre></div>
-<p>This piece of code will remind you how many files you&#39;ve marked so far each
-time you press <kbd>m</kbd>.
-By the way, this is the 64th post on the blog; I found out by pressing
-<kbd>tm</kbd> in <code>dired</code> buffer or the <code>_posts</code> directory.
-Also, I don&#39;t think that I&#39;ve showed passing <code>&quot;&quot;</code> as the keyboard prefix parameter
-before. Apparently, it works and just translates to this:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span>
-    <span class="s">&quot;m&quot;</span> <span class="ss">&#39;hydra-marked-items/dired-mark</span><span class="p">)</span>
-</code></pre></div>
-<p>Here&#39;s how it looks like:
-<img src="/download/hydra-docstring-sexp.png" alt="hydra-docstring-sexp"></p>
-
-<p>There&#39;s no need for a quitting key, it will auto-vanish when you press
-anything other than <kbd>m</kbd>.</p>
 
   </div>
   

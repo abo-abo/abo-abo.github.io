@@ -4,13 +4,45 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2016-06-27T22:24:46+02:00</updated>
+ <updated>2016-07-29T20:55:11+02:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Swipe all the files!</title>
+   <link href="http://oremacs.com/2016/07/29/brand-new-swiper-all/"/>
+   <updated>2016-07-29T00:00:00+02:00</updated>
+   <id>http://oremacs.com/2016/07/29/brand-new-swiper-all</id>
+   <content type="html">&lt;p&gt;If you&amp;#39;ve ever tried the &lt;code&gt;swiper-all&lt;/code&gt; from
+&lt;a href=&quot;https://github.com/abo-abo/swiper&quot;&gt;swiper&lt;/a&gt;, forget everything about
+it.  The command was super-awkward, since it had to parse all your
+open files before giving you a chance enter anything, resulting in
+dozens of seconds before the prompt.&lt;/p&gt;
+
+&lt;p&gt;Recently, I&amp;#39;ve had some time to examine and improve it and the result
+looks very promising. The new command is now async, which means
+there&amp;#39;s no delay before the prompt comes up. Here&amp;#39;s a result I got
+with no delay while having around 50 buffers open:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/swiper-all.png&quot; alt=&quot;swiper-all.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;The shortcut I&amp;#39;m using:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-c u&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;swiper-all&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;For efficiency&amp;#39;s sake a small trade off had to be made: the line
+numbers are no longer displayed. This actually results in an advantage
+that you can select different candidates on the same line.&lt;/p&gt;
+
+&lt;p&gt;There are still a few things I plan to try for the new command, like
+adding file-less buffers, caching for incremental regexes and maybe
+even newlines in wild cards, but even now it seems very usable. So
+give it a try, enjoy and happy hacking!&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Bookmark the current window layout with Ivy</title>

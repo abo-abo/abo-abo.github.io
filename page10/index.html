@@ -279,6 +279,162 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/04/28/blending-faces/">
+        Blending colors in Elisp
+      </a>
+    </h1>
+
+    <span class="post-date">28 Apr 2015</span>
+
+    <h2 id="intro">Intro</h2>
+
+<p>This is a slightly obscure feature that I&#39;ve added today to
+<a href="https://github.com/abo-abo/swiper">ivy-mode</a>. It&#39;s obscure, since
+very few packages give their candidates a face with a custom
+background.  Still, when that happens, a conflict arises:</p>
+
+<blockquote>
+<p>Which face to apply: <code>ivy-current-match</code> or the existing one?</p>
+</blockquote>
+
+<p>In the image below, I&#39;ve blended them both in a 50-50 mixture:</p>
+
+<p><img src="/download/ivy-blend.png" alt="ivy-blend.png"></p>
+
+<p>By the way, if you&#39;re wondering where the backgrounds come from in the
+first place, it&#39;s <a href="https://github.com/abo-abo/lispy">lispy-goto</a>
+function (if you know what <code>imenu</code> is, it&#39;s an advanced version of
+that).  This function collects all the Elisp tags in the current
+directory, and offers to jump to them. The functions that have
+<code>interactive</code> in them, are highlighted with <code>lispy-command-name-face</code>.
+In the above screenshot, the first 7 functions are interactive, and the other 2 are not.</p>
+
+<p>If you&#39;re interested in how color blending is done, I&#39;ll describe it
+shortly below.</p>
+
+<h2 id="color-building-internals">Color-building internals</h2>
+
+<p>First, a smaller and more clear example (I&#39;ve used <code>rainbow-mode</code> and <code>htmlize-buffer</code>):</p>
+
+<style type="text/css">
+    <!--
+      .ATTRLIST {
+        /* (:background "#800080") */
+        background-color: #800080;
+      }
+      .ATTRLIST-1 {
+        /* (:background "blue") */
+        background-color: #0000ff;
+      }
+      .ATTRLIST-2 {
+        /* (:foreground "white") */
+        color: #ffffff;
+      }
+      .ATTRLIST-3 {
+        /* (:background "red") */
+        background-color: #ff0000;
+      }
+      .comment {
+        /* font-lock-comment-face */
+        color: #3F7F5F;
+      }
+      .comment-delimiter {
+        /* font-lock-comment-delimiter-face */
+        color: #3F7F5F;
+      }
+      .string {
+        /* font-lock-string-face */
+        color: #2A00FF;
+      }
+    -->
+    </style>
+
+<pre>
+(colir-blend
+ (color-values <span class="string">"</span><span class="ATTRLIST-3"><span class="ATTRLIST-2">red</span></span><span class="string">"</span>)
+ (color-values <span class="string">"</span><span class="ATTRLIST-1"><span class="ATTRLIST-2">blue</span></span><span class="string">"</span>))
+<span class="comment-delimiter">;; </span><span class="comment">=&gt; "</span><span class="ATTRLIST"><span class="ATTRLIST-2">#800080</span></span><span class="comment">"
+</span></pre>
+
+<p>Here, <code>colir-blend</code> is a very small function that I&#39;ll describe below,
+and <code>color-values</code> is a function from faces.el that forwards to a C
+function <code>xw-color-values</code> with this doc:</p>
+
+<blockquote>
+<p>Return a list of three integers, (RED GREEN BLUE), each between 0
+and either 65280 or 65535 (the maximum depends on the system).</p>
+</blockquote>
+
+<p>Which is a bit weird, since the last time I checked, the standard for
+colors was one-byte per channel, not two.  Granted, it was about 10
+years ago that I checked, and indeed, the
+<a href="http://en.wikipedia.org/wiki/RGB_color_model#Numeric_representations">entry on Wikipedia</a>
+says:</p>
+
+<blockquote>
+<p>High-end digital image equipment are often able to deal with larger
+integer ranges for each primary color, such as 0..1023 (10 bits),
+0..65535 (16 bits) or even larger, by extending the 24-bits (three
+8-bit values) to 32-bit, 48-bit, or 64-bit units</p>
+</blockquote>
+
+<p>Apparently, Emacs is outfitted to deal high-end digital image
+equipment. But I&#39;m still pretty sure that most graphics cards that you
+can buy only give 8 bits per each channel. Anyway, here&#39;s the code for
+the basic functions:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">colir-join</span> <span class="p">(</span><span class="nv">r</span> <span class="nv">g</span> <span class="nv">b</span><span class="p">)</span>
+  <span class="s">&quot;Build a color from R G B.</span>
+<span class="s">Inverse of `color-values&#39;.&quot;</span>
+  <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;#%02x%02x%02x&quot;</span>
+          <span class="p">(</span><span class="nf">ash</span> <span class="nv">r</span> <span class="mi">-8</span><span class="p">)</span>
+          <span class="p">(</span><span class="nf">ash</span> <span class="nv">g</span> <span class="mi">-8</span><span class="p">)</span>
+          <span class="p">(</span><span class="nf">ash</span> <span class="nv">b</span> <span class="mi">-8</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">colir-blend</span> <span class="p">(</span><span class="nv">c1</span> <span class="nv">c2</span> <span class="kp">&amp;optional</span> <span class="nv">alpha</span><span class="p">)</span>
+  <span class="s">&quot;Blend the two colors C1 and C2 with ALPHA.</span>
+<span class="s">C1 and C2 are in the format of `color-values&#39;.</span>
+<span class="s">ALPHA is a number between 0.0 and 1.0 which corresponds to the</span>
+<span class="s">influence of C1 on the result.&quot;</span>
+  <span class="p">(</span><span class="k">setq</span> <span class="nv">alpha</span> <span class="p">(</span><span class="k">or</span> <span class="nv">alpha</span> <span class="mf">0.5</span><span class="p">))</span>
+  <span class="p">(</span><span class="nf">apply</span> <span class="nf">#&#39;</span><span class="nv">colir-join</span>
+         <span class="p">(</span><span class="nv">cl-mapcar</span>
+          <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span> <span class="nv">y</span><span class="p">)</span>
+            <span class="p">(</span><span class="nf">round</span> <span class="p">(</span><span class="nf">+</span> <span class="p">(</span><span class="nf">*</span> <span class="nv">x</span> <span class="nv">alpha</span><span class="p">)</span> <span class="p">(</span><span class="nf">*</span> <span class="nv">y</span> <span class="p">(</span><span class="nf">-</span> <span class="mi">1</span> <span class="nv">alpha</span><span class="p">)))))</span>
+          <span class="nv">c1</span> <span class="nv">c2</span><span class="p">)))</span>
+</code></pre></div>
+<p>All pretty simple:</p>
+
+<ol>
+<li>Split each color into red, green, and blue integers with <code>color-values</code>.</li>
+<li>Compute a mean for each color channel.</li>
+<li>Build the new color by concatenating the hex components into a string.</li>
+</ol>
+
+<p>In the example above:</p>
+
+<ul>
+<li>The result of <code>(color-values &quot;red&quot;)</code> is <code>(65535 0 0)</code>.</li>
+<li>The result of <code>(color-values &quot;blue&quot;)</code> is <code>(0 0 65535)</code>.</li>
+<li>Their arithmetic mean is <code>(32768 0 32768)</code>.</li>
+<li>Divided by <code>256</code> with <code>ash</code>, we get <code>(128 0 128)</code>.</li>
+<li>Converted to hex, <code>(128 0 128)</code> is <code>(80 0 80)</code>.</li>
+<li>And the final color is <code>&quot;#800080&quot;</code>.</li>
+</ul>
+
+<h2 id="outro">Outro</h2>
+
+<p>I hope that you&#39;ve enjoyed this little venture into Elisp and colors.
+People say rough things about Elisp sometimes, but hey: it offers
+functions ranging from the assembly-level <code>ash</code>, all the way up to
+Photoshop-grade color channel handling.</p>
+
+<p>If only it could get a good optimization bump, like JavaScript got at
+one point, and a small threading library, we&#39;d be all set.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/04/24/oremacs-config/">
         Oremacs config is on Github
       </a>
@@ -766,71 +922,6 @@ No black boxes or hidden variables that dramatically change the order of candida
 
 <p>Check it out, I hope you like it. And a big thanks to all who
 contributed code or bug reports.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/04/15/hydra-idle-hint/">
-        Display the initial Hydra hint with a delay
-      </a>
-    </h1>
-
-    <span class="post-date">15 Apr 2015</span>
-
-    <p>More hydra goodness incoming, this time thanks to <a href="https://github.com/joedicastro">@joedicastro</a>.
-Firstly, he contributed this awesome-looking <code>twittering-mode</code> hydra to <a href="https://github.com/abo-abo/hydra/wiki/Twittering">the wiki</a>:</p>
-
-<p><img src="https://camo.githubusercontent.com/c2c541ec30563223701609c24c5ed5ec7ebf59b6/68747470733a2f2f7062732e7477696d672e636f6d2f6d656469612f43436b336a4851556b4141436e62502e706e673a6c61726765" alt="hydra-twittering.png"></p>
-
-<p>And a similarly nice one for <a href="https://github.com/abo-abo/hydra/wiki/Helm-2">helm</a>:</p>
-
-<p><img src="https://camo.githubusercontent.com/757f726b2010173505f1c2b32cb9292f9c20ddaa/687474703a2f2f692e696d6775722e636f6d2f696a47703675392e706e67" alt="hydra-helm-2.png"></p>
-
-<p>You can look up the code for both hydras by following the above two links.</p>
-
-<p>Secondly, he gave me a nice idea in <a href="https://github.com/abo-abo/hydra/issues/108">#108</a>:</p>
-
-<blockquote>
-<p>A nice thing that guide-key has is that you can set an idle time to
-wait until you press a key to activate any head before show the
-hydra hints buffer (explained in hydra terms). This is very helpful
-when you know the key bindings by memory and you do not need to see
-the hints buffer, but if you forget how to activate any head, you
-simple press the hydra binding and wait the &quot;idle time&quot; and the
-hints buffer is shown to help you to choose the right next binding.</p>
-</blockquote>
-
-<p>So this option is now also possible. Here&#39;s an example, using <code>hydra-toggle</code> from hydra-examples.el:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-toggle</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">blue</span>
-                        <span class="nb">:idle</span> <span class="mf">1.0</span><span class="p">)</span>
-  <span class="s">&quot;toggle&quot;</span>
-  <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="nv">abbrev-mode</span> <span class="s">&quot;abbrev&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;d&quot;</span> <span class="nv">toggle-debug-on-error</span> <span class="s">&quot;debug&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;f&quot;</span> <span class="nv">auto-fill-mode</span> <span class="s">&quot;fill&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;t&quot;</span> <span class="nv">toggle-truncate-lines</span> <span class="s">&quot;truncate&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span> <span class="s">&quot;cancel&quot;</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c C-v&quot;</span><span class="p">)</span> <span class="ss">&#39;hydra-toggle/body</span><span class="p">)</span>
-</code></pre></div>
-<p>So the single change from the old code is <code>:idle 1.0</code>, which means:</p>
-
-<blockquote>
-<p>After a call to <code>hydra-toggle/body</code>, instead of displaying the hint
-as usual, start a timer for 1.0 seconds. Once the timer runs out,
-display the hint.  But if the hydra has exited before that time,
-cancel the timer.</p>
-</blockquote>
-
-<p>Typically, I&#39;m not a huge fan of timers, but it&#39;s nice to have the
-option.  And indeed, I&#39;ve been noticing that I could do without a hint
-for some simple and more often used hydras. But a command can go from
-often to barely used quickly, and disabling the hint altogether seems
-too harsh. A timer could be a nice middle ground, especially since I
-can decide whether to use it or not and the interval for each specific
-hydra.</p>
-
-<p>Anyway, thanks for the contributions. Enjoy the new feature, and keep
-those good ideas coming!</p>
 
   </div>
   
