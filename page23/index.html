@@ -279,6 +279,181 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/02/02/colorful-hydrae/">
+        Colorful Hydras
+      </a>
+    </h1>
+
+    <span class="post-date">02 Feb 2015</span>
+
+    <p>This post advertises the release of <a href="https://github.com/abo-abo/hydra/releases/tag/0.5.0">hydra.el 0.5.0</a>.
+The package was introduced in <a href="/2015/01/20/introducing-hydra/">an earlier post</a> and received some positive feedback.
+Currently, it&#39;s available in both
+<a href="https://elpa.gnu.org/packages/hydra.html">GNU ELPA</a> (slightly behind)
+and <a href="http://melpa.org/#/hydra">MELPA</a> (always current).</p>
+
+<p><img src="/download/Hydra-color.png" alt="colorful-hydra"></p>
+
+<h2 id="the-newfound-utility">The newfound utility</h2>
+
+<p>As I originally released the Hydra, I was asked if it was similar to
+<a href="http://endlessparentheses.com/the-toggle-map-and-wizardry.html">this approach</a>
+described on <a href="http://endlessparentheses.com/">Endless Parentheses</a>. I
+said that it&#39;s not, since Hydra commands are meant to be repeatable
+instead of being called just once.</p>
+
+<p>Now, after I&#39;ve designated the repeatable heads with red color and the one-off heads with blue color,
+Hydra can reproduce the mentioned approach. Here&#39;s how it looks like:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span>
+ <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c C-v&quot;</span><span class="p">)</span>
+ <span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-toggle</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
+   <span class="s">&quot;toggle&quot;</span>
+   <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="nv">abbrev-mode</span> <span class="s">&quot;abbrev&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;d&quot;</span> <span class="nv">toggle-debug-on-error</span> <span class="s">&quot;debug&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;f&quot;</span> <span class="nv">auto-fill-mode</span> <span class="s">&quot;fill&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;t&quot;</span> <span class="nv">toggle-truncate-lines</span> <span class="s">&quot;truncate&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;w&quot;</span> <span class="nv">whitespace-mode</span> <span class="s">&quot;whitespace&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span> <span class="s">&quot;cancel&quot;</span><span class="p">)))</span>
+</code></pre></div>
+<p>And this is what I see in the echo area after pressing <kbd>C-c C-v</kbd>:</p>
+
+<p><img src="/download/Hydra-toggle.png" alt="hydra-toggle"></p>
+
+<p>At this point:</p>
+
+<ul>
+<li><kbd>q</kbd> will cancel without doing anything. I think it&#39;s more
+convenient than doing the equivalent <kbd>C-g</kbd> with the
+<code>global-set-key</code> approach.</li>
+<li><kbd>a</kbd>, <kbd>d</kbd>, <kbd>f</kbd>, <kbd>t</kbd>, and <kbd>a</kbd> will call the appropriate function.
+The advantage of blue Hydra heads over <code>global-set-key</code> is that you immediately get the hint: this can be useful
+for rarely used commands.</li>
+<li>as with the old red Hydra heads, pressing anything other than
+<kbd>a</kbd>, <kbd>d</kbd>, <kbd>f</kbd>, <kbd>t</kbd>, <kbd>a</kbd>,
+or <kbd>q</kbd> will vanquish the Hydra <em>and</em> call the key binding
+that you just pressed. This is different from the <code>global-set-key</code>
+approach, which would e.g. error to your <kbd>C-c C-v C-n</kbd> with
+<code>&quot;C-c C-v C-n is undefined&quot;</code>, unlike the Hydra, which would call <kbd>C-n</kbd>
+(<code>next-line</code>).</li>
+</ul>
+
+<h2 id="the-full-defhydra-syntax">The full <code>defhydra</code> syntax</h2>
+
+<p>Note that <code>defhydra</code> looks intentionally like a <code>defun</code>, so that it&#39;s
+easier to remember how it works.
+Here&#39;s a more verbose Hydra that&#39;s largely equivalent to the one above:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-toggle</span> <span class="p">(</span><span class="nv">global-map</span> <span class="s">&quot;C-c&quot;</span> <span class="nb">:color</span> <span class="nv">red</span><span class="p">)</span>
+   <span class="s">&quot;toggle&quot;</span>
+   <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="nv">abbrev-mode</span> <span class="s">&quot;abbrev&quot;</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;d&quot;</span> <span class="nv">toggle-debug-on-error</span> <span class="s">&quot;debug&quot;</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;f&quot;</span> <span class="nv">auto-fill-mode</span> <span class="s">&quot;fill&quot;</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;t&quot;</span> <span class="nv">toggle-truncate-lines</span> <span class="s">&quot;truncate&quot;</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;w&quot;</span> <span class="nv">whitespace-mode</span> <span class="s">&quot;whitespace&quot;</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;v&quot;</span> <span class="nv">recenter-top-bottom</span> <span class="s">&quot;recenter&quot;</span> <span class="nb">:color</span> <span class="nv">red</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span> <span class="s">&quot;cancel&quot;</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c C-v&quot;</span><span class="p">)</span> <span class="ss">&#39;hydra-toggle/body</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="first-argument-hydra-name">First argument: Hydra name</h3>
+
+<p>This argument decides the prefix to all the functions that will be generated.
+In this case the following functions will be generated:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="nv">hydra-toggle/abbrev-mode</span>
+<span class="nv">hydra-toggle/toggle-debug-on-error</span>
+<span class="nv">hydra-toggle/auto-fill-mode</span>
+<span class="nv">hydra-toggle/toggle-truncate-lines</span>
+<span class="nv">hydra-toggle/whitespace-mode</span>
+<span class="nv">hydra-toggle/recenter-top-bottom</span>
+<span class="nv">hydra-toggle/nil</span>
+<span class="nv">hydra-toggle/body</span>
+</code></pre></div>
+<p>The final function calls the Hydra&#39;s body, displaying the hint in the echo area and setting
+the transient map. It&#39;s the return result of <code>defhydra</code>, that&#39;s why it was possible to pass it
+to <code>global-set-key</code> in the first example.</p>
+
+<h3 id="second-argument-hydra-body">Second argument: Hydra body</h3>
+
+<p>The Hydra body consists of:</p>
+
+<ul>
+<li>a map used for binding, like <code>global-map</code> or <code>c++-mode-map</code> or <code>projectile-mode-map</code></li>
+<li>the body prefix: it&#39;s a string passable to <code>kbd</code> that will be used
+in conjunction with heads&#39; prefixes to bind the functions</li>
+<li>an optional plist, which currently recognizes only the <code>:color</code> key,
+which in turn can be either red (the old behavior) or blue.</li>
+</ul>
+
+<p>It&#39;s possible to omit the map and the body prefix simultaneously (it
+doesn&#39;t make sense to omit one but not the other), or just pass <code>()</code>
+if you want to get a red Hydra body that you can bind yourself.</p>
+
+<h3 id="third-argument-hydra-hint">Third argument: Hydra hint</h3>
+
+<p>This string will be used in the echo area to distinguish the current
+Hydra. This is optional, it case you don&#39;t provide it, it will default
+to <code>&quot;hydra&quot;</code>.</p>
+
+<h3 id="fourth-argument-hydra-heads">Fourth argument: Hydra heads</h3>
+
+<p>Each Hydra head is a list of:</p>
+
+<ul>
+<li>the key extension</li>
+<li>the function</li>
+<li>optional hint</li>
+<li>optional plist.</li>
+</ul>
+
+<p>Again, the plist recognizes only <code>:color</code> currently. The color is inherited from the body, if
+you don&#39;t specify it. In turn, the body color is red if you don&#39;t specify it.</p>
+
+<p>The code above:</p>
+
+<ul>
+<li>binds <kbd>C-c a</kbd>, <kbd>C-c d</kbd> etc with the usual <code>global-set-key</code> approach.</li>
+<li>binds <kbd>C-c C-v a</kbd>, <kbd>C-c C-v d</kbd> with the new
+approach, which shows you the hint right after <kbd>C-c C-v</kbd> and
+allows you to cancel easier.</li>
+<li>binds <kbd>C-c v</kbd> to be repeatable, i.e. you can press <kbd>C-c v v v</kbd>. Same with <kbd>C-c C-v v v v</kbd>.</li>
+</ul>
+
+<h2 id="some-more-ideas-for-blue-hydras">Some more ideas for blue Hydras</h2>
+
+<p>Here&#39;s one for some <code>helm</code>-related functions, don&#39;t ask how
+<code>projectile-find-file</code> ended up here:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span>
+ <span class="s">&quot;κ&quot;</span>
+ <span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-helm</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
+   <span class="s">&quot;helm&quot;</span>
+   <span class="p">(</span><span class="s">&quot;f&quot;</span> <span class="nv">projectile-find-file</span> <span class="s">&quot;file&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;w&quot;</span> <span class="nv">helm-org-wiki</span> <span class="s">&quot;wiki&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;r&quot;</span> <span class="nv">helm-recentf</span> <span class="s">&quot;recent&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;s&quot;</span> <span class="nv">helm-swoop</span> <span class="s">&quot;swoop&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span> <span class="s">&quot;quit&quot;</span><span class="p">)))</span>
+</code></pre></div>
+<p>Here&#39;s one more for <code>gnus</code>; I&#39;m just getting the hang of it, so some hints are useful:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-gnus-reply</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
+  <span class="s">&quot;reply&quot;</span>
+  <span class="p">(</span><span class="s">&quot;o&quot;</span> <span class="nv">gnus-summary-reply-with-original</span> <span class="s">&quot;one&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;O&quot;</span> <span class="nv">gnus-summary-reply</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="nv">gnus-summary-wide-reply-with-original</span> <span class="s">&quot;all&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;A&quot;</span> <span class="nv">gnus-summary-wide-reply</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;u&quot;</span> <span class="nv">gnus-summary-very-wide-reply-with-original</span> <span class="s">&quot;universe&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;U&quot;</span> <span class="nv">gnus-summary-very-wide-reply</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span> <span class="s">&quot;quit&quot;</span><span class="p">))</span>
+<span class="p">(</span><span class="nf">define-key</span> <span class="nv">gnus-summary-mode-map</span> <span class="s">&quot;r&quot;</span> <span class="ss">&#39;hydra-gnus-reply/body</span><span class="p">)</span>
+</code></pre></div>
+<p>I omit the hint for the commands that do the same as the previous one,
+just without citing.</p>
+
+<h2 id="outro">Outro</h2>
+
+<p>I hope that you enjoy the update and let me know when you invent some
+efficient blue or red-and-blue Hydras. Happy hacking!</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/02/01/blogging-about-blogging/">
         Blogging about blogging
       </a>
@@ -850,90 +1025,6 @@ Hydra, sometimes I have nothing on my mind that needs doing. For that
 case, as you can see above, I enter <kbd>o</kbd> in its own list
 without a function, so that <kbd>o</kbd> will dismiss the Hydra
 without doing anything.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/01/28/notes-on-elisp-indentation/">
-        A few notes on Elisp indentation
-      </a>
-    </h1>
-
-    <span class="post-date">28 Jan 2015</span>
-
-    <p>I sure do like to keep my Elisp code nice and indented.
-But sometimes the indentation engine just won&#39;t listen.</p>
-
-<h2 id="lisp-indent-function">lisp-indent-function</h2>
-
-<p>By default, the indentation is handled as if:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">lisp-indent-function</span> <span class="ss">&#39;lisp-indent-function</span><span class="p">)</span>
-</code></pre></div>
-<p>At least in one case, it looks horrible:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">cl-labels</span> <span class="p">((</span><span class="nv">square</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
-                    <span class="p">(</span><span class="nf">*</span> <span class="nv">x</span> <span class="nv">x</span><span class="p">)))</span>
-  <span class="p">(</span><span class="nf">mapcar</span> <span class="nf">#&#39;</span><span class="nv">square</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">0</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">)))</span>
-<span class="c1">;; =&gt; (0 1 4 9 16 25)</span>
-</code></pre></div>
-<p>That&#39;s why I have:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">lisp-indent-function</span> <span class="ss">&#39;common-lisp-indent-function</span><span class="p">)</span>
-</code></pre></div>
-<p>which leads to this indentation:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">cl-labels</span> <span class="p">((</span><span class="nv">square</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
-              <span class="p">(</span><span class="nf">*</span> <span class="nv">x</span> <span class="nv">x</span><span class="p">)))</span>
-  <span class="p">(</span><span class="nf">mapcar</span> <span class="nf">#&#39;</span><span class="nv">square</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">0</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">)))</span>
-<span class="c1">;; =&gt; (0 1 4 9 16 25)</span>
-</code></pre></div>
-<p>Ah, much better. The indentation does change a bit in other places as
-a result of this. To my experience, it can be fixed on a case-by-case
-basis by declaring the indent level for the offending function or
-macro.</p>
-
-<h2 id="declaring-indent-level">Declaring indent level</h2>
-
-<p>Here&#39;s how it looks like</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defmacro</span> <span class="nv">lispy-save-excursion</span> <span class="p">(</span><span class="kp">&amp;rest</span> <span class="nv">body</span><span class="p">)</span>
-  <span class="s">&quot;More intuitive (`save-excursion&#39; BODY).&quot;</span>
-  <span class="p">(</span><span class="nb">declare</span> <span class="p">(</span><span class="nv">indent</span> <span class="mi">0</span><span class="p">))</span>
-  <span class="o">`</span><span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">out</span> <span class="p">(</span><span class="k">save-excursion</span>
-                <span class="o">,@</span><span class="nv">body</span><span class="p">)))</span>
-     <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">bolp</span><span class="p">)</span>
-       <span class="p">(</span><span class="nv">back-to-indentation</span><span class="p">))</span>
-     <span class="nv">out</span><span class="p">))</span>
-</code></pre></div>
-<p>By default, functions behave as if their <code>indent</code> was declared to <code>nil</code>.
-Zero here means that we expect zero arguments on the same line, so that this indentation follows:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">lispy-save-excursion</span>
-  <span class="p">(</span><span class="nv">lispy--out-forward</span> <span class="nv">arg</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">backward-list</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">indent-sexp</span><span class="p">))</span>
-</code></pre></div>
-<p>The indentation above is just like the one that the original <code>save-excursion</code> has.
-Note that if I hadn&#39;t declared the indent, it would look like this:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">lispy-save-excursion</span>
- <span class="p">(</span><span class="nv">lispy--out-forward</span> <span class="nv">arg</span><span class="p">)</span>
- <span class="p">(</span><span class="nv">backward-list</span><span class="p">)</span>
- <span class="p">(</span><span class="nv">indent-sexp</span><span class="p">))</span>
-</code></pre></div>
-<p>The impact is much larger for statements that require an <code>indent</code> of 1:</p>
-
-<p>Compare the proper thing:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">lispy-dotimes</span> <span class="nv">arg</span>
-  <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">point</span><span class="p">)</span> <span class="p">(</span><span class="nf">point-max</span><span class="p">))</span>
-    <span class="p">(</span><span class="ne">error</span> <span class="s">&quot;Reached end of buffer&quot;</span><span class="p">))</span>
-  <span class="p">(</span><span class="nv">forward-list</span><span class="p">))</span>
-</code></pre></div>
-<p>to this horror:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">lispy-dotimes</span> <span class="nv">arg</span>
-               <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">point</span><span class="p">)</span> <span class="p">(</span><span class="nf">point-max</span><span class="p">))</span>
-                 <span class="p">(</span><span class="ne">error</span> <span class="s">&quot;Reached end of buffer&quot;</span><span class="p">))</span>
-               <span class="p">(</span><span class="nv">forward-list</span><span class="p">))</span>
-</code></pre></div>
-<h2 id="outro">Outro</h2>
-
-<p>I&#39;ve shown two things you can try if you find your Elisp indentation
-annoying. If you know of more, let me know.</p>
 
   </div>
   

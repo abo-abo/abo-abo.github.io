@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      elf-mode - view the symbol list in a binary &middot; (or emacs
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="/public/css/octicons.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Scripts -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body class="layout-reverse theme-base-08">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <!-- <div class="sidebar-item"> -->
+  <!--   <p>unused</p> -->
+  <!-- </div> -->
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about/">About</a>
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/archive/">Archive</a>
+        
+      
+    
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+
+    <div id="github" class="sidebar-nav-item">
+      <button type="button"
+              class="btn btn-info"
+              data-toggle="collapse"
+              data-target="#github-projects">
+        <span class="octicon octicon-mark-github"></span> My Emacs Projects
+      </button>
+      <div id="github-projects" class="collapse">
+        <ul style="margin-bottom:0em;">
+          <li>
+            <a href="https://github.com/abo-abo/lispy">lispy</a>
+            <p>vi-like Paredit</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/worf">worf</a>
+            <p>vi-like bindings for org-mode</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-window">ace-window</a>
+            <p>switch windows with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-link">ace-link</a>
+            <p>follow links with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/function-args">function-args</a>
+            <p>enhance <code>CEDET</code> for C++</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/helm-make">helm-make</a>
+            <p>select a Makefile target with <code>helm</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/make-it-so">make-it-so</a>
+            <p>transform files with Makefile recipes</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/org-download">org-download</a>
+            <p>drag-and-drop images to <code>org-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo?tab=repositories">
+              <span class="octicon octicon-octoface"></span>
+              and more
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
+
+  <div class="sidebar-item">
+    <p>
+      <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
+        <img alt="Creative Commons License"
+             style="border-width:0;opacity: 0.3;"
+             src="https://licensebuttons.net/l/by-sa/4.0/88x31.png"/>
+      </a>
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">(or emacs</a>
+            <small>irrelevant)</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">elf-mode - view the symbol list in a binary</h1>
+  <span class="post-date">28 Aug 2016</span>
+  <p>Recently, I&#39;ve been looking at
+<a href="http://libigl.github.io/libigl/tutorial/tutorial.html#meshrepresentation">libigl</a>. I
+didn&#39;t manage to fully figure out their CMake build system for
+tutorials: although each tutorial has a <code>CMakeLists.txt</code>, it&#39;s only
+possible to build them all at once.</p>
+
+<p>So I decided to replace <code>CMakeLists.txt</code> with a good-old <code>Makefile</code>;
+how hard can it be?  Concerning includes, not at all hard: the missing
+files are found with <code>counsel-locate</code> and added to the include path.</p>
+
+<p>But I had some trouble matching a missing <code>ld</code> dependency to a library
+file. Fixed it with a bunch of googling and guesswork; I still wonder
+if there&#39;s a better way. But in the process, I&#39;ve found this useful
+command:</p>
+<div class="highlight"><pre><code class="language-shell" data-lang="shell">readelf --syms libGL.so
+</code></pre></div>
+<p>which produces e.g.:</p>
+
+<pre><small>
+Symbol table '.dynsym' contains 2732 entries:
+   Num:    Value          Size Type    Bind   Vis      Ndx Name
+     0: 0000000000000000     0 NOTYPE  LOCAL  DEFAULT  UND
+     1: 000000000004faf0     0 SECTION LOCAL  DEFAULT    8
+     2: 00000000000e8f20     0 FUNC    GLOBAL DEFAULT   11 glGetIntegerui64i_vNV
+     3: 00000000000e13e0     0 FUNC    GLOBAL DEFAULT   11 glGetMultiTexEnvfvEXT
+     4: 00000000000d7440     0 FUNC    GLOBAL DEFAULT   11 glProgramUniform2uiv
+     5: 00000000000cfdc0     0 FUNC    GLOBAL DEFAULT   11 glMultiTexCoord3sv
+</small></pre>
+
+<p>This is a pretty good representation of a binary file: in this
+example, instead of one megabyte of gibberish I see a bit more than
+2732 lines describing the functions this file uses and provides.</p>
+
+<h2 id="viewing-the-symbol-list-automatically">Viewing the symbol list automatically</h2>
+
+<p>I liked the above representation so much that I want to see it by
+default. In Emacs, it&#39;s pretty easy to do with <code>auto-mode-alist</code>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">add-to-list</span> <span class="ss">&#39;auto-mode-alist</span> <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;\\.\\(?:a\\|so\\)\\&#39;&quot;</span> <span class="o">.</span> <span class="nv">elf-mode</span><span class="p">))</span>
+</code></pre></div>
+<p>The above code instructs Emacs to call <code>elf-mode</code> function whenever
+the file name ends in <code>*.a</code> or <code>*.so</code>.</p>
+
+<p>And here&#39;s the body of <code>elf-mode</code>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defvar-local</span> <span class="nv">elf-mode</span> <span class="no">nil</span><span class="p">)</span>
+
+<span class="c1">;;;###autoload</span>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">elf-mode</span> <span class="p">()</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">inhibit-read-only</span> <span class="no">t</span><span class="p">))</span>
+    <span class="p">(</span><span class="k">if</span> <span class="nv">elf-mode</span>
+        <span class="p">(</span><span class="k">progn</span>
+          <span class="p">(</span><span class="nf">delete-region</span> <span class="p">(</span><span class="nf">point-min</span><span class="p">)</span> <span class="p">(</span><span class="nf">point-max</span><span class="p">))</span>
+          <span class="p">(</span><span class="nf">insert-file-contents</span> <span class="p">(</span><span class="nf">buffer-file-name</span><span class="p">))</span>
+          <span class="p">(</span><span class="k">setq</span> <span class="nv">elf-mode</span> <span class="no">nil</span><span class="p">))</span>
+      <span class="p">(</span><span class="k">setq</span> <span class="nv">elf-mode</span> <span class="no">t</span><span class="p">)</span>
+      <span class="p">(</span><span class="nf">delete-region</span> <span class="p">(</span><span class="nf">point-min</span><span class="p">)</span> <span class="p">(</span><span class="nf">point-max</span><span class="p">))</span>
+      <span class="p">(</span><span class="nf">insert</span> <span class="p">(</span><span class="nv">shell-command-to-string</span>
+               <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;readelf --syms %s&quot;</span> <span class="p">(</span><span class="nf">buffer-file-name</span><span class="p">)))))</span>
+    <span class="p">(</span><span class="nf">set-buffer-modified-p</span> <span class="no">nil</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">read-only-mode</span> <span class="mi">1</span><span class="p">)))</span>
+</code></pre></div>
+<p>The idea is very simple: <code>elf-mode</code> is a toggle function that replaces
+the buffer contents with the shell command output. It carefully uses
+<code>read-only-mode</code> and <code>set-buffer-modified-p</code> so that the file will not
+be overwritten by accident with the symbol names.</p>
+
+<h2 id="using-autoload-to-avoid-overhead">Using autoload to avoid overhead</h2>
+
+<p>As you might imagine, looking at binaries isn&#39;t really a common
+task. Is it worth to be dragging this code around from now on, loading
+it on each start? The answer is yes, of course. Since the actual cost
+is negligible until the feature is used.</p>
+
+<p>If you look above, <code>elf-mode</code> has an <code>;;;###autoload</code> cookie before
+it. The cookie results in this line in my <code>loaddefs.el</code>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">autoload</span> <span class="ss">&#39;elf-mode</span> <span class="s">&quot;modes/ora-elf&quot;</span> <span class="s">&quot;&quot;</span> <span class="no">t</span> <span class="no">nil</span><span class="p">)</span>
+</code></pre></div>
+<p>My <code>init.el</code> always loads <code>loaddefs.el</code>, but never loads <code>ora-elf.el</code>
+where the function is defined. That file is only loaded when the
+function <code>elf-mode</code> is called for the first time. The above <code>autoload</code>
+statement simply instructs Emacs to load a particular file when
+<code>elf-mode</code> needs to be called.</p>
+
+<p>When you use the package manager, the autoloads file is generated and
+loaded for you automatically:</p>
+<div class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="nv">$ </span>tree elpa/ace-link-20160811.112/
+
+elpa/ace-link-20160811.112/
+├── ace-link-autoloads.el
+├── ace-link.el
+├── ace-link.elc
+└── ace-link-pkg.el
+
+<span class="m">0</span> directories, <span class="m">4</span> files
+</code></pre></div>
+<p>Here, the package manager will always load <code>ace-link-autoloads.el</code>,
+which instructs Emacs to load <code>ace-link.el</code> when one of the
+<code>;;;###autoload</code> functions is called and <code>ace-link.el</code> isn&#39;t yet
+loaded.</p>
+
+<p>As an example of how useful delayed loading is: my 6000 line
+<a href="https://github.com/abo-abo/oremacs">config</a> starts in 1.8 seconds.
+About 40% of that time is spent on <code>(package-initialize)</code>, which I
+assume is the package manager loading all those <code>*-autoloads.el</code> files
+that I have in my <code>elpa/</code>.</p>
+
+<h2 id="outro">Outro</h2>
+
+<p>Let me know if there&#39;s interest to have <code>elf-mode</code> on MELPA.  Also, if
+anyone knows how to set mode automatically based on the first few
+chars of the file (all binaries seem to start with <code>^?ELF</code>), I&#39;d like
+to know that as well. Happy hacking!</p>
+
+</div>
+
+<div class="twitter-share">
+  <a href="https://twitter.com/share"
+     class="twitter-share-button"
+     data-via="_abo_abo"
+     data-dnt="true">
+    Tweet
+  </a>
+</div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'oremacs'; // required: replace example with your forum shortname
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+<script>
+  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+</script>
+<noscript>
+  Please enable JavaScript to view the
+  <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>

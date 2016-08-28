@@ -279,6 +279,146 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/10/23/dired-compress/">
+        New in Emacs 25 - convenient compression/decompression in Dired
+      </a>
+    </h1>
+
+    <span class="post-date">23 Oct 2015</span>
+
+    <p>Today I&#39;ll describe my past and current workflows for compressing
+files and directories in Dired.  In my opinion, Dired is one of the
+best features of Emacs - a great abstraction of <code>cd</code>+<code>ls</code> that lets
+you get things done much faster. The default binding for <code>dired</code> is
+<kbd>C-x d</kbd> (I bind it to <kbd>C-;-d</kbd> though, see my
+<a href="http://oremacs.com/2015/02/14/semi-xmodmap/">xmodmap post</a>).</p>
+
+<h2 id="my-previous-workflow">My previous workflow</h2>
+
+<p>To compress several files in Dired, first I compile a list of files to
+work on by marking them with <kbd>m</kbd> (<code>dired-mark</code>), navigating
+to ones that you want with <kbd>n</kbd> (<code>dired-next-line</code>) and
+<kbd>p</kbd> (<code>dired-previous-line</code>).</p>
+
+<p>Once a list is ready, I press <kbd>&amp;</kbd> (<code>dired-do-async-shell-command</code>), which allows me to run an arbitrary shell command.
+I enter:</p>
+<div class="highlight"><pre><code class="language-sh" data-lang="sh">tar -czf ~/tmp/path/foo.tar.gz *
+</code></pre></div>
+<p>into the minibuffer, press <kbd>RET</kbd> and I&#39;m done. It&#39;s a
+standard shell command with 2 advantages:</p>
+
+<ol>
+<li>I get <kbd>TAB</kbd> completion for the directory of the created archive.</li>
+<li><code>*</code> means the selected file list, so I don&#39;t enter them by hand.</li>
+</ol>
+
+<h2 id="my-current-workflow">My current workflow</h2>
+
+<p>Since I often forget the command for <code>tar</code>, and I really don&#39;t want to
+remember the commands for <code>zip</code> etc, I&#39;ve implemented a more convenient approach:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="s">&quot;c&quot;</span> <span class="ss">&#39;dired-do-compress-to</span><span class="p">)</span>
+</code></pre></div>
+<p>This new command <code>dired-do-compress-to</code>, bound to <kbd>c</kbd>, will
+prompt me for a file name of the output archive. So now it&#39;s easier to
+type in that file name, if you use <code>ido-mode</code> / <code>ivy-mode</code> /
+<code>helm-mode</code>. What&#39;s more, the command will be automatically determined
+from the archive extension and executed. Here&#39;s the corresponding
+customization variable:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">defvar</span> <span class="nv">dired-compress-files-alist</span>
+  <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;\\.tar\\.gz\\&#39;&quot;</span> <span class="o">.</span> <span class="s">&quot;tar -c %i | gzip -c9 &gt; %o&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="s">&quot;\\.zip\\&#39;&quot;</span> <span class="o">.</span> <span class="s">&quot;zip %o -r --filesync %i&quot;</span><span class="p">))</span>
+  <span class="s">&quot;Control the compression shell command for `dired-do-compress-to&#39;.</span>
+
+<span class="s">Each element is (REGEXP . CMD), where REGEXP is the name of the</span>
+<span class="s">archive to which you want to compress, and CMD the the</span>
+<span class="s">corresponding command.</span>
+
+<span class="s">Within CMD, %i denotes the input file(s), and %o denotes the</span>
+<span class="s">output file. %i path(s) are relative, while %o is absolute.&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>This thing is pretty self-explanatory. It currently only supports
+<code>*.tar.gz</code> and <code>*.zip</code>, use <kbd>M-x</kbd> <code>report-emacs-bug</code> if you
+want to add more options.</p>
+
+<h2 id="other-improvements-in-compression-decompression">Other improvements in compression/decompression</h2>
+
+<p>I improved the good-old <kbd>Z</kbd> (<code>dired-do-compress</code>) as
+well. Now it can compress directories to <code>*.tar.gz</code>, as well as
+decompress <code>*.tar.gz</code> and <code>*.zip</code> to directories.  It&#39;s all automatic,
+you only have to press <kbd>Z</kbd>, either on an archive to
+decompress, or on a directory to compress.</p>
+
+<h2 id="easy-way-to-have-a-bleeding-edge-emacs">Easy way to have a bleeding edge Emacs</h2>
+
+<p>If you want to get these improvements right now and are on a Debian
+type system (I use Ubuntu), you can use:</p>
+<div class="highlight"><pre><code class="language-sh" data-lang="sh">sudo apt-add-repository ppa:ubuntu-elisp/ppa
+sudo apt-get update
+sudo apt-get install emacs-snapshot
+</code></pre></div>
+<p>Then just use <code>emacs-snapshot</code> executable. It updates every few days.</p>
+
+<p>Myself, I track the Emacs master from
+<a href="http://savannah.gnu.org/projects/emacs">git</a>. But <code>emacs-snapshot</code> is
+very useful for CI tests, and can also be used by people who don&#39;t
+want to build the executable from git.</p>
+
+<h2 id="how-to-get-your-improvements-into-emacs">How to get your improvements into Emacs</h2>
+
+<p>If you&#39;d like to contribute code to the Emacs core yourself, it takes
+two steps:</p>
+
+<ol>
+<li><p>Sign the Copyright Assignment
+(<a href="http://orgmode.org/w/org-mode.git?p=org-mode.git;a=blob_plain;f=request-assign-future.txt;hb=HEAD">CA</a>).
+This gives the Copyright for your changes to Emacs to the Free
+Software Foundation. This is useful so that the FSF can defend your
+rights in court, in case the GPL regarding your contribution is broken
+by someone.</p></li>
+<li><p><kbd>M-x</kbd> <code>report-emacs-bug</code> and attach a patch.</p></li>
+</ol>
+
+<p>It seems that some people could have a moral objection to the CA. I
+see no reason for it whatsoever.  Since Elisp libraries make calls to
+GPL code and are GPL themselves, you have to publish Elisp code under
+GPL, there&#39;s no choice there.  GPL means basically that, while you&#39;re
+still acknowledged as the author, everyone else has about as much
+right to your code as you do. No one can hide or restrict access to
+it, but neither can you. The CA is a further step, which makes the FSF
+own the Copyright to your <em>changes</em> to Emacs. You submit these changes
+yourself, and the Copyright over these changes isn&#39;t really that
+useful: they&#39;re only changes - they do nothing on their own, outside
+of Emacs. Besides, with the FSF owning the Copyright, the range of
+things that you can do to your code stays exactly the same as if you
+owned the Copyright, as long as you publish under GPL.</p>
+
+<p>To illustrate, the FSF CA is very polite and benign, compared to the
+CA that I have to give to Elsevier when I publish an article.  That CA
+means that a multi-billion dollar corporation owns the right to my
+paper until the end of time, and can charge people to view it
+(including myself and my peers) as much as they see fit (currently,
+$30). Of course, I don&#39;t receive a dime of that money, but hey - I get
+published, and at least I can share my article <em>for free</em> for the
+first 50 days of the publish date. And if that one doesn&#39;t seem
+draconian enough for you, just think of the NDAs in commercial
+companies: out there, you can&#39;t even publish or mention anything
+related to your work. So please, if you&#39;re hating on the FSF, do
+reconsider, they&#39;re the good guys in my book.</p>
+
+<p>Eventually, after a few submitted patches, you&#39;ll be granted commit
+access. This is a great way to implement small improvements faster.
+However, the larger issues that aren&#39;t simple improvements still need
+to be discussed with other developers, either on debbugs or on
+emacs-devel. For example, initially I went with the <code>tar -czf</code>
+command. But it turns out that it can&#39;t be used on Solaris 10 or AIX
+7.1. Whatever those things are, people still use Emacs on them, and
+it&#39;s important that the core features are usable on all supported
+systems.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/10/14/swiper-mc/">
         A simple multiple-cursors extension to swiper
       </a>
@@ -533,155 +673,6 @@ from these faces, only leaving the bold part on the matches.</p>
 <p>Thanks to <a href="https://github.com/Wilfred">@Wilfred</a> for nudging me to
 finally implement this feature.  It&#39;s been on my list for a long time,
 but I&#39;ve been putting it off.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/08/26/counsel-jedi/">
-        Complete Python symbols using Ivy
-      </a>
-    </h1>
-
-    <span class="post-date">26 Aug 2015</span>
-
-    <p>I had a fascination with Python at one point, until I got too annoyed
-with the indentation rules.  I still have a few scripts left over, so
-I&#39;m sympathetic to Python support in Emacs.  The reason for
-today&#39;s post comes from
-<a href="http://emacs.stackexchange.com/questions/15032/insert-parens-while-completing-functions-in-company-mode">this question</a>
-on Emacs StackExchange. Essentially, the user wants to insert parens
-automatically when a function name is completed.</p>
-
-<p>The completion candidates come from
-<a href="https://github.com/tkf/emacs-jedi">jedi</a> plugin.  To quickly see
-where the list of strings is coming from, I&#39;ve examined <code>ac-sources</code>
-variable and saw that it contains <code>ac-source-jedi-direct</code>, which evaluates to:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">((</span><span class="nv">candidates</span> <span class="o">.</span> <span class="nv">jedi:ac-direct-matches</span><span class="p">)</span>
- <span class="p">(</span><span class="nv">prefix</span> <span class="o">.</span> <span class="nv">jedi:ac-direct-prefix</span><span class="p">)</span>
- <span class="p">(</span><span class="nv">init</span> <span class="o">.</span> <span class="nv">jedi:complete-request</span><span class="p">)</span>
- <span class="p">(</span><span class="nv">requires</span> <span class="o">.</span> <span class="mi">-1</span><span class="p">))</span>
-</code></pre></div>
-<p>This means that <code>jedi:complete-request</code> has to be called at point,
-followed by <code>jedi:ac-direct-matches</code> to obtain the list of strings. So
-basically, this code:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">progn</span>
-  <span class="p">(</span><span class="nv">deferred:sync!</span>
-   <span class="p">(</span><span class="nv">jedi:complete-request</span><span class="p">))</span>
-  <span class="p">(</span><span class="nv">jedi:ac-direct-matches</span><span class="p">))</span>
-</code></pre></div>
-<p>Note the call to <code>deferred:sync!</code>. I had to add that one to make sure
-that <code>jedi:complete-request</code> completes before <code>jedi:ac-direct-matches</code>
-is called.</p>
-
-<p>Testing with some Python code, where <code>|</code> is the point:</p>
-<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;foo&quot;</span><span class="p">:</span><span class="s">&quot;bar&quot;</span><span class="p">}</span>
-<span class="n">params</span><span class="o">.</span><span class="n">i</span>
-</code></pre></div>
-<p>The Elisp code above will return:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="o">#(</span><span class="s">&quot;items&quot;</span>
-   <span class="mi">0</span> <span class="mi">5</span> <span class="p">(</span><span class="nv">summary</span>
-        <span class="s">&quot;function: __builtin__.dict.items&quot;</span>
-        <span class="nv">symbol</span>
-        <span class="s">&quot;f&quot;</span>
-        <span class="nv">document</span>
-        <span class="s">&quot;items(self)</span>
-
-<span class="s">D.items() -&gt; list of D&#39;s (key, value) pairs, as 2-tuples&quot;</span><span class="p">))</span>
-  <span class="o">#(</span><span class="s">&quot;iteritems&quot;</span>
-    <span class="mi">0</span> <span class="mi">9</span> <span class="p">(</span><span class="nv">summary</span>
-         <span class="s">&quot;function: __builtin__.dict.iteritems&quot;</span>
-         <span class="nv">symbol</span>
-         <span class="s">&quot;f&quot;</span>
-         <span class="nv">document</span>
-         <span class="s">&quot;iteritems(self)</span>
-
-<span class="s">D.iteritems() -&gt; an iterator over the (key, value) items of D&quot;</span><span class="p">))</span>
-  <span class="o">#(</span><span class="s">&quot;iterkeys&quot;</span>
-    <span class="mi">0</span> <span class="mi">8</span> <span class="p">(</span><span class="nv">summary</span>
-         <span class="s">&quot;function: __builtin__.dict.iterkeys&quot;</span>
-         <span class="nv">symbol</span>
-         <span class="s">&quot;f&quot;</span>
-         <span class="nv">document</span>
-         <span class="s">&quot;iterkeys(self)</span>
-
-<span class="s">D.iterkeys() -&gt; an iterator over the keys of D&quot;</span><span class="p">))</span>
-  <span class="o">#(</span><span class="s">&quot;itervalues&quot;</span>
-    <span class="mi">0</span> <span class="mi">10</span> <span class="p">(</span><span class="nv">summary</span>
-          <span class="s">&quot;function: __builtin__.dict.itervalues&quot;</span>
-          <span class="nv">symbol</span>
-          <span class="s">&quot;f&quot;</span>
-          <span class="nv">document</span>
-          <span class="s">&quot;itervalues(self)</span>
-
-<span class="s">D.itervalues() -&gt; an iterator over the values of D&quot;</span><span class="p">)))</span>
-</code></pre></div>
-<p>So these strings come with the symbol documentation and symbol type
-encoded as string properties. After this, the rest of the Elisp code
-follows very easily, you can find it as part of
-<a href="https://github.com/abo-abo/swiper/blob/master/counsel.el">counsel</a>
-package on MELPA:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel-jedi</span> <span class="p">()</span>
-  <span class="s">&quot;Python completion at point.&quot;</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">bnd</span> <span class="p">(</span><span class="nv">bounds-of-thing-at-point</span> <span class="ss">&#39;symbol</span><span class="p">)))</span>
-    <span class="p">(</span><span class="k">if</span> <span class="nv">bnd</span>
-        <span class="p">(</span><span class="k">progn</span>
-          <span class="p">(</span><span class="k">setq</span> <span class="nv">counsel-completion-beg</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">bnd</span><span class="p">))</span>
-          <span class="p">(</span><span class="k">setq</span> <span class="nv">counsel-completion-end</span> <span class="p">(</span><span class="nf">cdr</span> <span class="nv">bnd</span><span class="p">)))</span>
-      <span class="p">(</span><span class="k">setq</span> <span class="nv">counsel-completion-beg</span> <span class="no">nil</span><span class="p">)</span>
-      <span class="p">(</span><span class="k">setq</span> <span class="nv">counsel-completion-end</span> <span class="no">nil</span><span class="p">)))</span>
-  <span class="p">(</span><span class="nv">deferred:sync!</span>
-   <span class="p">(</span><span class="nv">jedi:complete-request</span><span class="p">))</span>
-  <span class="p">(</span><span class="nv">ivy-read</span> <span class="s">&quot;Symbol name: &quot;</span> <span class="p">(</span><span class="nv">jedi:ac-direct-matches</span><span class="p">)</span>
-            <span class="nb">:action</span> <span class="nf">#&#39;</span><span class="nv">counsel--py-action</span><span class="p">))</span>
-
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel--py-action</span> <span class="p">(</span><span class="nv">symbol</span><span class="p">)</span>
-  <span class="s">&quot;Insert SYMBOL, erasing the previous one.&quot;</span>
-  <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">stringp</span> <span class="nv">symbol</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">with-ivy-window</span>
-      <span class="p">(</span><span class="nb">when</span> <span class="nv">counsel-completion-beg</span>
-        <span class="p">(</span><span class="nf">delete-region</span>
-         <span class="nv">counsel-completion-beg</span>
-         <span class="nv">counsel-completion-end</span><span class="p">))</span>
-      <span class="p">(</span><span class="k">setq</span> <span class="nv">counsel-completion-beg</span>
-            <span class="p">(</span><span class="nv">move-marker</span> <span class="p">(</span><span class="nf">make-marker</span><span class="p">)</span> <span class="p">(</span><span class="nf">point</span><span class="p">)))</span>
-      <span class="p">(</span><span class="nf">insert</span> <span class="nv">symbol</span><span class="p">)</span>
-      <span class="p">(</span><span class="k">setq</span> <span class="nv">counsel-completion-end</span>
-            <span class="p">(</span><span class="nv">move-marker</span> <span class="p">(</span><span class="nf">make-marker</span><span class="p">)</span> <span class="p">(</span><span class="nf">point</span><span class="p">)))</span>
-      <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">equal</span> <span class="p">(</span><span class="nf">get-text-property</span> <span class="mi">0</span> <span class="ss">&#39;symbol</span> <span class="nv">symbol</span><span class="p">)</span> <span class="s">&quot;f&quot;</span><span class="p">)</span>
-        <span class="p">(</span><span class="nf">insert</span> <span class="s">&quot;()&quot;</span><span class="p">)</span>
-        <span class="p">(</span><span class="k">setq</span> <span class="nv">counsel-completion-end</span>
-              <span class="p">(</span><span class="nv">move-marker</span> <span class="p">(</span><span class="nf">make-marker</span><span class="p">)</span> <span class="p">(</span><span class="nf">point</span><span class="p">)))</span>
-        <span class="p">(</span><span class="nf">backward-char</span> <span class="mi">1</span><span class="p">)))))</span>
-</code></pre></div>
-<p>Essentially, the last interesting part is <code>(equal (get-text-property 0
-&#39;symbol symbol) &quot;f&quot;)</code> which test if the string corresponds to a
-function or not. The rest of the code just fiddles with symbol markers
-with ensure that the previous symbol is erased before the new symbol
-is inserted if you press <kbd>C-M-n</kbd> (<code>ivy-next-line-and-call</code>),
-or use <code>ivy-resume</code>. Just to describe how this would be useful for the
-Python code above: I call <code>counsel-jedi</code>, followed by <kbd>C-M-n</kbd>
-to get:</p>
-<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;foo&quot;</span><span class="p">:</span><span class="s">&quot;bar&quot;</span><span class="p">}</span>
-<span class="n">params</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="o">|</span><span class="p">)</span>
-</code></pre></div>
-<p>Pressing <kbd>C-M-n</kbd> again will result in:</p>
-<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;foo&quot;</span><span class="p">:</span><span class="s">&quot;bar&quot;</span><span class="p">}</span>
-<span class="n">params</span><span class="o">.</span><span class="n">iterkeys</span><span class="p">(</span><span class="o">|</span><span class="p">)</span>
-</code></pre></div>
-<p>Once I&#39;m satisfied with my selected candidate, I can press either
-<kbd>C-m</kbd> or <kbd>C-j</kbd> or <kbd>C-g</kbd>.  Most of the above
-code can be used almost verbatim if you&#39;re a Helm fan and want to
-implement <code>helm-jedi</code>. Basically, the approach I described (going
-through <code>ac-sources</code>) can be used to implement alternative completion
-in a lot of cases where <code>auto-complete-mode</code> completion is already
-available.</p>
-
-<p>Finally, if you like the idea of auto-inserting parens with completion
-and are using C/C++, have a look at
-<a href="https://github.com/abo-abo/function-args">function-args</a> - this
-package does that too, with Ivy, Ido and Helm as available back ends.</p>
 
   </div>
   

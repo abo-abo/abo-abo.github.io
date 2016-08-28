@@ -4,13 +4,133 @@
  <title>(or emacs</title>
  <link href="http://oremacs.com/atom.xml" rel="self"/>
  <link href="http://oremacs.com/"/>
- <updated>2016-07-29T20:55:11+02:00</updated>
+ <updated>2016-08-28T13:13:56+02:00</updated>
  <id>http://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>elf-mode - view the symbol list in a binary</title>
+   <link href="http://oremacs.com/2016/08/28/elf-mode/"/>
+   <updated>2016-08-28T00:00:00+02:00</updated>
+   <id>http://oremacs.com/2016/08/28/elf-mode</id>
+   <content type="html">&lt;p&gt;Recently, I&amp;#39;ve been looking at
+&lt;a href=&quot;http://libigl.github.io/libigl/tutorial/tutorial.html#meshrepresentation&quot;&gt;libigl&lt;/a&gt;. I
+didn&amp;#39;t manage to fully figure out their CMake build system for
+tutorials: although each tutorial has a &lt;code&gt;CMakeLists.txt&lt;/code&gt;, it&amp;#39;s only
+possible to build them all at once.&lt;/p&gt;
+
+&lt;p&gt;So I decided to replace &lt;code&gt;CMakeLists.txt&lt;/code&gt; with a good-old &lt;code&gt;Makefile&lt;/code&gt;;
+how hard can it be?  Concerning includes, not at all hard: the missing
+files are found with &lt;code&gt;counsel-locate&lt;/code&gt; and added to the include path.&lt;/p&gt;
+
+&lt;p&gt;But I had some trouble matching a missing &lt;code&gt;ld&lt;/code&gt; dependency to a library
+file. Fixed it with a bunch of googling and guesswork; I still wonder
+if there&amp;#39;s a better way. But in the process, I&amp;#39;ve found this useful
+command:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;readelf --syms libGL.so
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;which produces e.g.:&lt;/p&gt;
+
+&lt;pre&gt;&lt;small&gt;
+Symbol table &#39;.dynsym&#39; contains 2732 entries:
+   Num:    Value          Size Type    Bind   Vis      Ndx Name
+     0: 0000000000000000     0 NOTYPE  LOCAL  DEFAULT  UND
+     1: 000000000004faf0     0 SECTION LOCAL  DEFAULT    8
+     2: 00000000000e8f20     0 FUNC    GLOBAL DEFAULT   11 glGetIntegerui64i_vNV
+     3: 00000000000e13e0     0 FUNC    GLOBAL DEFAULT   11 glGetMultiTexEnvfvEXT
+     4: 00000000000d7440     0 FUNC    GLOBAL DEFAULT   11 glProgramUniform2uiv
+     5: 00000000000cfdc0     0 FUNC    GLOBAL DEFAULT   11 glMultiTexCoord3sv
+&lt;/small&gt;&lt;/pre&gt;
+
+&lt;p&gt;This is a pretty good representation of a binary file: in this
+example, instead of one megabyte of gibberish I see a bit more than
+2732 lines describing the functions this file uses and provides.&lt;/p&gt;
+
+&lt;h2 id=&quot;viewing-the-symbol-list-automatically&quot;&gt;Viewing the symbol list automatically&lt;/h2&gt;
+
+&lt;p&gt;I liked the above representation so much that I want to see it by
+default. In Emacs, it&amp;#39;s pretty easy to do with &lt;code&gt;auto-mode-alist&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;add-to-list&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;auto-mode-alist&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;\\.\\(?:a\\|so\\)\\&amp;#39;&amp;quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;elf-mode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The above code instructs Emacs to call &lt;code&gt;elf-mode&lt;/code&gt; function whenever
+the file name ends in &lt;code&gt;*.a&lt;/code&gt; or &lt;code&gt;*.so&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;And here&amp;#39;s the body of &lt;code&gt;elf-mode&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defvar-local&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;elf-mode&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;;;;###autoload&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;elf-mode&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;inhibit-read-only&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;elf-mode&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;progn&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;delete-region&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;point-min&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;point-max&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;insert-file-contents&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;buffer-file-name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;elf-mode&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;elf-mode&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;delete-region&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;point-min&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;point-max&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;insert&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;shell-command-to-string&lt;/span&gt;
+               &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;readelf --syms %s&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;buffer-file-name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;set-buffer-modified-p&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;read-only-mode&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The idea is very simple: &lt;code&gt;elf-mode&lt;/code&gt; is a toggle function that replaces
+the buffer contents with the shell command output. It carefully uses
+&lt;code&gt;read-only-mode&lt;/code&gt; and &lt;code&gt;set-buffer-modified-p&lt;/code&gt; so that the file will not
+be overwritten by accident with the symbol names.&lt;/p&gt;
+
+&lt;h2 id=&quot;using-autoload-to-avoid-overhead&quot;&gt;Using autoload to avoid overhead&lt;/h2&gt;
+
+&lt;p&gt;As you might imagine, looking at binaries isn&amp;#39;t really a common
+task. Is it worth to be dragging this code around from now on, loading
+it on each start? The answer is yes, of course. Since the actual cost
+is negligible until the feature is used.&lt;/p&gt;
+
+&lt;p&gt;If you look above, &lt;code&gt;elf-mode&lt;/code&gt; has an &lt;code&gt;;;;###autoload&lt;/code&gt; cookie before
+it. The cookie results in this line in my &lt;code&gt;loaddefs.el&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;autoload&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;elf-mode&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;modes/ora-elf&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;quot;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;My &lt;code&gt;init.el&lt;/code&gt; always loads &lt;code&gt;loaddefs.el&lt;/code&gt;, but never loads &lt;code&gt;ora-elf.el&lt;/code&gt;
+where the function is defined. That file is only loaded when the
+function &lt;code&gt;elf-mode&lt;/code&gt; is called for the first time. The above &lt;code&gt;autoload&lt;/code&gt;
+statement simply instructs Emacs to load a particular file when
+&lt;code&gt;elf-mode&lt;/code&gt; needs to be called.&lt;/p&gt;
+
+&lt;p&gt;When you use the package manager, the autoloads file is generated and
+loaded for you automatically:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;tree elpa/ace-link-20160811.112/
+
+elpa/ace-link-20160811.112/
+├── ace-link-autoloads.el
+├── ace-link.el
+├── ace-link.elc
+└── ace-link-pkg.el
+
+&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; directories, &lt;span class=&quot;m&quot;&gt;4&lt;/span&gt; files
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Here, the package manager will always load &lt;code&gt;ace-link-autoloads.el&lt;/code&gt;,
+which instructs Emacs to load &lt;code&gt;ace-link.el&lt;/code&gt; when one of the
+&lt;code&gt;;;;###autoload&lt;/code&gt; functions is called and &lt;code&gt;ace-link.el&lt;/code&gt; isn&amp;#39;t yet
+loaded.&lt;/p&gt;
+
+&lt;p&gt;As an example of how useful delayed loading is: my 6000 line
+&lt;a href=&quot;https://github.com/abo-abo/oremacs&quot;&gt;config&lt;/a&gt; starts in 1.8 seconds.
+About 40% of that time is spent on &lt;code&gt;(package-initialize)&lt;/code&gt;, which I
+assume is the package manager loading all those &lt;code&gt;*-autoloads.el&lt;/code&gt; files
+that I have in my &lt;code&gt;elpa/&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;Let me know if there&amp;#39;s interest to have &lt;code&gt;elf-mode&lt;/code&gt; on MELPA.  Also, if
+anyone knows how to set mode automatically based on the first few
+chars of the file (all binaries seem to start with &lt;code&gt;^?ELF&lt;/code&gt;), I&amp;#39;d like
+to know that as well. Happy hacking!&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Swipe all the files!</title>
