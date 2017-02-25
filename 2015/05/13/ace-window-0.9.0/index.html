@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -323,15 +327,15 @@ cancel <code>ace-select-window</code> with <kbd>C-g</kbd> and call
 
 <p>With the new way, you can, just press <kbd>x</kbd> followed by the
 decision char.  All keys are customizable through <code>aw-dispatch-alist</code>.</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">defvar</span> <span class="nv">aw-dispatch-alist</span>
-  <span class="o">&#39;</span><span class="p">((</span><span class="nv">?x</span> <span class="nv">aw-delete-window</span> <span class="s">&quot; Ace - Delete Window&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">?m</span> <span class="nv">aw-swap-window</span> <span class="s">&quot; Ace - Swap Window&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">?n</span> <span class="nv">aw-flip-window</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">?v</span> <span class="nv">aw-split-window-vert</span> <span class="s">&quot; Ace - Split Vert Window&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">?b</span> <span class="nv">aw-split-window-horz</span> <span class="s">&quot; Ace - Split Horz Window&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">?i</span> <span class="nv">delete-other-windows</span> <span class="s">&quot; Ace - Maximize Window&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">?o</span> <span class="nv">delete-other-windows</span><span class="p">))</span>
-  <span class="s">&quot;List of actions for `aw-dispatch-default&#39;.&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">defvar</span> <span class="nv">aw-dispatch-alist</span>
+  <span class="o">&#39;</span><span class="p">((</span><span class="sc">?x</span> <span class="nv">aw-delete-window</span> <span class="s">&quot; Ace - Delete Window&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="sc">?m</span> <span class="nv">aw-swap-window</span> <span class="s">&quot; Ace - Swap Window&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="sc">?n</span> <span class="nv">aw-flip-window</span><span class="p">)</span>
+    <span class="p">(</span><span class="sc">?v</span> <span class="nv">aw-split-window-vert</span> <span class="s">&quot; Ace - Split Vert Window&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="sc">?b</span> <span class="nv">aw-split-window-horz</span> <span class="s">&quot; Ace - Split Horz Window&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="sc">?i</span> <span class="nv">delete-other-windows</span> <span class="s">&quot; Ace - Maximize Window&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="sc">?o</span> <span class="nv">delete-other-windows</span><span class="p">))</span>
+  <span class="s">&quot;List of actions for </span><span class="ss">`aw-dispatch-default&#39;</span><span class="s">.&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p>The strings beside each command are important: they are used to update
 the mode line when you press a char. They also mean that a window
@@ -356,7 +360,7 @@ decision char.</p>
 
 <p>If you want to skip step 1 always (since, by default, you&#39;re not
 prompted for <code>aw-keys</code> when you have 2 or less windows), use:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">aw-dispatch-always</span> <span class="no">t</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">aw-dispatch-always</span> <span class="no">t</span><span class="p">)</span>
 </code></pre></div>
 <p>Be careful though, setting this means that you&#39;ll always have to
 select a window with <code>aw-keys</code>, even if there are only two. This is a

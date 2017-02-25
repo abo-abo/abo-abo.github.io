@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -293,7 +297,7 @@ concept, it&#39;s very convenient to have them all in one place available
 for completion.</p>
 
 <p>Here are the relevant settings:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="c1">;; Enable bookmarks and recentf</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="c1">;; Enable bookmarks and recentf</span>
 <span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-use-virtual-buffers</span> <span class="no">t</span><span class="p">)</span>
 
 <span class="c1">;; Example setting for ivy-views</span>
@@ -326,7 +330,7 @@ you&#39;ve got something similar to <code>bookmark-set</code>.</li>
 <h2 id="recommended-key-bindings">Recommended key bindings</h2>
 
 <p>Here&#39;s what I use currently:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c v&quot;</span><span class="p">)</span> <span class="ss">&#39;ivy-push-view</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c v&quot;</span><span class="p">)</span> <span class="ss">&#39;ivy-push-view</span><span class="p">)</span>
 <span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c V&quot;</span><span class="p">)</span> <span class="ss">&#39;ivy-pop-view</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="typical-workflow">Typical workflow</h2>
@@ -374,7 +378,7 @@ as usual with most <code>ivy</code> completion functions.</p>
 <p>While implementing <code>ivy-set-view</code> I decided that the current way alist
 collections are handled together with actions is sub-optimal.  Here&#39;s
 the new way of working:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">res</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">res</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">ivy-with</span>
    <span class="o">&#39;</span><span class="p">(</span><span class="nv">ivy-read</span> <span class="s">&quot;test: &quot;</span>
      <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;one&quot;</span> <span class="o">.</span> <span class="mi">1</span><span class="p">)</span> <span class="p">(</span><span class="s">&quot;three&quot;</span> <span class="o">.</span> <span class="mi">3</span><span class="p">))</span>

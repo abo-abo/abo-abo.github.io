@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -286,10 +290,10 @@ repository (available as <code>counsel</code> from MELPA).</p>
 
 <p>The motivation was to write an ivy equivalent of <a href="https://github.com/yasuyk/helm-git-grep">helm-git-grep</a>.
 I didn&#39;t use this feature before, but the only thing that I needed to get me started was this shell command:</p>
-<div class="highlight"><pre><code class="language-sh" data-lang="sh">git --no-pager grep --full-name -n --no-color -i -e foobar
+<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>git --no-pager grep --full-name -n --no-color -i -e foobar
 </code></pre></div>
 <p>The rest of the code (just 20 lines) followed all by itself:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel-git-grep-function</span> <span class="p">(</span><span class="nf">string</span> <span class="kp">&amp;optional</span> <span class="nv">_pred</span> <span class="kp">&amp;rest</span> <span class="nv">_u</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel-git-grep-function</span> <span class="p">(</span><span class="nf">string</span> <span class="kp">&amp;optional</span> <span class="nv">_pred</span> <span class="kp">&amp;rest</span> <span class="nv">_u</span><span class="p">)</span>
   <span class="s">&quot;Grep in the current git repository for STRING.&quot;</span>
   <span class="p">(</span><span class="nv">split-string</span>
    <span class="p">(</span><span class="nv">shell-command-to-string</span>
@@ -331,7 +335,7 @@ And that&#39;s it, it only remains to open a file and jump to the selected line.
 
 <p>I think that <code>counsel-git-grep</code> might complement and slightly displace <code>rgrep</code> or <code>ag</code> in my setup.
 So I&#39;ve given it a nice binding:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c j&quot;</span><span class="p">)</span> <span class="ss">&#39;counsel-git-grep</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c j&quot;</span><span class="p">)</span> <span class="ss">&#39;counsel-git-grep</span><span class="p">)</span>
 </code></pre></div>
 <p>I hope that I&#39;ve made a good case of how easy it is to quickly write
 something in Elisp, especially if it&#39;s just a shell command

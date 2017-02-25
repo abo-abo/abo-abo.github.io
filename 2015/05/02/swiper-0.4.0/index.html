@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -307,7 +311,7 @@ trouble:</p>
 
 <p><code>ivy-immediate-done</code> is currently unbound by default. If you want, you
 can bind it in your config like this:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">ivy-minibuffer-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c C-d&quot;</span><span class="p">)</span> <span class="ss">&#39;ivy-immediate-done</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">ivy-minibuffer-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c C-d&quot;</span><span class="p">)</span> <span class="ss">&#39;ivy-immediate-done</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="exclude-a-couple-more-modes-from-font-lock">Exclude a couple more modes from font-lock</h3>
 
@@ -484,8 +488,8 @@ it was going to do with the result.</p>
 </ul>
 
 <p>Here&#39;s how I&#39;ve bound it in my config:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c C-r&quot;</span><span class="p">)</span> <span class="ss">&#39;ivy-resume</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">global-set-key</span> <span class="nv">[f6]</span> <span class="ss">&#39;ivy-resume</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c C-r&quot;</span><span class="p">)</span> <span class="ss">&#39;ivy-resume</span><span class="p">)</span>
+<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">[</span><span class="nv">f6</span><span class="p">]</span> <span class="ss">&#39;ivy-resume</span><span class="p">)</span>
 </code></pre></div>
 <p>The <code>ivy-resume</code> feature adds <code>occur</code>-like functionality to <code>swiper</code>.
 Calling <code>ivy-resume</code> is like switching to the <code>*Occur*</code> buffer.</p>
@@ -503,7 +507,7 @@ find some up-to-date info on the
 page syntax from markdown to org-mode, but Github makes the headings
 way to big. So it might be easier to clone the wiki and view the org
 files in Emacs:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">git clone https://github.com/abo-abo/swiper.wiki.git
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>git clone https://github.com/abo-abo/swiper.wiki.git
 </code></pre></div>
 </div>
 

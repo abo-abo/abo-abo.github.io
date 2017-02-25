@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -281,7 +285,7 @@
   <h1 class="post-title">Save before compile</h1>
   <span class="post-date">16 Jan 2015</span>
   <p>Here&#39;s a very simplistic function that I was using for a while:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">save-and-compile</span> <span class="p">()</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">save-and-compile</span> <span class="p">()</span>
   <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">save-buffer</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">compile</span> <span class="s">&quot;make -j4&quot;</span><span class="p">)</span>
@@ -293,7 +297,7 @@ compilation buffer.</p>
 <h2 id="compilation-customization">Compilation customization</h2>
 
 <p>Turns out that there&#39;s no need to save, since I get away with this:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">(setq compilation-ask-about-save nil)
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>(setq compilation-ask-about-save nil)
 </code></pre></div>
 <p>The documentation says:</p>
 
@@ -323,8 +327,8 @@ current directory but from <code>projectile-project-root</code>.</p>
 
 <p>I&#39;ve had these bindings for a very long time, just making sure
 that you&#39;re aware of these commands:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="nv">[f6]</span> <span class="ss">&#39;next-error</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">global-set-key</span> <span class="nv">[C-f6]</span> <span class="ss">&#39;previous-error</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">[</span><span class="nv">f6</span><span class="p">]</span> <span class="ss">&#39;next-error</span><span class="p">)</span>
+<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">[</span><span class="nv">C-f6</span><span class="p">]</span> <span class="ss">&#39;previous-error</span><span class="p">)</span>
 </code></pre></div>
 <p>These bindings work for <kbd>M-x</kbd> <code>occur</code> and <code>rgrep</code> as well.</p>
 

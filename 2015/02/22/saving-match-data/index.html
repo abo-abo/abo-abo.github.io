@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -292,12 +296,12 @@ or post-command hooks etc.).</p>
 <p>After getting annoyed by this a few times, I&#39;ve finally added a
 fail-safe to <kbd>e</kbd> (<code>lispy-eval</code>) and <kbd>p</kbd>
 (<code>lispy-eval-other-window</code>). Here&#39;s how it looks like:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">defvar</span> <span class="nv">lispy-eval-match-data</span> <span class="no">nil</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">defvar</span> <span class="nv">lispy-eval-match-data</span> <span class="no">nil</span><span class="p">)</span>
 
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">lispy--eval-elisp-form</span> <span class="p">(</span><span class="nv">form</span> <span class="nv">lexical</span><span class="p">)</span>
   <span class="s">&quot;Eval FORM and return its value.</span>
 <span class="s">If LEXICAL is t, evaluate using lexical scoping.</span>
-<span class="s">Restore and save `lispy-eval-match-data&#39; appropriately,</span>
+<span class="s">Restore and save </span><span class="ss">`lispy-eval-match-data&#39;</span><span class="s"> appropriately,</span>
 <span class="s">so that no other packages disturb the match data.&quot;</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">val</span><span class="p">)</span>
     <span class="p">(</span><span class="nf">fset</span> <span class="ss">&#39;\,</span> <span class="nf">#&#39;identity</span><span class="p">)</span>

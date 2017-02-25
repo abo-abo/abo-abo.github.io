@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -312,7 +316,7 @@ automatically get the <code>avy</code> selection.</p>
 allows you to switch the action after you get the avy prompt.</p>
 
 <p>For example, suppose you have:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-t&quot;</span><span class="p">)</span> <span class="ss">&#39;avy-goto-word-1</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-t&quot;</span><span class="p">)</span> <span class="ss">&#39;avy-goto-word-1</span><span class="p">)</span>
 </code></pre></div>
 <p>Here&#39;s what you can do now to a word that starts with a &quot;w&quot; and is
 select-able with &quot;a&quot;:</p>
@@ -336,10 +340,10 @@ customized them.  By default, it works fine, since <code>avy-keys</code> is <cod
 It has its own history and works across multiple windows and frames.
 I&#39;m using it currently as an upgrade to my old <code>(set-mark-command 4)</code>
 lambda:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-p&quot;</span><span class="p">)</span> <span class="ss">&#39;avy-pop-mark</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-p&quot;</span><span class="p">)</span> <span class="ss">&#39;avy-pop-mark</span><span class="p">)</span>
 </code></pre></div>
 <p>Here&#39;s a line to make <code>avy-pop-mark</code> work also for <code>swiper</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">advice-add</span> <span class="ss">&#39;swiper</span> <span class="nb">:before</span> <span class="ss">&#39;avy-push-mark</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">advice-add</span> <span class="ss">&#39;swiper</span> <span class="nb">:before</span> <span class="ss">&#39;avy-push-mark</span><span class="p">)</span>
 </code></pre></div>
 </div>
 

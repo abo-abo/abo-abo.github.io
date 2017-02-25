@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -300,13 +304,13 @@ interactively for most popular packages. For example, after <kbd>M-x</kbd> <code
 <code>swiper</code>, you get a GUI for selecting most configurable things for <code>swiper</code>, including the faces.</p>
 
 <p>The GUI will generate the code that looks something like this:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">custom-set-faces</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">custom-set-faces</span>
   <span class="o">&#39;</span><span class="p">(</span><span class="nv">ivy-current-match</span> <span class="p">((</span><span class="no">t</span> <span class="p">(</span><span class="nb">:background</span> <span class="s">&quot;#e5b7c0&quot;</span><span class="p">)))))</span>
 </code></pre></div>
 <h2 id="elisp-completion-with-ivy">Elisp completion with <code>ivy</code></h2>
 
 <p>The code to complete Elisp code at point is very simple:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel</span> <span class="p">()</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel</span> <span class="p">()</span>
   <span class="s">&quot;Elisp completion at point.&quot;</span>
   <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
   <span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">bnd</span> <span class="p">(</span><span class="nv">bounds-of-thing-at-point</span> <span class="ss">&#39;symbol</span><span class="p">))</span>

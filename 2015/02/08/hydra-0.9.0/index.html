@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -295,7 +299,7 @@ sexp or a function name. The function doesn&#39;t need to be interactive.</p>
 <h2 id="support-for-local-hydra-heads-via-bind-property">Support for local Hydra heads via <code>:bind</code> property</h2>
 
 <p>Example:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-next-error</span> <span class="p">(</span><span class="nv">global-map</span> <span class="s">&quot;C-x&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-next-error</span> <span class="p">(</span><span class="nv">global-map</span> <span class="s">&quot;C-x&quot;</span><span class="p">)</span>
   <span class="s">&quot;next-error&quot;</span>
   <span class="p">(</span><span class="s">&quot;`&quot;</span> <span class="nv">next-error</span> <span class="s">&quot;next&quot;</span><span class="p">)</span>
   <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">next-error</span> <span class="s">&quot;next&quot;</span> <span class="nb">:bind</span> <span class="no">nil</span><span class="p">)</span>
@@ -318,7 +322,7 @@ The heads will inherit it, just like they do with <code>:color</code>.
 The <code>:bind</code> property can be nil or a lambda of <code>global-set-key</code> format.</p>
 
 <p>Example:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-goto</span> <span class="p">(</span><span class="nv">global-map</span> <span class="s">&quot;M-g&quot;</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-goto</span> <span class="p">(</span><span class="nv">global-map</span> <span class="s">&quot;M-g&quot;</span>
                       <span class="nb">:bind</span>
                       <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">key</span> <span class="nv">cmd</span><span class="p">)</span>
                         <span class="p">(</span><span class="nv">bind-key</span> <span class="nv">key</span> <span class="nv">cmd</span><span class="p">)))</span>
@@ -340,9 +344,9 @@ whole <code>BODY</code> argument, as was advertised before. Just put it on
 <h2 id="hydra-body-will-pass-the-initial-current-prefix-arg-along"><code>hydra/body</code> will pass the initial <code>current-prefix-arg</code> along</h2>
 
 <p>Example:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span>
  <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-z&quot;</span><span class="p">)</span>
- <span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-vi</span> <span class="p">()</span>
+ <span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-vi</span> <span class="p">()</span>
    <span class="s">&quot;vi&quot;</span>
    <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nf">forward-char</span><span class="p">)</span>
    <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span> <span class="s">&quot;quit&quot;</span><span class="p">)))</span>
@@ -354,7 +358,7 @@ behavior allowed only for <kbd>C-z C-u l</kbd> to get <code>(forward-char 4)</co
 <h2 id="allow-a-sexp-as-head-39-s-cmd-parameter">Allow a sexp as head&#39;s CMD parameter</h2>
 
 <p>Example:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-launcher</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-launcher</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
    <span class="s">&quot;Launch&quot;</span>
    <span class="p">(</span><span class="s">&quot;h&quot;</span> <span class="nv">man</span> <span class="s">&quot;man&quot;</span><span class="p">)</span>
    <span class="p">(</span><span class="s">&quot;r&quot;</span> <span class="p">(</span><span class="nv">browse-url</span> <span class="s">&quot;http://www.reddit.com/r/emacs/&quot;</span><span class="p">)</span> <span class="s">&quot;reddit&quot;</span><span class="p">)</span>
@@ -365,16 +369,16 @@ behavior allowed only for <kbd>C-z C-u l</kbd> to get <code>(forward-char 4)</co
 </code></pre></div>
 <p>Here, <kbd>r</kbd> and <kbd>w</kbd> heads are using this feature.
 Here&#39;s what will be generated, if you&#39;re interested:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">hydra-launcher/lambda-w</span> <span class="no">nil</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">hydra-launcher/lambda-w</span> <span class="no">nil</span>
   <span class="s">&quot;Create a hydra with no body and the heads:</span>
 
-<span class="s">\&quot;h\&quot;:    `man&#39;,</span>
+<span class="s">\&quot;h\&quot;:    </span><span class="ss">`man&#39;</span><span class="s">,</span>
 <span class="s">\&quot;r\&quot;:    `(browse-url \&quot;http://www.reddit.com/r/emacs/\&quot;)&#39;,</span>
 <span class="s">\&quot;w\&quot;:    `(browse-url \&quot;http://www.emacswiki.org/\&quot;)&#39;,</span>
-<span class="s">\&quot;s\&quot;:    `shell&#39;,</span>
-<span class="s">\&quot;q\&quot;:    `nil&#39;</span>
+<span class="s">\&quot;s\&quot;:    </span><span class="ss">`shell&#39;</span><span class="s">,</span>
+<span class="s">\&quot;q\&quot;:    </span><span class="ss">`nil&#39;</span><span class="s"></span>
 
-<span class="s">The body can be accessed via `hydra-launcher/body&#39;.</span>
+<span class="s">The body can be accessed via </span><span class="ss">`hydra-launcher/body&#39;</span><span class="s">.</span>
 
 <span class="s">Call the head: `(browse-url \&quot;http://www.emacswiki.org/\&quot;)&#39;.&quot;</span>
   <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>

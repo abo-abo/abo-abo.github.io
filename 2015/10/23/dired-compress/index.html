@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -296,7 +300,7 @@ to ones that you want with <kbd>n</kbd> (<code>dired-next-line</code>) and
 
 <p>Once a list is ready, I press <kbd>&amp;</kbd> (<code>dired-do-async-shell-command</code>), which allows me to run an arbitrary shell command.
 I enter:</p>
-<div class="highlight"><pre><code class="language-sh" data-lang="sh">tar -czf ~/tmp/path/foo.tar.gz *
+<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>tar -czf ~/tmp/path/foo.tar.gz *
 </code></pre></div>
 <p>into the minibuffer, press <kbd>RET</kbd> and I&#39;m done. It&#39;s a
 standard shell command with 2 advantages:</p>
@@ -310,7 +314,7 @@ standard shell command with 2 advantages:</p>
 
 <p>Since I often forget the command for <code>tar</code>, and I really don&#39;t want to
 remember the commands for <code>zip</code> etc, I&#39;ve implemented a more convenient approach:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="s">&quot;c&quot;</span> <span class="ss">&#39;dired-do-compress-to</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="s">&quot;c&quot;</span> <span class="ss">&#39;dired-do-compress-to</span><span class="p">)</span>
 </code></pre></div>
 <p>This new command <code>dired-do-compress-to</code>, bound to <kbd>c</kbd>, will
 prompt me for a file name of the output archive. So now it&#39;s easier to
@@ -318,10 +322,10 @@ type in that file name, if you use <code>ido-mode</code> / <code>ivy-mode</code>
 <code>helm-mode</code>. What&#39;s more, the command will be automatically determined
 from the archive extension and executed. Here&#39;s the corresponding
 customization variable:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">defvar</span> <span class="nv">dired-compress-files-alist</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">defvar</span> <span class="nv">dired-compress-files-alist</span>
   <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;\\.tar\\.gz\\&#39;&quot;</span> <span class="o">.</span> <span class="s">&quot;tar -c %i | gzip -c9 &gt; %o&quot;</span><span class="p">)</span>
     <span class="p">(</span><span class="s">&quot;\\.zip\\&#39;&quot;</span> <span class="o">.</span> <span class="s">&quot;zip %o -r --filesync %i&quot;</span><span class="p">))</span>
-  <span class="s">&quot;Control the compression shell command for `dired-do-compress-to&#39;.</span>
+  <span class="s">&quot;Control the compression shell command for </span><span class="ss">`dired-do-compress-to&#39;</span><span class="s">.</span>
 
 <span class="s">Each element is (REGEXP . CMD), where REGEXP is the name of the</span>
 <span class="s">archive to which you want to compress, and CMD the the</span>
@@ -346,7 +350,7 @@ decompress, or on a directory to compress.</p>
 
 <p>If you want to get these improvements right now and are on a Debian
 type system (I use Ubuntu), you can use:</p>
-<div class="highlight"><pre><code class="language-sh" data-lang="sh">sudo apt-add-repository ppa:ubuntu-elisp/ppa
+<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>sudo apt-add-repository ppa:ubuntu-elisp/ppa
 sudo apt-get update
 sudo apt-get install emacs-snapshot
 </code></pre></div>

@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -292,12 +296,12 @@ that became <code>headlong-bookmark-jump</code> from
 if you missed it).</p>
 
 <h2 id="a-bit-of-code-to-make-things-right">A bit of code to make things right</h2>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">ido-occasional-completing-read</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">ido-occasional-completing-read</span>
     <span class="p">(</span><span class="nv">prompt</span> <span class="nv">collection</span>
      <span class="kp">&amp;optional</span> <span class="nv">predicate</span> <span class="nv">require-match</span> <span class="nv">initial-input</span>
        <span class="nv">hist</span> <span class="nv">def</span> <span class="nv">inherit-input-method</span><span class="p">)</span>
-  <span class="s">&quot;Use `ido-completing-read&#39; if the collection isn&#39;t too large.</span>
-<span class="s">Fall back to `completing-read&#39; otherwise.&quot;</span>
+  <span class="s">&quot;Use </span><span class="ss">`ido-completing-read&#39;</span><span class="s"> if the collection isn&#39;t too large.</span>
+<span class="s">Fall back to </span><span class="ss">`completing-read&#39;</span><span class="s"> otherwise.&quot;</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">filtered-collection</span>
          <span class="p">(</span><span class="nf">all-completions</span> <span class="s">&quot;&quot;</span> <span class="nv">collection</span> <span class="nv">predicate</span><span class="p">)))</span>
     <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">&lt;=</span> <span class="p">(</span><span class="nf">length</span> <span class="nv">filtered-collection</span><span class="p">)</span> <span class="mi">30000</span><span class="p">)</span>
@@ -314,7 +318,7 @@ if you missed it).</p>
 <span class="p">(</span><span class="nb">defmacro</span> <span class="nv">with-ido-completion</span> <span class="p">(</span><span class="nv">fun</span><span class="p">)</span>
   <span class="s">&quot;Wrap FUN in another interactive function with ido completion.&quot;</span>
   <span class="o">`</span><span class="p">(</span><span class="nb">defun</span> <span class="o">,</span><span class="p">(</span><span class="nf">intern</span> <span class="p">(</span><span class="nf">concat</span> <span class="p">(</span><span class="nf">symbol-name</span> <span class="nv">fun</span><span class="p">)</span> <span class="s">&quot;/with-ido&quot;</span><span class="p">))</span> <span class="p">()</span>
-     <span class="o">,</span><span class="p">(</span><span class="nf">format</span> <span class="s">&quot;Forward to `%S&#39; with ido completion.&quot;</span> <span class="nv">fun</span><span class="p">)</span>
+     <span class="o">,</span><span class="p">(</span><span class="nf">format</span> <span class="s">&quot;Forward to </span><span class="ss">`%S&#39;</span><span class="s"> with ido completion.&quot;</span> <span class="nv">fun</span><span class="p">)</span>
      <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
      <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">completing-read-function</span>
             <span class="ss">&#39;ido-occasional-completing-read</span><span class="p">))</span>
@@ -325,7 +329,7 @@ pre-filter <code>collection</code> with <code>predicate</code> and pass it on to
 <code>ido-completing-read</code>. And <code>with-ido-completion</code> is just a convenience wrapper.</p>
 
 <h2 id="example">Example</h2>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;&lt;f1&gt; f&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;&lt;f1&gt; f&quot;</span><span class="p">)</span>
                 <span class="p">(</span><span class="nv">with-ido-completion</span> <span class="nv">describe-function</span><span class="p">))</span>
 <span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;&lt;f1&gt; v&quot;</span><span class="p">)</span>
                 <span class="p">(</span><span class="nv">with-ido-completion</span> <span class="nv">describe-variable</span><span class="p">))</span>

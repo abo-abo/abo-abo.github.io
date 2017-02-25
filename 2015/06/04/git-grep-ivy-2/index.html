@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -302,9 +306,9 @@ should remove some pdfs from the repository at some point.</p>
 <h2 id="the-video-demo">The Video Demo</h2>
 
 <p>Check out the speed and the various command in this <a href="https://www.youtube.com/watch?v=OEmXQNS7ofo">Video Demo</a>. Each key stroke starts two asynchronous shell calls, while canceling the current ones if they are still running.  Here are the example calls:</p>
-<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span class="nv">$ </span>git --no-pager grep --full-name -n --no-color <span class="se">\</span>
-    -i -e <span class="s2">&quot;forward-line 1&quot;</span> <span class="p">|</span> head -n 200
-<span class="nv">$ </span>git grep -i -c <span class="s1">&#39;forward-line 1&#39;</span> <span class="se">\</span>
+<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>$ git --no-pager grep --full-name -n --no-color <span class="se">\</span>
+    -i -e <span class="s2">&quot;forward-line 1&quot;</span> <span class="p">|</span> head -n <span class="m">200</span>
+$ git grep -i -c <span class="s1">&#39;forward-line 1&#39;</span> <span class="se">\</span>
     <span class="p">|</span> sed <span class="s1">&#39;s/.*:\\(.*\\)/\\1/g&#39;</span> <span class="se">\</span>
     <span class="p">|</span> awk <span class="s1">&#39;{s+=$1} END {print s}&#39;</span>
 </code></pre></div>
@@ -312,7 +316,7 @@ should remove some pdfs from the repository at some point.</p>
 
 <p>I figure since I was interested in this topic, probably a few more people are as well.
 So I&#39;ll explain below how async processing is done (in this case):</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel--gg-count</span> <span class="p">(</span><span class="nv">regex</span> <span class="kp">&amp;optional</span> <span class="nv">no-async</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel--gg-count</span> <span class="p">(</span><span class="nv">regex</span> <span class="kp">&amp;optional</span> <span class="nv">no-async</span><span class="p">)</span>
   <span class="s">&quot;Quickly count the amount of git grep REGEX matches.</span>
 <span class="s">When NO-ASYNC is non-nil, do it synchronously.&quot;</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">default-directory</span> <span class="nv">counsel--git-grep-dir</span><span class="p">)</span>

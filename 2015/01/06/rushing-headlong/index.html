@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -294,12 +298,12 @@ a package called <a href="https://github.com/abo-abo/headlong">headlong</a>.</p>
 <p>It provides a macro called <code>headlong-with</code> that modifies minibuffer
 completion for the forms within it, making it faster in some
 situations.  For instance:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">headlong-with</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">headlong-with</span>
  <span class="p">(</span><span class="nf">completing-read</span> <span class="s">&quot;Jump to bookmark: &quot;</span>
                   <span class="nv">bookmark-alist</span> <span class="no">nil</span> <span class="no">t</span><span class="p">))</span>
 </code></pre></div>
 <p>or:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">headlong-with</span> <span class="p">(</span><span class="nv">read-extended-command</span><span class="p">))</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">headlong-with</span> <span class="p">(</span><span class="nv">read-extended-command</span><span class="p">))</span>
 </code></pre></div>
 <p>But more importantly, it provides two commands that can use it
 efficiently: <code>headlong-bookmark-jump</code> and
@@ -317,7 +321,7 @@ How much is <em>one</em> keystroke worth? It depends.</p>
 <p>If you arrange your bookmarks in a way that I do, with each one
 starting with a different letter, it saves you 33% of the total
 keystrokes.  For example, suppose I have:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-p&quot;</span><span class="p">)</span> <span class="ss">&#39;bookmark-jump</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-p&quot;</span><span class="p">)</span> <span class="ss">&#39;bookmark-jump</span><span class="p">)</span>
 <span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-o&quot;</span><span class="p">)</span> <span class="ss">&#39;headlong-bookmark-jump</span><span class="p">)</span>
 </code></pre></div>
 <p>Then I can jump to my bookmarked directory named <code>&quot;s: sources&quot;</code> with

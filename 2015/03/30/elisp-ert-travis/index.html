@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -291,7 +295,7 @@ error.</p>
 from <a href="https://launchpad.net/%7Eubuntu-elisp/+archive/ppa">ppa:ubuntu-elisp</a>.</p>
 
 <p>Here&#39;s my current <a href="https://github.com/abo-abo/lispy/blob/master/.travis.yml">.travis.yml</a>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">language: emacs-lisp
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>language: emacs-lisp
 env:
   matrix:
     - emacs=emacs-snapshot
@@ -311,10 +315,10 @@ The reason for this is that both <code>ansi-term</code> and <code>compile</code>
 for legacy reasons set <code>EMACS</code> to <a href="https://lists.gnu.org/archive/html/emacs-devel/2015-03/msg00994.html">strange values</a>,
 like <code>&quot;24.4.91.2 (term:0.96)&quot;</code>.
 So if you have in your Makefile:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">EMACS ?= emacs
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>EMACS ?= emacs
 </code></pre></div>
 <p>you&#39;re going to have a bad time. So I changed my <a href="https://github.com/abo-abo/lispy/blob/master/Makefile">Makefile</a> to:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">emacs ?= emacs
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>emacs ?= emacs
 </code></pre></div>
 <p>And now I can compile and test while inside Emacs with no issues.  The only issue left is that I
 don&#39;t yet know which PPA I should use for a stable Emacs. Maybe someone has a suggestion.</p>

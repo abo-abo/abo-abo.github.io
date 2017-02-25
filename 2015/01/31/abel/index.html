@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -314,7 +318,7 @@ restored. It even overrides the mode-line description to <code>Abbrev</code> -&g
 bindings and asks no questions.</p>
 
 <p>Here&#39;s the current list:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defcustom</span> <span class="nv">abel-abbrevs</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defcustom</span> <span class="nv">abel-abbrevs</span>
   <span class="o">&#39;</span><span class="p">(</span>
     <span class="c1">;; basics</span>
     <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="s">&quot;and&quot;</span><span class="p">)</span>
@@ -430,9 +434,9 @@ bindings and asks no questions.</p>
     <span class="p">(</span><span class="s">&quot;tap&quot;</span> <span class="s">&quot;thing-at-point&quot;</span><span class="p">)</span>
     <span class="p">(</span><span class="s">&quot;tc&quot;</span> <span class="s">&quot;this-command&quot;</span><span class="p">)</span>
     <span class="p">(</span><span class="s">&quot;ul&quot;</span> <span class="s">&quot;up-list&quot;</span><span class="p">))</span>
-  <span class="s">&quot;List of (ABBREV EXPANSION) used by `abel&#39;.&quot;</span>
+  <span class="s">&quot;List of (ABBREV EXPANSION) used by </span><span class="ss">`abel&#39;</span><span class="s">.&quot;</span>
   <span class="nb">:set</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">symbol</span> <span class="nv">value</span><span class="p">)</span>
-         <span class="s">&quot;Update abbrevs accoring to `abel-abbrevs&#39;.&quot;</span>
+         <span class="s">&quot;Update abbrevs accoring to </span><span class="ss">`abel-abbrevs&#39;</span><span class="s">.&quot;</span>
          <span class="p">(</span><span class="nf">set</span> <span class="nv">symbol</span> <span class="nv">value</span><span class="p">)</span>
          <span class="p">(</span><span class="nf">mapc</span> <span class="nf">#&#39;</span><span class="nv">abel-define</span> <span class="nv">value</span><span class="p">))</span>
   <span class="nb">:group</span> <span class="ss">&#39;abel</span><span class="p">)</span>

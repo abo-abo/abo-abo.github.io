@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -299,7 +303,7 @@ that e.g. <code>byte-compile-file</code> gives:</p>
 you&#39;ll have to wait for 25.1 to come out.</p>
 
 <p>There&#39;s also a new custom variable that you can set to get a more strict check:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">check-declare-ext-errors</span> <span class="no">t</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">check-declare-ext-errors</span> <span class="no">t</span><span class="p">)</span>
 </code></pre></div>
 <p>Unless you set it, the standard behavior is to issue a <code>&quot;skipping
 external file&quot;</code> message when checking a statement like the one above.
@@ -310,11 +314,11 @@ there&#39;s no reason not to have <code>check-declare-ext-errors</code> always t
 <h2 id="a-trick-to-actually-load-slime-repl">A trick to actually load <code>slime-repl</code></h2>
 
 <p>Here&#39;s the Makefile target for <code>check-declare</code>:</p>
-<div class="highlight"><pre><code class="language-Makefile" data-lang="Makefile"><span class="nf">check-declare</span><span class="o">:</span>
+<div class="highlight"><pre><code class="language-Makefile" data-lang="Makefile"><span></span><span class="nf">check-declare</span><span class="o">:</span>
     <span class="k">$(</span>CASKEMACS<span class="k">)</span> -batch <span class="k">$(</span>LOAD<span class="k">)</span> -l check-declare.elt
 </code></pre></div>
 <p>And here are the contents of check-declare.elt:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">check-declare-ext-errors</span> <span class="no">t</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">check-declare-ext-errors</span> <span class="no">t</span><span class="p">)</span>
 <span class="p">(</span><span class="k">setq</span> <span class="nv">files</span> <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;lispy.el&quot;</span>
               <span class="s">&quot;lispy-inline.el&quot;</span>
               <span class="s">&quot;le-clojure.el&quot;</span>

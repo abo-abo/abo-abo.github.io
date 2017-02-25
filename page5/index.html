@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -281,6 +285,74 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/09/04/ivy-fancy-minibuffer/">
+        Fancy minibuffer faces for Ivy completion
+      </a>
+    </h1>
+
+    <span class="post-date">04 Sep 2015</span>
+
+    <p>Today, I&#39;ll describe a recent improvement to the display of Ivy completion.
+To use it, add this code to your configuration:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-display-style</span> <span class="ss">&#39;fancy</span><span class="p">)</span>
+</code></pre></div>
+<p>After this, <a href="https://github.com/abo-abo/swiper">swiper</a> will look like this:</p>
+
+<p><img src="/download/ivy-display-style-1.png" alt="ivy-display-style-1.png"></p>
+
+<p>And <code>counsel-M-x</code> will look like this:</p>
+
+<p><img src="/download/ivy-display-style-2.png" alt="ivy-display-style-2.png"></p>
+
+<p>If you haven&#39;t used it before, <code>counsel-M-x</code> is part the counsel
+package on MELPA, or part of swiper package if you&#39;re installing from
+GNU ELPA. Basically, it&#39;s a <kbd>M-x</kbd> replacement (that I like to
+bind to <kbd>C-t</kbd> for efficiency reasons), that doubles as
+<code>find-function</code> (just press <kbd>C-.</kbd> instead of <kbd>RET</kbd>
+to find the function instead of calling it). If you&#39;re using
+<code>counsel-M-x</code> I highly recommend to also install <code>smex</code>, since then
+<code>counsel-M-x</code> will use <code>smex</code> for sorting the matched commands.</p>
+
+<p>The update will propertize the minibuffer contents with a new set of faces:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defcustom</span> <span class="nv">swiper-minibuffer-faces</span>
+  <span class="o">&#39;</span><span class="p">(</span><span class="nv">swiper-minibuffer-match-face-1</span>
+    <span class="nv">swiper-minibuffer-match-face-2</span>
+    <span class="nv">swiper-minibuffer-match-face-3</span>
+    <span class="nv">swiper-minibuffer-match-face-4</span><span class="p">)</span>
+  <span class="s">&quot;List of </span><span class="ss">`swiper&#39;</span><span class="s"> faces for minibuffer group matches.&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>Initially, when responding to
+<a href="https://github.com/abo-abo/swiper/issues/212">#212</a>, I used the
+original swiper faces in the minibuffer as well. But after some use,
+their brightness became a bit annoying.  So I introduced a new set of
+faces that can be customized separately.</p>
+
+<p>Here are the settings that I&#39;m currently using:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">custom-set-faces</span>
+ <span class="o">&#39;</span><span class="p">(</span><span class="nv">swiper-minibuffer-match-face-1</span>
+   <span class="p">((</span><span class="no">t</span> <span class="nb">:background</span> <span class="s">&quot;#dddddd&quot;</span><span class="p">)))</span>
+ <span class="o">&#39;</span><span class="p">(</span><span class="nv">swiper-minibuffer-match-face-2</span>
+   <span class="p">((</span><span class="no">t</span> <span class="nb">:background</span> <span class="s">&quot;#bbbbbb&quot;</span> <span class="nb">:weight</span> <span class="nv">bold</span><span class="p">)))</span>
+ <span class="o">&#39;</span><span class="p">(</span><span class="nv">swiper-minibuffer-match-face-3</span>
+   <span class="p">((</span><span class="no">t</span> <span class="nb">:background</span> <span class="s">&quot;#bbbbff&quot;</span> <span class="nb">:weight</span> <span class="nv">bold</span><span class="p">)))</span>
+ <span class="o">&#39;</span><span class="p">(</span><span class="nv">swiper-minibuffer-match-face-4</span>
+   <span class="p">((</span><span class="no">t</span> <span class="nb">:background</span> <span class="s">&quot;#ffbbff&quot;</span> <span class="nb">:weight</span> <span class="nv">bold</span><span class="p">))))</span>
+</code></pre></div>
+<p>It&#39;s similar to what the Firefox address bar uses: gray background and
+bold font. Additionally, the matching parts are highlighted with pale
+gray, blue and magenta colors. If you like the color scheme, it&#39;s part
+of <a href="https://github.com/abo-abo/eclipse-theme">eclipse-theme</a>.  Another
+choice, for even less distraction, could be to remove the background
+from these faces, only leaving the bold part on the matches.</p>
+
+<p>Thanks to <a href="https://github.com/Wilfred">@Wilfred</a> for nudging me to
+finally implement this feature.  It&#39;s been on my list for a long time,
+but I&#39;ve been putting it off.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/08/26/counsel-jedi/">
         Complete Python symbols using Ivy
       </a>
@@ -300,7 +372,7 @@ automatically when a function name is completed.</p>
 <a href="https://github.com/tkf/emacs-jedi">jedi</a> plugin.  To quickly see
 where the list of strings is coming from, I&#39;ve examined <code>ac-sources</code>
 variable and saw that it contains <code>ac-source-jedi-direct</code>, which evaluates to:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">((</span><span class="nv">candidates</span> <span class="o">.</span> <span class="nv">jedi:ac-direct-matches</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">((</span><span class="nv">candidates</span> <span class="o">.</span> <span class="nv">jedi:ac-direct-matches</span><span class="p">)</span>
  <span class="p">(</span><span class="nv">prefix</span> <span class="o">.</span> <span class="nv">jedi:ac-direct-prefix</span><span class="p">)</span>
  <span class="p">(</span><span class="nv">init</span> <span class="o">.</span> <span class="nv">jedi:complete-request</span><span class="p">)</span>
  <span class="p">(</span><span class="nv">requires</span> <span class="o">.</span> <span class="mi">-1</span><span class="p">))</span>
@@ -308,7 +380,7 @@ variable and saw that it contains <code>ac-source-jedi-direct</code>, which eval
 <p>This means that <code>jedi:complete-request</code> has to be called at point,
 followed by <code>jedi:ac-direct-matches</code> to obtain the list of strings. So
 basically, this code:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">progn</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">progn</span>
   <span class="p">(</span><span class="nv">deferred:sync!</span>
    <span class="p">(</span><span class="nv">jedi:complete-request</span><span class="p">))</span>
   <span class="p">(</span><span class="nv">jedi:ac-direct-matches</span><span class="p">))</span>
@@ -318,11 +390,11 @@ that <code>jedi:complete-request</code> completes before <code>jedi:ac-direct-ma
 is called.</p>
 
 <p>Testing with some Python code, where <code>|</code> is the point:</p>
-<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;foo&quot;</span><span class="p">:</span><span class="s">&quot;bar&quot;</span><span class="p">}</span>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span></span><span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;foo&quot;</span><span class="p">:</span><span class="s2">&quot;bar&quot;</span><span class="p">}</span>
 <span class="n">params</span><span class="o">.</span><span class="n">i</span>
 </code></pre></div>
 <p>The Elisp code above will return:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="o">#(</span><span class="s">&quot;items&quot;</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="o">#(</span><span class="s">&quot;items&quot;</span>
    <span class="mi">0</span> <span class="mi">5</span> <span class="p">(</span><span class="nv">summary</span>
         <span class="s">&quot;function: __builtin__.dict.items&quot;</span>
         <span class="nv">symbol</span>
@@ -364,7 +436,7 @@ encoded as string properties. After this, the rest of the Elisp code
 follows very easily, you can find it as part of
 <a href="https://github.com/abo-abo/swiper/blob/master/counsel.el">counsel</a>
 package on MELPA:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel-jedi</span> <span class="p">()</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel-jedi</span> <span class="p">()</span>
   <span class="s">&quot;Python completion at point.&quot;</span>
   <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">bnd</span> <span class="p">(</span><span class="nv">bounds-of-thing-at-point</span> <span class="ss">&#39;symbol</span><span class="p">)))</span>
@@ -406,11 +478,11 @@ is inserted if you press <kbd>C-M-n</kbd> (<code>ivy-next-line-and-call</code>),
 or use <code>ivy-resume</code>. Just to describe how this would be useful for the
 Python code above: I call <code>counsel-jedi</code>, followed by <kbd>C-M-n</kbd>
 to get:</p>
-<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;foo&quot;</span><span class="p">:</span><span class="s">&quot;bar&quot;</span><span class="p">}</span>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span></span><span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;foo&quot;</span><span class="p">:</span><span class="s2">&quot;bar&quot;</span><span class="p">}</span>
 <span class="n">params</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="o">|</span><span class="p">)</span>
 </code></pre></div>
 <p>Pressing <kbd>C-M-n</kbd> again will result in:</p>
-<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;foo&quot;</span><span class="p">:</span><span class="s">&quot;bar&quot;</span><span class="p">}</span>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span></span><span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;foo&quot;</span><span class="p">:</span><span class="s2">&quot;bar&quot;</span><span class="p">}</span>
 <span class="n">params</span><span class="o">.</span><span class="n">iterkeys</span><span class="p">(</span><span class="o">|</span><span class="p">)</span>
 </code></pre></div>
 <p>Once I&#39;m satisfied with my selected candidate, I can press either
@@ -449,7 +521,7 @@ start with <code>forward-</code>. Then call <code>counsel-describe-function</cod
 &quot;forward-&quot; as input and press <kbd>M-w</kbd>. Then just yank this into
 some buffer, <code>org-mode</code> for instance, and go through the functions
 one-by-one takings notes on the way:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">forward-comment
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>forward-comment
 forward-paragraph
 forward-thing
 forward-symbol
@@ -473,7 +545,7 @@ forward-page
 <p>Suppose you want to store a subset of <code>projectile-find-file</code> names
 that match a pattern.  Just press <kbd>M-w</kbd> and those file names
 will be on the top of the kill ring. Of course, you need to have this setting on:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">projectile-completion-system</span> <span class="ss">&#39;ivy</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">projectile-completion-system</span> <span class="ss">&#39;ivy</span><span class="p">)</span>
 </code></pre></div>
 <p>This scenario should apply to basically any place where you&#39;re
 completing file names, like <code>counsel-locate</code> or
@@ -538,8 +610,8 @@ strings and perform that action for each of them.</p>
 <p>The result is that sometimes I have to replace the built-in functions,
 instead of re-using them. So instead of re-using <code>find-file</code>, I wrote
 my own <code>counsel-find-file</code> that looks like this:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel-find-file</span> <span class="p">()</span>
-  <span class="s">&quot;Forward to `find-file&#39;.&quot;</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel-find-file</span> <span class="p">()</span>
+  <span class="s">&quot;Forward to </span><span class="ss">`find-file&#39;</span><span class="s">.&quot;</span>
   <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">ivy-read</span> <span class="s">&quot;Find file: &quot;</span> <span class="ss">&#39;read-file-name-internal</span>
             <span class="nb">:matcher</span> <span class="nf">#&#39;</span><span class="nv">counsel--find-file-matcher</span>
@@ -586,7 +658,7 @@ I&#39;ll highlight a few things that I think the users might be interested in mo
 
 <p>This is off by default, since I think having less candidates is better than having more.
 You can customize this for all commands or per-command. For example:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-re-builders-alist</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-re-builders-alist</span>
       <span class="o">&#39;</span><span class="p">((</span><span class="no">t</span> <span class="o">.</span> <span class="nv">ivy--regex-fuzzy</span><span class="p">)))</span>
 </code></pre></div>
 <h3 id="swiper-has-a-case-fold-search-optimization"><code>swiper</code> has a <code>case-fold-search</code> optimization</h3>
@@ -601,12 +673,12 @@ You can customize this for all commands or per-command. For example:</p>
 <h3 id="anzu-things">Anzu things</h3>
 
 <p>To see not only the number of matched candidates, but also the index of the current one, set this:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-count-format</span> <span class="s">&quot;(%d/%d) &quot;</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-count-format</span> <span class="s">&quot;(%d/%d) &quot;</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="customize-additional-exit-points-for-any-command">Customize additional exit points for any command</h3>
 
 <p>For any command that uses <code>ivy-read</code> that is. Example for <code>ivy-switch-to-buffer</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">ivy-set-actions</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">ivy-set-actions</span>
  <span class="ss">&#39;ivy-switch-buffer</span>
  <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;k&quot;</span>
     <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
@@ -713,7 +785,7 @@ impression is that it&#39;s the easiest system for building (as in <code>make
 be hard for me to explain other systems.</p>
 
 <p>If you want to toy around with the graphical back end of Recoll, you can install it with:</p>
-<div class="highlight"><pre><code class="language-sh" data-lang="sh">sudo apt-get install recoll
+<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>sudo apt-get install recoll
 </code></pre></div>
 <p>Unfortunately, the shell tool <code>recollq</code> isn&#39;t bundled with that
 package, so we need to download
@@ -736,7 +808,7 @@ from tarballs, since I don&#39;t want to put too much stuff in <code>~/Downloads
 directory.</p>
 
 <p>Here&#39;s the setup for that (part of <a href="https://github.com/abo-abo/oremacs">my full config</a>):</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">ora-terminal</span> <span class="p">()</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">ora-terminal</span> <span class="p">()</span>
   <span class="s">&quot;Switch to terminal. Launch if nonexistent.&quot;</span>
   <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
   <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">get-buffer</span> <span class="s">&quot;*ansi-term*&quot;</span><span class="p">)</span>
@@ -745,7 +817,7 @@ directory.</p>
     <span class="p">(</span><span class="nf">get-buffer-process</span> <span class="s">&quot;*ansi-term*&quot;</span><span class="p">))</span>
 
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">ora-dired-open-term</span> <span class="p">()</span>
-  <span class="s">&quot;Open an `ansi-term&#39; that corresponds to current directory.&quot;</span>
+  <span class="s">&quot;Open an </span><span class="ss">`ansi-term&#39;</span><span class="s"> that corresponds to current directory.&quot;</span>
   <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">current-dir</span> <span class="p">(</span><span class="nv">dired-current-directory</span><span class="p">)))</span>
     <span class="p">(</span><span class="nv">term-send-string</span>
@@ -762,9 +834,9 @@ directory.</p>
 <h3 id="configure-and-make">Configure and make</h3>
 
 <p>Here&#39;s a typical sequence of shell commands. </p>
-<div class="highlight"><pre><code class="language-sh" data-lang="sh">./configure <span class="o">&amp;&amp;</span> make
+<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>./configure <span class="o">&amp;&amp;</span> make
 sudo make install
-<span class="nb">cd </span>query <span class="o">&amp;&amp;</span> make
+<span class="nb">cd</span> query <span class="o">&amp;&amp;</span> make
 which recoll
 sudo cp recollq /usr/local/bin/
 </code></pre></div>
@@ -776,10 +848,10 @@ lines for a year a so.</p>
 
 <p>After the first run or <code>./configure</code> it turned out that I was missing
 one library, so I had to do this one and redo the <code>./configure</code> step.</p>
-<div class="highlight"><pre><code class="language-sh" data-lang="sh">sudo apt-get install libqt5webkit5-dev
+<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>sudo apt-get install libqt5webkit5-dev
 </code></pre></div>
 <p>I think this one would work as well:</p>
-<div class="highlight"><pre><code class="language-sh" data-lang="sh">sudo apt-get build-dep recoll
+<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>sudo apt-get build-dep recoll
 </code></pre></div>
 <h2 id="configuring-recoll">Configuring Recoll</h2>
 
@@ -794,10 +866,10 @@ graphical interface: it&#39;s all good.</p>
 <p>Emacs has great options for processing output from a shell command. So
 first I had to figure out how the shell command should look like. This
 should be good enough to produce a list of indexed files that contain the word &quot;Haskell&quot;:</p>
-<div class="highlight"><pre><code class="language-sh" data-lang="sh">recollq -b <span class="s1">&#39;haskell&#39;</span>
+<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>recollq -b <span class="s1">&#39;haskell&#39;</span>
 </code></pre></div>
 <p>And there&#39;s how to adapt that command to the asynchronous <code>ivy-read</code> interface:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel-recoll-function</span> <span class="p">(</span><span class="nf">string</span> <span class="kp">&amp;rest</span> <span class="nv">_unused</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel-recoll-function</span> <span class="p">(</span><span class="nf">string</span> <span class="kp">&amp;rest</span> <span class="nv">_unused</span><span class="p">)</span>
   <span class="s">&quot;Issue recallq for STRING.&quot;</span>
   <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">&lt;</span> <span class="p">(</span><span class="nf">length</span> <span class="nf">string</span><span class="p">)</span> <span class="mi">3</span><span class="p">)</span>
       <span class="p">(</span><span class="nv">counsel-more-chars</span> <span class="mi">3</span><span class="p">)</span>
@@ -808,7 +880,7 @@ should be good enough to produce a list of indexed files that contain the word &
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel-recoll</span> <span class="p">(</span><span class="kp">&amp;optional</span> <span class="nv">initial-input</span><span class="p">)</span>
   <span class="s">&quot;Search for a string in the recoll database.</span>
 <span class="s">You&#39;ll be given a list of files that match.</span>
-<span class="s">Selecting a file will launch `swiper&#39; for that file.</span>
+<span class="s">Selecting a file will launch </span><span class="ss">`swiper&#39;</span><span class="s"> for that file.</span>
 <span class="s">INITIAL-INPUT can be given as the initial minibuffer input.&quot;</span>
   <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">ivy-read</span> <span class="s">&quot;recoll: &quot;</span> <span class="ss">&#39;counsel-recoll-function</span>
@@ -833,8 +905,8 @@ should be good enough to produce a list of indexed files that contain the word &
 <h2 id="outro">Outro</h2>
 
 <p>I hope you found this info useful. It&#39;s certainly pretty cool:</p>
-<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span class="nb">cd</span> ~/Dropbox/org <span class="o">&amp;&amp;</span> du -hs
-<span class="c"># 567M .</span>
+<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span><span class="nb">cd</span> ~/Dropbox/org <span class="o">&amp;&amp;</span> du -hs
+<span class="c1"># 567M .</span>
 </code></pre></div>
 <p>So there&#39;s half of a gigabyte of stuff, all of it indexed, and I&#39;m
 getting a file list update after each new key press in Emacs.</p>
@@ -844,137 +916,6 @@ context that it gives via the <code>-A</code> command option), please do share.
 Also, I&#39;ve just learned that there&#39;s
 <a href="https://github.com/emacs-helm/helm-recoll">helm-recoll</a> out there, so
 you can use that if you like Helm.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/07/23/ivy-multiaction/">
-        New Ivy multi-action exit
-      </a>
-    </h1>
-
-    <span class="post-date">23 Jul 2015</span>
-
-    <p>So many Emacs commands and bindings, but little time to learn them
-all.  That&#39;s why many-in-one solutions like
-<a href="https://github.com/abo-abo/hydra">hydra</a> are often a good deal: you
-only remember the base binding, and get more info along the way if you
-get lost.</p>
-
-<p>I&#39;ve wanted to optimize this approach when it comes to completion as
-well.  In
-<a href="http://oremacs.com/2015/06/08/describe-variable-tip/">last month&#39;s post</a>
-I described how you can get help / jump to definition / jump to info
-for the current <kbd>F1 v</kbd> (<code>counsel-describe-variable</code>)
-candidate with <kbd>C-m</kbd> / <kbd>C-.</kbd> / <kbd>C-,</kbd>.
-While that approach can be viable, it has a few problems. The first
-problem is that it&#39;s not discoverable: you may be using <kbd>C-m</kbd>
-option for ages and not know that <kbd>C-.</kbd> and <kbd>C-,</kbd>
-exist. The second problem is that it&#39;s not extensible: if you wanted
-more actions, there are hardly any good bindings left in the
-minibuffer to bind those actions.</p>
-
-<p>In
-<a href="http://oremacs.com/2015/07/09/counsel-rhythmbox/">a more recent post</a>,
-I described a solution that alleviates both problems. When you press
-<kbd>C-o</kbd>, you see how many actions are
-available, and you can cycle them with <kbd>w</kbd> and
-<kbd>s</kbd>. However, while discoverable, this approach is cumbersome
-if you already know what you want to do. Especially cycling can&#39;t be
-great when there are a lot of actions.</p>
-
-<p>So today I&#39;ve added a new approach in addition to the previous one.
-When you press <kbd>M-o</kbd> (<code>ivy-dispatching-done</code>), you get a hint
-showing you which actions are available.  It&#39;s like <kbd>C-m</kbd>
-(<code>ivy-done</code>), only allows you to quickly select the
-action. Conveniently, the default action is bound to <kbd>o</kbd>, so
-<kbd>M-o o</kbd> is equivalent to <kbd>C-m</kbd>.</p>
-
-<p>Here&#39;s how I add one more action to the default one of <code>ivy-switch-buffer</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">ivy-set-actions</span>
- <span class="ss">&#39;ivy-switch-buffer</span>
- <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;k&quot;</span>
-    <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
-      <span class="p">(</span><span class="nf">kill-buffer</span> <span class="nv">x</span><span class="p">)</span>
-      <span class="p">(</span><span class="nv">ivy--reset-state</span> <span class="nv">ivy-last</span><span class="p">))</span>
-    <span class="s">&quot;kill&quot;</span><span class="p">)))</span>
-</code></pre></div>
-<p>So now:</p>
-
-<ul>
-<li><kbd>M-o o</kbd> will still switch to selected buffer.</li>
-<li><kbd>M-o k</kbd> will kill the selected buffer.</li>
-</ul>
-
-<p>If you&#39;re familiar with <code>hydra</code>, the format is the same: <code>(key cmd
-hint)</code>.  This approach is very extensible: you can add actions and
-bindings to commands without changing the code of the original
-command. It&#39;s really fast: you&#39;re typing just one extra key to select
-an action. And you&#39;ll hardly run out of keys to bind, with 25 lower
-case keys at your disposal (other bindings work as well, I just think
-that lower case keys are the fastest to press).</p>
-
-<p>In case you wonder what <code>(ivy--reset-state ivy-last)</code> does, it&#39;s used
-to update the list of buffers, since one of them was deleted. This
-way, you can delete e.g. 4 buffers with <kbd>C-x b C-o s gggg</kbd>,
-and have the buffer list update after each <kbd>g</kbd>.</p>
-
-<h2 id="new-functionality-in-action">New functionality in action</h2>
-
-<p>Let&#39;s look at one package that has a multitude of actions available
-for each candidate - <code>projectile</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">defvar</span> <span class="nv">helm-projectile-projects-map</span>
-  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">map</span> <span class="p">(</span><span class="nf">make-sparse-keymap</span><span class="p">)))</span>
-    <span class="p">(</span><span class="nf">set-keymap-parent</span> <span class="nv">map</span> <span class="nv">helm-map</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">helm-projectile-define-key</span> <span class="nv">map</span>
-        <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-d&quot;</span><span class="p">)</span> <span class="nf">#&#39;</span><span class="nv">dired</span>
-        <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-g&quot;</span><span class="p">)</span> <span class="nf">#&#39;</span><span class="nv">helm-projectile-vc</span>
-        <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-e&quot;</span><span class="p">)</span> <span class="nf">#&#39;</span><span class="nv">helm-projectile-switch-to-eshell</span>
-        <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-s&quot;</span><span class="p">)</span> <span class="nf">#&#39;</span><span class="nv">helm-find-files-grep</span>
-        <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-c&quot;</span><span class="p">)</span> <span class="nf">#&#39;</span><span class="nv">helm-projectile-compile-project</span>
-        <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-t&quot;</span><span class="p">)</span> <span class="nf">#&#39;</span><span class="nv">helm-projectile-test-project</span>
-        <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-r&quot;</span><span class="p">)</span> <span class="nf">#&#39;</span><span class="nv">helm-projectile-run-project</span>
-        <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-D&quot;</span><span class="p">)</span> <span class="nf">#&#39;</span><span class="nv">helm-projectile-remove-known-project</span><span class="p">)</span>
-    <span class="nv">map</span><span class="p">)</span>
-  <span class="s">&quot;Mapping for known projectile projects.&quot;</span><span class="p">)</span>
-</code></pre></div>
-<p>Here&#39;s the basic Ivy function for selecting a project:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">ivy-switch-project</span> <span class="p">()</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">ivy-read</span>
-   <span class="s">&quot;Switch to project: &quot;</span>
-   <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">projectile-project-p</span><span class="p">)</span>
-       <span class="p">(</span><span class="nf">cons</span> <span class="p">(</span><span class="nv">abbreviate-file-name</span> <span class="p">(</span><span class="nv">projectile-project-root</span><span class="p">))</span>
-             <span class="p">(</span><span class="nv">projectile-relevant-known-projects</span><span class="p">))</span>
-     <span class="nv">projectile-known-projects</span><span class="p">)</span>
-   <span class="nb">:action</span> <span class="nf">#&#39;</span><span class="nv">projectile-switch-project-by-name</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c m&quot;</span><span class="p">)</span> <span class="ss">&#39;ivy-switch-project</span><span class="p">)</span>
-</code></pre></div>
-<p>And now let&#39;s add all those actions:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">ivy-set-actions</span>
- <span class="ss">&#39;ivy-switch-project</span>
- <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;d&quot;</span> <span class="nv">dired</span> <span class="s">&quot;Open Dired in project&#39;s directory&quot;</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;v&quot;</span> <span class="nv">helm-projectile-vc</span> <span class="s">&quot;Open project root in vc-dir or magit&quot;</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;e&quot;</span> <span class="nv">helm-projectile-switch-to-eshell</span> <span class="s">&quot;Switch to Eshell&quot;</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;g&quot;</span>
-    <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
-      <span class="p">(</span><span class="nv">helm-do-grep-1</span> <span class="p">(</span><span class="nf">list</span> <span class="nv">x</span><span class="p">)))</span>
-    <span class="s">&quot;Grep in projects&quot;</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;c&quot;</span> <span class="nv">helm-projectile-compile-project</span> <span class="s">&quot;Compile project&quot;</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;r&quot;</span> <span class="nv">helm-projectile-remove-known-project</span> <span class="s">&quot;Remove project(s)&quot;</span><span class="p">)))</span>
-</code></pre></div>
-<p>Here&#39;s what I get now after pressing <kbd>M-o</kbd>:</p>
-
-<p><img src="/download/ivy-multiaction.png" alt="ivy-multiaction.png"></p>
-
-<p>Looks pretty good, I think. I hope you find the new approach useful.
-The multi-action exit is currently enabled by default for
-<code>ivy-switch-buffer</code>, <code>counsel-locate</code> and <code>counsel-rhythmbox</code>, but you
-can add actions yourself to almost any command that uses <code>ivy-read</code>.
-In the rare case when <code>ivy-read</code> isn&#39;t in the tail position, you can
-use <a href="http://oremacs.com/2015/07/16/callback-quit/">ivy-quit-and-run</a>
-inside the added action functions.</p>
 
   </div>
   

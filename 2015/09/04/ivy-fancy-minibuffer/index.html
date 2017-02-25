@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -282,7 +286,7 @@
   <span class="post-date">04 Sep 2015</span>
   <p>Today, I&#39;ll describe a recent improvement to the display of Ivy completion.
 To use it, add this code to your configuration:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-display-style</span> <span class="ss">&#39;fancy</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-display-style</span> <span class="ss">&#39;fancy</span><span class="p">)</span>
 </code></pre></div>
 <p>After this, <a href="https://github.com/abo-abo/swiper">swiper</a> will look like this:</p>
 
@@ -302,12 +306,12 @@ to find the function instead of calling it). If you&#39;re using
 <code>counsel-M-x</code> will use <code>smex</code> for sorting the matched commands.</p>
 
 <p>The update will propertize the minibuffer contents with a new set of faces:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defcustom</span> <span class="nv">swiper-minibuffer-faces</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defcustom</span> <span class="nv">swiper-minibuffer-faces</span>
   <span class="o">&#39;</span><span class="p">(</span><span class="nv">swiper-minibuffer-match-face-1</span>
     <span class="nv">swiper-minibuffer-match-face-2</span>
     <span class="nv">swiper-minibuffer-match-face-3</span>
     <span class="nv">swiper-minibuffer-match-face-4</span><span class="p">)</span>
-  <span class="s">&quot;List of `swiper&#39; faces for minibuffer group matches.&quot;</span><span class="p">)</span>
+  <span class="s">&quot;List of </span><span class="ss">`swiper&#39;</span><span class="s"> faces for minibuffer group matches.&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p>Initially, when responding to
 <a href="https://github.com/abo-abo/swiper/issues/212">#212</a>, I used the
@@ -316,7 +320,7 @@ their brightness became a bit annoying.  So I introduced a new set of
 faces that can be customized separately.</p>
 
 <p>Here are the settings that I&#39;m currently using:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">custom-set-faces</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">custom-set-faces</span>
  <span class="o">&#39;</span><span class="p">(</span><span class="nv">swiper-minibuffer-match-face-1</span>
    <span class="p">((</span><span class="no">t</span> <span class="nb">:background</span> <span class="s">&quot;#dddddd&quot;</span><span class="p">)))</span>
  <span class="o">&#39;</span><span class="p">(</span><span class="nv">swiper-minibuffer-match-face-2</span>

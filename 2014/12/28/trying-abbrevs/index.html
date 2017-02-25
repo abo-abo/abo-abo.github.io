@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -306,7 +310,7 @@ major mode</p>
 </blockquote>
 
 <p>Sounds like something that could solve my problem with <code>region-</code> commands:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">rb -&gt; region-beginning
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>rb -&gt; region-beginning
 re -&gt; region-end
 ra -&gt; region-active-p
 </code></pre></div>
@@ -318,7 +322,7 @@ enabled</p>
 </blockquote>
 
 <p>Add it to the mix:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">oleh-emacs-lisp-hook</span> <span class="p">()</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">oleh-emacs-lisp-hook</span> <span class="p">()</span>
   <span class="p">(</span><span class="k">setq</span> <span class="nv">outline-regexp</span> <span class="s">&quot;;; ———&quot;</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">company-mode</span> <span class="mi">1</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">abbrev-mode</span> <span class="mi">1</span><span class="p">)</span>
@@ -346,10 +350,10 @@ in the <em>RAW Paste Data</em> section.</p>
 the list. Well, for this file even <kbd>999j</kbd> wasn&#39;t enough.
 I quickly tired of deleting one-by-one the each individual useless abbrev.
 I mean:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">ek -&gt; echo-keystrokes,
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>ek -&gt; echo-keystrokes,
 </code></pre></div>
 <p>when is that ever going to be useful? So I wrote this throw-away code:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">foobar</span> <span class="p">()</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">foobar</span> <span class="p">()</span>
   <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">lispy-mark-list</span> <span class="mi">2</span><span class="p">)</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">str</span> <span class="p">(</span><span class="nf">read</span> <span class="p">(</span><span class="nv">lispy--string-dwim</span><span class="p">)))</span>
@@ -376,7 +380,7 @@ delete. In the end, there were only 56 abbrevs left out of 1600.</p>
 <h2 id="the-final-result">The final result</h2>
 
 <p>Here&#39;s what I have put into my <code>abbrev_defs</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">define-abbrev-table</span> <span class="ss">&#39;emacs-lisp-mode-abbrev-table</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">define-abbrev-table</span> <span class="ss">&#39;emacs-lisp-mode-abbrev-table</span>
     <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;sm&quot;</span> <span class="s">&quot;string-match&quot;</span><span class="p">)</span> <span class="p">(</span><span class="s">&quot;mm&quot;</span> <span class="s">&quot;major-mode&quot;</span><span class="p">)</span>
       <span class="p">(</span><span class="s">&quot;rb&quot;</span> <span class="s">&quot;region-beginning&quot;</span><span class="p">)</span> <span class="p">(</span><span class="s">&quot;ca&quot;</span> <span class="s">&quot;char-after&quot;</span><span class="p">)</span>
       <span class="p">(</span><span class="s">&quot;smd&quot;</span> <span class="s">&quot;save-match-data&quot;</span><span class="p">)</span> <span class="p">(</span><span class="s">&quot;mb&quot;</span> <span class="s">&quot;match-beginning&quot;</span><span class="p">)</span>

@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -294,7 +298,7 @@ my <code>dired.el</code>.</p>
 </ul>
 
 <h2 id="jump-to-a-file-with-ido">Jump to a file with <code>ido</code></h2>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="s">&quot;i&quot;</span> <span class="ss">&#39;ido-find-file</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="s">&quot;i&quot;</span> <span class="ss">&#39;ido-find-file</span><span class="p">)</span>
 </code></pre></div>
 <p>I use this one quite frequently: <kbd>i</kbd> is somehow mnemonic to
 <kbd>C-i</kbd>, which means completion.  Remember that you can select
@@ -302,23 +306,23 @@ the current candidate with <kbd>C-m</kbd> and the current text
 (usually to create a new file) with <kbd>C-j</kbd>.</p>
 
 <h2 id="move-up-and-down">Move up and down</h2>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="s">&quot;j&quot;</span> <span class="ss">&#39;dired-next-line</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="s">&quot;j&quot;</span> <span class="ss">&#39;dired-next-line</span><span class="p">)</span>
 <span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="s">&quot;k&quot;</span> <span class="ss">&#39;dired-previous-line</span><span class="p">)</span>
 </code></pre></div>
 <p>As I&#39;ve mentioned before, this is my standard recipe for all modes
 that don&#39;t self-insert.</p>
 
 <h2 id="flag-garbage-files">Flag garbage files</h2>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;%^&quot;</span><span class="p">)</span> <span class="ss">&#39;dired-flag-garbage-files</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;%^&quot;</span><span class="p">)</span> <span class="ss">&#39;dired-flag-garbage-files</span><span class="p">)</span>
 </code></pre></div>
 <p>Huh, I always thought this was the default binding. I have no idea
 where this came from, but I use this plus <kbd>x</kbd> to get rid of
 the garbage produced by a LaTeX run:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">dired-garbage-files-regexp</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">dired-garbage-files-regexp</span>
       <span class="s">&quot;\\.idx\\|\\.run\\.xml$\\|\\.bbl$\\|\\.bcf$\\|.blg$\\|-blx.bib$\\|.nav$\\|.snm$\\|.out$\\|.synctex.gz$\\|\\(?:\\.\\(?:aux\\|bak\\|dvi\\|log\\|orig\\|rej\\|toc\\|pyg\\)\\)\\&#39;&quot;</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="emacs-39-adaptation-of-find">Emacs&#39; adaptation of <code>find</code></h2>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="s">&quot;F&quot;</span> <span class="ss">&#39;find-name-dired</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="s">&quot;F&quot;</span> <span class="ss">&#39;find-name-dired</span><span class="p">)</span>
 </code></pre></div>
 <p>This little function is essential if you want to do perform some
 operation on all files in the current directory and its sub
@@ -326,13 +330,13 @@ directories that match a pattern. Basically the same thing that you
 would do with the UNIX <code>find</code>, just better.</p>
 
 <h2 id="ignore-unimportant-files">Ignore unimportant files</h2>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-o&quot;</span><span class="p">)</span> <span class="ss">&#39;dired-omit-mode</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-o&quot;</span><span class="p">)</span> <span class="ss">&#39;dired-omit-mode</span><span class="p">)</span>
 </code></pre></div>
 <p>This will toggle the display of unimportant files, like:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">dired-omit-files</span> <span class="s">&quot;\\(?:.*\\.\\(?:aux\\|log\\|synctex\\.gz\\|run\\.xml\\|bcf\\|am\\|in\\)\\&#39;\\)\\|^\\.\\|-blx\\.bib&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">dired-omit-files</span> <span class="s">&quot;\\(?:.*\\.\\(?:aux\\|log\\|synctex\\.gz\\|run\\.xml\\|bcf\\|am\\|in\\)\\&#39;\\)\\|^\\.\\|-blx\\.bib&quot;</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="move-to-the-parent-directory">Move to the parent directory</h2>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="s">&quot;a&quot;</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="s">&quot;a&quot;</span>
     <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span>
       <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
       <span class="p">(</span><span class="nv">find-alternate-file</span> <span class="s">&quot;..&quot;</span><span class="p">)))</span>

@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -284,8 +288,8 @@
 plain <kbd>M-s o</kbd> (<code>occur</code>).</p>
 
 <h2 id="smarter-than-the-average-occur">smarter-than-the-average-occur</h2>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">occur-dwim</span> <span class="p">()</span>
-  <span class="s">&quot;Call `occur&#39; with a sane default.&quot;</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">occur-dwim</span> <span class="p">()</span>
+  <span class="s">&quot;Call </span><span class="ss">`occur&#39;</span><span class="s"> with a sane default.&quot;</span>
   <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
   <span class="p">(</span><span class="nb">push</span> <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">region-active-p</span><span class="p">)</span>
             <span class="p">(</span><span class="nf">buffer-substring-no-properties</span>
@@ -314,7 +318,7 @@ this out-of-the-box.</p>
 works with <code>next-error</code>, it&#39;s possible to use this
 <a href="https://github.com/abo-abo/hydra">Hydra</a> to navigate the <code>occur</code>
 matches:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">hydra-create</span> <span class="s">&quot;M-g&quot;</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">hydra-create</span> <span class="s">&quot;M-g&quot;</span>
   <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;h&quot;</span> <span class="nv">first-error</span> <span class="s">&quot;first&quot;</span><span class="p">)</span>
     <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">next-error</span> <span class="s">&quot;next&quot;</span><span class="p">)</span>
     <span class="p">(</span><span class="s">&quot;k&quot;</span> <span class="nv">previous-error</span> <span class="s">&quot;prev&quot;</span><span class="p">)))</span>

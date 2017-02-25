@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -316,8 +320,8 @@ strings and perform that action for each of them.</p>
 <p>The result is that sometimes I have to replace the built-in functions,
 instead of re-using them. So instead of re-using <code>find-file</code>, I wrote
 my own <code>counsel-find-file</code> that looks like this:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel-find-file</span> <span class="p">()</span>
-  <span class="s">&quot;Forward to `find-file&#39;.&quot;</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel-find-file</span> <span class="p">()</span>
+  <span class="s">&quot;Forward to </span><span class="ss">`find-file&#39;</span><span class="s">.&quot;</span>
   <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">ivy-read</span> <span class="s">&quot;Find file: &quot;</span> <span class="ss">&#39;read-file-name-internal</span>
             <span class="nb">:matcher</span> <span class="nf">#&#39;</span><span class="nv">counsel--find-file-matcher</span>
@@ -364,7 +368,7 @@ I&#39;ll highlight a few things that I think the users might be interested in mo
 
 <p>This is off by default, since I think having less candidates is better than having more.
 You can customize this for all commands or per-command. For example:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-re-builders-alist</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-re-builders-alist</span>
       <span class="o">&#39;</span><span class="p">((</span><span class="no">t</span> <span class="o">.</span> <span class="nv">ivy--regex-fuzzy</span><span class="p">)))</span>
 </code></pre></div>
 <h3 id="swiper-has-a-case-fold-search-optimization"><code>swiper</code> has a <code>case-fold-search</code> optimization</h3>
@@ -379,12 +383,12 @@ You can customize this for all commands or per-command. For example:</p>
 <h3 id="anzu-things">Anzu things</h3>
 
 <p>To see not only the number of matched candidates, but also the index of the current one, set this:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-count-format</span> <span class="s">&quot;(%d/%d) &quot;</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-count-format</span> <span class="s">&quot;(%d/%d) &quot;</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="customize-additional-exit-points-for-any-command">Customize additional exit points for any command</h3>
 
 <p>For any command that uses <code>ivy-read</code> that is. Example for <code>ivy-switch-to-buffer</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">ivy-set-actions</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">ivy-set-actions</span>
  <span class="ss">&#39;ivy-switch-buffer</span>
  <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;k&quot;</span>
     <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>

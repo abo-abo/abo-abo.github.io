@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -301,7 +305,7 @@ eventually in most circumstances.  Even
 <code>select-window</code>.</p>
 
 <p>This is what I came up with so far:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">defvar</span> <span class="nv">menubar-last</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">defvar</span> <span class="nv">menubar-last</span>
   <span class="p">(</span><span class="nv">make-ring</span> <span class="mi">20</span><span class="p">))</span>
 <span class="p">(</span><span class="nv">ring-insert</span> <span class="nv">menubar-last</span> <span class="s">&quot;dummy&quot;</span><span class="p">)</span>
 
@@ -326,7 +330,7 @@ from the tail. Perfect for debugging this code, since I don&#39;t care
 what happened 20 window switches ago, I&#39;m only interested in the most
 recent state. One small annoyance is that the following code will
 throw, if the ring is empty:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">ring-ref</span> <span class="nv">menubar-last</span> <span class="mi">0</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">ring-ref</span> <span class="nv">menubar-last</span> <span class="mi">0</span><span class="p">)</span>
 </code></pre></div>
 <p>I would prefer if it just returned <code>nil</code> instead. Hence the trick of
 initializing <code>menubar-last</code> with a dummy item.  Note that this

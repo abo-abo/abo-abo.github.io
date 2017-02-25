@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -288,13 +292,13 @@ appropriate meaning:</p>
 <p><strong>apropos</strong></p>
 
 <p><em>preposition</em></p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">with reference to; concerning.
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>with reference to; concerning.
 </code></pre></div></blockquote>
 
 <h2 id="an-apropos-hydra">An apropos Hydra</h2>
 
 <p>I&#39;ve just added this one to <a href="https://github.com/abo-abo/hydra/blob/master/hydra-examples.el">hydra-examples.el</a>.</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-apropos</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">blue</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-apropos</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">blue</span>
                          <span class="nb">:hint</span> <span class="no">nil</span><span class="p">)</span>
   <span class="s">&quot;</span>
 <span class="s">_a_propos        _c_ommand</span>
@@ -310,7 +314,7 @@ appropriate meaning:</p>
   <span class="p">(</span><span class="s">&quot;e&quot;</span> <span class="nv">apropos-value</span><span class="p">))</span>
 </code></pre></div>
 <p>I recommend to bind it like this:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c h&quot;</span><span class="p">)</span> <span class="ss">&#39;hydra-apropos/body</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c h&quot;</span><span class="p">)</span> <span class="ss">&#39;hydra-apropos/body</span><span class="p">)</span>
 </code></pre></div>
 <p>Customary screenshot:</p>
 

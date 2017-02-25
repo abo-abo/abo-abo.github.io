@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -291,7 +295,7 @@ update and get nicely highlighted code in a pdf via the
 <h2 id="the-install">The install</h2>
 
 <p>Assuming that you are on a Debian-related system:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">sudo apt-get install mercurial
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>sudo apt-get install mercurial
 mkdir ~/git &amp;&amp; cd ~/git
 hg clone https://bitbucket.org/abo-abo/pygments-main
 cd pygments-main
@@ -300,7 +304,7 @@ sudo python setup.py install
 </code></pre></div>
 <p>And, of course, I&#39;m assuming that you already have TeX Live installed.
 I&#39;m not too sophisticated about it, so I just install everything:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">sudo apt-get install texlive-full
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>sudo apt-get install texlive-full
 </code></pre></div>
 <h2 id="the-result">The result</h2>
 
@@ -313,11 +317,11 @@ And here&#39;s the result of the PDF export (<kbd>C-c C-e lo</kbd>):
 <h2 id="the-red-tape">The red tape</h2>
 
 <p><code>org-mode</code> had trouble exporting on my laptop until I did this:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">cd /usr/bin/
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>cd /usr/bin/
 sudo ln -s /usr/local/texlive/2013/bin/x86_64-linux/pdflatex
 </code></pre></div>
 <p>Also be mindful of the <code>-shell-escape</code> flag to <code>pdflatex</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">org-latex-pdf-process</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">org-latex-pdf-process</span>
       <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f&quot;</span>
         <span class="s">&quot;pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f&quot;</span>
         <span class="s">&quot;pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f&quot;</span><span class="p">))</span>

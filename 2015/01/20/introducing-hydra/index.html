@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -305,7 +309,7 @@ that disables itself auto-magically.</p>
 <h2 id="an-example">An Example</h2>
 
 <p>This code will accomplish the task of the previous post:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;hydra</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;hydra</span><span class="p">)</span>
 <span class="p">(</span><span class="nv">hydra-create</span> <span class="s">&quot;&lt;f2&gt;&quot;</span>
   <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;g&quot;</span> <span class="nv">text-scale-increase</span><span class="p">)</span>
     <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nv">text-scale-decrease</span><span class="p">)))</span>
@@ -347,11 +351,11 @@ e.g. <kbd>&lt;f2&gt; f</kbd>: the Hydra <em>does not</em> take over
 <h2 id="an-exciting-new-hydra-move-window-splitter">An exciting new Hydra: move window splitter</h2>
 
 <p>Zooming is old news, Hydra bundles a new application:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;hydra-examples</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;hydra-examples</span><span class="p">)</span>
 <span class="p">(</span><span class="nv">hydra-create</span> <span class="s">&quot;C-M-o&quot;</span> <span class="nv">hydra-example-move-window-splitter</span><span class="p">)</span>
 </code></pre></div>
 <p>or in the expanded form (equivalent):</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">hydra-create</span> <span class="s">&quot;C-M-o&quot;</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">hydra-create</span> <span class="s">&quot;C-M-o&quot;</span>
   <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;h&quot;</span> <span class="nv">hydra-move-splitter-left</span><span class="p">)</span>
     <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">hydra-move-splitter-down</span><span class="p">)</span>
     <span class="p">(</span><span class="s">&quot;k&quot;</span> <span class="nv">hydra-move-splitter-up</span><span class="p">)</span>

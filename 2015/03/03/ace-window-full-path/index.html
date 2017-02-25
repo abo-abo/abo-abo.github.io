@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -297,7 +301,7 @@ to read the whole path at once and type it in at once rather than:</p>
 </ul>
 
 <p>To turn on the new behavior:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">aw-leading-char-style</span> <span class="ss">&#39;path</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">aw-leading-char-style</span> <span class="ss">&#39;path</span><span class="p">)</span>
 </code></pre></div>
 <p>Although this will only have an effect once you have more than 10 windows.
 But this method really improves the functions from avy-jump.el.
@@ -308,7 +312,7 @@ I&#39;ve added some more commands and renamed the old ones since yesterday.</p>
 <h3 id="avi-goto-char-2"><code>avi-goto-char-2</code></h3>
 
 <p>Here&#39;s how I like to bind <code>avi-goto-char-2</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-&#39;&quot;</span><span class="p">)</span> <span class="ss">&#39;avi-goto-char-2</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-&#39;&quot;</span><span class="p">)</span> <span class="ss">&#39;avi-goto-char-2</span><span class="p">)</span>
 </code></pre></div>
 <p>And here&#39;s the result of <kbd>C-&#39; bu</kbd>:</p>
 
@@ -321,7 +325,7 @@ t if you want a gray background.</p>
 <h3 id="avi-goto-char"><code>avi-goto-char</code></h3>
 
 <p>After binding <code>avi-goto-char</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;π&quot;</span><span class="p">)</span> <span class="ss">&#39;avi-goto-char</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;π&quot;</span><span class="p">)</span> <span class="ss">&#39;avi-goto-char</span><span class="p">)</span>
 </code></pre></div>
 <p>Here&#39;s the result of <kbd>π b</kbd>:</p>
 
@@ -330,7 +334,7 @@ t if you want a gray background.</p>
 <h3 id="avi-goto-line"><code>avi-goto-line</code></h3>
 
 <p>After binding <code>avi-goto-line</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-g f&quot;</span><span class="p">)</span> <span class="ss">&#39;avi-goto-line</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-g f&quot;</span><span class="p">)</span> <span class="ss">&#39;avi-goto-line</span><span class="p">)</span>
 </code></pre></div>
 <p>Here&#39;s the result of <kbd>M-g f</kbd>:</p>
 
@@ -350,10 +354,10 @@ It might be useful for line-based text.</p>
 <h3 id="avi-goto-word-0"><code>avi-goto-word-0</code></h3>
 
 <p>Here&#39;s the simple definition and the binding:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">avi-goto-word-0</span> <span class="p">()</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">avi-goto-word-0</span> <span class="p">()</span>
   <span class="s">&quot;Jump to a word start in current window.&quot;</span>
   <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">avi-keys</span> <span class="p">(</span><span class="nv">number-sequence</span> <span class="nv">?a</span> <span class="nv">?z</span><span class="p">))</span>
+  <span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">avi-keys</span> <span class="p">(</span><span class="nv">number-sequence</span> <span class="sc">?a</span> <span class="sc">?z</span><span class="p">))</span>
          <span class="p">(</span><span class="nv">candidates</span> <span class="p">(</span><span class="nv">avi--regex-candidates</span> <span class="s">&quot;\\b\\sw&quot;</span><span class="p">)))</span>
     <span class="p">(</span><span class="nv">avi--goto</span>
      <span class="p">(</span><span class="nv">avi--process</span> <span class="nv">candidates</span> <span class="nf">#&#39;</span><span class="nv">avi--overlay-pre</span><span class="p">))))</span>
@@ -367,7 +371,7 @@ Here&#39;s what happens after <kbd>M-g e</kbd>:</p>
 <h3 id="avi-goto-word-1"><code>avi-goto-word-1</code></h3>
 
 <p>Here&#39;s a version of it that reads one char:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">avi-goto-word-1</span> <span class="p">()</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">avi-goto-word-1</span> <span class="p">()</span>
   <span class="s">&quot;Jump to a word start in current window.</span>
 <span class="s">Read one char with which the word should start.&quot;</span>
   <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>

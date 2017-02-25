@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -343,7 +347,7 @@ pressing these keys with a shift isn&#39;t the worst thing, having them on the h
 <kbd>c</kbd> - <kbd>σ</kbd>.
 These are meant for Emacs and <code>.inputrc</code>. In both cases, e.g. <kbd>φ</kbd> should insert <code>()</code> and
 go backward one char. Here&#39;s my <code>.inputrc</code>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">set input-meta on
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>set input-meta on
 set output-meta on
 set convert-meta off
 &quot;θ&quot;:&quot;&quot;\C-b&quot;&quot;
@@ -358,7 +362,7 @@ set completion-ignore-case on
 </code></pre></div>
 <p>With this <code>.inputrc</code>, it&#39;s like I have some kind of electric mode in my bash.
 In Emacs, the pairs are bound in a straightforward way:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">ins-brackets</span> <span class="p">()</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">ins-brackets</span> <span class="p">()</span>
   <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
   <span class="p">(</span><span class="k">cond</span> <span class="p">((</span><span class="nf">eq</span> <span class="nv">major-mode</span> <span class="ss">&#39;term-mode</span><span class="p">)</span>
          <span class="p">(</span><span class="nv">term-send-raw-string</span> <span class="s">&quot;[]&quot;</span><span class="p">)</span>
@@ -371,7 +375,7 @@ In Emacs, the pairs are bound in a straightforward way:</p>
 <span class="p">(</span><span class="nv">global-set-key</span> <span class="s">&quot;ρ&quot;</span> <span class="ss">&#39;ins-brackets</span><span class="p">)</span>
 </code></pre></div>
 <p>For LISP, I use <code>lispy</code>-specific bindings:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">lispy-mode-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;φ&quot;</span><span class="p">)</span> <span class="ss">&#39;lispy-parens</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">lispy-mode-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;φ&quot;</span><span class="p">)</span> <span class="ss">&#39;lispy-parens</span><span class="p">)</span>
 <span class="p">(</span><span class="nf">define-key</span> <span class="nv">lispy-mode-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;σ&quot;</span><span class="p">)</span> <span class="ss">&#39;lispy-braces</span><span class="p">)</span>
 <span class="p">(</span><span class="nf">define-key</span> <span class="nv">lispy-mode-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;ρ&quot;</span><span class="p">)</span> <span class="ss">&#39;lispy-brackets</span><span class="p">)</span>
 <span class="p">(</span><span class="nf">define-key</span> <span class="nv">lispy-mode-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;θ&quot;</span><span class="p">)</span> <span class="ss">&#39;lispy-quotes</span><span class="p">)</span>
@@ -381,7 +385,7 @@ In Emacs, the pairs are bound in a straightforward way:</p>
 
 <p>These are bound to various Emacs functions. In fact, I initially started with all Greek chars, and
 bound e.g.:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;ε&quot;</span><span class="p">)</span> <span class="s">&quot;=&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;ε&quot;</span><span class="p">)</span> <span class="s">&quot;=&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p>When these remap-type bindings became mature, I&#39;ve put them directly
 into <code>.Xmodmap</code>, which gave the advantage of being able to compose the

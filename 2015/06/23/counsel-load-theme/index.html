@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -283,7 +287,7 @@
   <p>Without further ado, here&#39;s the <a href="https://youtu.be/V_whk214fec">video link</a>.</p>
 
 <h2 id="the-code">The code</h2>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel--load-theme-action</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel--load-theme-action</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
   <span class="s">&quot;Disable current themes and load theme X.&quot;</span>
   <span class="p">(</span><span class="k">condition-case</span> <span class="no">nil</span>
       <span class="p">(</span><span class="k">progn</span>
@@ -295,9 +299,9 @@
 
 <span class="c1">;;;###autoload</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel-load-theme</span> <span class="p">()</span>
-  <span class="s">&quot;Forward to `load-theme&#39;.</span>
-<span class="s">Usable with `ivy-resume&#39;, `ivy-next-line-and-call&#39; and</span>
-<span class="s">`ivy-previous-line-and-call&#39;.&quot;</span>
+  <span class="s">&quot;Forward to </span><span class="ss">`load-theme&#39;</span><span class="s">.</span>
+<span class="s">Usable with </span><span class="ss">`ivy-resume&#39;</span><span class="s">, </span><span class="ss">`ivy-next-line-and-call&#39;</span><span class="s"> and</span>
+<span class="ss">`ivy-previous-line-and-call&#39;</span><span class="s">.&quot;</span>
   <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">ivy-read</span> <span class="s">&quot;Load custom theme: &quot;</span>
             <span class="p">(</span><span class="nf">mapcar</span> <span class="ss">&#39;symbol-name</span>
@@ -334,7 +338,7 @@ same way you can call the completion again with the same
 completion (<code>counsel-git-grep</code> or <code>counsel-load-theme</code> or
 <code>counsel-load-library</code> etc). <code>ivy-resume</code> isn&#39;t bound by default,
 since it needs to be a global binding. I just use this in my config:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="nv">[f6]</span> <span class="ss">&#39;ivy-resume</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">[</span><span class="nv">f6</span><span class="p">]</span> <span class="ss">&#39;ivy-resume</span><span class="p">)</span>
 </code></pre></div>
 <p>For the functions that execute the callback while changing the
 candidate, the idea is:</p>

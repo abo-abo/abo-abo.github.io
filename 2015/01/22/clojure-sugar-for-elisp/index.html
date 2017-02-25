@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -310,23 +314,23 @@ mapping/filter fns and the like.</p>
 <h2 id="what-the-patch-does">What the patch does</h2>
 
 <p>It makes it possible to write this in Elisp:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">mapc</span> <span class="o">#(</span><span class="nf">put</span> <span class="nf">%</span> <span class="ss">&#39;disabled</span> <span class="no">nil</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">mapc</span> <span class="o">#(</span><span class="nf">put</span> <span class="nf">%</span> <span class="ss">&#39;disabled</span> <span class="no">nil</span><span class="p">)</span>
       <span class="o">&#39;</span><span class="p">(</span><span class="nf">upcase-region</span> <span class="nf">downcase-region</span> <span class="nf">narrow-to-region</span><span class="p">))</span>
 </code></pre></div>
 <p>You can also do this and other things that you would expect, if you&#39;re
 familiar with Clojure:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">cl-mapcar</span> <span class="o">#(</span><span class="nf">concat</span> <span class="nv">%1</span> <span class="s">&quot; are &quot;</span> <span class="nv">%2</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">cl-mapcar</span> <span class="o">#(</span><span class="nf">concat</span> <span class="nv">%1</span> <span class="s">&quot; are &quot;</span> <span class="nv">%2</span><span class="p">)</span>
            <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;roses&quot;</span> <span class="s">&quot;violets&quot;</span><span class="p">)</span>
            <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;red&quot;</span> <span class="s">&quot;blue&quot;</span><span class="p">))</span>
 <span class="c1">;; =&gt; (&quot;roses are red&quot; &quot;violets are blue&quot;)</span>
 </code></pre></div>
 <p>Or you could replace this snippet from <code>org-mode</code>&#39;s code:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">mapcar</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">mapcar</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
           <span class="p">(</span><span class="k">and</span> <span class="p">(</span><span class="nf">member</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">x</span><span class="p">)</span> <span class="nv">matchers</span><span class="p">)</span> <span class="p">(</span><span class="nf">nth</span> <span class="mi">1</span> <span class="nv">x</span><span class="p">)))</span>
         <span class="nv">org-latex-regexps</span><span class="p">)</span>
 </code></pre></div>
 <p>with this sugar-coated code:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">mapcar</span> <span class="o">#(</span><span class="k">and</span> <span class="p">(</span><span class="nf">member</span> <span class="p">(</span><span class="nf">car</span> <span class="nf">%</span><span class="p">)</span> <span class="nv">matchers</span><span class="p">)</span> <span class="p">(</span><span class="nf">nth</span> <span class="mi">1</span> <span class="nf">%</span><span class="p">))</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">mapcar</span> <span class="o">#(</span><span class="k">and</span> <span class="p">(</span><span class="nf">member</span> <span class="p">(</span><span class="nf">car</span> <span class="nf">%</span><span class="p">)</span> <span class="nv">matchers</span><span class="p">)</span> <span class="p">(</span><span class="nf">nth</span> <span class="mi">1</span> <span class="nf">%</span><span class="p">))</span>
         <span class="nv">org-latex-regexps</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="outro">Outro</h2>

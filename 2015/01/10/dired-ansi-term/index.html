@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -297,7 +301,7 @@ ended up being the one that you wanted.</p>
 
 <p>That&#39;s why I usually have only one <code>*ansi-term*</code> active in my Emacs
 session at all times.  Here&#39;s how it looks like:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">terminal</span> <span class="p">()</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">terminal</span> <span class="p">()</span>
   <span class="s">&quot;Switch to terminal. Launch if nonexistent.&quot;</span>
   <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
   <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">get-buffer</span> <span class="s">&quot;*ansi-term*&quot;</span><span class="p">)</span>
@@ -322,10 +326,10 @@ navigate there with <code>dired</code>, sometimes combined with
 <code>ido-find-file</code>. Then I get my current <code>*ansi-term*</code> and tell it to
 switch to the current <code>dired</code> buffer&#39;s directory with <kbd>`</kbd>
 binding:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;`&quot;</span><span class="p">)</span> <span class="ss">&#39;dired-open-term</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;`&quot;</span><span class="p">)</span> <span class="ss">&#39;dired-open-term</span><span class="p">)</span>
 
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">dired-open-term</span> <span class="p">()</span>
-  <span class="s">&quot;Open an `ansi-term&#39; that corresponds to current directory.&quot;</span>
+  <span class="s">&quot;Open an </span><span class="ss">`ansi-term&#39;</span><span class="s"> that corresponds to current directory.&quot;</span>
   <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">current-dir</span> <span class="p">(</span><span class="nv">dired-current-directory</span><span class="p">)))</span>
     <span class="p">(</span><span class="nv">term-send-string</span>
@@ -339,7 +343,7 @@ binding:</p>
 <p>I also have a similar <code>eshell</code> setup, although I have yet to
 comprehend why <code>eshell</code> is great and am using <code>*ansi-term*</code> most of the
 time instead.</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;&#39;&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;&#39;&quot;</span><span class="p">)</span>
   <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span>
     <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
     <span class="p">(</span><span class="nv">eshell-cmd</span>
@@ -352,7 +356,7 @@ time instead.</p>
 <p>With <code>dired-jump</code>, of course. This command will examine your current
 buffer&#39;s <code>default-directory</code> and open a <code>dired</code> buffer there. All you
 need is:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;dired-x</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;dired-x</span><span class="p">)</span>
 </code></pre></div>
 <p>The <code>dired-jump</code> command will be bound automatically to <kbd>C-x
 C-j</kbd>.  I have it also bound to <kbd>C-:</kbd>, since that&#39;s more
@@ -374,7 +378,7 @@ ignored by <code>dired-open-term</code>. This is exactly what I want, since I ju
 create named terminals for long running processes like <code>jekyll serve</code>.
 And I can switch to the named terminals with just <code>ido-switch-buffer</code>.
 Here is the very simple code:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">named-term</span> <span class="p">(</span><span class="nv">name</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">named-term</span> <span class="p">(</span><span class="nv">name</span><span class="p">)</span>
   <span class="p">(</span><span class="k">interactive</span> <span class="s">&quot;sName: &quot;</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">ansi-term</span> <span class="s">&quot;/bin/bash&quot;</span> <span class="nv">name</span><span class="p">))</span>
 </code></pre></div>

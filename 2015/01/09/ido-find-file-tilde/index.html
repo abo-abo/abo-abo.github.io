@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -296,7 +300,7 @@ Well, it&#39;s an oldie where I come from.</p>
 <h2 id="the-code">The code</h2>
 
 <p>This is the original code that I was using:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">oleh-ido-setup-hook</span> <span class="p">()</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">oleh-ido-setup-hook</span> <span class="p">()</span>
   <span class="p">(</span><span class="nf">define-key</span> <span class="nv">ido-file-dir-completion-map</span> <span class="s">&quot;~&quot;</span>
     <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span>
       <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
@@ -309,8 +313,8 @@ Well, it&#39;s an oldie where I come from.</p>
 <h2 id="the-generalization">The generalization</h2>
 
 <p>It wouldn&#39;t be a LISP if I couldn&#39;t generalize the code:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">ido-find-file-jump</span> <span class="p">(</span><span class="nv">dir</span><span class="p">)</span>
-  <span class="s">&quot;Return a command that sends DIR to `ido-find-file&#39;.&quot;</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">ido-find-file-jump</span> <span class="p">(</span><span class="nv">dir</span><span class="p">)</span>
+  <span class="s">&quot;Return a command that sends DIR to </span><span class="ss">`ido-find-file&#39;</span><span class="s">.&quot;</span>
   <span class="o">`</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span>
      <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
      <span class="p">(</span><span class="nv">ido-set-current-directory</span> <span class="o">,</span><span class="nv">dir</span><span class="p">)</span>
@@ -318,7 +322,7 @@ Well, it&#39;s an oldie where I come from.</p>
      <span class="p">(</span><span class="nv">exit-minibuffer</span><span class="p">)))</span>
 </code></pre></div>
 <p>And here&#39;s how to leverage this generalization:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">oleh-ido-setup-hook</span> <span class="p">()</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">oleh-ido-setup-hook</span> <span class="p">()</span>
   <span class="p">(</span><span class="nf">define-key</span> <span class="nv">ido-file-dir-completion-map</span> <span class="s">&quot;~&quot;</span>
     <span class="p">(</span><span class="nv">ido-find-file-jump</span> <span class="s">&quot;~/&quot;</span><span class="p">))</span>
   <span class="p">(</span><span class="nf">define-key</span> <span class="nv">ido-file-dir-completion-map</span> <span class="s">&quot;!&quot;</span>
@@ -330,7 +334,7 @@ Well, it&#39;s an oldie where I come from.</p>
 <code>ido-find-file-jump</code> would be called three times each time you do an
 <code>ido</code> related command, like <code>ido-switch-buffer</code> etc.
 I would have preferred to do it like this instead:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">eval-after-load</span> <span class="s">&quot;ido&quot;</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">eval-after-load</span> <span class="s">&quot;ido&quot;</span>
   <span class="o">`</span><span class="p">(</span><span class="k">progn</span>
      <span class="p">(</span><span class="nf">define-key</span> <span class="nv">ido-file-dir-completion-map</span> <span class="s">&quot;~&quot;</span>
        <span class="p">(</span><span class="nv">ido-find-file-jump</span> <span class="s">&quot;~/&quot;</span><span class="p">))</span>
@@ -346,7 +350,7 @@ bindings in <code>ido-setup-hook</code>.</p>
 <h2 id="the-further-generalization">The further generalization</h2>
 
 <p>Here is the final iteration of the code:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">defvar</span> <span class="nv">oleh-ido-shortcuts</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">defvar</span> <span class="nv">oleh-ido-shortcuts</span>
   <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;~/&quot;</span> <span class="s">&quot;~&quot;</span><span class="p">)</span>
     <span class="p">(</span><span class="s">&quot;~/Dropbox/source/site-lisp/&quot;</span> <span class="s">&quot;!&quot;</span><span class="p">)</span>
     <span class="p">(</span><span class="s">&quot;~/git/lispy/&quot;</span> <span class="s">&quot;@&quot;</span><span class="p">)))</span>
@@ -376,11 +380,11 @@ In <em>my</em> Elisp?&quot;</p>
 modify <code>oleh-ido-shortcuts</code>. This isn&#39;t a problem for me, but if I
 wanted to package a code like this, I would define
 <code>oleh-ido-shortcuts</code> like this:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defcustom</span> <span class="nv">oleh-ido-shortcuts</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defcustom</span> <span class="nv">oleh-ido-shortcuts</span>
   <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;~/&quot;</span> <span class="s">&quot;~&quot;</span><span class="p">)</span>
    <span class="p">(</span><span class="s">&quot;~/Dropbox/source/site-lisp/&quot;</span> <span class="s">&quot;!&quot;</span><span class="p">)</span>
     <span class="p">(</span><span class="s">&quot;~/git/lispy/&quot;</span> <span class="s">&quot;@&quot;</span><span class="p">))</span>
-  <span class="s">&quot;A list of directory-shortcut pairs for `ido-find-file&#39;.&quot;</span>
+  <span class="s">&quot;A list of directory-shortcut pairs for </span><span class="ss">`ido-find-file&#39;</span><span class="s">.&quot;</span>
   <span class="nb">:set</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">symbol</span> <span class="nv">value</span><span class="p">)</span>
          <span class="p">(</span><span class="nf">set-default</span>
           <span class="nv">symbol</span>
@@ -393,7 +397,7 @@ wanted to package a code like this, I would define
            <span class="nv">value</span><span class="p">))))</span>
 </code></pre></div>
 <p>Now, this should work:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">csetq</span> <span class="nv">oleh-ido-shortcuts</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">csetq</span> <span class="nv">oleh-ido-shortcuts</span>
        <span class="p">(</span><span class="k">progn</span>
          <span class="p">(</span><span class="nf">setcar</span> <span class="p">(</span><span class="nf">rassoc</span> <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;@&quot;</span><span class="p">)</span> <span class="nv">oleh-ido-shortcuts</span><span class="p">)</span>
                  <span class="s">&quot;~/git/worf&quot;</span><span class="p">)</span>
@@ -406,7 +410,7 @@ wanted to package a code like this, I would define
 <p>Here, the appropriate lambda is auto-generated by using the <code>:set</code>
 property of <code>oleh-ido-shortcuts</code>.
 And <code>csetq</code> is just a <code>customize</code>-aware version of <code>setq</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defmacro</span> <span class="nv">csetq</span> <span class="p">(</span><span class="nv">variable</span> <span class="nv">value</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defmacro</span> <span class="nv">csetq</span> <span class="p">(</span><span class="nv">variable</span> <span class="nv">value</span><span class="p">)</span>
   <span class="o">`</span><span class="p">(</span><span class="nf">funcall</span> <span class="p">(</span><span class="k">or</span> <span class="p">(</span><span class="nf">get</span> <span class="ss">&#39;,variable</span> <span class="ss">&#39;custom-set</span><span class="p">)</span> <span class="ss">&#39;set-default</span><span class="p">)</span>
             <span class="ss">&#39;,variable</span> <span class="o">,</span><span class="nv">value</span><span class="p">))</span>
 </code></pre></div>

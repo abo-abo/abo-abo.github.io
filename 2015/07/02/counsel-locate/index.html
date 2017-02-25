@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -288,7 +292,7 @@ files on your system that match a particular pattern. The advantage of
 <code>locate</code> over <code>find</code> when searching the whole system, is that it is
 much faster, since it uses a pre-computed database.  This database is
 updated periodically, you can force an update with:</p>
-<div class="highlight"><pre><code class="language-sh" data-lang="sh">sudo updatedb
+<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>sudo updatedb
 </code></pre></div>
 <p>Of course <code>find</code> is faster if you need to search only a specific
 directory instead of the whole system, but sometimes you just don&#39;t
@@ -311,16 +315,16 @@ complete, so it requires a bit of patience.</p>
 
 <p>I like regex way more than globs for some reason. Here&#39;s the command
 called for the input <code>mp3$</code>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">locate -i --regex mp3$
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>locate -i --regex mp3$
 </code></pre></div>
 <p>Of course, the standard <a href="https://github.com/abo-abo/swiper">ivy-mode</a>
 method is used to build the regex from a list of space separated
 words.  So the input <code>fleet mp3$</code> will result in:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">locate -i --regex \\(fleet\\).*?\\(mp3$\\)
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>locate -i --regex \\(fleet\\).*?\\(mp3$\\)
 </code></pre></div>
 <p>You could go your own way and update the regex matcher to be
 <code>ivy--regex-fuzzy</code>, which results in:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">locate -i --regex f.*l.*e.*e.*t.* .*m.*p.*3$
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>locate -i --regex f.*l.*e.*e.*t.* .*m.*p.*3$
 </code></pre></div>
 <p>But I think less matches is usually better than more matches.</p>
 

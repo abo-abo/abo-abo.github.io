@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -286,7 +290,7 @@ some minor update, like a change to README.md.  I mean, how in the
 world would a few words in README.md break the Elisp tests?  Upon
 investigation, it turned out that only one test was broken <sup id="fnref1"><a href="#fn1" rel="footnote">1</a></sup>.  This
 one:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">ert-deftest</span> <span class="nv">clojure-thread-macro</span> <span class="p">()</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">ert-deftest</span> <span class="nv">clojure-thread-macro</span> <span class="p">()</span>
   <span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;cider</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">should</span>
    <span class="p">(</span><span class="nv">string=</span>
@@ -296,12 +300,12 @@ one:</p>
 </code></pre></div>
 <p>The culprit was an update in <code>clojure-mode</code>&#39;s indentation.
 The previous behavior:</p>
-<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="nf">-&gt;&gt;</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">]</span>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span></span><span class="p">(</span><span class="nf">-&gt;&gt;</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">]</span>
    <span class="p">(</span><span class="nb">map </span><span class="nv">sqr</span><span class="p">)</span>
    <span class="p">(</span><span class="nb">filter </span><span class="nv">odd?</span><span class="p">))</span>
 </code></pre></div>
 <p>is now replaced with:</p>
-<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="nf">-&gt;&gt;</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">]</span>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span></span><span class="p">(</span><span class="nf">-&gt;&gt;</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">]</span>
      <span class="p">(</span><span class="nb">map </span><span class="nv">sqr</span><span class="p">)</span>
      <span class="p">(</span><span class="nb">filter </span><span class="nv">odd?</span><span class="p">))</span>
 </code></pre></div>
@@ -366,7 +370,7 @@ not interfere with the tests.</p>
 it on your machine as well as on Travis CI.</p>
 
 <p>Here&#39;s my <code>Cask</code> file for <code>lispy</code>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">(source gnu)
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>(source gnu)
 (source melpa)
 
 (package-file &quot;lispy.el&quot;)
@@ -387,7 +391,7 @@ it on your machine as well as on Travis CI.</p>
  (depends-on &quot;highlight&quot;))
 </code></pre></div>
 <p>And here&#39;s the <code>Makefile</code>:</p>
-<div class="highlight"><pre><code class="language-Makefile" data-lang="Makefile"><span class="nv">EMACS</span> <span class="o">=</span> emacs
+<div class="highlight"><pre><code class="language-Makefile" data-lang="Makefile"><span></span><span class="nv">EMACS</span> <span class="o">=</span> emacs
 <span class="c"># EMACS = emacs-24.3</span>
 
 <span class="nv">CASK</span> <span class="o">=</span> ~/.cask/bin/cask
@@ -418,7 +422,7 @@ compilation warnings/errors.  I can change the Emacs version at the
 top, although I don&#39;t have to do it too often.</p>
 
 <p>Finally, here&#39;s <code>.travis.yml</code>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">language: emacs-lisp
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>language: emacs-lisp
 env:
   matrix:
     - EMACS=emacs24

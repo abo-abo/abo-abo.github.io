@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -287,7 +291,7 @@ made some minor changes to get the arrows to work the way that I like,
 and made all keys into plain letters.</p>
 
 <h2 id="the-code">The code</h2>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">ora-ex-point-mark</span> <span class="p">()</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">ora-ex-point-mark</span> <span class="p">()</span>
   <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
   <span class="p">(</span><span class="k">if</span> <span class="nv">rectangle-mark-mode</span>
       <span class="p">(</span><span class="nv">exchange-point-and-mark</span><span class="p">)</span>
@@ -295,12 +299,12 @@ and made all keys into plain letters.</p>
       <span class="p">(</span><span class="nv">rectangle-mark-mode</span> <span class="mi">1</span><span class="p">)</span>
       <span class="p">(</span><span class="nf">goto-char</span> <span class="nv">mk</span><span class="p">))))</span>
 
-<span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-rectangle</span> <span class="p">(</span><span class="nb">:body-pre</span> <span class="p">(</span><span class="nv">rectangle-mark-mode</span> <span class="mi">1</span><span class="p">)</span>
+<span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-rectangle</span> <span class="p">(</span><span class="nb">:body-pre</span> <span class="p">(</span><span class="nv">rectangle-mark-mode</span> <span class="mi">1</span><span class="p">)</span>
                            <span class="nb">:color</span> <span class="nv">pink</span>
                            <span class="nb">:post</span> <span class="p">(</span><span class="nv">deactivate-mark</span><span class="p">))</span>
   <span class="s">&quot;</span>
 <span class="s">  ^_k_^     _d_elete    _s_tring     |\\     ‗,,,--,,‗</span>
-<span class="s">_h_   _l_   _o_k        _y_ank       /,`.-&#39;`&#39;   .‗  \-;;,‗</span>
+<span class="s">_h_   _l_   _o_k        _y_ank       /,</span><span class="ss">`.-&#39;</span><span class="s">`&#39;   .‗  \-;;,‗</span>
 <span class="s">  ^_j_^     _n_ew-copy  _r_eset     |,4-  ) )‗   .;.(  `&#39;-&#39;</span>
 <span class="s">^^^^        _e_xchange  _u_ndo     &#39;---&#39;&#39;(‗/.‗)-&#39;(‗\‗)</span>
 <span class="s">^^^^        ^ ^         _p_aste</span>

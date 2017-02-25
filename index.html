@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -281,6 +285,244 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2017/02/25/warp-9-make-it-so/">
+        Make it so&#58 file1 -> Makefile -> file2
+      </a>
+    </h1>
+
+    <span class="post-date">25 Feb 2017</span>
+
+    <h2 id="intro">Intro</h2>
+
+<p><a href="https://github.com/abo-abo/make-it-so">make-it-so</a> is an old package
+of mine that I haven&#39;t yet highlighted on the blog. This package helps
+you manage a collection of makefiles that are used to generate new
+files from existing files using shell commands.</p>
+
+<p>You can think of these makefiles as a directory of shell functions,
+arranged by the extension of the files that they operate on:</p>
+<div class="highlight"><pre><code class="language-shell" data-lang="shell"><span></span>$ <span class="nb">cd</span> make-it-so <span class="o">&amp;&amp;</span> find recipes -name Makefile
+recipes/ipynb/to-md/Makefile
+recipes/ogv/crop/Makefile
+recipes/ogv/trim/Makefile
+recipes/ogv/to-gif/Makefile
+recipes/pdf/to-txt/Makefile
+recipes/md/to-org/Makefile
+recipes/md/to-html/Makefile
+recipes/cue/split/Makefile
+recipes/dot/to-png/Makefile
+recipes/m4a/to-mp3/Makefile
+recipes/flac/to-mp3/Makefile
+recipes/gif/gifsicle/Makefile
+recipes/svg/to-png/Makefile
+recipes/chm/to-pdf/Makefile
+recipes/txt/encode-utf8/Makefile
+recipes/mp4/to-mp3/Makefile
+recipes/mp4/trim/Makefile
+recipes/mp4/replace-audio/Makefile
+recipes/png/to-gif/Makefile
+</code></pre></div>
+<p>When you call <code>make-it-so</code> on a particular file, you get completion
+for the recipes that are available for that file extension, along with
+an option to create a new recipe.</p>
+
+<h2 id="example-1-convert-pdf-to-txt">Example 1: convert <code>pdf</code> to <code>txt</code></h2>
+
+<p>Suppose you want to convert a PDF file <code>test.pdf</code> to a text file <code>test.txt</code>.</p>
+
+<p>In case the recipe is in your collection, you don&#39;t have to remember
+the command or the command switches to do it anymore:</p>
+
+<ol>
+<li>Navigate to <code>test.pdf</code> in <code>dired</code> and press <kbd>,</kbd> (bound to <code>make-it-so</code>).</li>
+<li>Select the recipe you want using completion: <code>to-txt</code> is already provided.</li>
+<li><p>Your file and the makefile recipe are moved to the staging area:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>./to-txt_test.pdf/test.pdf
+./to-txt_test.pdf/Makefile
+</code></pre></div></li>
+<li><p>The makefile is opened in a new buffer with the following bindings:</p>
+
+<ul>
+<li><kbd>f5</kbd> (<code>mis-save-and-compile</code>) will run <code>compile</code>,
+creating <code>test.txt</code> in the current directory.</li>
+<li><kbd>C-,</kbd> (<code>mis-finalize</code>) will finalize the operation,
+moving <code>test.pdf</code> and <code>test.txt</code> to the parent directory (where
+<code>test.pdf</code> was before), and deleting the staging directory.</li>
+<li><kbd>C-M-,</kbd> (<code>mis-abort</code>) will move <code>test.pdf</code> back to its
+initial location and delete all generated files. This command is
+effectively an <code>undo</code> for <code>make-it-so</code>.</li>
+</ul></li>
+</ol>
+
+<p>It takes a large chunk of text to describe everything, but the key sequence for doing all this is quite short:</p>
+
+<ol>
+<li><kbd>,</kbd> - <code>make-it-so</code>.</li>
+<li><kbd>RET</kbd> - select <code>to-txt</code>.</li>
+<li><kbd>f5</kbd> - create <code>test.txt</code>.</li>
+<li><kbd>C-,</kbd> - finalize.</li>
+</ol>
+
+<h2 id="example-2-make-a-gif-from-a-series-of-png-images">Example 2: make a gif from a series of png images</h2>
+
+<p>I&#39;ll describe the process of creating a high quality gif like this
+one, which describes the effect of the <kbd>C</kbd> key
+in <a href="https://github.com/abo-abo/lispy">lispy</a>:</p>
+
+<p><img src="/download/lispy-convolute.gif" alt="lispy-convolute"></p>
+
+<p>First, I use <a href="https://launchpad.net/kazam">kazam</a> to take two <code>png</code>
+screenshots of my Emacs screen:</p>
+<div class="highlight"><pre><code class="language-shell" data-lang="shell"><span></span>$ ls -1 *.png
+Screenshot <span class="m">2017</span>-02-25 <span class="m">16</span>:14:49.png
+Screenshot <span class="m">2017</span>-02-25 <span class="m">16</span>:15:10.png
+</code></pre></div>
+<p>I plan to use <a href="https://www.lcdf.org/gifsicle/">gifsicle</a> to sequence
+the still images into a gif. But it only takes <code>gif</code> as the input
+format, so first I have to convert my <code>png</code> files to non-animated
+<code>gif</code> files.</p>
+
+<p>I open the <code>dired</code> buffer where they are located and mark them with
+<kbd>m</kbd> (<code>dired-mark</code>). Then call <code>make-it-so</code> with <kbd>,</kbd>
+and select <code>to-gif</code> recipe.  This recipe has no parameters, so there&#39;s
+nothing else to do but <kbd>f5 C-,</kbd>. Two new files are created:</p>
+<div class="highlight"><pre><code class="language-shell" data-lang="shell"><span></span>$ ls -1 *.png *.gif
+Screenshot_2017-02-25 <span class="m">16</span>:14:49.gif
+Screenshot_2017-02-25 <span class="m">16</span>:14:49.png
+Screenshot_2017-02-25 <span class="m">16</span>:15:10.gif
+Screenshot_2017-02-25 <span class="m">16</span>:15:10.png
+</code></pre></div>
+<p>Note that the file names (the defaults of <code>kazam</code>) are problematic
+when used with makefiles, since they contain spaces and colons. The
+Elisp layer of <code>make-it-so</code> takes care of that. It renames the files
+back and forth so that the logic in the makefiles remains simple.</p>
+
+<p>Next, I mark the two <code>gif</code> files using <kbd>*%</kbd>
+(<code>dired-mark-files-regexp</code>), press <kbd>,</kbd> once more and select
+the <code>gifsicle</code> recipe. I&#39;m presented a makefile with the following
+contents:</p>
+<div class="highlight"><pre><code class="language-Makefile" data-lang="Makefile"><span></span><span class="c"># ——— parameters —————————————————————————————————</span>
+
+<span class="c"># delay between frames in hundredths of a second</span>
+<span class="nv">delay</span> <span class="o">=</span> <span class="m">60</span>
+
+<span class="c"># ——— implementation —————————————————————————————</span>
+<span class="nv">DIRGIF</span> <span class="o">=</span> <span class="k">$(</span>shell ls *.gif <span class="p">|</span> grep -v anime.gif<span class="k">)</span>
+
+<span class="nf">all</span><span class="o">:</span> <span class="n">anime</span>.<span class="n">gif</span>
+
+<span class="nf">anime.gif</span><span class="o">:</span> <span class="n">Makefile</span> <span class="k">$(</span><span class="nv">DIRGIF</span><span class="k">)</span>
+    rm -f anime.gif
+    gifsicle --delay<span class="o">=</span><span class="k">$(</span>delay<span class="k">)</span> --colors<span class="o">=</span><span class="m">256</span> --loop <span class="k">$(</span>DIRGIF<span class="k">)</span> &gt; <span class="nv">$@</span>
+    <span class="nb">echo</span> <span class="nv">$@</span> &gt;&gt; provide
+
+<span class="nf">clean</span><span class="o">:</span>
+    rm -f anime.gif provide
+
+<span class="nf">install-tools</span><span class="o">:</span>
+    sudo apt-get install gifsicle
+
+<span class="nf">.PHONY</span><span class="o">:</span> <span class="n">all</span> <span class="n">install</span>-<span class="n">tools</span> <span class="n">clean</span>
+</code></pre></div>
+<p>The most commonly useful parameter, the delay between frames, is
+nicely documented at the top. I don&#39;t have to remember that the switch
+name is <code>--delay</code> or that the switch style <code>--delay=60</code> is used. I
+simply change the number above until I get the result that I want.</p>
+
+<h2 id="example-3-add-a-new-recipe">Example 3: add a new recipe</h2>
+
+<p>As a sample scenario, assume you want to convert *.svg to *.png.</p>
+
+<h3 id="step-1">Step 1</h3>
+
+<p>An internet search leads to <a href="http://stackoverflow.com/questions/9853325/how-to-convert-a-svg-to-a-png-with-image-magick">Stack Overflow</a> and this command:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>inkscape -z -e test.png -w 1024 -h 1024 test.svg
+</code></pre></div>
+<p>Navigate to the file(s) in <code>dired</code> and call <code>make-it-so</code> with
+<kbd>,</kbd>.  No default actions are available, so just type &quot;to-png&quot;
+and hit <kbd>RET</kbd>.  The &quot;to-&quot; prefix signifies that this is a
+conversion, adapting the Makefile to this form:</p>
+<div class="highlight"><pre><code class="language-Makefile" data-lang="Makefile"><span></span><span class="c"># This is a template for the Makefile.</span>
+<span class="c"># Parameters should go in the upper half as:</span>
+<span class="c">#     width = 200</span>
+<span class="c"># and be referenced in the command as $(width)</span>
+
+<span class="c"># ____________________________________________</span>
+
+<span class="nv">DIRSVG</span> <span class="o">=</span> <span class="k">$(</span>shell dir *.svg<span class="k">)</span>
+
+<span class="nv">DIRPNG</span> <span class="o">=</span> <span class="k">$(</span>DIRSVG:.svg<span class="o">=</span>.png<span class="k">)</span>
+
+<span class="nf">all</span><span class="o">:</span> <span class="n">clean</span> <span class="n">Makefile</span> <span class="k">$(</span><span class="nv">DIRPNG</span><span class="k">)</span>
+
+<span class="nf">%.png</span><span class="o">:</span> %.<span class="n">svg</span>
+    <span class="nb">echo</span> <span class="s2">&quot;add command here&quot;</span>
+    <span class="nb">echo</span> <span class="nv">$@</span> &gt;&gt; provide
+
+<span class="nf">clean</span><span class="o">:</span>
+    rm -f *.png provide
+
+<span class="c"># Insert the install command here.</span>
+<span class="c"># e.g. sudo apt-get install ffmpeg</span>
+<span class="nf">install-tools</span><span class="o">:</span>
+    <span class="nb">echo</span> <span class="s2">&quot;No tools required&quot;</span>
+
+<span class="nf">.PHONY</span><span class="o">:</span> <span class="n">all</span> <span class="n">install</span>-<span class="n">tools</span> <span class="n">clean</span>
+</code></pre></div>
+<p>If the action name doesn&#39;t have a &quot;to-&quot; prefix, the transformation is
+assumed to be e.g. &quot;svg&quot; -&gt; &quot;out.svg&quot;. You can change this of course
+by editing the Makefile.</p>
+
+<h3 id="step-2">Step 2</h3>
+
+<p>In case the command needs additional packages in order to work you
+might want to change <code>echo &quot;No tools required&quot;</code> to the appropriate
+package install instruction, e.g. <code>sudo apt-get install inkscape</code>.</p>
+
+<p>When you&#39;re on a new system, this will serve as a reminder of what you
+should install in order for the Makefile to work. Simply call:</p>
+<div class="highlight"><pre><code class="language-shell" data-lang="shell"><span></span>make install-tools
+</code></pre></div>
+<h3 id="step-3">Step 3</h3>
+
+<p>Replace <code>echo &quot;add command here&quot;</code> with:</p>
+<div class="highlight"><pre><code class="language-Makefile" data-lang="Makefile"><span></span>    inkscape -z -e <span class="nv">$@</span> -w <span class="k">$(</span>width<span class="k">)</span> -h <span class="k">$(</span>height<span class="k">)</span> $^
+</code></pre></div>
+<ul>
+<li><p>The parameters <code>width</code> and <code>height</code> will go to the top of the
+Makefile, where they can be customized.</p></li>
+<li><p><code>$@</code> refers to the output file, <code>test.png</code> in this case.</p></li>
+<li><p><code>$^</code> refers to the input file, <code>test.svg</code> in this case.</p></li>
+</ul>
+
+<p>That&#39;s it. You can see the final
+Makefile <a href="https://raw.githubusercontent.com/abo-abo/make-it-so/master/recipes/svg/to-png/Makefile">here</a>.
+Test if the command works with <kbd>f5</kbd> from the Makefile.  If
+you&#39;re happy with it, call <code>mis-finalize</code> with <kbd>C-,</kbd> from
+<code>dired</code>.  The Makefile will be saved for all future calls to
+<code>make-it-so</code>.</p>
+
+<h2 id="outro">Outro</h2>
+
+<p>To summarize the advantages of <code>make-it-so</code>:</p>
+
+<ul>
+<li>Write the recipe <em>one time</em>, never have to look up how to do the
+same thing a few months from now.</li>
+<li>A chance to write the recipe <em>zero times</em>, if someone in the
+community has already done it and shared the recipe with you.</li>
+<li>The Elisp layer takes care of hairy file names.</li>
+<li>Parallel commands on multiple files, i.e. <code>make -j8</code>, are provided for free.</li>
+</ul>
+
+<p>The most important usage tip: until you&#39;re sure that the command and
+the Makefile work properly make backups. In fact, make backups period.
+Happy hacking!</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2016/08/28/elf-mode/">
         elf-mode - view the symbol list in a binary
       </a>
@@ -302,7 +544,7 @@ files are found with <code>counsel-locate</code> and added to the include path.<
 file. Fixed it with a bunch of googling and guesswork; I still wonder
 if there&#39;s a better way. But in the process, I&#39;ve found this useful
 command:</p>
-<div class="highlight"><pre><code class="language-shell" data-lang="shell">readelf --syms libGL.so
+<div class="highlight"><pre><code class="language-shell" data-lang="shell"><span></span>readelf --syms libGL.so
 </code></pre></div>
 <p>which produces e.g.:</p>
 
@@ -325,13 +567,13 @@ example, instead of one megabyte of gibberish I see a bit more than
 
 <p>I liked the above representation so much that I want to see it by
 default. In Emacs, it&#39;s pretty easy to do with <code>auto-mode-alist</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">add-to-list</span> <span class="ss">&#39;auto-mode-alist</span> <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;\\.\\(?:a\\|so\\)\\&#39;&quot;</span> <span class="o">.</span> <span class="nv">elf-mode</span><span class="p">))</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">add-to-list</span> <span class="ss">&#39;auto-mode-alist</span> <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;\\.\\(?:a\\|so\\)\\&#39;&quot;</span> <span class="o">.</span> <span class="nv">elf-mode</span><span class="p">))</span>
 </code></pre></div>
 <p>The above code instructs Emacs to call <code>elf-mode</code> function whenever
 the file name ends in <code>*.a</code> or <code>*.so</code>.</p>
 
 <p>And here&#39;s the body of <code>elf-mode</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defvar-local</span> <span class="nv">elf-mode</span> <span class="no">nil</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defvar-local</span> <span class="nv">elf-mode</span> <span class="no">nil</span><span class="p">)</span>
 
 <span class="c1">;;;###autoload</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">elf-mode</span> <span class="p">()</span>
@@ -363,7 +605,7 @@ is negligible until the feature is used.</p>
 
 <p>If you look above, <code>elf-mode</code> has an <code>;;;###autoload</code> cookie before
 it. The cookie results in this line in my <code>loaddefs.el</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">autoload</span> <span class="ss">&#39;elf-mode</span> <span class="s">&quot;modes/ora-elf&quot;</span> <span class="s">&quot;&quot;</span> <span class="no">t</span> <span class="no">nil</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">autoload</span> <span class="ss">&#39;elf-mode</span> <span class="s">&quot;modes/ora-elf&quot;</span> <span class="s">&quot;&quot;</span> <span class="no">t</span> <span class="no">nil</span><span class="p">)</span>
 </code></pre></div>
 <p>My <code>init.el</code> always loads <code>loaddefs.el</code>, but never loads <code>ora-elf.el</code>
 where the function is defined. That file is only loaded when the
@@ -373,7 +615,7 @@ statement simply instructs Emacs to load a particular file when
 
 <p>When you use the package manager, the autoloads file is generated and
 loaded for you automatically:</p>
-<div class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="nv">$ </span>tree elpa/ace-link-20160811.112/
+<div class="highlight"><pre><code class="language-shell" data-lang="shell"><span></span>$ tree elpa/ace-link-20160811.112/
 
 elpa/ace-link-20160811.112/
 ├── ace-link-autoloads.el
@@ -426,7 +668,7 @@ with no delay while having around 50 buffers open:</p>
 <p><img src="/download/swiper-all.png" alt="swiper-all.png"></p>
 
 <p>The shortcut I&#39;m using:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c u&quot;</span><span class="p">)</span> <span class="ss">&#39;swiper-all</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c u&quot;</span><span class="p">)</span> <span class="ss">&#39;swiper-all</span><span class="p">)</span>
 </code></pre></div>
 <p>For efficiency&#39;s sake a small trade off had to be made: the line
 numbers are no longer displayed. This actually results in an advantage
@@ -461,7 +703,7 @@ concept, it&#39;s very convenient to have them all in one place available
 for completion.</p>
 
 <p>Here are the relevant settings:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="c1">;; Enable bookmarks and recentf</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="c1">;; Enable bookmarks and recentf</span>
 <span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-use-virtual-buffers</span> <span class="no">t</span><span class="p">)</span>
 
 <span class="c1">;; Example setting for ivy-views</span>
@@ -494,7 +736,7 @@ you&#39;ve got something similar to <code>bookmark-set</code>.</li>
 <h2 id="recommended-key-bindings">Recommended key bindings</h2>
 
 <p>Here&#39;s what I use currently:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c v&quot;</span><span class="p">)</span> <span class="ss">&#39;ivy-push-view</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c v&quot;</span><span class="p">)</span> <span class="ss">&#39;ivy-push-view</span><span class="p">)</span>
 <span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c V&quot;</span><span class="p">)</span> <span class="ss">&#39;ivy-pop-view</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="typical-workflow">Typical workflow</h2>
@@ -542,7 +784,7 @@ as usual with most <code>ivy</code> completion functions.</p>
 <p>While implementing <code>ivy-set-view</code> I decided that the current way alist
 collections are handled together with actions is sub-optimal.  Here&#39;s
 the new way of working:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">res</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">res</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">ivy-with</span>
    <span class="o">&#39;</span><span class="p">(</span><span class="nv">ivy-read</span> <span class="s">&quot;test: &quot;</span>
      <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;one&quot;</span> <span class="o">.</span> <span class="mi">1</span><span class="p">)</span> <span class="p">(</span><span class="s">&quot;three&quot;</span> <span class="o">.</span> <span class="mi">3</span><span class="p">))</span>
@@ -594,9 +836,9 @@ possible to offer all values that the symbol is allowed to become for
 completion.</p>
 
 <p>For example, here&#39;s a typical <code>&#39;radio</code>-type definition:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defcustom</span> <span class="nv">avy-style</span> <span class="ss">&#39;at-full</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defcustom</span> <span class="nv">avy-style</span> <span class="ss">&#39;at-full</span>
   <span class="s">&quot;The default method of displaying the overlays.</span>
-<span class="s">Use `avy-styles-alist&#39; to customize this per-command.&quot;</span>
+<span class="s">Use </span><span class="ss">`avy-styles-alist&#39;</span><span class="s"> to customize this per-command.&quot;</span>
   <span class="nb">:type</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">choice</span>
           <span class="p">(</span><span class="nv">const</span> <span class="nb">:tag</span> <span class="s">&quot;Pre&quot;</span> <span class="nv">pre</span><span class="p">)</span>
           <span class="p">(</span><span class="nv">const</span> <span class="nb">:tag</span> <span class="s">&quot;At&quot;</span> <span class="nv">at</span><span class="p">)</span>
@@ -620,7 +862,7 @@ in. For example:</p>
 <p><img src="/download/counsel-set-variable-3.png" alt="counsel-set-variable-3.png"></p>
 
 <p>The <code>read-expression</code> part combines well with this setting in my config:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">conditionally-enable-lispy</span> <span class="p">()</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">conditionally-enable-lispy</span> <span class="p">()</span>
   <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">eq</span> <span class="nv">this-command</span> <span class="ss">&#39;eval-expression</span><span class="p">)</span>
     <span class="p">(</span><span class="nv">lispy-mode</span> <span class="mi">1</span><span class="p">)))</span>
 
@@ -640,13 +882,13 @@ value:</p>
 </ol>
 
 <p>After the <kbd>C-f -e C-d</kbd> chain of bindings, the minibuffer contents become:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-re-builders-alist</span> <span class="o">&#39;</span><span class="p">((</span><span class="no">t</span> <span class="o">.</span> <span class="nv">ivy--regex-</span><span class="err">|</span><span class="p">)))</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-re-builders-alist</span> <span class="o">&#39;</span><span class="p">((</span><span class="no">t</span> <span class="o">.</span> <span class="nv">ivy--regex-|</span><span class="p">)))</span>
 </code></pre></div>
 <p>I press <kbd>C-M-i</kbd> (<code>completion-at-point</code>) to get completion for
 all symbols that start with <code>ivy--regex-</code>. Since I have <code>ivy-mode</code> on,
 <kbd>C-M-i</kbd> starts a recursive completion session. I highly
 recommend adding these settings to your config:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="c1">;; Allow to read from minibuffer while in minibuffer.</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="c1">;; Allow to read from minibuffer while in minibuffer.</span>
 <span class="p">(</span><span class="k">setq</span> <span class="nv">enable-recursive-minibuffers</span> <span class="no">t</span><span class="p">)</span>
 
 <span class="c1">;; Show the minibuffer depth (when larger than 1)</span>
@@ -663,244 +905,10 @@ RET</kbd> to finalize the eval. The first <kbd>RET</kbd> exits from
 part, is quite a bit faster than what I did before. That is switching
 to <code>*scratch*</code> and typing in the <code>setq</code> manually and evaluating with
 <kbd>C-j</kbd>. Here&#39;s my binding for the new command:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;&lt;f2&gt; j&quot;</span><span class="p">)</span> <span class="ss">&#39;counsel-set-variable</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;&lt;f2&gt; j&quot;</span><span class="p">)</span> <span class="ss">&#39;counsel-set-variable</span><span class="p">)</span>
 </code></pre></div>
 <p>It&#39;s not very mnemonic, but it&#39;s really fast. Just a suggestion, in
 case you don&#39;t know where to bind it. Happy hacking!</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2016/04/26/ivy-0.8.0/">
-        Ivy 0.8.0 is out
-      </a>
-    </h1>
-
-    <span class="post-date">26 Apr 2016</span>
-
-    <h2 id="intro">Intro</h2>
-
-<p><a href="https://github.com/abo-abo/swiper">Ivy</a> is a completion method that&#39;s
-similar to <code>Ido</code>, but with emphasis on simplicity and customizability.</p>
-
-<h2 id="new-package-names">New package names</h2>
-
-<h3 id="changes-on-melpa">Changes on MELPA</h3>
-
-<p>Due to multiple requests, in an attempt to simplify things a new
-package <code>ivy</code> has been released on MELPA. The old package <code>swiper</code>,
-which used to provide most of the <code>ivy</code> features, now only provides
-<code>swiper.el</code> and depends on <code>ivy</code>. The third package <code>counsel</code>, which
-provides most of the goodies using <code>ivy</code> hasn&#39;t been changed and is
-still on MELPA. All three packages have the version <code>0.8.0</code> currently.</p>
-
-<p>To reiterate the dependencies:</p>
-
-<ul>
-<li><code>ivy</code> depends on Emacs version larger than 24.1, preferably at least 24.3 (the most common one bundled currently with Linux distributions).</li>
-<li><code>swiper</code> depends on <code>ivy</code> and provides basically 3 commands: <code>swiper</code>, <code>swiper-multi</code> and <code>swiper-all</code>.</li>
-<li><code>counsel</code> depends on <code>swiper</code> and provides around 50 commands for all kinds of stuff. My favorites are <code>counsel-M-x</code>, <code>counsel-git-grep</code>, <code>counsel-rhythmbox</code> and <code>counsel-grep-or-swiper</code>.</li>
-</ul>
-
-<h3 id="changes-on-gnu-elpa">Changes on GNU ELPA</h3>
-
-<p>On <a href="http://elpa.gnu.org/packages/">GNU ELPA</a>, a single package
-<code>ivy-0.8.0</code> has replaced the previous stable version <code>swiper-0.7.0</code>.
-This package provides all the files combined of the three separate
-MELPA packages.</p>
-
-<h2 id="release-summary">Release summary</h2>
-
-<p>The release consists of 282 commits over 5 months by 15 authors. The
-detailed Changelog is available
-<a href="http://oremacs.com/swiper/Changelog.html#0.8.0">here</a>, thanks to the
-ever useful Org mode export. The raw Org file is in
-<a href="https://github.com/abo-abo/swiper/blob/master/doc/Changelog.org#080">doc/Changelog.org</a>
-in the main repository.</p>
-
-<p>The detailed documentation is available as an <code>(ivy)</code> Info node and
-also in HTML form <a href="http://oremacs.com/swiper/">here</a>. If anyone wants
-to document something that&#39;s missing there, I&#39;d appreciate the help:
-simply edit
-<a href="https://github.com/abo-abo/swiper/blob/master/doc/ivy.org">doc/ivy.org</a>
-and send me a PR.</p>
-
-<h2 id="release-highlights">Release highlights</h2>
-
-<p>Below, I&#39;ll highlight some of the new features.</p>
-
-<h3 id="allow-to-compose-collections">Allow to compose collections</h3>
-
-<p>For example, to stack the top 10 elements of <code>recentf</code> on top of <code>counsel-locate</code>, use this code:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">small-test</span> <span class="p">()</span>
-  <span class="p">(</span><span class="nv">cl-subseq</span> <span class="nv">recentf-list</span> <span class="mi">0</span> <span class="mi">10</span><span class="p">))</span>
-
-<span class="p">(</span><span class="nv">ivy-set-sources</span>
- <span class="ss">&#39;counsel-locate</span>
- <span class="o">&#39;</span><span class="p">((</span><span class="nv">small-test</span><span class="p">)</span>
-   <span class="p">(</span><span class="nv">original-source</span><span class="p">)))</span>
-</code></pre></div>
-<p>Here, <code>(original-source)</code> represents the async candidates of
-counsel-locate. All extra sources are static - each function is called
-once to generate a list of strings, which will be filtered later.</p>
-
-<p>See <a href="https://github.com/abo-abo/swiper/issues/373">#373</a> for more info.</p>
-
-<h3 id="improved-documentation">Improved documentation</h3>
-
-<p>If you&#39;re not yet familiar with Ivy, you can get a quick reference
-card by pressing <kbd>C-h m</kbd> during any completion session.  It
-will pop up an Org-mode buffer that describes most of the minibuffer
-key bindings.</p>
-
-<p>Additionally, <kbd>C-o</kbd> (<code>hydra-ivy/body</code>), which serves a quick
-reference as well, received a small restructuring and a new
-binding. Press <kbd>D</kbd> to go to the definition of this
-hydra. This is useful to see what each key does, you might even want
-to customize some of it.</p>
-
-<h3 id="completion-in-region">Completion in region</h3>
-
-<p>From now on, <code>ivy-mode</code> will also set
-<code>completion-in-region-function</code>. This means that functions like:</p>
-
-<ul>
-<li><kbd>C-M-i</kbd> <code>complete-symbol</code> in many major modes, </li>
-<li><kbd>TAB</kbd> while in the <kbd>M-:</kbd> (<code>eval-expression</code>) minibuffer,</li>
-<li><kbd>TAB</kbd> in a <code>shell</code> buffer,</li>
-</ul>
-
-<p>will use <code>ivy</code> for completion.</p>
-
-<h3 id="many-improvements-to-ivy-occur-mode">Many improvements to <code>ivy-occur-mode</code></h3>
-
-<p>You can &quot;permanently&quot; save any completion session by pressing <kbd>C-c
-C-o</kbd> (<code>ivy-occur</code>).  This will generate a new buffer in
-<code>ivy-occur-mode</code> with all your current candidates inserted there.
-Clicking or pressing <kbd>f</kbd> on any of the candidates in that
-buffer will result in the appropriate action being called with that
-candidate.</p>
-
-<p><img src="/download/ivy-occur-mode.png" alt="ivy-occur-mode.png"></p>
-
-<p>The <code>*ivy-occur ...*</code> buffers can actually be customized per
-collection type. Specifically for <code>swiper</code>, <code>counsel-git-grep</code>,
-<code>counsel-grep</code> and <code>counsel-ag</code>, the customizations are already in
-place that allow you to:</p>
-
-<ul>
-<li>Edit the buffer with <code>wgrep</code> by pressing <kbd>C-x C-q</kbd>
-(<code>ivy-wgrep-change-to-wgrep-mode</code>).</li>
-<li>Refresh the buffer due to the original files being changed by pressing <kbd>g</kbd> (<code>ivy-occur-revert-buffer</code>).</li>
-</ul>
-
-<p>The second feature is often useful to me when I want to somehow change
-a symbol throughout the project. First I make a list of all
-occurrences via e.g. <code>swiper</code> and <code>ivy-occur</code>. After I went through
-some of the occurrences, I can press <kbd>g</kbd> to refresh the
-search for the same symbol and see how many I still have left.</p>
-
-<p>Yet another cool feature is to press <kbd>c</kbd>
-(<code>ivy-occur-toggle-calling</code>) to toggle calling the action after each
-line movement and cycle through candidates by holding either
-<kbd>j</kbd> (<code>ivy-occur-next-line</code>) or <kbd>k</kbd>
-(<code>ivy-occur-previous-line</code>).</p>
-
-<h3 id="ivy-set-action-can-work-on-all-commands"><code>ivy-set-action</code> can work on all commands</h3>
-
-<p>Here&#39;s the code I&#39;m using currently in my config:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">ivy-insert-action</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">with-ivy-window</span>
-    <span class="p">(</span><span class="nf">insert</span> <span class="nv">x</span><span class="p">)))</span>
-
-<span class="p">(</span><span class="nv">ivy-set-actions</span>
- <span class="no">t</span>
- <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;I&quot;</span> <span class="nv">ivy-insert-action</span> <span class="s">&quot;insert&quot;</span><span class="p">)))</span>
-</code></pre></div>
-<p>This allows me to press <kbd>M-o I</kbd> to insert the current
-candidate into the buffer. For instance, if I want to quote an Emacs
-command, I can <kbd>M-x</kbd> (<code>counsel-M-x</code>), select the command I
-want and press <kbd>M-o I</kbd> to insert it instead of calling it.</p>
-
-<h3 id="virtual-views-in-ivy-switch-buffer">Virtual views in <code>ivy-switch-buffer</code></h3>
-
-<p>Here, &quot;virtual&quot; buffer means something that&#39;s close to a buffer but
-not an actual buffer. If you were using the setting
-<code>ivy-use-virtual-buffers</code>, you&#39;d have your bookmarks and <code>recentf</code>
-items available to you as virtual buffers.</p>
-
-<p>The new feature allows to select a whole window configuration with
-many buffers inside nested horizontal and vertical splits from
-<code>ivy-switch-buffer</code>.</p>
-
-<p>To use it, set <code>ivy-views</code>, since it&#39;s nil by default. For instance,
-here&#39;s what I have in my config:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-views</span>
-      <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;dutch + notes {}&quot;</span>
-         <span class="p">(</span><span class="nv">vert</span>
-          <span class="p">(</span><span class="nv">file</span> <span class="s">&quot;dutch.org&quot;</span><span class="p">)</span>
-          <span class="p">(</span><span class="nv">buffer</span> <span class="s">&quot;notes&quot;</span><span class="p">)))</span>
-        <span class="p">(</span><span class="s">&quot;ivy {}&quot;</span>
-         <span class="p">(</span><span class="nv">horz</span>
-          <span class="p">(</span><span class="nv">file</span> <span class="s">&quot;ivy.el&quot;</span><span class="p">)</span>
-          <span class="p">(</span><span class="nv">buffer</span> <span class="s">&quot;*scratch*&quot;</span><span class="p">)))))</span>
-</code></pre></div>
-<p>For a more elaborate and detailed use, see
-<a href="http://informatica.boccaperta.com/m-x-emacs-piu-rapidi-con-ivy-views/">this post</a>
-by Manuel Uberti.</p>
-
-<h3 id="magic-slash-in-file-name-completion">Magic slash in file name completion</h3>
-
-<p>From now on, if you want to enter a directory, simply select a
-candidate which is a directory and press <kbd>/</kbd>. You can still
-use the old binding <kbd>C-j</kbd> (<code>ivy-alt-done</code>), but <kbd>/</kbd>
-is shorter and easier to get used to if you&#39;re switching from Ido.</p>
-
-<p>Note that this does not prevent the use of old functionality like:</p>
-
-<ul>
-<li><kbd>//</kbd> to enter the root directory,</li>
-<li><code>/ssh:</code> <kbd>RET</kbd> to connect via TRAMP.</li>
-</ul>
-
-<h3 id="a-better-way-to-search-with-counsel-grep-or-swiper">A better way to search with <code>counsel-grep-or-swiper</code></h3>
-
-<p>If you&#39;ve ever been annoyed with the long start-up time of <code>swiper</code> in
-huge buffers, switch to this setting:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="s">&quot;\C-s&quot;</span> <span class="ss">&#39;counsel-grep-or-swiper</span><span class="p">)</span>
-</code></pre></div>
-<p>This command will use <code>swiper</code> for small buffers, and <code>counsel-grep</code> for large buffers.</p>
-
-<p>Something very similar to this command was highlighted in
-<a href="http://karl-voit.at/2016/04/09/chosing-emacs-search-method/">this post</a>
-by Karl Voit.</p>
-
-<p>Just to give you an idea of how fast <code>counsel-grep</code> is:</p>
-
-<ul>
-<li>It has 0s start-up time, since it&#39;s async.</li>
-<li>For a two million line file weighing 50MB produced by copying
-<code>org.el</code> a few times, it takes 0.2s to find the 17,664 occurrences
-of the word <code>hook</code>. It still takes 7.5s to search for <code>org</code> in that
-file, simply because there are 500,000 candidates and it takes time
-for Emacs to simply receive that input.</li>
-</ul>
-
-<h3 id="a-list-of-all-new-commands">A list of all new commands</h3>
-
-<p>The new commands since <code>0.7.0</code> are: <code>counsel-tmm</code>, <code>counsel-imenu</code>,
-<code>counsel-decbinds</code>, <code>counsel-list-processes</code>,
-<code>ivy-switch-buffer-other-window</code>, <code>counsel-git-stash</code>,
-<code>counsel-git-log</code>, <code>counsel-pt</code>, <code>counsel-linux-app</code>,
-<code>counsel-ace-link</code>, <code>counsel-esh-history</code>, <code>counsel-shell-history</code>,
-<code>counsel-grep-or-swiper</code>.</p>
-
-<p>If any of those sound interesting, go ahead and try them out.</p>
-
-<h2 id="outro">Outro</h2>
-
-<p>Thanks to all the contributors. Happy hacking!</p>
 
   </div>
   

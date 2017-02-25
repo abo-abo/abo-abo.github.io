@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -287,7 +291,7 @@ at all, just makes it look nicer. For the <code>\\|</code> I chose <code>∨</co
 <em>logical or</em> character.</p>
 
 <h2 id="the-code">The code</h2>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">fontify-glyph</span> <span class="p">(</span><span class="nv">item</span> <span class="nv">glyph</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">fontify-glyph</span> <span class="p">(</span><span class="nv">item</span> <span class="nv">glyph</span><span class="p">)</span>
   <span class="o">`</span><span class="p">((</span><span class="o">,</span><span class="nv">item</span>
      <span class="p">(</span><span class="mi">0</span> <span class="nv">font-lock-keyword-face</span> <span class="no">t</span><span class="p">)</span>
      <span class="p">(</span><span class="mi">0</span> <span class="p">(</span><span class="k">prog1</span>
@@ -316,7 +320,7 @@ It didn&#39;t, so I just edited a small snippet by hand:</p>
 a capture group in the regex, especially with the help of
 <a href="https://github.com/abo-abo/lispy">lispy-mode</a>.
 Here are some relevant tests for the regex support:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">should</span> <span class="p">(</span><span class="nv">string=</span> <span class="p">(</span><span class="nv">lispy-with</span> <span class="s">&quot;\&quot;a regex \\\\|\&quot;&quot;</span> <span class="s">&quot;(&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">should</span> <span class="p">(</span><span class="nv">string=</span> <span class="p">(</span><span class="nv">lispy-with</span> <span class="s">&quot;\&quot;a regex \\\\|\&quot;&quot;</span> <span class="s">&quot;(&quot;</span><span class="p">)</span>
                  <span class="s">&quot;\&quot;a regex \\\\(|\\\\)\&quot;&quot;</span><span class="p">))</span>
 <span class="p">(</span><span class="nv">should</span> <span class="p">(</span><span class="nv">string=</span> <span class="p">(</span><span class="nv">lispy-with</span> <span class="s">&quot;\&quot;\\\\(|foo\\\\)\&quot;&quot;</span> <span class="s">&quot;\C-?&quot;</span><span class="p">)</span>
                  <span class="s">&quot;\&quot;|foo\&quot;&quot;</span><span class="p">))</span>

@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -283,7 +287,7 @@
   <p>I&#39;m really enjoying using <a href="https://github.com/abo-abo/swiper">ivy</a> for matching stuff.</p>
 
 <p>Here is today&#39;s <a href="https://github.com/abo-abo/swiper/blob/master/counsel.el">addition</a>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">couns-git</span> <span class="p">()</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">couns-git</span> <span class="p">()</span>
   <span class="s">&quot;Find file in the current Git repository.&quot;</span>
   <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
   <span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">default-directory</span> <span class="p">(</span><span class="nv">locate-dominating-file</span>
@@ -298,7 +302,7 @@
 </code></pre></div>
 <p>This one will allow you to find a file in your Git repository.
 I&#39;ve bound it like this:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c f&quot;</span><span class="p">)</span> <span class="ss">&#39;couns-git</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c f&quot;</span><span class="p">)</span> <span class="ss">&#39;couns-git</span><span class="p">)</span>
 </code></pre></div>
 <p>Here&#39;s how it looks like for selecting a file in the Emacs repo:</p>
 
@@ -313,7 +317,7 @@ and <kbd>C-r</kbd> like I do, you&#39;ll find that <kbd>C-s C-s</kbd> and <kbd>C
 Thanks to <a href="https://github.com/johnmastro">@johnmastro</a> for the suggestion.</p>
 
 <p>Here&#39;s the current state of the keymap:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">defvar</span> <span class="nv">ivy-minibuffer-map</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">defvar</span> <span class="nv">ivy-minibuffer-map</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">map</span> <span class="p">(</span><span class="nf">make-sparse-keymap</span><span class="p">)))</span>
     <span class="p">(</span><span class="nf">define-key</span> <span class="nv">map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-m&quot;</span><span class="p">)</span> <span class="ss">&#39;ivy-done</span><span class="p">)</span>
     <span class="p">(</span><span class="nf">define-key</span> <span class="nv">map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-n&quot;</span><span class="p">)</span> <span class="ss">&#39;ivy-next-line</span><span class="p">)</span>

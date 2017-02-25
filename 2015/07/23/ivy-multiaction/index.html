@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -316,7 +320,7 @@ action. Conveniently, the default action is bound to <kbd>o</kbd>, so
 <kbd>M-o o</kbd> is equivalent to <kbd>C-m</kbd>.</p>
 
 <p>Here&#39;s how I add one more action to the default one of <code>ivy-switch-buffer</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">ivy-set-actions</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">ivy-set-actions</span>
  <span class="ss">&#39;ivy-switch-buffer</span>
  <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;k&quot;</span>
     <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
@@ -348,7 +352,7 @@ and have the buffer list update after each <kbd>g</kbd>.</p>
 
 <p>Let&#39;s look at one package that has a multitude of actions available
 for each candidate - <code>projectile</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">defvar</span> <span class="nv">helm-projectile-projects-map</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">defvar</span> <span class="nv">helm-projectile-projects-map</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">map</span> <span class="p">(</span><span class="nf">make-sparse-keymap</span><span class="p">)))</span>
     <span class="p">(</span><span class="nf">set-keymap-parent</span> <span class="nv">map</span> <span class="nv">helm-map</span><span class="p">)</span>
     <span class="p">(</span><span class="nv">helm-projectile-define-key</span> <span class="nv">map</span>
@@ -364,7 +368,7 @@ for each candidate - <code>projectile</code>:</p>
   <span class="s">&quot;Mapping for known projectile projects.&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p>Here&#39;s the basic Ivy function for selecting a project:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">ivy-switch-project</span> <span class="p">()</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">ivy-switch-project</span> <span class="p">()</span>
   <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">ivy-read</span>
    <span class="s">&quot;Switch to project: &quot;</span>
@@ -376,7 +380,7 @@ for each candidate - <code>projectile</code>:</p>
 <span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c m&quot;</span><span class="p">)</span> <span class="ss">&#39;ivy-switch-project</span><span class="p">)</span>
 </code></pre></div>
 <p>And now let&#39;s add all those actions:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">ivy-set-actions</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">ivy-set-actions</span>
  <span class="ss">&#39;ivy-switch-project</span>
  <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;d&quot;</span> <span class="nv">dired</span> <span class="s">&quot;Open Dired in project&#39;s directory&quot;</span><span class="p">)</span>
    <span class="p">(</span><span class="s">&quot;v&quot;</span> <span class="nv">helm-projectile-vc</span> <span class="s">&quot;Open project root in vc-dir or magit&quot;</span><span class="p">)</span>

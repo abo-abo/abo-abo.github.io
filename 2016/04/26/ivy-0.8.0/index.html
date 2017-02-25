@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -334,7 +338,7 @@ and send me a PR.</p>
 <h3 id="allow-to-compose-collections">Allow to compose collections</h3>
 
 <p>For example, to stack the top 10 elements of <code>recentf</code> on top of <code>counsel-locate</code>, use this code:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">small-test</span> <span class="p">()</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">small-test</span> <span class="p">()</span>
   <span class="p">(</span><span class="nv">cl-subseq</span> <span class="nv">recentf-list</span> <span class="mi">0</span> <span class="mi">10</span><span class="p">))</span>
 
 <span class="p">(</span><span class="nv">ivy-set-sources</span>
@@ -411,7 +415,7 @@ line movement and cycle through candidates by holding either
 <h3 id="ivy-set-action-can-work-on-all-commands"><code>ivy-set-action</code> can work on all commands</h3>
 
 <p>Here&#39;s the code I&#39;m using currently in my config:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">ivy-insert-action</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">ivy-insert-action</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">with-ivy-window</span>
     <span class="p">(</span><span class="nf">insert</span> <span class="nv">x</span><span class="p">)))</span>
 
@@ -437,7 +441,7 @@ many buffers inside nested horizontal and vertical splits from
 
 <p>To use it, set <code>ivy-views</code>, since it&#39;s nil by default. For instance,
 here&#39;s what I have in my config:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-views</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-views</span>
       <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;dutch + notes {}&quot;</span>
          <span class="p">(</span><span class="nv">vert</span>
           <span class="p">(</span><span class="nv">file</span> <span class="s">&quot;dutch.org&quot;</span><span class="p">)</span>
@@ -469,7 +473,7 @@ is shorter and easier to get used to if you&#39;re switching from Ido.</p>
 
 <p>If you&#39;ve ever been annoyed with the long start-up time of <code>swiper</code> in
 huge buffers, switch to this setting:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="s">&quot;\C-s&quot;</span> <span class="ss">&#39;counsel-grep-or-swiper</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="s">&quot;\C-s&quot;</span> <span class="ss">&#39;counsel-grep-or-swiper</span><span class="p">)</span>
 </code></pre></div>
 <p>This command will use <code>swiper</code> for small buffers, and <code>counsel-grep</code> for large buffers.</p>
 

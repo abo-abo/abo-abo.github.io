@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -281,7 +285,7 @@
   <h1 class="post-title">Transform region into ASCII art</h1>
   <span class="post-date">23 Mar 2015</span>
   <p>Here&#39;s a command that I&#39;ve found laying around my config that you might find interesting:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">ora-figlet-region</span> <span class="p">(</span><span class="kp">&amp;optional</span> <span class="nv">b</span> <span class="nv">e</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">ora-figlet-region</span> <span class="p">(</span><span class="kp">&amp;optional</span> <span class="nv">b</span> <span class="nv">e</span><span class="p">)</span>
   <span class="p">(</span><span class="k">interactive</span> <span class="s">&quot;r&quot;</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">shell-command-on-region</span> <span class="nv">b</span> <span class="nv">e</span> <span class="s">&quot;toilet&quot;</span> <span class="p">(</span><span class="nf">current-buffer</span><span class="p">)</span> <span class="no">t</span><span class="p">))</span>
 </code></pre></div>

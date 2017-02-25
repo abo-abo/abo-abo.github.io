@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -294,7 +298,7 @@ for <code>dbus.el</code> which makes interaction with D-Bus possible through
 Elisp.</p>
 
 <p>I&#39;m not as big a fan of Helm as I used to be, so I quickly implemented an Ivy equivalent:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel-rhythmbox-enqueue-song</span> <span class="p">(</span><span class="nv">song</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel-rhythmbox-enqueue-song</span> <span class="p">(</span><span class="nv">song</span><span class="p">)</span>
   <span class="s">&quot;Let Rhythmbox enqueue SONG.&quot;</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">service</span> <span class="s">&quot;org.gnome.Rhythmbox3&quot;</span><span class="p">)</span>
         <span class="p">(</span><span class="nv">path</span> <span class="s">&quot;/org/gnome/Rhythmbox3/PlayQueue&quot;</span><span class="p">)</span>
@@ -307,7 +311,7 @@ Elisp.</p>
   <span class="s">&quot;Choose a song from the Rhythmbox library to play or enqueue.&quot;</span>
   <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
   <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;helm-rhythmbox</span> <span class="no">nil</span> <span class="no">t</span><span class="p">)</span>
-    <span class="p">(</span><span class="ne">error</span> <span class="s">&quot;Please install `helm-rhythmbox&#39;&quot;</span><span class="p">))</span>
+    <span class="p">(</span><span class="ne">error</span> <span class="s">&quot;Please install </span><span class="ss">`helm-rhythmbox&#39;</span><span class="s">&quot;</span><span class="p">))</span>
   <span class="p">(</span><span class="nb">unless</span> <span class="nv">rhythmbox-library</span>
     <span class="p">(</span><span class="nv">rhythmbox-load-library</span><span class="p">)</span>
     <span class="p">(</span><span class="k">while</span> <span class="p">(</span><span class="nf">null</span> <span class="nv">rhythmbox-library</span><span class="p">)</span>
@@ -324,7 +328,7 @@ D-Bus, and also to show-off the shiny new multi-action interface of
 <code>ivy-read</code>.  Besides being discoverable via <kbd>C-o</kbd>, the
 multi-action interface is extensible as well. Here&#39;s how to add a
 &quot;Dequeue&quot; action without touching the original code:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel-rhythmbox-dequeue-song</span> <span class="p">(</span><span class="nv">song</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel-rhythmbox-dequeue-song</span> <span class="p">(</span><span class="nv">song</span><span class="p">)</span>
   <span class="s">&quot;Let Rhythmbox dequeue SONG.&quot;</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">service</span> <span class="s">&quot;org.gnome.Rhythmbox3&quot;</span><span class="p">)</span>
         <span class="p">(</span><span class="nv">path</span> <span class="s">&quot;/org/gnome/Rhythmbox3/PlayQueue&quot;</span><span class="p">)</span>
@@ -340,7 +344,7 @@ multi-action interface is extensible as well. Here&#39;s how to add a
 <code>AddToQueue</code> to <code>RemoveFromQueue</code> (I blind-guessed the name, but there
 should be a reference somewhere).  If you got tired of having a whole
 three actions to choose from, you can revert to the initial two with:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">ivy-set-actions</span> <span class="ss">&#39;counsel-rhythmbox</span> <span class="no">nil</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">ivy-set-actions</span> <span class="ss">&#39;counsel-rhythmbox</span> <span class="no">nil</span><span class="p">)</span>
 </code></pre></div>
 <p>And here&#39;s how the updated <kbd>C-o</kbd> option panel now looks like:</p>
 

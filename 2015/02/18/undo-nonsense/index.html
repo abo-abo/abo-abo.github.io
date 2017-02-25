@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -291,7 +295,7 @@ This undoes all changes since the file was visited or saved.</p>
 </blockquote>
 
 <p>But the poor old <code>revert-buffer</code> isn&#39;t bound by default in Emacs. The perfect binding for it is <kbd>C-x C-r</kbd>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span>
  <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-x C-r&quot;</span><span class="p">)</span>
  <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span> <span class="p">(</span><span class="k">interactive</span><span class="p">)</span> <span class="p">(</span><span class="nv">revert-buffer</span> <span class="no">nil</span> <span class="no">t</span><span class="p">)))</span>
 </code></pre></div>
@@ -314,7 +318,7 @@ ever recall needing to use that, since <kbd>v</kbd>
 <h2 id="auto-reverting">Auto-reverting</h2>
 
 <p>While on the topic, let me mention <code>auto-revert-mode</code>. I have this in my config:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-auto-revert-mode</span> <span class="mi">1</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-auto-revert-mode</span> <span class="mi">1</span><span class="p">)</span>
 </code></pre></div>
 <p>This way, if any opened and saved file was modified outside of Emacs, it will be updated
 in a short while. I was able to use this to a great advantage when writing the SVG picture
@@ -327,7 +331,7 @@ for the <a href="/2015/02/14/semi-xmodmap/">Xmodmap post</a>:</p>
 
 <p>With that setup, I was able to see the picture update as I was inputting the XML.
 Here&#39;s some Elisp for XML generation, if you&#39;re interested</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">make-row</span> <span class="p">(</span><span class="nv">row-str</span> <span class="nv">ix</span> <span class="nv">iy</span> <span class="nv">fill</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">make-row</span> <span class="p">(</span><span class="nv">row-str</span> <span class="nv">ix</span> <span class="nv">iy</span> <span class="nv">fill</span><span class="p">)</span>
   <span class="p">(</span><span class="nf">mapconcat</span>
    <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
      <span class="p">(</span><span class="nf">format</span>

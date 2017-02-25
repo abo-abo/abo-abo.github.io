@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -323,7 +327,7 @@ I&#39;ve added functionality to <code>counsel-find-file</code> that allows me to
 visit Github issues by simply pointing at the plain issue number,
 e.g. <code>#123</code> in either a version-controlled file or in a Magit buffer.
 The command will query:</p>
-<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span class="nv">$ </span>git remote get-url origin
+<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>$ git remote get-url origin
 </code></pre></div>
 <p>and fill in all the details. So I no longer bother with
 <code>bug-reference-url-format</code> and <code>bug-reference-mode</code> - now it&#39;s all
@@ -333,7 +337,7 @@ automatic.</p>
 instance this code (already included in
 <a href="http://melpa.org/#/counsel">counsel</a>) makes it work for the Emacs Git
 repository:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel-emacs-url-p</span> <span class="p">()</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel-emacs-url-p</span> <span class="p">()</span>
   <span class="s">&quot;Return a Debbugs issue URL at point.&quot;</span>
   <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="k">and</span> <span class="p">(</span><span class="nf">looking-at</span> <span class="s">&quot;#[0-9]+&quot;</span><span class="p">)</span>
              <span class="p">(</span><span class="k">or</span>

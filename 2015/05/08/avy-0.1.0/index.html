@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -327,22 +331,22 @@ just one.  This doesn&#39;t impact the narrowing phase too much, since inputting
 isn&#39;t much more than just one.  But it greatly decreases the number of candidates in the decision
 phase. The small amount of candidates allows me to use this setting for the decision:</p></li>
 </ul>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">avy-keys</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">?a</span> <span class="nv">?s</span> <span class="nv">?d</span> <span class="nv">?f</span> <span class="nv">?g</span> <span class="nv">?h</span> <span class="nv">?j</span> <span class="nv">?k</span> <span class="nv">?l</span><span class="p">))</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">avy-keys</span> <span class="o">&#39;</span><span class="p">(</span><span class="sc">?a</span> <span class="sc">?s</span> <span class="sc">?d</span> <span class="sc">?f</span> <span class="sc">?g</span> <span class="sc">?h</span> <span class="sc">?j</span> <span class="sc">?k</span> <span class="sc">?l</span><span class="p">))</span>
 </code></pre></div>
 <p>That&#39;s only 9 decision chars, all of them on the home row.</p>
 
 <h2 id="the-decision-char-overlay-flavors">The decision char overlay flavors</h2>
 
 <p>Once again, there are three, here are their corresponding <code>defcustom</code>s:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defcustom</span> <span class="nv">avy-goto-char-style</span> <span class="ss">&#39;pre</span>
-  <span class="s">&quot;Method of displaying the overlays for `avy-goto-char&#39; and `avy-goto-char-2&#39;.&quot;</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defcustom</span> <span class="nv">avy-goto-char-style</span> <span class="ss">&#39;pre</span>
+  <span class="s">&quot;Method of displaying the overlays for </span><span class="ss">`avy-goto-char&#39;</span><span class="s"> and </span><span class="ss">`avy-goto-char-2&#39;</span><span class="s">.&quot;</span>
   <span class="nb">:type</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">choice</span>
           <span class="p">(</span><span class="nv">const</span> <span class="nb">:tag</span> <span class="s">&quot;Pre&quot;</span> <span class="nv">pre</span><span class="p">)</span>
           <span class="p">(</span><span class="nv">const</span> <span class="nb">:tag</span> <span class="s">&quot;At&quot;</span> <span class="nv">at</span><span class="p">)</span>
           <span class="p">(</span><span class="nv">const</span> <span class="nb">:tag</span> <span class="s">&quot;Post&quot;</span> <span class="nv">post</span><span class="p">)))</span>
 
 <span class="p">(</span><span class="nb">defcustom</span> <span class="nv">avy-goto-word-style</span> <span class="ss">&#39;pre</span>
-  <span class="s">&quot;Method of displaying the overlays for `avy-goto-word-0&#39; and `avy-goto-word-0&#39;.&quot;</span>
+  <span class="s">&quot;Method of displaying the overlays for </span><span class="ss">`avy-goto-word-0&#39;</span><span class="s"> and </span><span class="ss">`avy-goto-word-0&#39;</span><span class="s">.&quot;</span>
   <span class="nb">:type</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">choice</span>
           <span class="p">(</span><span class="nv">const</span> <span class="nb">:tag</span> <span class="s">&quot;Pre&quot;</span> <span class="nv">pre</span><span class="p">)</span>
           <span class="p">(</span><span class="nv">const</span> <span class="nb">:tag</span> <span class="s">&quot;At&quot;</span> <span class="nv">at</span><span class="p">)</span>

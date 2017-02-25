@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -352,7 +356,7 @@ since it was published on <code>Mar 26</code> and <code>helm</code> switched to
 now.</p>
 
 <p>Here&#39;s what <code>helm</code> is using currently:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">fboundp</span> <span class="ss">&#39;set-transient-map</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">fboundp</span> <span class="ss">&#39;set-transient-map</span><span class="p">)</span>
     <span class="p">(</span><span class="nv">set-transient-map</span> <span class="nv">it</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">set-temporary-overlay-map</span> <span class="nv">it</span><span class="p">))</span>
 </code></pre></div>
@@ -364,7 +368,7 @@ called after <code>helm</code>.</p>
 <p>It didn&#39;t work out, because <code>helm</code> adds the code that calls
 <code>set-transient-map</code> to <code>post-command-hook</code>.
 In the end, this finally worked:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">remove-hook</span> <span class="ss">&#39;post-command-hook</span> <span class="ss">&#39;helm--maybe-update-keymap</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">remove-hook</span> <span class="ss">&#39;post-command-hook</span> <span class="ss">&#39;helm--maybe-update-keymap</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="lispy-vs-slime-and-cider"><code>lispy</code> vs. <code>SLIME</code> and <code>CIDER</code></h2>
 
@@ -407,8 +411,8 @@ as well.</p>
 
 <p>The answer is the first one on <code>minor-mode-map-alist</code>.
 This function I&#39;ve found on the <a href="http://www.emacswiki.org/emacs/minor-mode-hack.el">wiki</a>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">lispy-raise-minor-mode</span> <span class="p">(</span><span class="nv">mode</span><span class="p">)</span>
-  <span class="s">&quot;Make MODE the first on `minor-mode-map-alist&#39;.&quot;</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">lispy-raise-minor-mode</span> <span class="p">(</span><span class="nv">mode</span><span class="p">)</span>
+  <span class="s">&quot;Make MODE the first on </span><span class="ss">`minor-mode-map-alist&#39;</span><span class="s">.&quot;</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">x</span> <span class="p">(</span><span class="nf">assq</span> <span class="nv">mode</span> <span class="nv">minor-mode-map-alist</span><span class="p">)))</span>
       <span class="p">(</span><span class="nb">when</span> <span class="nv">x</span>
         <span class="p">(</span><span class="k">setq</span> <span class="nv">minor-mode-map-alist</span>
@@ -417,7 +421,7 @@ This function I&#39;ve found on the <a href="http://www.emacswiki.org/emacs/mino
 <p>I didn&#39;t want <code>lispy-mode</code> to mess with <code>minor-mode-map-alist</code> too
 actively, so I went with this approach: if <code>lispy-mode</code> is called
 interactively, i.e. via a key binding or <kbd>M-x</kbd>, put it ahead:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="k">and</span> <span class="nv">lispy-mode</span> <span class="p">(</span><span class="nv">called-interactively-p</span> <span class="ss">&#39;any</span><span class="p">))</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="k">and</span> <span class="nv">lispy-mode</span> <span class="p">(</span><span class="nv">called-interactively-p</span> <span class="ss">&#39;any</span><span class="p">))</span>
     <span class="p">(</span><span class="nf">mapc</span> <span class="nf">#&#39;</span><span class="nv">lispy-raise-minor-mode</span>
           <span class="p">(</span><span class="nf">cons</span> <span class="ss">&#39;lispy-mode</span> <span class="nv">lispy-known-verbs</span><span class="p">)))</span>
 </code></pre></div>

@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -281,11 +285,11 @@
   <h1 class="post-title">Profile your Emacs start-up time</h1>
   <span class="post-date">24 Feb 2015</span>
   <p>I bet I could compete for the shortest <code>~/.emacs</code> ever:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">(load &quot;~/Dropbox/source/site-lisp/init&quot;)
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>(load &quot;~/Dropbox/source/site-lisp/init&quot;)
 </code></pre></div>
 <p>However, it being one line doesn&#39;t make it start up any faster.
 Here&#39;s what I have in my Makefile beside <code>init.el</code>:</p>
-<div class="highlight"><pre><code class="language-Makefile" data-lang="Makefile"><span class="nf">profile</span><span class="o">:</span>
+<div class="highlight"><pre><code class="language-Makefile" data-lang="Makefile"><span></span><span class="nf">profile</span><span class="o">:</span>
     emacs -Q -l git/profile-dotemacs/profile-dotemacs.el <span class="se">\</span>
     --eval <span class="s2">&quot;(setq profile-dotemacs-file \</span>
 <span class="s2">        (setq load-file-name \&quot;</span><span class="k">$(</span>abspath init.el<span class="k">)</span><span class="s2">\&quot;))&quot;</span> <span class="se">\</span>
@@ -311,7 +315,7 @@ laptop, which I do at home.</p>
 <h2 id="use-package-idle-option"><code>use-package</code> <code>:idle</code> option</h2>
 
 <p>This one is a big time saver, since <code>org-mode</code> just takes so long to load:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">use-package</span> <span class="nv">org</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">use-package</span> <span class="nv">org</span>
     <span class="nb">:defer</span> <span class="no">t</span>
     <span class="nb">:idle</span> <span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;oleh/org</span><span class="p">))</span>
 </code></pre></div>
@@ -323,7 +327,7 @@ use it for <code>org</code> and one or two other things.</p>
 <h2 id="autoloading-stuff">autoloading stuff</h2>
 
 <p>Here&#39;s some helper code for this:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">update-all-autoloads</span> <span class="p">()</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">update-all-autoloads</span> <span class="p">()</span>
   <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">cd</span> <span class="nv">emacs-d</span><span class="p">)</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">generated-autoload-file</span>
@@ -340,7 +344,7 @@ use it for <code>org</code> and one or two other things.</p>
 The directory <code>modes</code> contains 44 Elisp files for each major mode or package that I customize.</p>
 
 <p>For instance, here are the contents of <code>Info.el</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">Info-mode-map</span> <span class="s">&quot;j&quot;</span> <span class="ss">&#39;ora-para-down</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">Info-mode-map</span> <span class="s">&quot;j&quot;</span> <span class="ss">&#39;ora-para-down</span><span class="p">)</span>
 <span class="p">(</span><span class="nf">define-key</span> <span class="nv">Info-mode-map</span> <span class="s">&quot;k&quot;</span> <span class="ss">&#39;ora-para-up</span><span class="p">)</span>
 <span class="p">(</span><span class="nf">define-key</span> <span class="nv">Info-mode-map</span> <span class="s">&quot;v&quot;</span> <span class="ss">&#39;recenter-top-bottom</span><span class="p">)</span>
 <span class="p">(</span><span class="nf">define-key</span> <span class="nv">Info-mode-map</span> <span class="s">&quot;h&quot;</span> <span class="ss">&#39;backward-char</span><span class="p">)</span>
@@ -359,21 +363,21 @@ The directory <code>modes</code> contains 44 Elisp files for each major mode or 
 of posts to cover what I have in <code>magit.el</code>. The file <code>Info.el</code> never
 gets loaded until I open a buffer in <code>Info-mode</code>.
 Here&#39;s what gets loaded every time:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">load</span> <span class="p">(</span><span class="nf">concat</span> <span class="nv">emacs-d</span> <span class="s">&quot;loaddefs.el&quot;</span><span class="p">)</span> <span class="no">nil</span> <span class="no">t</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">load</span> <span class="p">(</span><span class="nf">concat</span> <span class="nv">emacs-d</span> <span class="s">&quot;loaddefs.el&quot;</span><span class="p">)</span> <span class="no">nil</span> <span class="no">t</span><span class="p">)</span>
 <span class="c1">;; ...</span>
 <span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;Info-mode-hook</span> <span class="ss">&#39;oleh-Info-hook</span><span class="p">)</span>
 </code></pre></div>
 <p>My <code>loaddefs.el</code> is just over 1000 lines and is automatically
 generated by <code>update-all-autoloads</code>. And here are the lines in
 <code>loaddefs.el</code> responsible for loading <code>Info.el</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">autoload</span> <span class="ss">&#39;oleh-Info-hook</span> <span class="s">&quot;oleh/modes/Info&quot;</span> <span class="s">&quot;\</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">autoload</span> <span class="ss">&#39;oleh-Info-hook</span> <span class="s">&quot;oleh/modes/Info&quot;</span> <span class="s">&quot;\</span>
 
 
 <span class="s">\(fn)&quot;</span> <span class="no">nil</span> <span class="no">nil</span><span class="p">)</span>
 </code></pre></div>
 <p>So the statements above are cheap to load.  Actually, the largest
 chunk of my start up time, 28 percent, is taken by:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;eclipse-theme</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;eclipse-theme</span><span class="p">)</span>
 </code></pre></div>
 <p>I don&#39;t know why it takes so long to call <code>custom-theme-set-faces</code>, it&#39;s a mystery.</p>
 

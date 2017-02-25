@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -300,7 +304,7 @@ customizations.</p>
 
 <p>Usually there&#39;s nothing wrong with just killing a spawned process,
 like an <code>ipython</code> shell or something.</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="c1">;; add `flet&#39;</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="c1">;; add `flet&#39;</span>
 <span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;cl</span><span class="p">)</span>
 
 <span class="p">(</span><span class="nb">defadvice</span> <span class="nv">save-buffers-kill-emacs</span>
@@ -312,7 +316,7 @@ like an <code>ipython</code> shell or something.</p>
 
 <p>With this setup, usually there&#39;s no need to manually type in the
 command name.</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;dired-x</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;dired-x</span><span class="p">)</span>
 
 <span class="p">(</span><span class="k">setq</span> <span class="nv">dired-guess-shell-alist-user</span>
       <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;\\.pdf\\&#39;&quot;</span> <span class="s">&quot;evince&quot;</span> <span class="s">&quot;okular&quot;</span><span class="p">)</span>
@@ -339,7 +343,7 @@ out.</p>
 
 <p>In my case, it means that the processes started by Emacs can
 continue running even when Emacs is closed.</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;dired-aux</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;dired-aux</span><span class="p">)</span>
 
 <span class="p">(</span><span class="k">defvar</span> <span class="nv">dired-filelist-cmd</span>
   <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;vlc&quot;</span> <span class="s">&quot;-L&quot;</span><span class="p">)))</span>
@@ -370,7 +374,7 @@ doesn&#39;t make a playlist when given a list of files.</p>
 
 <p>Then I bind it to <kbd>r</kbd> - a nice shortcut not bound
 by default in <code>dired</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="s">&quot;r&quot;</span> <span class="ss">&#39;dired-start-process</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="s">&quot;r&quot;</span> <span class="ss">&#39;dired-start-process</span><span class="p">)</span>
 </code></pre></div>
 </div>
 

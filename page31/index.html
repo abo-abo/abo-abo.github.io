@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -281,6 +285,121 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2014/12/25/ode-to-toggle/">
+        Ode to the toggle
+      </a>
+    </h1>
+
+    <span class="post-date">25 Dec 2014</span>
+
+    <p>Man, I just love toggles: the light switches, the
+<kbd>f</kbd> - full-screen key in <code>vlc</code>, and the clicky pens (ooh, those
+are the best). So I try to model some of my Emacs key bindings as
+toggles.</p>
+
+<p>Let me just quantify the two features that make a good toggle:</p>
+
+<ul>
+<li>only two states: <em>on</em> and <em>off</em></li>
+<li>the state is visible at a glance</li>
+</ul>
+
+<p>One could argue that with <code>undo</code> most editing commands become toggles.
+But they&#39;re not, since each time you call <code>undo</code>, you mess with
+Emacs&#39;s undo state. And the undo state isn&#39;t visible at a glance, so
+both requirements for a good toggle aren&#39;t fulfilled.</p>
+
+<p>I&#39;ll demonstrate the two editing commands that I use every day,
+<code>capitalize-word-toggle</code> and <code>upcase-word-toggle</code>, that are good
+toggles.</p>
+
+<h2 id="capitalize-word-toggle"><code>capitalize-word-toggle</code></h2>
+
+<blockquote>
+<p>Talk is cheap. Show me the code.</p>
+</blockquote>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">char-upcasep</span> <span class="p">(</span><span class="nv">letter</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">eq</span> <span class="nv">letter</span> <span class="p">(</span><span class="nf">upcase</span> <span class="nv">letter</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">capitalize-word-toggle</span> <span class="p">()</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">start</span>
+         <span class="p">(</span><span class="nf">car</span>
+          <span class="p">(</span><span class="k">save-excursion</span>
+            <span class="p">(</span><span class="nv">backward-word</span><span class="p">)</span>
+            <span class="p">(</span><span class="nv">bounds-of-thing-at-point</span> <span class="ss">&#39;symbol</span><span class="p">)))))</span>
+    <span class="p">(</span><span class="k">if</span> <span class="nv">start</span>
+        <span class="p">(</span><span class="k">save-excursion</span>
+          <span class="p">(</span><span class="nf">goto-char</span> <span class="nv">start</span><span class="p">)</span>
+          <span class="p">(</span><span class="nf">funcall</span>
+           <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">char-upcasep</span> <span class="p">(</span><span class="nf">char-after</span><span class="p">))</span>
+               <span class="ss">&#39;downcase-region</span>
+             <span class="ss">&#39;upcase-region</span><span class="p">)</span>
+           <span class="nv">start</span> <span class="p">(</span><span class="nf">1+</span> <span class="nv">start</span><span class="p">)))</span>
+      <span class="p">(</span><span class="nf">capitalize-word</span> <span class="mi">-1</span><span class="p">))))</span>
+<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-z&quot;</span><span class="p">)</span> <span class="ss">&#39;capitalize-word-toggle</span><span class="p">)</span>
+</code></pre></div>
+<p>I may not have mentioned this before, but you should for the most part
+ignore the key bindings mentioned on this blog. I&#39;m actually using
+them, they work for me because of my non-standard layout, but you
+should assign what works for you.</p>
+
+<p>Anyway, <code>capitalize-word-toggle</code> clearly has a state that&#39;s visible at
+a glance: the first char of the current symbol. Also, there are only
+two possible states: the char can either be upper-case or lower-case.
+Hence, I can toggle this state with <kbd>C-z</kbd> for fun and profit.</p>
+
+<p>Maybe some background on how this command is useful for me. I write a bunch of C++,
+and the code features a lot of lines like this:</p>
+<div class="highlight"><pre><code class="language-c++" data-lang="c++"><span></span><span class="n">Triangulation</span> <span class="n">triangulation</span><span class="p">;</span> <span class="c1">// duh</span>
+</code></pre></div>
+<p>So when I&#39;m using <code>auto-complete</code>, it often eagerly expands to
+<code>Triangulation</code> when I want <code>triangulation</code>, and the other way around.
+So <code>capitalize-word-toggle</code> is super-useful there.</p>
+
+<h2 id="upcase-word-toggle"><code>upcase-word-toggle</code></h2>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">upcase-word-toggle</span> <span class="p">()</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">bounds</span> <span class="p">(</span><span class="nv">bounds-of-thing-at-point</span> <span class="ss">&#39;symbol</span><span class="p">))</span>
+        <span class="nv">beg</span> <span class="nv">end</span>
+        <span class="p">(</span><span class="nv">regionp</span>
+         <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">eq</span> <span class="nv">this-command</span> <span class="nv">last-command</span><span class="p">)</span>
+             <span class="p">(</span><span class="nf">get</span> <span class="nv">this-command</span> <span class="ss">&#39;regionp</span><span class="p">)</span>
+           <span class="p">(</span><span class="nf">put</span> <span class="nv">this-command</span> <span class="ss">&#39;regionp</span> <span class="no">nil</span><span class="p">))))</span>
+    <span class="p">(</span><span class="k">cond</span>
+      <span class="p">((</span><span class="k">or</span> <span class="p">(</span><span class="nv">region-active-p</span><span class="p">)</span> <span class="nv">regionp</span><span class="p">)</span>
+       <span class="p">(</span><span class="k">setq</span> <span class="nv">beg</span> <span class="p">(</span><span class="nf">region-beginning</span><span class="p">)</span>
+             <span class="nv">end</span> <span class="p">(</span><span class="nf">region-end</span><span class="p">))</span>
+       <span class="p">(</span><span class="nf">put</span> <span class="nv">this-command</span> <span class="ss">&#39;regionp</span> <span class="no">t</span><span class="p">))</span>
+      <span class="p">(</span><span class="nv">bounds</span>
+       <span class="p">(</span><span class="k">setq</span> <span class="nv">beg</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">bounds</span><span class="p">)</span>
+             <span class="nv">end</span> <span class="p">(</span><span class="nf">cdr</span> <span class="nv">bounds</span><span class="p">)))</span>
+      <span class="p">(</span><span class="no">t</span>
+       <span class="p">(</span><span class="k">setq</span> <span class="nv">beg</span> <span class="p">(</span><span class="nf">point</span><span class="p">)</span>
+             <span class="nv">end</span> <span class="p">(</span><span class="nf">1+</span> <span class="nv">beg</span><span class="p">))))</span>
+    <span class="p">(</span><span class="k">save-excursion</span>
+      <span class="p">(</span><span class="nf">goto-char</span> <span class="p">(</span><span class="nf">1-</span> <span class="nv">beg</span><span class="p">))</span>
+      <span class="p">(</span><span class="k">and</span> <span class="p">(</span><span class="nf">re-search-forward</span> <span class="s">&quot;[A-Za-z]&quot;</span> <span class="nv">end</span> <span class="no">t</span><span class="p">)</span>
+           <span class="p">(</span><span class="nf">funcall</span> <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">char-upcasep</span> <span class="p">(</span><span class="nf">char-before</span><span class="p">))</span>
+                        <span class="ss">&#39;downcase-region</span>
+                      <span class="ss">&#39;upcase-region</span><span class="p">)</span>
+                    <span class="nv">beg</span> <span class="nv">end</span><span class="p">)))))</span>
+<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-&gt;&quot;</span><span class="p">)</span> <span class="ss">&#39;upcase-word-toggle</span><span class="p">)</span>
+</code></pre></div>
+<p><code>upcase-word-toggle</code>&#39;s state becomes binary after you call it once,
+since initially the thing at point could have mixed case.
+But afterwards, it&#39;s either all lowercase or all uppercase.
+So again, a clearly visible binary state is a good thing.</p>
+
+<p>This command works either on <code>(bounds-of-thing-at-point &#39;symbol)</code> or
+on the active region. Since <code>region-active-p</code> is deactivated after you
+call the command once, there&#39;s some machinery to remember the state
+and to toggle when called again.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2014/12/24/light-it-up/">
         Light it up! Pygments for Emacs Lisp.
       </a>
@@ -305,33 +424,33 @@
 Turns out that the Pygments development takes place on
 <a href="https://bitbucket.org/birkenfeld/pygments-main">Bitbucket</a>, so I had
 to start an account there. I shortly cloned the repository:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">hg clone https://abo-abo@bitbucket.org/birkenfeld/pygments-main
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>hg clone https://abo-abo@bitbucket.org/birkenfeld/pygments-main
 </code></pre></div>
 <p>Then I quickly copy-pasted some starting code:</p>
-<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;SchemeLexer&#39;</span><span class="p">,</span> <span class="s">&#39;CommonLispLexer&#39;</span><span class="p">,</span>
-           <span class="s">&#39;HyLexer&#39;</span><span class="p">,</span> <span class="s">&#39;RacketLexer&#39;</span><span class="p">,</span>
-           <span class="s">&#39;NewLispLexer&#39;</span><span class="p">,</span> <span class="s">&#39;EmacsLispLexer&#39;</span><span class="p">]</span>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span></span><span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;SchemeLexer&#39;</span><span class="p">,</span> <span class="s1">&#39;CommonLispLexer&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;HyLexer&#39;</span><span class="p">,</span> <span class="s1">&#39;RacketLexer&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;NewLispLexer&#39;</span><span class="p">,</span> <span class="s1">&#39;EmacsLispLexer&#39;</span><span class="p">]</span>
 
 <span class="k">class</span> <span class="nc">EmacsLispLexer</span><span class="p">(</span><span class="n">RegexLexer</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An ELisp lexer, parsing a stream and outputting the tokens</span>
 <span class="sd">    needed to highlight elisp code.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="s">&#39;ELisp&#39;</span>
-    <span class="n">aliases</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;emacs&#39;</span><span class="p">,</span> <span class="s">&#39;elisp&#39;</span><span class="p">]</span>
-    <span class="n">filenames</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;*.el&#39;</span><span class="p">]</span>
-    <span class="n">mimetypes</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;text/x-elisp&#39;</span><span class="p">]</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;ELisp&#39;</span>
+    <span class="n">aliases</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;emacs&#39;</span><span class="p">,</span> <span class="s1">&#39;elisp&#39;</span><span class="p">]</span>
+    <span class="n">filenames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;*.el&#39;</span><span class="p">]</span>
+    <span class="n">mimetypes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;text/x-elisp&#39;</span><span class="p">]</span>
 
     <span class="n">flags</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">MULTILINE</span>
 
-    <span class="c"># the rest of the code was copied from CommonLispLexer for now</span>
+    <span class="c1"># the rest of the code was copied from CommonLispLexer for now</span>
 </code></pre></div>
 <p>Apparently, infrastructure-wise, I only need to know two commands.
 The first one needs to be run just once, so that Pygments is aware of the new lexer:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">$ cd ~/git/pygments-main &amp;&amp; make mapfiles
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>$ cd ~/git/pygments-main &amp;&amp; make mapfiles
 </code></pre></div>
 <p>The second command is to (re-)generate <code>/tmp/example.html</code>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">$ cp ~/git/emacs/lisp/vc/ediff.el \
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>$ cp ~/git/emacs/lisp/vc/ediff.el \
   ~/git/pygments-main/tests/examplefiles/
 $ ./pygmentize -O full -f html -o /tmp/example.html \
   tests/examplefiles/ediff.el
@@ -353,12 +472,12 @@ refresh the page in Firefox to see the result.</p>
 
 <ul>
 <li><p>a list of built-in functions that are highlighted with <code>font-lock-keyword-face</code>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">&#39;defvaralias&#39;, &#39;provide&#39;, &#39;require&#39;,
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>&#39;defvaralias&#39;, &#39;provide&#39;, &#39;require&#39;,
 &#39;with-no-warnings&#39;, &#39;define-widget&#39;, &#39;with-electric-help&#39;,
 &#39;throw&#39;, &#39;defalias&#39;, &#39;featurep&#39;
 </code></pre></div></li>
 <li><p>a list of built-in functions and macros that are highlighted with <code>font-lock-warning-face</code>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">&#39;cl-assert&#39;, &#39;cl-check-type&#39;, &#39;error&#39;, &#39;signal&#39;,
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>&#39;cl-assert&#39;, &#39;cl-check-type&#39;, &#39;error&#39;, &#39;signal&#39;,
 &#39;user-error&#39;, &#39;warn&#39;
 </code></pre></div></li>
 </ul>
@@ -368,7 +487,7 @@ refresh the page in Firefox to see the result.</p>
 kicked in and I&#39;ve saved the work to <code>research.el</code>.  At least,
 <a href="http://batsov.com/articles/2012/03/08/emacs-tip-number-5-save-buffers-automatically-on-buffer-or-window-switch/">thanks to @bbatsov</a>,
 I&#39;m not <kbd>C-x C-s</kbd>-ing that much since I&#39;ve added this:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">save-and-switch-buffer</span> <span class="p">()</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">save-and-switch-buffer</span> <span class="p">()</span>
   <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
   <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="k">and</span> <span class="p">(</span><span class="nf">buffer-file-name</span><span class="p">)</span>
              <span class="p">(</span><span class="nv">not</span> <span class="p">(</span><span class="nv">bound-and-true-p</span> <span class="nv">archive-subfile-mode</span><span class="p">)))</span>
@@ -378,7 +497,7 @@ I&#39;m not <kbd>C-x C-s</kbd>-ing that much since I&#39;ve added this:</p>
 </code></pre></div>
 <p>But it&#39;s time for the student to one-up the master, so here&#39;s a tip to
 improve even further:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">oleh-ido-setup-hook</span> <span class="p">()</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">oleh-ido-setup-hook</span> <span class="p">()</span>
   <span class="p">(</span><span class="nf">define-key</span> <span class="nv">ido-buffer-completion-map</span> <span class="s">&quot;η&quot;</span> <span class="ss">&#39;ido-next-match</span><span class="p">))</span>
 </code></pre></div>
 <p>This way I can cycle the buffers with the same shortcut that invokes
@@ -390,12 +509,12 @@ improve even further:</p>
 <p>Getting the list of built-in C functions and special forms, obviously
 involved browsing the C source code. In case you don&#39;t (yet) have the Emacs sources,
 they&#39;re here:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">$ git clone git://git.savannah.gnu.org/emacs.git
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>$ git clone git://git.savannah.gnu.org/emacs.git
 </code></pre></div>
 <p>I switched to the <code>./src</code> directory and called <kbd>M-x</kbd> <code>find-name-dired</code> with
 <code>*.c</code> to build a list of all the sources.
 Then I ran the following code from <code>research.el</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">defvar</span> <span class="nv">foo-c-functions</span> <span class="no">nil</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">defvar</span> <span class="nv">foo-c-functions</span> <span class="no">nil</span><span class="p">)</span>
 <span class="p">(</span><span class="k">defvar</span> <span class="nv">foo-c-special-forms</span> <span class="no">nil</span><span class="p">)</span>
 
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">c-research</span> <span class="p">()</span>
@@ -426,7 +545,7 @@ Software FTW.</p>
 
 <p>If you&#39;re interested, there are 1294 built-in functions.
 Here&#39;s a list of 23 special forms that I found:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="k">and</span> <span class="k">catch</span> <span class="k">cond</span> <span class="k">condition-case</span> <span class="k">defconst</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="k">and</span> <span class="k">catch</span> <span class="k">cond</span> <span class="k">condition-case</span> <span class="k">defconst</span>
 <span class="k">defvar</span> <span class="k">function</span> <span class="k">if</span> <span class="k">interactive</span> <span class="k">let</span> <span class="k">let*</span>
 <span class="k">or</span> <span class="k">prog1</span> <span class="k">prog2</span> <span class="k">progn</span> <span class="k">quote</span>
 <span class="k">save-current-buffer</span> <span class="k">save-excursion</span>
@@ -516,7 +635,7 @@ place? You should have used <kbd>M-b</kbd>/<kbd>M-f</kbd>.</p>
 <h2 id="resolve-the-word-malarkey-with-defadvice">Resolve the <code>*-word</code> malarkey with <code>defadvice</code></h2>
 
 <p>Here are some simple advice commands that I&#39;ve just rolled:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defadvice</span> <span class="nf">upcase-word</span> <span class="p">(</span><span class="nv">before</span> <span class="nv">upcase-word-advice</span> <span class="nv">activate</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defadvice</span> <span class="nf">upcase-word</span> <span class="p">(</span><span class="nv">before</span> <span class="nv">upcase-word-advice</span> <span class="nv">activate</span><span class="p">)</span>
   <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nv">looking-back</span> <span class="s">&quot;\\b&quot;</span><span class="p">)</span>
     <span class="p">(</span><span class="nv">backward-word</span><span class="p">)))</span>
 
@@ -561,7 +680,7 @@ some minor update, like a change to README.md.  I mean, how in the
 world would a few words in README.md break the Elisp tests?  Upon
 investigation, it turned out that only one test was broken <sup id="fnref1"><a href="#fn1" rel="footnote">1</a></sup>.  This
 one:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">ert-deftest</span> <span class="nv">clojure-thread-macro</span> <span class="p">()</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">ert-deftest</span> <span class="nv">clojure-thread-macro</span> <span class="p">()</span>
   <span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;cider</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">should</span>
    <span class="p">(</span><span class="nv">string=</span>
@@ -571,12 +690,12 @@ one:</p>
 </code></pre></div>
 <p>The culprit was an update in <code>clojure-mode</code>&#39;s indentation.
 The previous behavior:</p>
-<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="nf">-&gt;&gt;</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">]</span>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span></span><span class="p">(</span><span class="nf">-&gt;&gt;</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">]</span>
    <span class="p">(</span><span class="nb">map </span><span class="nv">sqr</span><span class="p">)</span>
    <span class="p">(</span><span class="nb">filter </span><span class="nv">odd?</span><span class="p">))</span>
 </code></pre></div>
 <p>is now replaced with:</p>
-<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="nf">-&gt;&gt;</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">]</span>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span></span><span class="p">(</span><span class="nf">-&gt;&gt;</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">]</span>
      <span class="p">(</span><span class="nb">map </span><span class="nv">sqr</span><span class="p">)</span>
      <span class="p">(</span><span class="nb">filter </span><span class="nv">odd?</span><span class="p">))</span>
 </code></pre></div>
@@ -641,7 +760,7 @@ not interfere with the tests.</p>
 it on your machine as well as on Travis CI.</p>
 
 <p>Here&#39;s my <code>Cask</code> file for <code>lispy</code>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">(source gnu)
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>(source gnu)
 (source melpa)
 
 (package-file &quot;lispy.el&quot;)
@@ -662,7 +781,7 @@ it on your machine as well as on Travis CI.</p>
  (depends-on &quot;highlight&quot;))
 </code></pre></div>
 <p>And here&#39;s the <code>Makefile</code>:</p>
-<div class="highlight"><pre><code class="language-Makefile" data-lang="Makefile"><span class="nv">EMACS</span> <span class="o">=</span> emacs
+<div class="highlight"><pre><code class="language-Makefile" data-lang="Makefile"><span></span><span class="nv">EMACS</span> <span class="o">=</span> emacs
 <span class="c"># EMACS = emacs-24.3</span>
 
 <span class="nv">CASK</span> <span class="o">=</span> ~/.cask/bin/cask
@@ -693,7 +812,7 @@ compilation warnings/errors.  I can change the Emacs version at the
 top, although I don&#39;t have to do it too often.</p>
 
 <p>Finally, here&#39;s <code>.travis.yml</code>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">language: emacs-lisp
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>language: emacs-lisp
 env:
   matrix:
     - EMACS=emacs24
@@ -768,9 +887,9 @@ with:</p>
 <p>Why not make it do something useful instead, for instance close <code>helm</code>?</p>
 
 <p>Easy:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;helm</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;helm</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">helm-backspace</span> <span class="p">()</span>
-  <span class="s">&quot;Forward to `backward-delete-char&#39;.</span>
+  <span class="s">&quot;Forward to </span><span class="ss">`backward-delete-char&#39;</span><span class="s">.</span>
 <span class="s">On error (read-only), quit without selecting.&quot;</span>
   <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
   <span class="p">(</span><span class="k">condition-case</span> <span class="no">nil</span>
@@ -782,82 +901,11 @@ with:</p>
 </code></pre></div>
   </div>
   
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2014/12/20/poyekhali!/">
-        Poyekhali!
-      </a>
-    </h1>
-
-    <span class="post-date">20 Dec 2014</span>
-
-    <p>Welcome to <b><code>(or emacs</code></b>!</p>
-
-<p>My name is Oleh and I&#39;ve been using Emacs for about 3 years now.  I
-think that it&#39;s an awesome editor, and I&#39;ve accumulated some know-how
-to make it even better (at least for me and people who think like me).
-Sharing is caring, so here we go.</p>
-
-<h2 id="ace-window-update"><code>ace-window</code> update</h2>
-
-<p>On this weekend I&#39;ve made a major update to my package
-<a href="https://github.com/abo-abo/ace-window">ace-window</a> that allows it to
-be used as a library. Luckily the change went smoothly, as there are
-no complaints in the github issues so far.  In case you don&#39;t know
-what the package does in the first place, a short blurb follows.</p>
-
-<h2 id="ace-window-39-s-quot-what-and-why-quot"><code>ace-window</code>&#39;s &quot;what and why&quot;</h2>
-
-<p>I&#39;m sure you&#39;re aware of the <code>other-window</code> command. While it&#39;s great for
-two windows, it quickly loses its value when there are more windows:
-you need to call it many times, and since it&#39;s not easily predictable,
-you have to check each time if you&#39;re in the window that you wanted.</p>
-
-<p>Another approach is to use <code>windmove-left</code>, <code>windmove-up</code> etc.  These
-are fast and predictable. Their disadvantage is that they need 4 key
-bindings.  The default ones are shift+arrows, which are hard to reach.</p>
-
-<p>This package aims to take the speed and predictability of <code>windmove</code>
-and pack it into a single key binding, similar to <code>other-window</code>.  To
-achieve this, I&#39;m using the excellent
-<a href="https://github.com/winterTTr/ace-jump-mode">ace-jump-mode</a>.</p>
-
-<p>Here&#39;s how the package looks in action: <a href="/download/ace-window.gif">ace-window.gif</a></p>
-
-<p>Since switching windows is a frequently used operation, I recommend
-binding <code>ace-window</code> to something short, like <kbd>M-p</kbd>.</p>
-
-<p>By default, three actions are available:</p>
-
-<ul>
-<li><kbd>M-p</kbd> - select window</li>
-<li><kbd>C-u M-p</kbd> - swap the current window with the selected window</li>
-<li><kbd>C-u C-u M-p</kbd> - delete the selected window</li>
-</ul>
-
-<h2 id="finally-the-library-part">finally, the library part</h2>
-
-<p>So now, what if you want to select a window to maximize with <code>ace-window</code>?
-After the change that I&#39;ve mentioned, the code to do this is dirt simple:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">ace-maximize-window</span> <span class="p">()</span>
-  <span class="s">&quot;Ace maximize window.&quot;</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">setq</span> <span class="nv">aw--current-op</span>
-        <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">aj</span><span class="p">)</span>
-          <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">wnd</span> <span class="p">(</span><span class="nv">aj-position-window</span> <span class="nv">aj</span><span class="p">)))</span>
-            <span class="p">(</span><span class="nf">select-window</span> <span class="nv">wnd</span><span class="p">)</span>
-            <span class="p">(</span><span class="nv">delete-other-windows</span><span class="p">))))</span>
-  <span class="p">(</span><span class="nv">aw--doit</span> <span class="s">&quot; Ace - Maximize Window&quot;</span><span class="p">))</span>
-
-<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-M-o&quot;</span><span class="p">)</span> <span class="ss">&#39;ace-maximize-window</span><span class="p">)</span>
-</code></pre></div>
-  </div>
-  
 </div>
 
 <div class="pagination">
   
-    <span class="pagination-item older">Older</span>
+    <a class="pagination-item older" href="/page32">Older</a>
   
   
     

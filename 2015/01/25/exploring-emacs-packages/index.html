@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -283,7 +287,7 @@
   <p>Currently, <a href="http://melpa.org/">MELPA</a> hosts over <code>2250</code> packages. That&#39;s
 quite a large number, although it&#39;s still feasible to try most of the
 popular ones. In comparison,</p>
-<div class="highlight"><pre><code class="language-sh" data-lang="sh">apt-cache pkgnames <span class="p">|</span> wc
+<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>apt-cache pkgnames <span class="p">|</span> wc
 </code></pre></div>
 <p>gives me the number <code>50250</code>. I don&#39;t recall calling <code>apt-cache
 pkgnames</code> ever before, while I call <code>package-list-packages</code> all the
@@ -300,7 +304,7 @@ In addition to executing commands faster, it gives you an option to jump to the 
 with <kbd>M-.</kbd>.</p>
 
 <p>Here&#39;s how I bind <code>smex</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;smex</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;smex</span><span class="p">)</span>
 <span class="p">(</span><span class="nv">global-set-key</span> <span class="s">&quot;\C-t&quot;</span> <span class="ss">&#39;smex</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">smex-prepare-ido-bindings</span> <span class="p">()</span>
   <span class="p">(</span><span class="nf">define-key</span> <span class="nv">ido-completion-map</span>

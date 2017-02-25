@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -294,7 +298,7 @@ quite a common usage pattern:</p>
 <p>In the step 3, you have to go though the whole <code>aw-keys</code> dispatch,
 only to select a window which can be pre-determined. Not any more, if
 you call <code>aw-flip-window</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">aw-flip-window</span> <span class="p">()</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">aw-flip-window</span> <span class="p">()</span>
   <span class="s">&quot;Switch to the window you were previously in.&quot;</span>
   <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">aw-switch-to-window</span> <span class="p">(</span><span class="nv">aw--pop-window</span><span class="p">)))</span>
@@ -307,7 +311,7 @@ window with <code>ace-flip-window</code>, while ignoring the other 8.</p>
 
 <p>Remember that if you have some window that you never want to switch to
 with <code>ace-window</code>, you can add it to <code>aw-ignored-buffers</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defcustom</span> <span class="nv">aw-ignored-buffers</span> <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;*Calc Trail*&quot;</span> <span class="s">&quot;*LV*&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defcustom</span> <span class="nv">aw-ignored-buffers</span> <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;*Calc Trail*&quot;</span> <span class="s">&quot;*LV*&quot;</span><span class="p">)</span>
   <span class="s">&quot;List of buffers to ignore when selecting window.&quot;</span>
   <span class="nb">:type</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">repeat</span> <span class="nf">string</span><span class="p">))</span>
 </code></pre></div>
@@ -327,7 +331,7 @@ ignored, so that makes only two total windows.</li>
 <code>aw-select-window</code>, <code>aw-swap-window</code>, and <code>aw-delete-window</code>, you can
 select the previous window as a target with the same key <kbd>n</kbd>.
 This is, of course, customizable:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defcustom</span> <span class="nv">aw-flip-keys</span> <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;n&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defcustom</span> <span class="nv">aw-flip-keys</span> <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;n&quot;</span><span class="p">)</span>
   <span class="s">&quot;Keys which should select the last window.&quot;</span>
   <span class="nb">:set</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">sym</span> <span class="nv">val</span><span class="p">)</span>
          <span class="p">(</span><span class="nf">set</span> <span class="nv">sym</span> <span class="nv">val</span><span class="p">)</span>
@@ -341,7 +345,7 @@ muscle memory. The bindings don&#39;t necessarily need to be single keys,
 anything with one chord, e.g. <kbd>C-f</kbd>, is acceptable.</p>
 
 <p>Here&#39;s how I&#39;ve set it up for myself:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="s">&quot;ν&quot;</span> <span class="ss">&#39;ace-window</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="s">&quot;ν&quot;</span> <span class="ss">&#39;ace-window</span><span class="p">)</span>
 <span class="p">(</span><span class="nv">csetq</span> <span class="nv">aw-flip-keys</span> <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;n&quot;</span> <span class="s">&quot;ν&quot;</span><span class="p">))</span>
 </code></pre></div>
 <p>This means that:</p>

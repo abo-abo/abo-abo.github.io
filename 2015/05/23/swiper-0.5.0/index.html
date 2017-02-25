@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -310,7 +314,7 @@ repository: <code>counsel-git-grep</code> works much better this way.</p>
 <h3 id="out-of-order-matching">Out of order matching</h3>
 
 <p>I actually like in-order matching, meaning the input &quot;in ma&quot; will match &quot;in-order matching&quot;, but not &quot;made in&quot;. But the users can switch to out-of-order matching if they use this code:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-re-builders-alist</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-re-builders-alist</span>
           <span class="o">&#39;</span><span class="p">((</span><span class="no">t</span> <span class="o">.</span> <span class="nv">ivy--regex-ignore-order</span><span class="p">)))</span>
 </code></pre></div>
 <p><code>ivy-re-builders-alist</code> is the flexible way to customize the regex builders per-collection.  Using <code>t</code> here, means to use this regex builder for everything. You could choose to have in-order for files, and out-of-order for buffers and so on.</p>
@@ -318,7 +322,7 @@ repository: <code>counsel-git-grep</code> works much better this way.</p>
 <h3 id="new-defcustom-ivy-tab-space">New defcustom: <code>ivy-tab-space</code></h3>
 
 <p>Use this to have a space inserted each time you press <kbd>TAB</kbd>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-tab-space</span> <span class="no">t</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-tab-space</span> <span class="no">t</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="ignore-case-for-tab">ignore case for TAB</h3>
 
@@ -348,7 +352,7 @@ name and no way to distinguish them), you can simply use
 
 <p>Does a partial complete without exiting. Use this code to replace
 <code>ivy-partial-or-done</code> with this command:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">ivy-minibuffer-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;TAB&quot;</span><span class="p">)</span> <span class="ss">&#39;ivy-partial</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">ivy-minibuffer-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;TAB&quot;</span><span class="p">)</span> <span class="ss">&#39;ivy-partial</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="allow-to-use-in-swiper">Allow to use <code>^</code> in <code>swiper</code></h3>
 
@@ -372,7 +376,7 @@ one candidate once you&#39;ve narrowed to about 10-20 candidates).</p>
 <p>Suppose you killed a buffer and want to bring it back: now you do it as if you didn&#39;t kill the buffer and instead buried it. The bookmarks access is also nice.</p>
 
 <p>Here&#39;s how to configure it, along with some customization of <code>recentf</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-use-virtual-buffers</span> <span class="no">t</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-use-virtual-buffers</span> <span class="no">t</span><span class="p">)</span>
 
 <span class="p">(</span><span class="nb">use-package</span> <span class="nv">recentf</span>
   <span class="nb">:config</span>
@@ -396,7 +400,7 @@ one candidate once you&#39;ve narrowed to about 10-20 candidates).</p>
 
 <p>See <a href="https://github.com/abo-abo/swiper/wiki/Customize-candidate-menu-style">the wiki</a> on how to customize
 the minibuffer display to look like this:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">100 Find file: ~/
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>100 Find file: ~/
   file1
   file2
 &gt; file3

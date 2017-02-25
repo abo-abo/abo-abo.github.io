@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -294,7 +298,7 @@ files are found with <code>counsel-locate</code> and added to the include path.<
 file. Fixed it with a bunch of googling and guesswork; I still wonder
 if there&#39;s a better way. But in the process, I&#39;ve found this useful
 command:</p>
-<div class="highlight"><pre><code class="language-shell" data-lang="shell">readelf --syms libGL.so
+<div class="highlight"><pre><code class="language-shell" data-lang="shell"><span></span>readelf --syms libGL.so
 </code></pre></div>
 <p>which produces e.g.:</p>
 
@@ -317,13 +321,13 @@ example, instead of one megabyte of gibberish I see a bit more than
 
 <p>I liked the above representation so much that I want to see it by
 default. In Emacs, it&#39;s pretty easy to do with <code>auto-mode-alist</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">add-to-list</span> <span class="ss">&#39;auto-mode-alist</span> <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;\\.\\(?:a\\|so\\)\\&#39;&quot;</span> <span class="o">.</span> <span class="nv">elf-mode</span><span class="p">))</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">add-to-list</span> <span class="ss">&#39;auto-mode-alist</span> <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;\\.\\(?:a\\|so\\)\\&#39;&quot;</span> <span class="o">.</span> <span class="nv">elf-mode</span><span class="p">))</span>
 </code></pre></div>
 <p>The above code instructs Emacs to call <code>elf-mode</code> function whenever
 the file name ends in <code>*.a</code> or <code>*.so</code>.</p>
 
 <p>And here&#39;s the body of <code>elf-mode</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defvar-local</span> <span class="nv">elf-mode</span> <span class="no">nil</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defvar-local</span> <span class="nv">elf-mode</span> <span class="no">nil</span><span class="p">)</span>
 
 <span class="c1">;;;###autoload</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">elf-mode</span> <span class="p">()</span>
@@ -355,7 +359,7 @@ is negligible until the feature is used.</p>
 
 <p>If you look above, <code>elf-mode</code> has an <code>;;;###autoload</code> cookie before
 it. The cookie results in this line in my <code>loaddefs.el</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">autoload</span> <span class="ss">&#39;elf-mode</span> <span class="s">&quot;modes/ora-elf&quot;</span> <span class="s">&quot;&quot;</span> <span class="no">t</span> <span class="no">nil</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">autoload</span> <span class="ss">&#39;elf-mode</span> <span class="s">&quot;modes/ora-elf&quot;</span> <span class="s">&quot;&quot;</span> <span class="no">t</span> <span class="no">nil</span><span class="p">)</span>
 </code></pre></div>
 <p>My <code>init.el</code> always loads <code>loaddefs.el</code>, but never loads <code>ora-elf.el</code>
 where the function is defined. That file is only loaded when the
@@ -365,7 +369,7 @@ statement simply instructs Emacs to load a particular file when
 
 <p>When you use the package manager, the autoloads file is generated and
 loaded for you automatically:</p>
-<div class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="nv">$ </span>tree elpa/ace-link-20160811.112/
+<div class="highlight"><pre><code class="language-shell" data-lang="shell"><span></span>$ tree elpa/ace-link-20160811.112/
 
 elpa/ace-link-20160811.112/
 ├── ace-link-autoloads.el

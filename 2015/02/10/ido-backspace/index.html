@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -291,10 +295,10 @@ according to <kbd>M-=</kbd> (<code>count-words-region</code>) in my <strong>_pos
 <a href="/2014/12/21/helm-backspace/">easy helm improvement</a>,
 which was about implementing a similar function for <code>helm</code>.
 So here it is:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">ido-mode</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">ido-mode</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;delsel</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">ido-backspace</span> <span class="p">()</span>
-  <span class="s">&quot;Forward to `backward-delete-char&#39;.</span>
+  <span class="s">&quot;Forward to </span><span class="ss">`backward-delete-char&#39;</span><span class="s">.</span>
 <span class="s">On error (read-only), quit without selecting.&quot;</span>
   <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
   <span class="p">(</span><span class="k">condition-case</span> <span class="no">nil</span>
@@ -309,7 +313,7 @@ with <kbd>DEL</kbd>.  This, of course, will also work for
 <a href="https://github.com/magit/magit">some</a>
 <a href="https://github.com/abo-abo/lispy">other</a> packages that allow for
 <code>ido</code> completion:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">magit-completing-read-function</span> <span class="nf">#&#39;</span><span class="nv">magit-ido-completing-read</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">magit-completing-read-function</span> <span class="nf">#&#39;</span><span class="nv">magit-ido-completing-read</span><span class="p">)</span>
 <span class="p">(</span><span class="k">setq</span> <span class="nv">lispy-completion-method</span> <span class="ss">&#39;ido</span><span class="p">)</span>
 </code></pre></div>
 <p>Note that the <code>define-key</code> part of the code takes an advantage of a

@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -288,7 +292,7 @@ standard <code>set-transient-map</code> to my own <code>hydra-set-transient-map<
 intercept a binding which doesn&#39;t belong to them and then try to forward it back
 to Emacs. It was done in this way, which might be interesting for people who
 write Elisp:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">hydra-keymap</span> <span class="no">t</span> <span class="ss">&#39;hydra-intercept</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">hydra-keymap</span> <span class="no">t</span> <span class="ss">&#39;hydra-intercept</span><span class="p">)</span>
 </code></pre></div>
 <p>Binding <code>t</code> means that when the keymap is active, any binding which doesn&#39;t
 belong to the keymap will be interpreted as <code>t</code>.  Then, I would use <code>lookup-key</code>
@@ -302,8 +306,8 @@ fragile:</p>
 
 <p>The new method solves the mentioned issues by not using <code>t</code> and instead running
 this function in the <code>pre-command-hook</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">hydra--clearfun</span> <span class="p">()</span>
-  <span class="s">&quot;Disable the current Hydra unless `this-command&#39; is a head.&quot;</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">hydra--clearfun</span> <span class="p">()</span>
+  <span class="s">&quot;Disable the current Hydra unless </span><span class="ss">`this-command&#39;</span><span class="s"> is a head.&quot;</span>
   <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">memq</span> <span class="nv">this-command</span> <span class="o">&#39;</span><span class="p">(</span><span class="nf">handle-switch-frame</span>
                            <span class="nv">keyboard-quit</span><span class="p">))</span>
       <span class="p">(</span><span class="nv">hydra-disable</span><span class="p">)</span>
@@ -334,7 +338,7 @@ and raise an <a href="https://github.com/abo-abo/hydra/issues">issue</a>.</p>
 red and a blue head.</p>
 
 <p>Here&#39;s an example:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-zoom</span> <span class="p">(</span><span class="nv">global-map</span> <span class="s">&quot;&lt;f2&gt;&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-zoom</span> <span class="p">(</span><span class="nv">global-map</span> <span class="s">&quot;&lt;f2&gt;&quot;</span><span class="p">)</span>
   <span class="s">&quot;zoom&quot;</span>
   <span class="p">(</span><span class="s">&quot;g&quot;</span> <span class="nv">text-scale-increase</span> <span class="s">&quot;in&quot;</span><span class="p">)</span>
   <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nv">text-scale-decrease</span> <span class="s">&quot;out&quot;</span><span class="p">)</span>
@@ -384,8 +388,8 @@ won&#39;t call the <kbd>jj</kbd> key chord by accident with <kbd>djj</kbd>.</p>
 <h3 id="variable-as-a-string-docstring-spec">Variable as a string docstring spec</h3>
 
 <p>You can now use this form in your hydras:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">defvar</span> <span class="nv">foo</span> <span class="s">&quot;a b c&quot;</span><span class="p">)</span>
-<span class="p">(</span><span class="nb">defhydra</span> <span class="nv">bar</span> <span class="p">()</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">defvar</span> <span class="nv">foo</span> <span class="s">&quot;a b c&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="nv">defhydra</span> <span class="nv">bar</span> <span class="p">()</span>
   <span class="s">&quot;</span>
 <span class="s">  bar %s`foo</span>
 <span class="s">&quot;</span>
@@ -410,7 +414,7 @@ also running, both for <code>emacs24</code> and for <code>emacs-snapshot</code>.
 should be a lot more stable now.</p>
 
 <p>Here&#39;s an example test:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-simple-1</span> <span class="p">(</span><span class="nv">global-map</span> <span class="s">&quot;C-c&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-simple-1</span> <span class="p">(</span><span class="nv">global-map</span> <span class="s">&quot;C-c&quot;</span><span class="p">)</span>
   <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="p">(</span><span class="nf">insert</span> <span class="s">&quot;j&quot;</span><span class="p">))</span>
   <span class="p">(</span><span class="s">&quot;b&quot;</span> <span class="p">(</span><span class="nf">insert</span> <span class="s">&quot;k&quot;</span><span class="p">))</span>
   <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span><span class="p">))</span>
@@ -446,7 +450,7 @@ for heads to be activated conditionally.</p>
 
 <p>For now, you can modify the docstring on your own if you wish.
 Here&#39;s some code from the expansion of <code>hydra-zoom</code> to explain what I mean:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">set</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">set</span>
  <span class="p">(</span><span class="k">defvar</span> <span class="nv">hydra-zoom/hint</span> <span class="no">nil</span>
    <span class="s">&quot;Dynamic hint for hydra-zoom.&quot;</span><span class="p">)</span>
  <span class="o">&#39;</span><span class="p">(</span><span class="nf">format</span>
@@ -468,18 +472,18 @@ experiment with modifying e.g. <code>hydra-zoom/hint</code> inside heads, if you
 
 <p>Each hydra, e.g. <code>hydra-foo</code> will now declare its own heads as a variable
 <code>hydra-foo/heads</code>. It&#39;s possible to inherit them like this:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-zoom</span> <span class="p">(</span><span class="nv">global-map</span> <span class="s">&quot;&lt;f2&gt;&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-zoom</span> <span class="p">(</span><span class="nv">global-map</span> <span class="s">&quot;&lt;f2&gt;&quot;</span><span class="p">)</span>
   <span class="s">&quot;zoom&quot;</span>
   <span class="p">(</span><span class="s">&quot;g&quot;</span> <span class="nv">text-scale-increase</span> <span class="s">&quot;in&quot;</span><span class="p">)</span>
   <span class="p">(</span><span class="s">&quot;s&quot;</span> <span class="nv">text-scale-decrease</span> <span class="s">&quot;out&quot;</span><span class="p">))</span>
 
-<span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-arrows</span> <span class="p">()</span>
+<span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-arrows</span> <span class="p">()</span>
   <span class="p">(</span><span class="s">&quot;h&quot;</span> <span class="nf">backward-char</span> <span class="s">&quot;left&quot;</span><span class="p">)</span>
   <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">next-line</span> <span class="s">&quot;down&quot;</span><span class="p">)</span>
   <span class="p">(</span><span class="s">&quot;k&quot;</span> <span class="nv">previous-line</span> <span class="s">&quot;up&quot;</span><span class="p">)</span>
   <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nf">forward-char</span> <span class="s">&quot;right&quot;</span><span class="p">))</span>
 
-<span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-zoom-child</span> <span class="p">(</span><span class="nb">:inherit</span> <span class="p">(</span><span class="nv">hydra-zoom/heads</span>
+<span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-zoom-child</span> <span class="p">(</span><span class="nb">:inherit</span> <span class="p">(</span><span class="nv">hydra-zoom/heads</span>
                                       <span class="nv">hydra-arrows/heads</span><span class="p">)</span>
                             <span class="nb">:color</span> <span class="nv">amaranth</span><span class="p">)</span>
   <span class="s">&quot;zoom&quot;</span>

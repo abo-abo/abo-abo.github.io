@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -299,7 +303,7 @@ rather have plain lists, but that&#39;s a minor issue.</p>
 
 <p>I tried to pinpoint the most generic algorithm that <code>ace-jump-mode</code> implements and wrote it down
 in <code>avy</code>. Here&#39;s the core of the implementation:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">avy-subdiv</span> <span class="p">(</span><span class="nv">n</span> <span class="nv">b</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">avy-subdiv</span> <span class="p">(</span><span class="nv">n</span> <span class="nv">b</span><span class="p">)</span>
   <span class="s">&quot;Distribute N in B terms in a balanced way.&quot;</span>
   <span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">p</span> <span class="p">(</span><span class="nf">1-</span> <span class="p">(</span><span class="nf">floor</span> <span class="p">(</span><span class="nf">log</span> <span class="nv">n</span> <span class="nv">b</span><span class="p">))))</span>
          <span class="p">(</span><span class="nv">x1</span> <span class="p">(</span><span class="nf">expt</span> <span class="nv">b</span> <span class="nv">p</span><span class="p">))</span>
@@ -338,7 +342,7 @@ in <code>avy</code>. Here&#39;s the core of the implementation:</p>
 </code></pre></div>
 <p>The first function, <code>avy-subdiv</code>, tries to split a number in terms of the base in a way that
 the most leaves have the lowest level:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">avy-subdiv</span> <span class="mi">42</span> <span class="mi">5</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">avy-subdiv</span> <span class="mi">42</span> <span class="mi">5</span><span class="p">)</span>
 <span class="c1">;;=&gt; (5 5 5 5 22)</span>
 
 <span class="p">(</span><span class="nv">avy-subdiv</span> <span class="mi">42</span> <span class="mi">4</span><span class="p">)</span>
@@ -351,7 +355,7 @@ the most leaves have the lowest level:</p>
 <span class="c1">;;=&gt; (16 26)</span>
 </code></pre></div>
 <p>And here&#39;s an example of what <code>avy-tree</code> produces:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">avy-tree</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">avy-tree</span>
  <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;Acid green&quot;</span> <span class="s">&quot;Aero blue&quot;</span> <span class="s">&quot;Almond&quot;</span> <span class="s">&quot;Amaranth&quot;</span>
    <span class="s">&quot;Amber&quot;</span> <span class="s">&quot;Amethyst&quot;</span> <span class="s">&quot;Apple green&quot;</span> <span class="s">&quot;Aqua&quot;</span>
    <span class="s">&quot;Aquamarine&quot;</span> <span class="s">&quot;Auburn&quot;</span> <span class="s">&quot;Aureolin&quot;</span> <span class="s">&quot;Azure&quot;</span>
@@ -385,7 +389,7 @@ the type of leaf items and keys.</p>
 
 <p>I&#39;ll list them together with the code, so it&#39;s easier to see what they do.
 The basic customizable variable is this one:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defcustom</span> <span class="nv">avy-keys</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">?a</span> <span class="nv">?s</span> <span class="nv">?d</span> <span class="nv">?f</span> <span class="nv">?g</span> <span class="nv">?h</span> <span class="nv">?j</span> <span class="nv">?k</span> <span class="nv">?l</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defcustom</span> <span class="nv">avy-keys</span> <span class="o">&#39;</span><span class="p">(</span><span class="sc">?a</span> <span class="sc">?s</span> <span class="sc">?d</span> <span class="sc">?f</span> <span class="sc">?g</span> <span class="sc">?h</span> <span class="sc">?j</span> <span class="sc">?k</span> <span class="sc">?l</span><span class="p">)</span>
   <span class="s">&quot;Keys for jumping.&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p>Note that, while <code>ace-jump-mode</code> has 52 selection chars by default, I
@@ -394,7 +398,7 @@ usually have to go around one level deeper, but the characters are
 easy to find and press.</p>
 
 <h3 id="avy-jump-double-char"><code>avy-jump-double-char</code></h3>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">avy-jump-double-char</span> <span class="p">()</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">avy-jump-double-char</span> <span class="p">()</span>
   <span class="s">&quot;Read two chars and jump to them in current window.&quot;</span>
   <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">avy--process</span> <span class="p">(</span><span class="nv">avy--regex-candidates</span>
@@ -418,7 +422,7 @@ candidates will have depth 2. The sorting preference is for the first
 candidates to have lower depth.</p>
 
 <h3 id="avy-jump-line"><code>avy-jump-line</code></h3>
-<div class="highlight"><pre><code class="language-Elisp" data-lang="Elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">avy-jump-line</span> <span class="p">()</span>
+<div class="highlight"><pre><code class="language-Elisp" data-lang="Elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">avy-jump-line</span> <span class="p">()</span>
   <span class="s">&quot;Jump to a line start in current buffer.&quot;</span>
   <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">we</span> <span class="p">(</span><span class="nf">window-end</span><span class="p">))</span>
@@ -443,7 +447,7 @@ Here&#39;s how it looks like:</p>
 <h3 id="avy-jump-isearch"><code>avy-jump-isearch</code></h3>
 
 <p>Saving the most clever one for last:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">avy-jump-isearch</span> <span class="p">()</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">avy-jump-isearch</span> <span class="p">()</span>
   <span class="s">&quot;Jump to one of the current isearch candidates.&quot;</span>
   <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">candidates</span>

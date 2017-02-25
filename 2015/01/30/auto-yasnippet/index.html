@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -301,7 +305,7 @@ CSS and more.</p>
 <h3 id="snippet-step-by-step">Snippet step-by-step</h3>
 
 <p>Here&#39;s one of the snippets that I use for <code>emacs-lisp-mode</code>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"># -*- mode: snippet -*-
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span># -*- mode: snippet -*-
 # name: function
 # key: d
 # --
@@ -325,7 +329,7 @@ until the expansion is finished.</p>
 <h3 id="snippets-are-mode-local">Snippets are mode-local</h3>
 
 <p>Here&#39;s the corresponding snippet for <code>clojure-mode</code>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"># -*- mode: snippet -*-
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span># -*- mode: snippet -*-
 # name: defn
 # key: d
 # --
@@ -337,7 +341,7 @@ them based on the current <code>major-mode</code>.</p>
 
 <p>Even after <a href="/archive/">quite a few posts</a>, I still keep forgetting
 Jekyll&#39;s syntax for the post header. This is my reminder:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"># -*- mode: snippet -*-
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span># -*- mode: snippet -*-
 # name: post
 # key: post
 # --
@@ -350,7 +354,7 @@ title: $0
 
 <p>This simple snippet introduces a powerful concept, and an important
 <code>yasnippet</code> feature that <code>auto-yasnippet</code> uses:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"># -*- mode: snippet -*-
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span># -*- mode: snippet -*-
 #name : class ... { ... }
 # --
 class $1$2
@@ -376,13 +380,13 @@ need a file and aren&#39;t persistent.</p>
 
 <p>To get a usable install, you just need to bind <code>aya-create</code>, which is
 similar in spirit to <kbd>M-w</kbd> (<code>kill-ring-save</code>):</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;H-w&quot;</span><span class="p">)</span> <span class="ss">&#39;aya-create</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;H-w&quot;</span><span class="p">)</span> <span class="ss">&#39;aya-create</span><span class="p">)</span>
 </code></pre></div>
 <p>and <code>aya-expand</code>, which is similar to <kbd>C-y</kbd> (<code>yank</code>):</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;H-y&quot;</span><span class="p">)</span> <span class="ss">&#39;aya-expand</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;H-y&quot;</span><span class="p">)</span> <span class="ss">&#39;aya-expand</span><span class="p">)</span>
 </code></pre></div>
 <p>I also like to bind:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-o&quot;</span><span class="p">)</span> <span class="ss">&#39;aya-open-line</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-o&quot;</span><span class="p">)</span> <span class="ss">&#39;aya-open-line</span><span class="p">)</span>
 </code></pre></div>
 <p>I&#39;m using <kbd>C-o</kbd> to do all of these:</p>
 
@@ -395,19 +399,19 @@ similar in spirit to <kbd>M-w</kbd> (<code>kill-ring-save</code>):</p>
 <h3 id="example-1-javascript">Example 1: JavaScript</h3>
 
 <p>Let&#39;s say that you have this code and want to generate more like it:</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">field1</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;field1&quot;</span><span class="p">);</span>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span></span><span class="nx">field1</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;field1&quot;</span><span class="p">);</span>
 </code></pre></div>
 <p>Let&#39;s even assume that you know how <code>auto-yasnippet</code> works and wrote down a slightly modified code beforehand:</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">field</span><span class="o">~</span><span class="mi">1</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;field~1&quot;</span><span class="p">);</span>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span></span><span class="nx">field</span><span class="o">~</span><span class="mi">1</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;field~1&quot;</span><span class="p">);</span>
 </code></pre></div>
 <p>Here, <code>~</code> are meant to represent <code>yasnippet</code>&#39;s mirrors, they will be
 consistent across every expansion. Now you type <kbd>H-w</kbd> (<code>aya-create</code>), which works on the current
 line when there&#39;s no region. Your code becomes the initial one without <code>~</code>, and <code>aya-current</code> variable now holds:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="nv">aya-current</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="nv">aya-current</span>
 <span class="c1">;; =&gt; &quot;field$1 = document.getElementById(\&quot;field$1\&quot;);&quot;</span>
 </code></pre></div>
 <p>By typing e.g. <kbd>H-y 2 C-o RET</kbd>, <kbd>H-y 3 C-o RET</kbd>, <kbd>H-y Final C-o RET</kbd> you get:</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">field2</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;field2&quot;</span><span class="p">);</span>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span></span><span class="nx">field2</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;field2&quot;</span><span class="p">);</span>
 <span class="nx">field3</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;field3&quot;</span><span class="p">);</span>
 <span class="nx">fieldFinal</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;fieldFinal&quot;</span><span class="p">);</span>
 </code></pre></div>
@@ -420,7 +424,7 @@ again.</p>
 <p>Here&#39;s the starting code, with fields and mirrors already in place
 (note one mirror named <code>~On</code>, one field named <code>~on</code> and one field
 named <code>~true</code>):</p>
-<div class="highlight"><pre><code class="language-Java" data-lang="Java"><span class="kd">class</span> <span class="nc">Light</span><span class="o">~</span><span class="n">On</span> <span class="kd">implements</span> <span class="n">Runnable</span> <span class="o">{</span>
+<div class="highlight"><pre><code class="language-Java" data-lang="Java"><span></span><span class="kd">class</span> <span class="nc">Light</span><span class="o">~</span><span class="n">On</span> <span class="kd">implements</span> <span class="n">Runnable</span> <span class="o">{</span>
   <span class="kd">public</span> <span class="n">Light</span><span class="o">~</span><span class="n">On</span><span class="o">()</span> <span class="o">{}</span>
   <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
     <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Turning ~on lights&quot;</span><span class="o">);</span>
@@ -432,7 +436,7 @@ named <code>~true</code>):</p>
 with a region before <kbd>H-w</kbd>.</p>
 
 <p>Here&#39;s the final result:</p>
-<div class="highlight"><pre><code class="language-Java" data-lang="Java"><span class="kd">class</span> <span class="nc">LightOn</span> <span class="kd">implements</span> <span class="n">Runnable</span> <span class="o">{</span>
+<div class="highlight"><pre><code class="language-Java" data-lang="Java"><span></span><span class="kd">class</span> <span class="nc">LightOn</span> <span class="kd">implements</span> <span class="n">Runnable</span> <span class="o">{</span>
   <span class="kd">public</span> <span class="nf">LightOn</span><span class="o">()</span> <span class="o">{}</span>
   <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
     <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Turning on lights&quot;</span><span class="o">);</span>
@@ -455,10 +459,10 @@ copy-paste tool.</p>
 <h3 id="example-3-c">Example 3: C++</h3>
 
 <p>Suppose that I want to generate <code>curl</code> from the <code>grad</code>. I can start with this template:</p>
-<div class="highlight"><pre><code class="language-c++" data-lang="c++"><span class="k">const</span> <span class="n">Point</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">curl</span><span class="p">(</span><span class="n">grad</span><span class="p">[</span><span class="o">~</span><span class="mi">2</span><span class="p">][</span><span class="o">~</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">grad</span><span class="p">[</span><span class="o">~</span><span class="mi">1</span><span class="p">][</span><span class="o">~</span><span class="mi">2</span><span class="p">],</span>
+<div class="highlight"><pre><code class="language-c++" data-lang="c++"><span></span><span class="k">const</span> <span class="n">Point</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">curl</span><span class="p">(</span><span class="n">grad</span><span class="p">[</span><span class="o">~</span><span class="mi">2</span><span class="p">][</span><span class="o">~</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">grad</span><span class="p">[</span><span class="o">~</span><span class="mi">1</span><span class="p">][</span><span class="o">~</span><span class="mi">2</span><span class="p">],</span>
 </code></pre></div>
 <p>Here, I need less than a line, so region needs to be marked again. The result:</p>
-<div class="highlight"><pre><code class="language-C++" data-lang="C++">    <span class="k">const</span> <span class="n">Point</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">curl</span><span class="p">(</span><span class="n">grad</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">grad</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span>
+<div class="highlight"><pre><code class="language-C++" data-lang="C++"><span></span>    <span class="k">const</span> <span class="n">Point</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">curl</span><span class="p">(</span><span class="n">grad</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">grad</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span>
                         <span class="n">grad</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">grad</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
                         <span class="n">grad</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">grad</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]);</span>
 </code></pre></div>
@@ -471,10 +475,10 @@ This time, I just had to check the first line.</p>
 In the JavaScript example, you can leave a <code>$</code> instead of each
 occurrence of <code>$1</code>, and with the point in place of the last occurrence
 you call <kbd>H-w</kbd> (<code>aya-create</code>).  Here, <code>|</code> represents the point:</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">field$</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;|&quot;</span><span class="p">);</span>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span></span><span class="nx">field$</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;|&quot;</span><span class="p">);</span>
 </code></pre></div>
 <p>The final result is the same:</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">field1</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;field1&quot;</span><span class="p">);</span>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span></span><span class="nx">field1</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;field1&quot;</span><span class="p">);</span>
 <span class="nx">field2</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;field2&quot;</span><span class="p">);</span>
 <span class="nx">field3</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;field3&quot;</span><span class="p">);</span>
 <span class="nx">fieldFinal</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;fieldFinal&quot;</span><span class="p">);</span>

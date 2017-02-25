@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -285,7 +289,7 @@ Trek: TNG is one of my favorite shows, so I&#39;ve added some TNG characters to 
 features that I&#39;m testing.</p>
 
 <h2 id="defhydradio-statement"><code>defhydradio</code> statement</h2>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;hydra</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;hydra</span><span class="p">)</span>
 <span class="p">(</span><span class="nv">defhydradio</span> <span class="nv">hydra-tng</span> <span class="p">()</span>
   <span class="p">(</span><span class="nv">picard</span> <span class="s">&quot;_p_ Captain Jean Luc Picard:&quot;</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">riker</span> <span class="s">&quot;_r_ Commander William Riker:&quot;</span><span class="p">)</span>
@@ -294,7 +298,7 @@ features that I&#39;m testing.</p>
   <span class="p">(</span><span class="nv">la-forge</span> <span class="s">&quot;_f_ Geordi La Forge:&quot;</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">troi</span> <span class="s">&quot;_t_ Deanna Troi:&quot;</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">dr-crusher</span> <span class="s">&quot;_c_ Doctor Beverly Crusher:&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">phaser</span> <span class="s">&quot;_h_ Set phasers to &quot;</span> <span class="nv">[stun</span> <span class="nv">kill]</span><span class="p">))</span>
+  <span class="p">(</span><span class="nv">phaser</span> <span class="s">&quot;_h_ Set phasers to &quot;</span> <span class="p">[</span><span class="nv">stun</span> <span class="nv">kill</span><span class="p">]))</span>
 </code></pre></div>
 <p>The <code>defhydradio</code> macro is akin to a namespace construct that defines multiple variables that can
 assume only certain values (either <code>t</code> or <code>nil</code> by default), and functions to cycle those values.</p>
@@ -302,19 +306,19 @@ assume only certain values (either <code>t</code> or <code>nil</code> by default
 <h2 id="defhydradio-implementation"><code>defhydradio</code> implementation</h2>
 
 <p>Here&#39;s what you may see after a <code>macroexpand</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">progn</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">progn</span>
   <span class="p">(</span><span class="k">defvar</span> <span class="nv">hydra-tng/picard</span> <span class="no">nil</span>
     <span class="s">&quot;_p_ Captain Jean Luc Picard:&quot;</span><span class="p">)</span>
   <span class="p">(</span><span class="nf">put</span> <span class="p">(</span><span class="k">quote</span> <span class="nv">hydra-tng/picard</span><span class="p">)</span>
        <span class="p">(</span><span class="k">quote</span> <span class="nv">range</span><span class="p">)</span>
-       <span class="nv">[nil</span> <span class="nv">t]</span><span class="p">)</span>
+       <span class="p">[</span><span class="no">nil</span> <span class="no">t</span><span class="p">])</span>
   <span class="p">(</span><span class="nb">defun</span> <span class="nv">hydra-tng/picard</span> <span class="no">nil</span>
     <span class="p">(</span><span class="nv">hydra--cycle-radio</span> <span class="p">(</span><span class="k">quote</span> <span class="nv">hydra-tng/picard</span><span class="p">)))</span>
   <span class="p">(</span><span class="k">defvar</span> <span class="nv">hydra-tng/riker</span> <span class="no">nil</span>
     <span class="s">&quot;_r_ Commander William Riker:&quot;</span><span class="p">)</span>
   <span class="p">(</span><span class="nf">put</span> <span class="p">(</span><span class="k">quote</span> <span class="nv">hydra-tng/riker</span><span class="p">)</span>
        <span class="p">(</span><span class="k">quote</span> <span class="nv">range</span><span class="p">)</span>
-       <span class="nv">[nil</span> <span class="nv">t]</span><span class="p">)</span>
+       <span class="p">[</span><span class="no">nil</span> <span class="no">t</span><span class="p">])</span>
   <span class="p">(</span><span class="nb">defun</span> <span class="nv">hydra-tng/riker</span> <span class="no">nil</span> <span class="p">(</span><span class="nv">hydra--cycle-radio</span> <span class="p">(</span><span class="k">quote</span> <span class="nv">hydra-tng/riker</span><span class="p">)))</span>
   <span class="c1">;; ...</span>
   <span class="p">(</span><span class="k">defvar</span> <span class="nv">hydra-tng/names</span>
@@ -332,7 +336,7 @@ assume only certain values (either <code>t</code> or <code>nil</code> by default
 </ul>
 
 <h2 id="defhydra-statement"><code>defhydra</code> statement</h2>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-tng</span> <span class="p">(</span><span class="nb">:foreign-keys</span> <span class="nv">run</span> <span class="nb">:hint</span> <span class="no">nil</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-tng</span> <span class="p">(</span><span class="nb">:foreign-keys</span> <span class="nv">run</span> <span class="nb">:hint</span> <span class="no">nil</span><span class="p">)</span>
   <span class="p">(</span><span class="nf">concat</span> <span class="p">(</span><span class="nv">hydra--table</span> <span class="nv">hydra-tng/names</span> <span class="mi">7</span> <span class="mi">2</span>
                         <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;  % -30s %% -3`%s&quot;</span>
                           <span class="s">&quot;%s %%`%s&quot;</span><span class="p">))</span>
@@ -350,7 +354,7 @@ assume only certain values (either <code>t</code> or <code>nil</code> by default
   <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span> <span class="s">&quot;cancel&quot;</span><span class="p">))</span>
 </code></pre></div>
 <p>The interesting statement in place of the docstring will actually evaluate to this docstring:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="s">&quot;  _p_ Captain Jean Luc Picard:   % -3`hydra-tng/picard^^^^    _h_ Set phasers to  %`hydra-tng/phaser</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="s">&quot;  _p_ Captain Jean Luc Picard:   % -3`hydra-tng/picard^^^^    _h_ Set phasers to  %`hydra-tng/phaser</span>
 <span class="s">  _r_ Commander William Riker:   % -3`hydra-tng/riker^^^^^</span>
 <span class="s">  _d_ Lieutenant Commander Data: % -3`hydra-tng/data^^^^^^</span>
 <span class="s">  _w_ Worf:                      % -3`hydra-tng/worf^^^^^^</span>
@@ -372,7 +376,7 @@ assume only certain values (either <code>t</code> or <code>nil</code> by default
 values through <code>range</code>, it&#39;s possible to reset them all at once with <code>hydra-reset-radios</code>.</p>
 
 <p>Finally, here&#39;s a simple implementation of <code>beam-down</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">beam-down</span> <span class="p">()</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">beam-down</span> <span class="p">()</span>
   <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
   <span class="p">(</span><span class="nf">message</span>
    <span class="s">&quot;Beaming down: %s.&quot;</span>

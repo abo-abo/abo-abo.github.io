@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -287,7 +291,7 @@
 <p>This is just a copy-paste of the code from
 <a href="http://iqbalansari.github.io/blog/2014/02/22/switching-repositories-with-magit/">this post</a> by
 Iqbal Ansari.</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">magit-repo-dirs</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">magit-repo-dirs</span>
       <span class="p">(</span><span class="nf">mapcar</span>
        <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">dir</span><span class="p">)</span>
          <span class="p">(</span><span class="nf">substring</span> <span class="nv">dir</span> <span class="mi">0</span> <span class="mi">-1</span><span class="p">))</span>
@@ -302,10 +306,10 @@ that project has <code>.git</code> in its root.</p>
 
 <p>To get a selection of repositories, call with <kbd>C-u M-x</kbd> <code>magit-status</code>.
 And don&#39;t forget to choose <code>ido</code> completion:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">magit-completing-read-function</span> <span class="ss">&#39;magit-ido-completing-read</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">magit-completing-read-function</span> <span class="ss">&#39;magit-ido-completing-read</span><span class="p">)</span>
 </code></pre></div>
 <p>And here&#39;s how I use this in a dispatch:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-helm</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-helm</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
   <span class="s">&quot;helm&quot;</span>
   <span class="p">(</span><span class="s">&quot;f&quot;</span> <span class="nv">projectile-find-file</span> <span class="s">&quot;file&quot;</span><span class="p">)</span>
   <span class="p">(</span><span class="s">&quot;w&quot;</span> <span class="nv">helm-org-wiki</span> <span class="s">&quot;wiki&quot;</span><span class="p">)</span>
@@ -323,21 +327,21 @@ And don&#39;t forget to choose <code>ido</code> completion:</p>
 
 <p>I learned this from some HN post that I can&#39;t find now. Basically, you have to open
 your <code>.git/config</code> file and find the following contents:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">[remote &quot;origin&quot;]
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>[remote &quot;origin&quot;]
     url = git@github.com:abo-abo/hydra.git
     fetch = +refs/heads/*:refs/remotes/origin/*
 </code></pre></div>
 <p>Then, modify it by adding one line (same for all repositories):</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">[remote &quot;origin&quot;]
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>[remote &quot;origin&quot;]
     url = git@github.com:abo-abo/hydra.git
     fetch = +refs/heads/*:refs/remotes/origin/*
     fetch = +refs/pull/*/head:refs/pull/origin/*
 </code></pre></div>
 <p>Now, if you issue:</p>
-<div class="highlight"><pre><code class="language-sh" data-lang="sh">git fetch --all
+<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>git fetch --all
 </code></pre></div>
 <p>You can operate on your pull requests like so:</p>
-<div class="highlight"><pre><code class="language-sh" data-lang="sh">git merge refs/pull/origin/20
+<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>git merge refs/pull/origin/20
 </code></pre></div>
 <p>Here, <code>20</code> is the issue number. And after merging I finally get access to <code>magit</code> and <code>ediff</code> and
 all that jazz to see what the change is actually about.  Before I learned this, I had to manually
@@ -350,10 +354,10 @@ after thoughtfully browsing the diff in Firefox. Trust me, <code>ediff</code> is
 <a href="https://addons.mozilla.org/en-us/firefox/addon/its-all-text/">It&#39;s All Text</a> Firefox plugin.
 But when I wanted to add an image, I actually read the manual and found out that you can simply
 clone the wiki:</p>
-<div class="highlight"><pre><code class="language-sh" data-lang="sh">git clone https://github.com/abo-abo/hydra.wiki.git
+<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>git clone https://github.com/abo-abo/hydra.wiki.git
 </code></pre></div>
 <p>Or with the ssh style, in order to not type the user name and password on pushing:</p>
-<div class="highlight"><pre><code class="language-sh" data-lang="sh">git clone git@github.com:abo-abo/hydra.wiki.git
+<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>git clone git@github.com:abo-abo/hydra.wiki.git
 </code></pre></div>
 <p>By the way, today I&#39;ve made a very large overhaul of <a href="https://github.com/abo-abo/hydra">hydra</a>&#39;s
 README.md. So if you wanted to start writing your own hydras, but were hesitant because of the lack
@@ -362,7 +366,7 @@ of documentation, now is the time to start.</p>
 <p>If you figure out something that you think is worth documenting, you can immediately leave it on the
 <a href="https://github.com/abo-abo/hydra/wiki">wiki</a>.
 By the way, here&#39;s the syntax for including an image, if you were wondering:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">![hydra-helm](images/hydra-helm-unite.png)
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>![hydra-helm](images/hydra-helm-unite.png)
 </code></pre></div>
 <p>You upload a file simply by adding it to the repository. Look Ma, no Imgur!</p>
 

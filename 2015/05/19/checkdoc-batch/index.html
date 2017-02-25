@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -290,13 +294,13 @@ a small modification, I&#39;ve made it suitable for batch.</p>
 <a href="https://github.com/abo-abo/avy">avy</a> (or
 <a href="https://github.com/abo-abo/lispy">lispy</a>) repository. Here&#39;s my
 <code>compile</code> target in the Makefile:</p>
-<div class="highlight"><pre><code class="language-Makefile" data-lang="Makefile"><span class="nv">emacs</span> <span class="o">?=</span> emacs
+<div class="highlight"><pre><code class="language-Makefile" data-lang="Makefile"><span></span><span class="nv">emacs</span> <span class="o">?=</span> emacs
 
 <span class="nf">compile</span><span class="o">:</span>
     <span class="k">$(</span>emacs<span class="k">)</span> -batch -l targets/avy-init.el
 </code></pre></div>
 <p>And here are the contents of avy-init.el:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">add-to-list</span> <span class="ss">&#39;load-path</span> <span class="nv">default-directory</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">add-to-list</span> <span class="ss">&#39;load-path</span> <span class="nv">default-directory</span><span class="p">)</span>
 <span class="p">(</span><span class="nf">mapc</span> <span class="nf">#&#39;</span><span class="nv">byte-compile-file</span> <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;avy.el&quot;</span><span class="p">))</span>
 <span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;avy</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;checkdoc</span><span class="p">)</span>
@@ -322,7 +326,7 @@ the <code>*compilation*</code> buffer.</p>
 
 <p>For the lazy, it&#39;s possible to jump to errors with a mouse, but
 navigating errors is a breeze with this Hydra:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-error</span> <span class="p">(</span><span class="nv">global-map</span> <span class="s">&quot;M-g&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-error</span> <span class="p">(</span><span class="nv">global-map</span> <span class="s">&quot;M-g&quot;</span><span class="p">)</span>
   <span class="s">&quot;goto-error&quot;</span>
   <span class="p">(</span><span class="s">&quot;h&quot;</span> <span class="nv">first-error</span> <span class="s">&quot;first&quot;</span><span class="p">)</span>
   <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">next-error</span> <span class="s">&quot;next&quot;</span><span class="p">)</span>
@@ -346,9 +350,9 @@ extremely stable: I&#39;m on Emacs25 almost all the time now, since it
 feels a lot faster.</p>
 
 <p>Here are my aliasing settings:</p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>which newemacs
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ which newemacs
 /usr/local/bin/newemacs
-<span class="nv">$ </span>readlink -f <span class="sb">`</span>which newemacs<span class="sb">`</span>
+$ readlink -f <span class="sb">`</span>which newemacs<span class="sb">`</span>
 /home/oleh/git/gnu-emacs/src/emacs
 </code></pre></div>
 <p>To run the tests with <code>newemacs</code> instead of <code>emacs</code> (since that&#39;s the

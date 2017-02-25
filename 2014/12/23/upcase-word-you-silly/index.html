@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -315,7 +319,7 @@ place? You should have used <kbd>M-b</kbd>/<kbd>M-f</kbd>.</p>
 <h2 id="resolve-the-word-malarkey-with-defadvice">Resolve the <code>*-word</code> malarkey with <code>defadvice</code></h2>
 
 <p>Here are some simple advice commands that I&#39;ve just rolled:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defadvice</span> <span class="nf">upcase-word</span> <span class="p">(</span><span class="nv">before</span> <span class="nv">upcase-word-advice</span> <span class="nv">activate</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defadvice</span> <span class="nf">upcase-word</span> <span class="p">(</span><span class="nv">before</span> <span class="nv">upcase-word-advice</span> <span class="nv">activate</span><span class="p">)</span>
   <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nv">looking-back</span> <span class="s">&quot;\\b&quot;</span><span class="p">)</span>
     <span class="p">(</span><span class="nv">backward-word</span><span class="p">)))</span>
 

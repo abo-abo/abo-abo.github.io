@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -306,7 +310,7 @@ replacements:</p>
 that I call by name instead of by key chord. But thanks to
 <code>counsel-M-x</code> and <code>smex</code> calling this command by name is as short as
 <kbd>C-t v RET</kbd>.  To explain a bit more, here&#39;s my setup:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="c1">;; make sure to install smex</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="c1">;; make sure to install smex</span>
 <span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-t&quot;</span><span class="p">)</span> <span class="ss">&#39;counsel-M-x</span><span class="p">)</span>
 </code></pre></div>
 <p>The default command bound to <kbd>C-t</kbd> is <code>transpose-chars</code> - a
@@ -324,7 +328,7 @@ press <kbd>RET</kbd> and be done with it.</p>
 
 <p>Finally, related to <code>visual-line-mode</code>, here&#39;s a command I use to
 negate <kbd>M-q</kbd> (<code>fill-paragraph</code>) (<a href="http://www.emacswiki.org/emacs/UnfillParagraph">source</a>):</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-M-q&quot;</span><span class="p">)</span> <span class="ss">&#39;ora-unfill-paragraph</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-M-q&quot;</span><span class="p">)</span> <span class="ss">&#39;ora-unfill-paragraph</span><span class="p">)</span>
 
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">ora-unfill-paragraph</span> <span class="p">()</span>
   <span class="s">&quot;Transform a paragraph into a single line.&quot;</span>

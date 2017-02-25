@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -287,7 +291,7 @@ Finally, the number of candidates display has also been added.  You can see the 
 <a href="https://www.youtube.com/watch?v=s3qwiAtKjuA">one minute video demo</a>.</p>
 
 <p>Here are the bindings that I&#39;m using:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="s">&quot;\C-r&quot;</span> <span class="ss">&#39;swiper</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="s">&quot;\C-r&quot;</span> <span class="ss">&#39;swiper</span><span class="p">)</span>
 <span class="p">(</span><span class="nv">global-set-key</span> <span class="s">&quot;\C-s&quot;</span> <span class="ss">&#39;swiper</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="integration-tests">Integration tests</h2>
@@ -295,16 +299,16 @@ Finally, the number of candidates display has also been added.  You can see the 
 <p>I&#39;ve also added some <a href="https://github.com/abo-abo/swiper/blob/master/ivy-test.el">integration tests</a>,
 if you&#39;re interested. I didn&#39;t know how to do exactly this type of testing before (when there&#39;s input from minibuffer).
 Turns out, it&#39;s pretty easy to do using <code>execute-kbd-macro</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;ert</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;ert</span><span class="p">)</span>
 
 <span class="p">(</span><span class="k">defvar</span> <span class="nv">ivy-expr</span> <span class="no">nil</span>
-  <span class="s">&quot;Holds a test expression to evaluate with `ivy-eval&#39;.&quot;</span><span class="p">)</span>
+  <span class="s">&quot;Holds a test expression to evaluate with </span><span class="ss">`ivy-eval&#39;</span><span class="s">.&quot;</span><span class="p">)</span>
 
 <span class="p">(</span><span class="k">defvar</span> <span class="nv">ivy-result</span> <span class="no">nil</span>
-  <span class="s">&quot;Holds the eval result of `ivy-expr&#39; by `ivy-eval&#39;.&quot;</span><span class="p">)</span>
+  <span class="s">&quot;Holds the eval result of </span><span class="ss">`ivy-expr&#39;</span><span class="s"> by </span><span class="ss">`ivy-eval&#39;</span><span class="s">.&quot;</span><span class="p">)</span>
 
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">ivy-eval</span> <span class="p">()</span>
-  <span class="s">&quot;Evaluate `ivy-expr&#39;.&quot;</span>
+  <span class="s">&quot;Evaluate </span><span class="ss">`ivy-expr&#39;</span><span class="s">.&quot;</span>
   <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
   <span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-result</span> <span class="p">(</span><span class="nf">eval</span> <span class="nv">ivy-expr</span><span class="p">)))</span>
 

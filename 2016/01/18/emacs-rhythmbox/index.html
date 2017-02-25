@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -284,7 +288,7 @@
 <a href="http://oremacs.com/2015/07/09/counsel-rhythmbox/">earlier post</a>, I
 described how I&#39;ve been managing Rhythmbox from Emacs. I&#39;ve bound the
 entry point to <kbd>C-S-o</kbd>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-S-o&quot;</span><span class="p">)</span> <span class="ss">&#39;counsel-rhythmbox</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-S-o&quot;</span><span class="p">)</span> <span class="ss">&#39;counsel-rhythmbox</span><span class="p">)</span>
 </code></pre></div>
 <p>Obviously, this entry point won&#39;t work while outside Emacs. Today,
 I&#39;ll describe how I&#39;ve made it work everywhere. Everywhere on Ubuntu
@@ -294,7 +298,7 @@ distributions.</p>
 <h2 id="step-1-make-sure-the-emacs-server-is-running">Step 1: Make sure the Emacs server is running</h2>
 
 <p>Here&#39;s the relevant part of my <a href="https://github.com/abo-abo/oremacs/blob/github/init.el">init.el</a>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;server</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;server</span><span class="p">)</span>
 <span class="p">(</span><span class="k">or</span> <span class="p">(</span><span class="nv">server-running-p</span><span class="p">)</span> <span class="p">(</span><span class="nv">server-start</span><span class="p">))</span>
 </code></pre></div>
 <p>Using <code>emacsclient</code> is essential to avoiding the extra startup time:
@@ -311,10 +315,10 @@ selection, and raise it as well.</p>
 <p>I wanted to do something with <code>wmctrl</code>, but I found that
 <a href="http://superuser.com/questions/382616/detecting-currently-active-window">xdotool</a>
 can do what I want in a simple way.</p>
-<div class="highlight"><pre><code class="language-sh" data-lang="sh">sudo apt-get install xdotool
+<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>sudo apt-get install xdotool
 </code></pre></div>
 <h2 id="step-3-write-a-shell-script">Step 3: Write a shell script</h2>
-<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span class="c">#!/bin/bash</span>
+<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span><span class="ch">#!/bin/bash</span>
 <span class="nv">wnd_id</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>xdotool getwindowfocus<span class="k">)</span><span class="s2">&quot;</span>
 emacsclient --eval <span class="s2">&quot;(progn (x-focus-frame nil) (counsel-rhythmbox))&quot;</span>
 xdotool windowfocus <span class="nv">$wnd_id</span>
@@ -328,14 +332,14 @@ invoked.</p>
 
 <p>By the way, here&#39;s a cool configuration that automatically makes a
 file executable if it starts with <code>#!</code>.</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">add-hook</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">add-hook</span>
  <span class="ss">&#39;after-save-hook</span>
  <span class="ss">&#39;executable-make-buffer-file-executable-if-script-p</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="step-4-bind-the-shell-script-to-a-key">Step 4: Bind the shell script to a key</h2>
 
 <p>Open this (possibly using <code>gnome-control-center</code> instead, if applicable):</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">unity-control-center keyboard
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>unity-control-center keyboard
 </code></pre></div>
 <p>And add a new shortcut in <code>Shortcuts</code>/<code>Custom Shortcuts</code>. I&#39;ve bound
 that one to <kbd>C-S-o</kbd> as well.</p>

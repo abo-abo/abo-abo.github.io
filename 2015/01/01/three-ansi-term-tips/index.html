@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -284,7 +288,7 @@
 
 <p>There&#39;s no reason not to have <code>/bin/bash</code> instead of <code>/bin/sh</code> as the
 default choice when you <kbd>M-x</kbd> <code>term</code>.</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">explicit-shell-file-name</span> <span class="s">&quot;/bin/bash&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">explicit-shell-file-name</span> <span class="s">&quot;/bin/bash&quot;</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="tip-2">Tip #2</h2>
 
@@ -292,7 +296,7 @@ default choice when you <kbd>M-x</kbd> <code>term</code>.</p>
 process. It&#39;s probably left there for you to have a history of what
 you did. I find it not useful, so here&#39;s a way to kill that buffer
 automatically:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">oleh-term-exec-hook</span> <span class="p">()</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">oleh-term-exec-hook</span> <span class="p">()</span>
   <span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">buff</span> <span class="p">(</span><span class="nf">current-buffer</span><span class="p">))</span>
          <span class="p">(</span><span class="nv">proc</span> <span class="p">(</span><span class="nf">get-buffer-process</span> <span class="nv">buff</span><span class="p">)))</span>
     <span class="p">(</span><span class="nf">set-process-sentinel</span>
@@ -309,7 +313,7 @@ automatically:</p>
 from Emacs&#39;s <code>yank</code>.  So, until recently, I was using
 <kbd>S-&lt;insert&gt;</kbd> to paste stuff into <code>*term*</code>. Here&#39;s a
 more ergonomic way:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">eval-after-load</span> <span class="s">&quot;term&quot;</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">eval-after-load</span> <span class="s">&quot;term&quot;</span>
   <span class="o">&#39;</span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">term-raw-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c C-y&quot;</span><span class="p">)</span> <span class="ss">&#39;term-paste</span><span class="p">))</span>
 </code></pre></div>
 </div>

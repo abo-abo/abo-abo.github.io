@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -281,6 +285,40 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/06/09/lispy-case-to-cond/">
+        Transform a LISP case into a cond with lispy
+      </a>
+    </h1>
+
+    <span class="post-date">09 Jun 2015</span>
+
+    <p>Just a little extension to the old <kbd>xc</kbd> (<code>lispy-to-cond</code>)
+command that I&#39;ve added today to <a href="https://github.com/abo-abo/lispy">lispy</a>:</p>
+
+<p><img src="/download/lispy-case-to-cond.png" alt="lispy-case-to-cond.png"></p>
+
+<p>Previously, <kbd>xc</kbd> could only transform a series of nested <code>if</code>
+into a <code>cond</code>.  You can even chain <kbd>xcxi</kbd> to transform a
+<code>case</code> statement into equivalent <code>if</code> statements.</p>
+
+<p>Note also that unwanted whitespace is properly removed. What you see
+in the picture is actually an
+<a href="https://www.gnu.org/software/emacs/manual/html_node/ert/">ERT</a> test
+that&#39;s being run each time I commit new stuff. It makes sure that
+starting in the first buffer state and pressing <kbd>xc</kbd> really
+results in the second buffer state. With this test, it&#39;s reasonable to
+believe that <kbd>xc</kbd> will actually work the same way in an
+interactive scenario. Right now, there are 599 of these type of tests
+in lispy-test.el.  To view them like in the screenshot, you can press
+<kbd>xv</kbd>.</p>
+
+<p>Final note, I realize that it should be <code>eql</code> instead of <code>eq</code>, but I
+like <code>eq</code> more: it&#39;s 33% more efficient.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/06/08/describe-variable-tip/">
         More productive describe-variable
       </a>
@@ -303,7 +341,7 @@ looks like <code>counsel-describe-variable</code>, but has only this exit point.
 
 <p>I&#39;ll just describe one useful scenario that happened just now. I was working on <a href="http://debbugs.gnu.org/cgi/bugreport.cgi?bug=20754">a <code>checkdoc.el</code> change</a>
 and was testing it with <code>avy.el</code>. And I got a few style warnings for this code, which I got from a <a href="https://github.com/abo-abo/avy/pull/59">contributor</a> (thanks for the code btw):</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">defvar</span> <span class="nv">avy-translate-char-function</span> <span class="nf">#&#39;identity</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">defvar</span> <span class="nv">avy-translate-char-function</span> <span class="nf">#&#39;identity</span>
   <span class="s">&quot;Function to translate user input key. This can be useful for</span>
 <span class="s">adding mirror key. E.g. one can make SPACE an alternative of &#39;a&#39;,</span>
 <span class="s">by adding:</span>
@@ -315,14 +353,14 @@ and was testing it with <code>avy.el</code>. And I got a few style warnings for 
 <span class="s">highlighted by &#39;a&#39;.&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p>One of the warnings that <code>avy-translate-char-function</code> should be quoted while inside the docstring like so:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="s">&quot;`avy-translate-char-function&#39;&quot;</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="s">&quot;</span><span class="ss">`avy-translate-char-function&#39;</span><span class="s">&quot;</span>
 </code></pre></div>
 <p>Of course that wouldn&#39;t play well with <code>setq</code>, so I wanted to see if
 any other variables that end in <code>-function</code> provide an example of use
 like here, and, if so, how they quote.</p>
 
 <p>This is my <a href="https://github.com/abo-abo/oremacs/blob/github/oleh/keys.el">personal configuration</a>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;&lt;f1&gt; v&quot;</span><span class="p">)</span> <span class="ss">&#39;counsel-describe-variable</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;&lt;f1&gt; v&quot;</span><span class="p">)</span> <span class="ss">&#39;counsel-describe-variable</span><span class="p">)</span>
 </code></pre></div>
 <p>So I did <kbd>&lt;f1&gt; v</kbd> <code>function$</code> to describe a variable that ends with <code>function</code>.
 Here, <code>$</code> is a part of <a href="http://www.emacswiki.org/emacs/RegularExpression">a regular expression</a>, which should be a priority to learn if you want to be a (not just) Emacs Power User.</p>
@@ -331,7 +369,7 @@ Here, <code>$</code> is a part of <a href="http://www.emacswiki.org/emacs/Regula
 
 <p>With this trick I was able to skim through the 346 matches in seconds. The conclusion was that an example isn&#39;t usually provided, with <code>nnmail-expiry-wait-function</code> being an exemption.
 In the end, I decided not to provide such an explicit example and shorten the doc to this:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">defvar</span> <span class="nv">avy-translate-char-function</span> <span class="nf">#&#39;identity</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">defvar</span> <span class="nv">avy-translate-char-function</span> <span class="nf">#&#39;identity</span>
   <span class="s">&quot;Function to translate user input key into another key.</span>
 <span class="s">For example, to make SPC do the same as ?a, use</span>
 <span class="s">\(lambda (c) (if (= c 32) ?a c)).&quot;</span><span class="p">)</span>
@@ -369,9 +407,9 @@ should remove some pdfs from the repository at some point.</p>
 <h2 id="the-video-demo">The Video Demo</h2>
 
 <p>Check out the speed and the various command in this <a href="https://www.youtube.com/watch?v=OEmXQNS7ofo">Video Demo</a>. Each key stroke starts two asynchronous shell calls, while canceling the current ones if they are still running.  Here are the example calls:</p>
-<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span class="nv">$ </span>git --no-pager grep --full-name -n --no-color <span class="se">\</span>
-    -i -e <span class="s2">&quot;forward-line 1&quot;</span> <span class="p">|</span> head -n 200
-<span class="nv">$ </span>git grep -i -c <span class="s1">&#39;forward-line 1&#39;</span> <span class="se">\</span>
+<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>$ git --no-pager grep --full-name -n --no-color <span class="se">\</span>
+    -i -e <span class="s2">&quot;forward-line 1&quot;</span> <span class="p">|</span> head -n <span class="m">200</span>
+$ git grep -i -c <span class="s1">&#39;forward-line 1&#39;</span> <span class="se">\</span>
     <span class="p">|</span> sed <span class="s1">&#39;s/.*:\\(.*\\)/\\1/g&#39;</span> <span class="se">\</span>
     <span class="p">|</span> awk <span class="s1">&#39;{s+=$1} END {print s}&#39;</span>
 </code></pre></div>
@@ -379,7 +417,7 @@ should remove some pdfs from the repository at some point.</p>
 
 <p>I figure since I was interested in this topic, probably a few more people are as well.
 So I&#39;ll explain below how async processing is done (in this case):</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel--gg-count</span> <span class="p">(</span><span class="nv">regex</span> <span class="kp">&amp;optional</span> <span class="nv">no-async</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel--gg-count</span> <span class="p">(</span><span class="nv">regex</span> <span class="kp">&amp;optional</span> <span class="nv">no-async</span><span class="p">)</span>
   <span class="s">&quot;Quickly count the amount of git grep REGEX matches.</span>
 <span class="s">When NO-ASYNC is non-nil, do it synchronously.&quot;</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">default-directory</span> <span class="nv">counsel--git-grep-dir</span><span class="p">)</span>
@@ -489,10 +527,10 @@ than <code>0.15s</code> on Emacs&#39; <code>lisp/</code> directory, which has 21
 <h3 id="paredit-key-bindings">Paredit key bindings</h3>
 
 <p>You can have only Paredit + special key bindings by using this composition of key themes:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">lispy-set-key-theme</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">special</span> <span class="nv">paredit</span><span class="p">))</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">lispy-set-key-theme</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">special</span> <span class="nv">paredit</span><span class="p">))</span>
 </code></pre></div>
 <p>The default setting is:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">lispy-set-key-theme</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">special</span> <span class="nv">lispy</span> <span class="nv">c-digits</span><span class="p">))</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">lispy-set-key-theme</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">special</span> <span class="nv">lispy</span> <span class="nv">c-digits</span><span class="p">))</span>
 </code></pre></div>
 <h3 id="new-algorithm-for-multi-lining">New algorithm for multi-lining</h3>
 
@@ -556,7 +594,7 @@ algorithm.</p>
 <h3 id="the-96-will-quote-the-region">The <kbd>&#96;</kbd> will quote the region</h3>
 
 <p>If you have a region selected, pressing <kbd>&#96;</kbd> will result in:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">`symbol&#39;
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>`symbol&#39;
 </code></pre></div>
 <h3 id="customize-the-file-selection-back-end-for-v">Customize the file selection back end for <kbd>V</kbd></h3>
 
@@ -570,8 +608,8 @@ Now it uses <code>find-file-in-project</code> by default, with the option to cus
 <h3 id="m-m-will-work-better-in-strings-and-comments"><kbd>M-m</kbd> will work better in strings and comments.</h3>
 
 <p>See the relevant test:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">should</span> <span class="p">(</span><span class="nv">string=</span> <span class="p">(</span><span class="nv">lispy-with</span> <span class="s">&quot;\&quot;See `plu|mage&#39;.\&quot;&quot;</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-m&quot;</span><span class="p">))</span>
-                 <span class="s">&quot;\&quot;See ~`plumage&#39;|.\&quot;&quot;</span><span class="p">))</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">should</span> <span class="p">(</span><span class="nv">string=</span> <span class="p">(</span><span class="nv">lispy-with</span> <span class="s">&quot;\&quot;See </span><span class="ss">`plu|mage&#39;</span><span class="s">.\&quot;&quot;</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-m&quot;</span><span class="p">))</span>
+                 <span class="s">&quot;\&quot;See ~</span><span class="ss">`plumage&#39;</span><span class="s">|.\&quot;&quot;</span><span class="p">))</span>
 </code></pre></div>
 <p>Thanks to this, to e.g. get the value of a quoted var in a docstring or a comment, or jump to its definition, you can <kbd>M-m</kbd>. Then, you can step-in with <kbd>i</kbd> to select the symbol without quotes.</p>
 
@@ -625,14 +663,14 @@ splicing region, remove random quotes at region bounds.</p>
 
 <p>This change makes the splice a lot more manageable. For example,
 starting with this Clojure code, with <code>|</code> marking the current point:</p>
-<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="kd">defn </span><span class="nv">read-resource</span>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span></span><span class="p">(</span><span class="kd">defn </span><span class="nv">read-resource</span>
   <span class="s">&quot;Read a resource into a string&quot;</span>
   <span class="p">[</span><span class="nv">path</span><span class="p">]</span>
   <span class="p">(</span><span class="nf">read-string</span>
    <span class="err">|</span><span class="p">(</span><span class="nb">slurp </span><span class="p">(</span><span class="nf">clojure.java.io/resource</span> <span class="nv">path</span><span class="p">))))</span>
 </code></pre></div>
 <p>A double splice <kbd>//</kbd> will result in:</p>
-<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="kd">defn </span><span class="nv">read-resource</span>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span></span><span class="p">(</span><span class="kd">defn </span><span class="nv">read-resource</span>
   <span class="s">&quot;Read a resource into a string&quot;</span>
   <span class="p">[</span><span class="nv">path</span><span class="p">]</span>
   <span class="err">|</span><span class="p">(</span><span class="nf">read-string</span>
@@ -641,7 +679,7 @@ starting with this Clojure code, with <code>|</code> marking the current point:<
 <p>After <kbd>xR</kbd> (reverse list), <kbd>2 SPC</kbd> (same as
 <kbd>C-f</kbd>), <code>-&gt;</code> (plain insert),
 <kbd>[M</kbd> (back to parent and multi-line), the final result:</p>
-<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="kd">defn </span><span class="nv">read-resource</span>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span></span><span class="p">(</span><span class="kd">defn </span><span class="nv">read-resource</span>
   <span class="s">&quot;Read a resource into a string&quot;</span>
   <span class="p">[</span><span class="nv">path</span><span class="p">]</span>
   <span class="err">|</span><span class="p">(</span><span class="nb">-&gt; </span><span class="nv">path</span>
@@ -701,7 +739,7 @@ repository: <code>counsel-git-grep</code> works much better this way.</p>
 <h3 id="out-of-order-matching">Out of order matching</h3>
 
 <p>I actually like in-order matching, meaning the input &quot;in ma&quot; will match &quot;in-order matching&quot;, but not &quot;made in&quot;. But the users can switch to out-of-order matching if they use this code:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-re-builders-alist</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-re-builders-alist</span>
           <span class="o">&#39;</span><span class="p">((</span><span class="no">t</span> <span class="o">.</span> <span class="nv">ivy--regex-ignore-order</span><span class="p">)))</span>
 </code></pre></div>
 <p><code>ivy-re-builders-alist</code> is the flexible way to customize the regex builders per-collection.  Using <code>t</code> here, means to use this regex builder for everything. You could choose to have in-order for files, and out-of-order for buffers and so on.</p>
@@ -709,7 +747,7 @@ repository: <code>counsel-git-grep</code> works much better this way.</p>
 <h3 id="new-defcustom-ivy-tab-space">New defcustom: <code>ivy-tab-space</code></h3>
 
 <p>Use this to have a space inserted each time you press <kbd>TAB</kbd>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-tab-space</span> <span class="no">t</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-tab-space</span> <span class="no">t</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="ignore-case-for-tab">ignore case for TAB</h3>
 
@@ -739,7 +777,7 @@ name and no way to distinguish them), you can simply use
 
 <p>Does a partial complete without exiting. Use this code to replace
 <code>ivy-partial-or-done</code> with this command:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">ivy-minibuffer-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;TAB&quot;</span><span class="p">)</span> <span class="ss">&#39;ivy-partial</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">ivy-minibuffer-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;TAB&quot;</span><span class="p">)</span> <span class="ss">&#39;ivy-partial</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="allow-to-use-in-swiper">Allow to use <code>^</code> in <code>swiper</code></h3>
 
@@ -763,7 +801,7 @@ one candidate once you&#39;ve narrowed to about 10-20 candidates).</p>
 <p>Suppose you killed a buffer and want to bring it back: now you do it as if you didn&#39;t kill the buffer and instead buried it. The bookmarks access is also nice.</p>
 
 <p>Here&#39;s how to configure it, along with some customization of <code>recentf</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-use-virtual-buffers</span> <span class="no">t</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-use-virtual-buffers</span> <span class="no">t</span><span class="p">)</span>
 
 <span class="p">(</span><span class="nb">use-package</span> <span class="nv">recentf</span>
   <span class="nb">:config</span>
@@ -787,7 +825,7 @@ one candidate once you&#39;ve narrowed to about 10-20 candidates).</p>
 
 <p>See <a href="https://github.com/abo-abo/swiper/wiki/Customize-candidate-menu-style">the wiki</a> on how to customize
 the minibuffer display to look like this:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">100 Find file: ~/
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>100 Find file: ~/
   file1
   file2
 &gt; file3
@@ -837,64 +875,6 @@ you want an actual space, you can now quote them even easier.</p>
 <p>Thanks to all who contributed, check out the new stuff, and make sure
 to bind <code>ivy-resume</code> to something short: it has become a really nice
 feature.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/05/22/define-word/">
-        New on MELPA - define word at point
-      </a>
-    </h1>
-
-    <span class="post-date">22 May 2015</span>
-
-    <p>Doing things in Emacs is <em>superlatively</em> better than having to switch
-to another application.</p>
-
-<p>In this case, &quot;doing things&quot; is getting the dictionary definition of
-word at point, and &quot;<em>superlatively</em>&quot; is a word that I didn&#39;t know - a
-straw that broke the camel&#39;s back and caused me to finally automate
-the process of getting the definition of a word that I encounter in an
-Emacs buffer.</p>
-
-<p>The whole process of writing the <code>define-word</code> package took around 30
-minutes, I just had to:</p>
-
-<ul>
-<li>See which engine DuckDuckGo uses.</li>
-<li>Follow to <a href="https://www.wordnik.com/words/superlative">wordnik</a>.</li>
-<li>Try to get an API key, read their draconian TOS and decide that I don&#39;t want
-to agree to it just to get their key.</li>
-<li>Examine the HTML that it returns and note that it&#39;s quite regular.</li>
-<li>Write a 10 line function with <code>re-search-forward</code> to extract the word
-definitions from a sample page that I saved with <code>wget</code>.</li>
-</ul>
-
-<p>Then just wrap the function in an <code>url-retrieve</code> and done.  It&#39;s a
-good thing that I learned to use <code>url-retrieve</code> when I wrote
-<a href="https://github.com/abo-abo/org-download">org-download</a>.</p>
-
-<p>Here&#39;s how it looks like in action, the word under point is &quot;Authors&quot;
-and instead of visiting
-<a href="https://www.wordnik.com/words/authors">this page</a>, you can see it
-right away in your Echo Area:</p>
-
-<p><img src="https://raw.githubusercontent.com/wiki/abo-abo/define-word/images/define-word.png" alt="demo"></p>
-
-<p>The result is displayed simply with <code>message</code>, so it doesn&#39;t mess with
-your window config.  You read it, press any key and the Echo Area
-popup will vanish automatically.</p>
-
-<p>Install the package from MELPA or check it out at <a href="https://github.com/abo-abo/define-word">github</a>.
-You just need to decide where to bind it:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c d&quot;</span><span class="p">)</span> <span class="ss">&#39;define-word-at-point</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c D&quot;</span><span class="p">)</span> <span class="ss">&#39;define-word</span><span class="p">)</span>
-</code></pre></div>
-<p>At less than 50 lines, the source is very easy to understand. So if
-you&#39;re looking to write some Elisp that retrieves and parses some HTML
-from a web service, it&#39;s nice to look at a simple implementation of
-how it&#39;s done.</p>
 
   </div>
   

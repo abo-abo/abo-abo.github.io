@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -318,14 +322,14 @@ for saving the videos from Youtube. It downloads the highest resolution at a usu
 higher speed than Youtube&#39;s player buffers. I&#39;ve discovered it when I had to download
 a bunch of lecture videos from <a href="https://www.edx.org/">edX</a>.
 You can install it with:</p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">sudo pip install youtube-dl
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>sudo pip install youtube-dl
 </code></pre></div>
 <h2 id="one-emacs-script-to-rule-them-all">One Emacs script to rule them all</h2>
 
 <p>I quickly tired of opening a shell, setting the directory, entering
 the command, and pasting the link. So I wrote some Elisp code that does it for me.
 It&#39;s nothing too sophisticated, but I&#39;ve been using this version for a couple months:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">youtube-dl</span> <span class="p">()</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">youtube-dl</span> <span class="p">()</span>
   <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
   <span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">str</span> <span class="p">(</span><span class="nv">current-kill</span> <span class="mi">0</span><span class="p">))</span>
          <span class="p">(</span><span class="nv">default-directory</span> <span class="s">&quot;~/Downloads&quot;</span><span class="p">)</span>

@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -367,7 +371,7 @@ to select the <code>definition</code> action, followed by <kbd>C-c C-o</kbd>.</p
 <p>As a reminder of how it works, <code>counsel-M-x</code> is defined with a single
 action that calls the selected command. But then, I&#39;ve also added this
 statement at top-level of counsel.el:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">ivy-set-actions</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">ivy-set-actions</span>
  <span class="ss">&#39;counsel-M-x</span>
  <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;d&quot;</span> <span class="nv">counsel--find-symbol</span> <span class="s">&quot;definition&quot;</span><span class="p">)))</span>
 </code></pre></div>
@@ -384,7 +388,7 @@ to <code>ivy-read</code>. For instance, it won&#39;t work for <code>package-inst
 <kbd>RET</kbd> won&#39;t install a package.</p>
 
 <p>Fortunately, it&#39;s not hard to write a version that works:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel-package-install</span> <span class="p">()</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel-package-install</span> <span class="p">()</span>
   <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">ivy-read</span> <span class="s">&quot;Install package: &quot;</span>
             <span class="p">(</span><span class="nf">delq</span> <span class="no">nil</span>
@@ -407,7 +411,7 @@ to <code>ivy-read</code>. For instance, it won&#39;t work for <code>package-inst
 instead of <kbd>C-c C-o</kbd>. But I was reminded that <kbd>C-c LETTER</kbd> are
 <a href="http://www.gnu.org/software/emacs/manual/html_node/elisp/Key-Binding-Conventions.html">reserved</a>.
 I still think it&#39;s a better binding. If you agree, you can add it to your config:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">ivy-minibuffer-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c o&quot;</span><span class="p">)</span> <span class="ss">&#39;ivy-occur</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">ivy-minibuffer-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c o&quot;</span><span class="p">)</span> <span class="ss">&#39;ivy-occur</span><span class="p">)</span>
 </code></pre></div>
 <p>Additionally, <code>ivy-occur</code> is also available on <kbd>C-o u</kbd>,
 through the <kbd>C-o</kbd> hydra.</p>

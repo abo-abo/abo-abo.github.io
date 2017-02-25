@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -287,7 +291,7 @@ config when I don&#39;t have the time to post something more substantial.</p>
 
 <p>This one looks nice, although it only works on systems with <code>/usr/bin/du</code>,
 which actually comprise 100% of the systems that I use:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">dired-get-size</span> <span class="p">()</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">dired-get-size</span> <span class="p">()</span>
   <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">files</span> <span class="p">(</span><span class="nv">dired-get-marked-files</span><span class="p">)))</span>
     <span class="p">(</span><span class="nb">with-temp-buffer</span>
@@ -319,7 +323,7 @@ on a series of marked files and directories.</p>
 shift keys that many file browsers use looks like kindergarten.</p>
 
 <p>This new action, getting the size of marked things, I&#39;ve bound to <kbd>z</kbd>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;z&quot;</span><span class="p">)</span> <span class="ss">&#39;dired-get-size</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;z&quot;</span><span class="p">)</span> <span class="ss">&#39;dired-get-size</span><span class="p">)</span>
 </code></pre></div>
 </div>
 

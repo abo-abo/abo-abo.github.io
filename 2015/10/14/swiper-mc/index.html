@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -296,7 +300,7 @@ all have <code>Dired by name</code> in their line.</p>
 <a href="https://github.com/magnars/multiple-cursors.el">multiple-cursors</a> for
 each matched line. I&#39;ve bound this action to <kbd>C-7</kbd>. Here&#39;s
 the very simple code:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">swiper-mc</span> <span class="p">()</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">swiper-mc</span> <span class="p">()</span>
   <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
   <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;multiple-cursors</span> <span class="no">nil</span> <span class="no">t</span><span class="p">)</span>
     <span class="p">(</span><span class="ne">error</span> <span class="s">&quot;multiple-cursors isn&#39;t installed&quot;</span><span class="p">))</span>
@@ -328,7 +332,7 @@ the very simple code:</p>
 <p>Other interesting applications are also possible, like mass renames in
 <code>wdired</code>, or un-commenting everything in a function.  For example,
 suppose that you have this code:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">progn</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">progn</span>
   <span class="c1">;; (check-1)</span>
   <span class="p">(</span><span class="nv">foo</span><span class="p">)</span>
   <span class="c1">;; (check-2)</span>

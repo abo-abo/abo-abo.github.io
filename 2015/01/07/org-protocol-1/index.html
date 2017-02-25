@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -287,7 +291,7 @@ Firefox, thanks to
 <a href="https://addons.mozilla.org/en-US/firefox/addon/org-mode-capture/">org-mode capture</a>.</p>
 
 <h2 id="org-protocol-starter"><code>org-protocol</code> starter</h2>
-<div class="highlight"><pre><code class="language-emacs" data-lang="emacs"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;org-capture</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-emacs" data-lang="emacs"><span></span><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;org-capture</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;org-protocol</span><span class="p">)</span>
 <span class="p">(</span><span class="k">setq</span> <span class="nv">org-protocol-default-template-key</span> <span class="s">&quot;l&quot;</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">push</span> <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="s">&quot;Link&quot;</span> <span class="nv">entry</span> <span class="p">(</span><span class="k">function</span> <span class="nv">org-handle-link</span><span class="p">)</span>
@@ -306,7 +310,7 @@ Firefox, thanks to
 <a href="http://stackoverflow.com/questions/tagged/emacs">Stack Overflow</a>, I
 don&#39;t want to see <code>- Stack Overflow -</code> as part of the TODO string,
 since the TODO itself is stored in <code>wiki/stack.org/* Questions</code>.</p>
-<div class="highlight"><pre><code class="language-emacs" data-lang="emacs"><span class="p">(</span><span class="nb">defun</span> <span class="nv">org-wash-link</span> <span class="p">()</span>
+<div class="highlight"><pre><code class="language-emacs" data-lang="emacs"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">org-wash-link</span> <span class="p">()</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">link</span> <span class="p">(</span><span class="nv">caar</span> <span class="nv">org-stored-links</span><span class="p">))</span>
         <span class="p">(</span><span class="nv">title</span> <span class="p">(</span><span class="nv">cadar</span> <span class="nv">org-stored-links</span><span class="p">)))</span>
     <span class="p">(</span><span class="k">setq</span> <span class="nv">title</span> <span class="p">(</span><span class="nv">replace-regexp-in-string</span>
@@ -317,7 +321,7 @@ since the TODO itself is stored in <code>wiki/stack.org/* Questions</code>.</p>
 
 <p>This is just a hack for passing information around that
 functions from <code>org-handle-link</code> can use.</p>
-<div class="highlight"><pre><code class="language-emacs" data-lang="emacs"><span class="p">(</span><span class="k">defvar</span> <span class="nv">org-link-hook</span> <span class="no">nil</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-emacs" data-lang="emacs"><span></span><span class="p">(</span><span class="k">defvar</span> <span class="nv">org-link-hook</span> <span class="no">nil</span><span class="p">)</span>
 
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">org-link-hooks</span> <span class="p">()</span>
   <span class="p">(</span><span class="k">prog1</span>
@@ -329,7 +333,7 @@ functions from <code>org-handle-link</code> can use.</p>
 <h2 id="org-handle-link"><code>org-handle-link</code></h2>
 
 <p>This is the heart of the setup.</p>
-<div class="highlight"><pre><code class="language-emacs" data-lang="emacs"><span class="p">(</span><span class="nb">defun</span> <span class="nv">org-handle-link</span> <span class="p">()</span>
+<div class="highlight"><pre><code class="language-emacs" data-lang="emacs"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">org-handle-link</span> <span class="p">()</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">link</span> <span class="p">(</span><span class="nv">caar</span> <span class="nv">org-stored-links</span><span class="p">))</span>
         <span class="nv">file</span><span class="p">)</span>
     <span class="p">(</span><span class="k">cond</span> <span class="p">((</span><span class="nf">string-match</span> <span class="s">&quot;^https://www.youtube.com/&quot;</span> <span class="nv">link</span><span class="p">)</span>

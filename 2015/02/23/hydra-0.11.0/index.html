@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -311,9 +315,9 @@ quitting when a non-head binding is intercepted, respectively run the binding or
 but the default behavior for each head is to quit.</p>
 
 <p>The following evaluates to true:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">equal</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">equal</span>
  <span class="p">(</span><span class="nf">macroexpand</span>
-  <span class="o">&#39;</span><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-test</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">amaranth</span><span class="p">)</span>
+  <span class="o">&#39;</span><span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-test</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">amaranth</span><span class="p">)</span>
     <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="nv">fun-a</span><span class="p">)</span>
     <span class="p">(</span><span class="s">&quot;b&quot;</span> <span class="nv">fun-b</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
     <span class="p">(</span><span class="s">&quot;c&quot;</span> <span class="nv">fun-c</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
@@ -321,7 +325,7 @@ but the default behavior for each head is to quit.</p>
     <span class="p">(</span><span class="s">&quot;e&quot;</span> <span class="nv">fun-e</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
     <span class="p">(</span><span class="s">&quot;f&quot;</span> <span class="nv">fun-f</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)))</span>
  <span class="p">(</span><span class="nf">macroexpand</span>
-  <span class="o">&#39;</span><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-test</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">teal</span><span class="p">)</span>
+  <span class="o">&#39;</span><span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-test</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">teal</span><span class="p">)</span>
     <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="nv">fun-a</span> <span class="nb">:color</span> <span class="nv">red</span><span class="p">)</span>
     <span class="p">(</span><span class="s">&quot;b&quot;</span> <span class="nv">fun-b</span><span class="p">)</span>
     <span class="p">(</span><span class="s">&quot;c&quot;</span> <span class="nv">fun-c</span><span class="p">)</span>
@@ -337,7 +341,7 @@ but the default behavior for each head is to quit.</p>
 once you pinpoint a color it will have that behavior, all the new behaviors will be released under a new color.</p>
 
 <p>Some might prefer an alternative set of switches rather than colors. New compat switches are:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">- &quot;:exit nil&quot; for &quot;:color red&quot;; You don&#39;t have to specify either
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>- &quot;:exit nil&quot; for &quot;:color red&quot;; You don&#39;t have to specify either
   option in the body, since they are the default behavior that was
   available on Hydra release
 - &quot;:exit t&quot; for &quot;:color blue&quot;
@@ -348,9 +352,9 @@ once you pinpoint a color it will have that behavior, all the new behaviors will
 <p>The property <code>:exit</code> can be inherited and overridden in the same way as <code>:color</code> red or blue.</p>
 
 <p>The following evaluates to true:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">equal</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">equal</span>
  <span class="p">(</span><span class="nf">macroexpand</span>
-  <span class="o">&#39;</span><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-test</span> <span class="p">()</span>
+  <span class="o">&#39;</span><span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-test</span> <span class="p">()</span>
     <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="nv">fun-a</span><span class="p">)</span>
     <span class="p">(</span><span class="s">&quot;b&quot;</span> <span class="nv">fun-b</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
     <span class="p">(</span><span class="s">&quot;c&quot;</span> <span class="nv">fun-c</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
@@ -358,7 +362,7 @@ once you pinpoint a color it will have that behavior, all the new behaviors will
     <span class="p">(</span><span class="s">&quot;e&quot;</span> <span class="nv">fun-e</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
     <span class="p">(</span><span class="s">&quot;f&quot;</span> <span class="nv">fun-f</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)))</span>
  <span class="p">(</span><span class="nf">macroexpand</span>
-  <span class="o">&#39;</span><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-test</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
+  <span class="o">&#39;</span><span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-test</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
     <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="nv">fun-a</span> <span class="nb">:color</span> <span class="nv">red</span><span class="p">)</span>
     <span class="p">(</span><span class="s">&quot;b&quot;</span> <span class="nv">fun-b</span><span class="p">)</span>
     <span class="p">(</span><span class="s">&quot;c&quot;</span> <span class="nv">fun-c</span><span class="p">)</span>
@@ -367,9 +371,9 @@ once you pinpoint a color it will have that behavior, all the new behaviors will
     <span class="p">(</span><span class="s">&quot;f&quot;</span> <span class="nv">fun-f</span><span class="p">))))</span>
 </code></pre></div>
 <p>The following two are exactly the same as the two above:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">equal</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">equal</span>
  <span class="p">(</span><span class="nf">macroexpand</span>
-  <span class="o">&#39;</span><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-test</span> <span class="p">()</span>
+  <span class="o">&#39;</span><span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-test</span> <span class="p">()</span>
     <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="nv">fun-a</span><span class="p">)</span>
     <span class="p">(</span><span class="s">&quot;b&quot;</span> <span class="nv">fun-b</span> <span class="nb">:exit</span> <span class="no">t</span><span class="p">)</span>
     <span class="p">(</span><span class="s">&quot;c&quot;</span> <span class="nv">fun-c</span> <span class="nb">:exit</span> <span class="no">t</span><span class="p">)</span>
@@ -377,7 +381,7 @@ once you pinpoint a color it will have that behavior, all the new behaviors will
     <span class="p">(</span><span class="s">&quot;e&quot;</span> <span class="nv">fun-e</span> <span class="nb">:exit</span> <span class="no">t</span><span class="p">)</span>
     <span class="p">(</span><span class="s">&quot;f&quot;</span> <span class="nv">fun-f</span> <span class="nb">:exit</span> <span class="no">t</span><span class="p">)))</span>
  <span class="p">(</span><span class="nf">macroexpand</span>
-  <span class="o">&#39;</span><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-test</span> <span class="p">(</span><span class="nb">:exit</span> <span class="no">t</span><span class="p">)</span>
+  <span class="o">&#39;</span><span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-test</span> <span class="p">(</span><span class="nb">:exit</span> <span class="no">t</span><span class="p">)</span>
     <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="nv">fun-a</span> <span class="nb">:exit</span> <span class="no">nil</span><span class="p">)</span>
     <span class="p">(</span><span class="s">&quot;b&quot;</span> <span class="nv">fun-b</span><span class="p">)</span>
     <span class="p">(</span><span class="s">&quot;c&quot;</span> <span class="nv">fun-c</span><span class="p">)</span>
@@ -388,7 +392,7 @@ once you pinpoint a color it will have that behavior, all the new behaviors will
 <h3 id="ruby-style-string-interpolation-in-docstrings">Ruby-style string interpolation in docstrings</h3>
 
 <p>Here&#39;s an example:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-marked-items</span> <span class="p">(</span><span class="nv">dired-mode-map</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-marked-items</span> <span class="p">(</span><span class="nv">dired-mode-map</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
   <span class="s">&quot;</span>
 <span class="s">Number of marked items: %(length (dired-get-marked-files))</span>
 <span class="s">Auto-revert mode is:    %`auto-revert-mode</span>
@@ -416,11 +420,11 @@ face interactively with <kbd>M-x</kbd> <code>customize-group</code> <code>hydra<
 taste.</p>
 
 <p>As an example:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">hydra-fontify-head-function</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">hydra-fontify-head-function</span>
       <span class="nf">#&#39;</span><span class="nv">hydra-fontify-head-greyscale</span><span class="p">)</span>
 </code></pre></div>
 <p>This function is already defined in hydra.el, but you could define a similar one on your own:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">hydra-fontify-head-greyscale</span> <span class="p">(</span><span class="nv">head</span> <span class="nv">body</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">hydra-fontify-head-greyscale</span> <span class="p">(</span><span class="nv">head</span> <span class="nv">body</span><span class="p">)</span>
   <span class="s">&quot;Produce a pretty string from HEAD and BODY.</span>
 <span class="s">HEAD&#39;s binding is returned as a string wrapped with [] or {}.&quot;</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">color</span> <span class="p">(</span><span class="nv">hydra--head-color</span> <span class="nv">head</span> <span class="nv">body</span><span class="p">)))</span>
@@ -433,8 +437,8 @@ taste.</p>
 
 <p>This sexp or function will be prepended to the prefix/body function.
 Here&#39;s an example of use:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">defvar</span> <span class="nv">hydra-vi/init-pos</span> <span class="no">nil</span><span class="p">)</span>
-<span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-vi</span> <span class="p">(</span><span class="nb">:body-pre</span> <span class="p">(</span><span class="k">setq</span> <span class="nv">hydra-vi/init-pos</span> <span class="p">(</span><span class="nf">point</span><span class="p">))</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">defvar</span> <span class="nv">hydra-vi/init-pos</span> <span class="no">nil</span><span class="p">)</span>
+<span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-vi</span> <span class="p">(</span><span class="nb">:body-pre</span> <span class="p">(</span><span class="k">setq</span> <span class="nv">hydra-vi/init-pos</span> <span class="p">(</span><span class="nf">point</span><span class="p">))</span>
                     <span class="nb">:color</span> <span class="nv">pink</span><span class="p">)</span>
   <span class="s">&quot;vi&quot;</span>
   <span class="c1">;; arrows</span>

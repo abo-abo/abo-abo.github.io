@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -292,18 +296,18 @@ implement were the ones that I didn&#39;t find any use for: <code>paredit-backsl
 
 <p>So if you ever thought that <code>lispy</code> could be a good idea, but the non-special key bindings are weird,
 and you&#39;re too used to Paredit, you can now try this setting:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">lispy-set-key-theme</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">special</span> <span class="nv">paredit</span> <span class="nv">c-digits</span><span class="p">))</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">lispy-set-key-theme</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">special</span> <span class="nv">paredit</span> <span class="nv">c-digits</span><span class="p">))</span>
 </code></pre></div>
 <p>Here&#39;s the setting that I&#39;m using, since I love <code>lispy</code>&#39;s default bindings:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">lispy-set-key-theme</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">oleh</span> <span class="nv">special</span> <span class="nv">lispy</span> <span class="nv">c-digits</span><span class="p">))</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">lispy-set-key-theme</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">oleh</span> <span class="nv">special</span> <span class="nv">lispy</span> <span class="nv">c-digits</span><span class="p">))</span>
 </code></pre></div>
 <p>The default setting actually is this one, <code>lispy-mode-map-oleh</code> is an additional map for use with
 my <a href="http://oremacs.com/2015/02/14/semi-xmodmap/">Xmodmap setup</a>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">lispy-set-key-theme</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">special</span> <span class="nv">lispy</span> <span class="nv">c-digits</span><span class="p">))</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">lispy-set-key-theme</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">special</span> <span class="nv">lispy</span> <span class="nv">c-digits</span><span class="p">))</span>
 </code></pre></div>
 <p>Each item in the list passed to <code>lispy-set-key-theme</code> designates a keymap to turn on.
 So in a non-LISP buffer you could turn on just the special map:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">lispy-set-key-theme</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">special</span><span class="p">))</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">lispy-set-key-theme</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">special</span><span class="p">))</span>
 </code></pre></div>
 <p>This would mean that zero regular bindings get overridden, but when the point is before or after a
 paren, you get the <code>lispy</code> bindings. Actually, I&#39;ve just enabled <code>lispy-mode</code> for <code>markdown-mode</code>,
@@ -327,11 +331,11 @@ reports are very important for my non-annoyance agenda.</p>
 
 <p>Finally, if you&#39;re super-devoted to Paredit and don&#39;t want to drop it, now you can easily have both
 <code>lispy-mode</code> and <code>paredit-mode</code> on. Just use this setting:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">lispy-set-key-theme</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">special</span><span class="p">))</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">lispy-set-key-theme</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">special</span><span class="p">))</span>
 </code></pre></div>
 <p>Or this one if you additionally want <kbd>C-1</kbd> to show the inline doc, and <kbd>C-2</kbd> to show
 the inline args:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">lispy-set-key-theme</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">special</span> <span class="nv">c-digits</span><span class="p">))</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">lispy-set-key-theme</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">special</span> <span class="nv">c-digits</span><span class="p">))</span>
 </code></pre></div>
 </div>
 

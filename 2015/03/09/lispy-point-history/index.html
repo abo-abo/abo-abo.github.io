@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -288,7 +292,7 @@ quite obvious: since <code>lispy</code> offers commands to quickly manipulate po
 to quickly restore them.</p>
 
 <p>Here&#39;s the bulk of the new code:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">defvar</span> <span class="nv">lispy-pos-ring</span> <span class="p">(</span><span class="nv">make-ring</span> <span class="mi">200</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">defvar</span> <span class="nv">lispy-pos-ring</span> <span class="p">(</span><span class="nv">make-ring</span> <span class="mi">200</span><span class="p">)</span>
   <span class="s">&quot;Ring for point and mark position history.&quot;</span><span class="p">)</span>
 <span class="p">(</span><span class="nv">ring-insert</span> <span class="nv">lispy-pos-ring</span> <span class="mi">1</span><span class="p">)</span>
 

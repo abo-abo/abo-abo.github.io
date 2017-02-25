@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -301,9 +305,9 @@ possible to offer all values that the symbol is allowed to become for
 completion.</p>
 
 <p>For example, here&#39;s a typical <code>&#39;radio</code>-type definition:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defcustom</span> <span class="nv">avy-style</span> <span class="ss">&#39;at-full</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defcustom</span> <span class="nv">avy-style</span> <span class="ss">&#39;at-full</span>
   <span class="s">&quot;The default method of displaying the overlays.</span>
-<span class="s">Use `avy-styles-alist&#39; to customize this per-command.&quot;</span>
+<span class="s">Use </span><span class="ss">`avy-styles-alist&#39;</span><span class="s"> to customize this per-command.&quot;</span>
   <span class="nb">:type</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">choice</span>
           <span class="p">(</span><span class="nv">const</span> <span class="nb">:tag</span> <span class="s">&quot;Pre&quot;</span> <span class="nv">pre</span><span class="p">)</span>
           <span class="p">(</span><span class="nv">const</span> <span class="nb">:tag</span> <span class="s">&quot;At&quot;</span> <span class="nv">at</span><span class="p">)</span>
@@ -327,7 +331,7 @@ in. For example:</p>
 <p><img src="/download/counsel-set-variable-3.png" alt="counsel-set-variable-3.png"></p>
 
 <p>The <code>read-expression</code> part combines well with this setting in my config:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">conditionally-enable-lispy</span> <span class="p">()</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">conditionally-enable-lispy</span> <span class="p">()</span>
   <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">eq</span> <span class="nv">this-command</span> <span class="ss">&#39;eval-expression</span><span class="p">)</span>
     <span class="p">(</span><span class="nv">lispy-mode</span> <span class="mi">1</span><span class="p">)))</span>
 
@@ -347,13 +351,13 @@ value:</p>
 </ol>
 
 <p>After the <kbd>C-f -e C-d</kbd> chain of bindings, the minibuffer contents become:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-re-builders-alist</span> <span class="o">&#39;</span><span class="p">((</span><span class="no">t</span> <span class="o">.</span> <span class="nv">ivy--regex-</span><span class="err">|</span><span class="p">)))</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-re-builders-alist</span> <span class="o">&#39;</span><span class="p">((</span><span class="no">t</span> <span class="o">.</span> <span class="nv">ivy--regex-|</span><span class="p">)))</span>
 </code></pre></div>
 <p>I press <kbd>C-M-i</kbd> (<code>completion-at-point</code>) to get completion for
 all symbols that start with <code>ivy--regex-</code>. Since I have <code>ivy-mode</code> on,
 <kbd>C-M-i</kbd> starts a recursive completion session. I highly
 recommend adding these settings to your config:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="c1">;; Allow to read from minibuffer while in minibuffer.</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="c1">;; Allow to read from minibuffer while in minibuffer.</span>
 <span class="p">(</span><span class="k">setq</span> <span class="nv">enable-recursive-minibuffers</span> <span class="no">t</span><span class="p">)</span>
 
 <span class="c1">;; Show the minibuffer depth (when larger than 1)</span>
@@ -370,7 +374,7 @@ RET</kbd> to finalize the eval. The first <kbd>RET</kbd> exits from
 part, is quite a bit faster than what I did before. That is switching
 to <code>*scratch*</code> and typing in the <code>setq</code> manually and evaluating with
 <kbd>C-j</kbd>. Here&#39;s my binding for the new command:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;&lt;f2&gt; j&quot;</span><span class="p">)</span> <span class="ss">&#39;counsel-set-variable</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;&lt;f2&gt; j&quot;</span><span class="p">)</span> <span class="ss">&#39;counsel-set-variable</span><span class="p">)</span>
 </code></pre></div>
 <p>It&#39;s not very mnemonic, but it&#39;s really fast. Just a suggestion, in
 case you don&#39;t know where to bind it. Happy hacking!</p>

@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -281,6 +285,64 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/05/22/define-word/">
+        New on MELPA - define word at point
+      </a>
+    </h1>
+
+    <span class="post-date">22 May 2015</span>
+
+    <p>Doing things in Emacs is <em>superlatively</em> better than having to switch
+to another application.</p>
+
+<p>In this case, &quot;doing things&quot; is getting the dictionary definition of
+word at point, and &quot;<em>superlatively</em>&quot; is a word that I didn&#39;t know - a
+straw that broke the camel&#39;s back and caused me to finally automate
+the process of getting the definition of a word that I encounter in an
+Emacs buffer.</p>
+
+<p>The whole process of writing the <code>define-word</code> package took around 30
+minutes, I just had to:</p>
+
+<ul>
+<li>See which engine DuckDuckGo uses.</li>
+<li>Follow to <a href="https://www.wordnik.com/words/superlative">wordnik</a>.</li>
+<li>Try to get an API key, read their draconian TOS and decide that I don&#39;t want
+to agree to it just to get their key.</li>
+<li>Examine the HTML that it returns and note that it&#39;s quite regular.</li>
+<li>Write a 10 line function with <code>re-search-forward</code> to extract the word
+definitions from a sample page that I saved with <code>wget</code>.</li>
+</ul>
+
+<p>Then just wrap the function in an <code>url-retrieve</code> and done.  It&#39;s a
+good thing that I learned to use <code>url-retrieve</code> when I wrote
+<a href="https://github.com/abo-abo/org-download">org-download</a>.</p>
+
+<p>Here&#39;s how it looks like in action, the word under point is &quot;Authors&quot;
+and instead of visiting
+<a href="https://www.wordnik.com/words/authors">this page</a>, you can see it
+right away in your Echo Area:</p>
+
+<p><img src="https://raw.githubusercontent.com/wiki/abo-abo/define-word/images/define-word.png" alt="demo"></p>
+
+<p>The result is displayed simply with <code>message</code>, so it doesn&#39;t mess with
+your window config.  You read it, press any key and the Echo Area
+popup will vanish automatically.</p>
+
+<p>Install the package from MELPA or check it out at <a href="https://github.com/abo-abo/define-word">github</a>.
+You just need to decide where to bind it:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c d&quot;</span><span class="p">)</span> <span class="ss">&#39;define-word-at-point</span><span class="p">)</span>
+<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c D&quot;</span><span class="p">)</span> <span class="ss">&#39;define-word</span><span class="p">)</span>
+</code></pre></div>
+<p>At less than 50 lines, the source is very easy to understand. So if
+you&#39;re looking to write some Elisp that retrieves and parses some HTML
+from a web service, it&#39;s nice to look at a simple implementation of
+how it&#39;s done.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/05/19/checkdoc-batch/">
         New in Emacs - run checkdoc in batch mode
       </a>
@@ -298,13 +360,13 @@ a small modification, I&#39;ve made it suitable for batch.</p>
 <a href="https://github.com/abo-abo/avy">avy</a> (or
 <a href="https://github.com/abo-abo/lispy">lispy</a>) repository. Here&#39;s my
 <code>compile</code> target in the Makefile:</p>
-<div class="highlight"><pre><code class="language-Makefile" data-lang="Makefile"><span class="nv">emacs</span> <span class="o">?=</span> emacs
+<div class="highlight"><pre><code class="language-Makefile" data-lang="Makefile"><span></span><span class="nv">emacs</span> <span class="o">?=</span> emacs
 
 <span class="nf">compile</span><span class="o">:</span>
     <span class="k">$(</span>emacs<span class="k">)</span> -batch -l targets/avy-init.el
 </code></pre></div>
 <p>And here are the contents of avy-init.el:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">add-to-list</span> <span class="ss">&#39;load-path</span> <span class="nv">default-directory</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">add-to-list</span> <span class="ss">&#39;load-path</span> <span class="nv">default-directory</span><span class="p">)</span>
 <span class="p">(</span><span class="nf">mapc</span> <span class="nf">#&#39;</span><span class="nv">byte-compile-file</span> <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;avy.el&quot;</span><span class="p">))</span>
 <span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;avy</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;checkdoc</span><span class="p">)</span>
@@ -330,7 +392,7 @@ the <code>*compilation*</code> buffer.</p>
 
 <p>For the lazy, it&#39;s possible to jump to errors with a mouse, but
 navigating errors is a breeze with this Hydra:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-error</span> <span class="p">(</span><span class="nv">global-map</span> <span class="s">&quot;M-g&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-error</span> <span class="p">(</span><span class="nv">global-map</span> <span class="s">&quot;M-g&quot;</span><span class="p">)</span>
   <span class="s">&quot;goto-error&quot;</span>
   <span class="p">(</span><span class="s">&quot;h&quot;</span> <span class="nv">first-error</span> <span class="s">&quot;first&quot;</span><span class="p">)</span>
   <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">next-error</span> <span class="s">&quot;next&quot;</span><span class="p">)</span>
@@ -354,9 +416,9 @@ extremely stable: I&#39;m on Emacs25 almost all the time now, since it
 feels a lot faster.</p>
 
 <p>Here are my aliasing settings:</p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>which newemacs
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ which newemacs
 /usr/local/bin/newemacs
-<span class="nv">$ </span>readlink -f <span class="sb">`</span>which newemacs<span class="sb">`</span>
+$ readlink -f <span class="sb">`</span>which newemacs<span class="sb">`</span>
 /home/oleh/git/gnu-emacs/src/emacs
 </code></pre></div>
 <p>To run the tests with <code>newemacs</code> instead of <code>emacs</code> (since that&#39;s the
@@ -405,7 +467,7 @@ that number.</p>
 
 <p><code>avy-goto-line</code> will recognize that you entered a digit, and forward
 to <code>goto-line</code> with that digit already pre-entered. So basically there&#39;s no disadvantage to doing this:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-g g&quot;</span><span class="p">)</span> <span class="ss">&#39;avy-goto-line</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-g g&quot;</span><span class="p">)</span> <span class="ss">&#39;avy-goto-line</span><span class="p">)</span>
 </code></pre></div>
 <p>Even if you use the <code>avy</code> method zero times, you lose no efficiency
 when compared with regular <code>goto-line</code>, you just get a pretty
@@ -472,15 +534,15 @@ cancel <code>ace-select-window</code> with <kbd>C-g</kbd> and call
 
 <p>With the new way, you can, just press <kbd>x</kbd> followed by the
 decision char.  All keys are customizable through <code>aw-dispatch-alist</code>.</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">defvar</span> <span class="nv">aw-dispatch-alist</span>
-  <span class="o">&#39;</span><span class="p">((</span><span class="nv">?x</span> <span class="nv">aw-delete-window</span> <span class="s">&quot; Ace - Delete Window&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">?m</span> <span class="nv">aw-swap-window</span> <span class="s">&quot; Ace - Swap Window&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">?n</span> <span class="nv">aw-flip-window</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">?v</span> <span class="nv">aw-split-window-vert</span> <span class="s">&quot; Ace - Split Vert Window&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">?b</span> <span class="nv">aw-split-window-horz</span> <span class="s">&quot; Ace - Split Horz Window&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">?i</span> <span class="nv">delete-other-windows</span> <span class="s">&quot; Ace - Maximize Window&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">?o</span> <span class="nv">delete-other-windows</span><span class="p">))</span>
-  <span class="s">&quot;List of actions for `aw-dispatch-default&#39;.&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">defvar</span> <span class="nv">aw-dispatch-alist</span>
+  <span class="o">&#39;</span><span class="p">((</span><span class="sc">?x</span> <span class="nv">aw-delete-window</span> <span class="s">&quot; Ace - Delete Window&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="sc">?m</span> <span class="nv">aw-swap-window</span> <span class="s">&quot; Ace - Swap Window&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="sc">?n</span> <span class="nv">aw-flip-window</span><span class="p">)</span>
+    <span class="p">(</span><span class="sc">?v</span> <span class="nv">aw-split-window-vert</span> <span class="s">&quot; Ace - Split Vert Window&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="sc">?b</span> <span class="nv">aw-split-window-horz</span> <span class="s">&quot; Ace - Split Horz Window&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="sc">?i</span> <span class="nv">delete-other-windows</span> <span class="s">&quot; Ace - Maximize Window&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="sc">?o</span> <span class="nv">delete-other-windows</span><span class="p">))</span>
+  <span class="s">&quot;List of actions for </span><span class="ss">`aw-dispatch-default&#39;</span><span class="s">.&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p>The strings beside each command are important: they are used to update
 the mode line when you press a char. They also mean that a window
@@ -505,7 +567,7 @@ decision char.</p>
 
 <p>If you want to skip step 1 always (since, by default, you&#39;re not
 prompted for <code>aw-keys</code> when you have 2 or less windows), use:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">aw-dispatch-always</span> <span class="no">t</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">aw-dispatch-always</span> <span class="no">t</span><span class="p">)</span>
 </code></pre></div>
 <p>Be careful though, setting this means that you&#39;ll always have to
 select a window with <code>aw-keys</code>, even if there are only two. This is a
@@ -595,22 +657,22 @@ just one.  This doesn&#39;t impact the narrowing phase too much, since inputting
 isn&#39;t much more than just one.  But it greatly decreases the number of candidates in the decision
 phase. The small amount of candidates allows me to use this setting for the decision:</p></li>
 </ul>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">avy-keys</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">?a</span> <span class="nv">?s</span> <span class="nv">?d</span> <span class="nv">?f</span> <span class="nv">?g</span> <span class="nv">?h</span> <span class="nv">?j</span> <span class="nv">?k</span> <span class="nv">?l</span><span class="p">))</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">avy-keys</span> <span class="o">&#39;</span><span class="p">(</span><span class="sc">?a</span> <span class="sc">?s</span> <span class="sc">?d</span> <span class="sc">?f</span> <span class="sc">?g</span> <span class="sc">?h</span> <span class="sc">?j</span> <span class="sc">?k</span> <span class="sc">?l</span><span class="p">))</span>
 </code></pre></div>
 <p>That&#39;s only 9 decision chars, all of them on the home row.</p>
 
 <h2 id="the-decision-char-overlay-flavors">The decision char overlay flavors</h2>
 
 <p>Once again, there are three, here are their corresponding <code>defcustom</code>s:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defcustom</span> <span class="nv">avy-goto-char-style</span> <span class="ss">&#39;pre</span>
-  <span class="s">&quot;Method of displaying the overlays for `avy-goto-char&#39; and `avy-goto-char-2&#39;.&quot;</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defcustom</span> <span class="nv">avy-goto-char-style</span> <span class="ss">&#39;pre</span>
+  <span class="s">&quot;Method of displaying the overlays for </span><span class="ss">`avy-goto-char&#39;</span><span class="s"> and </span><span class="ss">`avy-goto-char-2&#39;</span><span class="s">.&quot;</span>
   <span class="nb">:type</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">choice</span>
           <span class="p">(</span><span class="nv">const</span> <span class="nb">:tag</span> <span class="s">&quot;Pre&quot;</span> <span class="nv">pre</span><span class="p">)</span>
           <span class="p">(</span><span class="nv">const</span> <span class="nb">:tag</span> <span class="s">&quot;At&quot;</span> <span class="nv">at</span><span class="p">)</span>
           <span class="p">(</span><span class="nv">const</span> <span class="nb">:tag</span> <span class="s">&quot;Post&quot;</span> <span class="nv">post</span><span class="p">)))</span>
 
 <span class="p">(</span><span class="nb">defcustom</span> <span class="nv">avy-goto-word-style</span> <span class="ss">&#39;pre</span>
-  <span class="s">&quot;Method of displaying the overlays for `avy-goto-word-0&#39; and `avy-goto-word-0&#39;.&quot;</span>
+  <span class="s">&quot;Method of displaying the overlays for </span><span class="ss">`avy-goto-word-0&#39;</span><span class="s"> and </span><span class="ss">`avy-goto-word-0&#39;</span><span class="s">.&quot;</span>
   <span class="nb">:type</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">choice</span>
           <span class="p">(</span><span class="nv">const</span> <span class="nb">:tag</span> <span class="s">&quot;Pre&quot;</span> <span class="nv">pre</span><span class="p">)</span>
           <span class="p">(</span><span class="nv">const</span> <span class="nb">:tag</span> <span class="s">&quot;At&quot;</span> <span class="nv">at</span><span class="p">)</span>
@@ -632,242 +694,6 @@ and new features appearing, thanks to all who contributed.</p>
 
 <p>Finally, the package in on <a href="http://melpa.org/#/avy">MELPA</a>, so it&#39;s convenient to install.  The only hassle is to decide where to bind all these commands.</p>
 
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/05/02/swiper-0.4.0/">
-        Ivy-mode 0.4.0 is out
-      </a>
-    </h1>
-
-    <span class="post-date">02 May 2015</span>
-
-    <p>This is a feature-packed release with a lot of cool things like:</p>
-
-<ul>
-<li>Partial completion on <kbd>TAB</kbd></li>
-<li>Resume the last completion session with <code>ivy-resume</code></li>
-<li>Multi-tier regex matching</li>
-</ul>
-
-<p>The detailed release notes follow.</p>
-
-<h2 id="fixes">Fixes</h2>
-
-<h3 id="glob-expansion-in-rgrep">Glob expansion in <code>rgrep</code></h3>
-
-<p>While completing file names, ivy expands the file name to
-full. Unfortunately, <code>rgrep</code> uses <code>read-file-name-internal</code> and isn&#39;t
-receptive to globs being expanded with the current directory.  A
-work-around this is to use the generic strategy when ivy is in
-trouble:</p>
-
-<ul>
-<li>enter the input text as if there was no completion.</li>
-<li>exit with <kbd>C-u C-j</kbd> (forwards to <code>ivy-immediate-done</code>).</li>
-</ul>
-
-<p><code>ivy-immediate-done</code> is currently unbound by default. If you want, you
-can bind it in your config like this:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">ivy-minibuffer-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c C-d&quot;</span><span class="p">)</span> <span class="ss">&#39;ivy-immediate-done</span><span class="p">)</span>
-</code></pre></div>
-<h3 id="exclude-a-couple-more-modes-from-font-lock">Exclude a couple more modes from font-lock</h3>
-
-<p>This time, they are <code>jabber-chat-mode</code> and <code>elfeed-search-mode</code>.</p>
-
-<h3 id="fix-a-flag-in-swiper-query-replace">Fix a flag in <code>swiper-query-replace</code></h3>
-
-<p>You can launch a query replace with <kbd>M-q</kbd> from swiper.</p>
-
-<h3 id="avoid-sorting-org-refile-candidates">Avoid sorting <code>org-refile</code> candidates</h3>
-
-<p>By default, ivy completion candidates are sorted with
-<code>string-lessp</code>. The sorting can be customized with
-<code>ivy-sort-functions-alist</code>. While refiling, the natural order is
-actually best, so the sorting is turned off in that case.</p>
-
-<h3 id="reset-to-the-first-candidate-when-switching-directories">Reset to the first candidate when switching directories</h3>
-
-<p>With <code>ivy-mode</code> you can select a file anywhere on your file system by
-switching directories repeatedly with <kbd>C-j</kbd>
-(<code>ivy-alt-done</code>). After moving to a new directory, the point should be
-on the first candidate.</p>
-
-<h3 id="fixup-the-face-order">Fixup the face order</h3>
-
-<p>All this time there was an issue with the face order swapping between
-1 and 2 groups.  This is now fixed.  Also, I&#39;ve made
-<code>swiper-match-face-4</code> inherit from <code>isearch-fail</code>. It&#39;s important to
-have all 4 faces be different.</p>
-
-<h3 id="don-39-t-error-on-bad-regex">Don&#39;t error on bad regex</h3>
-
-<p>When the current input is a bad regex, just display no candidates and
-continue. Don&#39;t throw an error.</p>
-
-<h2 id="new-features">New Features</h2>
-
-<h3 id="use-instead-of-to-move-to-root">Use <kbd>//</kbd> instead of <kbd>/</kbd> to move to root</h3>
-
-<p>While completing file names, you can enter <kbd>//</kbd> to move to
-the root directory.  This change was necessary in order to make it
-possible to enter e.g. <code>/sudo:</code> or <code>/ssh:</code>.</p>
-
-<h3 id="host-completion-for-sudo-and-ssh">Host completion for <code>/sudo:</code> and <code>/ssh:</code></h3>
-
-<p>This feature is a bit flaky for now. But it works well on my
-machine. It should get better after a few bug reports. You can start
-the completion right after the method, e.g. <code>/ssh:</code> <kbd>RET</kbd>, or
-after method+user, e.g. <code>/ssh:oleh@</code> <kbd>RET</kbd>.</p>
-
-<h3 id="respect-confirm-nonexistent-file-or-buffer">Respect <code>confirm-nonexistent-file-or-buffer</code></h3>
-
-<p>If you set <code>confirm-nonexistent-file-or-buffer</code> to t (it&#39;s nil by
-default), you&#39;ll have to confirm when you create a new file or buffer
-with ivy.</p>
-
-<p><img src="https://raw.githubusercontent.com/wiki/abo-abo/swiper/images/ivy-confirm.png" alt="confirm.png"></p>
-
-<h3 id="highlight-remote-buffers-with-ivy-remote-face">Highlight remote buffers with <code>ivy-remote</code> face</h3>
-
-<p>Just some extra polish to make things look nicer. The buffers to which
-you&#39;re connected through TRAMP will be highlighted with the new
-<code>ivy-remote</code> face.</p>
-
-<h3 id="change-the-prompt-for-match-required-interactions">Change the prompt for <code>match-required</code> interactions</h3>
-
-<p>Sometimes, the Emacs functions that call completion specify to it that
-a match is required, i.e. you can&#39;t just type in some random stuff -
-you have to select one of the candidates given to you.  In that case
-ivy will appropriately change the prompt like this:</p>
-
-<p><img src="https://raw.githubusercontent.com/wiki/abo-abo/swiper/images/ivy-match-required.png" alt="match-required.png"></p>
-
-<h3 id="improve-the-candidate-selection-while-using-history">Improve the candidate selection while using history</h3>
-
-<p>While completing, you press <kbd>M-p</kbd> to select the previous
-input. This update tries to select not just the first candidates that
-matches, but the actual previous candidate that you selected before.</p>
-
-<h3 id="use-alpha-compositing-to-add-ivy-current-match-face">Use alpha compositing to add <code>ivy-current-match-face</code></h3>
-
-<p>This is only relevant for when the completion candidates have custom
-face backgrounds. But in that case, the minibuffer looks a lot nicer.</p>
-
-<h3 id="add-partial-completion">Add partial completion</h3>
-
-<p>Press <kbd>TAB</kbd> to do call <code>ivy-partial-or-done</code> to complete the
-current thing to the largest possible prefix. When called twice in a
-row, it&#39;s the same as <kbd>C-j</kbd>, i.e. it will finish the
-completion.</p>
-
-<h3 id="improve-completion-of-hidden-buffers">Improve completion of hidden buffers</h3>
-
-<p>In Emacs, hidden buffer names start with a space. To see them all,
-press a single space while completing buffers in <code>ivy-mode</code>. You can
-toggle between hidden and non-hidden buffers by editing the first
-space in your input query. Remember that with <code>ivy-mode</code> the
-minibuffer is a proper editable area, so <kbd>C-a</kbd> works properly
-(unlike in <code>isearch</code> or <code>ido-mode</code>).</p>
-
-<h3 id="allow-to-quote-spaces-while-matching">Allow to quote spaces while matching</h3>
-
-<p>Spaces are wild while matching - they serve as group
-boundaries. However, sometimes it would be useful to quote them. From
-now on, you can quote <code>N</code> consecutive spaces by inputting <code>N+1</code>
-consecutive spaces.</p>
-
-<h2 id="add-multi-tier-regex-matching">Add multi-tier regex matching</h2>
-
-<p>This is actually a really cool feature, so if you&#39;re paying attention
-to any section, let it be this one.</p>
-
-<h3 id="user-side">User side</h3>
-
-<p>For example, I cloned
-<a href="https://github.com/boostorg/boost/tree/boost-1.58.0">boost-1.58.0</a>
-and called <code>counsel-git</code>, which is like a <code>find-file</code> for all files in
-a git repository at once.</p>
-
-<ul>
-<li>Initially, it gives 45919 candidate files.</li>
-<li>With input &quot;utility&quot;, there are 234 candidates.</li>
-<li>With input &quot;utility hpp&quot;, there are 139 candidates.</li>
-</ul>
-
-<p>Now, the interesting part. If I want to exclude anything with &quot;hpp&quot; in
-it, I change the input to &quot;utility !hpp&quot; (with <kbd>M-b !</kbd>) to
-get 95 candidates (95=234-139, it checks out).  I could exclude some
-more:</p>
-
-<ul>
-<li>with input &quot;utility !hpp cpp&quot; there are 57 candidates.</li>
-<li>with input &quot;utility !hpp cpp ipp&quot; there are 46 candidates.</li>
-<li>I can unify the regex to &quot;utility ![hic]pp&quot; and also get 46 candidates.</li>
-<li>exclude htm with &quot;utility ![hic]pp htm&quot; to get only 17 candidates.</li>
-</ul>
-
-<p>You can use this strategy anywhere, not just for git file. For example, in <code>describe-function</code> or <code>swiper</code>.</p>
-
-<h3 id="elisp-side">Elisp side</h3>
-
-<p>You can customize <code>ivy-re-builders-alist</code> to make <code>ivy-mode</code> complete
-in the way that you like.  The alist dispatches on the collection
-type, so you can have one completion strategy for buffers, another for
-files and still another for everything else.</p>
-
-<p>Each function on the alist should turn the string input into a string
-regex. So the simplest one would be <code>regexp-quote</code>. If you want to use
-multi-tier matching, the function should instead return a list of
-regexps of two types:</p>
-
-<ul>
-<li>the ones that should match (will be joined by <code>and</code>).</li>
-<li>the ones that should not match (will be joined by <code>or</code>).</li>
-</ul>
-
-<h2 id="add-ivy-resume">Add <code>ivy-resume</code></h2>
-
-<p>This feature is still a bit of a work-in-progress. But it allows you
-to resume the last completion to the point before you entered
-<kbd>RET</kbd> or <kbd>C-g</kbd> etc.  It only works for features that
-specifically passed <code>:action</code> to <code>ivy-read</code>.  You could resume other
-features, but nothing would be done when you select the candidate,
-since <code>ivy-completing-read</code> has no idea what the function that called
-it was going to do with the result.</p>
-
-<p>Currently, you can resume:</p>
-
-<ul>
-<li><code>counsel-describe-variable</code></li>
-<li><code>counsel-describe-function</code></li>
-<li><code>lispy-goto</code></li>
-<li><code>swiper</code></li>
-</ul>
-
-<p>Here&#39;s how I&#39;ve bound it in my config:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c C-r&quot;</span><span class="p">)</span> <span class="ss">&#39;ivy-resume</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">global-set-key</span> <span class="nv">[f6]</span> <span class="ss">&#39;ivy-resume</span><span class="p">)</span>
-</code></pre></div>
-<p>The <code>ivy-resume</code> feature adds <code>occur</code>-like functionality to <code>swiper</code>.
-Calling <code>ivy-resume</code> is like switching to the <code>*Occur*</code> buffer.</p>
-
-<h2 id="outro">Outro</h2>
-
-<p>Big thanks to all who contributed, especially
-<a href="https://github.com/tsdh">@tsdh</a> and
-<a href="https://github.com/zhaojiangbin">@zhaojiangbin</a>.</p>
-
-<p>If you&#39;re considering to switch from <code>ido-mode</code> to <code>ivy-mode</code>, now is
-a good time, since the most glaring gaps have now been filled. You can
-find some up-to-date info on the
-<a href="https://github.com/abo-abo/swiper/wiki">swiper wiki</a>. I switched the
-page syntax from markdown to org-mode, but Github makes the headings
-way to big. So it might be easier to clone the wiki and view the org
-files in Emacs:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">git clone https://github.com/abo-abo/swiper.wiki.git
-</code></pre></div>
   </div>
   
 </div>

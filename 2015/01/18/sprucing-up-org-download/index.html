@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -302,7 +306,7 @@ be.</p>
 un-aliases images that point to HTML. I see a lot of these from the
 people that I&#39;m following on my Twitter,
 <a href="https://twitter.com/_abo_abo">@&#95;abo&#95;abo</a>. Here&#39;s the code:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defcustom</span> <span class="nv">org-download-img-regex-list</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defcustom</span> <span class="nv">org-download-img-regex-list</span>
   <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;&lt;img +src=\&quot;&quot;</span> <span class="s">&quot;&lt;img +\\(class=\&quot;[^\&quot;]+\&quot;\\)? *src=\&quot;&quot;</span><span class="p">)</span>
   <span class="s">&quot;This regex is used to unalias links that look like images.</span>
 <span class="s">The html to which the links points will be searched for these</span>
@@ -311,7 +315,7 @@ people that I&#39;m following on my Twitter,
   <span class="nb">:group</span> <span class="ss">&#39;org-download</span><span class="p">)</span>
 </code></pre></div>
 <p>and in <code>(org-download-image link)</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nv">image-type-from-file-name</span> <span class="nv">link</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nv">image-type-from-file-name</span> <span class="nv">link</span><span class="p">)</span>
     <span class="p">(</span><span class="nb">with-current-buffer</span>
         <span class="p">(</span><span class="nv">url-retrieve-synchronously</span> <span class="nv">link</span> <span class="no">t</span><span class="p">)</span>
       <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">regexes</span> <span class="nv">org-download-img-regex-list</span><span class="p">)</span>

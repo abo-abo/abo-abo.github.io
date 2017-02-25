@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -311,7 +315,7 @@ much faster at refreshing.</p>
 
 <p>Which brings me to the next point. Since I&#39;m calling it so much, might
 as well wrap it in some Elisp. Elisp is like frosting - it makes everything better:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">jekyll-serve</span> <span class="p">()</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">jekyll-serve</span> <span class="p">()</span>
   <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
   <span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">default-directory</span>
           <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">string-match</span> <span class="s">&quot;_posts/$&quot;</span> <span class="nv">default-directory</span><span class="p">)</span>

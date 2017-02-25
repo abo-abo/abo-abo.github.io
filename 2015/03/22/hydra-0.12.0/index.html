@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -313,7 +317,7 @@ becomes too small.</li>
 <p>The spec that&#39;s used for e.g. <code>(test)</code> is <code>%S</code>. So if <code>(test)</code> returns a string, it will be quoted.
 This may not be desired, hence the new feature.
 Example:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-marked-items</span> <span class="p">(</span><span class="nv">dired-mode-map</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-marked-items</span> <span class="p">(</span><span class="nv">dired-mode-map</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
   <span class="s">&quot;</span>
 <span class="s">Number of marked items: %(length (dired-get-marked-files))</span>
 <span class="s">Directory size: %s(shell-command-to-string \&quot;du -hs\&quot;)</span>
@@ -323,7 +327,7 @@ Example:</p>
 <h3 id="the-pink-amaranth-override-is-set-recursively">The pink/amaranth override is set recursively</h3>
 
 <p>This fixes the issue in this hydra:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-test</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">amaranth</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-test</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">amaranth</span><span class="p">)</span>
   <span class="s">&quot;foo&quot;</span>
   <span class="p">(</span><span class="s">&quot;fo&quot;</span> <span class="p">(</span><span class="nf">message</span> <span class="s">&quot;yay&quot;</span><span class="p">))</span>
   <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span><span class="p">))</span>
@@ -336,7 +340,7 @@ keymap. This is now fixed.</p>
 <p>When you write a large docstring, you usually pass <code>nil</code> as the hint for most heads.
 Now you can omit it, if you set <code>:hint nil</code> in body.
 Example:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-org-template</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">blue</span> <span class="nb">:hint</span> <span class="no">nil</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-org-template</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">blue</span> <span class="nb">:hint</span> <span class="no">nil</span><span class="p">)</span>
   <span class="s">&quot;</span>
 <span class="s">_c_enter  _q_uote    _L_aTeX:</span>
 <span class="s">_l_atex   _e_xample  _i_ndex:</span>

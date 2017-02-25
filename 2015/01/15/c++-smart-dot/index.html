@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -287,7 +291,7 @@ name on the left. So why not automatically insert the object name each
 time I press the dot? Below, I&#39;ll show a code that does exactly that.</p>
 
 <h2 id="the-dot-command">The dot command</h2>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">c++-smart-dot</span> <span class="p">()</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">c++-smart-dot</span> <span class="p">()</span>
   <span class="s">&quot;Insert a dot or an object name plus dot when appropriate.&quot;</span>
   <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">var-name</span><span class="p">)</span>
@@ -301,14 +305,14 @@ optionally with some spaces or (ugh) tabs before the point, then try
 to insert the object name along with a dot.</p>
 
 <p>Here&#39;s how to bind it:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">eval-after-load</span> <span class="s">&quot;cc-mode&quot;</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">eval-after-load</span> <span class="s">&quot;cc-mode&quot;</span>
   <span class="o">`</span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">c++-mode-map</span> <span class="s">&quot;.&quot;</span> <span class="ss">&#39;c++-smart-dot</span><span class="p">))</span>
 </code></pre></div>
 <h2 id="how-to-get-the-recent-variable">How to get the recent variable</h2>
 
 <p>This code doesn&#39;t aim to be thorough, it&#39;s just a hack that
 works reasonably well.</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">defconst</span> <span class="nv">c++-var-regex</span> <span class="s">&quot;[A-Za-z][A-Za-z0-9_]*&quot;</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">defconst</span> <span class="nv">c++-var-regex</span> <span class="s">&quot;[A-Za-z][A-Za-z0-9_]*&quot;</span>
   <span class="s">&quot;The regex for C++ variable name.&quot;</span><span class="p">)</span>
 
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">c++-get-recent-var</span> <span class="p">()</span>
@@ -332,7 +336,7 @@ works reasonably well.</p>
 </code></pre></div>
 <p>If you&#39;re a stickler for performance and you don&#39;t want to call format a bunch of times,
 you can amend the code like this:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defalias</span> <span class="ss">&#39;c++-get-recent-var</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defalias</span> <span class="ss">&#39;c++-get-recent-var</span>
     <span class="p">(</span><span class="nv">byte-compile</span>
      <span class="o">`</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span>
         <span class="p">(</span><span class="k">save-excursion</span>
@@ -362,7 +366,7 @@ it look nicer.</p>
 <h2 id="the-sample-application">The sample application</h2>
 
 <p>For the happy people that have never seen C++:</p>
-<div class="highlight"><pre><code class="language-C++" data-lang="C++"><span class="n">DataOut</span><span class="o">&lt;</span><span class="n">dim</span><span class="o">&gt;</span> <span class="n">data_out</span><span class="p">;</span>
+<div class="highlight"><pre><code class="language-C++" data-lang="C++"><span></span><span class="n">DataOut</span><span class="o">&lt;</span><span class="n">dim</span><span class="o">&gt;</span> <span class="n">data_out</span><span class="p">;</span>
 <span class="n">data_out</span><span class="p">.</span><span class="n">attach_dof_handler</span><span class="p">(</span><span class="n">dof_handler</span><span class="p">);</span>
 <span class="n">data_out</span><span class="p">.</span><span class="n">add_data_vector</span><span class="p">(</span><span class="n">solution</span><span class="p">,</span> <span class="s">&quot;u&quot;</span><span class="p">);</span>
 <span class="n">data_out</span><span class="p">.</span><span class="n">build_patches</span><span class="p">();</span>

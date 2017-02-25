@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -286,19 +290,19 @@ But sometimes the indentation engine just won&#39;t listen.</p>
 <h2 id="lisp-indent-function">lisp-indent-function</h2>
 
 <p>By default, the indentation is handled as if:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">lisp-indent-function</span> <span class="ss">&#39;lisp-indent-function</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">lisp-indent-function</span> <span class="ss">&#39;lisp-indent-function</span><span class="p">)</span>
 </code></pre></div>
 <p>At least in one case, it looks horrible:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">cl-labels</span> <span class="p">((</span><span class="nv">square</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">cl-labels</span> <span class="p">((</span><span class="nv">square</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
                     <span class="p">(</span><span class="nf">*</span> <span class="nv">x</span> <span class="nv">x</span><span class="p">)))</span>
   <span class="p">(</span><span class="nf">mapcar</span> <span class="nf">#&#39;</span><span class="nv">square</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">0</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">)))</span>
 <span class="c1">;; =&gt; (0 1 4 9 16 25)</span>
 </code></pre></div>
 <p>That&#39;s why I have:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">lisp-indent-function</span> <span class="ss">&#39;common-lisp-indent-function</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">lisp-indent-function</span> <span class="ss">&#39;common-lisp-indent-function</span><span class="p">)</span>
 </code></pre></div>
 <p>which leads to this indentation:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">cl-labels</span> <span class="p">((</span><span class="nv">square</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">cl-labels</span> <span class="p">((</span><span class="nv">square</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
               <span class="p">(</span><span class="nf">*</span> <span class="nv">x</span> <span class="nv">x</span><span class="p">)))</span>
   <span class="p">(</span><span class="nf">mapcar</span> <span class="nf">#&#39;</span><span class="nv">square</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">0</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">)))</span>
 <span class="c1">;; =&gt; (0 1 4 9 16 25)</span>
@@ -311,8 +315,8 @@ macro.</p>
 <h2 id="declaring-indent-level">Declaring indent level</h2>
 
 <p>Here&#39;s how it looks like</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defmacro</span> <span class="nv">lispy-save-excursion</span> <span class="p">(</span><span class="kp">&amp;rest</span> <span class="nv">body</span><span class="p">)</span>
-  <span class="s">&quot;More intuitive (`save-excursion&#39; BODY).&quot;</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defmacro</span> <span class="nv">lispy-save-excursion</span> <span class="p">(</span><span class="kp">&amp;rest</span> <span class="nv">body</span><span class="p">)</span>
+  <span class="s">&quot;More intuitive (</span><span class="ss">`save-excursion&#39;</span><span class="s"> BODY).&quot;</span>
   <span class="p">(</span><span class="nb">declare</span> <span class="p">(</span><span class="nv">indent</span> <span class="mi">0</span><span class="p">))</span>
   <span class="o">`</span><span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">out</span> <span class="p">(</span><span class="k">save-excursion</span>
                 <span class="o">,@</span><span class="nv">body</span><span class="p">)))</span>
@@ -322,14 +326,14 @@ macro.</p>
 </code></pre></div>
 <p>By default, functions behave as if their <code>indent</code> was declared to <code>nil</code>.
 Zero here means that we expect zero arguments on the same line, so that this indentation follows:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">lispy-save-excursion</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">lispy-save-excursion</span>
   <span class="p">(</span><span class="nv">lispy--out-forward</span> <span class="nv">arg</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">backward-list</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">indent-sexp</span><span class="p">))</span>
 </code></pre></div>
 <p>The indentation above is just like the one that the original <code>save-excursion</code> has.
 Note that if I hadn&#39;t declared the indent, it would look like this:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">lispy-save-excursion</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">lispy-save-excursion</span>
  <span class="p">(</span><span class="nv">lispy--out-forward</span> <span class="nv">arg</span><span class="p">)</span>
  <span class="p">(</span><span class="nv">backward-list</span><span class="p">)</span>
  <span class="p">(</span><span class="nv">indent-sexp</span><span class="p">))</span>
@@ -337,13 +341,13 @@ Note that if I hadn&#39;t declared the indent, it would look like this:</p>
 <p>The impact is much larger for statements that require an <code>indent</code> of 1:</p>
 
 <p>Compare the proper thing:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">lispy-dotimes</span> <span class="nv">arg</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">lispy-dotimes</span> <span class="nv">arg</span>
   <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">point</span><span class="p">)</span> <span class="p">(</span><span class="nf">point-max</span><span class="p">))</span>
     <span class="p">(</span><span class="ne">error</span> <span class="s">&quot;Reached end of buffer&quot;</span><span class="p">))</span>
   <span class="p">(</span><span class="nv">forward-list</span><span class="p">))</span>
 </code></pre></div>
 <p>to this horror:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">lispy-dotimes</span> <span class="nv">arg</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">lispy-dotimes</span> <span class="nv">arg</span>
                <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">point</span><span class="p">)</span> <span class="p">(</span><span class="nf">point-max</span><span class="p">))</span>
                  <span class="p">(</span><span class="ne">error</span> <span class="s">&quot;Reached end of buffer&quot;</span><span class="p">))</span>
                <span class="p">(</span><span class="nv">forward-list</span><span class="p">))</span>

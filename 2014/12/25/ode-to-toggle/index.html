@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -306,7 +310,7 @@ toggles.</p>
 <blockquote>
 <p>Talk is cheap. Show me the code.</p>
 </blockquote>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">char-upcasep</span> <span class="p">(</span><span class="nv">letter</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">char-upcasep</span> <span class="p">(</span><span class="nv">letter</span><span class="p">)</span>
   <span class="p">(</span><span class="nf">eq</span> <span class="nv">letter</span> <span class="p">(</span><span class="nf">upcase</span> <span class="nv">letter</span><span class="p">)))</span>
 
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">capitalize-word-toggle</span> <span class="p">()</span>
@@ -339,14 +343,14 @@ Hence, I can toggle this state with <kbd>C-z</kbd> for fun and profit.</p>
 
 <p>Maybe some background on how this command is useful for me. I write a bunch of C++,
 and the code features a lot of lines like this:</p>
-<div class="highlight"><pre><code class="language-c++" data-lang="c++"><span class="n">Triangulation</span> <span class="n">triangulation</span><span class="p">;</span> <span class="c1">// duh</span>
+<div class="highlight"><pre><code class="language-c++" data-lang="c++"><span></span><span class="n">Triangulation</span> <span class="n">triangulation</span><span class="p">;</span> <span class="c1">// duh</span>
 </code></pre></div>
 <p>So when I&#39;m using <code>auto-complete</code>, it often eagerly expands to
 <code>Triangulation</code> when I want <code>triangulation</code>, and the other way around.
 So <code>capitalize-word-toggle</code> is super-useful there.</p>
 
 <h2 id="upcase-word-toggle"><code>upcase-word-toggle</code></h2>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">upcase-word-toggle</span> <span class="p">()</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">upcase-word-toggle</span> <span class="p">()</span>
   <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">bounds</span> <span class="p">(</span><span class="nv">bounds-of-thing-at-point</span> <span class="ss">&#39;symbol</span><span class="p">))</span>
         <span class="nv">beg</span> <span class="nv">end</span>

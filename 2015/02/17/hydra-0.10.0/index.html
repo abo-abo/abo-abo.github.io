@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -314,11 +318,11 @@ This was already covered in <a href="/2015/02/16/hydra-multi/">yesterday&#39;s p
 <h3 id="add-option-to-font-lock-defhydra">Add option to font-lock <code>defhydra</code></h3>
 
 <p>If you want to nicely font-lock your <code>defhydra</code> statements, just add this to your config:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;hydra</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;hydra</span><span class="p">)</span>
 <span class="p">(</span><span class="nv">hydra-add-font-lock</span><span class="p">)</span>
 </code></pre></div>
 <p>Additionally, <code>defhydra</code> is now to be indented as a <code>defun</code>, so it will be indented like this:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-goto-line</span> <span class="p">(</span><span class="nv">global-map</span> <span class="s">&quot;M-g&quot;</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-goto-line</span> <span class="p">(</span><span class="nv">global-map</span> <span class="s">&quot;M-g&quot;</span>
                            <span class="nb">:pre</span> <span class="p">(</span><span class="nv">linum-mode</span> <span class="mi">1</span><span class="p">)</span>
                            <span class="nb">:post</span> <span class="p">(</span><span class="nv">linum-mode</span> <span class="mi">-1</span><span class="p">)</span>
                            <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>

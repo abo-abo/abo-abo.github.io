@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -287,7 +291,7 @@
 <p>I tried to make the first call to <code>youtube-dl</code> asynchronous, but it
 wasn&#39;t working out.  So for the current code, there&#39;s still about a 2
 second delay before the capture buffer appears.</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;async</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;async</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">org-handle-link-youtube</span> <span class="p">(</span><span class="nv">link</span><span class="p">)</span>
   <span class="p">(</span><span class="nb">lexical-let*</span>
       <span class="p">((</span><span class="nv">file-name</span> <span class="p">(</span><span class="nv">org-trim</span>

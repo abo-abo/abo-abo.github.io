@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -284,7 +288,7 @@
 whole config on Github. Today, I&#39;ll show you a useful function for
 describing the current buffer&#39;s key bindings. The function will
 generate something like this (with all letters, of course):</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="c1">;; (global-set-key (kbd &quot;a&quot;) &#39;self-insert-command)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="c1">;; (global-set-key (kbd &quot;a&quot;) &#39;self-insert-command)</span>
 <span class="c1">;; ...</span>
 <span class="c1">;; (global-set-key (kbd &quot;C-b&quot;) &#39;backward-char)</span>
 <span class="c1">;; ...</span>
@@ -306,14 +310,14 @@ then today&#39;s corrections with some remarks.</p>
 <h2 id="old-style">Old style</h2>
 
 <p>Please don&#39;t try this at home:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="c1">;;;###autoload</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="c1">;;;###autoload</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">keys-latin</span> <span class="p">()</span>
-  <span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">c</span> <span class="nv">from</span> <span class="nv">?a</span> <span class="nv">to</span> <span class="nv">?z</span>
+  <span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">c</span> <span class="nv">from</span> <span class="sc">?a</span> <span class="nv">to</span> <span class="sc">?z</span>
      <span class="nv">collect</span> <span class="p">(</span><span class="nf">string</span> <span class="nv">c</span><span class="p">)))</span>
 
 <span class="c1">;;;###autoload</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">keys-greek</span> <span class="p">()</span>
-  <span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">c</span> <span class="nv">from</span> <span class="nv">?</span><span class="err">α</span> <span class="nv">to</span> <span class="nv">?</span><span class="err">ω</span>
+  <span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">c</span> <span class="nv">from</span> <span class="sc">?α</span> <span class="nv">to</span> <span class="sc">?ω</span>
      <span class="nv">collect</span> <span class="p">(</span><span class="nf">string</span> <span class="nv">c</span><span class="p">)))</span>
 
 <span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;dash</span><span class="p">)</span>
@@ -368,7 +372,7 @@ the three consecutive <code>mapcar</code>s could be folded into a single <code>m
 
 <p>After the fold, it starts to look silly, since I&#39;m <code>cons</code>ing just to
 take a <code>car</code> and <code>cdr</code> later:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">keys-describe-prefix</span> <span class="p">(</span><span class="nv">letters</span> <span class="nv">prefix</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">keys-describe-prefix</span> <span class="p">(</span><span class="nv">letters</span> <span class="nv">prefix</span><span class="p">)</span>
   <span class="p">(</span><span class="nf">apply</span> <span class="nf">#&#39;concat</span>
          <span class="p">(</span><span class="nf">mapcar</span>
           <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">letter</span><span class="p">)</span>
@@ -386,7 +390,7 @@ take a <code>car</code> and <code>cdr</code> later:</p>
           <span class="nv">letters</span><span class="p">)))</span>
 </code></pre></div>
 <p>Here&#39;s a simplification, removing <code>binding</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">keys-describe-prefix</span> <span class="p">(</span><span class="nv">letters</span> <span class="nv">prefix</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">keys-describe-prefix</span> <span class="p">(</span><span class="nv">letters</span> <span class="nv">prefix</span><span class="p">)</span>
   <span class="p">(</span><span class="nf">apply</span> <span class="nf">#&#39;concat</span>
          <span class="p">(</span><span class="nf">mapcar</span>
           <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">letter</span><span class="p">)</span>
@@ -402,7 +406,7 @@ take a <code>car</code> and <code>cdr</code> later:</p>
 </code></pre></div>
 <p>I guess that I didn&#39;t know about <code>format</code> function back then, and the fact that <code>&quot;%S&quot;</code> key is equivalent
 to <code>prin1-to-string</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">keys-describe-prefix</span> <span class="p">(</span><span class="nv">letters</span> <span class="nv">prefix</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">keys-describe-prefix</span> <span class="p">(</span><span class="nv">letters</span> <span class="nv">prefix</span><span class="p">)</span>
   <span class="p">(</span><span class="nf">apply</span> <span class="nf">#&#39;concat</span>
          <span class="p">(</span><span class="nf">mapcar</span>
           <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">letter</span><span class="p">)</span>
@@ -413,7 +417,7 @@ to <code>prin1-to-string</code>:</p>
           <span class="nv">letters</span><span class="p">)))</span>
 </code></pre></div>
 <p>Next, the combination <code>(apply #&#39;concat (mapcar ...))</code> is already implemented in C as <code>mapconcat</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">keys-describe-prefix</span> <span class="p">(</span><span class="nv">letters</span> <span class="nv">prefix</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">keys-describe-prefix</span> <span class="p">(</span><span class="nv">letters</span> <span class="nv">prefix</span><span class="p">)</span>
   <span class="p">(</span><span class="nf">mapconcat</span>
    <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">letter</span><span class="p">)</span>
      <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">key</span> <span class="p">(</span><span class="nf">concat</span> <span class="nv">prefix</span> <span class="nv">letter</span><span class="p">)))</span>
@@ -429,14 +433,14 @@ to <code>prin1-to-string</code>:</p>
 <h2 id="final-version">Final version</h2>
 
 <p>Note that here I also replaced <code>mapcar</code> with <code>dolist</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="c1">;;;###autoload</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="c1">;;;###autoload</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">keys-describe-prefixes</span> <span class="p">()</span>
   <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
   <span class="p">(</span><span class="nb">with-output-to-temp-buffer</span> <span class="s">&quot;*Bindings*&quot;</span>
     <span class="p">(</span><span class="nb">dolist</span> <span class="p">(</span><span class="nv">letter-group</span> <span class="p">(</span><span class="nf">list</span>
-                           <span class="p">(</span><span class="nb">cl-loop</span> <span class="nv">for</span> <span class="nv">c</span> <span class="nv">from</span> <span class="nv">?a</span> <span class="nv">to</span> <span class="nv">?z</span>
+                           <span class="p">(</span><span class="nb">cl-loop</span> <span class="nv">for</span> <span class="nv">c</span> <span class="nv">from</span> <span class="sc">?a</span> <span class="nv">to</span> <span class="sc">?z</span>
                                     <span class="nv">collect</span> <span class="p">(</span><span class="nf">string</span> <span class="nv">c</span><span class="p">))</span>
-                           <span class="p">(</span><span class="nb">cl-loop</span> <span class="nv">for</span> <span class="nv">c</span> <span class="nv">from</span> <span class="nv">?</span><span class="err">α</span> <span class="nv">to</span> <span class="nv">?</span><span class="err">ω</span>
+                           <span class="p">(</span><span class="nb">cl-loop</span> <span class="nv">for</span> <span class="nv">c</span> <span class="nv">from</span> <span class="sc">?α</span> <span class="nv">to</span> <span class="sc">?ω</span>
                                     <span class="nv">collect</span> <span class="p">(</span><span class="nf">string</span> <span class="nv">c</span><span class="p">))))</span>
       <span class="p">(</span><span class="nb">dolist</span> <span class="p">(</span><span class="nv">prefix</span> <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;&quot;</span> <span class="s">&quot;C-&quot;</span> <span class="s">&quot;M-&quot;</span> <span class="s">&quot;C-M-&quot;</span><span class="p">))</span>
         <span class="p">(</span><span class="nf">princ</span> <span class="p">(</span><span class="nf">mapconcat</span>

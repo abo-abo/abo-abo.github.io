@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -300,7 +304,7 @@ byte-compiled, and the byte code can be incompatible between versions (for insta
 Having two independent checkouts with ELPA directory auto-generated really helps in that case.</p>
 
 <p>So here is the code to get the main directory and define an ELPA directory with respect to that:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">defconst</span> <span class="nv">emacs-d</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">defconst</span> <span class="nv">emacs-d</span>
   <span class="p">(</span><span class="nf">file-name-directory</span>
    <span class="p">(</span><span class="nv">file-chase-links</span> <span class="nv">load-file-name</span><span class="p">))</span>
   <span class="s">&quot;The giant turtle on which the world rests.&quot;</span><span class="p">)</span>
@@ -314,7 +318,7 @@ Having two independent checkouts with ELPA directory auto-generated really helps
 dependencies that they bring. Note that the code of the whole post is stored in a separate file
 <code>packages.el</code> that is not intended to be loaded on start up, so it&#39;s fine to call
 <code>package-refresh-contents</code> here:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">package-initialize</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">package-initialize</span><span class="p">)</span>
 <span class="p">(</span><span class="k">setq</span> <span class="nv">package-archives</span>
       <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;melpa&quot;</span> <span class="o">.</span> <span class="s">&quot;http://melpa.milkbox.net/packages/&quot;</span><span class="p">)</span>
         <span class="p">(</span><span class="s">&quot;gnu&quot;</span> <span class="o">.</span> <span class="s">&quot;http://elpa.gnu.org/packages/&quot;</span><span class="p">)))</span>
@@ -336,7 +340,7 @@ dependencies that they bring. Note that the code of the whole post is stored in 
 I tried to do something fancier for the upgrade, but in the end it was much more simple to
 just call the interactive interface. The last two lines are basically equivalent to pressing
 <kbd>Uxy</kbd> interactively:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="c1">;; install required</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="c1">;; install required</span>
 <span class="p">(</span><span class="nb">dolist</span> <span class="p">(</span><span class="nv">package</span> <span class="nv">ora-packages</span><span class="p">)</span>
   <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nv">package-installed-p</span> <span class="nv">package</span><span class="p">)</span>
     <span class="p">(</span><span class="nv">package-install</span> <span class="nv">package</span><span class="p">)))</span>
@@ -350,7 +354,7 @@ just call the interactive interface. The last two lines are basically equivalent
 <h2 id="step-4-make-it-callable">Step 4: make it callable</h2>
 
 <p>Finally, I just create a Makefile with the following contents:</p>
-<div class="highlight"><pre><code class="language-Makefile" data-lang="Makefile"><span class="nv">emacs</span> <span class="o">?=</span> emacs
+<div class="highlight"><pre><code class="language-Makefile" data-lang="Makefile"><span></span><span class="nv">emacs</span> <span class="o">?=</span> emacs
 <span class="nf">upgrade</span><span class="o">:</span>
     <span class="k">$(</span>emacs<span class="k">)</span> -batch -l packages.el
 
@@ -360,7 +364,7 @@ just call the interactive interface. The last two lines are basically equivalent
 <span class="nf">up</span><span class="o">:</span> <span class="n">upgrade</span> <span class="n">run</span>
 </code></pre></div>
 <p>Thanks to the first line, I can issue stuff like this on the shell:</p>
-<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span class="nv">emacs</span><span class="o">=</span>emacs24 make up
+<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span><span class="nv">emacs</span><span class="o">=</span>emacs24 make up
 </code></pre></div>
 <p>This will use the <code>emacs24</code> executable, instead of whatever <code>emacs</code> points to.  Since the <code>up</code>
 target depends on <code>upgrade</code> and <code>run</code> targets, they will be executed in that order:</p>

@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -333,10 +337,10 @@ than <code>0.15s</code> on Emacs&#39; <code>lisp/</code> directory, which has 21
 <h3 id="paredit-key-bindings">Paredit key bindings</h3>
 
 <p>You can have only Paredit + special key bindings by using this composition of key themes:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">lispy-set-key-theme</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">special</span> <span class="nv">paredit</span><span class="p">))</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">lispy-set-key-theme</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">special</span> <span class="nv">paredit</span><span class="p">))</span>
 </code></pre></div>
 <p>The default setting is:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">lispy-set-key-theme</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">special</span> <span class="nv">lispy</span> <span class="nv">c-digits</span><span class="p">))</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">lispy-set-key-theme</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">special</span> <span class="nv">lispy</span> <span class="nv">c-digits</span><span class="p">))</span>
 </code></pre></div>
 <h3 id="new-algorithm-for-multi-lining">New algorithm for multi-lining</h3>
 
@@ -400,7 +404,7 @@ algorithm.</p>
 <h3 id="the-96-will-quote-the-region">The <kbd>&#96;</kbd> will quote the region</h3>
 
 <p>If you have a region selected, pressing <kbd>&#96;</kbd> will result in:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">`symbol&#39;
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>`symbol&#39;
 </code></pre></div>
 <h3 id="customize-the-file-selection-back-end-for-v">Customize the file selection back end for <kbd>V</kbd></h3>
 
@@ -414,8 +418,8 @@ Now it uses <code>find-file-in-project</code> by default, with the option to cus
 <h3 id="m-m-will-work-better-in-strings-and-comments"><kbd>M-m</kbd> will work better in strings and comments.</h3>
 
 <p>See the relevant test:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">should</span> <span class="p">(</span><span class="nv">string=</span> <span class="p">(</span><span class="nv">lispy-with</span> <span class="s">&quot;\&quot;See `plu|mage&#39;.\&quot;&quot;</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-m&quot;</span><span class="p">))</span>
-                 <span class="s">&quot;\&quot;See ~`plumage&#39;|.\&quot;&quot;</span><span class="p">))</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">should</span> <span class="p">(</span><span class="nv">string=</span> <span class="p">(</span><span class="nv">lispy-with</span> <span class="s">&quot;\&quot;See </span><span class="ss">`plu|mage&#39;</span><span class="s">.\&quot;&quot;</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-m&quot;</span><span class="p">))</span>
+                 <span class="s">&quot;\&quot;See ~</span><span class="ss">`plumage&#39;</span><span class="s">|.\&quot;&quot;</span><span class="p">))</span>
 </code></pre></div>
 <p>Thanks to this, to e.g. get the value of a quoted var in a docstring or a comment, or jump to its definition, you can <kbd>M-m</kbd>. Then, you can step-in with <kbd>i</kbd> to select the symbol without quotes.</p>
 
@@ -469,14 +473,14 @@ splicing region, remove random quotes at region bounds.</p>
 
 <p>This change makes the splice a lot more manageable. For example,
 starting with this Clojure code, with <code>|</code> marking the current point:</p>
-<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="kd">defn </span><span class="nv">read-resource</span>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span></span><span class="p">(</span><span class="kd">defn </span><span class="nv">read-resource</span>
   <span class="s">&quot;Read a resource into a string&quot;</span>
   <span class="p">[</span><span class="nv">path</span><span class="p">]</span>
   <span class="p">(</span><span class="nf">read-string</span>
    <span class="err">|</span><span class="p">(</span><span class="nb">slurp </span><span class="p">(</span><span class="nf">clojure.java.io/resource</span> <span class="nv">path</span><span class="p">))))</span>
 </code></pre></div>
 <p>A double splice <kbd>//</kbd> will result in:</p>
-<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="kd">defn </span><span class="nv">read-resource</span>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span></span><span class="p">(</span><span class="kd">defn </span><span class="nv">read-resource</span>
   <span class="s">&quot;Read a resource into a string&quot;</span>
   <span class="p">[</span><span class="nv">path</span><span class="p">]</span>
   <span class="err">|</span><span class="p">(</span><span class="nf">read-string</span>
@@ -485,7 +489,7 @@ starting with this Clojure code, with <code>|</code> marking the current point:<
 <p>After <kbd>xR</kbd> (reverse list), <kbd>2 SPC</kbd> (same as
 <kbd>C-f</kbd>), <code>-&gt;</code> (plain insert),
 <kbd>[M</kbd> (back to parent and multi-line), the final result:</p>
-<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="kd">defn </span><span class="nv">read-resource</span>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span></span><span class="p">(</span><span class="kd">defn </span><span class="nv">read-resource</span>
   <span class="s">&quot;Read a resource into a string&quot;</span>
   <span class="p">[</span><span class="nv">path</span><span class="p">]</span>
   <span class="err">|</span><span class="p">(</span><span class="nb">-&gt; </span><span class="nv">path</span>

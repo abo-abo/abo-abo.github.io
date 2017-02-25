@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -288,7 +292,7 @@ Below, I&#39;ll share some functions and packages that I used for that.</p>
 <h2 id="my-github-setup">My Github setup</h2>
 
 <p>Here&#39;s it (<code>tree -da -L 1</code>) is:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">.
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>.
 ├── .cask
 ├── gh-pages
 ├── .git
@@ -301,7 +305,7 @@ the code and the documentation simultaneously.</p>
 <h2 id="declaring-functions-obsolete-in-elisp">Declaring functions obsolete in Elisp</h2>
 
 <p>It can be done like this:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">define-obsolete-function-alias</span> <span class="ss">&#39;lispy-out-forward</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">define-obsolete-function-alias</span> <span class="ss">&#39;lispy-out-forward</span>
     <span class="ss">&#39;lispy-right</span> <span class="s">&quot;0.21.0&quot;</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">define-obsolete-function-alias</span> <span class="ss">&#39;lispy-out-backward</span>
     <span class="ss">&#39;lispy-left</span> <span class="s">&quot;0.21.0&quot;</span><span class="p">)</span>
@@ -310,7 +314,7 @@ the code and the documentation simultaneously.</p>
 </code></pre></div>
 <p>After version <code>&quot;0.21.0&quot;</code> hits, any time you call <code>lispy-left</code> by its
 now obsolete alias <code>lispy-out-backward</code>, you&#39;ll get a message:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">`lispy-out-forward&#39; is an obsolete command (as of 0.21.0); use `lispy-right&#39; instead.
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>`lispy-out-forward&#39; is an obsolete command (as of 0.21.0); use `lispy-right&#39; instead.
 </code></pre></div>
 <p>So now, since I&#39;m releasing version <code>&quot;0.22.0&quot;</code>, I can remove even the
 alias declarations. I gave people one week of warnings to adjust (just
@@ -350,7 +354,7 @@ package, I wonder why it&#39;s not more popular. Since it&#39;s so similar to
 <code>wdired</code> (one of the best things since sliced bread, btw), I like to bind
 the starter to  <kbd>C-x C-q</kbd> and the finisher to <kbd>C-c C-c</kbd>
 as well:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">eval-after-load</span> <span class="ss">&#39;grep</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">eval-after-load</span> <span class="ss">&#39;grep</span>
   <span class="o">&#39;</span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">grep-mode-map</span>
     <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-x C-q&quot;</span><span class="p">)</span> <span class="ss">&#39;wgrep-change-to-wgrep-mode</span><span class="p">))</span>
 
@@ -362,7 +366,7 @@ as well:</p>
 
 <p><a href="https://github.com/victorhge/iedit">iedit</a> is an amazing package, it&#39;s crazy-good.
 Here&#39;s how I bind it, since once <code>iedit-mode</code> is on, you can move to the next occurrence with <kbd>C-i</kbd>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-M-i&quot;</span><span class="p">)</span> <span class="ss">&#39;iedit-mode</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-M-i&quot;</span><span class="p">)</span> <span class="ss">&#39;iedit-mode</span><span class="p">)</span>
 </code></pre></div>
 <p>In order to change <em>really</em> every occurrence in the buffer, I need to
 mark the thing that I want to change, before <kbd>C-M-i</kbd>.

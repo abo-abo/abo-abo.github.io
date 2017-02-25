@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -292,7 +296,7 @@ automatically when a function name is completed.</p>
 <a href="https://github.com/tkf/emacs-jedi">jedi</a> plugin.  To quickly see
 where the list of strings is coming from, I&#39;ve examined <code>ac-sources</code>
 variable and saw that it contains <code>ac-source-jedi-direct</code>, which evaluates to:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">((</span><span class="nv">candidates</span> <span class="o">.</span> <span class="nv">jedi:ac-direct-matches</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">((</span><span class="nv">candidates</span> <span class="o">.</span> <span class="nv">jedi:ac-direct-matches</span><span class="p">)</span>
  <span class="p">(</span><span class="nv">prefix</span> <span class="o">.</span> <span class="nv">jedi:ac-direct-prefix</span><span class="p">)</span>
  <span class="p">(</span><span class="nv">init</span> <span class="o">.</span> <span class="nv">jedi:complete-request</span><span class="p">)</span>
  <span class="p">(</span><span class="nv">requires</span> <span class="o">.</span> <span class="mi">-1</span><span class="p">))</span>
@@ -300,7 +304,7 @@ variable and saw that it contains <code>ac-source-jedi-direct</code>, which eval
 <p>This means that <code>jedi:complete-request</code> has to be called at point,
 followed by <code>jedi:ac-direct-matches</code> to obtain the list of strings. So
 basically, this code:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">progn</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">progn</span>
   <span class="p">(</span><span class="nv">deferred:sync!</span>
    <span class="p">(</span><span class="nv">jedi:complete-request</span><span class="p">))</span>
   <span class="p">(</span><span class="nv">jedi:ac-direct-matches</span><span class="p">))</span>
@@ -310,11 +314,11 @@ that <code>jedi:complete-request</code> completes before <code>jedi:ac-direct-ma
 is called.</p>
 
 <p>Testing with some Python code, where <code>|</code> is the point:</p>
-<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;foo&quot;</span><span class="p">:</span><span class="s">&quot;bar&quot;</span><span class="p">}</span>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span></span><span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;foo&quot;</span><span class="p">:</span><span class="s2">&quot;bar&quot;</span><span class="p">}</span>
 <span class="n">params</span><span class="o">.</span><span class="n">i</span>
 </code></pre></div>
 <p>The Elisp code above will return:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="o">#(</span><span class="s">&quot;items&quot;</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="o">#(</span><span class="s">&quot;items&quot;</span>
    <span class="mi">0</span> <span class="mi">5</span> <span class="p">(</span><span class="nv">summary</span>
         <span class="s">&quot;function: __builtin__.dict.items&quot;</span>
         <span class="nv">symbol</span>
@@ -356,7 +360,7 @@ encoded as string properties. After this, the rest of the Elisp code
 follows very easily, you can find it as part of
 <a href="https://github.com/abo-abo/swiper/blob/master/counsel.el">counsel</a>
 package on MELPA:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel-jedi</span> <span class="p">()</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel-jedi</span> <span class="p">()</span>
   <span class="s">&quot;Python completion at point.&quot;</span>
   <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">bnd</span> <span class="p">(</span><span class="nv">bounds-of-thing-at-point</span> <span class="ss">&#39;symbol</span><span class="p">)))</span>
@@ -398,11 +402,11 @@ is inserted if you press <kbd>C-M-n</kbd> (<code>ivy-next-line-and-call</code>),
 or use <code>ivy-resume</code>. Just to describe how this would be useful for the
 Python code above: I call <code>counsel-jedi</code>, followed by <kbd>C-M-n</kbd>
 to get:</p>
-<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;foo&quot;</span><span class="p">:</span><span class="s">&quot;bar&quot;</span><span class="p">}</span>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span></span><span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;foo&quot;</span><span class="p">:</span><span class="s2">&quot;bar&quot;</span><span class="p">}</span>
 <span class="n">params</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="o">|</span><span class="p">)</span>
 </code></pre></div>
 <p>Pressing <kbd>C-M-n</kbd> again will result in:</p>
-<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;foo&quot;</span><span class="p">:</span><span class="s">&quot;bar&quot;</span><span class="p">}</span>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span></span><span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;foo&quot;</span><span class="p">:</span><span class="s2">&quot;bar&quot;</span><span class="p">}</span>
 <span class="n">params</span><span class="o">.</span><span class="n">iterkeys</span><span class="p">(</span><span class="o">|</span><span class="p">)</span>
 </code></pre></div>
 <p>Once I&#39;m satisfied with my selected candidate, I can press either

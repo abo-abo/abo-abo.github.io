@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -306,7 +310,7 @@ I can also pair this with <kbd>v</kbd>, which I bind to recenter the
 current line to the top.</p>
 
 <p>So here&#39;s what my key setup currently looks like:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">oleh-eww-hook</span> <span class="p">()</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">oleh-eww-hook</span> <span class="p">()</span>
   <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;j&quot;</span> <span class="ss">&#39;oww-down</span><span class="p">)</span>
   <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;k&quot;</span> <span class="ss">&#39;oww-up</span><span class="p">)</span>
   <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;l&quot;</span> <span class="ss">&#39;forward-char</span><span class="p">)</span>
@@ -324,7 +328,7 @@ current line to the top.</p>
 <p>As you see, I was careful to re-assign <code>eww-back-url</code> and
 <code>eww-view-source</code> - the commands that I&#39;ve displaced from <kbd>l</kbd>
 and <kbd>v</kbd>.  And here&#39;s the implementation of the arrows:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">oww-down</span> <span class="p">(</span><span class="nv">arg</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">oww-down</span> <span class="p">(</span><span class="nv">arg</span><span class="p">)</span>
   <span class="p">(</span><span class="k">interactive</span> <span class="s">&quot;p&quot;</span><span class="p">)</span>
   <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">bolp</span><span class="p">)</span>
       <span class="p">(</span><span class="k">progn</span>
@@ -349,7 +353,7 @@ pretty easy, basically the same routine as for <code>help-mode</code> and
 code keeps binding <code>shr-save-contents</code> to <kbd>o</kbd>, my preferred
 binding for <code>ace-link</code>. Turns out it was <code>eww-link-keymap</code>, and not
 <code>shr-map</code>. So here&#39;s the new key binding code:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">ace-link-setup-default</span> <span class="p">()</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">ace-link-setup-default</span> <span class="p">()</span>
   <span class="s">&quot;Setup the defualt shortcuts.&quot;</span>
   <span class="p">(</span><span class="nv">eval-after-load</span> <span class="s">&quot;info&quot;</span>
     <span class="o">&#39;</span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">Info-mode-map</span> <span class="s">&quot;o&quot;</span> <span class="ss">&#39;ace-link-info</span><span class="p">))</span>
@@ -363,10 +367,10 @@ binding for <code>ace-link</code>. Turns out it was <code>eww-link-keymap</code>
 <p>If you haven&#39;t tried <a href="https://github.com/abo-abo/ace-link">ace-link</a>
 before, you can get it from MELPA.  The minimal configuration that you
 need is this:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">ace-link-setup-default</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">ace-link-setup-default</span><span class="p">)</span>
 </code></pre></div>
 <p>Here&#39;s the setup that I&#39;m actually using:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">use-package</span> <span class="nv">ace-link</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">use-package</span> <span class="nv">ace-link</span>
     <span class="nb">:load-path</span> <span class="s">&quot;~/git/ace-link&quot;</span>
     <span class="nb">:init</span> <span class="p">(</span><span class="nv">ace-link-setup-default</span><span class="p">))</span>
 </code></pre></div>

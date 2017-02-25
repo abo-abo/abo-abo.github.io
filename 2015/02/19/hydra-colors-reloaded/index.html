@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -329,7 +333,7 @@ bindings can be called, since I haven&#39;t figured out how to do it for prefixe
 <h3 id="a-nice-table-to-sum-things-up">A nice table to sum things up</h3>
 
 <p>Thanks to <a href="https://github.com/kaushalmodi">@kaushalmodi</a> for pointing me in this direction:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">|----------+-----------+-----------------------+-----------------|
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>|----------+-----------+-----------------------+-----------------|
 | Body     | Head      | Executing NON-HEADS   | Executing HEADS |
 | Color    | Inherited |                       |                 |
 |          | Color     |                       |                 |
@@ -349,7 +353,7 @@ packages, first <a href="https://github.com/abo-abo/tiny">tiny</a>, and now
 <a href="https://github.com/abo-abo/hydra">hydra</a>.</p>
 
 <p>How it works:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-toggle</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">pink</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-toggle</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">pink</span><span class="p">)</span>
   <span class="s">&quot;</span>
 <span class="s">_a_ abbrev-mode:       %`abbrev-mode</span>
 <span class="s">_d_ debug-on-error:    %`debug-on-error</span>
@@ -371,10 +375,10 @@ packages, first <a href="https://github.com/abo-abo/tiny">tiny</a>, and now
 </code></pre></div>
 <p>Here, using e.g. <code>&quot;_a_&quot;</code> translates to <code>&quot;a&quot;</code> with proper face.  More
 interestingly, e.g.</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="s">&quot;foobar %`abbrev-mode&quot;</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="s">&quot;foobar %`abbrev-mode&quot;</span>
 </code></pre></div>
 <p>translates roughly to</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">format</span> <span class="s">&quot;foobar %S&quot;</span> <span class="nv">abbrev-mode</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">format</span> <span class="s">&quot;foobar %S&quot;</span> <span class="nv">abbrev-mode</span><span class="p">)</span>
 </code></pre></div>
 <p>This means that you actually see the state of the mode that you&#39;re
 changing.  The escape syntax was chosen with another intent in mind:

@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -288,9 +292,9 @@ be released, since the behavior has changed slightly.</p>
 <p>The code from the <a href="/2015/02/03/one-hydra-two-hydra/">last post</a> had to be changed.
 Note that only <code>ace-window</code>-related heads are affected, since <code>ace-window</code> uses <code>set-transient-map</code> as well.
 This was necessary to fix <a href="https://github.com/abo-abo/hydra/issues/15">issue #15</a> (unable to use <code>goto-line</code> in a Hydra, since it requires input).</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span>
  <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-M-o&quot;</span><span class="p">)</span>
- <span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-window</span> <span class="p">()</span>
+ <span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-window</span> <span class="p">()</span>
    <span class="s">&quot;window&quot;</span>
    <span class="p">(</span><span class="s">&quot;h&quot;</span> <span class="nv">windmove-left</span><span class="p">)</span>
    <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">windmove-down</span><span class="p">)</span>
@@ -350,7 +354,7 @@ it&#39;s a simple trick that you can use if you want to have a head quit
 conditionally, or something.</p>
 
 <h2 id="goto-line-ad-infinum"><code>goto-line</code> ad infinum</h2>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-test</span> <span class="p">(</span><span class="nv">global-map</span> <span class="s">&quot;M-g&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-test</span> <span class="p">(</span><span class="nv">global-map</span> <span class="s">&quot;M-g&quot;</span><span class="p">)</span>
   <span class="p">(</span><span class="s">&quot;g&quot;</span> <span class="nv">goto-line</span> <span class="s">&quot;goto-line&quot;</span><span class="p">))</span>
 </code></pre></div>
 <p>With the Hydra above, it&#39;s possible to:</p>
@@ -364,9 +368,9 @@ conditionally, or something.</p>
 <h2 id="change-the-cursor-color-when-a-hydra-is-active">Change the cursor color when a Hydra is active</h2>
 
 <p>Here&#39;s how the new <code>:pre</code> and <code>:post</code> statements work:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span>
  <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-z&quot;</span><span class="p">)</span>
- <span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-vi</span>
+ <span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-vi</span>
      <span class="p">(</span><span class="nb">:pre</span>
       <span class="p">(</span><span class="nv">set-cursor-color</span> <span class="s">&quot;#40e0d0&quot;</span><span class="p">)</span>
       <span class="nb">:post</span>

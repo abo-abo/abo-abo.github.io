@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -295,7 +299,7 @@ looks like <code>counsel-describe-variable</code>, but has only this exit point.
 
 <p>I&#39;ll just describe one useful scenario that happened just now. I was working on <a href="http://debbugs.gnu.org/cgi/bugreport.cgi?bug=20754">a <code>checkdoc.el</code> change</a>
 and was testing it with <code>avy.el</code>. And I got a few style warnings for this code, which I got from a <a href="https://github.com/abo-abo/avy/pull/59">contributor</a> (thanks for the code btw):</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">defvar</span> <span class="nv">avy-translate-char-function</span> <span class="nf">#&#39;identity</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">defvar</span> <span class="nv">avy-translate-char-function</span> <span class="nf">#&#39;identity</span>
   <span class="s">&quot;Function to translate user input key. This can be useful for</span>
 <span class="s">adding mirror key. E.g. one can make SPACE an alternative of &#39;a&#39;,</span>
 <span class="s">by adding:</span>
@@ -307,14 +311,14 @@ and was testing it with <code>avy.el</code>. And I got a few style warnings for 
 <span class="s">highlighted by &#39;a&#39;.&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p>One of the warnings that <code>avy-translate-char-function</code> should be quoted while inside the docstring like so:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="s">&quot;`avy-translate-char-function&#39;&quot;</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="s">&quot;</span><span class="ss">`avy-translate-char-function&#39;</span><span class="s">&quot;</span>
 </code></pre></div>
 <p>Of course that wouldn&#39;t play well with <code>setq</code>, so I wanted to see if
 any other variables that end in <code>-function</code> provide an example of use
 like here, and, if so, how they quote.</p>
 
 <p>This is my <a href="https://github.com/abo-abo/oremacs/blob/github/oleh/keys.el">personal configuration</a>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;&lt;f1&gt; v&quot;</span><span class="p">)</span> <span class="ss">&#39;counsel-describe-variable</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;&lt;f1&gt; v&quot;</span><span class="p">)</span> <span class="ss">&#39;counsel-describe-variable</span><span class="p">)</span>
 </code></pre></div>
 <p>So I did <kbd>&lt;f1&gt; v</kbd> <code>function$</code> to describe a variable that ends with <code>function</code>.
 Here, <code>$</code> is a part of <a href="http://www.emacswiki.org/emacs/RegularExpression">a regular expression</a>, which should be a priority to learn if you want to be a (not just) Emacs Power User.</p>
@@ -323,7 +327,7 @@ Here, <code>$</code> is a part of <a href="http://www.emacswiki.org/emacs/Regula
 
 <p>With this trick I was able to skim through the 346 matches in seconds. The conclusion was that an example isn&#39;t usually provided, with <code>nnmail-expiry-wait-function</code> being an exemption.
 In the end, I decided not to provide such an explicit example and shorten the doc to this:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">defvar</span> <span class="nv">avy-translate-char-function</span> <span class="nf">#&#39;identity</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">defvar</span> <span class="nv">avy-translate-char-function</span> <span class="nf">#&#39;identity</span>
   <span class="s">&quot;Function to translate user input key into another key.</span>
 <span class="s">For example, to make SPC do the same as ?a, use</span>
 <span class="s">\(lambda (c) (if (= c 32) ?a c)).&quot;</span><span class="p">)</span>

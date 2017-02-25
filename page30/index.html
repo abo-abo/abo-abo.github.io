@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -281,6 +285,117 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2014/12/30/ace-link-eww/">
+        Emacs Web Wowser (EWW) got ace-link
+      </a>
+    </h1>
+
+    <span class="post-date">30 Dec 2014</span>
+
+    <h2 id="emacs-goodness-incoming">Emacs goodness incoming</h2>
+
+<p>I&#39;ve discovered a nice Emacs-related blog -
+<a href="http://mbork.pl/Content_AND_Presentation">Content AND Presentation</a>.
+Unlike <a href="http://axisofeval.blogspot.nl">The Axis of Eval</a>, the blog
+that I mentioned yesterday, this one is pretty self-contained, i.e. it
+doesn&#39;t link to many external information sources.  So I thought that
+it&#39;s perfect for trying EWW to read it.</p>
+
+<h2 id="not-so-fast-configure-first">Not so fast! Configure first.</h2>
+
+<p>For modes that don&#39;t require to self-insert (and even for some that
+do), I like to navigate with
+<kbd>h</kbd>/<kbd>j</kbd>/<kbd>k</kbd>/<kbd>l</kbd> as arrows.  These
+arrows are on the home row, so navigation becomes a pleasant and
+relaxed experience.  But for EWW I decided to add a little twist: if
+the point is in the first column, <kbd>j</kbd>/<kbd>k</kbd> will move
+down/up not by one line, but by one paragraph.  This is great for
+concentration: I navigate to a paragraph, read it, navigate to the
+next one. The point shows me the paragraph that I&#39;m reading,
+everything before the point I&#39;ve already read.  So every time I press
+<kbd>j</kbd>, I get a tiny warm feeling of accomplishment.
+I can also pair this with <kbd>v</kbd>, which I bind to recenter the
+current line to the top.</p>
+
+<p>So here&#39;s what my key setup currently looks like:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">oleh-eww-hook</span> <span class="p">()</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;j&quot;</span> <span class="ss">&#39;oww-down</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;k&quot;</span> <span class="ss">&#39;oww-up</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;l&quot;</span> <span class="ss">&#39;forward-char</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;L&quot;</span> <span class="ss">&#39;eww-back-url</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;h&quot;</span> <span class="ss">&#39;backward-char</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;v&quot;</span> <span class="ss">&#39;recenter-top-bottom</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;V&quot;</span> <span class="ss">&#39;eww-view-source</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;m&quot;</span> <span class="ss">&#39;eww-follow-link</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;a&quot;</span> <span class="ss">&#39;move-beginning-of-line</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;e&quot;</span> <span class="ss">&#39;move-end-of-line</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;o&quot;</span> <span class="ss">&#39;ace-link-eww</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;y&quot;</span> <span class="ss">&#39;eww</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;eww-mode-hook</span> <span class="ss">&#39;oleh-eww-hook</span><span class="p">)</span>
+</code></pre></div>
+<p>As you see, I was careful to re-assign <code>eww-back-url</code> and
+<code>eww-view-source</code> - the commands that I&#39;ve displaced from <kbd>l</kbd>
+and <kbd>v</kbd>.  And here&#39;s the implementation of the arrows:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">oww-down</span> <span class="p">(</span><span class="nv">arg</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">interactive</span> <span class="s">&quot;p&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">bolp</span><span class="p">)</span>
+      <span class="p">(</span><span class="k">progn</span>
+        <span class="p">(</span><span class="nv">forward-paragraph</span> <span class="nv">arg</span><span class="p">)</span>
+        <span class="p">(</span><span class="nf">forward-line</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="p">(</span><span class="nv">line-move</span> <span class="nv">arg</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">oww-up</span> <span class="p">(</span><span class="nv">arg</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">interactive</span> <span class="s">&quot;p&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">bolp</span><span class="p">)</span>
+      <span class="p">(</span><span class="k">progn</span>
+        <span class="p">(</span><span class="nf">forward-line</span> <span class="mi">-1</span><span class="p">)</span>
+        <span class="p">(</span><span class="nv">backward-paragraph</span> <span class="nv">arg</span><span class="p">)</span>
+        <span class="p">(</span><span class="nf">forward-line</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="p">(</span><span class="nv">line-move</span> <span class="p">(</span><span class="nf">-</span> <span class="nv">arg</span><span class="p">))))</span>
+</code></pre></div>
+<h2 id="cherry-on-the-top">Cherry on the top</h2>
+
+<p>And while I was at it, I&#39;ve added <a href="https://github.com/abo-abo/ace-link">ace-link</a> support for EWW.  It was
+pretty easy, basically the same routine as for <code>help-mode</code> and
+<code>info-mode</code>. The only hard part was to figure out what part of the
+code keeps binding <code>shr-save-contents</code> to <kbd>o</kbd>, my preferred
+binding for <code>ace-link</code>. Turns out it was <code>eww-link-keymap</code>, and not
+<code>shr-map</code>. So here&#39;s the new key binding code:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">ace-link-setup-default</span> <span class="p">()</span>
+  <span class="s">&quot;Setup the defualt shortcuts.&quot;</span>
+  <span class="p">(</span><span class="nv">eval-after-load</span> <span class="s">&quot;info&quot;</span>
+    <span class="o">&#39;</span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">Info-mode-map</span> <span class="s">&quot;o&quot;</span> <span class="ss">&#39;ace-link-info</span><span class="p">))</span>
+  <span class="p">(</span><span class="nv">eval-after-load</span> <span class="s">&quot;help-mode&quot;</span>
+    <span class="o">&#39;</span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">help-mode-map</span> <span class="s">&quot;o&quot;</span> <span class="ss">&#39;ace-link-help</span><span class="p">))</span>
+  <span class="p">(</span><span class="nv">eval-after-load</span> <span class="s">&quot;eww&quot;</span>
+    <span class="o">&#39;</span><span class="p">(</span><span class="k">progn</span>
+      <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-link-keymap</span> <span class="s">&quot;o&quot;</span> <span class="ss">&#39;ace-link-eww</span><span class="p">)</span>
+      <span class="p">(</span><span class="nf">define-key</span> <span class="nv">eww-mode-map</span> <span class="s">&quot;o&quot;</span> <span class="ss">&#39;ace-link-eww</span><span class="p">))))</span>
+</code></pre></div>
+<p>If you haven&#39;t tried <a href="https://github.com/abo-abo/ace-link">ace-link</a>
+before, you can get it from MELPA.  The minimal configuration that you
+need is this:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">ace-link-setup-default</span><span class="p">)</span>
+</code></pre></div>
+<p>Here&#39;s the setup that I&#39;m actually using:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">use-package</span> <span class="nv">ace-link</span>
+    <span class="nb">:load-path</span> <span class="s">&quot;~/git/ace-link&quot;</span>
+    <span class="nb">:init</span> <span class="p">(</span><span class="nv">ace-link-setup-default</span><span class="p">))</span>
+</code></pre></div>
+<p>I&#39;m using it from my git folder since when I want to edit a project, I
+like to use <a href="https://github.com/nonsequitur/smex">smex</a>&#39;s
+jump-to-definition.</p>
+
+<p>And <a href="https://github.com/jwiegley/use-package">use-package</a> is useful
+for the cases when my <code>~/git/</code> happens not to contain <code>ace-link</code>.  In
+that case, instead of getting a debugger error on starting Emacs, I
+get only a polite &quot;Could not load package ace-link&quot; in my <code>*Messages*</code>
+buffer.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2014/12/29/monkeying-around-with-javascript/">
         Monkeying around with JavaScript
       </a>
@@ -328,7 +443,7 @@ websites.</p>
 <p>I&#39;m not very proficient in JavaScript, the following code I just found
 by searching around. The part to note is the <code>@include</code> - the pattern
 of website names for which this script should be run automatically.</p>
-<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="c1">// ==UserScript==</span>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="c1">// ==UserScript==</span>
 <span class="c1">// @name        background</span>
 <span class="c1">// @namespace   abo-abo</span>
 <span class="c1">// @include     http://axisofeval.blogspot.nl/*</span>
@@ -388,7 +503,7 @@ major mode</p>
 </blockquote>
 
 <p>Sounds like something that could solve my problem with <code>region-</code> commands:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">rb -&gt; region-beginning
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>rb -&gt; region-beginning
 re -&gt; region-end
 ra -&gt; region-active-p
 </code></pre></div>
@@ -400,7 +515,7 @@ enabled</p>
 </blockquote>
 
 <p>Add it to the mix:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">oleh-emacs-lisp-hook</span> <span class="p">()</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">oleh-emacs-lisp-hook</span> <span class="p">()</span>
   <span class="p">(</span><span class="k">setq</span> <span class="nv">outline-regexp</span> <span class="s">&quot;;; ———&quot;</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">company-mode</span> <span class="mi">1</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">abbrev-mode</span> <span class="mi">1</span><span class="p">)</span>
@@ -428,10 +543,10 @@ in the <em>RAW Paste Data</em> section.</p>
 the list. Well, for this file even <kbd>999j</kbd> wasn&#39;t enough.
 I quickly tired of deleting one-by-one the each individual useless abbrev.
 I mean:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">ek -&gt; echo-keystrokes,
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>ek -&gt; echo-keystrokes,
 </code></pre></div>
 <p>when is that ever going to be useful? So I wrote this throw-away code:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">foobar</span> <span class="p">()</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">foobar</span> <span class="p">()</span>
   <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">lispy-mark-list</span> <span class="mi">2</span><span class="p">)</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">str</span> <span class="p">(</span><span class="nf">read</span> <span class="p">(</span><span class="nv">lispy--string-dwim</span><span class="p">)))</span>
@@ -458,7 +573,7 @@ delete. In the end, there were only 56 abbrevs left out of 1600.</p>
 <h2 id="the-final-result">The final result</h2>
 
 <p>Here&#39;s what I have put into my <code>abbrev_defs</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">define-abbrev-table</span> <span class="ss">&#39;emacs-lisp-mode-abbrev-table</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">define-abbrev-table</span> <span class="ss">&#39;emacs-lisp-mode-abbrev-table</span>
     <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;sm&quot;</span> <span class="s">&quot;string-match&quot;</span><span class="p">)</span> <span class="p">(</span><span class="s">&quot;mm&quot;</span> <span class="s">&quot;major-mode&quot;</span><span class="p">)</span>
       <span class="p">(</span><span class="s">&quot;rb&quot;</span> <span class="s">&quot;region-beginning&quot;</span><span class="p">)</span> <span class="p">(</span><span class="s">&quot;ca&quot;</span> <span class="s">&quot;char-after&quot;</span><span class="p">)</span>
       <span class="p">(</span><span class="s">&quot;smd&quot;</span> <span class="s">&quot;save-match-data&quot;</span><span class="p">)</span> <span class="p">(</span><span class="s">&quot;mb&quot;</span> <span class="s">&quot;match-beginning&quot;</span><span class="p">)</span>
@@ -511,7 +626,7 @@ update and get nicely highlighted code in a pdf via the
 <h2 id="the-install">The install</h2>
 
 <p>Assuming that you are on a Debian-related system:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">sudo apt-get install mercurial
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>sudo apt-get install mercurial
 mkdir ~/git &amp;&amp; cd ~/git
 hg clone https://bitbucket.org/abo-abo/pygments-main
 cd pygments-main
@@ -520,7 +635,7 @@ sudo python setup.py install
 </code></pre></div>
 <p>And, of course, I&#39;m assuming that you already have TeX Live installed.
 I&#39;m not too sophisticated about it, so I just install everything:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">sudo apt-get install texlive-full
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>sudo apt-get install texlive-full
 </code></pre></div>
 <h2 id="the-result">The result</h2>
 
@@ -533,11 +648,11 @@ And here&#39;s the result of the PDF export (<kbd>C-c C-e lo</kbd>):
 <h2 id="the-red-tape">The red tape</h2>
 
 <p><code>org-mode</code> had trouble exporting on my laptop until I did this:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">cd /usr/bin/
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>cd /usr/bin/
 sudo ln -s /usr/local/texlive/2013/bin/x86_64-linux/pdflatex
 </code></pre></div>
 <p>Also be mindful of the <code>-shell-escape</code> flag to <code>pdflatex</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">org-latex-pdf-process</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">org-latex-pdf-process</span>
       <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f&quot;</span>
         <span class="s">&quot;pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f&quot;</span>
         <span class="s">&quot;pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f&quot;</span><span class="p">))</span>
@@ -574,13 +689,13 @@ eval-and-replace, i.e. inserting some Elisp in your non-Elisp buffer
 and then replacing that code in-place with the result of the eval.</p>
 
 <p>Here&#39;s the type of code that I was playing around with:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">mapcar</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">mapcar</span>
  <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nf">*</span> <span class="nv">x</span> <span class="nv">x</span><span class="p">))</span>
  <span class="p">(</span><span class="nv">number-sequence</span> <span class="mi">1</span> <span class="mi">7</span><span class="p">))</span>
 </code></pre></div>
 <p>Then I realized that the code should probably produce a string.
 Here&#39;s a more refined version:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">mapconcat</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">mapconcat</span>
  <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
    <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;hex: 0x%x&quot;</span>
            <span class="p">(</span><span class="nf">*</span> <span class="nv">x</span> <span class="nv">x</span><span class="p">)))</span>
@@ -643,37 +758,37 @@ the source code:
 <li><button type="button" class="btn btn-info"
 data-toggle="collapse" data-target="#demo-2"> <code>m10</code>
 </button> <div id="demo-2" class="collapse"></p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">0 1 2 3 4 5 6 7 8 9 10
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>0 1 2 3 4 5 6 7 8 9 10
 </code></pre></div>
 <p></div></li>
 <li><button type="button" class="btn btn-info"
 data-toggle="collapse" data-target="#demo-3"><code>m5 10</code></button>
 <div id="demo-3" class="collapse"></p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">5 6 7 8 9 10
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>5 6 7 8 9 10
 </code></pre></div>
 <p></div></li>
 <li><button type="button" class="btn btn-info"
 data-toggle="collapse" data-target="#demo-4"><code>m5,10</code></button>
 <div id="demo-4" class="collapse"></p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">5,6,7,8,9,10
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>5,6,7,8,9,10
 </code></pre></div>
 <p></div></li>
 <li><button type="button" class="btn btn-info"
 data-toggle="collapse" data-target="#demo-5"><code>m5 10*xx</code></button>
 <div id="demo-5" class="collapse"></p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">25 36 49 64 81 100
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>25 36 49 64 81 100
 </code></pre></div>
 <p></div></li>
 <li><button type="button" class="btn btn-info"
 data-toggle="collapse" data-target="#demo-6"><code>m5 10*xx%x</code></button>
 <div id="demo-6" class="collapse"></p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">19 24 31 40 51 64
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>19 24 31 40 51 64
 </code></pre></div>
 <p></div></li>
 <li><button type="button" class="btn btn-info"
 data-toggle="collapse" data-target="#demo-7"><code>m5 10*xx|0x%x</code></button>
 <div id="demo-7" class="collapse"></p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">0x19 0x24 0x31 0x40 0x51 0x64
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>0x19 0x24 0x31 0x40 0x51 0x64
 </code></pre></div>
 <p></div></li>
 <li><button type="button" class="btn btn-info"
@@ -681,7 +796,7 @@ data-toggle="collapse" data-target="#demo-8">
 <code>m25+x?a%c</code>
 </button>
 <div id="demo-8" class="collapse"></p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">a b c d e f g h i j k l m n o p q r s t u v w x y z
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>a b c d e f g h i j k l m n o p q r s t u v w x y z
 </code></pre></div>
 <p></div></li>
 <li><button type="button" class="btn btn-info"
@@ -689,7 +804,7 @@ data-toggle="collapse" data-target="#demo-9">
 <code>m25+x?A%c</code>
 </button>
 <div id="demo-9" class="collapse"></p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
 </code></pre></div>
 <p></div></li>
 <li><button type="button" class="btn btn-info"
@@ -697,7 +812,7 @@ data-toggle="collapse" data-target="#demo-10">
 <code>m97,122(string x)</code>
 </button>
 <div id="demo-10" class="collapse"></p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z
 </code></pre></div>
 <p></div></li>
 <li><button type="button" class="btn btn-info"
@@ -705,7 +820,7 @@ data-toggle="collapse" data-target="#demo-11">
 <code>m97,122stringxx</code>
 </button>
 <div id="demo-11" class="collapse"></p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">aa,bb,cc,dd,ee,ff,gg,hh,ii,jj,kk,ll,mm,nn,oo,pp,qq,rr,ss,tt,uu,vv,ww,xx,yy,zz
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>aa,bb,cc,dd,ee,ff,gg,hh,ii,jj,kk,ll,mm,nn,oo,pp,qq,rr,ss,tt,uu,vv,ww,xx,yy,zz
 </code></pre></div>
 <p></div></li>
 <li><button type="button" class="btn btn-info"
@@ -713,7 +828,7 @@ data-toggle="collapse" data-target="#demo-12">
 <code>m97,120stringxupcasex</code>
 </button>
 <div id="demo-12" class="collapse"></p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">aA,bB,cC,dD,eE,fF,gG,hH,iI,jJ,kK,lL,mM,nN,oO,pP,qQ,rR,sS,tT,uU,vV,wW,xX
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>aA,bB,cC,dD,eE,fF,gG,hH,iI,jJ,kK,lL,mM,nN,oO,pP,qQ,rR,sS,tT,uU,vV,wW,xX
 </code></pre></div>
 <p></div></li>
 <li><button type="button" class="btn btn-info"
@@ -721,7 +836,7 @@ data-toggle="collapse" data-target="#demo-13">
 <code>m97,120stringxupcasex)x</code>
 </button>
 <div id="demo-13" class="collapse"></p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">aAa,bBb,cCc,dDd,eEe,fFf,gGg,hHh,iIi,jJj,kKk,lLl,mMm,nNn,oOo,pPp,qQq,rRr,sSs,tTt,uUu,vVv,wWw,xXx
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>aAa,bBb,cCc,dDd,eEe,fFf,gGg,hHh,iIi,jJj,kKk,lLl,mMm,nNn,oOo,pPp,qQq,rRr,sSs,tTt,uUu,vVv,wWw,xXx
 </code></pre></div>
 <p></div></li>
 <li><button type="button" class="btn btn-info"
@@ -729,7 +844,7 @@ data-toggle="collapse" data-target="#demo-14">
 <code>m\n10|%(+ x x) and %(* x x) and %s</code>
 </button>
 <div id="demo-14" class="collapse"></p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">0 and 0 and 0
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>0 and 0 and 0
 2 and 1 and 1
 4 and 4 and 2
 6 and 9 and 3
@@ -747,7 +862,7 @@ data-toggle="collapse" data-target="#demo-15">
 <code>m10*2+3x</code>
 </button>
 <div id="demo-15" class="collapse"></p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">6 8 10 12 14 16 18 20 22 24 26
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>6 8 10 12 14 16 18 20 22 24 26
 </code></pre></div>
 <p></div></li>
 <li><button type="button" class="btn btn-info"
@@ -755,7 +870,7 @@ data-toggle="collapse" data-target="#demo-16">
 <code>m\n10expx</code>
 </button>
 <div id="demo-16" class="collapse"></p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">1.0
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>1.0
 2.718281828459045
 7.38905609893065
 20.085536923187668
@@ -773,7 +888,7 @@ data-toggle="collapse" data-target="#demo-17">
 <code>m1\n20expx%014.2f</code>
 </button>
 <div id="demo-17" class="collapse"></p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">00000000002.72
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>00000000002.72
 00000000007.39
 00000000020.09
 00000000054.60
@@ -800,7 +915,7 @@ data-toggle="collapse" data-target="#demo-18">
 <code>m7|%(expt 2 x)</code>
 </button>
 <div id="demo-18" class="collapse"></p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">1 2 4 8 16 32 64 128
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>1 2 4 8 16 32 64 128
 </code></pre></div>
 <p></div></li>
 <li><button type="button" class="btn btn-info"
@@ -808,7 +923,7 @@ data-toggle="collapse" data-target="#demo-19">
 <code>m, 7|0x%02x</code>
 </button>
 <div id="demo-19" class="collapse"></p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07
 </code></pre></div>
 <p></div></li>
 <li><button type="button" class="btn btn-info"
@@ -816,7 +931,7 @@ data-toggle="collapse" data-target="#demo-20">
 <code>m10|%0.2f</code>
 </button>
 <div id="demo-20" class="collapse"></p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">0.00 1.00 2.00 3.00 4.00 5.00 6.00 7.00 8.00 9.00 10.00
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>0.00 1.00 2.00 3.00 4.00 5.00 6.00 7.00 8.00 9.00 10.00
 </code></pre></div>
 <p></div></li>
 <li><button type="button" class="btn btn-info"
@@ -824,7 +939,7 @@ data-toggle="collapse" data-target="#demo-21">
 <code>m1\n14|* TODO http://emacsrocks.com/e%02d.html</code>
 </button>
 <div id="demo-21" class="collapse"></p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">* TODO http://emacsrocks.com/e01.html
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>* TODO http://emacsrocks.com/e01.html
 * TODO http://emacsrocks.com/e02.html
 * TODO http://emacsrocks.com/e03.html
 * TODO http://emacsrocks.com/e04.html
@@ -845,7 +960,7 @@ data-toggle="collapse" data-target="#demo-22">
 <code>m\n8|* TODO Wash dog %(+ x 2) \nDEADLINE: &lt;%(date &quot;Jan 1&quot; (* x 5))&gt;</code>
 </button>
 <div id="demo-22" class="collapse"></p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">* TODO Wash dog 2
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>* TODO Wash dog 2
 DEADLINE: &lt;2015-01-01 Thu&gt;
 * TODO Wash dog 3
 DEADLINE: &lt;2015-01-06 Tue&gt;
@@ -898,121 +1013,6 @@ implementing only one snippet that can be used in a variety of ways.</p>
 <blockquote>
 <p>tiny is not yasnippet</p>
 </blockquote>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2014/12/25/ode-to-toggle/">
-        Ode to the toggle
-      </a>
-    </h1>
-
-    <span class="post-date">25 Dec 2014</span>
-
-    <p>Man, I just love toggles: the light switches, the
-<kbd>f</kbd> - full-screen key in <code>vlc</code>, and the clicky pens (ooh, those
-are the best). So I try to model some of my Emacs key bindings as
-toggles.</p>
-
-<p>Let me just quantify the two features that make a good toggle:</p>
-
-<ul>
-<li>only two states: <em>on</em> and <em>off</em></li>
-<li>the state is visible at a glance</li>
-</ul>
-
-<p>One could argue that with <code>undo</code> most editing commands become toggles.
-But they&#39;re not, since each time you call <code>undo</code>, you mess with
-Emacs&#39;s undo state. And the undo state isn&#39;t visible at a glance, so
-both requirements for a good toggle aren&#39;t fulfilled.</p>
-
-<p>I&#39;ll demonstrate the two editing commands that I use every day,
-<code>capitalize-word-toggle</code> and <code>upcase-word-toggle</code>, that are good
-toggles.</p>
-
-<h2 id="capitalize-word-toggle"><code>capitalize-word-toggle</code></h2>
-
-<blockquote>
-<p>Talk is cheap. Show me the code.</p>
-</blockquote>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">char-upcasep</span> <span class="p">(</span><span class="nv">letter</span><span class="p">)</span>
-  <span class="p">(</span><span class="nf">eq</span> <span class="nv">letter</span> <span class="p">(</span><span class="nf">upcase</span> <span class="nv">letter</span><span class="p">)))</span>
-
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">capitalize-word-toggle</span> <span class="p">()</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">start</span>
-         <span class="p">(</span><span class="nf">car</span>
-          <span class="p">(</span><span class="k">save-excursion</span>
-            <span class="p">(</span><span class="nv">backward-word</span><span class="p">)</span>
-            <span class="p">(</span><span class="nv">bounds-of-thing-at-point</span> <span class="ss">&#39;symbol</span><span class="p">)))))</span>
-    <span class="p">(</span><span class="k">if</span> <span class="nv">start</span>
-        <span class="p">(</span><span class="k">save-excursion</span>
-          <span class="p">(</span><span class="nf">goto-char</span> <span class="nv">start</span><span class="p">)</span>
-          <span class="p">(</span><span class="nf">funcall</span>
-           <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">char-upcasep</span> <span class="p">(</span><span class="nf">char-after</span><span class="p">))</span>
-               <span class="ss">&#39;downcase-region</span>
-             <span class="ss">&#39;upcase-region</span><span class="p">)</span>
-           <span class="nv">start</span> <span class="p">(</span><span class="nf">1+</span> <span class="nv">start</span><span class="p">)))</span>
-      <span class="p">(</span><span class="nf">capitalize-word</span> <span class="mi">-1</span><span class="p">))))</span>
-<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-z&quot;</span><span class="p">)</span> <span class="ss">&#39;capitalize-word-toggle</span><span class="p">)</span>
-</code></pre></div>
-<p>I may not have mentioned this before, but you should for the most part
-ignore the key bindings mentioned on this blog. I&#39;m actually using
-them, they work for me because of my non-standard layout, but you
-should assign what works for you.</p>
-
-<p>Anyway, <code>capitalize-word-toggle</code> clearly has a state that&#39;s visible at
-a glance: the first char of the current symbol. Also, there are only
-two possible states: the char can either be upper-case or lower-case.
-Hence, I can toggle this state with <kbd>C-z</kbd> for fun and profit.</p>
-
-<p>Maybe some background on how this command is useful for me. I write a bunch of C++,
-and the code features a lot of lines like this:</p>
-<div class="highlight"><pre><code class="language-c++" data-lang="c++"><span class="n">Triangulation</span> <span class="n">triangulation</span><span class="p">;</span> <span class="c1">// duh</span>
-</code></pre></div>
-<p>So when I&#39;m using <code>auto-complete</code>, it often eagerly expands to
-<code>Triangulation</code> when I want <code>triangulation</code>, and the other way around.
-So <code>capitalize-word-toggle</code> is super-useful there.</p>
-
-<h2 id="upcase-word-toggle"><code>upcase-word-toggle</code></h2>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">upcase-word-toggle</span> <span class="p">()</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">bounds</span> <span class="p">(</span><span class="nv">bounds-of-thing-at-point</span> <span class="ss">&#39;symbol</span><span class="p">))</span>
-        <span class="nv">beg</span> <span class="nv">end</span>
-        <span class="p">(</span><span class="nv">regionp</span>
-         <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">eq</span> <span class="nv">this-command</span> <span class="nv">last-command</span><span class="p">)</span>
-             <span class="p">(</span><span class="nf">get</span> <span class="nv">this-command</span> <span class="ss">&#39;regionp</span><span class="p">)</span>
-           <span class="p">(</span><span class="nf">put</span> <span class="nv">this-command</span> <span class="ss">&#39;regionp</span> <span class="no">nil</span><span class="p">))))</span>
-    <span class="p">(</span><span class="k">cond</span>
-      <span class="p">((</span><span class="k">or</span> <span class="p">(</span><span class="nv">region-active-p</span><span class="p">)</span> <span class="nv">regionp</span><span class="p">)</span>
-       <span class="p">(</span><span class="k">setq</span> <span class="nv">beg</span> <span class="p">(</span><span class="nf">region-beginning</span><span class="p">)</span>
-             <span class="nv">end</span> <span class="p">(</span><span class="nf">region-end</span><span class="p">))</span>
-       <span class="p">(</span><span class="nf">put</span> <span class="nv">this-command</span> <span class="ss">&#39;regionp</span> <span class="no">t</span><span class="p">))</span>
-      <span class="p">(</span><span class="nv">bounds</span>
-       <span class="p">(</span><span class="k">setq</span> <span class="nv">beg</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">bounds</span><span class="p">)</span>
-             <span class="nv">end</span> <span class="p">(</span><span class="nf">cdr</span> <span class="nv">bounds</span><span class="p">)))</span>
-      <span class="p">(</span><span class="no">t</span>
-       <span class="p">(</span><span class="k">setq</span> <span class="nv">beg</span> <span class="p">(</span><span class="nf">point</span><span class="p">)</span>
-             <span class="nv">end</span> <span class="p">(</span><span class="nf">1+</span> <span class="nv">beg</span><span class="p">))))</span>
-    <span class="p">(</span><span class="k">save-excursion</span>
-      <span class="p">(</span><span class="nf">goto-char</span> <span class="p">(</span><span class="nf">1-</span> <span class="nv">beg</span><span class="p">))</span>
-      <span class="p">(</span><span class="k">and</span> <span class="p">(</span><span class="nf">re-search-forward</span> <span class="s">&quot;[A-Za-z]&quot;</span> <span class="nv">end</span> <span class="no">t</span><span class="p">)</span>
-           <span class="p">(</span><span class="nf">funcall</span> <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">char-upcasep</span> <span class="p">(</span><span class="nf">char-before</span><span class="p">))</span>
-                        <span class="ss">&#39;downcase-region</span>
-                      <span class="ss">&#39;upcase-region</span><span class="p">)</span>
-                    <span class="nv">beg</span> <span class="nv">end</span><span class="p">)))))</span>
-<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-&gt;&quot;</span><span class="p">)</span> <span class="ss">&#39;upcase-word-toggle</span><span class="p">)</span>
-</code></pre></div>
-<p><code>upcase-word-toggle</code>&#39;s state becomes binary after you call it once,
-since initially the thing at point could have mixed case.
-But afterwards, it&#39;s either all lowercase or all uppercase.
-So again, a clearly visible binary state is a good thing.</p>
-
-<p>This command works either on <code>(bounds-of-thing-at-point &#39;symbol)</code> or
-on the active region. Since <code>region-active-p</code> is deactivated after you
-call the command once, there&#39;s some machinery to remember the state
-and to toggle when called again.</p>
 
   </div>
   

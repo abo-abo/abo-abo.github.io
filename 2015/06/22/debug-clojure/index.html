@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -291,7 +295,7 @@ I&#39;ve added exactly the same thing to Clojure.</p>
 <h2 id="how-it-works">How it works</h2>
 
 <p>Suppose that you have this function (borrowed from <a href="http://www.manning.com/fogus2/">The Joy of Clojure</a>):</p>
-<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="kd">defn </span><span class="nv">l-&gt;rfix</span>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span></span><span class="p">(</span><span class="kd">defn </span><span class="nv">l-&gt;rfix</span>
   <span class="p">([</span><span class="nv">a</span> <span class="nv">op</span> <span class="nv">b</span><span class="p">]</span>
    <span class="p">(</span><span class="nf">op</span> <span class="nv">a</span> <span class="nv">b</span><span class="p">))</span>
   <span class="p">([</span><span class="nv">a</span> <span class="nv">op1</span> <span class="nv">b</span> <span class="nv">op2</span> <span class="nv">c</span><span class="p">]</span>
@@ -305,10 +309,10 @@ you only evaluate the function with <kbd>C-x C-e</kbd>, it won&#39;t
 work. Actually, the same applies to Elisp.</p>
 
 <p>And then you have the corresponding function call (<code>|</code> is the point, as usual):</p>
-<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="err">|</span><span class="p">(</span><span class="nf">l-&gt;rfix</span> <span class="mi">10</span> <span class="nb">* </span><span class="mi">2</span> <span class="nb">+ </span><span class="mi">3</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span></span><span class="err">|</span><span class="p">(</span><span class="nf">l-&gt;rfix</span> <span class="mi">10</span> <span class="nb">* </span><span class="mi">2</span> <span class="nb">+ </span><span class="mi">3</span><span class="p">)</span>
 </code></pre></div>
 <p>As you press <kbd>xj</kbd> (<code>lispy-debug-step-in</code>), the following code is evaluated on the Clojure side:</p>
-<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="nf">do</span>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span></span><span class="p">(</span><span class="nf">do</span>
   <span class="p">(</span><span class="k">def </span><span class="nv">a</span> <span class="mi">10</span><span class="p">)</span>
   <span class="p">(</span><span class="k">def </span><span class="nv">op1</span> <span class="nv">*</span><span class="p">)</span>
   <span class="p">(</span><span class="k">def </span><span class="nv">b</span> <span class="mi">2</span><span class="p">)</span>
@@ -339,7 +343,7 @@ symbol and its value, and press <kbd>e</kbd>. If there are many
 </ul>
 
 <p>Just to add, any of these will work properly and switch to an appropriate body branch:</p>
-<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="nf">l-&gt;rfix</span> <span class="mi">1</span> <span class="nb">* </span><span class="mi">1</span> <span class="nb">+ </span><span class="mi">1</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span></span><span class="p">(</span><span class="nf">l-&gt;rfix</span> <span class="mi">1</span> <span class="nb">* </span><span class="mi">1</span> <span class="nb">+ </span><span class="mi">1</span><span class="p">)</span>
 <span class="p">(</span><span class="nf">l-&gt;rfix</span> <span class="mi">2</span> <span class="nb">+ </span><span class="mi">7</span><span class="p">)</span>
 <span class="p">(</span><span class="nf">l-&gt;rfix</span> <span class="mi">1</span> <span class="nb">+ </span><span class="mi">2</span> <span class="nb">+ </span><span class="mi">3</span> <span class="nb">+ </span><span class="mi">4</span><span class="p">)</span>
 <span class="p">(</span><span class="nf">l-&gt;rfix</span> <span class="p">(</span><span class="nb">str </span><span class="s">&quot;a&quot;</span> <span class="s">&quot;b&quot;</span> <span class="s">&quot;c&quot;</span><span class="p">)</span> <span class="nb">+ </span><span class="mi">7</span><span class="p">)</span>

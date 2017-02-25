@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -362,7 +366,7 @@ export documents from one format to another.
 The Elisp package is available in MELPA.
 And I installed <a href="https://github.com/jgm/pandoc/releases/download/1.15.2/pandoc-1.15.2-1-amd64.deb">pandoc-1.15.2-1-amd64.deb</a> from
 its <a href="https://github.com/jgm/pandoc/releases/tag/1.15.2">homepage</a> with:</p>
-<div class="highlight"><pre><code class="language-sh" data-lang="sh">sudo dpkg -i pandoc-1.15.2-1-amd64.deb
+<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>sudo dpkg -i pandoc-1.15.2-1-amd64.deb
 </code></pre></div>
 <p>After that, <kbd>M-x</kbd> <code>pandoc-mode</code> and I&#39;m on easy street: <kbd>C-c /</kbd> calls <code>pandoc-main-hydra/body</code>:</p>
 
@@ -384,7 +388,7 @@ Github renders Markdown for releases.</p>
 <h3 id="use-swiper-to-replace-each-markdown-link-with-its-title">Use <code>swiper</code> to replace each Markdown link with its title</h3>
 
 <p>Since <code>swiper</code> works with regexps, here&#39;s what I input to match each link:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">\[\(.*?\)\](.*?)
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>\[\(.*?\)\](.*?)
 </code></pre></div>
 <p>This matches anything in brackets (non-greedy), followed by anything
 in parens; the bracket&#39;s content is captured in a group.</p>
@@ -401,7 +405,7 @@ I wanted to remove that entry and promote its children one level.
 This can be done with <code>rectangle-mark-mode</code>, bound by default to <kbd>C-x SPC</kbd>.</p>
 
 <p>In my config, I use this instead:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-x SPC&quot;</span><span class="p">)</span> <span class="ss">&#39;hydra-rectangle/body</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-x SPC&quot;</span><span class="p">)</span> <span class="ss">&#39;hydra-rectangle/body</span><span class="p">)</span>
 </code></pre></div>
 <p>Where, <code>hydra-rectangle/body</code> is provided by <code>hydra-examples.el</code> and
 is also described in
@@ -417,7 +421,7 @@ tired of putting the each issue link as
 e.g. <code>[[https://github.com/abo-abo/swiper/issues/244][#244]]</code>.  So I
 wrote e.g. <code>#244</code> instead, and used this code in the end to make the
 transformation:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">ora-quote-github-issues</span> <span class="p">()</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">ora-quote-github-issues</span> <span class="p">()</span>
   <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">base</span> <span class="s">&quot;https://github.com/abo-abo/swiper/issues/&quot;</span><span class="p">))</span>
     <span class="p">(</span><span class="nf">goto-char</span> <span class="p">(</span><span class="nf">point-min</span><span class="p">))</span>

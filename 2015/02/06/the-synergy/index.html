@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -301,10 +305,10 @@ Here is such a <a href="http://emacs.stackexchange.com/questions/8006/">question
 <h3 id="is-there-a-yasnippet-producing-a-prepopulated-doxygen-comment">Is there a yasnippet producing a prepopulated doxygen comment?</h3>
 
 <p>For the following C++ function:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">bool importantStuff(double a, double b);
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>bool importantStuff(double a, double b);
 </code></pre></div>
 <p>It should output the following snippet, perhaps without the tags:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">/**
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>/**
 * &lt;Insert description of importantStuff&gt;
 *
 * @param a &lt;Insert description of a&gt;
@@ -330,8 +334,8 @@ I&#39;ve covered in <a href="/2015/01/30/auto-yasnippet/">an earlier post</a>.</
 
 <p>I think it might be useful to look at the code, since it&#39;s small and shows how to use <code>CEDET</code>&#39;s and
 <code>auto-yasnippet</code>&#39;s API:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">moo-doxygen</span> <span class="p">()</span>
-  <span class="s">&quot;Generate a doxygen yasnippet and expand it with `aya-expand&#39;.</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">moo-doxygen</span> <span class="p">()</span>
+  <span class="s">&quot;Generate a doxygen yasnippet and expand it with </span><span class="ss">`aya-expand&#39;</span><span class="s">.</span>
 <span class="s">The point should be on the top-level function name.&quot;</span>
   <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">move-beginning-of-line</span> <span class="no">nil</span><span class="p">)</span>
@@ -369,7 +373,7 @@ Recipies</font> in the comments.
 This code uses a similar approach to the one used in my posts
 about <a href="/2015/01/11/pretty-elisp-regex/">prettifying Elisp regex</a>,
 and <a href="/2015/01/23/eltex/">ElTeX</a>.</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defface</span> <span class="nv">font-lock-doxygen-face</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defface</span> <span class="nv">font-lock-doxygen-face</span>
     <span class="o">&#39;</span><span class="p">((</span><span class="no">nil</span> <span class="p">(</span><span class="nb">:foreground</span> <span class="s">&quot;SaddleBrown&quot;</span> <span class="nb">:background</span> <span class="s">&quot;#f7f7f7&quot;</span><span class="p">)</span> <span class="p">))</span>
     <span class="s">&quot;Special face to highlight doxygen tags such as &lt;tt&gt;...&lt;/tt&gt;</span>
 <span class="s">and &lt;code&gt;...&lt;/code&gt;.&quot;</span>

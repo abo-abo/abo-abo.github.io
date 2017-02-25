@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -291,9 +295,9 @@ with:</p>
 <p>Why not make it do something useful instead, for instance close <code>helm</code>?</p>
 
 <p>Easy:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;helm</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;helm</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">helm-backspace</span> <span class="p">()</span>
-  <span class="s">&quot;Forward to `backward-delete-char&#39;.</span>
+  <span class="s">&quot;Forward to </span><span class="ss">`backward-delete-char&#39;</span><span class="s">.</span>
 <span class="s">On error (read-only), quit without selecting.&quot;</span>
   <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
   <span class="p">(</span><span class="k">condition-case</span> <span class="no">nil</span>

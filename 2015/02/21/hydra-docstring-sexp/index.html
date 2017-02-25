@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -284,7 +288,7 @@
 I showed how to embed variable values into the docstring, among other
 things. Today, I&#39;ve extended this approach to work with s-expressions.
 Here&#39;s how it looks like:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defhydra</span> <span class="nv">hydra-marked-items</span> <span class="p">(</span><span class="nv">dired-mode-map</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-marked-items</span> <span class="p">(</span><span class="nv">dired-mode-map</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
       <span class="s">&quot;</span>
 <span class="s">Number of marked items: %(length (dired-get-marked-files))</span>
 <span class="s">&quot;</span>
@@ -296,7 +300,7 @@ By the way, this is the 64th post on the blog; I found out by pressing
 <kbd>tm</kbd> in <code>dired</code> buffer or the <code>_posts</code> directory.
 Also, I don&#39;t think that I&#39;ve showed passing <code>&quot;&quot;</code> as the keyboard prefix parameter
 before. Apparently, it works and just translates to this:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span>
     <span class="s">&quot;m&quot;</span> <span class="ss">&#39;hydra-marked-items/dired-mark</span><span class="p">)</span>
 </code></pre></div>
 <p>Here&#39;s how it looks like:

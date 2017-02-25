@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -281,6 +285,109 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/01/29/more-hydra-goodness/">
+        Combining ace-window and windmove with hydra
+      </a>
+    </h1>
+
+    <span class="post-date">29 Jan 2015</span>
+
+    <p>I was inspired by Sacha Chua&#39;s <a href="http://sachachua.com/blog/2015/01/emacs-microhabit-switching-windows-windmove-ace-window-ace-jump/">recent post</a>
+explaining her window bindings, that combine both <code>ace-window</code> and <code>windmove</code>.
+So I wrote down an update to Hydra in order to get a similar setup.</p>
+
+<h2 id="sacha-39-s-code">Sacha&#39;s code</h2>
+
+<p>Here it is:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">key-chord-define-global</span>
+ <span class="s">&quot;yy&quot;</span>
+ <span class="p">(</span><span class="nv">sacha/def-rep-command</span>
+  <span class="o">&#39;</span><span class="p">(</span><span class="no">nil</span>
+    <span class="p">(</span><span class="s">&quot;&lt;left&gt;&quot;</span> <span class="o">.</span> <span class="nv">windmove-left</span><span class="p">)</span>
+    <span class="p">(</span><span class="s">&quot;&lt;right&gt;&quot;</span> <span class="o">.</span> <span class="nv">windmove-right</span><span class="p">)</span>
+    <span class="p">(</span><span class="s">&quot;&lt;down&gt;&quot;</span> <span class="o">.</span> <span class="nv">windmove-down</span><span class="p">)</span>
+    <span class="p">(</span><span class="s">&quot;&lt;up&gt;&quot;</span> <span class="o">.</span> <span class="nv">windmove-up</span><span class="p">)</span>
+    <span class="p">(</span><span class="s">&quot;y&quot;</span> <span class="o">.</span> <span class="nv">other-window</span><span class="p">)</span>
+    <span class="p">(</span><span class="s">&quot;h&quot;</span> <span class="o">.</span> <span class="nv">ace-window</span><span class="p">)</span>
+    <span class="p">(</span><span class="s">&quot;s&quot;</span> <span class="o">.</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span> <span class="p">(</span><span class="k">interactive</span><span class="p">)</span> <span class="p">(</span><span class="nv">ace-window</span> <span class="mi">4</span><span class="p">)))</span>
+    <span class="p">(</span><span class="s">&quot;d&quot;</span> <span class="o">.</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span> <span class="p">(</span><span class="k">interactive</span><span class="p">)</span> <span class="p">(</span><span class="nv">ace-window</span> <span class="mi">16</span><span class="p">))))))</span>
+</code></pre></div>
+<h2 id="my-code">My code</h2>
+
+<p>Here&#39;s what I&#39;ve come up with, thanks to the newest code in
+<a href="https://github.com/abo-abo/hydra">hydra</a>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">hydra-universal-argument</span> <span class="p">(</span><span class="nv">arg</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">interactive</span> <span class="s">&quot;P&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">setq</span> <span class="nv">prefix-arg</span> <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">consp</span> <span class="nv">arg</span><span class="p">)</span>
+                       <span class="p">(</span><span class="nf">list</span> <span class="p">(</span><span class="nf">*</span> <span class="mi">4</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">arg</span><span class="p">)))</span>
+                     <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">eq</span> <span class="nv">arg</span> <span class="ss">&#39;-</span><span class="p">)</span>
+                         <span class="p">(</span><span class="nf">list</span> <span class="mi">-4</span><span class="p">)</span>
+                       <span class="o">&#39;</span><span class="p">(</span><span class="mi">4</span><span class="p">)))))</span>
+
+<span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-window</span> <span class="p">(</span><span class="nv">global-map</span> <span class="s">&quot;C-M-o&quot;</span><span class="p">)</span>
+  <span class="s">&quot;window&quot;</span>
+  <span class="p">(</span><span class="s">&quot;h&quot;</span> <span class="nv">windmove-left</span> <span class="s">&quot;left&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">windmove-down</span> <span class="s">&quot;down&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;k&quot;</span> <span class="nv">windmove-up</span> <span class="s">&quot;up&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nv">windmove-right</span> <span class="s">&quot;right&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="nv">ace-window</span> <span class="s">&quot;ace&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;u&quot;</span> <span class="nv">hydra-universal-argument</span> <span class="s">&quot;universal&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;s&quot;</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span> <span class="p">(</span><span class="k">interactive</span><span class="p">)</span> <span class="p">(</span><span class="nv">ace-window</span> <span class="mi">4</span><span class="p">))</span> <span class="s">&quot;swap&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;d&quot;</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span> <span class="p">(</span><span class="k">interactive</span><span class="p">)</span> <span class="p">(</span><span class="nv">ace-window</span> <span class="mi">16</span><span class="p">))</span> <span class="s">&quot;delete&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;o&quot;</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nv">key-chord-define-global</span> <span class="s">&quot;yy&quot;</span> <span class="ss">&#39;hydra-window/body</span><span class="p">)</span>
+</code></pre></div>
+<p>The new code should already be available in
+<a href="http://melpa.org/">MELPA</a>.  I&#39;ll update the code in
+<a href="https://elpa.gnu.org/packages/hydra.html">GNU ELPA</a> soon, when I make
+sure that there were no bugs introduced by the change.</p>
+
+<p>If anyone wants to see how the <code>defhydra</code> macro expands, you can check
+out
+<a href="https://github.com/abo-abo/hydra/blob/master/hydra-test.el">hydra-test.el</a>.
+I just added a Travis CI setup, so if you&#39;re interested in starting
+to test your Elisp code, you can have a very simple example.</p>
+
+<h2 id="how-the-defined-hydra-works">How the defined Hydra works</h2>
+
+<p>With this setup:</p>
+
+<ul>
+<li><p>to swap two windows (i.e. call <kbd>C-u</kbd> <code>ace-window</code>), I can do any of:</p>
+
+<ul>
+<li><kbd>C-M-o s</kbd></li>
+<li><kbd>C-M-o ua</kbd></li>
+<li><kbd>yys</kbd></li>
+<li><kbd>yyua</kbd></li>
+</ul></li>
+<li><p>to delete one window (i.e. call <kbd>C-u C-u</kbd> <code>ace-window</code>), any of:</p>
+
+<ul>
+<li><kbd>C-M-o d</kbd></li>
+<li><kbd>C-M-o uua</kbd></li>
+<li><kbd>yyd</kbd></li>
+<li><kbd>yyuua</kbd></li>
+</ul></li>
+<li><p>to move one window down, two windows right, and one window up:</p>
+
+<ul>
+<li><kbd>C-M-o jllk</kbd></li>
+<li><kbd>yyjllk</kbd></li>
+</ul></li>
+</ul>
+
+<p>Although every other shortcut except the Hydra heads will vanquish the
+Hydra, sometimes I have nothing on my mind that needs doing. For that
+case, as you can see above, I enter <kbd>o</kbd> in its own list
+without a function, so that <kbd>o</kbd> will dismiss the Hydra
+without doing anything.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/01/28/notes-on-elisp-indentation/">
         A few notes on Elisp indentation
       </a>
@@ -294,19 +401,19 @@ But sometimes the indentation engine just won&#39;t listen.</p>
 <h2 id="lisp-indent-function">lisp-indent-function</h2>
 
 <p>By default, the indentation is handled as if:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">lisp-indent-function</span> <span class="ss">&#39;lisp-indent-function</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">lisp-indent-function</span> <span class="ss">&#39;lisp-indent-function</span><span class="p">)</span>
 </code></pre></div>
 <p>At least in one case, it looks horrible:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">cl-labels</span> <span class="p">((</span><span class="nv">square</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">cl-labels</span> <span class="p">((</span><span class="nv">square</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
                     <span class="p">(</span><span class="nf">*</span> <span class="nv">x</span> <span class="nv">x</span><span class="p">)))</span>
   <span class="p">(</span><span class="nf">mapcar</span> <span class="nf">#&#39;</span><span class="nv">square</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">0</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">)))</span>
 <span class="c1">;; =&gt; (0 1 4 9 16 25)</span>
 </code></pre></div>
 <p>That&#39;s why I have:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">lisp-indent-function</span> <span class="ss">&#39;common-lisp-indent-function</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">lisp-indent-function</span> <span class="ss">&#39;common-lisp-indent-function</span><span class="p">)</span>
 </code></pre></div>
 <p>which leads to this indentation:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">cl-labels</span> <span class="p">((</span><span class="nv">square</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">cl-labels</span> <span class="p">((</span><span class="nv">square</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
               <span class="p">(</span><span class="nf">*</span> <span class="nv">x</span> <span class="nv">x</span><span class="p">)))</span>
   <span class="p">(</span><span class="nf">mapcar</span> <span class="nf">#&#39;</span><span class="nv">square</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">0</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">)))</span>
 <span class="c1">;; =&gt; (0 1 4 9 16 25)</span>
@@ -319,8 +426,8 @@ macro.</p>
 <h2 id="declaring-indent-level">Declaring indent level</h2>
 
 <p>Here&#39;s how it looks like</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defmacro</span> <span class="nv">lispy-save-excursion</span> <span class="p">(</span><span class="kp">&amp;rest</span> <span class="nv">body</span><span class="p">)</span>
-  <span class="s">&quot;More intuitive (`save-excursion&#39; BODY).&quot;</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defmacro</span> <span class="nv">lispy-save-excursion</span> <span class="p">(</span><span class="kp">&amp;rest</span> <span class="nv">body</span><span class="p">)</span>
+  <span class="s">&quot;More intuitive (</span><span class="ss">`save-excursion&#39;</span><span class="s"> BODY).&quot;</span>
   <span class="p">(</span><span class="nb">declare</span> <span class="p">(</span><span class="nv">indent</span> <span class="mi">0</span><span class="p">))</span>
   <span class="o">`</span><span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">out</span> <span class="p">(</span><span class="k">save-excursion</span>
                 <span class="o">,@</span><span class="nv">body</span><span class="p">)))</span>
@@ -330,14 +437,14 @@ macro.</p>
 </code></pre></div>
 <p>By default, functions behave as if their <code>indent</code> was declared to <code>nil</code>.
 Zero here means that we expect zero arguments on the same line, so that this indentation follows:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">lispy-save-excursion</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">lispy-save-excursion</span>
   <span class="p">(</span><span class="nv">lispy--out-forward</span> <span class="nv">arg</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">backward-list</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">indent-sexp</span><span class="p">))</span>
 </code></pre></div>
 <p>The indentation above is just like the one that the original <code>save-excursion</code> has.
 Note that if I hadn&#39;t declared the indent, it would look like this:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">lispy-save-excursion</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">lispy-save-excursion</span>
  <span class="p">(</span><span class="nv">lispy--out-forward</span> <span class="nv">arg</span><span class="p">)</span>
  <span class="p">(</span><span class="nv">backward-list</span><span class="p">)</span>
  <span class="p">(</span><span class="nv">indent-sexp</span><span class="p">))</span>
@@ -345,13 +452,13 @@ Note that if I hadn&#39;t declared the indent, it would look like this:</p>
 <p>The impact is much larger for statements that require an <code>indent</code> of 1:</p>
 
 <p>Compare the proper thing:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">lispy-dotimes</span> <span class="nv">arg</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">lispy-dotimes</span> <span class="nv">arg</span>
   <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">point</span><span class="p">)</span> <span class="p">(</span><span class="nf">point-max</span><span class="p">))</span>
     <span class="p">(</span><span class="ne">error</span> <span class="s">&quot;Reached end of buffer&quot;</span><span class="p">))</span>
   <span class="p">(</span><span class="nv">forward-list</span><span class="p">))</span>
 </code></pre></div>
 <p>to this horror:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">lispy-dotimes</span> <span class="nv">arg</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">lispy-dotimes</span> <span class="nv">arg</span>
                <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">point</span><span class="p">)</span> <span class="p">(</span><span class="nf">point-max</span><span class="p">))</span>
                  <span class="p">(</span><span class="ne">error</span> <span class="s">&quot;Reached end of buffer&quot;</span><span class="p">))</span>
                <span class="p">(</span><span class="nv">forward-list</span><span class="p">))</span>
@@ -380,7 +487,7 @@ Below, I&#39;ll share some functions and packages that I used for that.</p>
 <h2 id="my-github-setup">My Github setup</h2>
 
 <p>Here&#39;s it (<code>tree -da -L 1</code>) is:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">.
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>.
 ├── .cask
 ├── gh-pages
 ├── .git
@@ -393,7 +500,7 @@ the code and the documentation simultaneously.</p>
 <h2 id="declaring-functions-obsolete-in-elisp">Declaring functions obsolete in Elisp</h2>
 
 <p>It can be done like this:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">define-obsolete-function-alias</span> <span class="ss">&#39;lispy-out-forward</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">define-obsolete-function-alias</span> <span class="ss">&#39;lispy-out-forward</span>
     <span class="ss">&#39;lispy-right</span> <span class="s">&quot;0.21.0&quot;</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">define-obsolete-function-alias</span> <span class="ss">&#39;lispy-out-backward</span>
     <span class="ss">&#39;lispy-left</span> <span class="s">&quot;0.21.0&quot;</span><span class="p">)</span>
@@ -402,7 +509,7 @@ the code and the documentation simultaneously.</p>
 </code></pre></div>
 <p>After version <code>&quot;0.21.0&quot;</code> hits, any time you call <code>lispy-left</code> by its
 now obsolete alias <code>lispy-out-backward</code>, you&#39;ll get a message:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">`lispy-out-forward&#39; is an obsolete command (as of 0.21.0); use `lispy-right&#39; instead.
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>`lispy-out-forward&#39; is an obsolete command (as of 0.21.0); use `lispy-right&#39; instead.
 </code></pre></div>
 <p>So now, since I&#39;m releasing version <code>&quot;0.22.0&quot;</code>, I can remove even the
 alias declarations. I gave people one week of warnings to adjust (just
@@ -442,7 +549,7 @@ package, I wonder why it&#39;s not more popular. Since it&#39;s so similar to
 <code>wdired</code> (one of the best things since sliced bread, btw), I like to bind
 the starter to  <kbd>C-x C-q</kbd> and the finisher to <kbd>C-c C-c</kbd>
 as well:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">eval-after-load</span> <span class="ss">&#39;grep</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">eval-after-load</span> <span class="ss">&#39;grep</span>
   <span class="o">&#39;</span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">grep-mode-map</span>
     <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-x C-q&quot;</span><span class="p">)</span> <span class="ss">&#39;wgrep-change-to-wgrep-mode</span><span class="p">))</span>
 
@@ -454,7 +561,7 @@ as well:</p>
 
 <p><a href="https://github.com/victorhge/iedit">iedit</a> is an amazing package, it&#39;s crazy-good.
 Here&#39;s how I bind it, since once <code>iedit-mode</code> is on, you can move to the next occurrence with <kbd>C-i</kbd>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-M-i&quot;</span><span class="p">)</span> <span class="ss">&#39;iedit-mode</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-M-i&quot;</span><span class="p">)</span> <span class="ss">&#39;iedit-mode</span><span class="p">)</span>
 </code></pre></div>
 <p>In order to change <em>really</em> every occurrence in the buffer, I need to
 mark the thing that I want to change, before <kbd>C-M-i</kbd>.
@@ -518,8 +625,8 @@ can be skipped and I can rename stuff with <code>iedit-mode</code> only.</p>
 plain <kbd>M-s o</kbd> (<code>occur</code>).</p>
 
 <h2 id="smarter-than-the-average-occur">smarter-than-the-average-occur</h2>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">occur-dwim</span> <span class="p">()</span>
-  <span class="s">&quot;Call `occur&#39; with a sane default.&quot;</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">occur-dwim</span> <span class="p">()</span>
+  <span class="s">&quot;Call </span><span class="ss">`occur&#39;</span><span class="s"> with a sane default.&quot;</span>
   <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
   <span class="p">(</span><span class="nb">push</span> <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">region-active-p</span><span class="p">)</span>
             <span class="p">(</span><span class="nf">buffer-substring-no-properties</span>
@@ -548,7 +655,7 @@ this out-of-the-box.</p>
 works with <code>next-error</code>, it&#39;s possible to use this
 <a href="https://github.com/abo-abo/hydra">Hydra</a> to navigate the <code>occur</code>
 matches:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">hydra-create</span> <span class="s">&quot;M-g&quot;</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">hydra-create</span> <span class="s">&quot;M-g&quot;</span>
   <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;h&quot;</span> <span class="nv">first-error</span> <span class="s">&quot;first&quot;</span><span class="p">)</span>
     <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">next-error</span> <span class="s">&quot;next&quot;</span><span class="p">)</span>
     <span class="p">(</span><span class="s">&quot;k&quot;</span> <span class="nv">previous-error</span> <span class="s">&quot;prev&quot;</span><span class="p">)))</span>
@@ -583,7 +690,7 @@ was my old Stack Overflow answer:)</p>
     <p>Currently, <a href="http://melpa.org/">MELPA</a> hosts over <code>2250</code> packages. That&#39;s
 quite a large number, although it&#39;s still feasible to try most of the
 popular ones. In comparison,</p>
-<div class="highlight"><pre><code class="language-sh" data-lang="sh">apt-cache pkgnames <span class="p">|</span> wc
+<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>apt-cache pkgnames <span class="p">|</span> wc
 </code></pre></div>
 <p>gives me the number <code>50250</code>. I don&#39;t recall calling <code>apt-cache
 pkgnames</code> ever before, while I call <code>package-list-packages</code> all the
@@ -600,7 +707,7 @@ In addition to executing commands faster, it gives you an option to jump to the 
 with <kbd>M-.</kbd>.</p>
 
 <p>Here&#39;s how I bind <code>smex</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;smex</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;smex</span><span class="p">)</span>
 <span class="p">(</span><span class="nv">global-set-key</span> <span class="s">&quot;\C-t&quot;</span> <span class="ss">&#39;smex</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">defun</span> <span class="nv">smex-prepare-ido-bindings</span> <span class="p">()</span>
   <span class="p">(</span><span class="nf">define-key</span> <span class="nv">ido-completion-map</span>
@@ -654,77 +761,6 @@ user-visible functions, i.e.  the ones that are callable by
 your browser. Here, I can see at a glance, that there are three
 commands that I can call.  I can also see a few variables, two of them
 don&#39;t include <code>--</code>, so they&#39;re probably customizable.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/01/24/after-select-window/">
-        Do things after selecting window
-      </a>
-    </h1>
-
-    <span class="post-date">24 Jan 2015</span>
-
-    <p>I saw this question today at Stack Overflow -
-<a href="http://stackoverflow.com/q/28124095/1350992">Emacs: How to enable toolbar mode and menubar mode only under a certain mode?</a>.
-Myself, I never use the menubar or the toolbar. But maybe it&#39;s just
-because it&#39;s useless in the modes to which I&#39;m used to. What if there
-was an option to have the menu bar <em>on</em> just for a few select
-modes?  For instance, if I decided that I want to learn Haskell
-tomorrow, I wouldn&#39;t mind to have the menu bar on for a while,
-especially if there was some useful stuff there in the menu.</p>
-
-<h2 id="the-code">The Code</h2>
-
-<p>I&#39;m not aware of a convenient hook for this job; I tried
-<code>after-change-major-mode-hook</code>, and it doesn&#39;t work when switching
-windows. The universal <code>post-command-hook</code> would be totally lame for this task.</p>
-
-<p>Then it occurred to me, that <code>select-window</code> <em>has</em> to be called
-eventually in most circumstances.  Even
-<a href="https://github.com/abo-abo/ace-window">ace-window</a> calls
-<code>select-window</code>.</p>
-
-<p>This is what I came up with so far:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">defvar</span> <span class="nv">menubar-last</span>
-  <span class="p">(</span><span class="nv">make-ring</span> <span class="mi">20</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">ring-insert</span> <span class="nv">menubar-last</span> <span class="s">&quot;dummy&quot;</span><span class="p">)</span>
-
-<span class="p">(</span><span class="nb">defadvice</span> <span class="nf">select-window</span> <span class="p">(</span><span class="nv">after</span> <span class="nv">select-window-menubar</span> <span class="nv">activate</span><span class="p">)</span>
-  <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nf">equal</span> <span class="p">(</span><span class="nf">buffer-name</span><span class="p">)</span> <span class="p">(</span><span class="nv">ring-ref</span> <span class="nv">menubar-last</span> <span class="mi">0</span><span class="p">))</span>
-    <span class="p">(</span><span class="nv">ring-insert</span> <span class="nv">menubar-last</span> <span class="p">(</span><span class="nf">buffer-name</span><span class="p">))</span>
-    <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">yes-or-no</span>
-           <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">memq</span> <span class="nv">major-mode</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">r-mode</span> <span class="nv">lisp-interaction-mode</span><span class="p">))</span>
-               <span class="mi">1</span> <span class="mi">-1</span><span class="p">)))</span>
-      <span class="p">(</span><span class="nv">menu-bar-mode</span> <span class="nv">yes-or-no</span><span class="p">)</span>
-      <span class="p">(</span><span class="nv">tool-bar-mode</span> <span class="nv">yes-or-no</span><span class="p">))))</span>
-</code></pre></div>
-<h2 id="the-ring-trickery">The Ring trickery</h2>
-
-<p>It&#39;s necessary at least for <code>magit</code>. Doing, for instance,
-<kbd>ll</kbd> operation switches windows many times.
-So I added a check that the current buffer isn&#39;t selected twice.</p>
-
-<p>In Emacs, a ring is like a stack with a limited length: you push onto
-the head, and if the stack becomes too large, the stuff gets removed
-from the tail. Perfect for debugging this code, since I don&#39;t care
-what happened 20 window switches ago, I&#39;m only interested in the most
-recent state. One small annoyance is that the following code will
-throw, if the ring is empty:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nv">ring-ref</span> <span class="nv">menubar-last</span> <span class="mi">0</span><span class="p">)</span>
-</code></pre></div>
-<p>I would prefer if it just returned <code>nil</code> instead. Hence the trick of
-initializing <code>menubar-last</code> with a dummy item.  Note that this
-annoyance propagates to other areas: <code>(current-kill 0)</code> will throw if
-you haven&#39;t yet copied text since Emacs started.</p>
-
-<h2 id="outro">Outro</h2>
-
-<p>I&#39;m not sure if this code is more annoying than useful, but, at least,
-I learned something new while writing it, and I hope you did too.  If
-you know of a better way to accomplish the original task, please do
-share.</p>
 
   </div>
   

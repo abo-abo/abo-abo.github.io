@@ -198,6 +198,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -292,18 +296,18 @@ quick step-by-step to get an equivalent of
 <h2 id="step-2-configure-ivy-re-builders-alist">Step 2: configure <code>ivy-re-builders-alist</code></h2>
 
 <p>Here&#39;s the default setting:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-re-builders-alist</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-re-builders-alist</span>
       <span class="o">&#39;</span><span class="p">((</span><span class="no">t</span> <span class="o">.</span> <span class="nv">ivy--regex-plus</span><span class="p">)))</span>
 </code></pre></div>
 <p>The default matcher will use a <code>.*</code> regex wild card in place of each
 single space in the input.  If you want to use the fuzzy matcher,
 which instead uses a <code>.*</code> regex wild card between each input letter,
 write this in your config:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-re-builders-alist</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-re-builders-alist</span>
       <span class="o">&#39;</span><span class="p">((</span><span class="no">t</span> <span class="o">.</span> <span class="nv">ivy--regex-fuzzy</span><span class="p">)))</span>
 </code></pre></div>
 <p>You can also mix the two regex builders, for example:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-re-builders-alist</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-re-builders-alist</span>
       <span class="o">&#39;</span><span class="p">((</span><span class="nv">ivy-switch-buffer</span> <span class="o">.</span> <span class="nv">ivy--regex-plus</span><span class="p">)</span>
         <span class="p">(</span><span class="no">t</span> <span class="o">.</span> <span class="nv">ivy--regex-fuzzy</span><span class="p">)))</span>
 </code></pre></div>
@@ -325,7 +329,7 @@ into the input area for certain commands.</p>
 
 <p>If you&#39;re going fuzzy all the way, you can do without the initial <code>^</code>,
 and simply let <code>flx</code> (hopefully) sort the matches in a nice way:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-initial-inputs-alist</span> <span class="no">nil</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-initial-inputs-alist</span> <span class="no">nil</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="the-result">The result</h2>
 
