@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Using Emacs as a C++ IDE &middot; (or emacs
+    
+  </title>
+
+  <link rel="canonical" href="https://oremacs.com/2017/03/28/emacs-cpp-ide/" />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="/public/css/octicons.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Scripts -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body class="layout-reverse theme-base-08">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <!-- <div class="sidebar-item"> -->
+  <!--   <p>unused</p> -->
+  <!-- </div> -->
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about/">About</a>
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/archive/">Archive</a>
+        
+      
+    
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+
+    <div id="github" class="sidebar-nav-item">
+      <button type="button"
+              class="btn btn-info"
+              data-toggle="collapse"
+              data-target="#github-projects">
+        <span class="octicon octicon-mark-github"></span> My Emacs Projects
+      </button>
+      <div id="github-projects" class="collapse">
+        <ul style="margin-bottom:0em;">
+          <li>
+            <a href="https://github.com/abo-abo/lispy">lispy</a>
+            <p>vi-like Paredit</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/worf">worf</a>
+            <p>vi-like bindings for org-mode</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-window">ace-window</a>
+            <p>switch windows with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-link">ace-link</a>
+            <p>follow links with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/function-args">function-args</a>
+            <p>enhance <code>CEDET</code> for C++</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/helm-make">helm-make</a>
+            <p>select a Makefile target with <code>helm</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/make-it-so">make-it-so</a>
+            <p>transform files with Makefile recipes</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/org-download">org-download</a>
+            <p>drag-and-drop images to <code>org-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo?tab=repositories">
+              <span class="octicon octicon-octoface"></span>
+              and more
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
+
+  <div class="sidebar-item">
+    <p>
+      <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">
+        <img alt="Creative Commons License"
+             style="border-width:0;opacity: 0.3;"
+             src="https://licensebuttons.net/l/by-sa/4.0/88x31.png"/>
+      </a>
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">(or emacs</a>
+            <small>irrelevant)</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Using Emacs as a C++ IDE</h1>
+  <span class="post-date">28 Mar 2017</span>
+  <p>Recently, I&#39;ve had to code some C++ at work. And I saw it as a good
+opportunity to step up my Emacs&#39; IDE game. I&#39;ve eschewed clang-based
+tools until now, but GCC isn&#39;t adding AST support any time soon, and
+CEDET is too slow and too clumsy with macros for the particular
+project that I
+had. Here&#39;s
+<a href="https://bitbucket.org/eigen/eigen/src/525f03452c37a400bcc4df194950fa97aa61936a/Eigen/src/Core/Matrix.h?at=default&amp;fileviewer=file-view-default#Matrix.h-426">the line</a> in
+<a href="http://eigen.tuxfamily.org/index.php?title=Main_Page">Eigen</a> that
+broke the camel&#39;s back. Basically it&#39;s 30 lines of macros that expand
+to 30 lines of typedefs. Maybe it&#39;s a valid implementation choice, I&#39;d
+rather avoid the macros altogether, but in any case I couldn&#39;t get
+CEDET to parse that.</p>
+
+<h2 id="use-rtags-for-navigation">Use Rtags for navigation</h2>
+
+<p>The first thing I tried
+was <a href="https://github.com/Andersbakken/rtags">rtags</a>.  My project was
+CMake-based, so I just put this line in my subdirectory <code>Makefile</code>:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>cmake:
+    cd ../build &amp;&amp; cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1 ..
+</code></pre></div>
+<p>The <code>-DCMAKE_EXPORT_COMPILE_COMMANDS=1</code> causes a
+<code>compile_commands.json</code> file to be emitted during the actual
+compilation. This file describes the compile flags for every source
+file. These flags are essential in helping the parser understand
+what&#39;s going on.</p>
+
+<p>Then, in the <code>build</code> directory I start:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>rdm &amp; jc -J .
+</code></pre></div>
+<p>Finally, <code>rtags-find-symbol-at-point</code> should work now. I still like to
+use CEDET as backup, it&#39;s pretty good at tracking variables
+defined in the current function:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">ciao-goto-symbol</span> <span class="p">()</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">deactivate-mark</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">ring-insert</span> <span class="nv">find-tag-marker-ring</span> <span class="p">(</span><span class="nf">point-marker</span><span class="p">))</span>
+  <span class="p">(</span><span class="k">or</span> <span class="p">(</span><span class="k">and</span> <span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;rtags</span> <span class="no">nil</span> <span class="no">t</span><span class="p">)</span>
+           <span class="p">(</span><span class="nv">rtags-find-symbol-at-point</span><span class="p">))</span>
+      <span class="p">(</span><span class="k">and</span> <span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;semantic/ia</span><span class="p">)</span>
+           <span class="p">(</span><span class="k">condition-case</span> <span class="no">nil</span>
+               <span class="p">(</span><span class="nv">semantic-ia-fast-jump</span> <span class="p">(</span><span class="nf">point</span><span class="p">))</span>
+             <span class="p">(</span><span class="ne">error</span> <span class="no">nil</span><span class="p">)))))</span>
+<span class="p">(</span><span class="nf">define-key</span> <span class="nv">c++-mode-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-.&quot;</span><span class="p">)</span> <span class="ss">&#39;ciao-goto-symbol</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">define-key</span> <span class="nv">c++-mode-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-,&quot;</span><span class="p">)</span> <span class="ss">&#39;pop-tag-mark</span><span class="p">)</span>
+</code></pre></div>
+<p>For my other C++ projects which aren&#39;t CMake-based, I use the
+excellent <a href="https://github.com/rizsotto/Bear">bear</a> tool to emit the
+<code>compile_commands.json</code> file. It&#39;s as easy as:</p>
+<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>make clean
+bear make
+</code></pre></div>
+<h2 id="use-irony-for-completion">Use Irony for completion</h2>
+
+<p>It didn&#39;t take long to figure out that <code>rtags</code> isn&#39;t great at
+completion. I almost accepted that&#39;s just the way it is.  But this
+morning I decided to make some changes and
+try <a href="https://github.com/Sarcasm/irony-mode">irony-mode</a>.  And it
+worked beautifully for completion! What&#39;s ironic, is that <code>irony-mode</code>
+doesn&#39;t have <code>goto-symbol</code>, so the time spent to figure out <code>rtags</code>
+was worth it.</p>
+
+<p>Here&#39;s my Irony setup; I only changed the <kbd>C-M-i</kbd> binding to
+the newly written <code>counsel-irony</code>, now available in the <code>counsel</code>
+package on MELPA:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;c++-mode-hook</span> <span class="ss">&#39;irony-mode</span><span class="p">)</span>
+<span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;c-mode-hook</span> <span class="ss">&#39;irony-mode</span><span class="p">)</span>
+
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">my-irony-mode-hook</span> <span class="p">()</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">irony-mode-map</span>
+      <span class="p">[</span><span class="nv">remap</span> <span class="nv">completion-at-point</span><span class="p">]</span> <span class="ss">&#39;counsel-irony</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">irony-mode-map</span>
+      <span class="p">[</span><span class="nv">remap</span> <span class="nv">complete-symbol</span><span class="p">]</span> <span class="ss">&#39;counsel-irony</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;irony-mode-hook</span> <span class="ss">&#39;my-irony-mode-hook</span><span class="p">)</span>
+<span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;irony-mode-hook</span> <span class="ss">&#39;irony-cdb-autosetup-compile-options</span><span class="p">)</span>
+</code></pre></div>
+<p>And here are some screenshots of <code>counsel-irony</code>:</p>
+
+<p><img src="/download/counsel-irony-1.png" alt="screenshot-1"></p>
+
+<p>First of all, the completion is displayed inline, similarly to modern IDEs.
+You can use all of Ivy&#39;s regex tricks to complete your candidate:</p>
+
+<p><img src="/download/counsel-irony-2.png" alt="screenshot-2"></p>
+
+<p>Note how the power of regex matching allows me to narrow the initial
+1622 candidates to only 22 functions that have <code>src1</code> and <code>src2</code> as
+arguments. One of the candidates is cut off for being longer than the
+window width. You can still match against the invisible text, but you
+won&#39;t see it. It&#39;s possible to use <kbd>C-c C-o</kbd> (<code>ivy-occur</code>) to
+store the current candidates into a buffer:</p>
+
+<p><img src="/download/counsel-irony-3.png" alt="screenshot-3"></p>
+
+<p>Clicking the mouse on any of the lines in the new buffer will insert
+the appropriate symbol into the C++ buffer.</p>
+
+<h2 id="outro">Outro</h2>
+
+<p>I&#39;d like to thank the authors of <code>rtags</code> and <code>irony-mode</code> for these
+nice packages. Hopefully, <code>counsel-irony</code> is a nice addition. Happy
+hacking!</p>
+
+</div>
+
+<div class="twitter-share">
+  <a href="https://twitter.com/share"
+     class="twitter-share-button"
+     data-via="_abo_abo"
+     data-dnt="true">
+    Tweet
+  </a>
+</div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'oremacs'; // required: replace example with your forum shortname
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+<script>
+  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+</script>
+<noscript>
+  Please enable JavaScript to view the
+  <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>

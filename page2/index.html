@@ -285,6 +285,131 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2016/06/27/ivy-push-view/">
+        Bookmark the current window layout with Ivy
+      </a>
+    </h1>
+
+    <span class="post-date">27 Jun 2016</span>
+
+    <p>Today&#39;s post is about the newest feature related to the
+<a href="https://github.com/abo-abo/swiper">ivy-switch-buffer</a> command. If you
+use <code>ivy-mode</code>, you&#39;re probably already using <code>ivy-switch-buffer</code>
+since it overwrites the built-in <code>switch-to-buffer</code>.</p>
+
+<p>The cool thing about <code>ivy-switch-buffer</code> is that it&#39;s not only buffers
+that are offered for completion. Other buffer-like entities can be
+there as well: bookmarks, recently opened files (<code>recentf</code>), and
+finally, window layouts. Since all of those are relatively the same
+concept, it&#39;s very convenient to have them all in one place available
+for completion.</p>
+
+<p>Here are the relevant settings:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="c1">;; Enable bookmarks and recentf</span>
+<span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-use-virtual-buffers</span> <span class="no">t</span><span class="p">)</span>
+
+<span class="c1">;; Example setting for ivy-views</span>
+<span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-views</span>
+      <span class="o">`</span><span class="p">((</span><span class="s">&quot;dutch + notes {}&quot;</span>
+         <span class="p">(</span><span class="nv">vert</span>
+          <span class="p">(</span><span class="nv">file</span> <span class="s">&quot;dutch.org&quot;</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">buffer</span> <span class="s">&quot;notes&quot;</span><span class="p">)))</span>
+        <span class="p">(</span><span class="s">&quot;ivy.el {}&quot;</span>
+         <span class="p">(</span><span class="nv">horz</span>
+          <span class="p">(</span><span class="nv">file</span> <span class="o">,</span><span class="p">(</span><span class="nv">find-library-name</span> <span class="s">&quot;ivy&quot;</span><span class="p">))</span>
+          <span class="p">(</span><span class="nv">buffer</span> <span class="s">&quot;*scratch*&quot;</span><span class="p">)))))</span>
+</code></pre></div>
+<p>I did mention <code>ivy-views</code> before in the
+<a href="http://oremacs.com/2016/04/26/ivy-0.8.0/">ivy-0.8.0 release</a> post.
+But now, instead of setting <code>ivy-views</code> by hand, you can also bind
+<code>ivy-push-view</code> to a key and store as many window configurations as
+you like, really fast. </p>
+
+<p>What gets stored:</p>
+
+<ul>
+<li>The window list - all windows open on the current frame.</li>
+<li>The window splits relative to each other as a tree. Currently, the
+size of the split isn&#39;t saved, all windows are split equally.</li>
+<li>The point positions in each window. If you use just one window,
+you&#39;ve got something similar to <code>bookmark-set</code>.</li>
+</ul>
+
+<h2 id="recommended-key-bindings">Recommended key bindings</h2>
+
+<p>Here&#39;s what I use currently:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c v&quot;</span><span class="p">)</span> <span class="ss">&#39;ivy-push-view</span><span class="p">)</span>
+<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c V&quot;</span><span class="p">)</span> <span class="ss">&#39;ivy-pop-view</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="typical-workflow">Typical workflow</h2>
+
+<p>Suppose I have two files open: the file <code>2016-06-23-ivy-push-view.md</code>
+and the <code>_posts</code> directory. By pressing <kbd>C-c v</kbd> I am prompted
+for a view name with the default being e.g. 
+<code>{} 2016-06-23-ivy-push-view.md _posts 2</code>.</p>
+
+<p>I can still name the view however I want, but I typically just press
+<kbd>RET</kbd>.  The parts of the automatic view name are:</p>
+
+<ul>
+<li><code>{}</code> - this is a simple string marker to distinguish the views in
+the buffer view. If I enter only <code>{}</code> into <code>ivy-switch-buffer</code>
+prompt, the candidates will normally filter to only views, since
+very rarely will a file or a buffer name match <code>{}</code>.</li>
+<li><code>2016-06-23-ivy-push-view.md _posts</code> is the list of buffers stored
+in the view. This view has only two buffers, but <code>ivy-push-view</code> can
+handle as many windows as you can cram into a single frame.</li>
+<li><code>2</code> means that I already have two views with the same buffers, each
+new view with the same buffers gets an increased number for the
+suggested name. And it&#39;s not useless to have many views for the same
+buffers, since the views also store point positions, not just the
+window list.</li>
+</ul>
+
+<p>Here&#39;s the beauty of it for me: when I type <code>_posts</code> into
+<code>ivy-switch-buffer</code> I can chose to open the <code>_posts</code> directory in a
+variety of ways:</p>
+
+<ul>
+<li>If the buffer is currently open, I can just switch there.</li>
+<li>If the buffer is currently closed, I can re-open it, thanks to <code>recentf</code>.</li>
+<li>I can open the buffer as part of a stored view(s) in <code>ivy-views</code>.</li>
+</ul>
+
+<p>Finally, if I decide that I don&#39;t need a particular view any more, I
+can delete it with <kbd>C-c V</kbd> (<code>ivy-pop-view</code>). It&#39;s possible to
+delete many views at once by pressing <kbd>C-M-m</kbd> (<code>ivy-call</code>),
+as usual with most <code>ivy</code> completion functions.</p>
+
+<h2 id="breaking-api-change">Breaking API change</h2>
+
+<p>While implementing <code>ivy-set-view</code> I decided that the current way alist
+collections are handled together with actions is sub-optimal.  Here&#39;s
+the new way of working:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">res</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">ivy-with</span>
+   <span class="o">&#39;</span><span class="p">(</span><span class="nv">ivy-read</span> <span class="s">&quot;test: &quot;</span>
+     <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;one&quot;</span> <span class="o">.</span> <span class="mi">1</span><span class="p">)</span> <span class="p">(</span><span class="s">&quot;three&quot;</span> <span class="o">.</span> <span class="mi">3</span><span class="p">))</span>
+     <span class="nb">:action</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="k">setq</span> <span class="nv">res</span> <span class="nv">x</span><span class="p">)))</span>
+   <span class="s">&quot;t C-m&quot;</span><span class="p">)</span>
+  <span class="nv">res</span><span class="p">)</span>
+<span class="c1">;; =&gt;</span>
+<span class="c1">;; (&quot;three&quot; . 3)</span>
+</code></pre></div>
+<p>Previously, the return result would be <code>3</code>, i.e. the <code>cdr</code> of the
+selected candidate. Any code using <code>ivy-read</code> with an alist-type
+collection will break. I fixed all instances in <code>counsel.el</code>, and
+there actually aren&#39;t too many uses in the published third party
+packages.</p>
+
+<p>A simple fix to the problem is to use <code>cdr</code> in the action function.
+Additionally, having more information available in the action function
+will serve to improve the code.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2016/06/06/counsel-set-variable/">
         Set an Emacs variable with double completion
       </a>
@@ -762,58 +887,6 @@ and reliable replacement.</p>
 <p>Here&#39;s another screenshot, I open the keyboard settings quite often:</p>
 
 <p><img src="/download/counsel-linux-app-2.png" alt="counsel-linux-app-2.png"></p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2016/02/24/dired-rsync/">
-        Using rsync in dired
-      </a>
-    </h1>
-
-    <span class="post-date">24 Feb 2016</span>
-
-    <p>Here&#39;s a code snippet I&#39;ve found long ago on the internet (the source
-seems to be no longer accessible), that has proven valuable time and
-time again:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="c1">;;;###autoload</span>
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">ora-dired-rsync</span> <span class="p">(</span><span class="nv">dest</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">interactive</span>
-   <span class="p">(</span><span class="nf">list</span>
-    <span class="p">(</span><span class="nf">expand-file-name</span>
-     <span class="p">(</span><span class="nv">read-file-name</span>
-      <span class="s">&quot;Rsync to:&quot;</span>
-      <span class="p">(</span><span class="nv">dired-dwim-target-directory</span><span class="p">)))))</span>
-  <span class="c1">;; store all selected files into &quot;files&quot; list</span>
-  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">files</span> <span class="p">(</span><span class="nv">dired-get-marked-files</span>
-                <span class="no">nil</span> <span class="nv">current-prefix-arg</span><span class="p">))</span>
-        <span class="c1">;; the rsync command</span>
-        <span class="p">(</span><span class="nv">tmtxt/rsync-command</span>
-         <span class="s">&quot;rsync -arvz --progress &quot;</span><span class="p">))</span>
-    <span class="c1">;; add all selected file names as arguments</span>
-    <span class="c1">;; to the rsync command</span>
-    <span class="p">(</span><span class="nb">dolist</span> <span class="p">(</span><span class="nv">file</span> <span class="nv">files</span><span class="p">)</span>
-      <span class="p">(</span><span class="k">setq</span> <span class="nv">tmtxt/rsync-command</span>
-            <span class="p">(</span><span class="nf">concat</span> <span class="nv">tmtxt/rsync-command</span>
-                    <span class="p">(</span><span class="nv">shell-quote-argument</span> <span class="nv">file</span><span class="p">)</span>
-                    <span class="s">&quot; &quot;</span><span class="p">)))</span>
-    <span class="c1">;; append the destination</span>
-    <span class="p">(</span><span class="k">setq</span> <span class="nv">tmtxt/rsync-command</span>
-          <span class="p">(</span><span class="nf">concat</span> <span class="nv">tmtxt/rsync-command</span>
-                  <span class="p">(</span><span class="nv">shell-quote-argument</span> <span class="nv">dest</span><span class="p">)))</span>
-    <span class="c1">;; run the async shell command</span>
-    <span class="p">(</span><span class="nv">async-shell-command</span> <span class="nv">tmtxt/rsync-command</span> <span class="s">&quot;*rsync*&quot;</span><span class="p">)</span>
-    <span class="c1">;; finally, switch to that window</span>
-    <span class="p">(</span><span class="nv">other-window</span> <span class="mi">1</span><span class="p">)))</span>
-
-<span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="s">&quot;Y&quot;</span> <span class="ss">&#39;ora-dired-rsync</span><span class="p">)</span>
-</code></pre></div>
-<p>Lets you copy huge files and directories without Emacs freezing up and
-with convenient progress bar updates. That is all.</p>
-
-<p>Thanks to <code>tmtxt</code>, the mysterious hacker-person from whom the snippet
-likely originated .  Good luck with getting your blog back up.</p>
 
   </div>
   

@@ -4,13 +4,123 @@
  <title>(or emacs</title>
  <link href="https://oremacs.com/atom.xml" rel="self"/>
  <link href="https://oremacs.com/"/>
- <updated>2017-03-18T22:54:42+01:00</updated>
+ <updated>2017-03-28T23:10:13+02:00</updated>
  <id>https://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Using Emacs as a C++ IDE</title>
+   <link href="https://oremacs.com/2017/03/28/emacs-cpp-ide/"/>
+   <updated>2017-03-28T00:00:00+02:00</updated>
+   <id>https://oremacs.com/2017/03/28/emacs-cpp-ide</id>
+   <content type="html">&lt;p&gt;Recently, I&amp;#39;ve had to code some C++ at work. And I saw it as a good
+opportunity to step up my Emacs&amp;#39; IDE game. I&amp;#39;ve eschewed clang-based
+tools until now, but GCC isn&amp;#39;t adding AST support any time soon, and
+CEDET is too slow and too clumsy with macros for the particular
+project that I
+had. Here&amp;#39;s
+&lt;a href=&quot;https://bitbucket.org/eigen/eigen/src/525f03452c37a400bcc4df194950fa97aa61936a/Eigen/src/Core/Matrix.h?at=default&amp;amp;fileviewer=file-view-default#Matrix.h-426&quot;&gt;the line&lt;/a&gt; in
+&lt;a href=&quot;http://eigen.tuxfamily.org/index.php?title=Main_Page&quot;&gt;Eigen&lt;/a&gt; that
+broke the camel&amp;#39;s back. Basically it&amp;#39;s 30 lines of macros that expand
+to 30 lines of typedefs. Maybe it&amp;#39;s a valid implementation choice, I&amp;#39;d
+rather avoid the macros altogether, but in any case I couldn&amp;#39;t get
+CEDET to parse that.&lt;/p&gt;
+
+&lt;h2 id=&quot;use-rtags-for-navigation&quot;&gt;Use Rtags for navigation&lt;/h2&gt;
+
+&lt;p&gt;The first thing I tried
+was &lt;a href=&quot;https://github.com/Andersbakken/rtags&quot;&gt;rtags&lt;/a&gt;.  My project was
+CMake-based, so I just put this line in my subdirectory &lt;code&gt;Makefile&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;cmake:
+    cd ../build &amp;amp;&amp;amp; cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1 ..
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The &lt;code&gt;-DCMAKE_EXPORT_COMPILE_COMMANDS=1&lt;/code&gt; causes a
+&lt;code&gt;compile_commands.json&lt;/code&gt; file to be emitted during the actual
+compilation. This file describes the compile flags for every source
+file. These flags are essential in helping the parser understand
+what&amp;#39;s going on.&lt;/p&gt;
+
+&lt;p&gt;Then, in the &lt;code&gt;build&lt;/code&gt; directory I start:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;rdm &amp;amp; jc -J .
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Finally, &lt;code&gt;rtags-find-symbol-at-point&lt;/code&gt; should work now. I still like to
+use CEDET as backup, it&amp;#39;s pretty good at tracking variables
+defined in the current function:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ciao-goto-symbol&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;deactivate-mark&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ring-insert&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;find-tag-marker-ring&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;point-marker&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;or&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;and&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;rtags&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+           &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;rtags-find-symbol-at-point&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;and&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;semantic/ia&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+           &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;condition-case&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;
+               &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;semantic-ia-fast-jump&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;point&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+             &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ne&quot;&gt;error&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c++-mode-map&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;M-.&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ciao-goto-symbol&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c++-mode-map&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;M-,&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;pop-tag-mark&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;For my other C++ projects which aren&amp;#39;t CMake-based, I use the
+excellent &lt;a href=&quot;https://github.com/rizsotto/Bear&quot;&gt;bear&lt;/a&gt; tool to emit the
+&lt;code&gt;compile_commands.json&lt;/code&gt; file. It&amp;#39;s as easy as:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span&gt;&lt;/span&gt;make clean
+bear make
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;use-irony-for-completion&quot;&gt;Use Irony for completion&lt;/h2&gt;
+
+&lt;p&gt;It didn&amp;#39;t take long to figure out that &lt;code&gt;rtags&lt;/code&gt; isn&amp;#39;t great at
+completion. I almost accepted that&amp;#39;s just the way it is.  But this
+morning I decided to make some changes and
+try &lt;a href=&quot;https://github.com/Sarcasm/irony-mode&quot;&gt;irony-mode&lt;/a&gt;.  And it
+worked beautifully for completion! What&amp;#39;s ironic, is that &lt;code&gt;irony-mode&lt;/code&gt;
+doesn&amp;#39;t have &lt;code&gt;goto-symbol&lt;/code&gt;, so the time spent to figure out &lt;code&gt;rtags&lt;/code&gt;
+was worth it.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;#39;s my Irony setup; I only changed the &lt;kbd&gt;C-M-i&lt;/kbd&gt; binding to
+the newly written &lt;code&gt;counsel-irony&lt;/code&gt;, now available in the &lt;code&gt;counsel&lt;/code&gt;
+package on MELPA:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;add-hook&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;c++-mode-hook&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;irony-mode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;add-hook&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;c-mode-hook&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;irony-mode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;my-irony-mode-hook&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;irony-mode-map&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;remap&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;completion-at-point&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;counsel-irony&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;irony-mode-map&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;remap&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;complete-symbol&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;counsel-irony&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;add-hook&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;irony-mode-hook&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;my-irony-mode-hook&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;add-hook&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;irony-mode-hook&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;irony-cdb-autosetup-compile-options&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And here are some screenshots of &lt;code&gt;counsel-irony&lt;/code&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/counsel-irony-1.png&quot; alt=&quot;screenshot-1&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;First of all, the completion is displayed inline, similarly to modern IDEs.
+You can use all of Ivy&amp;#39;s regex tricks to complete your candidate:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/counsel-irony-2.png&quot; alt=&quot;screenshot-2&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Note how the power of regex matching allows me to narrow the initial
+1622 candidates to only 22 functions that have &lt;code&gt;src1&lt;/code&gt; and &lt;code&gt;src2&lt;/code&gt; as
+arguments. One of the candidates is cut off for being longer than the
+window width. You can still match against the invisible text, but you
+won&amp;#39;t see it. It&amp;#39;s possible to use &lt;kbd&gt;C-c C-o&lt;/kbd&gt; (&lt;code&gt;ivy-occur&lt;/code&gt;) to
+store the current candidates into a buffer:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/counsel-irony-3.png&quot; alt=&quot;screenshot-3&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Clicking the mouse on any of the lines in the new buffer will insert
+the appropriate symbol into the C++ buffer.&lt;/p&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;I&amp;#39;d like to thank the authors of &lt;code&gt;rtags&lt;/code&gt; and &lt;code&gt;irony-mode&lt;/code&gt; for these
+nice packages. Hopefully, &lt;code&gt;counsel-irony&lt;/code&gt; is a nice addition. Happy
+hacking!&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Quickly ediff files from dired</title>
@@ -939,7 +1049,7 @@ previous years.&lt;/p&gt;
                &lt;span class=&quot;ss&quot;&gt;&amp;#39;org-last-args&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;nth&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
 
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-org-agenda-view&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:hint&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-org-agenda-view&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:hint&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;none&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
   &lt;span class=&quot;s&quot;&gt;&amp;quot;&lt;/span&gt;
 &lt;span class=&quot;s&quot;&gt;_d_: ?d? day        _g_: time grid=?g? _a_: arch-trees&lt;/span&gt;
 &lt;span class=&quot;s&quot;&gt;_w_: ?w? week       _[_: inactive      _A_: arch-files&lt;/span&gt;
