@@ -285,6 +285,70 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/04/02/lispy-paredit-emulation/">
+        Paredit emulation in lispy
+      </a>
+    </h1>
+
+    <span class="post-date">02 Apr 2015</span>
+
+    <h2 id="intro">Intro</h2>
+
+<p>I just finished this feature today.  Almost all Paredit functionality is available in terms of
+<a href="https://github.com/abo-abo/lispy">lispy</a>&#39;s own functions.  The only functions that I didn&#39;t
+implement were the ones that I didn&#39;t find any use for: <code>paredit-backslash</code> (ugh, prompts),
+<code>paredit-comment-dwim</code> (covered by regular <kbd>;</kbd>), <code>paredit-forward-down</code> and
+<code>paredit-backward-down</code> (both just move out of special, and throw a lot).</p>
+
+<h2 id="setting-the-keymap-theme">Setting the keymap theme</h2>
+
+<p>So if you ever thought that <code>lispy</code> could be a good idea, but the non-special key bindings are weird,
+and you&#39;re too used to Paredit, you can now try this setting:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">lispy-set-key-theme</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">special</span> <span class="nv">paredit</span> <span class="nv">c-digits</span><span class="p">))</span>
+</code></pre></div>
+<p>Here&#39;s the setting that I&#39;m using, since I love <code>lispy</code>&#39;s default bindings:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">lispy-set-key-theme</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">oleh</span> <span class="nv">special</span> <span class="nv">lispy</span> <span class="nv">c-digits</span><span class="p">))</span>
+</code></pre></div>
+<p>The default setting actually is this one, <code>lispy-mode-map-oleh</code> is an additional map for use with
+my <a href="http://oremacs.com/2015/02/14/semi-xmodmap/">Xmodmap setup</a>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">lispy-set-key-theme</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">special</span> <span class="nv">lispy</span> <span class="nv">c-digits</span><span class="p">))</span>
+</code></pre></div>
+<p>Each item in the list passed to <code>lispy-set-key-theme</code> designates a keymap to turn on.
+So in a non-LISP buffer you could turn on just the special map:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">lispy-set-key-theme</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">special</span><span class="p">))</span>
+</code></pre></div>
+<p>This would mean that zero regular bindings get overridden, but when the point is before or after a
+paren, you get the <code>lispy</code> bindings. Actually, I&#39;ve just enabled <code>lispy-mode</code> for <code>markdown-mode</code>,
+and it&#39;s working great. Unfortunately, I haven&#39;t yet figured out how to make a minor mode&#39;s keymap
+buffer-local. Maybe someone reading has an idea.</p>
+
+<h2 id="the-screencast">The screencast</h2>
+
+<p>I went through all of Paredit tests and made ERT tests out of them, to make sure that the features
+are actually working. I&#39;ve recorded a short (&lt;3 minutes)
+<a href="https://www.youtube.com/watch?v=RDcc3RBQ9Gw">screencast</a> of implementing one of the tests.  Have a
+look, maybe you&#39;ll something interesting in my setup. There are two short pauses in the video,
+that&#39;s just me thinking how to write down a function. My ERT and Magit workflows are also shown.</p>
+
+<h2 id="outro">Outro</h2>
+
+<p>The new key-theme feature is meant to make <code>lispy</code> super-not-annoying. I think it&#39;s useful, since
+using <code>lispy</code> in Paredit mode was annoying for me, so the opposite has to be true for people that
+are used to Paredit. So if you notice a bug, please <a href="https://github.com/abo-abo/lispy/issues">report it</a>, bug
+reports are very important for my non-annoyance agenda.</p>
+
+<p>Finally, if you&#39;re super-devoted to Paredit and don&#39;t want to drop it, now you can easily have both
+<code>lispy-mode</code> and <code>paredit-mode</code> on. Just use this setting:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">lispy-set-key-theme</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">special</span><span class="p">))</span>
+</code></pre></div>
+<p>Or this one if you additionally want <kbd>C-1</kbd> to show the inline doc, and <kbd>C-2</kbd> to show
+the inline args:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">lispy-set-key-theme</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">special</span> <span class="nv">c-digits</span><span class="p">))</span>
+</code></pre></div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/04/01/lispy.0.25.0-is-out/">
         lispy 0.25.0 is out
       </a>
@@ -702,185 +766,6 @@ operations at once, even though I call <code>undo-boundary</code> in <code>ivy-r
 
 <p>I think <code>ivy</code> and the <code>hydra</code> docstring blend in together quite nicely, like
 <a href="http://i.imgur.com/QblQ8cO.gifv">old dogs and new tricks</a>. I don&#39;t know which is which.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/03/25/swiper-0.2.0/">
-        Swiper 0.2.0 is out
-      </a>
-    </h1>
-
-    <span class="post-date">25 Mar 2015</span>
-
-    <p>I forgot to mark the <code>0.1.0</code> release, so I&#39;m giving an overview of all the fixes and new features
-since the first commit in <a href="https://github.com/abo-abo/swiper/releases/0.2.0">the release notes</a>.</p>
-
-<h2 id="fixes">Fixes</h2>
-
-<h3 id="fix-font-locking-in-certain-modes">Fix font locking in certain modes</h3>
-
-<p>Some major modes try to optimize the font locking (highlighting text with various faces) by only
-doing it for the visible portion of the text. But since <code>swiper</code> needs to access all lines at once,
-it&#39;s necessary to font lock the whole buffer. This is done in <code>swiper-font-lock-ensure</code>. For some
-modes, the buffer becomes discolored after calling <code>swiper-font-lock-ensure</code>. In theory, this should
-not happen. As a work-around, I exclude these modes from ensuring font lock:</p>
-
-<ul>
-<li><code>package-menu-mode</code></li>
-<li><code>gnus-summary-mode</code></li>
-<li><code>gnus-article-mode</code></li>
-<li><code>gnus-group-mode</code></li>
-<li><code>emms-playlist-mode</code></li>
-<li><code>erc-mode</code></li>
-</ul>
-
-<p>If you see a discoloration in one of your favorite major modes while using <code>swiper</code>, just let me
-know and I&#39;ll add it to the list.</p>
-
-<h3 id="fix-face-changes-in-the-minibuffer-propagating-to-the-main-buffer">Fix face changes in the minibuffer propagating to the main buffer</h3>
-
-<p>This was a quite interesting <a href="https://github.com/abo-abo/swiper/issues/22">bug</a>. At that moment, I was using <code>add-face-text-property</code> to add faces to the copies of strings in the minibuffer. However, this function destructively modifies the properties, so the change to the properties of a string copy (obtained with <code>concat</code> or <code>copy-sequence</code>) was propagated to the properties of the original string. This was fixed by using <code>font-lock-append-text-property</code> instead of <code>add-face-text-property</code>.</p>
-
-<h3 id="ivy-read-returns-immediately-for-0-1-candidates"><code>ivy-read</code> returns immediately for 0-1 candidates</h3>
-
-<p>An obvious improvement.</p>
-
-<h3 id="clean-up-overlays-better-for-c-g">Clean up overlays better for <kbd>C-g</kbd></h3>
-
-<p>The hidden overlays revealed during the search will be re-hidden if you cancel the search with
-<kbd>C-g</kbd>.</p>
-
-<h3 id="ensure-that-candidates-don-39-t-have-read-only-property">Ensure that candidates don&#39;t have read-only property</h3>
-
-<p>This issue was causing a bug while using <code>swiper</code> in <code>erc-mode</code>, since it marks all of the buffer
-content to <code>read-only</code>. So once a string with <code>read-only</code> property is inserted into the minibuffer,
-you can&#39;t delete it unless you set <code>inhibit-read-only</code>.</p>
-
-<h2 id="new-features">New Features</h2>
-
-<h3 id="optional-initial-input">Optional initial input</h3>
-
-<p>If you call <code>(swiper &quot;fix&quot;)</code>, you&#39;ll start searching with initial input <code>&quot;fix&quot;</code>.</p>
-
-<h3 id="restore-the-initial-point-on-canceling">Restore the initial point on canceling</h3>
-
-<p>If you cancel the search with e.g. <kbd>C-g</kbd> (or <kbd>DEL</kbd> when there&#39;s no input), the
-initial point will be restored.</p>
-
-<h3 id="inherit-standard-faces">Inherit standard faces</h3>
-
-<p>To give a more standard default appearance, <code>swiper</code> faces inherit the default faces:</p>
-
-<ul>
-<li><code>isearch-lazy-highlight-face</code></li>
-<li><code>isearch</code></li>
-<li><code>match</code></li>
-<li><code>isearch</code> again</li>
-<li><code>highlight</code></li>
-</ul>
-
-<p>Most themes customize these faces, so by re-using them <code>swiper</code> blends in better.
-If you want the cool (my opinion) original faces, have a look at <a href="https://github.com/abo-abo/eclipse-theme">eclipse-theme</a>.</p>
-
-<h3 id="reveal-invisible-overlays">Reveal invisible overlays</h3>
-
-<p>This is quite important for searches in <code>org-mode</code> buffers. I tried to make it as close as possible
-to what <code>isearch</code> is doing.</p>
-
-<h3 id="mark-is-saved-for-successful-searches">Mark is saved for successful searches</h3>
-
-<p>This is the behavior of <code>isearch</code>. After you complete a search, you can go back to the search start with
-<kbd>C-x C-SPC</kbd> (<code>pop-global-mark</code>).</p>
-
-<h3 id="the-current-candidate-is-anchored-to-the-current-position">The current candidate is anchored to the current position</h3>
-
-<p>This means that if many candidates are matching the current input, the one which is closest to the
-current line (going forwards) is selected. This is important for not losing the context of what
-you&#39;re searching.</p>
-
-<h3 id="don-39-t-recenter-unless-necessary">Don&#39;t recenter unless necessary</h3>
-
-<p>This is similar to the behavior of <code>isearch</code>: a scroll is performed only if the candidate is out of
-the window bounds. An alternate strategy of keeping the current candidate always centered in the
-window is more distracting.</p>
-
-<h3 id="decouple-helm-back-end">Decouple helm back end</h3>
-
-<p><code>swiper</code> command uses only <code>ivy</code> now. If you want to use <code>helm</code>, have a look at
-<a href="https://github.com/abo-abo/swiper-helm">swiper-helm</a>.</p>
-
-<h3 id="add-history-handling">Add history handling</h3>
-
-<p><kbd>M-n</kbd> will select the next history element, and <kbd>M-p</kbd> will select the previous
-history element.</p>
-
-<p>When there is no input, both <kbd>C-s</kbd> and <kbd>C-r</kbd> will select the last history element.
-This is to make it similar to <code>isearch</code>.</p>
-
-<p>When there is no input, and only once during the search, <kbd>M-n</kbd> will select symbol-at-point
-as the current input.</p>
-
-<h3 id="truncate-candidates-to-window-width-in-the-minibuffer">Truncate candidates to window width in the minibuffer</h3>
-
-<p>If a candidate is longer than the window width, it will be appropriately truncated with <code>...</code>.
-You can still match the invisible parts.</p>
-
-<h3 id="warn-for-empty-buffer">Warn for empty buffer</h3>
-
-<p>Obviously there&#39;s nothing to search for in an empty buffer.</p>
-
-<h3 id="bring-the-last-history-candidate-to-front">Bring the last history candidate to front</h3>
-
-<p>In case of a successful search, the current input will be removed from history, and then re-added to
-the front.</p>
-
-<h3 id="make-c-n-and-c-p-differ-from-c-s-and-c-r">Make <kbd>C-n</kbd> and <kbd>C-p</kbd> differ from <kbd>C-s</kbd> and <kbd>C-r</kbd></h3>
-
-<p>The arrows will not recall the last history element in case the input is empty.
-Otherwise, <kbd>C-n</kbd> matches to <kbd>C-s</kbd> and <kbd>C-p</kbd> matches to <kbd>C-r</kbd>.</p>
-
-<h3 id="ivy-read-now-displays-the-number-of-candidates-in-the-prompt"><code>ivy-read</code> now displays the number of candidates in the prompt</h3>
-
-<p>The prompt argument can hold a <code>format</code>-style expression, e.g. <code>&quot; [% 3d] pattern:&quot;</code>, and the integer
-parameter will be updated with the current amount of matches.
-You can also customize <code>ivy-count-format</code>, that defaults to <code>&quot;%-4d &quot;</code>.</p>
-
-<h3 id="custom-amount-of-chars-to-start-highlighting">Custom amount of chars to start highlighting</h3>
-
-<p>Customize <code>swiper-min-highlight</code> for this. It defaults to 2, which means that the current buffer
-will be highlighted when the input has 2 chars or more. You can set it to <code>1</code> if you want, I found
-it slightly distracting, since there will be a lot of highlights for just one char input.
-Or you can set it to a larger value if you want the highlights to appear later.</p>
-
-<h3 id="customize-wrapping-for-c-n-and-c-p">Customize wrapping for <kbd>C-n</kbd> and <kbd>C-p</kbd></h3>
-
-<p>This feature being on by default in <code>helm-swoop</code> was very distracting for me, and one of the reasons
-that I wrote <code>swiper</code>. So it&#39;s off by default, but you can set it if you want. Calling
-<kbd>C-p</kbd> on line number 0 will cycle to the last candidate etc.</p>
-
-<h3 id="update-copyright">Update Copyright</h3>
-
-<p>Since <code>swiper</code> was added to <a href="https://elpa.gnu.org/packages/">GNU ELPA</a>, I had to assign the
-Copyright to the FSF. This also means that you also need an FSF Copyright assignment for Emacs in
-order to contribute more than total of 15 lines to the <code>swiper</code> code. It&#39;s really easy to get and is
-already necessary to contribute to any package that is part of Emacs.</p>
-
-<h3 id="add-swiper-query-replace">Add <code>swiper-query-replace</code></h3>
-
-<p>You can start a query replace operation starting with the current candidate with <kbd>M-q</kbd>.  If
-you want to query replace in whole buffer, just do <kbd>M-&lt; M-q</kbd>. And remember that
-<kbd>!</kbd> will auto-replace all matches for the current query.</p>
-
-<p>The default binding of <kbd>M-q</kbd> is <code>fill-paragraph</code>. This function is useless in the minibuffer,
-so I chose that binding for query-replace, which is normally bound to sub-optimal <kbd>M-%</kbd>.
-Although there are worse bindings than <kbd>M-%</kbd> (hold three keys at once), for instance, there&#39;s
-<kbd>C-M-%</kbd> (hold <strong>four</strong> keys at once) that calls <code>query-replace-regexp</code>.</p>
-
-<h2 id="outro">Outro</h2>
-
-<p>Enjoy the new features, and a big thanks to all who contributed!</p>
 
   </div>
   

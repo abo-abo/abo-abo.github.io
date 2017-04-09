@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Ivy 0.9.0 is out &middot; (or emacs
+    
+  </title>
+
+  <link rel="canonical" href="https://oremacs.com/2017/04/09/ivy-0.9.0/" />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="/public/css/octicons.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Scripts -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body class="layout-reverse theme-base-08">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <!-- <div class="sidebar-item"> -->
+  <!--   <p>unused</p> -->
+  <!-- </div> -->
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about/">About</a>
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/archive/">Archive</a>
+        
+      
+    
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+
+    <div id="github" class="sidebar-nav-item">
+      <button type="button"
+              class="btn btn-info"
+              data-toggle="collapse"
+              data-target="#github-projects">
+        <span class="octicon octicon-mark-github"></span> My Emacs Projects
+      </button>
+      <div id="github-projects" class="collapse">
+        <ul style="margin-bottom:0em;">
+          <li>
+            <a href="https://github.com/abo-abo/lispy">lispy</a>
+            <p>vi-like Paredit</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/worf">worf</a>
+            <p>vi-like bindings for org-mode</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-window">ace-window</a>
+            <p>switch windows with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-link">ace-link</a>
+            <p>follow links with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/function-args">function-args</a>
+            <p>enhance <code>CEDET</code> for C++</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/helm-make">helm-make</a>
+            <p>select a Makefile target with <code>helm</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/make-it-so">make-it-so</a>
+            <p>transform files with Makefile recipes</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/org-download">org-download</a>
+            <p>drag-and-drop images to <code>org-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo?tab=repositories">
+              <span class="octicon octicon-octoface"></span>
+              and more
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
+
+  <div class="sidebar-item">
+    <p>
+      <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">
+        <img alt="Creative Commons License"
+             style="border-width:0;opacity: 0.3;"
+             src="https://licensebuttons.net/l/by-sa/4.0/88x31.png"/>
+      </a>
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">(or emacs</a>
+            <small>irrelevant)</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Ivy 0.9.0 is out</h1>
+  <span class="post-date">09 Apr 2017</span>
+  <h2 id="intro">Intro</h2>
+
+<p><a href="https://github.com/abo-abo/swiper">Ivy</a> is a completion method that&#39;s
+similar to <code>Ido</code>, but with emphasis on simplicity and customizability.</p>
+
+<h2 id="overview">Overview</h2>
+
+<p>The current release constitutes of <code>339</code> commits and almost a full
+year of progress since <code>0.8.0</code>. Many issues ranging
+from <a href="https://github.com/abo-abo/swiper/issues/493">#493</a>
+to <a href="https://github.com/abo-abo/swiper/issues/946">#946</a> were fixed.
+The number of people who contributed code as grown
+to <a href="https://github.com/abo-abo/swiper/graphs/contributors">63</a>;
+thanks, everyone!</p>
+
+<h2 id="details-on-changes">Details on changes</h2>
+
+<p><code>Changelog.org</code> has been a part of the repository since <code>0.6.0</code>, you
+can get the details of the current and past changes:</p>
+
+<ul>
+<li>in <a href="https://github.com/abo-abo/swiper/blob/master/doc/Changelog.org#090">org-mode</a></li>
+<li>in <a href="http://oremacs.com/swiper/Changelog.html#0.9.0">HTML</a></li>
+</ul>
+
+<h2 id="highlights">Highlights</h2>
+
+<p>Many improvements are incremental and don&#39;t require any extra code to
+enable.  I&#39;ll go over a few selected features that require a bit of
+information to make a good use of them.</p>
+
+<h3 id="a-better-action-choice-interface">A better action choice interface</h3>
+
+<p>For all <code>ivy</code> completions, pressing <kbd>M-o</kbd> allows to execute
+one of the custom actions for the current command. Now you have an
+option to use <a href="https://github.com/abo-abo/hydra">hydra</a> for selecting
+an action. Use this code to turn on the feature:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;ivy-hydra</span><span class="p">)</span>
+</code></pre></div>
+<p>One big advantage of the new interface is that you can peak at the
+action list with <kbd>M-o</kbd> without dismissing the candidate
+list. Press <kbd>M-o</kbd> again to go back to candidate selection
+without selecting an action.</p>
+
+<p>Here&#39;s some code from my config that ensures that I always have some extra actions to choose from:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">ora-insert</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">insert</span>
+   <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">stringp</span> <span class="nv">x</span><span class="p">)</span>
+       <span class="nv">x</span>
+     <span class="p">(</span><span class="nf">car</span> <span class="nv">x</span><span class="p">))))</span>
+
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">ora-kill-new</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">kill-new</span>
+   <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">stringp</span> <span class="nv">x</span><span class="p">)</span>
+       <span class="nv">x</span>
+     <span class="p">(</span><span class="nf">car</span> <span class="nv">x</span><span class="p">))))</span>
+
+<span class="p">(</span><span class="nv">ivy-set-actions</span>
+ <span class="no">t</span>
+ <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;i&quot;</span> <span class="nv">ora-insert</span> <span class="s">&quot;insert&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;w&quot;</span> <span class="nv">ora-kill-new</span> <span class="s">&quot;copy&quot;</span><span class="p">)))</span>
+</code></pre></div>
+<h3 id="grepping">Grepping</h3>
+
+<p>The new <code>counsel-rg</code> joins the group of grepping commands in <code>counsel</code>
+(<code>counsel-ag</code>, <code>counsel-git-grep</code>, <code>counsel-grep</code>, <code>counsel-pt</code>). It
+wraps around the newly popular and very
+fast <a href="https://github.com/BurntSushi/ripgrep">ripgrep</a> shell tool.</p>
+
+<p>A nice improvement to the grepping commands is the ability to specify
+extra flags when you press <kbd>C-u</kbd> (<code>universal-argument</code>)
+before the
+command. See <a href="https://github.com/abo-abo/swiper/pull/774">this gif</a>
+for an example of excluding <code>*.el</code> from the files searched by <code>ag</code>.</p>
+
+<h3 id="counsel-find-file">counsel-find-file</h3>
+
+<ul>
+<li><p>Press <kbd>M-o b</kbd> to change the current directory to one of the
+virtual buffers&#39; directories. You continue to select a file from that
+directory.</p></li>
+<li><p>Press <kbd>M-o r</kbd> to find the current file as root.</p></li>
+</ul>
+
+<h3 id="counsel-git-log">counsel-git-log</h3>
+
+<p>You can now customize
+<code>counsel-git-log-cmd</code>. See
+<a href="https://github.com/abo-abo/swiper/issues/652">#652</a> for using this to
+make <code>counsel-git-log</code> work on Windows.</p>
+
+<h3 id="counsel-mode">counsel-mode</h3>
+
+<ul>
+<li><code>counsel-info-lookup-symbol</code> now substitutes the built in <code>info-lookup-symbol</code>.</li>
+<li>Pressing <kbd>C-r</kbd> while in the minibuffer of <code>eval-expression</code>
+or <code>shell-command</code> now gives you completion of your previous
+history.</li>
+</ul>
+
+<h3 id="counsel-yank-pop">counsel-yank-pop</h3>
+
+<p>Use the new <code>counsel-yank-pop-separator</code> variable to make
+<code>counsel-yank-pop</code> look
+like <a href="https://github.com/abo-abo/swiper/issues/660">this</a>.</p>
+
+<h3 id="ivy">ivy</h3>
+
+<p>There was breaking change for alist type collections some months
+ago. Right now the action functions receive an <code>item</code> from the
+collection, instead of <code>(cdr item)</code> like before. If anything breaks,
+the easy fix is to add an extra <code>cdr</code> to the action function.</p>
+
+<p>Unique index for alist completion was added. The uniqueness assumption
+is that the completion system is passed a list of unique strings, of
+which one (or more) are selected. Unlike plain string completion,
+alists may require violating the uniqueness assumption: there may be
+two elements with the same <code>car</code> but different <code>cdr</code>. Example: C
+function declaration and definition for tag completion. Until now,
+whenever two equal strings were sent to <code>ivy-read</code>, only the first one
+could be selected. Now, each alist car gets an integer index assigned
+to it as a text property <code>&#39;idx</code>. So it&#39;s possible to differentiate two
+alist items with the same key.</p>
+
+<p>Action functions don&#39;t require using <code>with-ivy-window</code> anymore.  This
+allows for a lot of simplification, e.g. use <code>insert</code> instead of
+<code>(lambda (x) (with-ivy-window (insert x)))</code>.</p>
+
+<h3 id="ivy-switch-buffer">ivy-switch-buffer</h3>
+
+<p>You can now customize faces in <code>ivy-switch-buffer</code> by the mode of each buffer.
+Here&#39;s a snippet from my config:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-switch-buffer-faces-alist</span>
+      <span class="o">&#39;</span><span class="p">((</span><span class="nv">emacs-lisp-mode</span> <span class="o">.</span> <span class="nv">swiper-match-face-1</span><span class="p">)</span>
+        <span class="p">(</span><span class="nv">dired-mode</span> <span class="o">.</span> <span class="nv">ivy-subdir</span><span class="p">)</span>
+        <span class="p">(</span><span class="nv">org-mode</span> <span class="o">.</span> <span class="nv">org-level-4</span><span class="p">)))</span>
+</code></pre></div>
+<p>Looks neat, I think:</p>
+
+<p><img src="/download/ivy-switch-buffer-faces-alist.png" alt="ivy-switch-buffer-faces-alist"></p>
+
+<h3 id="swiper">swiper</h3>
+
+<p>Customize <code>swiper-include-line-number-in-search</code> if you&#39;d like to
+match line numbers while using <code>swiper</code>.</p>
+
+<h2 id="new-commands">New Commands</h2>
+
+<h3 id="counsel-bookmark">counsel-bookmark</h3>
+
+<p>Offers completion for <code>bookmark-jump</code>. Press <kbd>M-o d</kbd> to
+delete a bookmark and <kbd>M-o e</kbd> to edit it.</p>
+
+<p>A custom option <code>counsel-bookmark-avoid-dired</code>, which is off by
+default, allows to continue completion for bookmarked
+directories. Turn it on with:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">counsel-bookmark-avoid-dired</span> <span class="no">t</span><span class="p">)</span>
+</code></pre></div>
+<p>and when you choose a bookmarked directory, the choice will be
+forwarded to <code>counsel-find-file</code> instead of opening a <code>dired-mode</code>
+buffer.</p>
+
+<h3 id="counsel-colors-emacs-and-counsel-colors-web">counsel-colors-emacs and counsel-colors-web</h3>
+
+<p>Completion for colors by name:</p>
+
+<ul>
+<li>the default action inserts the color name.</li>
+<li><kbd>M-o h</kbd> inserts the color hex name.</li>
+<li><kbd>M-o N</kbd> copies the color name to the kill ring.</li>
+<li><kbd>M-o H</kbd> copies the color hex name to the kill ring.</li>
+</ul>
+
+<p>The colors are displayed in the minibuffer, it looks really cool:</p>
+
+<p><img src="/download/counsel-colors-emacs.png" alt="counsel-colors-emacs"></p>
+
+<p>You also get 108 shades of grey to choose from, for some reason.</p>
+
+<h3 id="counsel-faces">counsel-faces</h3>
+
+<p>Completion for faces by name:</p>
+
+<p><img src="/download/counsel-faces.png" alt="counsel-faces"></p>
+
+<h3 id="counsel-command-history">counsel-command-history</h3>
+
+<p>Shows the history of the Emacs commands executed and lets you select
+and eval one
+again. See <a href="https://github.com/abo-abo/swiper/pull/826">#826</a> for a
+nice screenshot.</p>
+
+<h3 id="counsel-company">counsel-company</h3>
+
+<p>Picks up <code>company</code>&#39;s candidates and inserts the result into the buffer.</p>
+
+<h3 id="counsel-dired-jump-and-counsel-file-jump">counsel-dired-jump and counsel-file-jump</h3>
+
+<p>Jump to a directory or a file in the current directory.</p>
+
+<h3 id="counsel-dpkg-and-counsel-rpm">counsel-dpkg and counsel-rpm</h3>
+
+<p>Wrap around the popular system package managers.</p>
+
+<h3 id="counsel-package">counsel-package</h3>
+
+<p>Install or uninstall Emacs packages with completion.</p>
+
+<h3 id="counsel-mark-ring">counsel-mark-ring</h3>
+
+<p>Navigate the current buffer&#39;s mark ring.</p>
+
+<h3 id="counsel-semantic">counsel-semantic</h3>
+
+<p>Navigate the current buffer&#39;s tags.</p>
+
+<h3 id="counsel-outline">counsel-outline</h3>
+
+<p>Navigate the current buffer&#39;s outlines.</p>
+
+<h3 id="counsel-recentf">counsel-recentf</h3>
+
+<p>Completion for <code>recentf</code>.</p>
+
+<h3 id="counsel-find-library">counsel-find-library</h3>
+
+<p>Completion for <code>find-library</code>.</p>
+
+<h3 id="counsel-hydra-heads">counsel-hydra-heads</h3>
+
+<p>Completion for the last hydra&#39;s heads.</p>
+
+<h3 id="counsel-org-agenda-headlines">counsel-org-agenda-headlines</h3>
+
+<p>Completion for headlines of files in your <code>org-agenda-files</code>.</p>
+
+<h2 id="outro">Outro</h2>
+
+<p>Again, thanks to all the contributors. Happy hacking!</p>
+
+</div>
+
+<div class="twitter-share">
+  <a href="https://twitter.com/share"
+     class="twitter-share-button"
+     data-via="_abo_abo"
+     data-dnt="true">
+    Tweet
+  </a>
+</div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'oremacs'; // required: replace example with your forum shortname
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+<script>
+  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+</script>
+<noscript>
+  Please enable JavaScript to view the
+  <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>

@@ -4,13 +4,260 @@
  <title>(or emacs</title>
  <link href="https://oremacs.com/atom.xml" rel="self"/>
  <link href="https://oremacs.com/"/>
- <updated>2017-03-28T23:10:13+02:00</updated>
+ <updated>2017-04-09T19:37:00+02:00</updated>
  <id>https://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Ivy 0.9.0 is out</title>
+   <link href="https://oremacs.com/2017/04/09/ivy-0.9.0/"/>
+   <updated>2017-04-09T00:00:00+02:00</updated>
+   <id>https://oremacs.com/2017/04/09/ivy-0.9.0</id>
+   <content type="html">&lt;h2 id=&quot;intro&quot;&gt;Intro&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/abo-abo/swiper&quot;&gt;Ivy&lt;/a&gt; is a completion method that&amp;#39;s
+similar to &lt;code&gt;Ido&lt;/code&gt;, but with emphasis on simplicity and customizability.&lt;/p&gt;
+
+&lt;h2 id=&quot;overview&quot;&gt;Overview&lt;/h2&gt;
+
+&lt;p&gt;The current release constitutes of &lt;code&gt;339&lt;/code&gt; commits and almost a full
+year of progress since &lt;code&gt;0.8.0&lt;/code&gt;. Many issues ranging
+from &lt;a href=&quot;https://github.com/abo-abo/swiper/issues/493&quot;&gt;#493&lt;/a&gt;
+to &lt;a href=&quot;https://github.com/abo-abo/swiper/issues/946&quot;&gt;#946&lt;/a&gt; were fixed.
+The number of people who contributed code as grown
+to &lt;a href=&quot;https://github.com/abo-abo/swiper/graphs/contributors&quot;&gt;63&lt;/a&gt;;
+thanks, everyone!&lt;/p&gt;
+
+&lt;h2 id=&quot;details-on-changes&quot;&gt;Details on changes&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;Changelog.org&lt;/code&gt; has been a part of the repository since &lt;code&gt;0.6.0&lt;/code&gt;, you
+can get the details of the current and past changes:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;in &lt;a href=&quot;https://github.com/abo-abo/swiper/blob/master/doc/Changelog.org#090&quot;&gt;org-mode&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;in &lt;a href=&quot;http://oremacs.com/swiper/Changelog.html#0.9.0&quot;&gt;HTML&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;highlights&quot;&gt;Highlights&lt;/h2&gt;
+
+&lt;p&gt;Many improvements are incremental and don&amp;#39;t require any extra code to
+enable.  I&amp;#39;ll go over a few selected features that require a bit of
+information to make a good use of them.&lt;/p&gt;
+
+&lt;h3 id=&quot;a-better-action-choice-interface&quot;&gt;A better action choice interface&lt;/h3&gt;
+
+&lt;p&gt;For all &lt;code&gt;ivy&lt;/code&gt; completions, pressing &lt;kbd&gt;M-o&lt;/kbd&gt; allows to execute
+one of the custom actions for the current command. Now you have an
+option to use &lt;a href=&quot;https://github.com/abo-abo/hydra&quot;&gt;hydra&lt;/a&gt; for selecting
+an action. Use this code to turn on the feature:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ivy-hydra&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;One big advantage of the new interface is that you can peak at the
+action list with &lt;kbd&gt;M-o&lt;/kbd&gt; without dismissing the candidate
+list. Press &lt;kbd&gt;M-o&lt;/kbd&gt; again to go back to candidate selection
+without selecting an action.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;#39;s some code from my config that ensures that I always have some extra actions to choose from:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ora-insert&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;insert&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;stringp&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+       &lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;car&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ora-kill-new&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kill-new&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;stringp&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+       &lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;car&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ivy-set-actions&lt;/span&gt;
+ &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;
+ &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;i&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ora-insert&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;insert&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;w&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ora-kill-new&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;copy&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;grepping&quot;&gt;Grepping&lt;/h3&gt;
+
+&lt;p&gt;The new &lt;code&gt;counsel-rg&lt;/code&gt; joins the group of grepping commands in &lt;code&gt;counsel&lt;/code&gt;
+(&lt;code&gt;counsel-ag&lt;/code&gt;, &lt;code&gt;counsel-git-grep&lt;/code&gt;, &lt;code&gt;counsel-grep&lt;/code&gt;, &lt;code&gt;counsel-pt&lt;/code&gt;). It
+wraps around the newly popular and very
+fast &lt;a href=&quot;https://github.com/BurntSushi/ripgrep&quot;&gt;ripgrep&lt;/a&gt; shell tool.&lt;/p&gt;
+
+&lt;p&gt;A nice improvement to the grepping commands is the ability to specify
+extra flags when you press &lt;kbd&gt;C-u&lt;/kbd&gt; (&lt;code&gt;universal-argument&lt;/code&gt;)
+before the
+command. See &lt;a href=&quot;https://github.com/abo-abo/swiper/pull/774&quot;&gt;this gif&lt;/a&gt;
+for an example of excluding &lt;code&gt;*.el&lt;/code&gt; from the files searched by &lt;code&gt;ag&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;counsel-find-file&quot;&gt;counsel-find-file&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Press &lt;kbd&gt;M-o b&lt;/kbd&gt; to change the current directory to one of the
+virtual buffers&amp;#39; directories. You continue to select a file from that
+directory.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Press &lt;kbd&gt;M-o r&lt;/kbd&gt; to find the current file as root.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;counsel-git-log&quot;&gt;counsel-git-log&lt;/h3&gt;
+
+&lt;p&gt;You can now customize
+&lt;code&gt;counsel-git-log-cmd&lt;/code&gt;. See
+&lt;a href=&quot;https://github.com/abo-abo/swiper/issues/652&quot;&gt;#652&lt;/a&gt; for using this to
+make &lt;code&gt;counsel-git-log&lt;/code&gt; work on Windows.&lt;/p&gt;
+
+&lt;h3 id=&quot;counsel-mode&quot;&gt;counsel-mode&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;counsel-info-lookup-symbol&lt;/code&gt; now substitutes the built in &lt;code&gt;info-lookup-symbol&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Pressing &lt;kbd&gt;C-r&lt;/kbd&gt; while in the minibuffer of &lt;code&gt;eval-expression&lt;/code&gt;
+or &lt;code&gt;shell-command&lt;/code&gt; now gives you completion of your previous
+history.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;counsel-yank-pop&quot;&gt;counsel-yank-pop&lt;/h3&gt;
+
+&lt;p&gt;Use the new &lt;code&gt;counsel-yank-pop-separator&lt;/code&gt; variable to make
+&lt;code&gt;counsel-yank-pop&lt;/code&gt; look
+like &lt;a href=&quot;https://github.com/abo-abo/swiper/issues/660&quot;&gt;this&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;ivy&quot;&gt;ivy&lt;/h3&gt;
+
+&lt;p&gt;There was breaking change for alist type collections some months
+ago. Right now the action functions receive an &lt;code&gt;item&lt;/code&gt; from the
+collection, instead of &lt;code&gt;(cdr item)&lt;/code&gt; like before. If anything breaks,
+the easy fix is to add an extra &lt;code&gt;cdr&lt;/code&gt; to the action function.&lt;/p&gt;
+
+&lt;p&gt;Unique index for alist completion was added. The uniqueness assumption
+is that the completion system is passed a list of unique strings, of
+which one (or more) are selected. Unlike plain string completion,
+alists may require violating the uniqueness assumption: there may be
+two elements with the same &lt;code&gt;car&lt;/code&gt; but different &lt;code&gt;cdr&lt;/code&gt;. Example: C
+function declaration and definition for tag completion. Until now,
+whenever two equal strings were sent to &lt;code&gt;ivy-read&lt;/code&gt;, only the first one
+could be selected. Now, each alist car gets an integer index assigned
+to it as a text property &lt;code&gt;&amp;#39;idx&lt;/code&gt;. So it&amp;#39;s possible to differentiate two
+alist items with the same key.&lt;/p&gt;
+
+&lt;p&gt;Action functions don&amp;#39;t require using &lt;code&gt;with-ivy-window&lt;/code&gt; anymore.  This
+allows for a lot of simplification, e.g. use &lt;code&gt;insert&lt;/code&gt; instead of
+&lt;code&gt;(lambda (x) (with-ivy-window (insert x)))&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;ivy-switch-buffer&quot;&gt;ivy-switch-buffer&lt;/h3&gt;
+
+&lt;p&gt;You can now customize faces in &lt;code&gt;ivy-switch-buffer&lt;/code&gt; by the mode of each buffer.
+Here&amp;#39;s a snippet from my config:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ivy-switch-buffer-faces-alist&lt;/span&gt;
+      &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;emacs-lisp-mode&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;swiper-match-face-1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;dired-mode&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ivy-subdir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;org-mode&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-level-4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Looks neat, I think:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/ivy-switch-buffer-faces-alist.png&quot; alt=&quot;ivy-switch-buffer-faces-alist&quot;&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;swiper&quot;&gt;swiper&lt;/h3&gt;
+
+&lt;p&gt;Customize &lt;code&gt;swiper-include-line-number-in-search&lt;/code&gt; if you&amp;#39;d like to
+match line numbers while using &lt;code&gt;swiper&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;new-commands&quot;&gt;New Commands&lt;/h2&gt;
+
+&lt;h3 id=&quot;counsel-bookmark&quot;&gt;counsel-bookmark&lt;/h3&gt;
+
+&lt;p&gt;Offers completion for &lt;code&gt;bookmark-jump&lt;/code&gt;. Press &lt;kbd&gt;M-o d&lt;/kbd&gt; to
+delete a bookmark and &lt;kbd&gt;M-o e&lt;/kbd&gt; to edit it.&lt;/p&gt;
+
+&lt;p&gt;A custom option &lt;code&gt;counsel-bookmark-avoid-dired&lt;/code&gt;, which is off by
+default, allows to continue completion for bookmarked
+directories. Turn it on with:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;counsel-bookmark-avoid-dired&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;and when you choose a bookmarked directory, the choice will be
+forwarded to &lt;code&gt;counsel-find-file&lt;/code&gt; instead of opening a &lt;code&gt;dired-mode&lt;/code&gt;
+buffer.&lt;/p&gt;
+
+&lt;h3 id=&quot;counsel-colors-emacs-and-counsel-colors-web&quot;&gt;counsel-colors-emacs and counsel-colors-web&lt;/h3&gt;
+
+&lt;p&gt;Completion for colors by name:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;the default action inserts the color name.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;M-o h&lt;/kbd&gt; inserts the color hex name.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;M-o N&lt;/kbd&gt; copies the color name to the kill ring.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;M-o H&lt;/kbd&gt; copies the color hex name to the kill ring.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The colors are displayed in the minibuffer, it looks really cool:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/counsel-colors-emacs.png&quot; alt=&quot;counsel-colors-emacs&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;You also get 108 shades of grey to choose from, for some reason.&lt;/p&gt;
+
+&lt;h3 id=&quot;counsel-faces&quot;&gt;counsel-faces&lt;/h3&gt;
+
+&lt;p&gt;Completion for faces by name:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/counsel-faces.png&quot; alt=&quot;counsel-faces&quot;&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;counsel-command-history&quot;&gt;counsel-command-history&lt;/h3&gt;
+
+&lt;p&gt;Shows the history of the Emacs commands executed and lets you select
+and eval one
+again. See &lt;a href=&quot;https://github.com/abo-abo/swiper/pull/826&quot;&gt;#826&lt;/a&gt; for a
+nice screenshot.&lt;/p&gt;
+
+&lt;h3 id=&quot;counsel-company&quot;&gt;counsel-company&lt;/h3&gt;
+
+&lt;p&gt;Picks up &lt;code&gt;company&lt;/code&gt;&amp;#39;s candidates and inserts the result into the buffer.&lt;/p&gt;
+
+&lt;h3 id=&quot;counsel-dired-jump-and-counsel-file-jump&quot;&gt;counsel-dired-jump and counsel-file-jump&lt;/h3&gt;
+
+&lt;p&gt;Jump to a directory or a file in the current directory.&lt;/p&gt;
+
+&lt;h3 id=&quot;counsel-dpkg-and-counsel-rpm&quot;&gt;counsel-dpkg and counsel-rpm&lt;/h3&gt;
+
+&lt;p&gt;Wrap around the popular system package managers.&lt;/p&gt;
+
+&lt;h3 id=&quot;counsel-package&quot;&gt;counsel-package&lt;/h3&gt;
+
+&lt;p&gt;Install or uninstall Emacs packages with completion.&lt;/p&gt;
+
+&lt;h3 id=&quot;counsel-mark-ring&quot;&gt;counsel-mark-ring&lt;/h3&gt;
+
+&lt;p&gt;Navigate the current buffer&amp;#39;s mark ring.&lt;/p&gt;
+
+&lt;h3 id=&quot;counsel-semantic&quot;&gt;counsel-semantic&lt;/h3&gt;
+
+&lt;p&gt;Navigate the current buffer&amp;#39;s tags.&lt;/p&gt;
+
+&lt;h3 id=&quot;counsel-outline&quot;&gt;counsel-outline&lt;/h3&gt;
+
+&lt;p&gt;Navigate the current buffer&amp;#39;s outlines.&lt;/p&gt;
+
+&lt;h3 id=&quot;counsel-recentf&quot;&gt;counsel-recentf&lt;/h3&gt;
+
+&lt;p&gt;Completion for &lt;code&gt;recentf&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;counsel-find-library&quot;&gt;counsel-find-library&lt;/h3&gt;
+
+&lt;p&gt;Completion for &lt;code&gt;find-library&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;counsel-hydra-heads&quot;&gt;counsel-hydra-heads&lt;/h3&gt;
+
+&lt;p&gt;Completion for the last hydra&amp;#39;s heads.&lt;/p&gt;
+
+&lt;h3 id=&quot;counsel-org-agenda-headlines&quot;&gt;counsel-org-agenda-headlines&lt;/h3&gt;
+
+&lt;p&gt;Completion for headlines of files in your &lt;code&gt;org-agenda-files&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;Again, thanks to all the contributors. Happy hacking!&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Using Emacs as a C++ IDE</title>
