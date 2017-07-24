@@ -285,6 +285,93 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/06/30/context-aware-hydra/">
+        Context aware hydra
+      </a>
+    </h1>
+
+    <span class="post-date">30 Jun 2015</span>
+
+    <p>In this post, I&#39;ll demonstrate a snippet that came up this week in a
+conversation over John Kitchin&#39;s
+<a href="http://kitchingroup.cheme.cmu.edu/blog/2015/06/24/Conditional-hydra-menus/">post</a>.
+While the following snippet isn&#39;t inherently useful, it might help a creative
+user to understand Hydra a bit more and accomplish more advanced
+things.</p>
+
+<p>This hydra demonstrates that the hint and even the key bindings aren&#39;t
+set in stone: you can modify them depending on the current state of
+your Emacs, in this case the current line number.</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-vi</span> <span class="p">(</span><span class="nb">:hint</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="s">&quot;vi&quot;</span>
+  <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">next-line</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;k&quot;</span> <span class="nv">previous-line</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;n&quot;</span> <span class="nv">next-line</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;p&quot;</span> <span class="nv">previous-line</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">setq</span> <span class="nv">hydra-vi/hint</span>
+  <span class="o">&#39;</span><span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">evenp</span> <span class="p">(</span><span class="nv">line-number-at-pos</span><span class="p">))</span>
+    <span class="p">(</span><span class="k">prog1</span> <span class="p">(</span><span class="nf">eval</span>
+            <span class="p">(</span><span class="nv">hydra--format</span> <span class="no">nil</span> <span class="o">&#39;</span><span class="p">(</span><span class="no">nil</span> <span class="no">nil</span> <span class="nb">:hint</span> <span class="no">nil</span><span class="p">)</span>
+                           <span class="s">&quot;\neven: _j_ _k_\n&quot;</span> <span class="nv">hydra-vi/heads</span><span class="p">))</span>
+      <span class="p">(</span><span class="nf">define-key</span> <span class="nv">hydra-vi/keymap</span> <span class="s">&quot;n&quot;</span> <span class="no">nil</span><span class="p">)</span>
+      <span class="p">(</span><span class="nf">define-key</span> <span class="nv">hydra-vi/keymap</span> <span class="s">&quot;p&quot;</span> <span class="no">nil</span><span class="p">)</span>
+      <span class="p">(</span><span class="nf">define-key</span> <span class="nv">hydra-vi/keymap</span> <span class="s">&quot;j&quot;</span> <span class="ss">&#39;hydra-vi/next-line</span><span class="p">)</span>
+      <span class="p">(</span><span class="nf">define-key</span> <span class="nv">hydra-vi/keymap</span> <span class="s">&quot;k&quot;</span> <span class="ss">&#39;hydra-vi/previous-line</span><span class="p">))</span>
+    <span class="p">(</span><span class="k">prog1</span> <span class="p">(</span><span class="nf">eval</span>
+            <span class="p">(</span><span class="nv">hydra--format</span> <span class="no">nil</span> <span class="o">&#39;</span><span class="p">(</span><span class="no">nil</span> <span class="no">nil</span> <span class="nb">:hint</span> <span class="no">nil</span><span class="p">)</span>
+                           <span class="s">&quot;\nodd: _n_ _p_\n&quot;</span> <span class="nv">hydra-vi/heads</span><span class="p">))</span>
+      <span class="p">(</span><span class="nf">define-key</span> <span class="nv">hydra-vi/keymap</span> <span class="s">&quot;j&quot;</span> <span class="no">nil</span><span class="p">)</span>
+      <span class="p">(</span><span class="nf">define-key</span> <span class="nv">hydra-vi/keymap</span> <span class="s">&quot;k&quot;</span> <span class="no">nil</span><span class="p">)</span>
+      <span class="p">(</span><span class="nf">define-key</span> <span class="nv">hydra-vi/keymap</span> <span class="s">&quot;n&quot;</span> <span class="ss">&#39;hydra-vi/next-line</span><span class="p">)</span>
+      <span class="p">(</span><span class="nf">define-key</span> <span class="nv">hydra-vi/keymap</span> <span class="s">&quot;p&quot;</span> <span class="ss">&#39;hydra-vi/previous-line</span><span class="p">))))</span>
+</code></pre></div>
+<p>The first statement is one of the most elementary <code>defhydra</code>
+calls. The only extra thing is that it sets the <code>:hint</code> to nil.</p>
+
+<p>The <code>defhydra</code> statement generates a bunch of function and variable
+definitions. You can examine them closely by evaluating:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">macroexpand</span>
+ <span class="o">&#39;</span><span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-vi</span> <span class="p">(</span><span class="nb">:hint</span> <span class="no">nil</span><span class="p">)</span>
+   <span class="s">&quot;vi&quot;</span>
+   <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">next-line</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;k&quot;</span> <span class="nv">previous-line</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;n&quot;</span> <span class="nv">next-line</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;p&quot;</span> <span class="nv">previous-line</span><span class="p">)))</span>
+</code></pre></div>
+<p>Just paste that code into <code>*scratch*</code>, and press <kbd>C-j</kbd>. If
+you want pretty output (153 lines of code instead of 26), turn on
+<a href="https://github.com/abo-abo/lispy">lispy-mode</a> and press <kbd>E</kbd>
+instead of <kbd>C-j</kbd>.</p>
+
+<p>Anyway, among these defined variables is <code>hydra-vi/hint</code> which is
+evaluated each time to display the hint. So now we can just redefine
+<code>hydra-vi/hint</code> to make it so that on even lines <kbd>n</kbd> calls
+<code>next-line</code>, while on odd lines it&#39;s <kbd>j</kbd>, with the
+appropriate changes in the doc. The change in bindings, modifying
+<code>hydra-vi/keymap</code> - also one of the defined variables, needs to be a
+side-effect, since <code>hydra-vi/hint</code> is expected to evaluate to a
+string.</p>
+
+<p>Just to give you some idea of how it could be used: you can have a
+context-aware &quot;open&quot; command that, for instance, delegates to
+<code>open-in-pdf-tools</code> or <code>open-in-firefox</code> or <code>open-in-emacs</code> when it
+detects that the point is on a link. And of course all these commands
+would have their own key binding that works only if the command makes
+sense.</p>
+
+<p>This approach is described on
+<a href="https://github.com/abo-abo/hydra/wiki/Conditional-Hydra">the wiki</a>,
+in case you read this post much later and want to see an up-to-date
+code, or even update it yourself. In case something cool comes out of
+this snippet, I can try to implement a more palatable API for
+<code>defhydra</code>, most likely an option to supply a function name in the
+<code>docstring</code> argument position.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/06/23/counsel-load-theme/">
         New video demo - counsel-load-theme
       </a>
@@ -589,65 +676,6 @@ in lispy-test.el.  To view them like in the screenshot, you can press
 <p>Final note, I realize that it should be <code>eql</code> instead of <code>eq</code>, but I
 like <code>eq</code> more: it&#39;s 33% more efficient.</p>
 
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/06/08/describe-variable-tip/">
-        More productive describe-variable
-      </a>
-    </h1>
-
-    <span class="post-date">08 Jun 2015</span>
-
-    <p>I refer to <code>counsel-describe-variable</code> here, which you can get from
-the MELPA <code>counsel</code> package, or from
-<a href="https://github.com/abo-abo/swiper">Github</a>. If you&#39;re not familiar, <code>counsel</code> contains specialized functions using <code>ivy-mode</code> completion. Being specialized means that you can do more than usual, for instance here are the exit points of <code>counsel-describe-variable</code>:</p>
-
-<ul>
-<li><kbd>RET</kbd> calls <code>describe-variable</code>: a plain <code>describe-variable</code> with <code>ivy-mode</code> on
-looks like <code>counsel-describe-variable</code>, but has only this exit point.</li>
-<li><kbd>C-.</kbd> calls <code>counsel-find-symbol</code>: jump to symbol declaration.</li>
-<li><kbd>C-,</kbd> calls <code>counsel--info-lookup-symbol</code>: jump to symbol reference in <code>*Info*</code>.</li>
-</ul>
-
-<p>These can also be extended by binding new commands in <code>counsel-describe-map</code>.</p>
-
-<p>I&#39;ll just describe one useful scenario that happened just now. I was working on <a href="http://debbugs.gnu.org/cgi/bugreport.cgi?bug=20754">a <code>checkdoc.el</code> change</a>
-and was testing it with <code>avy.el</code>. And I got a few style warnings for this code, which I got from a <a href="https://github.com/abo-abo/avy/pull/59">contributor</a> (thanks for the code btw):</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">defvar</span> <span class="nv">avy-translate-char-function</span> <span class="nf">#&#39;identity</span>
-  <span class="s">&quot;Function to translate user input key. This can be useful for</span>
-<span class="s">adding mirror key. E.g. one can make SPACE an alternative of &#39;a&#39;,</span>
-<span class="s">by adding:</span>
-
-<span class="s">\(setq avy-translate-char-function</span>
-<span class="s">      (lambda (c) (if (= c 32) ?a c)))</span>
-
-<span class="s">to allow typing SPACE instead of character &#39;a&#39; to jump to the location</span>
-<span class="s">highlighted by &#39;a&#39;.&quot;</span><span class="p">)</span>
-</code></pre></div>
-<p>One of the warnings that <code>avy-translate-char-function</code> should be quoted while inside the docstring like so:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="s">&quot;</span><span class="ss">`avy-translate-char-function&#39;</span><span class="s">&quot;</span>
-</code></pre></div>
-<p>Of course that wouldn&#39;t play well with <code>setq</code>, so I wanted to see if
-any other variables that end in <code>-function</code> provide an example of use
-like here, and, if so, how they quote.</p>
-
-<p>This is my <a href="https://github.com/abo-abo/oremacs/blob/github/oleh/keys.el">personal configuration</a>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;&lt;f1&gt; v&quot;</span><span class="p">)</span> <span class="ss">&#39;counsel-describe-variable</span><span class="p">)</span>
-</code></pre></div>
-<p>So I did <kbd>&lt;f1&gt; v</kbd> <code>function$</code> to describe a variable that ends with <code>function</code>.
-Here, <code>$</code> is a part of <a href="http://www.emacswiki.org/emacs/RegularExpression">a regular expression</a>, which should be a priority to learn if you want to be a (not just) Emacs Power User.</p>
-
-<p>And now the key part: instead of pressing <kbd>RET</kbd> to describe just the current candidate, I repeatedly press <kbd>C-M-n</kbd> (<code>ivy-next-line-and-call</code>). After each <kbd>C-M-n</kbd>, the next candidate will be selected and the <code>*Help*</code> window will be updated.</p>
-
-<p>With this trick I was able to skim through the 346 matches in seconds. The conclusion was that an example isn&#39;t usually provided, with <code>nnmail-expiry-wait-function</code> being an exemption.
-In the end, I decided not to provide such an explicit example and shorten the doc to this:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">defvar</span> <span class="nv">avy-translate-char-function</span> <span class="nf">#&#39;identity</span>
-  <span class="s">&quot;Function to translate user input key into another key.</span>
-<span class="s">For example, to make SPC do the same as ?a, use</span>
-<span class="s">\(lambda (c) (if (= c 32) ?a c)).&quot;</span><span class="p">)</span>
-</code></pre></div>
   </div>
   
 </div>

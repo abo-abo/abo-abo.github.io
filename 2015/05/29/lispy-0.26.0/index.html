@@ -364,7 +364,7 @@ algorithm.</p>
 
 <p>The algorithm has a safety check implemented for Elisp: if <code>read</code> on the transformed expression returns something different than <code>read</code> on the original expression, an error will be signaled and no change will be made. For expressions that can&#39;t be <code>read</code>, like buffers/markers/windows/cyclic lists/overlays, only a warning will be issued (<code>lispy</code> can read them, unlike <code>read</code>).</p>
 
-<h3 id="d-and-gt-give-priority-to-lispy-right"><kbd>d</kbd> and <kbd>&gt;</kbd> give priority to <code>lispy-right</code></h3>
+<h3 id="d-and-give-priority-to-lispy-right"><kbd>d</kbd> and <kbd>&gt;</kbd> give priority to <code>lispy-right</code></h3>
 
 <p>For the expression <code>(a)|(b)</code>, <code>(a)</code> will be considered the sexp at point, instead of <code>(b)</code>. This is consistent with <code>show-paren-mode</code>.  If a space is present, all ambiguities are resolved anyway.</p>
 
@@ -401,7 +401,7 @@ algorithm.</p>
 
 <p>I normally use a light background, so I didn&#39;t notice before that the faces looked horrible with a dark background.</p>
 
-<h3 id="the-96-will-quote-the-region">The <kbd>&#96;</kbd> will quote the region</h3>
+<h3 id="the-will-quote-the-region">The <kbd>&#96;</kbd> will quote the region</h3>
 
 <p>If you have a region selected, pressing <kbd>&#96;</kbd> will result in:</p>
 <div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>`symbol&#39;

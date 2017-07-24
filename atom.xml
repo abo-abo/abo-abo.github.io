@@ -4,13 +4,28 @@
  <title>(or emacs</title>
  <link href="https://oremacs.com/atom.xml" rel="self"/>
  <link href="https://oremacs.com/"/>
- <updated>2017-04-09T19:37:00+02:00</updated>
+ <updated>2017-07-24T22:27:55+02:00</updated>
  <id>https://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>hydra.el talk @ london.el</title>
+   <link href="https://oremacs.com/2017/07/24/hydra-at-london-meetup/"/>
+   <updated>2017-07-24T00:00:00+02:00</updated>
+   <id>https://oremacs.com/2017/07/24/hydra-at-london-meetup</id>
+   <content type="html">&lt;p&gt;Today I gave a talk on &lt;a href=&quot;https://github.com/abo-abo/hydra&quot;&gt;hydra&lt;/a&gt; at the London Emacs meet up -
+&lt;a href=&quot;https://www.meetup.com/London-Emacs-Hacking/events/241399003/&quot;&gt;london.el&lt;/a&gt;.
+My screen capture is available on &lt;a href=&quot;https://youtu.be/ONHEDj3kWrE&quot;&gt;youtube&lt;/a&gt;,
+and the slides are &lt;a href=&quot;https://oremacs.com/download/london.pdf&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Thanks to &lt;a href=&quot;https://twitter.com/dotemacs&quot;&gt;@dotemacs&lt;/a&gt; for organizing the
+event and inviting me.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Ivy 0.9.0 is out</title>
@@ -270,7 +285,7 @@ tools until now, but GCC isn&amp;#39;t adding AST support any time soon, and
 CEDET is too slow and too clumsy with macros for the particular
 project that I
 had. Here&amp;#39;s
-&lt;a href=&quot;https://bitbucket.org/eigen/eigen/src/525f03452c37a400bcc4df194950fa97aa61936a/Eigen/src/Core/Matrix.h?at=default&amp;amp;fileviewer=file-view-default#Matrix.h-426&quot;&gt;the line&lt;/a&gt; in
+&lt;a href=&quot;https://bitbucket.org/eigen/eigen/src/525f03452c37a400bcc4df194950fa97aa61936a/Eigen/src/Core/Matrix.h?at=default&amp;fileviewer=file-view-default#Matrix.h-426&quot;&gt;the line&lt;/a&gt; in
 &lt;a href=&quot;http://eigen.tuxfamily.org/index.php?title=Main_Page&quot;&gt;Eigen&lt;/a&gt; that
 broke the camel&amp;#39;s back. Basically it&amp;#39;s 30 lines of macros that expand
 to 30 lines of typedefs. Maybe it&amp;#39;s a valid implementation choice, I&amp;#39;d
@@ -689,7 +704,7 @@ command:&lt;/p&gt;
 &lt;p&gt;which produces e.g.:&lt;/p&gt;
 
 &lt;pre&gt;&lt;small&gt;
-Symbol table '.dynsym' contains 2732 entries:
+Symbol table &#39;.dynsym&#39; contains 2732 entries:
    Num:    Value          Size Type    Bind   Vis      Ndx Name
      0: 0000000000000000     0 NOTYPE  LOCAL  DEFAULT  UND
      1: 000000000004faf0     0 SECTION LOCAL  DEFAULT    8
@@ -981,7 +996,7 @@ completion.&lt;/p&gt;
 &lt;p&gt;It is worth noting that the current value of the variable is
 pre-selected, to give a nice reference point for the new setting.&lt;/p&gt;
 
-&lt;h3 id=&quot;in-case-the-symbol-isn-39-t-a-boolean-or-a-radio&quot;&gt;In case the symbol isn&amp;#39;t a boolean or a radio&lt;/h3&gt;
+&lt;h3 id=&quot;in-case-the-symbol-isnt-a-boolean-or-a-radio&quot;&gt;In case the symbol isn&amp;#39;t a boolean or a radio&lt;/h3&gt;
 
 &lt;p&gt;Then you get a completion session similar to &lt;kbd&gt;M-x&lt;/kbd&gt;
 &lt;code&gt;read-expression&lt;/code&gt;, but with the initial contents already filled
@@ -1796,7 +1811,7 @@ the info pages, there&amp;#39;s info on info in info format: use &lt;kbd&gt;dg&l
 &lt;p&gt;Today, I&amp;#39;ll describe some cool stuff that I used to generate the
 Markdown notes from &lt;code&gt;Changelog.org&lt;/code&gt;.&lt;/p&gt;
 
-&lt;h3 id=&quot;org-mode-39-s-org-narrow-to-subtree&quot;&gt;Org-mode&amp;#39;s &lt;code&gt;org-narrow-to-subtree&lt;/code&gt;&lt;/h3&gt;
+&lt;h3 id=&quot;org-modes-org-narrow-to-subtree&quot;&gt;Org-mode&amp;#39;s &lt;code&gt;org-narrow-to-subtree&lt;/code&gt;&lt;/h3&gt;
 
 &lt;p&gt;Since &lt;code&gt;Changelog.org&lt;/code&gt; already has a &lt;code&gt;0.6.0&lt;/code&gt; branch that I didn&amp;#39;t want
 to see, I&amp;#39;ve narrowed the buffer to only the &lt;code&gt;0.7.0&lt;/code&gt; branch.  This is
@@ -4223,7 +4238,7 @@ algorithm.&lt;/p&gt;
 
 &lt;p&gt;The algorithm has a safety check implemented for Elisp: if &lt;code&gt;read&lt;/code&gt; on the transformed expression returns something different than &lt;code&gt;read&lt;/code&gt; on the original expression, an error will be signaled and no change will be made. For expressions that can&amp;#39;t be &lt;code&gt;read&lt;/code&gt;, like buffers/markers/windows/cyclic lists/overlays, only a warning will be issued (&lt;code&gt;lispy&lt;/code&gt; can read them, unlike &lt;code&gt;read&lt;/code&gt;).&lt;/p&gt;
 
-&lt;h3 id=&quot;d-and-gt-give-priority-to-lispy-right&quot;&gt;&lt;kbd&gt;d&lt;/kbd&gt; and &lt;kbd&gt;&amp;gt;&lt;/kbd&gt; give priority to &lt;code&gt;lispy-right&lt;/code&gt;&lt;/h3&gt;
+&lt;h3 id=&quot;d-and-give-priority-to-lispy-right&quot;&gt;&lt;kbd&gt;d&lt;/kbd&gt; and &lt;kbd&gt;&amp;gt;&lt;/kbd&gt; give priority to &lt;code&gt;lispy-right&lt;/code&gt;&lt;/h3&gt;
 
 &lt;p&gt;For the expression &lt;code&gt;(a)|(b)&lt;/code&gt;, &lt;code&gt;(a)&lt;/code&gt; will be considered the sexp at point, instead of &lt;code&gt;(b)&lt;/code&gt;. This is consistent with &lt;code&gt;show-paren-mode&lt;/code&gt;.  If a space is present, all ambiguities are resolved anyway.&lt;/p&gt;
 
@@ -4260,7 +4275,7 @@ algorithm.&lt;/p&gt;
 
 &lt;p&gt;I normally use a light background, so I didn&amp;#39;t notice before that the faces looked horrible with a dark background.&lt;/p&gt;
 
-&lt;h3 id=&quot;the-96-will-quote-the-region&quot;&gt;The &lt;kbd&gt;&amp;#96;&lt;/kbd&gt; will quote the region&lt;/h3&gt;
+&lt;h3 id=&quot;the-will-quote-the-region&quot;&gt;The &lt;kbd&gt;&amp;#96;&lt;/kbd&gt; will quote the region&lt;/h3&gt;
 
 &lt;p&gt;If you have a region selected, pressing &lt;kbd&gt;&amp;#96;&lt;/kbd&gt; will result in:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;`symbol&amp;#39;
@@ -4999,7 +5014,7 @@ on the first candidate.&lt;/p&gt;
 &lt;code&gt;swiper-match-face-4&lt;/code&gt; inherit from &lt;code&gt;isearch-fail&lt;/code&gt;. It&amp;#39;s important to
 have all 4 faces be different.&lt;/p&gt;
 
-&lt;h3 id=&quot;don-39-t-error-on-bad-regex&quot;&gt;Don&amp;#39;t error on bad regex&lt;/h3&gt;
+&lt;h3 id=&quot;dont-error-on-bad-regex&quot;&gt;Don&amp;#39;t error on bad regex&lt;/h3&gt;
 
 &lt;p&gt;When the current input is a bad regex, just display no candidates and
 continue. Don&amp;#39;t throw an error.&lt;/p&gt;
@@ -5564,7 +5579,7 @@ which mostly shows off the new &lt;code&gt;counsel-git-grep&lt;/code&gt; functio
 
 &lt;p&gt;&lt;kbd&gt;C-h v&lt;/kbd&gt; and &lt;kbd&gt;C-h f&lt;/kbd&gt; should select thing-at-point properly.&lt;/p&gt;
 
-&lt;h3 id=&quot;don-39-t-try-to-fontify-huge-buffers&quot;&gt;Don&amp;#39;t try to fontify huge buffers&lt;/h3&gt;
+&lt;h3 id=&quot;dont-try-to-fontify-huge-buffers&quot;&gt;Don&amp;#39;t try to fontify huge buffers&lt;/h3&gt;
 
 &lt;p&gt;It&amp;#39;s a nice feature of swiper that everything in the minibuffer is fontified.  However, this can cause a slowdown for buffers with x10000 lines. So this feature is automatically turned off for these large buffers.&lt;/p&gt;
 
@@ -5847,7 +5862,7 @@ but if the candidate is a perfect match, it will act like
 &lt;li&gt;&lt;kbd&gt;C-n&lt;/kbd&gt; and &lt;kbd&gt;C-p&lt;/kbd&gt; naturally select the next and the previous candidate.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&quot;what-39-s-it-all-for&quot;&gt;What&amp;#39;s it all for?&lt;/h2&gt;
+&lt;h2 id=&quot;whats-it-all-for&quot;&gt;What&amp;#39;s it all for?&lt;/h2&gt;
 
 &lt;p&gt;Well, for me the advantage is obvious: I get my completion just the
 way I like it.  You can use it as well if you find that you like it
@@ -6115,7 +6130,7 @@ red and a blue head.&lt;/p&gt;
 &lt;p&gt;The latter two call &lt;code&gt;hydra-zoom/lambda-0-and-exit&lt;/code&gt;, while &lt;kbd&gt;r&lt;/kbd&gt;
 calls &lt;code&gt;hydra-zoom/lambda-r&lt;/code&gt;.&lt;/p&gt;
 
-&lt;h3 id=&quot;don-39-t-default-hydra-repeast-prefix-arg-to-1&quot;&gt;Don&amp;#39;t default &lt;code&gt;hydra-repeast--prefix-arg&lt;/code&gt; to 1&lt;/h3&gt;
+&lt;h3 id=&quot;dont-default-hydra-repeast-prefix-arg-to-1&quot;&gt;Don&amp;#39;t default &lt;code&gt;hydra-repeast--prefix-arg&lt;/code&gt; to 1&lt;/h3&gt;
 
 &lt;p&gt;See &lt;a href=&quot;https://github.com/abo-abo/hydra/issues/61&quot;&gt;#61&lt;/a&gt; for more info.&lt;/p&gt;
 
@@ -7065,7 +7080,7 @@ know and I&amp;#39;ll add it to the list.&lt;/p&gt;
 &lt;p&gt;The hidden overlays revealed during the search will be re-hidden if you cancel the search with
 &lt;kbd&gt;C-g&lt;/kbd&gt;.&lt;/p&gt;
 
-&lt;h3 id=&quot;ensure-that-candidates-don-39-t-have-read-only-property&quot;&gt;Ensure that candidates don&amp;#39;t have read-only property&lt;/h3&gt;
+&lt;h3 id=&quot;ensure-that-candidates-dont-have-read-only-property&quot;&gt;Ensure that candidates don&amp;#39;t have read-only property&lt;/h3&gt;
 
 &lt;p&gt;This issue was causing a bug while using &lt;code&gt;swiper&lt;/code&gt; in &lt;code&gt;erc-mode&lt;/code&gt;, since it marks all of the buffer
 content to &lt;code&gt;read-only&lt;/code&gt;. So once a string with &lt;code&gt;read-only&lt;/code&gt; property is inserted into the minibuffer,
@@ -7113,7 +7128,7 @@ to what &lt;code&gt;isearch&lt;/code&gt; is doing.&lt;/p&gt;
 current line (going forwards) is selected. This is important for not losing the context of what
 you&amp;#39;re searching.&lt;/p&gt;
 
-&lt;h3 id=&quot;don-39-t-recenter-unless-necessary&quot;&gt;Don&amp;#39;t recenter unless necessary&lt;/h3&gt;
+&lt;h3 id=&quot;dont-recenter-unless-necessary&quot;&gt;Don&amp;#39;t recenter unless necessary&lt;/h3&gt;
 
 &lt;p&gt;This is similar to the behavior of &lt;code&gt;isearch&lt;/code&gt;: a scroll is performed only if the candidate is out of
 the window bounds. An alternate strategy of keeping the current candidate always centered in the
@@ -7805,7 +7820,7 @@ time ago (you can find a lot of additional info there):&lt;/p&gt;
 &lt;span class=&quot;variable-name&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;j-other&quot;&gt;=:&lt;/span&gt; &lt;span class=&quot;j-verb&quot;&gt;[:&lt;/span&gt;((&lt;span class=&quot;j-verb&quot;&gt;[:*&lt;/span&gt;&lt;span class=&quot;j-adverb&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;j-verb&quot;&gt;_9:&lt;/span&gt;c&lt;span class=&quot;j-adverb&quot;&gt;\&lt;/span&gt;&lt;span class=&quot;j-verb&quot;&gt;]&lt;/span&gt;)&lt;span class=&quot;j-conjunction&quot;&gt;&quot;&lt;/span&gt;1&lt;span class=&quot;j-verb&quot;&gt;#]&lt;/span&gt;)i&lt;span class=&quot;j-conjunction&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;j-verb&quot;&gt;{+&lt;/span&gt;&lt;span class=&quot;j-conjunction&quot;&gt;&quot;&lt;/span&gt;1 1(&lt;span class=&quot;j-verb&quot;&gt;&amp;gt;:i.&lt;/span&gt;9)&lt;span class=&quot;j-verb&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;j-adverb&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;j-verb&quot;&gt;[:&lt;/span&gt;i&lt;span class=&quot;j-conjunction&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;j-verb&quot;&gt;=i.&lt;/span&gt;&lt;span class=&quot;j-conjunction&quot;&gt;&amp;amp;&lt;/span&gt;0
 &lt;span class=&quot;variable-name&quot;&gt;r&lt;/span&gt; &lt;span class=&quot;j-other&quot;&gt;=:&lt;/span&gt; &lt;span class=&quot;j-verb&quot;&gt;[:,&lt;/span&gt;&lt;span class=&quot;j-conjunction&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;j-verb&quot;&gt;$:&lt;/span&gt;&lt;span class=&quot;j-conjunction&quot;&gt;@.&lt;/span&gt;(0&lt;span class=&quot;j-verb&quot;&gt;:e.,&lt;/span&gt;)&lt;span class=&quot;j-verb&quot;&gt;[:;&lt;/span&gt;(&lt;span class=&quot;j-verb&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;j-conjunction&quot;&gt;@&lt;/span&gt;t)&lt;span class=&quot;j-conjunction&quot;&gt;&quot;&lt;/span&gt;1
 &lt;span class=&quot;variable-name&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;j-other&quot;&gt;=:&lt;/span&gt; 9 9&lt;span class=&quot;j-conjunction&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;j-verb&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;j-conjunction&quot;&gt;@&lt;/span&gt;r&lt;span class=&quot;j-conjunction&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;j-verb&quot;&gt;,&lt;/span&gt;
-&lt;span class=&quot;j-verb&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;variable-name&quot;&gt;m&lt;/span&gt; &lt;span class=&quot;j-other&quot;&gt;=:&lt;/span&gt; 9 9 &lt;span class=&quot;j-verb&quot;&gt;$&quot;.&lt;/span&gt;&lt;span class=&quot;j-conjunction&quot;&gt;&quot;&lt;/span&gt;0&lt;span class=&quot;string&quot;&gt;'200370009009200007001004002050000800008000900006000040900100500800007600400089001'&lt;/span&gt;
+&lt;span class=&quot;j-verb&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;variable-name&quot;&gt;m&lt;/span&gt; &lt;span class=&quot;j-other&quot;&gt;=:&lt;/span&gt; 9 9 &lt;span class=&quot;j-verb&quot;&gt;$&quot;.&lt;/span&gt;&lt;span class=&quot;j-conjunction&quot;&gt;&quot;&lt;/span&gt;0&lt;span class=&quot;string&quot;&gt;&#39;200370009009200007001004002050000800008000900006000040900100500800007600400089001&#39;&lt;/span&gt;
 s m
 &lt;span class=&quot;org-block-end-line&quot;&gt;#+end_src
 &lt;/span&gt;
@@ -7871,7 +7886,7 @@ s m
 
 &lt;pre&gt;
 &lt;span class=&quot;org-block-begin-line&quot;&gt;#+begin_src J
-&lt;/span&gt;load &lt;span class=&quot;string&quot;&gt;'plot'&lt;/span&gt;
+&lt;/span&gt;load &lt;span class=&quot;string&quot;&gt;&#39;plot&#39;&lt;/span&gt;
 plot 1 &lt;span class=&quot;j-verb&quot;&gt;o.&lt;/span&gt; 0&lt;span class=&quot;j-adverb&quot;&gt;.&lt;/span&gt;1 &lt;span class=&quot;j-verb&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;j-verb&quot;&gt;i.&lt;/span&gt;200
 &lt;span class=&quot;org-block-end-line&quot;&gt;#+end_src
 &lt;/span&gt;
@@ -10018,7 +10033,7 @@ while maybe adding a bit of flavor.&lt;/p&gt;
 
 &lt;h2 id=&quot;new-features&quot;&gt;New features&lt;/h2&gt;
 
-&lt;h3 id=&quot;define-hydra-heads-that-don-39-t-show-up-in-the-hint-at-all&quot;&gt;Define Hydra heads that don&amp;#39;t show up in the hint at all&lt;/h3&gt;
+&lt;h3 id=&quot;define-hydra-heads-that-dont-show-up-in-the-hint-at-all&quot;&gt;Define Hydra heads that don&amp;#39;t show up in the hint at all&lt;/h3&gt;
 
 &lt;p&gt;This can be done by setting the head&amp;#39;s hint explicitly to &lt;code&gt;nil&lt;/code&gt;, instead of the usual string. For
 instance, if you always tend to bind the arrows to &lt;kbd&gt;hjkl&lt;/kbd&gt;, there&amp;#39;s no point to show a hint
@@ -10807,7 +10822,7 @@ whole &lt;code&gt;BODY&lt;/code&gt; argument, as was advertised before. Just put
 will normally call &lt;code&gt;(forward-char 1)&lt;/code&gt;, unless an additional prefix is given.  The previous
 behavior allowed only for &lt;kbd&gt;C-z C-u l&lt;/kbd&gt; to get &lt;code&gt;(forward-char 4)&lt;/code&gt;.&lt;/p&gt;
 
-&lt;h2 id=&quot;allow-a-sexp-as-head-39-s-cmd-parameter&quot;&gt;Allow a sexp as head&amp;#39;s CMD parameter&lt;/h2&gt;
+&lt;h2 id=&quot;allow-a-sexp-as-heads-cmd-parameter&quot;&gt;Allow a sexp as head&amp;#39;s CMD parameter&lt;/h2&gt;
 
 &lt;p&gt;Example:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-launcher&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:color&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
@@ -11600,7 +11615,7 @@ as well wrap it in some Elisp. Elisp is like frosting - it makes everything bett
 &lt;li&gt;open &lt;code&gt;localhost:4000&lt;/code&gt; in Firefox&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&quot;one-post-isn-39-t-a-blog&quot;&gt;One post isn&amp;#39;t a blog&lt;/h2&gt;
+&lt;h2 id=&quot;one-post-isnt-a-blog&quot;&gt;One post isn&amp;#39;t a blog&lt;/h2&gt;
 
 &lt;p&gt;Here&amp;#39;s how to quickly bring back the deleted posts.&lt;/p&gt;
 
@@ -12011,7 +12026,7 @@ become obsolete.&lt;/p&gt;
 explaining her window bindings, that combine both &lt;code&gt;ace-window&lt;/code&gt; and &lt;code&gt;windmove&lt;/code&gt;.
 So I wrote down an update to Hydra in order to get a similar setup.&lt;/p&gt;
 
-&lt;h2 id=&quot;sacha-39-s-code&quot;&gt;Sacha&amp;#39;s code&lt;/h2&gt;
+&lt;h2 id=&quot;sachas-code&quot;&gt;Sacha&amp;#39;s code&lt;/h2&gt;
 
 &lt;p&gt;Here it is:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;key-chord-define-global&lt;/span&gt;
@@ -12737,7 +12752,7 @@ the garbage produced by a LaTeX run:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dired-garbage-files-regexp&lt;/span&gt;
       &lt;span class=&quot;s&quot;&gt;&amp;quot;\\.idx\\|\\.run\\.xml$\\|\\.bbl$\\|\\.bcf$\\|.blg$\\|-blx.bib$\\|.nav$\\|.snm$\\|.out$\\|.synctex.gz$\\|\\(?:\\.\\(?:aux\\|bak\\|dvi\\|log\\|orig\\|rej\\|toc\\|pyg\\)\\)\\&amp;#39;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id=&quot;emacs-39-adaptation-of-find&quot;&gt;Emacs&amp;#39; adaptation of &lt;code&gt;find&lt;/code&gt;&lt;/h2&gt;
+&lt;h2 id=&quot;emacs-adaptation-of-find&quot;&gt;Emacs&amp;#39; adaptation of &lt;code&gt;find&lt;/code&gt;&lt;/h2&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dired-mode-map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;F&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;find-name-dired&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;This little function is essential if you want to do perform some
@@ -13256,7 +13271,7 @@ an &lt;code&gt;org-mode&lt;/code&gt; buffer. With a few hacks and some advice an
 contributions from more experienced hackers, &lt;code&gt;org-download&lt;/code&gt; came to
 be.&lt;/p&gt;
 
-&lt;h2 id=&quot;today-39-s-commits&quot;&gt;Today&amp;#39;s commits&lt;/h2&gt;
+&lt;h2 id=&quot;todays-commits&quot;&gt;Today&amp;#39;s commits&lt;/h2&gt;
 
 &lt;p&gt;The main contribution from today&amp;#39;s commits was adding the code that
 un-aliases images that point to HTML. I see a lot of these from the
@@ -14518,7 +14533,7 @@ I wrote down a new package called &lt;a href=&quot;https://github.com/abo-abo/la
 It&amp;#39;s only a few hours old, but I like it a lot.
 I&amp;#39;ve grepped the sources of AUCTeX, and it doesn&amp;#39;t seem to have this functionality.&lt;/p&gt;
 
-&lt;h2 id=&quot;here-39-s-how-it-works&quot;&gt;Here&amp;#39;s how it works&lt;/h2&gt;
+&lt;h2 id=&quot;heres-how-it-works&quot;&gt;Here&amp;#39;s how it works&lt;/h2&gt;
 
 &lt;p&gt;You start with an active region:&lt;/p&gt;
 
@@ -14681,7 +14696,7 @@ in this case.&lt;/li&gt;
 &lt;pre&gt;
 &lt;span class=&quot;diff-context&quot;&gt;&lt;span class=&quot;region&quot;&gt;     (let* ((source (helm-get-current-source))
             (kmap (and (listp source) ; Check if source is empty.
-                       (assoc-default 'keymap source))))
+                       (assoc-default &#39;keymap source))))
 &lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;diff-indicator-removed&quot;&gt;&lt;span class=&quot;region&quot;&gt;-&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;diff-removed&quot;&gt;&lt;span class=&quot;region&quot;&gt;      (when kmap (setq overriding-local-map kmap)))))
 &lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;diff-indicator-added&quot;&gt;&lt;span class=&quot;region&quot;&gt;+&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;diff-added&quot;&gt;&lt;span class=&quot;region&quot;&gt;      (when kmap (set-transient-map kmap)))))&lt;/span&gt;&lt;/span&gt;&lt;/pre&gt;
 
@@ -16102,7 +16117,7 @@ be used as a library. Luckily the change went smoothly, as there are
 no complaints in the github issues so far.  In case you don&amp;#39;t know
 what the package does in the first place, a short blurb follows.&lt;/p&gt;
 
-&lt;h2 id=&quot;ace-window-39-s-quot-what-and-why-quot&quot;&gt;&lt;code&gt;ace-window&lt;/code&gt;&amp;#39;s &amp;quot;what and why&amp;quot;&lt;/h2&gt;
+&lt;h2 id=&quot;ace-windows-what-and-why&quot;&gt;&lt;code&gt;ace-window&lt;/code&gt;&amp;#39;s &amp;quot;what and why&amp;quot;&lt;/h2&gt;
 
 &lt;p&gt;I&amp;#39;m sure you&amp;#39;re aware of the &lt;code&gt;other-window&lt;/code&gt; command. While it&amp;#39;s great for
 two windows, it quickly loses its value when there are more windows:

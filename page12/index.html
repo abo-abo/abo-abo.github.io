@@ -285,6 +285,144 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/04/16/ivy-mode/">
+        Introducing ivy-mode
+      </a>
+    </h1>
+
+    <span class="post-date">16 Apr 2015</span>
+
+    <p>Today I&#39;d like to introduce a function that has completely replaced
+<code>ido-mode</code> for me: <code>ivy-mode</code>. It comes with the
+<a href="https://github.com/abo-abo/swiper">swiper</a> package, available both in
+<a href="http://melpa.org/#/swiper">MELPA</a> and
+<a href="https://elpa.gnu.org/packages/swiper.html">GNU ELPA</a>.
+The latter is a bit slower to update, so the version there can be a bit outdated sometimes.</p>
+
+<h2 id="the-quick-video-demo">The quick video demo</h2>
+
+<p>If you prefer listening and watching to reading, check out the video
+demo <a href="https://www.youtube.com/watch?v=VvnJQpTFVDc">here</a>.
+It repeats most of the stuff written down below.</p>
+
+<h2 id="generic-completion">Generic completion</h2>
+
+<p><code>ivy-mode</code> is simply a minor mode that changes
+<code>completing-read-function</code> to <code>ivy-completing-read</code> while it&#39;s active.
+This function is used in most of the places where Emacs requires
+completion, like:</p>
+
+<ul>
+<li><kbd>M-x</kbd> <code>execute-extended-command</code></li>
+<li><kbd>C-h f</kbd> <code>describe-function</code></li>
+<li><kbd>C-h v</kbd> <code>describe-variable</code></li>
+<li><code>package-install</code></li>
+<li><kbd>C-x b</kbd> <code>switch-to-buffer</code></li>
+<li><kbd>C-x C-f</kbd> <code>find-file</code></li>
+</ul>
+
+<p>So, while <code>ivy-mode</code> is on, all these functions and more will use ivy completion.</p>
+
+<h2 id="package-specific-completion">Package-specific completion</h2>
+
+<h3 id="org-mode">org-mode</h3>
+
+<p>With the most recent master version, <code>org-mode</code> will obey
+<code>completing-read-function</code>, so it should work by default.  If you try
+it for refiling to headings with similar names, you&#39;ll really notice
+how much better <code>ivy-mode</code> is at it. <code>helm-mode</code> also does well, if
+you don&#39;t mind the large window.</p>
+
+<h3 id="magit">magit</h3>
+
+<p>This setting is needed to use ivy completion:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">magit-completing-read-function</span> <span class="ss">&#39;ivy-completing-read</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="find-file-in-project">find-file-in-project</h3>
+
+<p><a href="https://github.com/technomancy/find-file-in-project">find-file-in-project</a>
+will use ivy by default if it&#39;s available.</p>
+
+<h3 id="projectile">projectile</h3>
+
+<p>You can set this to make it work:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">projectile-completion-system</span> <span class="ss">&#39;ivy</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="smex">smex</h3>
+
+<p>Yes, it&#39;s also possible, since today. Although you&#39;ll have to use my
+fork of <a href="https://github.com/abo-abo/smex">smex</a> if you want to try it.
+I&#39;ve sent a pull request, it&#39;s all backwards-compatible, so hopefully
+it&#39;ll get merged.</p>
+
+<p>The nice thing is that <code>smex</code> can take care of the sorting all by
+itself, since <code>ivy</code> doesn&#39;t do that yet.</p>
+
+<h3 id="my-packages">my packages</h3>
+
+<p><a href="https://github.com/abo-abo/lispy">lispy</a> and
+<a href="https://github.com/abo-abo/function-args">function-args</a> use <code>ivy</code> by
+default. You can also enable it for
+<a href="https://github.com/abo-abo/helm-make">helm-make</a>, for which the
+default is obviously <code>helm</code>.</p>
+
+<h2 id="file-name-completion">File name completion</h2>
+
+<p>When <code>ivy-mode</code> is on, <code>find-file</code> will also use it.  The completion
+is considerably different from all other cases, since it&#39;s done in
+stages, just like <code>ido-find-file</code> does it.</p>
+
+<p>The key bindings are:</p>
+
+<ul>
+<li><kbd>RET</kbd> will select the current candidate and finish.</li>
+<li><kbd>C-j</kbd> will try to continue the completion, i.e. if the
+current candidate is a directory, move to that directory. But if the
+current candidate is a file or <code>./</code>, then finish.</li>
+<li><kbd>/</kbd> will switch to completing the sub-directories of <code>/</code>,
+but if the candidate is a perfect match, it will act like
+<kbd>C-j</kbd>.</li>
+<li><kbd>~</kbd> will switch to completing the sub-directories of <code>~/</code>.</li>
+<li><kbd>C-n</kbd> and <kbd>C-p</kbd> naturally select the next and the previous candidate.</li>
+</ul>
+
+<h2 id="whats-it-all-for">What&#39;s it all for?</h2>
+
+<p>Well, for me the advantage is obvious: I get my completion just the
+way I like it.  You can use it as well if you find that you like it
+more than ido.  I&#39;ll just list a list of features that I like:</p>
+
+<ul>
+<li>The current number of candidates is robustly displayed and updated after each key stroke.</li>
+<li>The minibuffer is an actual editing area, where the bindings like
+<kbd>C-a</kbd>, <kbd>M-DEL</kbd> and <kbd>C-k</kbd> etc. work just as
+you expect. Once you internalize the way that the regex is built, you
+can get your match very quickly and intuitively.</li>
+<li>The actual regular expressions constructs like <code>\\b</code> or <code>$</code> and <code>^</code> work. The only thing that works differently
+is the space: you can&#39;t match a single space because any amount of spaces translates into the <code>.*</code> wild card.
+But you can use it to your advantage and use the space instead of all the various symbol joining constructs out there, like
+<code>snake_case</code>, or <code>kebab-case</code> (yeah, it&#39;s totally called that, check the wiki), or <code>whatever/this/is/case</code>.</li>
+<li>The familiar <kbd>M-&lt;</kbd> and <kbd>M-&gt;</kbd> key bindings also work as expected, navigating you to the first and last candidate respectively.
+When you press <kbd>C-p</kbd> on the first match or <kbd>C-n</kbd> on the last match, the match will not change, unlike the behavior
+of <code>ido</code> that has annoyed me a lot.</li>
+<li>The minibuffer key bindings can actually be properly customized:
+just set <code>ivy-minibuffer-map</code> to whatever you like, it won&#39;t be
+changed. Even in Emacs 24.5, if you customize <code>ido-completion-map</code>,
+the change will be reset.  That was fixed only in the current master.</li>
+<li>You don&#39;t have to rely on <code>flx</code> or <code>flx-ido</code> to save you from the overwhelming number of matches.
+Instead, you type maybe a bit more, but in return you get a <em>very consistent</em> and predictable result.
+No black boxes or hidden variables that dramatically change the order of candidates from time to time.</li>
+</ul>
+
+<h2 id="outro">Outro</h2>
+
+<p>Check it out, I hope you like it. And a big thanks to all who
+contributed code or bug reports.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/04/15/hydra-idle-hint/">
         Display the initial Hydra hint with a delay
       </a>
@@ -528,7 +666,7 @@ red and a blue head.</p>
 <p>The latter two call <code>hydra-zoom/lambda-0-and-exit</code>, while <kbd>r</kbd>
 calls <code>hydra-zoom/lambda-r</code>.</p>
 
-<h3 id="don-39-t-default-hydra-repeast-prefix-arg-to-1">Don&#39;t default <code>hydra-repeast--prefix-arg</code> to 1</h3>
+<h3 id="dont-default-hydra-repeast-prefix-arg-to-1">Don&#39;t default <code>hydra-repeast--prefix-arg</code> to 1</h3>
 
 <p>See <a href="https://github.com/abo-abo/hydra/issues/61">#61</a> for more info.</p>
 
@@ -767,214 +905,6 @@ that I&#39;m still using are <code>ido-switch-buffer</code> and <code>ido-find-f
 <p>Also, if you&#39;re using <code>projectile</code>, you can use <code>ivy</code> completion for it:</p>
 <div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">projectile-completion-system</span> <span class="ss">&#39;ivy</span><span class="p">)</span>
 </code></pre></div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/04/06/lispy-multiline/">
-        Rule-based multi-line in lispy
-      </a>
-    </h1>
-
-    <span class="post-date">06 Apr 2015</span>
-
-    <h2 id="where-do-one-line-expressions-come-from">Where do one-line expressions come from?</h2>
-
-<p>When programming LISP, especially with <a href="https://github.com/abo-abo/lispy">lispy</a>, it&#39;s easy to
-generate random one-line expressions. This is, of course, because the results of <code>read</code> or <code>eval</code>
-don&#39;t contain any whitespace information: all original newlines are lost.</p>
-
-<p>Just to review the multitude of ways to insert generated code into a buffer using <code>lispy</code> I&#39;ll list
-the shortcuts and the test-based explanations (at around 2000 lines of tests and 54% test coverage,
-<code>lispy</code> is pretty well tested).</p>
-
-<h3 id="eval-and-insert">eval-and-insert</h3>
-
-<p><kbd>E</kbd> calls <code>lispy-eval-and-insert</code>.</p>
-
-<p><img src="/download/lispy-test-eval-and-insert.png" alt="lispy-test-eval-and-insert.png"></p>
-
-<p>The image above is generated using the interactive test visualizer <code>lispy-view-test</code>, bound to
-<kbd>xv</kbd>. If you want to explore how a certain command is intended to behave, just find the
-corresponding test (with the same name as the command) and call <kbd>xv</kbd>.</p>
-
-<h3 id="eval-and-replace">eval-and-replace</h3>
-
-<p><kbd>xr</kbd> calls <code>lispy-eval-and-replace</code>.  This function evaluates the current expression and
-replaces it with the result.</p>
-
-<p><img src="/download/lispy-test-eval-and-replace.png" alt="lispy-test-eval-and-replace.png"></p>
-
-<p>The sequence of actions in the test:</p>
-
-<ul>
-<li><kbd>e</kbd> calls <code>lispy-eval</code> to set <code>foo</code> to <code>42</code>.</li>
-<li><kbd>j</kbd> calls <code>lispy-down</code> to move to the next sexp.</li>
-<li><kbd>xr</kbd> calls <code>lispy-eval-and-replace</code>.</li>
-</ul>
-
-<p>Ideally, there should have been <code>&quot;xr&quot;</code> instead of <code>(lispy-eval-and-replace)</code> in the test, but
-there&#39;s a small wrinkle in the <code>lispy-with</code> macro that needs to be fixed before that can happen.</p>
-
-<h3 id="flatten">flatten</h3>
-
-<p><kbd>xf</kbd> calls <code>lispy-flatten</code>. This function expands in-place the current function or macro
-call.</p>
-
-<p><img src="/download/lispy-test-flatten.png" alt="lispy-test-flatten.png"></p>
-
-<p>In this test, the misleadingly named function <code>square</code> is evaluated and flattened, to see if the
-<code>&amp;optional</code> and <code>&amp;rest</code> argument passing rules indeed work.</p>
-
-<p>The flatten operation works really well for Elisp and quite well for Clojure.  The CL implementation
-would need to heavily rely on SLIME features (currently absent), since the CL spec doesn&#39;t define an
-equivalent of Elisp&#39;s <code>symbol-function</code>. The same applies to Scheme, I guess.</p>
-
-<h3 id="oneline">oneline</h3>
-
-<p><kbd>O</kbd> calls <code>lispy-oneline</code>. It&#39;s not eval-based, it just deletes the newlines.
-If there are any comments present, they are pushed out.</p>
-
-<p><img src="/download/lispy-test-oneline.png" alt="lispy-test-oneline.png"></p>
-
-<h2 id="lispy-alt-multiline-demo-1"><code>lispy-alt-multiline</code> Demo 1</h2>
-
-<p>In the following image, I just press <kbd>T</kbd> once, starting from an unchanged buffer:</p>
-
-<p><img src="/download/lispy-alt-multiline-1.gif" alt="lispy-alt-multiline-1.gif"></p>
-
-<h2 id="lispy-alt-multiline-demo-2"><code>lispy-alt-multiline</code> Demo 2</h2>
-
-<h3 id="flatten-push">Flatten <code>push</code></h3>
-
-<p>Start from this code (the cursor is in the CSS, if you don&#39;t see it):</p>
-
-<div class="highlight"><pre><code class="language-elisp"
-data-lang="elisp"><span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">res</span><span class="p">)</span>
-  <span class="p">(</span><span class="nb">dotimes</span> <span class="p">(</span><span class="nv">i</span> <span class="mi">10</span><span class="p">)</span>
-    <span class="p"><cursor>(</cursor></span><span class="nb">push</span> <span class="nv">i</span> <span class="nv">res</span><span class="p">))</span>
-  <span class="p">(</span><span class="nf">nreverse</span> <span class="nv">res</span><span class="p">))</span>
-</code></pre></div>
-
-<p>After <kbd>xf</kbd> it becomes:</p>
-
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">res</span><span class="p">)</span>
-  <span class="p">(</span><span class="nb">dotimes</span> <span class="p">(</span><span class="nv">i</span> <span class="mi">10</span><span class="p">)</span>
-    <span class="p"><cursor>(</cursor></span><span class="k">setq</span> <span class="nv">res</span>
-          <span class="p">(</span><span class="nf">cons</span> <span class="nv">i</span> <span class="nv">res</span><span class="p">)))</span>
-  <span class="p">(</span><span class="nf">nreverse</span> <span class="nv">res</span><span class="p">))</span>
-</code></pre></div>
-
-<p>Since <code>push</code> is a macro, <code>macroexpand</code> is used. And since <code>macroexpand</code> doesn&#39;t give newline
-information, <code>pp-to-string</code> is used, and it gives a reasonable result.</p>
-
-<h3 id="flatten-dotimes">Flatten <code>dotimes</code></h3>
-
-<p>Start with the same code, but with cursor on <code>dotimes</code> this time:</p>
-
-<div class="highlight"><pre><code class="language-elisp"
-data-lang="elisp"><span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">res</span><span class="p">)</span>
-  <span class="p"><cursor>(</cursor></span><span class="nb">dotimes</span> <span class="p">(</span><span class="nv">i</span> <span class="mi">10</span><span class="p">)</span>
-    <span class="p">(</span><span class="nb">push</span> <span class="nv">i</span> <span class="nv">res</span><span class="p">))</span>
-  <span class="p">(</span><span class="nf">nreverse</span> <span class="nv">res</span><span class="p">))</span>
-</code></pre></div>
-
-<p>After <kbd>xf</kbd> it becomes:</p>
-
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">res</span><span class="p">)</span>
-  <span class="p"><cursor>(</cursor></span><span class="nv">cl--block-wrapper</span>
-   <span class="p">(</span><span class="k">catch</span> <span class="ss">&#39;--cl-block-nil--</span>
-     <span class="p">(</span><span class="k">let</span>
-         <span class="p">((</span><span class="nv">--dotimes-limit--</span> <span class="mi">10</span><span class="p">)</span>
-          <span class="p">(</span><span class="nv">i</span> <span class="mi">0</span><span class="p">))</span>
-       <span class="p">(</span><span class="k">while</span>
-           <span class="p">(</span><span class="nf">&lt;</span> <span class="nv">i</span> <span class="nv">--dotimes-limit--</span><span class="p">)</span>
-         <span class="p">(</span><span class="k">setq</span> <span class="nv">res</span>
-               <span class="p">(</span><span class="nf">cons</span> <span class="nv">i</span> <span class="nv">res</span><span class="p">))</span>
-         <span class="p">(</span><span class="k">setq</span> <span class="nv">i</span>
-               <span class="p">(</span><span class="nf">1+</span> <span class="nv">i</span><span class="p">))))))</span>
-  <span class="p">(</span><span class="nf">nreverse</span> <span class="nv">res</span><span class="p">))</span>
-</code></pre></div>
-
-<p>This time <code>pp-to-string</code> isn&#39;t as good: <code>let</code> and <code>while</code> statements are messed up.
-Follow this up with <kbd>T</kbd> which calls <code>lispy-alt-multiline</code>:</p>
-
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">res</span><span class="p">)</span>
-  <span class="p"><cursor>(</cursor></span><span class="nv">cl--block-wrapper</span>
-   <span class="p">(</span><span class="k">catch</span> <span class="ss">&#39;--cl-block-nil--</span>
-     <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">--dotimes-limit--</span> <span class="mi">10</span><span class="p">)</span>
-           <span class="p">(</span><span class="nv">i</span> <span class="mi">0</span><span class="p">))</span>
-       <span class="p">(</span><span class="k">while</span> <span class="p">(</span><span class="nf">&lt;</span> <span class="nv">i</span>
-                 <span class="nv">--dotimes-limit--</span><span class="p">)</span>
-         <span class="p">(</span><span class="k">setq</span> <span class="nv">res</span>
-               <span class="p">(</span><span class="nf">cons</span> <span class="nv">i</span>
-                     <span class="nv">res</span><span class="p">))</span>
-         <span class="p">(</span><span class="k">setq</span> <span class="nv">i</span>
-               <span class="p">(</span><span class="nf">1+</span>
-                <span class="nv">i</span><span class="p">))))))</span>
-  <span class="p">(</span><span class="nf">nreverse</span> <span class="nv">res</span><span class="p">))</span>
-</code></pre></div>
-
-<p>Well, at least some parts look better. It could be make perfect by adding a sort of threshold when
-printing each sub-expression. It&#39;s less than, say <code>15</code> chars, which <code>(setq i (1+ i))</code> is, no
-newlines should be added. I&#39;ll add this a bit later.</p>
-
-<h2 id="more-on-lispy-alt-multiline">More on <code>lispy-alt-multiline</code></h2>
-
-<p><code>lispy-alt-multiline</code> can be used on a LISP expression to re-format it across multiple lines.  It
-doesn&#39;t matter in which shape the expression currently is, since all current newlines will be removed
-before the algorithm starts.</p>
-
-<p>This has to be done with some rules, since a one-line expression can transform to multiple viable
-multi-line forms. So far, these rules are implemented by customizing these variables:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">defvar</span> <span class="nv">lispy--multiline-take-3</span>
-  <span class="o">&#39;</span><span class="p">(</span><span class="k">defvar</span> <span class="nb">defun</span> <span class="nb">defmacro</span> <span class="nb">defcustom</span> <span class="nb">defgroup</span><span class="p">)</span>
-  <span class="s">&quot;List of constructs for which the first 3 elements are on the first line.&quot;</span><span class="p">)</span>
-
-<span class="p">(</span><span class="k">defvar</span> <span class="nv">lispy--multiline-take-2</span> <span class="o">&#39;</span><span class="p">(</span><span class="nb">defface</span> <span class="nb">define-minor-mode</span>
-  <span class="k">condition-case</span> <span class="k">while</span> <span class="nb">incf</span> <span class="nf">car</span> <span class="nf">cdr</span> <span class="nf">&gt;</span> <span class="nf">&gt;=</span> <span class="nf">&lt;</span> <span class="nf">&lt;=</span> <span class="nf">eq</span> <span class="nf">equal</span> <span class="nb">incf</span> <span class="nb">decf</span>
-  <span class="nb">cl-incf</span> <span class="nb">cl-decf</span> <span class="k">catch</span> <span class="nb">require</span> <span class="nb">provide</span> <span class="k">setq</span> <span class="nf">cons</span> <span class="nb">when</span> <span class="k">if</span> <span class="nb">unless</span> <span class="k">interactive</span><span class="p">)</span>
-  <span class="s">&quot;List of constructs for which the first 2 elements are on the first line.&quot;</span><span class="p">)</span>
-</code></pre></div>
-<p>The name suggests that there should be <code>lispy-multiline</code>, and there is, bound to <kbd>M</kbd>.  The
-difference between <kbd>M</kbd> and <kbd>T</kbd> is that <kbd>M</kbd> is older and ad-hoc, while
-<kbd>T</kbd> is newer and rule-based. This means that the latter can misbehave, since it&#39;s not yet
-fully tested. However, it has the following built-in check to make sure that it doesn&#39;t mess up your
-code:</p>
-
-<blockquote>
-<p>The <code>read</code> of the expression before transformation should be <code>equal</code> to the <code>read</code> of the
-transformed expression.</p>
-</blockquote>
-
-<p>If the above check fails, no change will be performed on the source code. So your code should be
-pretty safe. One more cool thing that I want to add to other operations is that it checks if the
-buffer will be changed after the transformation. If there will be no change, it will just issue a
-<code>&quot;No change&quot;</code> message, and no change will be performed. This is really cool if you obsess about the
-buffer changed marker in the mode line like I do.</p>
-
-<h2 id="outro">Outro</h2>
-
-<p>The functions bound to <kbd>O</kbd>, <kbd>M</kbd>, and <kbd>T</kbd> apply to the current expression.
-To be really sure which one, turn on <code>show-paren-mode</code>.  You can also call these functions not from
-special, although it&#39;s not very convenient. The typical strategy in that case would be to bind all
-of them on a prefix map, e.g. <kbd>C-c</kbd>.
-How is it different from <a href="https://github.com/abo-abo/lispy#how-to-get-into-list-editing-mode-special">special</a> then?</p>
-
-<blockquote>
-<p>Instead of typing <kbd>[T</kbd> you would type <kbd>C-c T</kbd>.</p>
-</blockquote>
-
-<p>But the advantage of the special approach is that <kbd>[</kbd>
-actually does something (moves point to the start of the current list),
-instead of just being a useless part of a key combination like <kbd>C-c</kbd>.
-And if you&#39;re in special already, there&#39;s no need for <kbd>[</kbd>.</p>
-
-<p>I hope that you enjoy the new update. If it&#39;s needed, variables like <code>lispy--multiline-take-3</code> can
-be made buffer-local so that <kbd>T</kbd> works appropriately for Clojure, CL and Scheme, instead of
-just Elisp. If you&#39;d like to add support for your favorite dialect in this way, I&#39;d be happy to
-explain some details if needed and to merge the PR. Happy hacking!</p>
-
   </div>
   
 </div>

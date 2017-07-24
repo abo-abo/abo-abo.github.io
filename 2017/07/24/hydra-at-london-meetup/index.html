@@ -10,12 +10,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
   <title>
-    
-      Wrap a region with a LaTeX environment &middot; (or emacs
-    
+
+      hydra.el talk @ london.el &middot; (or emacs
+
   </title>
 
-  <link rel="canonical" href="https://oremacs.com/2015/01/02/wrap-with-latex/" />
+  <link rel="canonical" href="https://oremacs.com/2017/07/24/hydra-at-london-meetup/" />
 
   <!-- CSS -->
   <link rel="stylesheet" href="/public/css/poole.css">
@@ -52,156 +52,156 @@
   <nav class="sidebar-nav">
     <a class="sidebar-nav-item" href="/">Home</a>
 
-    
 
-    
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
+
+
+
+
+
+
+
+
+
+
+
+
+
           <a class="sidebar-nav-item" href="/about/">About</a>
-        
-      
-    
-      
-        
+
+
+
+
+
           <a class="sidebar-nav-item" href="/archive/">Archive</a>
-        
-      
-    
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -282,71 +282,15 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Wrap a region with a LaTeX environment</h1>
-  <span class="post-date">02 Jan 2015</span>
-  <p>Prompted by <a href="http://stackoverflow.com/questions/27736102/wrap-text-around-a-selection-in-emacs">this StackOverflow question</a>,
-I wrote down a new package called <a href="https://github.com/abo-abo/latex-wrap">latex-wrap</a>.
-It&#39;s only a few hours old, but I like it a lot.
-I&#39;ve grepped the sources of AUCTeX, and it doesn&#39;t seem to have this functionality.</p>
+  <h1 class="post-title">hydra.el talk @ london.el</h1>
+  <span class="post-date">24 Jul 2017</span>
+  <p>Today I gave a talk on <a href="https://github.com/abo-abo/hydra">hydra</a> at the London Emacs meet up -
+<a href="https://www.meetup.com/London-Emacs-Hacking/events/241399003/">london.el</a>.
+My screen capture is available on <a href="https://youtu.be/ONHEDj3kWrE">youtube</a>,
+and the slides are <a href="https://oremacs.com/download/london.pdf">here</a>.</p>
 
-<h2 id="heres-how-it-works">Here&#39;s how it works</h2>
-
-<p>You start with an active region:</p>
-
-<pre><code><region>Homer
-Marge
-Bart
-Lisa
-Maggie<cursor> </cursor>
-</region></code></pre>
-
-<p>After calling <kbd>M-x</kbd> <code>latex-wrap-region</code> and selecting
-<em>enumerate</em> from the list of environments (others being <em>itemize</em>,
-<em>center</em> etc.), you get this:</p>
-
-<div class="highlight"><pre><code class="language-latex" data-lang="latex"><span class="k">\begin</span><span class="nb">{</span>enumerate<span class="nb">}</span>
-<span class="k">\item</span> Homer
-<span class="k">\item</span> Marge
-<span class="k">\item</span> Bart
-<span class="k">\item</span> Lisa
-<span class="k">\item</span> Maggie<cursor> </cursor>
-<span class="k">\end</span><span class="nb">{</span>enumerate<span class="nb">}</span>
-</code></pre></div>
-
-<p>Let&#39;s mark everything, <kbd>M-x</kbd> <code>latex-wrap-region</code>, and select
-<em>center</em>:</p>
-
-<div class="highlight"><pre><code class="language-latex" data-lang="latex"><span class="k">\begin</span><span class="nb">{</span>center<span class="nb">}</span>
-  <span class="k">\begin</span><span class="nb">{</span>enumerate<span class="nb">}</span>
-  <span class="k">\item</span> Homer
-  <span class="k">\item</span> Marge
-  <span class="k">\item</span> Bart
-  <span class="k">\item</span> Lisa
-  <span class="k">\item</span> Maggie
-  <span class="k">\end</span><span class="nb">{</span>enumerate<span class="nb">}</span><cursor> </cursor>
-<span class="k">\end</span><span class="nb">{</span>center<span class="nb">}</span>
-</code></pre></div>
-
-<p>As you can see, I want to make sure that it&#39;s possible to conveniently
-continue by always placing the point on the end of the last line of
-the inserted environment.</p>
-
-<h2 id="how-it-works-with-no-active-region">How it works with no active region</h2>
-
-<p>If <code>(looking-back &quot;^ *&quot;)</code> is true, the current line is used as if it was
-the region.  Otherwise, an empty environment is inserted after the
-current line.</p>
-
-<h2 id="using-the-code">Using the code</h2>
-
-<p>If you like the idea, you can check out the code at
-<a href="https://github.com/abo-abo/latex-wrap">github</a> and test it out.  If
-you know of another package that already does this, do let me know,
-otherwise I&#39;ll post the package on MELPA soon.  And if you have some
-ideas, or want to add a few environments that I forgot to mention to
-the list, just post
-<a href="https://github.com/abo-abo/latex-wrap/issues">an issue</a>, I don&#39;t
-bite.</p>
+<p>Thanks to <a href="https://twitter.com/dotemacs">@dotemacs</a> for organizing the
+event and inviting me.</p>
 
 </div>
 
