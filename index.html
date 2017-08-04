@@ -202,6 +202,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -282,6 +286,79 @@
 
       <div class="container content">
         <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/2017/08/04/ripgrep/">
+        Ripgrep
+      </a>
+    </h1>
+
+    <span class="post-date">04 Aug 2017</span>
+
+    <h2 id="counsel-rg">counsel-rg</h2>
+
+<p>Lately, due to working with a large code base, I&#39;ve grown more and
+more fond of <code>counsel-rg</code>.  It&#39;s an Elisp wrapper
+around <a href="https://github.com/BurntSushi/ripgrep">ripgrep</a> - a relatively
+new recursive grep tool that aims to be faster than the competition
+(<code>ag</code>, <code>git grep</code>, <code>pt</code>, <code>ack</code> etc).</p>
+
+<p>Besides being really fast, <code>rg</code> also has some really
+nice
+<a href="https://github.com/BurntSushi/ripgrep/blob/master/doc/rg.1.md">command switches</a>.
+One such switch is especially useful for Emacs:</p>
+
+<blockquote>
+<p>-M, --max-columns NUM
+: Don&#39;t print lines longer than this limit in bytes. Longer lines are omitted,
+ and only the number of matches in that line is printed.</p>
+</blockquote>
+
+<p>The <code>-M</code> switch is useful twofold:</p>
+
+<ul>
+<li>Emacs is slow when dealing long lines (by long I mean thousands of chars per line)</li>
+<li>Emacs is slow at accepting a huge amount of output from a process</li>
+</ul>
+
+<p>For each character you add to your input, <code>counsel-rg</code> starts a new
+shell command to recalculate the matches with the new input. This
+means that in order to avoid keyboard lag there&#39;s only about 0.1
+seconds available for both:</p>
+
+<ol>
+<li>Running the shell command.</li>
+<li>Accepting output from the shell command.</li>
+</ol>
+
+<p>So I&#39;m quite happy that <code>rg</code> speeds up both steps. Less time spent on
+these steps provides for much smoother searching.</p>
+
+<h2 id="counsel-grep-or-swiper">counsel-grep-or-swiper</h2>
+
+<p>I also work with large log files, one file at a time. For a long time,
+I&#39;ve used <code>counsel-grep-or-swiper</code> as my main search command:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-s&quot;</span><span class="p">)</span> <span class="ss">&#39;counsel-grep-or-swiper</span><span class="p">)</span>
+</code></pre></div>
+<p>But for a 40Mb log file with really long lines
+<code>counsel-grep-or-swiper</code> started to lag a bit. I tried <code>counsel-rg</code>,
+and it was actually faster than <code>grep</code>, although it was searching the
+whole directory. So I thought, why not use <code>rg</code> instead of <code>grep</code>? The
+switch is actually really easy and required only a simple user
+customization:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">counsel-grep-base-command</span>
+ <span class="s">&quot;rg -i -M 120 --no-heading --line-number --color never &#39;%s&#39; %s&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="outro">Outro</h2>
+
+<p>If you haven&#39;t tried <code>ripgrep</code> so far, I suggest you give it a go. Happy hacking!</p>
+
+<p>And if you&#39;re a C hacker and have some free time on your hands, why
+not look at the long lines and the process output issues in Emacs? I&#39;d
+be very grateful:)</p>
+
+  </div>
   
   <div class="post">
     <h1 class="post-title">
@@ -730,244 +807,6 @@ order by looking at the files&#39; last change times.</p></li>
 </ol>
 
 <p>That&#39;s about it. Hopefully, it&#39;s useful. Happy hacking.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2017/02/25/warp-9-make-it-so/">
-        Make it so&#58 file1 -> Makefile -> file2
-      </a>
-    </h1>
-
-    <span class="post-date">25 Feb 2017</span>
-
-    <h2 id="intro">Intro</h2>
-
-<p><a href="https://github.com/abo-abo/make-it-so">make-it-so</a> is an old package
-of mine that I haven&#39;t yet highlighted on the blog. This package helps
-you manage a collection of makefiles that are used to generate new
-files from existing files using shell commands.</p>
-
-<p>You can think of these makefiles as a directory of shell functions,
-arranged by the extension of the files that they operate on:</p>
-<div class="highlight"><pre><code class="language-shell" data-lang="shell"><span></span>$ <span class="nb">cd</span> make-it-so <span class="o">&amp;&amp;</span> find recipes -name Makefile
-recipes/ipynb/to-md/Makefile
-recipes/ogv/crop/Makefile
-recipes/ogv/trim/Makefile
-recipes/ogv/to-gif/Makefile
-recipes/pdf/to-txt/Makefile
-recipes/md/to-org/Makefile
-recipes/md/to-html/Makefile
-recipes/cue/split/Makefile
-recipes/dot/to-png/Makefile
-recipes/m4a/to-mp3/Makefile
-recipes/flac/to-mp3/Makefile
-recipes/gif/gifsicle/Makefile
-recipes/svg/to-png/Makefile
-recipes/chm/to-pdf/Makefile
-recipes/txt/encode-utf8/Makefile
-recipes/mp4/to-mp3/Makefile
-recipes/mp4/trim/Makefile
-recipes/mp4/replace-audio/Makefile
-recipes/png/to-gif/Makefile
-</code></pre></div>
-<p>When you call <code>make-it-so</code> on a particular file, you get completion
-for the recipes that are available for that file extension, along with
-an option to create a new recipe.</p>
-
-<h2 id="example-1-convert-pdf-to-txt">Example 1: convert <code>pdf</code> to <code>txt</code></h2>
-
-<p>Suppose you want to convert a PDF file <code>test.pdf</code> to a text file <code>test.txt</code>.</p>
-
-<p>In case the recipe is in your collection, you don&#39;t have to remember
-the command or the command switches to do it anymore:</p>
-
-<ol>
-<li>Navigate to <code>test.pdf</code> in <code>dired</code> and press <kbd>,</kbd> (bound to <code>make-it-so</code>).</li>
-<li>Select the recipe you want using completion: <code>to-txt</code> is already provided.</li>
-<li><p>Your file and the makefile recipe are moved to the staging area:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>./to-txt_test.pdf/test.pdf
-./to-txt_test.pdf/Makefile
-</code></pre></div></li>
-<li><p>The makefile is opened in a new buffer with the following bindings:</p>
-
-<ul>
-<li><kbd>f5</kbd> (<code>mis-save-and-compile</code>) will run <code>compile</code>,
-creating <code>test.txt</code> in the current directory.</li>
-<li><kbd>C-,</kbd> (<code>mis-finalize</code>) will finalize the operation,
-moving <code>test.pdf</code> and <code>test.txt</code> to the parent directory (where
-<code>test.pdf</code> was before), and deleting the staging directory.</li>
-<li><kbd>C-M-,</kbd> (<code>mis-abort</code>) will move <code>test.pdf</code> back to its
-initial location and delete all generated files. This command is
-effectively an <code>undo</code> for <code>make-it-so</code>.</li>
-</ul></li>
-</ol>
-
-<p>It takes a large chunk of text to describe everything, but the key sequence for doing all this is quite short:</p>
-
-<ol>
-<li><kbd>,</kbd> - <code>make-it-so</code>.</li>
-<li><kbd>RET</kbd> - select <code>to-txt</code>.</li>
-<li><kbd>f5</kbd> - create <code>test.txt</code>.</li>
-<li><kbd>C-,</kbd> - finalize.</li>
-</ol>
-
-<h2 id="example-2-make-a-gif-from-a-series-of-png-images">Example 2: make a gif from a series of png images</h2>
-
-<p>I&#39;ll describe the process of creating a high quality gif like this
-one, which describes the effect of the <kbd>C</kbd> key
-in <a href="https://github.com/abo-abo/lispy">lispy</a>:</p>
-
-<p><img src="/download/lispy-convolute.gif" alt="lispy-convolute"></p>
-
-<p>First, I use <a href="https://launchpad.net/kazam">kazam</a> to take two <code>png</code>
-screenshots of my Emacs screen:</p>
-<div class="highlight"><pre><code class="language-shell" data-lang="shell"><span></span>$ ls -1 *.png
-Screenshot <span class="m">2017</span>-02-25 <span class="m">16</span>:14:49.png
-Screenshot <span class="m">2017</span>-02-25 <span class="m">16</span>:15:10.png
-</code></pre></div>
-<p>I plan to use <a href="https://www.lcdf.org/gifsicle/">gifsicle</a> to sequence
-the still images into a gif. But it only takes <code>gif</code> as the input
-format, so first I have to convert my <code>png</code> files to non-animated
-<code>gif</code> files.</p>
-
-<p>I open the <code>dired</code> buffer where they are located and mark them with
-<kbd>m</kbd> (<code>dired-mark</code>). Then call <code>make-it-so</code> with <kbd>,</kbd>
-and select <code>to-gif</code> recipe.  This recipe has no parameters, so there&#39;s
-nothing else to do but <kbd>f5 C-,</kbd>. Two new files are created:</p>
-<div class="highlight"><pre><code class="language-shell" data-lang="shell"><span></span>$ ls -1 *.png *.gif
-Screenshot_2017-02-25 <span class="m">16</span>:14:49.gif
-Screenshot_2017-02-25 <span class="m">16</span>:14:49.png
-Screenshot_2017-02-25 <span class="m">16</span>:15:10.gif
-Screenshot_2017-02-25 <span class="m">16</span>:15:10.png
-</code></pre></div>
-<p>Note that the file names (the defaults of <code>kazam</code>) are problematic
-when used with makefiles, since they contain spaces and colons. The
-Elisp layer of <code>make-it-so</code> takes care of that. It renames the files
-back and forth so that the logic in the makefiles remains simple.</p>
-
-<p>Next, I mark the two <code>gif</code> files using <kbd>*%</kbd>
-(<code>dired-mark-files-regexp</code>), press <kbd>,</kbd> once more and select
-the <code>gifsicle</code> recipe. I&#39;m presented a makefile with the following
-contents:</p>
-<div class="highlight"><pre><code class="language-Makefile" data-lang="Makefile"><span></span><span class="c"># ——— parameters —————————————————————————————————</span>
-
-<span class="c"># delay between frames in hundredths of a second</span>
-<span class="nv">delay</span> <span class="o">=</span> <span class="m">60</span>
-
-<span class="c"># ——— implementation —————————————————————————————</span>
-<span class="nv">DIRGIF</span> <span class="o">=</span> <span class="k">$(</span>shell ls *.gif <span class="p">|</span> grep -v anime.gif<span class="k">)</span>
-
-<span class="nf">all</span><span class="o">:</span> <span class="n">anime</span>.<span class="n">gif</span>
-
-<span class="nf">anime.gif</span><span class="o">:</span> <span class="n">Makefile</span> <span class="k">$(</span><span class="nv">DIRGIF</span><span class="k">)</span>
-    rm -f anime.gif
-    gifsicle --delay<span class="o">=</span><span class="k">$(</span>delay<span class="k">)</span> --colors<span class="o">=</span><span class="m">256</span> --loop <span class="k">$(</span>DIRGIF<span class="k">)</span> &gt; <span class="nv">$@</span>
-    <span class="nb">echo</span> <span class="nv">$@</span> &gt;&gt; provide
-
-<span class="nf">clean</span><span class="o">:</span>
-    rm -f anime.gif provide
-
-<span class="nf">install-tools</span><span class="o">:</span>
-    sudo apt-get install gifsicle
-
-<span class="nf">.PHONY</span><span class="o">:</span> <span class="n">all</span> <span class="n">install</span>-<span class="n">tools</span> <span class="n">clean</span>
-</code></pre></div>
-<p>The most commonly useful parameter, the delay between frames, is
-nicely documented at the top. I don&#39;t have to remember that the switch
-name is <code>--delay</code> or that the switch style <code>--delay=60</code> is used. I
-simply change the number above until I get the result that I want.</p>
-
-<h2 id="example-3-add-a-new-recipe">Example 3: add a new recipe</h2>
-
-<p>As a sample scenario, assume you want to convert *.svg to *.png.</p>
-
-<h3 id="step-1">Step 1</h3>
-
-<p>An internet search leads to <a href="http://stackoverflow.com/questions/9853325/how-to-convert-a-svg-to-a-png-with-image-magick">Stack Overflow</a> and this command:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>inkscape -z -e test.png -w 1024 -h 1024 test.svg
-</code></pre></div>
-<p>Navigate to the file(s) in <code>dired</code> and call <code>make-it-so</code> with
-<kbd>,</kbd>.  No default actions are available, so just type &quot;to-png&quot;
-and hit <kbd>RET</kbd>.  The &quot;to-&quot; prefix signifies that this is a
-conversion, adapting the Makefile to this form:</p>
-<div class="highlight"><pre><code class="language-Makefile" data-lang="Makefile"><span></span><span class="c"># This is a template for the Makefile.</span>
-<span class="c"># Parameters should go in the upper half as:</span>
-<span class="c">#     width = 200</span>
-<span class="c"># and be referenced in the command as $(width)</span>
-
-<span class="c"># ____________________________________________</span>
-
-<span class="nv">DIRSVG</span> <span class="o">=</span> <span class="k">$(</span>shell dir *.svg<span class="k">)</span>
-
-<span class="nv">DIRPNG</span> <span class="o">=</span> <span class="k">$(</span>DIRSVG:.svg<span class="o">=</span>.png<span class="k">)</span>
-
-<span class="nf">all</span><span class="o">:</span> <span class="n">clean</span> <span class="n">Makefile</span> <span class="k">$(</span><span class="nv">DIRPNG</span><span class="k">)</span>
-
-<span class="nf">%.png</span><span class="o">:</span> %.<span class="n">svg</span>
-    <span class="nb">echo</span> <span class="s2">&quot;add command here&quot;</span>
-    <span class="nb">echo</span> <span class="nv">$@</span> &gt;&gt; provide
-
-<span class="nf">clean</span><span class="o">:</span>
-    rm -f *.png provide
-
-<span class="c"># Insert the install command here.</span>
-<span class="c"># e.g. sudo apt-get install ffmpeg</span>
-<span class="nf">install-tools</span><span class="o">:</span>
-    <span class="nb">echo</span> <span class="s2">&quot;No tools required&quot;</span>
-
-<span class="nf">.PHONY</span><span class="o">:</span> <span class="n">all</span> <span class="n">install</span>-<span class="n">tools</span> <span class="n">clean</span>
-</code></pre></div>
-<p>If the action name doesn&#39;t have a &quot;to-&quot; prefix, the transformation is
-assumed to be e.g. &quot;svg&quot; -&gt; &quot;out.svg&quot;. You can change this of course
-by editing the Makefile.</p>
-
-<h3 id="step-2">Step 2</h3>
-
-<p>In case the command needs additional packages in order to work you
-might want to change <code>echo &quot;No tools required&quot;</code> to the appropriate
-package install instruction, e.g. <code>sudo apt-get install inkscape</code>.</p>
-
-<p>When you&#39;re on a new system, this will serve as a reminder of what you
-should install in order for the Makefile to work. Simply call:</p>
-<div class="highlight"><pre><code class="language-shell" data-lang="shell"><span></span>make install-tools
-</code></pre></div>
-<h3 id="step-3">Step 3</h3>
-
-<p>Replace <code>echo &quot;add command here&quot;</code> with:</p>
-<div class="highlight"><pre><code class="language-Makefile" data-lang="Makefile"><span></span>    inkscape -z -e <span class="nv">$@</span> -w <span class="k">$(</span>width<span class="k">)</span> -h <span class="k">$(</span>height<span class="k">)</span> $^
-</code></pre></div>
-<ul>
-<li><p>The parameters <code>width</code> and <code>height</code> will go to the top of the
-Makefile, where they can be customized.</p></li>
-<li><p><code>$@</code> refers to the output file, <code>test.png</code> in this case.</p></li>
-<li><p><code>$^</code> refers to the input file, <code>test.svg</code> in this case.</p></li>
-</ul>
-
-<p>That&#39;s it. You can see the final
-Makefile <a href="https://raw.githubusercontent.com/abo-abo/make-it-so/master/recipes/svg/to-png/Makefile">here</a>.
-Test if the command works with <kbd>f5</kbd> from the Makefile.  If
-you&#39;re happy with it, call <code>mis-finalize</code> with <kbd>C-,</kbd> from
-<code>dired</code>.  The Makefile will be saved for all future calls to
-<code>make-it-so</code>.</p>
-
-<h2 id="outro">Outro</h2>
-
-<p>To summarize the advantages of <code>make-it-so</code>:</p>
-
-<ul>
-<li>Write the recipe <em>one time</em>, never have to look up how to do the
-same thing a few months from now.</li>
-<li>A chance to write the recipe <em>zero times</em>, if someone in the
-community has already done it and shared the recipe with you.</li>
-<li>The Elisp layer takes care of hairy file names.</li>
-<li>Parallel commands on multiple files, i.e. <code>make -j8</code>, are provided for free.</li>
-</ul>
-
-<p>The most important usage tip: until you&#39;re sure that the command and
-the Makefile work properly make backups. In fact, make backups period.
-Happy hacking!</p>
 
   </div>
   

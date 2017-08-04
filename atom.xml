@@ -4,13 +4,82 @@
  <title>(or emacs</title>
  <link href="https://oremacs.com/atom.xml" rel="self"/>
  <link href="https://oremacs.com/"/>
- <updated>2017-07-24T22:27:55+02:00</updated>
+ <updated>2017-08-04T20:24:56+02:00</updated>
  <id>https://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Ripgrep</title>
+   <link href="https://oremacs.com/2017/08/04/ripgrep/"/>
+   <updated>2017-08-04T00:00:00+02:00</updated>
+   <id>https://oremacs.com/2017/08/04/ripgrep</id>
+   <content type="html">&lt;h2 id=&quot;counsel-rg&quot;&gt;counsel-rg&lt;/h2&gt;
+
+&lt;p&gt;Lately, due to working with a large code base, I&amp;#39;ve grown more and
+more fond of &lt;code&gt;counsel-rg&lt;/code&gt;.  It&amp;#39;s an Elisp wrapper
+around &lt;a href=&quot;https://github.com/BurntSushi/ripgrep&quot;&gt;ripgrep&lt;/a&gt; - a relatively
+new recursive grep tool that aims to be faster than the competition
+(&lt;code&gt;ag&lt;/code&gt;, &lt;code&gt;git grep&lt;/code&gt;, &lt;code&gt;pt&lt;/code&gt;, &lt;code&gt;ack&lt;/code&gt; etc).&lt;/p&gt;
+
+&lt;p&gt;Besides being really fast, &lt;code&gt;rg&lt;/code&gt; also has some really
+nice
+&lt;a href=&quot;https://github.com/BurntSushi/ripgrep/blob/master/doc/rg.1.md&quot;&gt;command switches&lt;/a&gt;.
+One such switch is especially useful for Emacs:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;-M, --max-columns NUM
+: Don&amp;#39;t print lines longer than this limit in bytes. Longer lines are omitted,
+ and only the number of matches in that line is printed.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;The &lt;code&gt;-M&lt;/code&gt; switch is useful twofold:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Emacs is slow when dealing long lines (by long I mean thousands of chars per line)&lt;/li&gt;
+&lt;li&gt;Emacs is slow at accepting a huge amount of output from a process&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;For each character you add to your input, &lt;code&gt;counsel-rg&lt;/code&gt; starts a new
+shell command to recalculate the matches with the new input. This
+means that in order to avoid keyboard lag there&amp;#39;s only about 0.1
+seconds available for both:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Running the shell command.&lt;/li&gt;
+&lt;li&gt;Accepting output from the shell command.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;So I&amp;#39;m quite happy that &lt;code&gt;rg&lt;/code&gt; speeds up both steps. Less time spent on
+these steps provides for much smoother searching.&lt;/p&gt;
+
+&lt;h2 id=&quot;counsel-grep-or-swiper&quot;&gt;counsel-grep-or-swiper&lt;/h2&gt;
+
+&lt;p&gt;I also work with large log files, one file at a time. For a long time,
+I&amp;#39;ve used &lt;code&gt;counsel-grep-or-swiper&lt;/code&gt; as my main search command:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-s&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;counsel-grep-or-swiper&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;But for a 40Mb log file with really long lines
+&lt;code&gt;counsel-grep-or-swiper&lt;/code&gt; started to lag a bit. I tried &lt;code&gt;counsel-rg&lt;/code&gt;,
+and it was actually faster than &lt;code&gt;grep&lt;/code&gt;, although it was searching the
+whole directory. So I thought, why not use &lt;code&gt;rg&lt;/code&gt; instead of &lt;code&gt;grep&lt;/code&gt;? The
+switch is actually really easy and required only a simple user
+customization:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;counsel-grep-base-command&lt;/span&gt;
+ &lt;span class=&quot;s&quot;&gt;&amp;quot;rg -i -M 120 --no-heading --line-number --color never &amp;#39;%s&amp;#39; %s&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;If you haven&amp;#39;t tried &lt;code&gt;ripgrep&lt;/code&gt; so far, I suggest you give it a go. Happy hacking!&lt;/p&gt;
+
+&lt;p&gt;And if you&amp;#39;re a C hacker and have some free time on your hands, why
+not look at the long lines and the process output issues in Emacs? I&amp;#39;d
+be very grateful:)&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>hydra.el talk @ london.el</title>

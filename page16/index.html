@@ -202,6 +202,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -282,6 +286,162 @@
 
       <div class="container content">
         <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/2015/03/16/try-j/">
+        Try J
+      </a>
+    </h1>
+
+    <span class="post-date">16 Mar 2015</span>
+
+    <h2 id="intro">Intro</h2>
+
+<p>I imagine that if you&#39;re reading this blog, you like to tinker with Emacs.  And people who like to
+tinker with stuff probably also like to learn new programming languages, just for fun.  In that
+case, if you ever want to learn a non-mainstream language, I highly recommend J.</p>
+
+<p>From its homepage:</p>
+
+<blockquote>
+<p>J is a modern, high-level, general-purpose, high-performance programming language. J is portable
+and runs on Windows, Unix, Mac, both as a GUI and in a console. J systems can be installed and
+distributed for free.</p>
+</blockquote>
+
+<h2 id="the-appetizer">The Appetizer</h2>
+
+<p>Things J has going for it that are high on my list:</p>
+
+<ul>
+<li><a href="http://www.jsoftware.com/download/j701_b_source.tar.gz">GPL licensed source</a>
+(although it&#39;s gibberish to read)</li>
+<li>a REPL</li>
+<li>short code</li>
+<li>high performance</li>
+</ul>
+
+<p>What attracted me to J in the first place is that it consistently has the shortest solutions (and
+fast-running) on <a href="https://projecteuler.net/">Project Euler</a>.  What kept me going after the initial
+wow-effect, was the extremely elegant standard functions implementation dividing things into
+<a href="http://www.jsoftware.com/docs/help701/dictionary/partsofspeech.htm">verbs, adverbs, and conjunctions</a>.</p>
+
+<h3 id="something-impressive-a-sudoku-solver">Something impressive: a Sudoku solver</h3>
+
+<p>This code is taken from the <a href="http://orgmode.org/worg/org-contrib/babel/languages/ob-doc-J.html">ob-J</a> page that I wrote some
+time ago (you can find a lot of additional info there):</p>
+
+<pre>
+<span class="org-block-begin-line">#+begin_src J :exports both
+</span><span class="variable-name">i</span> <span class="j-other">=:</span> <span class="j-verb">,</span>((<span class="j-verb">,|:</span>)<span class="j-verb">i.</span>9 9)<span class="j-verb">,,.</span><span class="j-adverb">/</span><span class="j-verb">,.</span><span class="j-adverb">/</span><span class="j-verb">i.</span>4<span class="j-verb">$</span>3
+<span class="variable-name">c</span> <span class="j-other">=:</span> (<span class="j-verb">#=[:#~.</span>)<span class="j-conjunction">@</span><span class="j-verb">-.</span><span class="j-conjunction">&amp;</span>0
+<span class="variable-name">t</span> <span class="j-other">=:</span> <span class="j-verb">[:</span>((<span class="j-verb">[:*</span><span class="j-adverb">/</span><span class="j-verb">_9:</span>c<span class="j-adverb">\</span><span class="j-verb">]</span>)<span class="j-conjunction">"</span>1<span class="j-verb">#]</span>)i<span class="j-conjunction">&amp;</span><span class="j-verb">{+</span><span class="j-conjunction">"</span>1 1(<span class="j-verb">&gt;:i.</span>9)<span class="j-verb">*</span><span class="j-adverb">/</span><span class="j-verb">[:</span>i<span class="j-conjunction">&amp;</span><span class="j-verb">=i.</span><span class="j-conjunction">&amp;</span>0
+<span class="variable-name">r</span> <span class="j-other">=:</span> <span class="j-verb">[:,</span><span class="j-conjunction">`</span><span class="j-verb">$:</span><span class="j-conjunction">@.</span>(0<span class="j-verb">:e.,</span>)<span class="j-verb">[:;</span>(<span class="j-verb">&lt;</span><span class="j-conjunction">@</span>t)<span class="j-conjunction">"</span>1
+<span class="variable-name">s</span> <span class="j-other">=:</span> 9 9<span class="j-conjunction">&amp;</span><span class="j-verb">$</span><span class="j-conjunction">@</span>r<span class="j-conjunction">@</span><span class="j-verb">,</span>
+<span class="j-verb">]</span><span class="variable-name">m</span> <span class="j-other">=:</span> 9 9 <span class="j-verb">$".</span><span class="j-conjunction">"</span>0<span class="string">'200370009009200007001004002050000800008000900006000040900100500800007600400089001'</span>
+s m
+<span class="org-block-end-line">#+end_src
+</span>
+<span class="org-meta-line">#+RESULTS:</span>
+<span class="org-block-begin-line">#+begin_example
+</span><span class="org-block">2 0 0 3 7 0 0 0 9
+0 0 9 2 0 0 0 0 7
+0 0 1 0 0 4 0 0 2
+0 5 0 0 0 0 8 0 0
+0 0 8 0 0 0 9 0 0
+0 0 6 0 0 0 0 4 0
+9 0 0 1 0 0 5 0 0
+8 0 0 0 0 7 6 0 0
+4 0 0 0 8 9 0 0 1
+
+2 8 4 3 7 5 1 6 9
+6 3 9 2 1 8 4 5 7
+5 7 1 9 6 4 3 8 2
+1 5 2 4 9 6 8 7 3
+3 4 8 7 5 2 9 1 6
+7 9 6 8 3 1 2 4 5
+9 6 7 1 4 3 5 2 8
+8 1 3 5 2 7 6 9 4
+4 2 5 6 8 9 7 3 1
+</span><span class="org-block-end-line">#+end_example
+</span>
+</pre>
+
+<p>It&#39;s pretty amazing that the whole implementation, not counting the example input matrix, takes only
+169 characters. You can also see how functional the language is.</p>
+
+<h3 id="something-simpler-a-factorial">Something simpler: a factorial</h3>
+
+<p>To have a more simple example, here&#39;s how to write down incrementally the factorial of 20:</p>
+
+<pre>
+<span class="org-block-begin-line">#+begin_src J
+</span><span class="j-verb">i.</span>20
+<span class="org-block-end-line">#+end_src
+</span>
+<span class="org-meta-line">#+RESULTS:</span>
+<span class="org-code">: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
+</span>
+<span class="org-block-begin-line">#+begin_src J
+</span>1 <span class="j-verb">+</span> <span class="j-verb">i.</span>20
+<span class="org-block-end-line">#+end_src
+</span>
+<span class="org-meta-line">#+RESULTS:</span>
+<span class="org-code">: 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20
+</span>
+<span class="org-block-begin-line">#+begin_src J
+</span><span class="j-verb">*</span><span class="j-adverb">/</span> 1 <span class="j-verb">+</span> <span class="j-verb">i.</span>20
+<span class="org-block-end-line">#+end_src
+</span>
+<span class="org-meta-line">#+RESULTS:</span>
+<span class="org-code">: 2432902008176640000
+</span>
+</pre>
+
+<p>The spaces are optional, I&#39;ve only included them to make the code more clear.</p>
+
+<h3 id="something-visual-a-sine-plot">Something visual: a sine plot</h3>
+
+<pre>
+<span class="org-block-begin-line">#+begin_src J
+</span>load <span class="string">'plot'</span>
+plot 1 <span class="j-verb">o.</span> 0<span class="j-adverb">.</span>1 <span class="j-verb">*</span> <span class="j-verb">i.</span>200
+<span class="org-block-end-line">#+end_src
+</span>
+</pre>
+
+<p>By simply pressing <kbd>C-c C-c</kbd> on this source block you get this image generated and opened in your browser:</p>
+
+<p><img src="/download/ob-J-sine.png" alt="ob-J-sine.png"></p>
+
+<h2 id="the-emacs-tooling">The Emacs Tooling</h2>
+
+<p>As mentioned above, there&#39;s <code>org-mode</code> babel support for J, including session interaction.  More
+importantly, there is <a href="https://github.com/zellio/j-mode">j-mode</a>.  The same package also provides a
+REPL via <code>jconsole</code>.</p>
+
+<p>Additionally, I wrote down a learning/assisting tool
+<a href="https://github.com/abo-abo/helm-j-cheatsheet">helm-j-cheatsheet</a>.
+Here&#39;s one of the screenshots:</p>
+
+<p><img src="https://camo.githubusercontent.com/f3da93fe7c2fb30ffa9b1a4106dd41a6d8ee88a0/68747470733a2f2f7261772e6769746875622e636f6d2f61626f2d61626f2f68656c6d2d6a2d636865617473686565742f6d61737465722f646f632f73637265656e73686f742d322e706e67" alt="helm-j-cheatsheet"></p>
+
+<p>It allows to:</p>
+
+<ul>
+<li>insert a function by English name</li>
+<li>look up the English name of the function by symbol</li>
+<li>open the <a href="http://www.jsoftware.com/docs/help701/dictionary/d010.htm">J documentation</a> for a function</li>
+</ul>
+
+<h2 id="outro">Outro</h2>
+
+<p>J is a very cool language to try and I hope you give it a go. I haven&#39;t yet managed to find a nice
+use for it, but you could say that, just as learning LISP, learning J can make you better at other
+languages.</p>
+
+  </div>
   
   <div class="post">
     <h1 class="post-title">
@@ -611,114 +771,6 @@ for selecting window and setting <code>mode-line-format</code>.</p>
 <h2 id="outro">Outro</h2>
 
 <p>I hope that you enjoy the update, and keep those interesting ideas coming!</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/03/11/git-tricks/">
-        Some git / magit / github tricks
-      </a>
-    </h1>
-
-    <span class="post-date">11 Mar 2015</span>
-
-    <p>Of course, I mean <em>illusions</em> not tricks.</p>
-
-<h2 id="illusion-1-jump-to-a-magit-repository">Illusion 1: jump to a magit repository</h2>
-
-<p>This is just a copy-paste of the code from
-<a href="http://iqbalansari.github.io/blog/2014/02/22/switching-repositories-with-magit/">this post</a> by
-Iqbal Ansari.</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">magit-repo-dirs</span>
-      <span class="p">(</span><span class="nf">mapcar</span>
-       <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">dir</span><span class="p">)</span>
-         <span class="p">(</span><span class="nf">substring</span> <span class="nv">dir</span> <span class="mi">0</span> <span class="mi">-1</span><span class="p">))</span>
-       <span class="p">(</span><span class="nv">cl-remove-if-not</span>
-        <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">project</span><span class="p">)</span>
-          <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nv">file-remote-p</span> <span class="nv">project</span><span class="p">)</span>
-            <span class="p">(</span><span class="nf">file-directory-p</span> <span class="p">(</span><span class="nf">concat</span> <span class="nv">project</span> <span class="s">&quot;/.git/&quot;</span><span class="p">))))</span>
-        <span class="p">(</span><span class="nv">projectile-relevant-known-projects</span><span class="p">))))</span>
-</code></pre></div>
-<p>Basically it&#39;s just taking <code>projectile</code>&#39;s record of known projects, and then filtering it by whether
-that project has <code>.git</code> in its root.</p>
-
-<p>To get a selection of repositories, call with <kbd>C-u M-x</kbd> <code>magit-status</code>.
-And don&#39;t forget to choose <code>ido</code> completion:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">magit-completing-read-function</span> <span class="ss">&#39;magit-ido-completing-read</span><span class="p">)</span>
-</code></pre></div>
-<p>And here&#39;s how I use this in a dispatch:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-helm</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
-  <span class="s">&quot;helm&quot;</span>
-  <span class="p">(</span><span class="s">&quot;f&quot;</span> <span class="nv">projectile-find-file</span> <span class="s">&quot;file&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;w&quot;</span> <span class="nv">helm-org-wiki</span> <span class="s">&quot;wiki&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;g&quot;</span> <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">current-prefix-arg</span> <span class="mi">4</span><span class="p">))</span>
-         <span class="p">(</span><span class="nf">call-interactively</span> <span class="nf">#&#39;</span><span class="nv">magit-status</span><span class="p">))</span>
-       <span class="s">&quot;git&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nv">helm-locate</span> <span class="s">&quot;locate&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span> <span class="s">&quot;quit&quot;</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">global-set-key</span> <span class="s">&quot;κ&quot;</span> <span class="ss">&#39;hydra-helm/body</span><span class="p">)</span>
-</code></pre></div>
-<p>If you&#39;re wondering what the letter in <code>global-set-key</code> is, it&#39;s the Greek letter <code>kappa</code>
-(see <a href="http://oremacs.com/2015/02/14/semi-xmodmap/">the post on my Xmodmap setup</a>).</p>
-
-<h2 id="illusion-2-quickly-get-github-pull-requests-on-your-system">Illusion 2: quickly get Github pull requests on your system</h2>
-
-<p>I learned this from some HN post that I can&#39;t find now. Basically, you have to open
-your <code>.git/config</code> file and find the following contents:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>[remote &quot;origin&quot;]
-    url = git@github.com:abo-abo/hydra.git
-    fetch = +refs/heads/*:refs/remotes/origin/*
-</code></pre></div>
-<p>Then, modify it by adding one line (same for all repositories):</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>[remote &quot;origin&quot;]
-    url = git@github.com:abo-abo/hydra.git
-    fetch = +refs/heads/*:refs/remotes/origin/*
-    fetch = +refs/pull/*/head:refs/pull/origin/*
-</code></pre></div>
-<p>Now, if you issue:</p>
-<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>git fetch --all
-</code></pre></div>
-<p>You can operate on your pull requests like so:</p>
-<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>git merge refs/pull/origin/20
-</code></pre></div>
-<p>Here, <code>20</code> is the issue number. And after merging I finally get access to <code>magit</code> and <code>ediff</code> and
-all that jazz to see what the change is actually about.  Before I learned this, I had to manually
-add remotes with <code>magit-add-remote</code>.  And even before that, I was just clicking the merge button
-after thoughtfully browsing the diff in Firefox. Trust me, <code>ediff</code> is orders of magnitude better.</p>
-
-<h2 id="illusion-3-edit-a-github-wiki-in-emacs">Illusion 3: edit a Github wiki in Emacs</h2>
-
-<p>Of course, I was always editing it in Emacs with
-<a href="https://addons.mozilla.org/en-us/firefox/addon/its-all-text/">It&#39;s All Text</a> Firefox plugin.
-But when I wanted to add an image, I actually read the manual and found out that you can simply
-clone the wiki:</p>
-<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>git clone https://github.com/abo-abo/hydra.wiki.git
-</code></pre></div>
-<p>Or with the ssh style, in order to not type the user name and password on pushing:</p>
-<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>git clone git@github.com:abo-abo/hydra.wiki.git
-</code></pre></div>
-<p>By the way, today I&#39;ve made a very large overhaul of <a href="https://github.com/abo-abo/hydra">hydra</a>&#39;s
-README.md. So if you wanted to start writing your own hydras, but were hesitant because of the lack
-of documentation, now is the time to start.</p>
-
-<p>If you figure out something that you think is worth documenting, you can immediately leave it on the
-<a href="https://github.com/abo-abo/hydra/wiki">wiki</a>.
-By the way, here&#39;s the syntax for including an image, if you were wondering:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>![hydra-helm](images/hydra-helm-unite.png)
-</code></pre></div>
-<p>You upload a file simply by adding it to the repository. Look Ma, no Imgur!</p>
-
-<p>This is actually an issue that I ran into, when I was less experienced. I included some one megabyte
-gifs in the <code>lispy</code> repository to refer to them in <code>README.md</code>. Just a few of them resulted in a
-very uncomfortable cloning time, which is an issue for Travis CI and, you know, humans.  Finally, I
-had to resort to <a href="http://rtyley.github.io/bfg-repo-cleaner/">bfg-repo-cleaner</a> to remove the gifs
-from the repo history. It could all be avoided if I just posted all images on the wiki and linked to
-them in <code>README.md</code>.</p>
-
-<h2 id="outro">Outro</h2>
-
-<p>I hope that you find these illusions useful to make you a better Emacs magician. Happy hacking!</p>
 
   </div>
   
