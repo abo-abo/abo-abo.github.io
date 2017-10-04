@@ -289,6 +289,54 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/11/30/hydra-lispy-move/">
+        I move my s-expressions back and forth
+      </a>
+    </h1>
+
+    <span class="post-date">30 Nov 2015</span>
+
+    <p>Some people find <a href="https://github.com/abo-abo/lispy">lispy</a> too weird
+and/or complex to try, quite possibly because of it&#39;s sort-of-modal
+key binding structure. Which is a shame, since out of 7k lines of
+lispy&#39;s code, only 500 lines do key bindings, the rest do all sorts of
+useful stuff, like sexp navigation/modification, outlines and REPL
+interaction.</p>
+
+<p>In this post, I&#39;ll show a short example of using lispy&#39;s functions
+outside of <code>lispy-mode</code>, and compare it with the default approach.</p>
+
+<h2 id="moving-s-expressions-while-the-point-is-anywhere">Moving s-expressions while the point is anywhere</h2>
+
+<p>Using this simple <a href="https://github.com/abo-abo/hydra">hydra</a>, and the
+key sequence <kbd>C-c m sss www</kbd> I got the following GIF:</p>
+
+<p><img src="/download/hydra-lispy-move-1.gif" alt="hydra-lispy-move-1.gif"></p>
+
+<h2 id="doing-the-same-lispy-way">Doing the same lispy-way</h2>
+
+<p>To do it the lispy-way, I move the point before the list that I wish
+to operate on (with
+<kbd>[</kbd> key), and press <kbd>sss www</kbd> to get the following GIF:</p>
+
+<p><img src="/download/hydra-lispy-move-2.gif" alt="hydra-lispy-move-2.gif"></p>
+
+<p>The difference here is that no hydra is necessary in the second case,
+the key bindings come only from <code>lispy-mode</code>.  But the first case will
+also work if <code>lispy-mode</code> is off.</p>
+
+<h2 id="which-way-is-better">Which way is better?</h2>
+
+<p>I think the second way is better, since it&#39;s faster and more clear,
+but you can decide for yourself. By the way, you can also move
+symbols, comments and sub-words (if that makes sense) with
+<kbd>w</kbd> and <kbd>s</kbd>, provided you mark them with a region
+first.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/11/04/ivy-occur/">
         New feature in Ivy - ivy-occur
       </a>
@@ -717,55 +765,6 @@ negate <kbd>M-q</kbd> (<code>fill-paragraph</code>) (<a href="http://www.emacswi
 </code></pre></div>
 <p>Thanks to <a href="https://github.com/joostkremers">@joostkremers</a> for the
 suggestion in <a href="https://github.com/abo-abo/swiper/issues/227">#227</a>.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/09/29/tweak-ivy-faces/">
-        More tweaks to Ivy minibuffer faces
-      </a>
-    </h1>
-
-    <span class="post-date">29 Sep 2015</span>
-
-    <p>This is a continuation of the thought that I started in the
-<a href="http://oremacs.com/2015/09/04/ivy-fancy-minibuffer/">last post</a> a few
-weeks ago.  I don&#39;t fancy myself a graphical designer, but I kind of
-have a feeling of what I like - I certainly know it when I see it.</p>
-
-<p>I wasn&#39;t quite happy with the color of the current selection in the
-minibuffer.  Then it hit me that I like the way the Firefox address
-bar does it: invert the selected text foreground to white and add a
-flashy background. After that, it was only a matter of going though a
-few random color permutations in the GIMP color selector to arrive to
-a nice state:</p>
-
-<p><img src="/download/counsel-M-x.png" alt="counsel-M-x.png"></p>
-
-<p>I did add something similar for dark background themes, although I
-rarely use them myself, since they contrast too much with Firefox,
-with most websites having a light background:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defface</span> <span class="nv">ivy-current-match</span>
-  <span class="o">&#39;</span><span class="p">((((</span><span class="nv">class</span> <span class="nv">color</span><span class="p">)</span> <span class="p">(</span><span class="nv">background</span> <span class="nv">light</span><span class="p">))</span>
-     <span class="nb">:background</span> <span class="s">&quot;#1a4b77&quot;</span> <span class="nb">:foreground</span> <span class="s">&quot;white&quot;</span><span class="p">)</span>
-    <span class="p">(((</span><span class="nv">class</span> <span class="nv">color</span><span class="p">)</span> <span class="p">(</span><span class="nv">background</span> <span class="nv">dark</span><span class="p">))</span>
-     <span class="nb">:background</span> <span class="s">&quot;#65a7e2&quot;</span> <span class="nb">:foreground</span> <span class="s">&quot;black&quot;</span><span class="p">))</span>
-  <span class="s">&quot;Face used by Ivy for highlighting first match.&quot;</span><span class="p">)</span>
-</code></pre></div>
-<p>Of course, the standard recommendation follows to use
-<a href="https://elpa.gnu.org/packages/rainbow-mode.html">rainbow-mode</a> in
-buffers that deal with colors - it&#39;s great.</p>
-
-<p>Finally, <code>counsel-git-grep</code> and <code>counsel-ag</code> now also add the proper
-minibuffer coloring if you have it turned on:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-display-style</span> <span class="ss">&#39;fancy</span><span class="p">)</span>
-</code></pre></div>
-<p><img src="/download/counsel-ag.png" alt="counsel-ag"></p>
-
-<p>If you&#39;re interested in how the face backgrounds are combined, you can
-read my older article on
-<a href="http://oremacs.com/2015/04/28/blending-faces/">color blending in Elisp</a>.</p>
 
   </div>
   

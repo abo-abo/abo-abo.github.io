@@ -289,6 +289,53 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/07/07/hydra-resume/">
+        Pause or resume the current Hydra
+      </a>
+    </h1>
+
+    <span class="post-date">07 Jul 2015</span>
+
+    <p>Today I&#39;d like to highlight a generic command recently added to
+<a href="https://github.com/abo-abo/hydra">hydra</a>.  It&#39;s kind of cute, and
+maybe something that you didn&#39;t even know you wanted.  Basically, the
+<code>hydra-pause-resume</code> command allows to pause and resume the current
+hydra with one key. And it works for all hydras at once, without any
+extra configuration. All you have to do is to bind it globally to
+whatever you like, for example:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-M-k&quot;</span><span class="p">)</span> <span class="ss">&#39;hydra-pause-resume</span><span class="p">)</span>
+</code></pre></div>
+<p>What it does:</p>
+
+<ul>
+<li>If a hydra is active, deactivate and push it on the stack.</li>
+<li>If no hydra is active, pop one from the stack and call it.</li>
+<li>If the stack is empty, call the last hydra.</li>
+</ul>
+
+<p>Personally, I haven&#39;t found too much use from the stack - resuming the
+last one is enough for me. But the stack comes at no extra cost, and
+might be useful to someone.</p>
+
+<blockquote>
+<p>If, for example, you have 2 hydras on the stack, how to resume the
+older one?</p>
+</blockquote>
+
+<p>The way stacks work, you simply have to go through all elements one by one. So that&#39;s:</p>
+
+<ol>
+<li><kbd>C-M-k</kbd> to resume the newer one.</li>
+<li>Quit the current one with the appropriate shortcut, only not with <kbd>C-M-k</kbd>, since that would just put it back on the stack.</li>
+<li><kbd>C-M-k</kbd> to resume the only one remaining on the stack - the older one.</li>
+</ol>
+
+<p>Thanks to <a href="https://github.com/QiangF">@QiangF</a> for the suggestion in <a href="https://github.com/abo-abo/hydra/issues/135">#135</a>.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/07/02/counsel-locate/">
         Power up your locate command
       </a>
@@ -721,59 +768,6 @@ expression-by-expression, simultaneously debugging it.</li>
 
 <p>The disadvantage is a bit of namespace pollution, but I think it&#39;s
 more or less acceptable.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/06/19/avy-0.3.0/">
-        avy 0.3.0 is out
-      </a>
-    </h1>
-
-    <span class="post-date">19 Jun 2015</span>
-
-    <p>This is a feature-packed release consisting of 57 commits done over
-the course of the last month by me and many
-<a href="https://github.com/abo-abo/avy/graphs/contributors">contributors</a>.</p>
-
-<p>I&#39;m trying something different this time with the
-<a href="https://github.com/abo-abo/avy/releases/tag/0.3.0">release-notes</a>:
-I&#39;ve started a
-<a href="https://github.com/abo-abo/avy/blob/master/doc/Changelog.org">Changlelog.org</a>
-in the repository, which is much more pleasant to read (and write) in <a href="https://raw.githubusercontent.com/abo-abo/avy/master/doc/Changelog.org"><code>org-mode</code> form</a> inside Emacs:</p>
-
-<p><img src="/download/avy-changelog-org.png" alt="avy-changelog-org.png"></p>
-
-<p>Then I used <a href="http://pandoc.org/">pandoc</a> to convert the Org file to Markdown. Too bad, the <code>pandoc</code> install-able through <code>apt-get</code> knows nothing of Org mode,
-so I had to</p>
-<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>cabal install pandoc
-</code></pre></div>
-<p>and let <code>cabal</code> do its thing for like 30 minutes. The exported
-Markdown wasn&#39;t too bad, just had to reformat most things to one line,
-since Github&#39;s <code>fill-column</code> is like 150 chars instead of the
-usual 80.  If someone has more experience of exporting Org to
-Markdown, please do share: maybe there&#39;s a better way to do this.</p>
-
-<p>Anyway, read the release notes either at <a href="https://github.com/abo-abo/avy/releases/tag/0.3.0">github</a> or <a href="https://raw.githubusercontent.com/abo-abo/avy/master/doc/Changelog.org">inside Emacs</a> and enjoy the cool new stuff.  Big thanks to all contributors.</p>
-
-<p>Also check out the <a href="https://github.com/abo-abo/avy/wiki/defcustom">wiki page on customization</a> and other pages.
-I think it would be cool to have a separate page for e.g. <code>avy-goto-char</code> with the screenshots (or gifs) for all values of <code>avy-style</code>:</p>
-
-<ul>
-<li><code>pre</code></li>
-<li><code>post</code></li>
-<li><code>at</code></li>
-<li><code>at-full</code></li>
-<li><code>de-bruijn</code></li>
-</ul>
-
-<p>So if anyone is willing to contribute (and check out those overlay
-styles in the process), please go ahead: you can either clone the wiki
-with:</p>
-<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>git clone https://github.com/abo-abo/avy.wiki.git
-</code></pre></div>
-<p>and push, or just <a href="https://github.com/abo-abo/avy/wiki/_new">edit</a> it using Github&#39;s widgets.</p>
 
   </div>
   

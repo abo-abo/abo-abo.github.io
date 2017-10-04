@@ -4,13 +4,131 @@
  <title>(or emacs</title>
  <link href="https://oremacs.com/atom.xml" rel="self"/>
  <link href="https://oremacs.com/"/>
- <updated>2017-08-04T20:24:56+02:00</updated>
+ <updated>2017-10-04T19:47:40+02:00</updated>
  <id>https://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Extending completion-at-point for Org-mode</title>
+   <link href="https://oremacs.com/2017/10/04/completion-at-point/"/>
+   <updated>2017-10-04T00:00:00+02:00</updated>
+   <id>https://oremacs.com/2017/10/04/completion-at-point</id>
+   <content type="html">&lt;h2 id=&quot;intro&quot;&gt;Intro&lt;/h2&gt;
+
+&lt;p&gt;When creating documents, context aware completion is a powerful
+mechanism that can help you improve the speed, correctness and
+discoverability.&lt;/p&gt;
+
+&lt;p&gt;Emacs provides context aware completion via the &lt;code&gt;complete-symbol&lt;/code&gt;
+command, bound to &lt;kbd&gt;C-M-i&lt;/kbd&gt; by default. In order for it to do
+something useful, &lt;code&gt;completion-at-point-functions&lt;/code&gt; has to be set up.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;Documentation:
+
+Special hook to find the completion table for the thing at point.
+Each function on this hook is called in turn without any argument and should
+return either nil to mean that it is not applicable at point,
+or a list of the form (START END COLLECTION) where
+START and END delimit the entity to complete and should include
+point, COLLECTION is the completion table to use to complete it.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;For each &lt;code&gt;major-mode&lt;/code&gt;, a different value of
+&lt;code&gt;completion-at-point-functions&lt;/code&gt; can (and probably should) apply.  One
+of the modes that&amp;#39;s set up nicely by default is &lt;code&gt;emacs-lisp-mode&lt;/code&gt;:
+press &lt;kbd&gt;C-M-i&lt;/kbd&gt; to get completion for Elisp variable and
+function names. Org-mode, on the other hand, is quite lacking in this
+regard: nothing useful happens with &lt;kbd&gt;C-M-i&lt;/kbd&gt;.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;#39;s my current setting for Org-mode:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;completion-at-point-functions&lt;/span&gt;
+      &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;org-completion-symbols&lt;/span&gt;
+        &lt;span class=&quot;nv&quot;&gt;ora-cap-filesystem&lt;/span&gt;
+        &lt;span class=&quot;nv&quot;&gt;org-completion-refs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;org-completion-symbols&quot;&gt;org-completion-symbols&lt;/h2&gt;
+
+&lt;p&gt;When I write about code in Org-mode, I quote items like this:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;=/home/oleh/=, =HammerFactoryFactory=, etc.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Quoting has several advantages:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;It looks nice, since it&amp;#39;s in a different face,&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;flyspell&lt;/code&gt; doesn&amp;#39;t need to check it, which makes sense since it would
+fail on most variable and class names,&lt;/li&gt;
+&lt;li&gt;Prevents Org from confusing directory names for italics mark up.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Completion has one more advantage on top of that: if I refer to a
+symbol name multiple times within a document, completion helps me to
+enter it quickly and correctly. Here&amp;#39;s the corresponding completion
+source:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-completion-symbols&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;looking-back&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;=[a-zA-Z]+&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;cands&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;save-match-data&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;save-excursion&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;goto-char&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;point-min&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;re-search-forward&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;=\\([a-zA-Z]+\\)=&amp;quot;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cl-pushnew&lt;/span&gt;
+             &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;match-string-no-properties&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cands&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:test&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;equal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+          &lt;span class=&quot;nv&quot;&gt;cands&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cands&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;list&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;match-beginning&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;match-end&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cands&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;First of all, it checks if the point is e.g. after &lt;code&gt;=A&lt;/code&gt;, i.e. we
+are in fact entering a new quoted symbol. If that&amp;#39;s not the case,
+return &lt;code&gt;nil&lt;/code&gt; and let the other completion sources have a go.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Next, it looks through the current buffer for each &lt;code&gt;=foo=&lt;/code&gt; and
+&lt;code&gt;=bar=&lt;/code&gt;, accumulating them into a list.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Finally, it returns the bounds of what we&amp;#39;ve got so far, plus the
+found candidates. It&amp;#39;s important that the bounds are passed to the
+completion engine, so that it can delete everything inside the
+bounds before inserting the whole selected symbol.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;org-cap-filesystem&quot;&gt;org-cap-filesystem&lt;/h2&gt;
+
+&lt;p&gt;This source is for completing file names:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ora-cap-filesystem&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;path&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ffap-string-at-point&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;compl&lt;/span&gt;
+             &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;all-completions&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;path&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;#&amp;#39;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;read-file-name-internal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;compl&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;offset&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ivy-completion-common-length&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;car&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;compl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;list&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;point&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;offset&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;point&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;compl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;I usually enter &lt;code&gt;~&lt;/code&gt;, so that &lt;code&gt;ffap-string-at-point&lt;/code&gt; recognizes it as a
+path. Then complete each part of the path with &lt;kbd&gt;C-M-i&lt;/kbd&gt;. It&amp;#39;s
+very similar to &lt;code&gt;counsel-find-file&lt;/code&gt;. In fact, I could just use
+&lt;code&gt;counsel-find-file&lt;/code&gt; for this, with &lt;kbd&gt;M-o i&lt;/kbd&gt; to insert the file
+name instead of opening the selected file.&lt;/p&gt;
+
+&lt;h2 id=&quot;org-completion-refs&quot;&gt;org-completion-refs&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;org-completion-refs&lt;/code&gt; is very similar to &lt;code&gt;org-completion-symbols&lt;/code&gt;: it
+will collect all instances of e.g. &lt;code&gt;\label{foo}&lt;/code&gt;, and offer them for
+completion when you enter &lt;code&gt;\ref{&lt;/code&gt;. If you want to look at the code,
+it&amp;#39;s available in &lt;a href=&quot;https://github.com/abo-abo/oremacs/blob/github/modes/ora-org.el&quot;&gt;my config&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;I hope I convinced you about the usefulness of completion at
+point. It&amp;#39;s especially cool since it&amp;#39;s a universal interface for
+&lt;code&gt;major-mode&lt;/code&gt;-specific completion. So any IDE-like package for any
+language could provide its own completion using the familiar
+interface. That could go a long way towards providing a &amp;quot;just works&amp;quot;
+experience, particularly when dealing with a new language.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Ripgrep</title>
@@ -39,7 +157,7 @@ One such switch is especially useful for Emacs:&lt;/p&gt;
 &lt;p&gt;The &lt;code&gt;-M&lt;/code&gt; switch is useful twofold:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;Emacs is slow when dealing long lines (by long I mean thousands of chars per line)&lt;/li&gt;
+&lt;li&gt;Emacs is slow when dealing with long lines (by long I mean thousands of chars per line)&lt;/li&gt;
 &lt;li&gt;Emacs is slow at accepting a huge amount of output from a process&lt;/li&gt;
 &lt;/ul&gt;
 
