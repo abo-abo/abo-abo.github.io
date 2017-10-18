@@ -289,6 +289,104 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/04/14/hydra-org-mode/">
+        Org-mode Hydras incoming!
+      </a>
+    </h1>
+
+    <span class="post-date">14 Apr 2015</span>
+
+    <h2 id="a-hydra-for-org-mode-time-clock-capture">A hydra for org-mode time/clock/capture</h2>
+
+<p>This is a categorized version of the hydra that <a href="https://github.com/WorldsEndless">@WorldsEndless</a> contributed
+today to the <a href="https://github.com/abo-abo/hydra/wiki/Hydras-by-Topic">wiki</a>.</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-global-org</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">blue</span>
+                            <span class="nb">:hint</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="s">&quot;</span>
+<span class="s">Timer^^        ^Clock^         ^Capture^</span>
+<span class="s">--------------------------------------------------</span>
+<span class="s">s_t_art        _w_ clock in    _c_apture</span>
+<span class="s"> _s_top        _o_ clock out   _l_ast capture</span>
+<span class="s">_r_eset        _j_ clock goto</span>
+<span class="s">_p_rint</span>
+<span class="s">&quot;</span>
+  <span class="p">(</span><span class="s">&quot;t&quot;</span> <span class="nv">org-timer-start</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;s&quot;</span> <span class="nv">org-timer-stop</span><span class="p">)</span>
+  <span class="c1">;; Need to be at timer</span>
+  <span class="p">(</span><span class="s">&quot;r&quot;</span> <span class="nv">org-timer-set-timer</span><span class="p">)</span>
+  <span class="c1">;; Print timer value to buffer</span>
+  <span class="p">(</span><span class="s">&quot;p&quot;</span> <span class="nv">org-timer</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;w&quot;</span> <span class="p">(</span><span class="nv">org-clock-in</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">4</span><span class="p">)))</span>
+  <span class="p">(</span><span class="s">&quot;o&quot;</span> <span class="nv">org-clock-out</span><span class="p">)</span>
+  <span class="c1">;; Visit the clocked task from any buffer</span>
+  <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">org-clock-goto</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;c&quot;</span> <span class="nv">org-capture</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nv">org-capture-goto-last-stored</span><span class="p">))</span>
+</code></pre></div>
+<p>I&#39;ve bound it like this:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">[</span><span class="nv">f11</span><span class="p">]</span> <span class="ss">&#39;hydra-global-org/body</span><span class="p">)</span>
+</code></pre></div>
+<p>Previously, I had <kbd>f11</kbd> bound to <code>org-clock-goto</code>, thanks to
+the <a href="http://doc.norang.ca/org-mode.html">Org Mode - Organize Your Life In Plain Text!</a>
+post.  I kind of recommend that post, as it has a tonne of useful
+stuff. At the same time, it resulted in me copying too much stuff that I didn&#39;t understand into my config,
+ultimately discouraging me from using <code>org-mode</code>. YMMV.</p>
+
+<p>Screenshot:</p>
+
+<p><img src="/download/hydra-org-global.png" alt="hydra-org-global.png"></p>
+
+<h2 id="a-hydra-for-refile-archive">A hydra for refile/archive</h2>
+
+<p>Inspired by the previous one, I wanted to write a hydra of my own.  As
+it happened, I was just about to clean up my git notes. So I wanted a
+nice refile hydra to speed up the process.</p>
+
+<p>Here&#39;s the hydra&#39;s code, which is now part of
+<a href="https://github.com/abo-abo/worf">worf</a>.  Worf is a package for
+quickly navigating around an <code>org-mode</code> buffer, you can get it from
+MELPA.</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-refile</span> <span class="p">(</span><span class="nb">:hint</span> <span class="no">nil</span>
+                        <span class="nb">:color</span> <span class="nv">teal</span><span class="p">)</span>
+  <span class="s">&quot;</span>
+<span class="s">Refile:^^   _k_eep: %`org-refile-keep</span>
+<span class="s">----------------------------------</span>
+<span class="s">_l_ast      _a_rchive</span>
+<span class="s">_o_ther</span>
+<span class="s">_t_his</span>
+
+<span class="s">&quot;</span>
+  <span class="p">(</span><span class="s">&quot;t&quot;</span> <span class="nv">worf-refile-this</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;o&quot;</span> <span class="nv">worf-refile-other</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nv">worf-refile-last</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;k&quot;</span> <span class="p">(</span><span class="k">setq</span> <span class="nv">org-refile-keep</span> <span class="p">(</span><span class="nv">not</span> <span class="nv">org-refile-keep</span><span class="p">))</span>
+       <span class="nb">:exit</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="p">(</span><span class="nv">org-archive-subtree</span><span class="p">))</span>
+  <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span> <span class="s">&quot;quit&quot;</span><span class="p">))</span>
+</code></pre></div>
+<p>Some explanations:</p>
+
+<ul>
+<li><code>worf-refile-this</code> will give you a choice of this file&#39;s headings for refiling.</li>
+<li><code>worf-refile-other</code> will give you a choice of your <code>org-refile-targets</code> except the current file.</li>
+<li><code>worf-refile-last</code> will refile to the last refile location without prompting.</li>
+<li><kbd>k</kbd> will toggle <code>org-refile-keep</code>, which decides if refiling moves or copies the text.</li>
+</ul>
+
+<p>And here&#39;s how it looks like:</p>
+
+<p><img src="/download/hydra-refile.png" alt="hydra-refile.png"></p>
+
+<h2 id="outro">Outro</h2>
+
+<p>Thanks for the contribution, enjoy the new stuff.
+Also, if you ever want to dig around someone&#39;s git notes, you can read <a href="/public/git-notes/git.html">mine</a>,
+courtesy of <code>org-mode</code> export.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/04/13/hydra-0.13.0/">
         Hydra 0.13.0 is out
       </a>
@@ -880,217 +978,6 @@ reports are very important for my non-annoyance agenda.</p>
 the inline args:</p>
 <div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">lispy-set-key-theme</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">special</span> <span class="nv">c-digits</span><span class="p">))</span>
 </code></pre></div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/04/01/lispy.0.25.0-is-out/">
-        lispy 0.25.0 is out
-      </a>
-    </h1>
-
-    <span class="post-date">01 Apr 2015</span>
-
-    <p>Seriously, check <a href="https://github.com/abo-abo/lispy/releases/tag/0.25.0">the release notes</a> if you
-don&#39;t believe me.</p>
-
-<h2 id="fixes">Fixes</h2>
-
-<ul>
-<li>Add <code>minibuffer-inactive-mode</code> to the <code>lispy-elisp-modes</code> list. It means that you can eval there if you want.</li>
-<li><kbd>V</kbd> (<code>lispy-visit</code>) should turn on <code>projectile-global-mode</code> if it&#39;s not on.</li>
-<li><kbd>M</kbd> (<code>lispy-multiline</code>) works better for Clojure: the regexes for vectors, maps and sets have been improved.</li>
-<li><kbd>C-k</kbd> should not delete only the string when located at start of string.</li>
-<li><kbd>M</kbd> will not turn vectors into lists any more.</li>
-<li>the backquote bug for <kbd>i</kbd> and <kbd>M</kbd> was fixed.</li>
-<li>you can flatten Elisp closures as well, at least the plain ones.</li>
-</ul>
-
-<h2 id="new-features">New Features</h2>
-
-<h3 id="b-calls-lispy-back"><kbd>b</kbd> calls <code>lispy-back</code></h3>
-
-<p>The movement commands, such as:</p>
-
-<ul>
-<li>the arrows <kbd>hjkl</kbd> (<code>lispy-left</code>, <code>lispy-down</code> etc.)</li>
-<li><kbd>f</kbd> (<code>lispy-flow</code>)</li>
-<li><kbd>q</kbd> (<code>lispy-ace-paren</code>)</li>
-<li><kbd>i</kbd> (<code>lispy-tab</code>), only when called for an active region</li>
-</ul>
-
-<p>will not store each movement in the point-and-mark history. You can press <kbd>b</kbd> to go back in
-history. This is especially useful for <kbd>h</kbd>, <kbd>l</kbd>, and <kbd>f</kbd>, since they are
-not trivially reversible.</p>
-
-<p><kbd>b</kbd> was previously bound to <code>lispy-store-region-and-buffer</code>, so you could do Ediff with
-<kbd>b</kbd> and <kbd>B</kbd>. Now it&#39;s bound to <kbd>xB</kbd>.</p>
-
-<h3 id="hungry-comment-delete">Hungry comment delete</h3>
-
-<p><kbd>C-d</kbd> (<code>lispy-delete</code>) when positioned at the start of a comment, and with only whitespace
-before the start of the line, will delete the whole comment.</p>
-
-<p>If you want to un-comment, just use <kbd>C-u ;</kbd> from any point in the comment.</p>
-
-<h3 id="added-flatten-operation-for-clojure">Added flatten operation for Clojure</h3>
-
-<p><kbd>xf</kbd> (<code>lispy-flatten</code>) now also works for Clojure, before it was only for Elisp.</p>
-
-<h4 id="example-1-flatten-a-macro">Example 1 (flatten a macro):</h4>
-<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span></span><span class="err">|</span><span class="p">(</span><span class="nf">-&gt;&gt;</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">]</span>
-     <span class="p">(</span><span class="nb">map </span><span class="nv">sqr</span><span class="p">)</span>
-     <span class="p">(</span><span class="nb">filter </span><span class="nv">odd?</span><span class="p">))</span>
-</code></pre></div>
-<p>When you press <kbd>xf</kbd> you get this:</p>
-<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span></span><span class="err">|</span><span class="p">(</span><span class="nb">filter </span><span class="nv">odd?</span> <span class="p">(</span><span class="nb">map </span><span class="nv">sqr</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">]))</span>
-</code></pre></div>
-<h4 id="example-2-flatten-a-standard-function">Example 2 (flatten a standard function):</h4>
-
-<p>Start with:</p>
-<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span></span><span class="err">|</span><span class="p">(</span><span class="nb">map </span><span class="nv">odd?</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">])</span>
-</code></pre></div>
-<p>After <kbd>xf</kbd>:</p>
-<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span></span><span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">f</span> <span class="nv">odd?</span> <span class="nv">coll</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">]]</span>
-  <span class="p">(</span><span class="nf">lazy-seq</span> <span class="p">(</span><span class="nb">when-let </span><span class="p">[</span><span class="nv">s</span> <span class="p">(</span><span class="nb">seq </span><span class="nv">coll</span><span class="p">)]</span>
-              <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nf">chunked-seq?</span> <span class="nv">s</span><span class="p">)</span>
-                <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">c</span> <span class="p">(</span><span class="nf">chunk-first</span> <span class="nv">s</span><span class="p">)</span>
-                      <span class="nv">size</span> <span class="p">(</span><span class="nb">int </span><span class="p">(</span><span class="nb">count </span><span class="nv">c</span><span class="p">))</span>
-                      <span class="nv">b</span> <span class="p">(</span><span class="nf">chunk-buffer</span> <span class="nv">size</span><span class="p">)]</span>
-                  <span class="p">(</span><span class="nb">dotimes </span><span class="p">[</span><span class="nv">i</span> <span class="nv">size</span><span class="p">]</span>
-                    <span class="p">(</span><span class="nf">chunk-append</span> <span class="nv">b</span> <span class="p">(</span><span class="nf">f</span> <span class="p">(</span><span class="nf">.nth</span> <span class="nv">c</span> <span class="nv">i</span><span class="p">))))</span>
-                  <span class="p">(</span><span class="nf">chunk-cons</span> <span class="p">(</span><span class="nf">chunk</span> <span class="nv">b</span><span class="p">)</span>
-                              <span class="p">(</span><span class="nb">map </span><span class="nv">f</span> <span class="p">(</span><span class="nf">chunk-rest</span> <span class="nv">s</span><span class="p">))))</span>
-                <span class="p">(</span><span class="nb">cons </span><span class="p">(</span><span class="nf">f</span> <span class="p">(</span><span class="nb">first </span><span class="nv">s</span><span class="p">))</span>
-                      <span class="p">(</span><span class="nb">map </span><span class="nv">f</span> <span class="p">(</span><span class="nb">rest </span><span class="nv">s</span><span class="p">)))))))</span>
-</code></pre></div>
-<p>A bit of a gibberish, but at least we can confirm that <code>map</code> is indeed lazy.</p>
-
-<h4 id="example-3-flatten-your-own-function">Example 3 (flatten your own function):</h4>
-
-<p>Example function:</p>
-<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span></span><span class="p">(</span><span class="kd">defn </span><span class="nv">sqr</span> <span class="p">[</span><span class="nv">x</span><span class="p">]</span>
-  <span class="p">(</span><span class="nb">* </span><span class="nv">x</span> <span class="nv">x</span><span class="p">))</span>
-</code></pre></div>
-<p>This one requires the function to be properly loaded with <kbd>C-c C-l</kbd> (<code>cider-load-file</code>),
-otherwise Clojure will not know the location of the function.</p>
-
-<p>Example statement:</p>
-<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span></span><span class="p">(</span><span class="nb">+ </span><span class="err">|</span><span class="p">(</span><span class="nf">sqr</span> <span class="mi">10</span><span class="p">)</span> <span class="mi">20</span><span class="p">)</span>
-</code></pre></div>
-<p>After <kbd>xf</kbd>:</p>
-<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span></span><span class="p">(</span><span class="nb">+ </span><span class="err">|</span><span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">x</span> <span class="mi">10</span><span class="p">]</span>
-     <span class="p">(</span><span class="nb">* </span><span class="nv">x</span> <span class="nv">x</span><span class="p">))</span> <span class="mi">20</span><span class="p">)</span>
-</code></pre></div>
-<h3 id="added-lax-eval-for-clojure">Added lax eval for Clojure</h3>
-
-<p>This is similar to the lax eval for Elisp. If you mark an expression with a region:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>asdf [1 2 3]
-</code></pre></div>
-<p>and press <kbd>e</kbd>, you will actually eval this:</p>
-<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span></span><span class="p">(</span><span class="k">do </span><span class="p">(</span><span class="k">def </span><span class="nv">asdf</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">])</span>
-    <span class="nv">asdf</span><span class="p">)</span>
-</code></pre></div>
-<p>You can do this for let bindings, it&#39;s super-useful for debugging.  The rule is that if the first
-element of the region is a symbol, and there&#39;s more stuff in the region besides the symbol, a lax
-eval will be performed.</p>
-
-<h3 id="e-will-auto-start-cider"><kbd>e</kbd> will auto-start CIDER</h3>
-
-<p>If CIDER isn&#39;t live, <kbd>e</kbd> will start it and properly eval the current statement.</p>
-
-<h3 id="2f-will-search-for-variables-first"><kbd>2F</kbd> will search for variables first</h3>
-
-<p>Since Elisp is a LISP-2, there can be a function and a variable with the same name.  <kbd>F</kbd>
-(<code>lispy-follow</code>) prefers functions, but now <kbd>2F</kbd> will prefer variables.</p>
-
-<h3 id="2e-will-eval-and-insert-the-commented-result"><kbd>2e</kbd> will eval and insert the commented result</h3>
-
-<p>Starting with:</p>
-<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span></span><span class="err">|</span><span class="p">(</span><span class="nb">filter </span><span class="nv">odd?</span> <span class="p">(</span><span class="nb">map </span><span class="nv">sqr</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">]))</span>
-</code></pre></div>
-<p>Pressing <kbd>2e</kbd> gives:</p>
-<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span></span><span class="p">(</span><span class="nb">filter </span><span class="nv">odd?</span> <span class="p">(</span><span class="nb">map </span><span class="nv">sqr</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">]))</span>
-<span class="c1">;; =&gt;</span>
-<span class="c1">;; (1 9 25)</span>
-</code></pre></div>
-<p>This works for all dialects, so you can also have:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">symbol-function</span> <span class="ss">&#39;exit-minibuffer</span><span class="p">)</span>
-<span class="c1">;; =&gt;</span>
-<span class="c1">;; (closure (t)</span>
-<span class="c1">;;          nil &quot;Terminate this minibuffer argument.&quot; (interactive)</span>
-<span class="c1">;;          (setq deactivate-mark nil)</span>
-<span class="c1">;;          (throw (quote exit)</span>
-<span class="c1">;;            nil))</span>
-</code></pre></div>
-<p>or</p>
-<div class="highlight"><pre><code class="language-cl" data-lang="cl"><span></span><span class="vg">*MODULES*</span>
-<span class="c1">;; =&gt;</span>
-<span class="c1">;; (&quot;SWANK-ARGLISTS&quot; &quot;SWANK-FANCY-INSPECTOR&quot; &quot;SWANK-FUZZY&quot; </span>
-<span class="c1">;;                   &quot;SWANK-UTIL&quot; &quot;SWANK-PRESENTATIONS&quot; </span>
-<span class="c1">;;                   &quot;SWANK-TRACE-DIALOG&quot; &quot;SB-CLTL2&quot;)</span>
-</code></pre></div>
-<p>To do the last eval you need to be in special.
-It means that you first have to mark the symbol <code>*MODULES*</code> with a region.
-A convenient function to mark the current symbol is <kbd>M-m</kbd> (<code>lispy-mark-symbol</code>).</p>
-
-<h3 id="y-lispy-occur-now-has-an-ivy-back-end"><kbd>y</kbd> (<code>lispy-occur</code>) now has an <code>ivy</code> back end</h3>
-
-<p><code>lispy-occur</code> launches an interactive search within the current top-level expression, usually a
-defun. This is useful to see where a variable is used in a function, or to quickly navigate to a
-statement.</p>
-
-<p>You can customize <code>lispy-occur-backend</code> to either <code>ivy</code> (the default) or <code>helm</code> (if you have it,
-since it&#39;s no longer a dependency of <code>lispy</code>).</p>
-
-<h3 id="add-ivy-back-end-to-lispy-completion-method">Add ivy back end to <code>lispy-completion-method</code></h3>
-
-<p>Now it&#39;s the default one for navigating to tags. You can select alternatively <code>helm</code> or <code>ido</code> if you
-wish.</p>
-
-<h3 id="remove-the-dependency-on-ace-jump-mode">Remove the dependency on <code>ace-jump-mode</code></h3>
-
-<p>Instead the dependency on <code>ace-window</code> will be re-used. This allows for a lot of code
-simplifications and better tests.</p>
-
-<p>New custom variables:</p>
-
-<ul>
-<li><code>lispy-avy-style-char</code>: choose where the overlay appears for <kbd>Q</kbd> (<code>lispy-ace-char</code>)</li>
-<li><code>lispy-avy-style-paren</code>: choose where the overlay appears for <kbd>q</kbd> (<code>lispy-ace-paren</code>)</li>
-<li><code>lispy-avy-style-symbol</code>: choose where the overlay appears for <kbd>a</kbd> (<code>lispy-ace-symbol</code>)
-and <kbd>-</kbd> (<code>lispy-ace-subword</code>) and <kbd>H</kbd> (<code>ace-symbol-replace</code>).</li>
-</ul>
-
-<p>There&#39;s also <code>lispy-avy-keys</code>, which is <code>a</code> ... <code>z</code> by default.</p>
-
-<h3 id="add-lispy-compat">Add <code>lispy-compat</code></h3>
-
-<p>This is a list of compatibility features with other packages, such as <code>edebug</code> and <code>god-mode</code>.
-They add overhead, so you might want to turn them off if you don&#39;t use the mentioned packages.</p>
-
-<h3 id="f-works-for-scheme"><kbd>F</kbd> works for Scheme</h3>
-
-<p>You can navigate to a symbol definition in Scheme with <kbd>F</kbd>. This feature was already
-in place for Elisp, Clojure and CL.</p>
-
-<h2 id="outro">Outro</h2>
-
-<p>Looks like a great batch of features, but I&#39;m the most happy about the stupid backquote bug being
-fixed.</p>
-
-<p>Up next: pre-defined key binding <a href="https://github.com/abo-abo/lispy/issues/57">themes</a>, featuring:</p>
-
-<ul>
-<li>the beloved <code>default</code>.</li>
-<li>the old-school <code>paredit</code>.</li>
-<li>the special-only <code>minimal</code>.</li>
-<li>and maybe one more.</li>
-</ul>
-
-<p>Feel free to chime in, if you&#39;ve got a key setup that you think other people will like. Happy
-hacking!</p>
-
   </div>
   
 </div>

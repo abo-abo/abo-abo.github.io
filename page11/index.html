@@ -289,6 +289,125 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/05/13/ace-window-0.9.0/">
+        ace-window 0.9.0 is out
+      </a>
+    </h1>
+
+    <span class="post-date">13 May 2015</span>
+
+    <p><img src="https://cloud.githubusercontent.com/assets/390964/7583437/86180fa6-f895-11e4-80ef-c24a7bdf9bf6.png" alt="ace-window-keys.png"></p>
+
+<p>I kind of forgot to tag the <code>0.8.0</code> release on Github, so it&#39;s been a
+whole 3 months since the last release. In this post, I&#39;ll only
+describe the newest exciting feature in more detail, see
+<a href="http://oremacs.com/archive/">the archive</a> for
+<a href="http://oremacs.com/2015/02/27/ace-window-leading-char/">older</a>
+<a href="http://oremacs.com/2015/03/02/ace-window-without-ace/">posts</a>
+<a href="http://oremacs.com/2015/03/03/ace-window-full-path/">on</a>
+<a href="http://oremacs.com/2015/03/06/ace-window-toggle/">ace</a>
+<a href="http://oremacs.com/2015/03/12/ace-window-display-mode/">window</a>.</p>
+
+<h2 id="new-features">New Features</h2>
+
+<h3 id="display-the-window-decision-chars-in-the-mode-line">Display the window decision chars in the mode line</h3>
+
+<p>Enable <code>ace-window-display-mode</code> for this. This gives you the
+advantage of always being aware which window corresponds to which
+char.</p>
+
+<h3 id="new-defcustom-aw-ignore-current">New defcustom: <code>aw-ignore-current</code></h3>
+
+<p>This is off by default. When t, <code>ace-window</code> will ignore
+<code>selected-window</code>.</p>
+
+<h3 id="allow-to-switch-the-window-action-midway">Allow to switch the window action midway</h3>
+
+<p>Ace-window has many commands available, like:</p>
+
+<ul>
+<li><code>ace-select-window</code></li>
+<li><code>ace-delete-window</code></li>
+<li><code>ace-swap-window</code></li>
+<li>...</li>
+</ul>
+
+<p>But did you wish sometimes when you called <code>ace-select-window</code> that
+you should have called <code>ace-delete-window</code>? In the old way, you would
+cancel <code>ace-select-window</code> with <kbd>C-g</kbd> and call
+<code>ace-delete-window</code>.</p>
+
+<p>With the new way, you can, just press <kbd>x</kbd> followed by the
+decision char.  All keys are customizable through <code>aw-dispatch-alist</code>.</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">defvar</span> <span class="nv">aw-dispatch-alist</span>
+  <span class="o">&#39;</span><span class="p">((</span><span class="sc">?x</span> <span class="nv">aw-delete-window</span> <span class="s">&quot; Ace - Delete Window&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="sc">?m</span> <span class="nv">aw-swap-window</span> <span class="s">&quot; Ace - Swap Window&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="sc">?n</span> <span class="nv">aw-flip-window</span><span class="p">)</span>
+    <span class="p">(</span><span class="sc">?v</span> <span class="nv">aw-split-window-vert</span> <span class="s">&quot; Ace - Split Vert Window&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="sc">?b</span> <span class="nv">aw-split-window-horz</span> <span class="s">&quot; Ace - Split Horz Window&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="sc">?i</span> <span class="nv">delete-other-windows</span> <span class="s">&quot; Ace - Maximize Window&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="sc">?o</span> <span class="nv">delete-other-windows</span><span class="p">))</span>
+  <span class="s">&quot;List of actions for </span><span class="ss">`aw-dispatch-default&#39;</span><span class="s">.&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>The strings beside each command are important: they are used to update
+the mode line when you press a char. They also mean that a window
+should be selected using <code>aw-keys</code> for the corresponding command. If
+there&#39;s no string, the command is just called straight away, with no
+arguments.  To reiterate, for each entry without a string, its command
+will be called immediately, and for others the window will be selected
+first.</p>
+
+<p>Also, take note of <code>aw-flip-window</code>. Suppose the you have a lot (say
+7) windows, but you only want to cycle between the most recent
+two. You can do so with <kbd>n</kbd>, with no need to press the
+decision char.</p>
+
+<p>I call this feature &quot;the dispatch&quot;. The dispatch normally happens when:</p>
+
+<ol>
+<li>you&#39;re prompted for <code>aw-keys</code></li>
+<li>you press a char that isn&#39;t in <code>aw-keys</code></li>
+<li>there&#39;s an entry in <code>aw-dispatch-alist</code> for this char</li>
+</ol>
+
+<p>If you want to skip step 1 always (since, by default, you&#39;re not
+prompted for <code>aw-keys</code> when you have 2 or less windows), use:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">aw-dispatch-always</span> <span class="no">t</span><span class="p">)</span>
+</code></pre></div>
+<p>Be careful though, setting this means that you&#39;ll always have to
+select a window with <code>aw-keys</code>, even if there are only two. This is a
+large toll on the muscle memory. On the other hand, even with one
+window, assuming you&#39;ve bound <code>ace-window</code> to <kbd>M-p</kbd>, you get:</p>
+
+<ul>
+<li><code>split-window-vertically</code> on <kbd>M-p v</kbd></li>
+<li><code>split-window-horizontally</code> on <kbd>M-p b</kbd></li>
+<li><code>delete-other-windows</code> on <kbd>M-p o</kbd></li>
+</ul>
+
+<p>What&#39;s also nice is that these commands scale with the amount of
+windows: if you have only one window, you get no prompt for <kbd>M-p
+v</kbd>, so it acts just like <kbd>C-x 2</kbd>. But if you have more
+windows, you don&#39;t have to select the window that you want to split
+beforehand: you can select it after you decided to issue a split
+operation.</p>
+
+<p>See <a href="https://github.com/abo-abo/ace-window/wiki">the wiki</a> for a nice
+customization setup by <a href="https://github.com/joedicastro">@joedicastro</a>.</p>
+
+<h2 id="outro">Outro</h2>
+
+<p>Give the new feature a try. The jump in utility between the new and
+old <code>ace-window</code>, I feel, is of the same magnitude as the jump between
+<code>other-window</code> and <code>ace-window</code>. However, it doesn&#39;t come for free and
+the muscle memory needs to be readjusted slightly.</p>
+
+<p>Big thanks to all who contributed, especially to <a href="https://github.com/joedicastro">@joedicastro</a>.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/05/08/avy-0.1.0/">
         New on MELPA - avy
       </a>
@@ -861,139 +980,6 @@ Photoshop-grade color channel handling.</p>
 
 <p>If only it could get a good optimization bump, like JavaScript got at
 one point, and a small threading library, we&#39;d be all set.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/04/24/oremacs-config/">
-        Oremacs config is on Github
-      </a>
-    </h1>
-
-    <span class="post-date">24 Apr 2015</span>
-
-    <p>I noticed that the packages that I&#39;ve published on
-<a href="https://github.com/abo-abo">Github</a> in the last year did get a nice
-boost in quality just from being published, viewed, used and commented
-on.</p>
-
-<p>So it makes sense to do the same for my full Emacs config, which lives in the <a href="https://github.com/abo-abo/oremacs">oremacs</a> repository as of today.</p>
-
-<p>The config is personal in the sense that I&#39;m actually using it
-verbatim, but it&#39;s been configured in a way that&#39;s it&#39;s easy to
-replicate and modify it.</p>
-
-<h2 id="who-can-benefit-from-this-config">Who can benefit from this config</h2>
-
-<p>The audience is people like me, who like to tinker with Elisp just for
-fun of it.  If you want things to just work, or you find learning
-Elisp a chore, it&#39;s not for you.</p>
-
-<p>The config won&#39;t work initially, it won&#39;t work always, but when it
-finally does work (hopefully), it will be glorious!</p>
-
-<h2 id="installation-and-running">Installation and Running</h2>
-
-<h3 id="requirements">Requirements</h3>
-
-<p>Emacs 24 is required. Obviously, newer versions are better, but the
-default <code>emacs24</code> that you get from the package manager should work.</p>
-
-<p>I&#39;m currently switching between Emacs 24.5.2 built from source and the
-current master from <a href="https://savannah.gnu.org/git/?group=emacs">git</a>.</p>
-
-<h3 id="install-command">Install command</h3>
-
-<p>This config doesn&#39;t assume to become your main config when you install
-it.  It installs in-place in the git directory and will start from
-there without touching your main config.  But you still get access to
-all your stuff, like bookmarks stored in your actual <code>~/.emacs.d/</code>
-etc.</p>
-<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span><span class="nb">cd</span> ~/git
-git clone https://github.com/abo-abo/oremacs
-<span class="nb">cd</span> oremacs
-make install
-</code></pre></div>
-<h3 id="run-command">Run command</h3>
-
-<p>Run without updating:</p>
-<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>make run
-</code></pre></div>
-<p>Run with an upstream + ELPA update:</p>
-<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>make up
-</code></pre></div>
-<p>Run with an upstream + ELPA + org-mode + CEDET update:</p>
-<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>make install
-</code></pre></div>
-<h2 id="perks">Perks</h2>
-
-<h3 id="standalone">Standalone</h3>
-
-<p>You can try it without messing up your current Emacs config.  I actually have multiple versions of this on my system to work-around incompatibility between versions. This way, I can use my full setup even in case I get a bug report for an older Emacs version.</p>
-
-<h3 id="fast-start-up">Fast start up</h3>
-
-<p>With a SSD, it starts in 1 second. Most features are autoloaded and it&#39;s easy to add new autoloaded features.</p>
-
-<h3 id="tracks-the-most-recent-org-mode-and-cedet">Tracks the most recent org-mode and CEDET</h3>
-
-<p>Since these packages take a long time to byte compile, they are updated not with <code>make up</code> but with <code>make install</code>. They are actually git submodules, which means that they won&#39;t update if I don&#39;t update them in the upstream.</p>
-
-<h3 id="bankruptcy-proof">Bankruptcy-proof</h3>
-
-<p>It&#39;s hard to become Emacs-bankrupt with this config, since the config is composed of many independent pieces that you can simply ignore if you don&#39;t need them.</p>
-
-<h3 id="anti-rsi-qwerty-mod">Anti-RSI QWERTY mod</h3>
-
-<p>The config comes with its own <code>.Xmodmap</code> that makes <kbd>;</kbd> into an additional modifier. RSI savers:</p>
-
-<ul>
-<li><kbd>;-v</kbd> instead of <kbd>Enter</kbd>.</li>
-<li><kbd>;-o</kbd> instead of <kbd>Backspace</kbd>.</li>
-<li><kbd>;-f</kbd> instead of <kbd>Shift-9</kbd> and <kbd>Shift-0</kbd>.</li>
-<li><kbd>;-a</kbd> instead of <kbd>-</kbd>.</li>
-<li><kbd>;-s</kbd> instead of <kbd>Shift--</kbd>.</li>
-<li><kbd>;-q</kbd> instead of <kbd>Shift-&#39;</kbd>.</li>
-<li><kbd>;-e</kbd> instead of <kbd>=</kbd>.</li>
-<li><kbd>;-u</kbd> in addition / instead of <kbd>C-u</kbd>.</li>
-</ul>
-
-<p>And obviously the replacements for the two keys that the mod takes away:</p>
-
-<ul>
-<li><kbd>;-j</kbd> instead of <kbd>;</kbd>.</li>
-<li><kbd>;-d</kbd> instead of <kbd>Shift-;</kbd>.</li>
-</ul>
-
-<p>One more Elisp-level RSI-saver is the swap between <kbd>C-p</kbd> and <kbd>C-h</kbd>. Moving up/down line is very important, and it&#39;s nice to have these keys close, which <kbd>C-n</kbd> and <kbd>C-h</kbd> are.</p>
-
-<p>It also includes:</p>
-
-<ul>
-<li>a bunch of Hydras that save you key strokes.</li>
-<li><code>lispy-mode</code> which quickens any LISP mode, especially Elisp.</li>
-<li><code>worf-mode</code> which quickens <code>org-mode</code>.</li>
-<li><code>ivy-mode</code> which quickens all completion.</li>
-<li><code>swiper</code> which quickens <code>isearch</code> (by replacing it).</li>
-<li>C/C++ is customized with <code>function-args-mode</code> and a bunch of hacks.</li>
-</ul>
-
-<h3 id="org-mode-starter">Org mode starter</h3>
-
-<p>The config starts you off with a fully configured <code>org-mode</code> setup that includes:</p>
-
-<ul>
-<li>gtd.org for getting things done.</li>
-<li>ent.org to track entertainment.</li>
-<li>wiki folder for quickly starting and selecting wikis.</li>
-</ul>
-
-<h2 id="outro">Outro</h2>
-
-<p>I hope that you try and enjoy the new config. Perhaps not verbatim,
-but if you find the tips on this blog helpful, this config is their
-actual implementation that you can use for reference.</p>
 
   </div>
   
