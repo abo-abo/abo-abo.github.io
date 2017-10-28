@@ -289,6 +289,82 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/10/14/swiper-mc/">
+        A simple multiple-cursors extension to swiper
+      </a>
+    </h1>
+
+    <span class="post-date">14 Oct 2015</span>
+
+    <p>When using Emacs, it happens sometimes that I accumulate too many
+buffers. The usual next action is to close the buffers for the project
+that I&#39;m not currently working on. Previously, I marked those buffers
+in <code>*Buffer List*</code> by hand with <kbd>d</kbd> and
+<kbd>C-n</kbd>. Today, I&#39;ll show a faster way.</p>
+
+<p>It&#39;s very easy to select these buffers in <code>*Buffer List*</code> with
+<a href="https://github.com/abo-abo/swiper">swiper</a>: just type a part the
+shared directory name. Another example is to select all <code>dired</code>
+buffers: a &quot;dired by&quot; input will usually match all of them, since they
+all have <code>Dired by name</code> in their line.</p>
+
+<p>Afterwards, I want to open
+<a href="https://github.com/magnars/multiple-cursors.el">multiple-cursors</a> for
+each matched line. I&#39;ve bound this action to <kbd>C-7</kbd>. Here&#39;s
+the very simple code:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">swiper-mc</span> <span class="p">()</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;multiple-cursors</span> <span class="no">nil</span> <span class="no">t</span><span class="p">)</span>
+    <span class="p">(</span><span class="ne">error</span> <span class="s">&quot;multiple-cursors isn&#39;t installed&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">cands</span> <span class="p">(</span><span class="nf">nreverse</span> <span class="nv">ivy--old-cands</span><span class="p">)))</span>
+    <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nv">string=</span> <span class="nv">ivy-text</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
+      <span class="p">(</span><span class="nv">ivy-set-action</span>
+       <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">_</span><span class="p">)</span>
+         <span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">cand</span><span class="p">)</span>
+           <span class="p">(</span><span class="k">while</span> <span class="p">(</span><span class="k">setq</span> <span class="nv">cand</span> <span class="p">(</span><span class="nb">pop</span> <span class="nv">cands</span><span class="p">))</span>
+             <span class="p">(</span><span class="nv">swiper--action</span> <span class="nv">cand</span><span class="p">)</span>
+             <span class="p">(</span><span class="nb">when</span> <span class="nv">cands</span>
+               <span class="p">(</span><span class="nv">mc/create-fake-cursor-at-point</span><span class="p">))))</span>
+         <span class="p">(</span><span class="nv">mc/maybe-multiple-cursors-mode</span><span class="p">)))</span>
+      <span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-exit</span> <span class="ss">&#39;done</span><span class="p">)</span>
+      <span class="p">(</span><span class="nv">exit-minibuffer</span><span class="p">))))</span>
+</code></pre></div>
+<p>After <kbd>C-7</kbd>, here&#39;s the sequence to delete the selected buffers:</p>
+
+<ul>
+<li><kbd>d</kbd> (<code>Buffer-menu-delete</code>) to mark each item for deletion.</li>
+<li><kbd>C-g</kbd> (<code>keyboard-quit</code>) to exit <code>multiple-cursors</code>.</li>
+<li><kbd>x</kbd> (<code>Buffer-menu-execute</code>) to execute the deletions.</li>
+</ul>
+
+<p>And that&#39;s it: all selected buffers are now deleted.  To summarize,
+<kbd>C-s</kbd> <code>dired by</code> <kbd>C-7 d C-g x</kbd> will close all
+<code>dired</code> buffers from your <code>*Buffer List*</code>.</p>
+
+<p>Other interesting applications are also possible, like mass renames in
+<code>wdired</code>, or un-commenting everything in a function.  For example,
+suppose that you have this code:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">progn</span>
+  <span class="c1">;; (check-1)</span>
+  <span class="p">(</span><span class="nv">foo</span><span class="p">)</span>
+  <span class="c1">;; (check-2)</span>
+  <span class="p">(</span><span class="nv">bar</span><span class="p">)</span>
+  <span class="c1">;; (check-3)</span>
+  <span class="p">(</span><span class="nv">baz</span><span class="p">))</span>
+</code></pre></div>
+<p>If it&#39;s a part of a larger buffer, you can narrow with <kbd>C-x nd</kbd> (<code>narrow-to-defun</code>)
+or <kbd>C-x nn</kbd> (<code>narrow-to-region</code>).  Then <kbd>C-s ;; C-7 DEL DEL C-d C-g</kbd> to
+remove all comments.</p>
+
+<p>I have to say that the functionality intersects a bit with
+<code>mc/mark-all-like-this</code>. Except you know the result ahead of time
+(number and position of matches), and you can use a regex instead of a
+literal string.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/10/02/swiper-visual-line/">
         Swiper and visual-line-mode
       </a>
@@ -616,71 +692,6 @@ available.</p>
 and are using C/C++, have a look at
 <a href="https://github.com/abo-abo/function-args">function-args</a> - this
 package does that too, with Ivy, Ido and Helm as available back ends.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/08/14/ivy-kill-ring-save/">
-        Store all current ivy candidates into the kill ring
-      </a>
-    </h1>
-
-    <span class="post-date">14 Aug 2015</span>
-
-    <p>I&#39;d like to highlight a new command added to
-<a href="https://github.com/abo-abo/swiper">ivy-mode</a> today:
-<code>ivy-kill-ring-save</code>.  It allows to store all current candidates to
-the kill ring. This could have a number of uses.</p>
-
-<h2 id="scenario-1">Scenario 1</h2>
-
-<p>Suppose you want to learn some Elisp, specifically all functions that
-start with <code>forward-</code>. Then call <code>counsel-describe-function</code> with
-&quot;forward-&quot; as input and press <kbd>M-w</kbd>. Then just yank this into
-some buffer, <code>org-mode</code> for instance, and go through the functions
-one-by-one takings notes on the way:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>forward-comment
-forward-paragraph
-forward-thing
-forward-symbol
-forward-visible-line
-forward-word
-forward-same-syntax
-forward-whitespace
-forward-button
-forward-line
-forward-list
-forward-sentence
-forward-point
-forward-to-indentation
-forward-ifdef
-forward-char
-forward-sexp
-forward-page
-</code></pre></div>
-<h2 id="scenario-2">Scenario 2</h2>
-
-<p>Suppose you want to store a subset of <code>projectile-find-file</code> names
-that match a pattern.  Just press <kbd>M-w</kbd> and those file names
-will be on the top of the kill ring. Of course, you need to have this setting on:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">projectile-completion-system</span> <span class="ss">&#39;ivy</span><span class="p">)</span>
-</code></pre></div>
-<p>This scenario should apply to basically any place where you&#39;re
-completing file names, like <code>counsel-locate</code> or
-<code>counsel-find-file</code>. Also
-<a href="https://github.com/technomancy/find-file-in-project">find-file-in-project</a>,
-which uses <code>ivy</code> for completion if it&#39;s installed.</p>
-
-<h2 id="outro">Outro</h2>
-
-<p>Note also that the command comes for free, since normally nothing is
-done by <kbd>M-w</kbd> when the region isn&#39;t active. When the region
-is active, this command will store the selected text instead of
-matched candidates.</p>
-
-<p>Thanks to <a href="https://github.com/drorbemet">@drorbemet</a> for giving me the
-idea in <a href="https://github.com/abo-abo/swiper/issues/197">#197</a>.</p>
 
   </div>
   

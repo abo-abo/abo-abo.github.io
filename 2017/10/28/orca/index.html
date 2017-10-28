@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Orca - new package to improve org-capture from browser &middot; (or emacs
+    
+  </title>
+
+  <link rel="canonical" href="https://oremacs.com/2017/10/28/orca/" />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="/public/css/octicons.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Scripts -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body class="layout-reverse theme-base-08">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <!-- <div class="sidebar-item"> -->
+  <!--   <p>unused</p> -->
+  <!-- </div> -->
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about/">About</a>
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/archive/">Archive</a>
+        
+      
+    
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+
+    <div id="github" class="sidebar-nav-item">
+      <button type="button"
+              class="btn btn-info"
+              data-toggle="collapse"
+              data-target="#github-projects">
+        <span class="octicon octicon-mark-github"></span> My Emacs Projects
+      </button>
+      <div id="github-projects" class="collapse">
+        <ul style="margin-bottom:0em;">
+          <li>
+            <a href="https://github.com/abo-abo/lispy">lispy</a>
+            <p>vi-like Paredit</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/worf">worf</a>
+            <p>vi-like bindings for org-mode</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-window">ace-window</a>
+            <p>switch windows with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-link">ace-link</a>
+            <p>follow links with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/function-args">function-args</a>
+            <p>enhance <code>CEDET</code> for C++</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/helm-make">helm-make</a>
+            <p>select a Makefile target with <code>helm</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/make-it-so">make-it-so</a>
+            <p>transform files with Makefile recipes</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/org-download">org-download</a>
+            <p>drag-and-drop images to <code>org-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo?tab=repositories">
+              <span class="octicon octicon-octoface"></span>
+              and more
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
+
+  <div class="sidebar-item">
+    <p>
+      <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">
+        <img alt="Creative Commons License"
+             style="border-width:0;opacity: 0.3;"
+             src="https://licensebuttons.net/l/by-sa/4.0/88x31.png"/>
+      </a>
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">(or emacs</a>
+            <small>irrelevant)</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Orca - new package to improve org-capture from browser</h1>
+  <span class="post-date">28 Oct 2017</span>
+  <h2 id="intro">Intro</h2>
+
+<p><a href="https://github.com/abo-abo/orca">Orca</a> is a new Emacs package, an
+attempt to refactor my old <a href="https://github.com/abo-abo/org-fu">org-fu</a>
+into something that&#39;s much more re-usable and easier to get started
+with.</p>
+
+<h2 id="orca-functionality">Orca functionality</h2>
+
+<h3 id="problem">Problem:</h3>
+
+<p>When capturing from Firefox using
+<a href="http://orgmode.org/worg/org-contrib/org-protocol.html">org-protocol</a> (together with
+<a href="https://addons.mozilla.org/en-US/firefox/addon/org-capture/">this addon</a>):</p>
+
+<ul>
+<li>either I refile each time I capture, which is slow</li>
+<li>or my captures pile up in one place, which is messy</li>
+</ul>
+
+<h3 id="solution">Solution:</h3>
+
+<ol>
+<li>Define rules for where links from certain websites should be captured.</li>
+<li>Allow to capture directly into the current org-mode buffer, since it&#39;s likely related to what I&#39;m working with on.</li>
+</ol>
+
+<h3 id="part-1-rules-example">Part 1: Rules example</h3>
+
+<p>Here is my example list of configurations:</p>
+
+<ul>
+<li>Capture URL matching <a href="https://www.reddit.com/emacs/">https://www.reddit.com/emacs/</a> to <code>emacs.org:Reddit</code>,</li>
+<li>Capture URL matching <a href="https://emacs.stackexchange.com/">https://emacs.stackexchange.com/</a> to <code>emacs.org:Questions</code>,</li>
+<li>If nothing else matches, capture to <code>ent.org:Articles</code>.</li>
+</ul>
+
+<p>Corresponding code:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">orca-handler-list</span>
+      <span class="o">&#39;</span><span class="p">((</span><span class="nv">orca-handler-match-url</span>
+         <span class="s">&quot;https://www.reddit.com/&quot;</span>
+         <span class="s">&quot;~/Dropbox/org/wiki/emacs.org&quot;</span> <span class="s">&quot;Reddit&quot;</span><span class="p">)</span>
+        <span class="p">(</span><span class="nv">orca-handler-match-url</span>
+         <span class="s">&quot;https://emacs.stackexchange.com/&quot;</span>
+         <span class="s">&quot;~/Dropbox/org/wiki/emacs.org&quot;</span> <span class="s">&quot;\\* Questions&quot;</span><span class="p">)</span>
+        <span class="p">(</span><span class="nv">orca-handler-file</span>
+         <span class="s">&quot;~/Dropbox/org/ent.org&quot;</span> <span class="s">&quot;\\* Articles&quot;</span><span class="p">)))</span>
+</code></pre></div>
+<h3 id="part-2-current-buffer-example">Part 2: Current buffer example</h3>
+
+<p>For example, I&#39;m researching how to implement something with
+<a href="https://www.docker.com/">docker</a>.  This means that I have
+<code>docker.org</code> open, along with dozens of tabs in the browser.</p>
+
+<p>I can configure to capture into the current org-mode buffer with a <code>*
+Tasks</code> heading like this:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">push</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">orca-handler-current-buffer</span> <span class="s">&quot;\\* Tasks&quot;</span><span class="p">)</span> <span class="nv">orca-handler-list</span><span class="p">)</span>
+</code></pre></div>
+<p>Since <code>docker.org</code> has <code>* Tasks</code>, I just click the capture button in
+Firefox and follow up with an immediate <kbd>C-c C-c</kbd> in Emacs.
+The link is already in the right position, no need for an extra refile
+step.</p>
+
+<h2 id="using-customize-with-orca">Using <code>customize</code> with orca</h2>
+
+<p>You can set up the capture rules using <kbd>M-x</kbd>
+<code>customize-group</code> <kbd>RET</kbd> <code>orca</code> <kbd>RET</kbd>.</p>
+
+<p>Here&#39;s a screenshot:
+<img src="/download/orca-customize.png" alt="orca-customize"></p>
+
+<p>As you see, the customization is a list of an arbitrary length, with
+each element falling into one of three categories, each backed by an
+Elisp function (<code>orca-handler-current-buffer</code>, <code>orca-handler-file</code>,
+and <code>orca-handler-match-url</code>). Each function takes a different number
+of arguments (one, two, and three, respectively) - they are all
+annotated by the interface.</p>
+
+<p>Here&#39;s the code that describes the expected <code>:type</code> to <code>customize</code>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defcustom</span> <span class="nv">orca-handler-list</span>
+  <span class="c1">;; ...</span>
+  <span class="nb">:type</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">repeat</span>
+          <span class="p">(</span><span class="nv">choice</span>
+           <span class="p">(</span><span class="nf">list</span>
+            <span class="nb">:tag</span> <span class="s">&quot;Current buffer&quot;</span>
+            <span class="p">(</span><span class="nv">const</span> <span class="nv">orca-handler-current-buffer</span><span class="p">)</span>
+            <span class="p">(</span><span class="nf">string</span> <span class="nb">:tag</span> <span class="s">&quot;Heading&quot;</span><span class="p">))</span>
+           <span class="p">(</span><span class="nf">list</span>
+            <span class="nb">:tag</span> <span class="s">&quot;URL matching regex&quot;</span>
+            <span class="p">(</span><span class="nv">const</span> <span class="nv">orca-handler-match-url</span><span class="p">)</span>
+            <span class="p">(</span><span class="nf">string</span> <span class="nb">:tag</span> <span class="s">&quot;URL&quot;</span><span class="p">)</span>
+            <span class="p">(</span><span class="nf">string</span> <span class="nb">:tag</span> <span class="s">&quot;File&quot;</span><span class="p">)</span>
+            <span class="p">(</span><span class="nf">string</span> <span class="nb">:tag</span> <span class="s">&quot;Heading&quot;</span><span class="p">))</span>
+           <span class="p">(</span><span class="nf">list</span>
+            <span class="nb">:tag</span> <span class="s">&quot;Default&quot;</span>
+            <span class="p">(</span><span class="nv">const</span> <span class="nv">orca-handler-file</span><span class="p">)</span>
+            <span class="p">(</span><span class="nf">string</span> <span class="nb">:tag</span> <span class="s">&quot;File&quot;</span><span class="p">)</span>
+            <span class="p">(</span><span class="nf">string</span> <span class="nb">:tag</span> <span class="s">&quot;Heading&quot;</span><span class="p">)))))</span>
+</code></pre></div>
+<p>You can read more about the customization types in <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Composite-Types.html">this manual section</a>.</p>
+
+<h2 id="outro">Outro</h2>
+
+<p>I hope you enjoy <code>orca</code>. I&#39;ve submitted it to MELPA. Hopefully, it
+will be available for an easy install very soon.</p>
+
+<p>Org-mode is a beautiful thing, but my previous attempts to configure
+it were huge config files of loosely related (i.e. the only thing in
+common was Org-mode) stuff spanning hundreds of lines. Orca is an
+improvement in this respect, since it focuses on a very narrow
+domain. It still tries to be flexible (just like <code>org-capture</code>) - you
+can plug in your own functions into <code>orca-handler-list</code>. But
+initially, the flexibility can be constrained into the
+<code>customize-group</code> interface, to allow for a self-documenting solution
+that&#39;s easy to get started with. Happy hacking!</p>
+
+<p>PS. Thanks to all my patrons for advancing my
+<a href="https://oremacs.com/2017/10/18/patreon/">Patreon campaign</a>!
+As of this writing, we&#39;re almost at the <a href="https://www.patreon.com/abo_abo">25% mark</a>
+with 61 contributors.</p>
+
+</div>
+
+<div class="twitter-share">
+  <a href="https://twitter.com/share"
+     class="twitter-share-button"
+     data-via="_abo_abo"
+     data-dnt="true">
+    Tweet
+  </a>
+</div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'oremacs'; // required: replace example with your forum shortname
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+<script>
+  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+</script>
+<noscript>
+  Please enable JavaScript to view the
+  <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>

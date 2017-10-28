@@ -289,6 +289,95 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/06/04/git-grep-ivy-2/">
+        counsel-git-grep, in async
+      </a>
+    </h1>
+
+    <span class="post-date">04 Jun 2015</span>
+
+    <h2 id="introduction">Introduction</h2>
+
+<p>It took me quite a while to figure out, but finally
+<code>counsel-git-grep</code>, which I&#39;ve described
+<a href="http://oremacs.com/2015/04/19/git-grep-ivy/">before</a> works completely
+asynchronously, which means it&#39;s very fast and smooth even for huge
+repositories.</p>
+
+<p>If you don&#39;t know what <code>git grep</code> is: it allows you to search for a
+regular expression in your Git repository. In a way, it&#39;s just a
+<code>find</code> / <code>grep</code> combo, but very concise and fast.  It&#39;s particularly
+great for finding all uses and references to a symbol.</p>
+
+<p>It can be useful even for non-programmers. One great application is to
+stick all your org-mode files into a Git repository. Then you can
+search all your files at once very fast: all my org stuff takes more
+than 1000,000 lines and there&#39;s no lag while searching. I really
+should remove some pdfs from the repository at some point.</p>
+
+<h2 id="the-video-demo">The Video Demo</h2>
+
+<p>Check out the speed and the various command in this <a href="https://www.youtube.com/watch?v=OEmXQNS7ofo">Video Demo</a>. Each key stroke starts two asynchronous shell calls, while canceling the current ones if they are still running.  Here are the example calls:</p>
+<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>$ git --no-pager grep --full-name -n --no-color <span class="se">\</span>
+    -i -e <span class="s2">&quot;forward-line 1&quot;</span> <span class="p">|</span> head -n <span class="m">200</span>
+$ git grep -i -c <span class="s1">&#39;forward-line 1&#39;</span> <span class="se">\</span>
+    <span class="p">|</span> sed <span class="s1">&#39;s/.*:\\(.*\\)/\\1/g&#39;</span> <span class="se">\</span>
+    <span class="p">|</span> awk <span class="s1">&#39;{s+=$1} END {print s}&#39;</span>
+</code></pre></div>
+<h2 id="the-elisp-side">The Elisp side</h2>
+
+<p>I figure since I was interested in this topic, probably a few more people are as well.
+So I&#39;ll explain below how async processing is done (in this case):</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel--gg-count</span> <span class="p">(</span><span class="nv">regex</span> <span class="kp">&amp;optional</span> <span class="nv">no-async</span><span class="p">)</span>
+  <span class="s">&quot;Quickly count the amount of git grep REGEX matches.</span>
+<span class="s">When NO-ASYNC is non-nil, do it synchronously.&quot;</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">default-directory</span> <span class="nv">counsel--git-grep-dir</span><span class="p">)</span>
+        <span class="p">(</span><span class="nv">cmd</span> <span class="p">(</span><span class="nf">concat</span> <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;git grep -i -c &#39;%s&#39;&quot;</span>
+                             <span class="nv">regex</span><span class="p">)</span>
+                     <span class="s">&quot; | sed &#39;s/.*:\\(.*\\)/\\1/g&#39;&quot;</span>
+                     <span class="s">&quot; | awk &#39;{s+=$1} END {print s}&#39;&quot;</span><span class="p">))</span>
+        <span class="p">(</span><span class="nv">counsel-ggc-process</span> <span class="s">&quot; *counsel-gg-count*&quot;</span><span class="p">))</span>
+    <span class="p">(</span><span class="k">if</span> <span class="nv">no-async</span>
+        <span class="p">(</span><span class="nf">string-to-number</span> <span class="p">(</span><span class="nv">shell-command-to-string</span> <span class="nv">cmd</span><span class="p">))</span>
+      <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">proc</span> <span class="p">(</span><span class="nf">get-process</span> <span class="nv">counsel-ggc-process</span><span class="p">))</span>
+            <span class="p">(</span><span class="nv">buff</span> <span class="p">(</span><span class="nf">get-buffer</span> <span class="nv">counsel-ggc-process</span><span class="p">)))</span>
+        <span class="p">(</span><span class="nb">when</span> <span class="nv">proc</span>
+          <span class="p">(</span><span class="nf">delete-process</span> <span class="nv">proc</span><span class="p">))</span>
+        <span class="p">(</span><span class="nb">when</span> <span class="nv">buff</span>
+          <span class="p">(</span><span class="nf">kill-buffer</span> <span class="nv">buff</span><span class="p">))</span>
+        <span class="p">(</span><span class="k">setq</span> <span class="nv">proc</span> <span class="p">(</span><span class="nv">start-process-shell-command</span>
+                    <span class="nv">counsel-ggc-process</span>
+                    <span class="nv">counsel-ggc-process</span>
+                    <span class="nv">cmd</span><span class="p">))</span>
+        <span class="p">(</span><span class="nf">set-process-sentinel</span>
+         <span class="nv">proc</span>
+         <span class="nf">#&#39;</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">process</span> <span class="nv">event</span><span class="p">)</span>
+             <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nv">string=</span> <span class="nv">event</span> <span class="s">&quot;finished\n&quot;</span><span class="p">)</span>
+               <span class="p">(</span><span class="nb">with-current-buffer</span>
+                   <span class="p">(</span><span class="nf">process-buffer</span> <span class="nv">process</span><span class="p">)</span>
+                 <span class="p">(</span><span class="k">setq</span> <span class="nv">ivy--full-length</span>
+                       <span class="p">(</span><span class="nf">string-to-number</span>
+                        <span class="p">(</span><span class="nf">buffer-string</span><span class="p">))))</span>
+               <span class="p">(</span><span class="nv">ivy--insert-minibuffer</span>
+                <span class="p">(</span><span class="nv">ivy--format</span> <span class="nv">ivy--all-candidates</span><span class="p">)))))))))</span>
+</code></pre></div>
+<ol>
+<li>Since we&#39;re calling a shell command, it&#39;s important to set <code>default-directory</code> to a proper value: the shell command will be run there.</li>
+<li>The output from the process will be channeled into a buffer. I start the buffer name with a space to make it hidden: it will not be shown in the buffer list and <code>switch-to-buffer</code> completion.</li>
+<li>I leave the sync option and use <code>shell-command-to-string</code> for that. Sometimes it&#39;s necessary to know the amount of candidates without a delay.</li>
+<li>If <code>get-process</code> and <code>get-buffer</code> return something it means that the shell command is still running from the previous input. But the input has changed and that data has become useless, so I kill both the process and the buffer.</li>
+<li>Then I start a new process with <code>start-process-shell-command</code>- a convenience wrapper around the basic <code>start-process</code> that&#39;s useful for passing a full shell command with arguments.</li>
+<li>Finally, I let <code>counsel--gg-count</code> return without waiting for <code>git grep</code> to finish. But something needs to be done when it finishes, so I use <code>set-process-sentinel</code>. Emacs will call my lambda when there&#39;s a new event from the process.</li>
+</ol>
+
+<h2 id="outro">Outro</h2>
+
+<p>To check out the new stuff, just install or upgrade <code>counsel</code> from MELPA. Or clone <a href="https://github.com/abo-abo/swiper">the source</a>. I hope that my Elisp explanations were useful, async stuff is awesome, and I hope to see more of it in future Emacs packages.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/05/29/lispy-0.26.0/">
         lispy 0.26.0 is out
       </a>
@@ -841,61 +930,6 @@ $ readlink -f <span class="sb">`</span>which newemacs<span class="sb">`</span>
 <p>To run the tests with <code>newemacs</code> instead of <code>emacs</code> (since that&#39;s the
 one for which <code>checkdoc</code> works in batch), use <kbd>M-x</kbd> <code>setenv</code>
 -&gt; <code>emacs</code> -&gt; <code>newemacs</code>.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/05/17/avy-goto-line/">
-        Free avy with your goto-line
-      </a>
-    </h1>
-
-    <span class="post-date">17 May 2015</span>
-
-    <p>I have a fondness for Emacs commands and key bindings that you can
-get for free.  Here, by &quot;free&quot; I mean customizations that don&#39;t
-require you to change your old workflow (i.e. unbind your old
-bindings), but still get the new workflow with comfortable bindings.</p>
-
-<ul>
-<li>For free (almost physical) keys, see my post on
-<a href="http://oremacs.com/2015/02/14/semi-xmodmap/">xmodmap</a>.</li>
-<li>See <a href="http://oremacs.com/2015/05/13/ace-window-0.9.0/">the last post</a>
-to see how you can get window manipulation commands &quot;for free&quot; when
-you call <code>ace-window</code>.</li>
-<li>With <a href="https://github.com/abo-abo/hydra">hydra</a>, you can define
-lightweight minor modes for almost free or even completely free key
-bindings.</li>
-<li>With <a href="https://github.com/abo-abo/lispy">lispy</a>, you get list
-manipulation bindings (single letters, no less) for free when your
-point is positioned at a list boundary, or when the region is
-active.</li>
-<li>With <a href="https://github.com/abo-abo/worf">worf</a>, you get heading
-navigation and manipulation bindings, also single-letter, when your
-point is at a heading or markup start.</li>
-</ul>
-
-<p>Today, I describe a recent addition to
-<a href="https://github.com/abo-abo/avy">avy</a>: when you call <code>avy-goto-line</code>
-and decide that you don&#39;t want to use <code>avy-keys</code> to select a line on
-screen, and you want to select a line by number, you can just enter
-that number.</p>
-
-<p><code>avy-goto-line</code> will recognize that you entered a digit, and forward
-to <code>goto-line</code> with that digit already pre-entered. So basically there&#39;s no disadvantage to doing this:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-g g&quot;</span><span class="p">)</span> <span class="ss">&#39;avy-goto-line</span><span class="p">)</span>
-</code></pre></div>
-<p>Even if you use the <code>avy</code> method zero times, you lose no efficiency
-when compared with regular <code>goto-line</code>, you just get a pretty
-light-show with each call:</p>
-
-<p><img src="/download/avy-goto-line.png" alt="avy-goto-line.png"></p>
-
-<p>You can customize a lot of things in <code>avy</code>, for instance the keys or
-the way the overlays are displayed.  See the
-<a href="https://github.com/abo-abo/avy/wiki/defcustom">new wiki page</a> on
-customization for more info.</p>
 
   </div>
   

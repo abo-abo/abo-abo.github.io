@@ -4,13 +4,141 @@
  <title>(or emacs</title>
  <link href="https://oremacs.com/atom.xml" rel="self"/>
  <link href="https://oremacs.com/"/>
- <updated>2017-10-18T21:25:15+02:00</updated>
+ <updated>2017-10-28T23:02:23+02:00</updated>
  <id>https://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Orca - new package to improve org-capture from browser</title>
+   <link href="https://oremacs.com/2017/10/28/orca/"/>
+   <updated>2017-10-28T00:00:00+02:00</updated>
+   <id>https://oremacs.com/2017/10/28/orca</id>
+   <content type="html">&lt;h2 id=&quot;intro&quot;&gt;Intro&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/abo-abo/orca&quot;&gt;Orca&lt;/a&gt; is a new Emacs package, an
+attempt to refactor my old &lt;a href=&quot;https://github.com/abo-abo/org-fu&quot;&gt;org-fu&lt;/a&gt;
+into something that&amp;#39;s much more re-usable and easier to get started
+with.&lt;/p&gt;
+
+&lt;h2 id=&quot;orca-functionality&quot;&gt;Orca functionality&lt;/h2&gt;
+
+&lt;h3 id=&quot;problem&quot;&gt;Problem:&lt;/h3&gt;
+
+&lt;p&gt;When capturing from Firefox using
+&lt;a href=&quot;http://orgmode.org/worg/org-contrib/org-protocol.html&quot;&gt;org-protocol&lt;/a&gt; (together with
+&lt;a href=&quot;https://addons.mozilla.org/en-US/firefox/addon/org-capture/&quot;&gt;this addon&lt;/a&gt;):&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;either I refile each time I capture, which is slow&lt;/li&gt;
+&lt;li&gt;or my captures pile up in one place, which is messy&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;solution&quot;&gt;Solution:&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Define rules for where links from certain websites should be captured.&lt;/li&gt;
+&lt;li&gt;Allow to capture directly into the current org-mode buffer, since it&amp;#39;s likely related to what I&amp;#39;m working with on.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;part-1-rules-example&quot;&gt;Part 1: Rules example&lt;/h3&gt;
+
+&lt;p&gt;Here is my example list of configurations:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Capture URL matching &lt;a href=&quot;https://www.reddit.com/emacs/&quot;&gt;https://www.reddit.com/emacs/&lt;/a&gt; to &lt;code&gt;emacs.org:Reddit&lt;/code&gt;,&lt;/li&gt;
+&lt;li&gt;Capture URL matching &lt;a href=&quot;https://emacs.stackexchange.com/&quot;&gt;https://emacs.stackexchange.com/&lt;/a&gt; to &lt;code&gt;emacs.org:Questions&lt;/code&gt;,&lt;/li&gt;
+&lt;li&gt;If nothing else matches, capture to &lt;code&gt;ent.org:Articles&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Corresponding code:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;orca-handler-list&lt;/span&gt;
+      &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;orca-handler-match-url&lt;/span&gt;
+         &lt;span class=&quot;s&quot;&gt;&amp;quot;https://www.reddit.com/&amp;quot;&lt;/span&gt;
+         &lt;span class=&quot;s&quot;&gt;&amp;quot;~/Dropbox/org/wiki/emacs.org&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Reddit&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;orca-handler-match-url&lt;/span&gt;
+         &lt;span class=&quot;s&quot;&gt;&amp;quot;https://emacs.stackexchange.com/&amp;quot;&lt;/span&gt;
+         &lt;span class=&quot;s&quot;&gt;&amp;quot;~/Dropbox/org/wiki/emacs.org&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;\\* Questions&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;orca-handler-file&lt;/span&gt;
+         &lt;span class=&quot;s&quot;&gt;&amp;quot;~/Dropbox/org/ent.org&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;\\* Articles&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;part-2-current-buffer-example&quot;&gt;Part 2: Current buffer example&lt;/h3&gt;
+
+&lt;p&gt;For example, I&amp;#39;m researching how to implement something with
+&lt;a href=&quot;https://www.docker.com/&quot;&gt;docker&lt;/a&gt;.  This means that I have
+&lt;code&gt;docker.org&lt;/code&gt; open, along with dozens of tabs in the browser.&lt;/p&gt;
+
+&lt;p&gt;I can configure to capture into the current org-mode buffer with a &lt;code&gt;*
+Tasks&lt;/code&gt; heading like this:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;push&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;orca-handler-current-buffer&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;\\* Tasks&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;orca-handler-list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Since &lt;code&gt;docker.org&lt;/code&gt; has &lt;code&gt;* Tasks&lt;/code&gt;, I just click the capture button in
+Firefox and follow up with an immediate &lt;kbd&gt;C-c C-c&lt;/kbd&gt; in Emacs.
+The link is already in the right position, no need for an extra refile
+step.&lt;/p&gt;
+
+&lt;h2 id=&quot;using-customize-with-orca&quot;&gt;Using &lt;code&gt;customize&lt;/code&gt; with orca&lt;/h2&gt;
+
+&lt;p&gt;You can set up the capture rules using &lt;kbd&gt;M-x&lt;/kbd&gt;
+&lt;code&gt;customize-group&lt;/code&gt; &lt;kbd&gt;RET&lt;/kbd&gt; &lt;code&gt;orca&lt;/code&gt; &lt;kbd&gt;RET&lt;/kbd&gt;.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;#39;s a screenshot:
+&lt;img src=&quot;/download/orca-customize.png&quot; alt=&quot;orca-customize&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;As you see, the customization is a list of an arbitrary length, with
+each element falling into one of three categories, each backed by an
+Elisp function (&lt;code&gt;orca-handler-current-buffer&lt;/code&gt;, &lt;code&gt;orca-handler-file&lt;/code&gt;,
+and &lt;code&gt;orca-handler-match-url&lt;/code&gt;). Each function takes a different number
+of arguments (one, two, and three, respectively) - they are all
+annotated by the interface.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;#39;s the code that describes the expected &lt;code&gt;:type&lt;/code&gt; to &lt;code&gt;customize&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defcustom&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;orca-handler-list&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;;; ...&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;:type&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;repeat&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;choice&lt;/span&gt;
+           &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;list&lt;/span&gt;
+            &lt;span class=&quot;nb&quot;&gt;:tag&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Current buffer&amp;quot;&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;orca-handler-current-buffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:tag&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Heading&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+           &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;list&lt;/span&gt;
+            &lt;span class=&quot;nb&quot;&gt;:tag&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;URL matching regex&amp;quot;&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;orca-handler-match-url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:tag&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;URL&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:tag&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;File&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:tag&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Heading&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+           &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;list&lt;/span&gt;
+            &lt;span class=&quot;nb&quot;&gt;:tag&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Default&amp;quot;&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;orca-handler-file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:tag&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;File&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:tag&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Heading&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;You can read more about the customization types in &lt;a href=&quot;https://www.gnu.org/software/emacs/manual/html_node/elisp/Composite-Types.html&quot;&gt;this manual section&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;I hope you enjoy &lt;code&gt;orca&lt;/code&gt;. I&amp;#39;ve submitted it to MELPA. Hopefully, it
+will be available for an easy install very soon.&lt;/p&gt;
+
+&lt;p&gt;Org-mode is a beautiful thing, but my previous attempts to configure
+it were huge config files of loosely related (i.e. the only thing in
+common was Org-mode) stuff spanning hundreds of lines. Orca is an
+improvement in this respect, since it focuses on a very narrow
+domain. It still tries to be flexible (just like &lt;code&gt;org-capture&lt;/code&gt;) - you
+can plug in your own functions into &lt;code&gt;orca-handler-list&lt;/code&gt;. But
+initially, the flexibility can be constrained into the
+&lt;code&gt;customize-group&lt;/code&gt; interface, to allow for a self-documenting solution
+that&amp;#39;s easy to get started with. Happy hacking!&lt;/p&gt;
+
+&lt;p&gt;PS. Thanks to all my patrons for advancing my
+&lt;a href=&quot;https://oremacs.com/2017/10/18/patreon/&quot;&gt;Patreon campaign&lt;/a&gt;!
+As of this writing, we&amp;#39;re almost at the &lt;a href=&quot;https://www.patreon.com/abo_abo&quot;&gt;25% mark&lt;/a&gt;
+with 61 contributors.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Please consider supporting me on Patreon</title>
