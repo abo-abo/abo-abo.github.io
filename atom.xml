@@ -4,13 +4,120 @@
  <title>(or emacs</title>
  <link href="https://oremacs.com/atom.xml" rel="self"/>
  <link href="https://oremacs.com/"/>
- <updated>2017-10-28T23:02:23+02:00</updated>
+ <updated>2017-11-18T20:55:35+01:00</updated>
  <id>https://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Save Ivy file completions to Dired</title>
+   <link href="https://oremacs.com/2017/11/18/dired-occur/"/>
+   <updated>2017-11-18T00:00:00+01:00</updated>
+   <id>https://oremacs.com/2017/11/18/dired-occur</id>
+   <content type="html">&lt;h2 id=&quot;intro&quot;&gt;Intro&lt;/h2&gt;
+
+&lt;p&gt;I think &lt;code&gt;ivy-occur&lt;/code&gt; (&lt;kbd&gt;C-c C-o&lt;/kbd&gt;) is one of the coolest
+features in &lt;a href=&quot;https://github.com/abo-abo/swiper&quot;&gt;ivy&lt;/a&gt;.  It allows you
+to save your current search into a new buffer. This has many uses:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;get a full overview of all candidates&lt;/li&gt;
+&lt;li&gt;many useful modal bindings (&lt;kbd&gt;q&lt;/kbd&gt;, &lt;kbd&gt;j&lt;/kbd&gt;,
+&lt;kbd&gt;k&lt;/kbd&gt;, &lt;kbd&gt;f&lt;/kbd&gt;) and mouse support&lt;/li&gt;
+&lt;li&gt;ability to manipulate candidates as text&lt;/li&gt;
+&lt;li&gt;save the search for later, with the option to refresh the search with &lt;kbd&gt;g&lt;/kbd&gt;&lt;/li&gt;
+&lt;li&gt;go over candidates as a TODO list, using &lt;kbd&gt;C-d&lt;/kbd&gt; to remove elements&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Everything above works for any &lt;code&gt;ivy-read&lt;/code&gt; session. But the most
+powerful features come into play when &lt;code&gt;ivy-occur&lt;/code&gt; gets customized for
+a specific collection.&lt;/p&gt;
+
+&lt;h2 id=&quot;ivy-occur-for-grep-like-functions&quot;&gt;&lt;code&gt;ivy-occur&lt;/code&gt; for grep-like functions&lt;/h2&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ivy-set-occur&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;swiper&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;swiper-occur&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Thanks to this default customization, the resulting &lt;code&gt;*ivy-occur
+swiper*&lt;/code&gt; buffer is in &lt;code&gt;ivy-occur-grep-mode&lt;/code&gt; which inherits from
+&lt;code&gt;grep-mode&lt;/code&gt;. Additionally, you can use
+&lt;code&gt;ivy-wgrep-change-to-wgrep-mode&lt;/code&gt; &lt;kbd&gt;C-x C-q&lt;/kbd&gt; to edit the result
+in-place - pressing &lt;kbd&gt;C-x C-s&lt;/kbd&gt; will save the changes.&lt;/p&gt;
+
+&lt;p&gt;Similar customizations are available for &lt;code&gt;counsel-git-grep&lt;/code&gt;,
+&lt;code&gt;counsel-ag&lt;/code&gt;, &lt;code&gt;counsel-rg&lt;/code&gt;, and &lt;code&gt;counsel-grep&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;ivy-occur-for-ivy-switch-buffer&quot;&gt;&lt;code&gt;ivy-occur&lt;/code&gt; for &lt;code&gt;ivy-switch-buffer&lt;/code&gt;&lt;/h2&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ivy-set-occur&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ivy-switch-buffer&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ivy-switch-buffer-occur&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This makes &lt;kbd&gt;C-c C-o&lt;/kbd&gt; open your candidates in the powerful
+&lt;code&gt;ibuffer&lt;/code&gt;, which adds additional info to your buffer list and allows
+you to manipulate buffers easily.&lt;/p&gt;
+
+&lt;p&gt;For instance, to delete all matching buffers you can do &lt;kbd&gt;C-c C-o
+tD&lt;/kbd&gt;.&lt;/p&gt;
+
+&lt;p&gt;The source code is short enough to be included here:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ivy-switch-buffer-occur&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Occur function for &lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;`ivy-switch-buffer&amp;#39;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; using &lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;`ibuffer&amp;#39;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ibuffer&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;buffer-name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;list&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;cons&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;name&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ivy--old-re&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The interface is quite simple: &lt;code&gt;ivy-occur&lt;/code&gt; is responsible for
+generating a new buffer, and the occur function
+e.g. &lt;code&gt;ivy-switch-buffer-occur&lt;/code&gt; is to fill that buffer with useful
+info, based on the current search parameters like &lt;code&gt;ivy-text&lt;/code&gt; and
+&lt;code&gt;ivy--old-re&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;ivy-occur-for-counsel-find-file-like-functions&quot;&gt;&lt;code&gt;ivy-occur&lt;/code&gt; for &lt;code&gt;counsel-find-file&lt;/code&gt;-like functions&lt;/h2&gt;
+
+&lt;p&gt;This is a brand new feature that works for &lt;code&gt;counsel-find-file&lt;/code&gt;,
+&lt;code&gt;counsel-git&lt;/code&gt;, and &lt;code&gt;counsel-fzf&lt;/code&gt; (which itself is quite new, thanks to
+&lt;a href=&quot;https://github.com/jojojames&quot;&gt;@jojojames&lt;/a&gt; for contributing it).&lt;/p&gt;
+
+&lt;p&gt;Since these functions are used to complete file names, we obviously
+want &lt;code&gt;ivy-occur&lt;/code&gt; to open a Dired buffer.&lt;/p&gt;
+
+&lt;h3 id=&quot;example-1&quot;&gt;Example 1&lt;/h3&gt;
+
+&lt;p&gt;To delete all &lt;code&gt;*.elc&lt;/code&gt; files in the current folder do:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;C-x C-f&lt;/kbd&gt; &lt;code&gt;elc$&lt;/code&gt; &lt;kbd&gt;C-c C-o&lt;/kbd&gt; &lt;kbd&gt;tDy&lt;/kbd&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;example-2&quot;&gt;Example 2&lt;/h3&gt;
+
+&lt;p&gt;To copy all Org files in a Git project to some directory do:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;M-x&lt;/kbd&gt; &lt;code&gt;counsel-git&lt;/code&gt; &lt;code&gt;org$&lt;/code&gt; &lt;kbd&gt;C-c C-o&lt;/kbd&gt; &lt;kbd&gt;tC&lt;/kbd&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;example-3&quot;&gt;Example 3&lt;/h3&gt;
+
+&lt;p&gt;To get a list of videos to watch do:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;M-x&lt;/kbd&gt; &lt;code&gt;counsel-fzf&lt;/code&gt; &lt;code&gt;mp4$&lt;/code&gt; &lt;kbd&gt;C-c C-o&lt;/kbd&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I can further e.g. mark 3 files with &lt;kbd&gt;m&lt;/kbd&gt; and use &lt;kbd&gt;r&lt;/kbd&gt;
+to send these 3 files to &lt;code&gt;vlc&lt;/code&gt; as a list. See &lt;a href=&quot;https://oremacs.com/2015/01/04/dired-nohup/&quot;&gt;this
+post&lt;/a&gt; for my dired setup
+that makes &lt;kbd&gt;r&lt;/kbd&gt; work this way.&lt;/p&gt;
+
+&lt;p&gt;You can remove some files afterwards with the usual &lt;kbd&gt;D&lt;/kbd&gt; or
+&lt;kbd&gt;dx&lt;/kbd&gt;. And to redisplay the buffer use &lt;kbd&gt;g&lt;/kbd&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;I hope you like the new feature. I had a really good few hours
+figuring out how it should work exactly.  Please consider joining my
+&lt;a href=&quot;https://www.patreon.com/abo_abo&quot;&gt;72 patrons&lt;/a&gt; to give me the
+opportunity to work on Free Software a lot more. Happy hacking!&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Orca - new package to improve org-capture from browser</title>

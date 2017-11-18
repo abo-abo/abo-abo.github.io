@@ -289,6 +289,155 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/08/26/counsel-jedi/">
+        Complete Python symbols using Ivy
+      </a>
+    </h1>
+
+    <span class="post-date">26 Aug 2015</span>
+
+    <p>I had a fascination with Python at one point, until I got too annoyed
+with the indentation rules.  I still have a few scripts left over, so
+I&#39;m sympathetic to Python support in Emacs.  The reason for
+today&#39;s post comes from
+<a href="http://emacs.stackexchange.com/questions/15032/insert-parens-while-completing-functions-in-company-mode">this question</a>
+on Emacs StackExchange. Essentially, the user wants to insert parens
+automatically when a function name is completed.</p>
+
+<p>The completion candidates come from
+<a href="https://github.com/tkf/emacs-jedi">jedi</a> plugin.  To quickly see
+where the list of strings is coming from, I&#39;ve examined <code>ac-sources</code>
+variable and saw that it contains <code>ac-source-jedi-direct</code>, which evaluates to:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">((</span><span class="nv">candidates</span> <span class="o">.</span> <span class="nv">jedi:ac-direct-matches</span><span class="p">)</span>
+ <span class="p">(</span><span class="nv">prefix</span> <span class="o">.</span> <span class="nv">jedi:ac-direct-prefix</span><span class="p">)</span>
+ <span class="p">(</span><span class="nv">init</span> <span class="o">.</span> <span class="nv">jedi:complete-request</span><span class="p">)</span>
+ <span class="p">(</span><span class="nv">requires</span> <span class="o">.</span> <span class="mi">-1</span><span class="p">))</span>
+</code></pre></div>
+<p>This means that <code>jedi:complete-request</code> has to be called at point,
+followed by <code>jedi:ac-direct-matches</code> to obtain the list of strings. So
+basically, this code:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">progn</span>
+  <span class="p">(</span><span class="nv">deferred:sync!</span>
+   <span class="p">(</span><span class="nv">jedi:complete-request</span><span class="p">))</span>
+  <span class="p">(</span><span class="nv">jedi:ac-direct-matches</span><span class="p">))</span>
+</code></pre></div>
+<p>Note the call to <code>deferred:sync!</code>. I had to add that one to make sure
+that <code>jedi:complete-request</code> completes before <code>jedi:ac-direct-matches</code>
+is called.</p>
+
+<p>Testing with some Python code, where <code>|</code> is the point:</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span></span><span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;foo&quot;</span><span class="p">:</span><span class="s2">&quot;bar&quot;</span><span class="p">}</span>
+<span class="n">params</span><span class="o">.</span><span class="n">i</span>
+</code></pre></div>
+<p>The Elisp code above will return:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="o">#(</span><span class="s">&quot;items&quot;</span>
+   <span class="mi">0</span> <span class="mi">5</span> <span class="p">(</span><span class="nv">summary</span>
+        <span class="s">&quot;function: __builtin__.dict.items&quot;</span>
+        <span class="nv">symbol</span>
+        <span class="s">&quot;f&quot;</span>
+        <span class="nv">document</span>
+        <span class="s">&quot;items(self)</span>
+
+<span class="s">D.items() -&gt; list of D&#39;s (key, value) pairs, as 2-tuples&quot;</span><span class="p">))</span>
+  <span class="o">#(</span><span class="s">&quot;iteritems&quot;</span>
+    <span class="mi">0</span> <span class="mi">9</span> <span class="p">(</span><span class="nv">summary</span>
+         <span class="s">&quot;function: __builtin__.dict.iteritems&quot;</span>
+         <span class="nv">symbol</span>
+         <span class="s">&quot;f&quot;</span>
+         <span class="nv">document</span>
+         <span class="s">&quot;iteritems(self)</span>
+
+<span class="s">D.iteritems() -&gt; an iterator over the (key, value) items of D&quot;</span><span class="p">))</span>
+  <span class="o">#(</span><span class="s">&quot;iterkeys&quot;</span>
+    <span class="mi">0</span> <span class="mi">8</span> <span class="p">(</span><span class="nv">summary</span>
+         <span class="s">&quot;function: __builtin__.dict.iterkeys&quot;</span>
+         <span class="nv">symbol</span>
+         <span class="s">&quot;f&quot;</span>
+         <span class="nv">document</span>
+         <span class="s">&quot;iterkeys(self)</span>
+
+<span class="s">D.iterkeys() -&gt; an iterator over the keys of D&quot;</span><span class="p">))</span>
+  <span class="o">#(</span><span class="s">&quot;itervalues&quot;</span>
+    <span class="mi">0</span> <span class="mi">10</span> <span class="p">(</span><span class="nv">summary</span>
+          <span class="s">&quot;function: __builtin__.dict.itervalues&quot;</span>
+          <span class="nv">symbol</span>
+          <span class="s">&quot;f&quot;</span>
+          <span class="nv">document</span>
+          <span class="s">&quot;itervalues(self)</span>
+
+<span class="s">D.itervalues() -&gt; an iterator over the values of D&quot;</span><span class="p">)))</span>
+</code></pre></div>
+<p>So these strings come with the symbol documentation and symbol type
+encoded as string properties. After this, the rest of the Elisp code
+follows very easily, you can find it as part of
+<a href="https://github.com/abo-abo/swiper/blob/master/counsel.el">counsel</a>
+package on MELPA:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel-jedi</span> <span class="p">()</span>
+  <span class="s">&quot;Python completion at point.&quot;</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">bnd</span> <span class="p">(</span><span class="nv">bounds-of-thing-at-point</span> <span class="ss">&#39;symbol</span><span class="p">)))</span>
+    <span class="p">(</span><span class="k">if</span> <span class="nv">bnd</span>
+        <span class="p">(</span><span class="k">progn</span>
+          <span class="p">(</span><span class="k">setq</span> <span class="nv">counsel-completion-beg</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">bnd</span><span class="p">))</span>
+          <span class="p">(</span><span class="k">setq</span> <span class="nv">counsel-completion-end</span> <span class="p">(</span><span class="nf">cdr</span> <span class="nv">bnd</span><span class="p">)))</span>
+      <span class="p">(</span><span class="k">setq</span> <span class="nv">counsel-completion-beg</span> <span class="no">nil</span><span class="p">)</span>
+      <span class="p">(</span><span class="k">setq</span> <span class="nv">counsel-completion-end</span> <span class="no">nil</span><span class="p">)))</span>
+  <span class="p">(</span><span class="nv">deferred:sync!</span>
+   <span class="p">(</span><span class="nv">jedi:complete-request</span><span class="p">))</span>
+  <span class="p">(</span><span class="nv">ivy-read</span> <span class="s">&quot;Symbol name: &quot;</span> <span class="p">(</span><span class="nv">jedi:ac-direct-matches</span><span class="p">)</span>
+            <span class="nb">:action</span> <span class="nf">#&#39;</span><span class="nv">counsel--py-action</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel--py-action</span> <span class="p">(</span><span class="nv">symbol</span><span class="p">)</span>
+  <span class="s">&quot;Insert SYMBOL, erasing the previous one.&quot;</span>
+  <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">stringp</span> <span class="nv">symbol</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">with-ivy-window</span>
+      <span class="p">(</span><span class="nb">when</span> <span class="nv">counsel-completion-beg</span>
+        <span class="p">(</span><span class="nf">delete-region</span>
+         <span class="nv">counsel-completion-beg</span>
+         <span class="nv">counsel-completion-end</span><span class="p">))</span>
+      <span class="p">(</span><span class="k">setq</span> <span class="nv">counsel-completion-beg</span>
+            <span class="p">(</span><span class="nv">move-marker</span> <span class="p">(</span><span class="nf">make-marker</span><span class="p">)</span> <span class="p">(</span><span class="nf">point</span><span class="p">)))</span>
+      <span class="p">(</span><span class="nf">insert</span> <span class="nv">symbol</span><span class="p">)</span>
+      <span class="p">(</span><span class="k">setq</span> <span class="nv">counsel-completion-end</span>
+            <span class="p">(</span><span class="nv">move-marker</span> <span class="p">(</span><span class="nf">make-marker</span><span class="p">)</span> <span class="p">(</span><span class="nf">point</span><span class="p">)))</span>
+      <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">equal</span> <span class="p">(</span><span class="nf">get-text-property</span> <span class="mi">0</span> <span class="ss">&#39;symbol</span> <span class="nv">symbol</span><span class="p">)</span> <span class="s">&quot;f&quot;</span><span class="p">)</span>
+        <span class="p">(</span><span class="nf">insert</span> <span class="s">&quot;()&quot;</span><span class="p">)</span>
+        <span class="p">(</span><span class="k">setq</span> <span class="nv">counsel-completion-end</span>
+              <span class="p">(</span><span class="nv">move-marker</span> <span class="p">(</span><span class="nf">make-marker</span><span class="p">)</span> <span class="p">(</span><span class="nf">point</span><span class="p">)))</span>
+        <span class="p">(</span><span class="nf">backward-char</span> <span class="mi">1</span><span class="p">)))))</span>
+</code></pre></div>
+<p>Essentially, the last interesting part is <code>(equal (get-text-property 0
+&#39;symbol symbol) &quot;f&quot;)</code> which test if the string corresponds to a
+function or not. The rest of the code just fiddles with symbol markers
+with ensure that the previous symbol is erased before the new symbol
+is inserted if you press <kbd>C-M-n</kbd> (<code>ivy-next-line-and-call</code>),
+or use <code>ivy-resume</code>. Just to describe how this would be useful for the
+Python code above: I call <code>counsel-jedi</code>, followed by <kbd>C-M-n</kbd>
+to get:</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span></span><span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;foo&quot;</span><span class="p">:</span><span class="s2">&quot;bar&quot;</span><span class="p">}</span>
+<span class="n">params</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="o">|</span><span class="p">)</span>
+</code></pre></div>
+<p>Pressing <kbd>C-M-n</kbd> again will result in:</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span></span><span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;foo&quot;</span><span class="p">:</span><span class="s2">&quot;bar&quot;</span><span class="p">}</span>
+<span class="n">params</span><span class="o">.</span><span class="n">iterkeys</span><span class="p">(</span><span class="o">|</span><span class="p">)</span>
+</code></pre></div>
+<p>Once I&#39;m satisfied with my selected candidate, I can press either
+<kbd>C-m</kbd> or <kbd>C-j</kbd> or <kbd>C-g</kbd>.  Most of the above
+code can be used almost verbatim if you&#39;re a Helm fan and want to
+implement <code>helm-jedi</code>. Basically, the approach I described (going
+through <code>ac-sources</code>) can be used to implement alternative completion
+in a lot of cases where <code>auto-complete-mode</code> completion is already
+available.</p>
+
+<p>Finally, if you like the idea of auto-inserting parens with completion
+and are using C/C++, have a look at
+<a href="https://github.com/abo-abo/function-args">function-args</a> - this
+package does that too, with Ivy, Ido and Helm as available back ends.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/08/14/ivy-kill-ring-save/">
         Store all current ivy candidates into the kill ring
       </a>
@@ -834,113 +983,6 @@ can add actions yourself to almost any command that uses <code>ivy-read</code>.
 In the rare case when <code>ivy-read</code> isn&#39;t in the tail position, you can
 use <a href="http://oremacs.com/2015/07/16/callback-quit/">ivy-quit-and-run</a>
 inside the added action functions.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/07/20/hydra-columns/">
-        Easily arrange hydra into a matrix
-      </a>
-    </h1>
-
-    <span class="post-date">20 Jul 2015</span>
-
-    <h2 id="the-new-columns-option">The new <code>:columns</code> option</h2>
-
-<p>Today I&#39;ll introduce a pretty cool new option that you can use to
-quickly create hydra docstrings arranged in a matrix.  This, of
-course, was already possible before, but you had to format the matrix
-by-hand like this (I cite just bit instead of the
-<a href="https://github.com/abo-abo/hydra/wiki/Projectile">full code</a>, it was
-cut to fit into the Jekyll code column restriction):</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-projectile</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">teal</span>
-                            <span class="nb">:hint</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="s">&quot;</span>
-<span class="s">     PROJECTILE:</span>
-
-<span class="s">     Find File            Search/Tags</span>
-<span class="s">-----------------------------------------</span>
-<span class="s">_s-f_: file            _a_: ag</span>
-<span class="s"> _ff_: file dwim       _g_: update gtags</span>
-<span class="s"> _fd_: file curr dir   _o_: multi-occur</span>
-<span class="s"> &quot;</span>
-  <span class="p">(</span><span class="s">&quot;s-f&quot;</span> <span class="nv">projectile-find-file</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="nv">projectile-ag</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;ff&quot;</span> <span class="nv">projectile-find-file-dwim</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;fd&quot;</span> <span class="nv">projectile-find-file-in-directory</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;g&quot;</span> <span class="nv">ggtags-update-tags</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;o&quot;</span> <span class="nv">projectile-multi-occur</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span> <span class="s">&quot;cancel&quot;</span><span class="p">))</span>
-</code></pre></div>
-<p>The syntax above is still very useful if you want to arrange every
-detail perfectly or need Ruby-style quoting.  But here&#39;s the new
-syntax that allows to get almost the
-<a href="https://github.com/abo-abo/hydra/wiki/Projectile">same docstring</a>
-much easier:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-projectile</span> <span class="p">(</span><span class="nb">:color</span> <span class="nv">blue</span>
-                            <span class="nb">:columns</span> <span class="mi">4</span><span class="p">)</span>
-  <span class="s">&quot;Projectile&quot;</span>
-  <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="nv">projectile-ag</span> <span class="s">&quot;ag&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;b&quot;</span> <span class="nv">projectile-switch-to-buffer</span> <span class="s">&quot;switch to buffer&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;c&quot;</span> <span class="nv">projectile-invalidate-cache</span> <span class="s">&quot;cache clear&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;d&quot;</span> <span class="nv">projectile-find-dir</span> <span class="s">&quot;dir&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;s-f&quot;</span> <span class="nv">projectile-find-file</span> <span class="s">&quot;file&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;ff&quot;</span> <span class="nv">projectile-find-file-dwim</span> <span class="s">&quot;file dwim&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;fd&quot;</span> <span class="nv">projectile-find-file-in-directory</span> <span class="s">&quot;file curr dir&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;g&quot;</span> <span class="nv">ggtags-update-tags</span> <span class="s">&quot;update gtags&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;i&quot;</span> <span class="nv">projectile-ibuffer</span> <span class="s">&quot;Ibuffer&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;K&quot;</span> <span class="nv">projectile-kill-buffers</span> <span class="s">&quot;Kill all buffers&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;o&quot;</span> <span class="nv">projectile-multi-occur</span> <span class="s">&quot;multi-occur&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;p&quot;</span> <span class="nv">projectile-switch-project</span> <span class="s">&quot;switch&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;r&quot;</span> <span class="nv">projectile-recentf</span> <span class="s">&quot;recent file&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;x&quot;</span> <span class="nv">projectile-remove-known-project</span> <span class="s">&quot;remove known&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;X&quot;</span> <span class="nv">projectile-cleanup-known-projects</span> <span class="s">&quot;cleanup non-existing&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;z&quot;</span> <span class="nv">projectile-cache-current-file</span> <span class="s">&quot;cache current&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span> <span class="s">&quot;cancel&quot;</span><span class="p">))</span>
-</code></pre></div>
-<p>It still looks pretty good, in my opinion:</p>
-
-<p><img src="/download/hydra-columns-projectile.png" alt="hydra-columns-projectile.png"></p>
-
-<p>Note how all redundant information has been removed. Another advantage
-is the you can easily:</p>
-
-<ul>
-<li>Add/remove heads.</li>
-<li>Update head hints.</li>
-<li>Change the number of columns.</li>
-</ul>
-
-<h2 id="a-bit-of-customization">A bit of customization</h2>
-
-<p>After each change, just re-eval the <code>defhydra</code> and you&#39;re done - no
-need to manually re-arrange the docstring.  Since there already is an
-interface that allows you to customize the docstring very precisely, I
-tried to make the new interface as automatic as possible: just specify
-the number of columns and you&#39;re done. But if you want just a little
-bit more customization, look at this code:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">defvar</span> <span class="nv">hydra-key-doc-function</span> <span class="ss">&#39;hydra-key-doc-function-default</span>
-  <span class="s">&quot;The function for formatting key-doc pairs.&quot;</span><span class="p">)</span>
-
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">hydra-key-doc-function-default</span> <span class="p">(</span><span class="nv">key</span> <span class="nv">key-width</span> <span class="nv">doc</span> <span class="nv">doc-width</span><span class="p">)</span>
-  <span class="p">(</span><span class="nf">format</span> <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;%%%ds: %%%ds&quot;</span> <span class="nv">key-width</span> <span class="p">(</span><span class="nf">-</span> <span class="mi">-1</span> <span class="nv">doc-width</span><span class="p">))</span>
-          <span class="nv">key</span> <span class="nv">doc</span><span class="p">))</span>
-</code></pre></div>
-<p>So if you want to add a little space here and there, or e.g. wrap key
-bindings in brackets, just clone <code>hydra-key-doc-function-default</code>,
-customize it a bit and set <code>hydra-key-doc-function</code> to the new
-function.</p>
-
-<h2 id="outro">Outro</h2>
-
-<p>If you&#39;ve been using just the plain style before and felt that you
-can&#39;t fit your docstring on one line, try the new style: it&#39;s just one
-line of change with respect to your old code.  And if you&#39;ve been
-building the docstring by-hand, see if it&#39;s possible to transform it
-to the new style: adding and removing new heads will become easier.
-Thanks to <a href="https://github.com/Fuco1">@Fuco1</a> for the suggestion in
-<a href="https://github.com/abo-abo/hydra/issues/140">#140</a>.</p>
 
   </div>
   

@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Save Ivy file completions to Dired &middot; (or emacs
+    
+  </title>
+
+  <link rel="canonical" href="https://oremacs.com/2017/11/18/dired-occur/" />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="/public/css/octicons.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Scripts -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body class="layout-reverse theme-base-08">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <!-- <div class="sidebar-item"> -->
+  <!--   <p>unused</p> -->
+  <!-- </div> -->
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about/">About</a>
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/archive/">Archive</a>
+        
+      
+    
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+
+    <div id="github" class="sidebar-nav-item">
+      <button type="button"
+              class="btn btn-info"
+              data-toggle="collapse"
+              data-target="#github-projects">
+        <span class="octicon octicon-mark-github"></span> My Emacs Projects
+      </button>
+      <div id="github-projects" class="collapse">
+        <ul style="margin-bottom:0em;">
+          <li>
+            <a href="https://github.com/abo-abo/lispy">lispy</a>
+            <p>vi-like Paredit</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/worf">worf</a>
+            <p>vi-like bindings for org-mode</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-window">ace-window</a>
+            <p>switch windows with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-link">ace-link</a>
+            <p>follow links with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/function-args">function-args</a>
+            <p>enhance <code>CEDET</code> for C++</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/helm-make">helm-make</a>
+            <p>select a Makefile target with <code>helm</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/make-it-so">make-it-so</a>
+            <p>transform files with Makefile recipes</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/org-download">org-download</a>
+            <p>drag-and-drop images to <code>org-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo?tab=repositories">
+              <span class="octicon octicon-octoface"></span>
+              and more
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
+
+  <div class="sidebar-item">
+    <p>
+      <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">
+        <img alt="Creative Commons License"
+             style="border-width:0;opacity: 0.3;"
+             src="https://licensebuttons.net/l/by-sa/4.0/88x31.png"/>
+      </a>
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">(or emacs</a>
+            <small>irrelevant)</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Save Ivy file completions to Dired</h1>
+  <span class="post-date">18 Nov 2017</span>
+  <h2 id="intro">Intro</h2>
+
+<p>I think <code>ivy-occur</code> (<kbd>C-c C-o</kbd>) is one of the coolest
+features in <a href="https://github.com/abo-abo/swiper">ivy</a>.  It allows you
+to save your current search into a new buffer. This has many uses:</p>
+
+<ul>
+<li>get a full overview of all candidates</li>
+<li>many useful modal bindings (<kbd>q</kbd>, <kbd>j</kbd>,
+<kbd>k</kbd>, <kbd>f</kbd>) and mouse support</li>
+<li>ability to manipulate candidates as text</li>
+<li>save the search for later, with the option to refresh the search with <kbd>g</kbd></li>
+<li>go over candidates as a TODO list, using <kbd>C-d</kbd> to remove elements</li>
+</ul>
+
+<p>Everything above works for any <code>ivy-read</code> session. But the most
+powerful features come into play when <code>ivy-occur</code> gets customized for
+a specific collection.</p>
+
+<h2 id="ivy-occur-for-grep-like-functions"><code>ivy-occur</code> for grep-like functions</h2>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">ivy-set-occur</span> <span class="ss">&#39;swiper</span> <span class="ss">&#39;swiper-occur</span><span class="p">)</span>
+</code></pre></div>
+<p>Thanks to this default customization, the resulting <code>*ivy-occur
+swiper*</code> buffer is in <code>ivy-occur-grep-mode</code> which inherits from
+<code>grep-mode</code>. Additionally, you can use
+<code>ivy-wgrep-change-to-wgrep-mode</code> <kbd>C-x C-q</kbd> to edit the result
+in-place - pressing <kbd>C-x C-s</kbd> will save the changes.</p>
+
+<p>Similar customizations are available for <code>counsel-git-grep</code>,
+<code>counsel-ag</code>, <code>counsel-rg</code>, and <code>counsel-grep</code>.</p>
+
+<h2 id="ivy-occur-for-ivy-switch-buffer"><code>ivy-occur</code> for <code>ivy-switch-buffer</code></h2>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">ivy-set-occur</span> <span class="ss">&#39;ivy-switch-buffer</span> <span class="ss">&#39;ivy-switch-buffer-occur</span><span class="p">)</span>
+</code></pre></div>
+<p>This makes <kbd>C-c C-o</kbd> open your candidates in the powerful
+<code>ibuffer</code>, which adds additional info to your buffer list and allows
+you to manipulate buffers easily.</p>
+
+<p>For instance, to delete all matching buffers you can do <kbd>C-c C-o
+tD</kbd>.</p>
+
+<p>The source code is short enough to be included here:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">ivy-switch-buffer-occur</span> <span class="p">()</span>
+  <span class="s">&quot;Occur function for </span><span class="ss">`ivy-switch-buffer&#39;</span><span class="s"> using </span><span class="ss">`ibuffer&#39;</span><span class="s">.&quot;</span>
+  <span class="p">(</span><span class="nv">ibuffer</span> <span class="no">nil</span> <span class="p">(</span><span class="nf">buffer-name</span><span class="p">)</span> <span class="p">(</span><span class="nf">list</span> <span class="p">(</span><span class="nf">cons</span> <span class="ss">&#39;name</span> <span class="nv">ivy--old-re</span><span class="p">))))</span>
+</code></pre></div>
+<p>The interface is quite simple: <code>ivy-occur</code> is responsible for
+generating a new buffer, and the occur function
+e.g. <code>ivy-switch-buffer-occur</code> is to fill that buffer with useful
+info, based on the current search parameters like <code>ivy-text</code> and
+<code>ivy--old-re</code>.</p>
+
+<h2 id="ivy-occur-for-counsel-find-file-like-functions"><code>ivy-occur</code> for <code>counsel-find-file</code>-like functions</h2>
+
+<p>This is a brand new feature that works for <code>counsel-find-file</code>,
+<code>counsel-git</code>, and <code>counsel-fzf</code> (which itself is quite new, thanks to
+<a href="https://github.com/jojojames">@jojojames</a> for contributing it).</p>
+
+<p>Since these functions are used to complete file names, we obviously
+want <code>ivy-occur</code> to open a Dired buffer.</p>
+
+<h3 id="example-1">Example 1</h3>
+
+<p>To delete all <code>*.elc</code> files in the current folder do:</p>
+
+<ul>
+<li><kbd>C-x C-f</kbd> <code>elc$</code> <kbd>C-c C-o</kbd> <kbd>tDy</kbd>.</li>
+</ul>
+
+<h3 id="example-2">Example 2</h3>
+
+<p>To copy all Org files in a Git project to some directory do:</p>
+
+<ul>
+<li><kbd>M-x</kbd> <code>counsel-git</code> <code>org$</code> <kbd>C-c C-o</kbd> <kbd>tC</kbd>.</li>
+</ul>
+
+<h3 id="example-3">Example 3</h3>
+
+<p>To get a list of videos to watch do:</p>
+
+<ul>
+<li><kbd>M-x</kbd> <code>counsel-fzf</code> <code>mp4$</code> <kbd>C-c C-o</kbd>.</li>
+</ul>
+
+<p>I can further e.g. mark 3 files with <kbd>m</kbd> and use <kbd>r</kbd>
+to send these 3 files to <code>vlc</code> as a list. See <a href="https://oremacs.com/2015/01/04/dired-nohup/">this
+post</a> for my dired setup
+that makes <kbd>r</kbd> work this way.</p>
+
+<p>You can remove some files afterwards with the usual <kbd>D</kbd> or
+<kbd>dx</kbd>. And to redisplay the buffer use <kbd>g</kbd>.</p>
+
+<h2 id="outro">Outro</h2>
+
+<p>I hope you like the new feature. I had a really good few hours
+figuring out how it should work exactly.  Please consider joining my
+<a href="https://www.patreon.com/abo_abo">72 patrons</a> to give me the
+opportunity to work on Free Software a lot more. Happy hacking!</p>
+
+</div>
+
+<div class="twitter-share">
+  <a href="https://twitter.com/share"
+     class="twitter-share-button"
+     data-via="_abo_abo"
+     data-dnt="true">
+    Tweet
+  </a>
+</div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'oremacs'; // required: replace example with your forum shortname
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+<script>
+  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+</script>
+<noscript>
+  Please enable JavaScript to view the
+  <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>
