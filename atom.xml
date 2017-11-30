@@ -4,13 +4,140 @@
  <title>(or emacs</title>
  <link href="https://oremacs.com/atom.xml" rel="self"/>
  <link href="https://oremacs.com/"/>
- <updated>2017-11-18T20:55:35+01:00</updated>
+ <updated>2017-11-30T20:54:07+01:00</updated>
  <id>https://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Ivy 0.10.0 is out</title>
+   <link href="https://oremacs.com/2017/11/30/ivy-0.10.0/"/>
+   <updated>2017-11-30T00:00:00+01:00</updated>
+   <id>https://oremacs.com/2017/11/30/ivy-0.10.0</id>
+   <content type="html">&lt;h2 id=&quot;intro&quot;&gt;Intro&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/abo-abo/swiper&quot;&gt;Ivy&lt;/a&gt; is a completion method that&amp;#39;s
+similar to &lt;code&gt;Ido&lt;/code&gt;, but with emphasis on simplicity and customizability.&lt;/p&gt;
+
+&lt;h2 id=&quot;overview&quot;&gt;Overview&lt;/h2&gt;
+
+&lt;p&gt;The current release constitutes of 280 commits and 8 months of
+progress since &lt;code&gt;0.9.0&lt;/code&gt;. Many issues ranging from
+&lt;a href=&quot;https://github.com/abo-abo/swiper/issues/952&quot;&gt;#952&lt;/a&gt; to
+&lt;a href=&quot;https://github.com/abo-abo/swiper/issues/1336&quot;&gt;#1336&lt;/a&gt; were fixed.
+The number of people who contributed code as grown to
+&lt;a href=&quot;https://github.com/abo-abo/swiper/graphs/contributors&quot;&gt;91&lt;/a&gt;; thanks,
+everyone!&lt;/p&gt;
+
+&lt;h2 id=&quot;details-on-changes&quot;&gt;Details on changes&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;Changelog.org&lt;/code&gt; has been a part of the repository since &lt;code&gt;0.6.0&lt;/code&gt;, you
+can get the details of the current and past changes:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;in &lt;a href=&quot;https://github.com/abo-abo/swiper/blob/master/doc/Changelog.org#0100&quot;&gt;org-mode&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;in &lt;a href=&quot;http://oremacs.com/swiper/Changelog#0-10-0&quot;&gt;HTML&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;highlights&quot;&gt;Highlights&lt;/h2&gt;
+
+&lt;p&gt;Many improvements are incremental and don&amp;#39;t require any extra code to
+enable.  I&amp;#39;ll go over a few selected features that require a bit of
+information to make a good use of them.&lt;/p&gt;
+
+&lt;h3 id=&quot;selectable-prompt&quot;&gt;Selectable prompt&lt;/h3&gt;
+
+&lt;p&gt;Off by default. You can turn it on like so:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ivy-use-selectable-prompt&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;After this, your current input becomes selectable as a
+candidate. Press &lt;kbd&gt;C-p&lt;/kbd&gt; when you&amp;#39;re on the first candidate to
+select your input instead.&lt;/p&gt;
+
+&lt;p&gt;This solves the long standing issue of e.g. creating a file or
+a directory &lt;code&gt;foo&lt;/code&gt; when a file &lt;code&gt;foobar&lt;/code&gt; already exists. Previously, the
+only solution was to use &lt;kbd&gt;C-M-j&lt;/kbd&gt;.  It&amp;#39;s still available, but
+now you can also select your input with &lt;kbd&gt;C-p&lt;/kbd&gt; and press
+&lt;kbd&gt;RET&lt;/kbd&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;new-global-actions-for-ivy&quot;&gt;New global actions for ivy&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;ivy-set-actions&lt;/code&gt; was used to enable the following bindings:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Press &lt;kbd&gt;M-o w&lt;/kbd&gt; to copy the current candidate to the kill ring.&lt;/li&gt;
+&lt;li&gt;Press &lt;kbd&gt;M-o i&lt;/kbd&gt; to insert the current candidate into the buffer.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;These bindings are valid for any completion session by default.&lt;/p&gt;
+
+&lt;h3 id=&quot;use-c-d-in-ivy-occur-buffers&quot;&gt;Use &lt;kbd&gt;C-d&lt;/kbd&gt; in ivy-occur buffers&lt;/h3&gt;
+
+&lt;p&gt;Here&amp;#39;s an example use-case: search your source code for a variable
+name with e.g. &lt;code&gt;counsel-rg&lt;/code&gt; and call &lt;code&gt;ivy-occur&lt;/code&gt; (&lt;kbd&gt;C-c C-o&lt;/kbd&gt;).
+Suppose you get 10 results, only 4 of which are interesting.  You can
+now delete the uninteresting ones with &lt;kbd&gt;C-d&lt;/kbd&gt;. Then maybe
+check off the others with &lt;kbd&gt;C-d&lt;/kbd&gt; as well as you complete them
+one by one. A sort of a TODO list.&lt;/p&gt;
+
+&lt;p&gt;Similarly, if you want to go over variables to customize, you can call
+&lt;code&gt;counsel-describe-variable&lt;/code&gt; with input &lt;code&gt;^counsel-[^-]&lt;/code&gt; and then check
+off the ones you have already examined with &lt;kbd&gt;C-d&lt;/kbd&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;defcustoms-to-play-with&quot;&gt;Defcustoms to play with&lt;/h3&gt;
+
+&lt;p&gt;Here&amp;#39;s the list of new &lt;code&gt;defcustom&lt;/code&gt; or &lt;code&gt;defvar&lt;/code&gt; that might be
+interesting to review:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;counsel-async-filter-update-time&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;counsel-async-ignore-re&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;counsel-describe-function-function&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;counsel-describe-function-preselect&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;counsel-find-file-ignore-regexp&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;counsel-fzf-dir-function&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;counsel-git-grep-skip-counting-lines&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;counsel-git-log-split-string-re&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;counsel-url-expansions&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ivy-auto-select-single-candidate&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ivy-magic-slash-non-match-action&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ivy--preferred-re-builders&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ivy-truncate-lines&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;new-commands&quot;&gt;New Commands&lt;/h2&gt;
+
+&lt;p&gt;14 new commands were added by me and many contributors. Here&amp;#39;s the list:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;counsel-ack&lt;/code&gt; - completion for &lt;a href=&quot;https://beyondgrep.com/&quot;&gt;ack&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;counsel-apropos&lt;/code&gt; - completion for &lt;a href=&quot;https://www.gnu.org/software/emacs/manual/html_node/emacs/Apropos.html&quot;&gt;apropos&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;counsel-file-register&lt;/code&gt; - completion for &lt;a href=&quot;https://www.gnu.org/software/emacs/manual/html_node/emacs/File-Registers.html&quot;&gt;file registers&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;counsel-fzf&lt;/code&gt; - completion for &lt;a href=&quot;https://github.com/junegunn/fzf&quot;&gt;fzf&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;counsel-git-change-worktree&lt;/code&gt; - completion for &lt;a href=&quot;https://git-scm.com/docs/git-worktree&quot;&gt;git-worktree&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;counsel-git-checkout&lt;/code&gt; - completion for &lt;a href=&quot;https://git-scm.com/docs/git-checkout&quot;&gt;git-checkout&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;counsel-minibuffer-history&lt;/code&gt; - generalization of &lt;code&gt;counsel-expression-history&lt;/code&gt; and &lt;code&gt;counsel-shell-command-history&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;counsel-org-capture&lt;/code&gt; - completion for &lt;a href=&quot;http://orgmode.org/manual/Capture.html&quot;&gt;org-capture&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;counsel-org-file&lt;/code&gt; - browse all attachments for the current Org file&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;counsel-org-goto&lt;/code&gt; - completion for Org headings&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;counsel-org-goto-all&lt;/code&gt; - completion for Org headings in all open buffers&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;counsel-switch-to-shell-buffer&lt;/code&gt; - switch to a shell buffer, or create one&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ivy-occur-delete-candidate&lt;/code&gt; - delete current candidate in &lt;code&gt;ivy-occur-mode&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ivy-switch-view&lt;/code&gt; - select a &lt;a href=&quot;https://oremacs.com/2016/06/27/ivy-push-view/&quot;&gt;window configuration&lt;/a&gt;, decoupled from &lt;code&gt;ivy-switch-buffer&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;My personal favorites are &lt;code&gt;counsel-fzf&lt;/code&gt; and &lt;code&gt;counsel-org-file&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;Again, thanks to all the contributors. Happy hacking!&lt;/p&gt;
+
+&lt;p&gt;P.S. Please consider joining my &lt;a href=&quot;https://www.patreon.com/abo_abo&quot;&gt;74 patrons&lt;/a&gt; to give me the opportunity to work on Free Software a lot more. We are currently at 30% of the goal.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Save Ivy file completions to Dired</title>

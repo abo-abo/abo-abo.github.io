@@ -206,6 +206,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -286,6 +290,94 @@
 
       <div class="container content">
         <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/2015/03/06/ace-window-toggle/">
+        Select the previous window with ace-window
+      </a>
+    </h1>
+
+    <span class="post-date">06 Mar 2015</span>
+
+    <p>It&#39;s strange that I haven&#39;t implemented this feature before, as it&#39;s
+quite a common usage pattern:</p>
+
+<ol>
+<li>You select a window with <code>ace-window</code>.</li>
+<li>You do some stuff there.</li>
+<li>You want to return the previous window.</li>
+</ol>
+
+<h2 id="aw-flip-window"><code>aw-flip-window</code></h2>
+
+<p>In the step 3, you have to go though the whole <code>aw-keys</code> dispatch,
+only to select a window which can be pre-determined. Not any more, if
+you call <code>aw-flip-window</code>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">aw-flip-window</span> <span class="p">()</span>
+  <span class="s">&quot;Switch to the window you were previously in.&quot;</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">aw-switch-to-window</span> <span class="p">(</span><span class="nv">aw--pop-window</span><span class="p">)))</span>
+</code></pre></div>
+<p>So now, you could have a grid of 10 windows, select one of them with
+<code>ace-window</code>, and switch indefinitely between it and the previous
+window with <code>ace-flip-window</code>, while ignoring the other 8.</p>
+
+<h2 id="aw-ignored-buffers"><code>aw-ignored-buffers</code></h2>
+
+<p>Remember that if you have some window that you never want to switch to
+with <code>ace-window</code>, you can add it to <code>aw-ignored-buffers</code>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defcustom</span> <span class="nv">aw-ignored-buffers</span> <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;*Calc Trail*&quot;</span> <span class="s">&quot;*LV*&quot;</span><span class="p">)</span>
+  <span class="s">&quot;List of buffers to ignore when selecting window.&quot;</span>
+  <span class="nb">:type</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">repeat</span> <span class="nf">string</span><span class="p">))</span>
+</code></pre></div>
+<p>It&#39;s not a big deal, but it&#39;s convenient at least for this scenario:</p>
+
+<ol>
+<li>I start with one active window.</li>
+<li><kbd>M-x</kbd> <code>calc</code>; now I have three windows.</li>
+<li>I can toggle back and forth between <code>calc</code> and the main window with
+<code>ace-window</code> without having to type <code>aw-keys</code>, since <code>*Calc Trail*</code> is
+ignored, so that makes only two total windows.</li>
+</ol>
+
+<h2 id="selecting-last-window-during-the-ace-window-dispatch">Selecting last window during the <code>ace-window</code> dispatch</h2>
+
+<p>This is a really cool feature, in my opinion: for all three actions -
+<code>aw-select-window</code>, <code>aw-swap-window</code>, and <code>aw-delete-window</code>, you can
+select the previous window as a target with the same key <kbd>n</kbd>.
+This is, of course, customizable:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defcustom</span> <span class="nv">aw-flip-keys</span> <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;n&quot;</span><span class="p">)</span>
+  <span class="s">&quot;Keys which should select the last window.&quot;</span>
+  <span class="nb">:set</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">sym</span> <span class="nv">val</span><span class="p">)</span>
+         <span class="p">(</span><span class="nf">set</span> <span class="nv">sym</span> <span class="nv">val</span><span class="p">)</span>
+         <span class="p">(</span><span class="k">setq</span> <span class="nv">aw--flip-keys</span>
+               <span class="p">(</span><span class="nf">mapcar</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nf">aref</span> <span class="p">(</span><span class="nv">kbd</span> <span class="nv">x</span><span class="p">)</span> <span class="mi">0</span><span class="p">))</span> <span class="nv">val</span><span class="p">))))</span>
+</code></pre></div>
+<p>So you could have a whole list of bindings that select the previous
+window during the <code>aw-keys</code> dispatch. This is cool because there&#39;s no
+visual feedback necessary, so this binding can be easily added to the
+muscle memory. The bindings don&#39;t necessarily need to be single keys,
+anything with one chord, e.g. <kbd>C-f</kbd>, is acceptable.</p>
+
+<p>Here&#39;s how I&#39;ve set it up for myself:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="s">&quot;ν&quot;</span> <span class="ss">&#39;ace-window</span><span class="p">)</span>
+<span class="p">(</span><span class="nv">csetq</span> <span class="nv">aw-flip-keys</span> <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;n&quot;</span> <span class="s">&quot;ν&quot;</span><span class="p">))</span>
+</code></pre></div>
+<p>This means that:</p>
+
+<ul>
+<li>I can select the previous window with <kbd>νν</kbd> - a double call to <code>ace-window</code>.</li>
+<li>I can swap with the previous window with <kbd>ψνν</kbd>, <kbd>ψ</kbd> calls <code>universal-argument</code> for me.</li>
+<li>I can delete the previous window with <kbd>ψψνν</kbd>.</li>
+</ul>
+
+<h2 id="outro">Outro</h2>
+
+<p>Thanks to <a href="https://github.com/luciferasm">@luciferasm</a> for the idea, I
+hope you&#39;ll enjoy the new feature.</p>
+
+  </div>
   
   <div class="post">
     <h1 class="post-title">
@@ -704,50 +796,6 @@ you can fall back to version <code>0.7.1</code> on
 <a href="https://github.com/abo-abo/ace-window/issues">an issue</a>.  Finally, I
 hope that some people will take advantage of avy.el simplicity and
 come up with some cool new commands to share with me. Happy hacking!</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/02/28/hydra-repeat/">
-        Hydra-repeat
-      </a>
-    </h1>
-
-    <span class="post-date">28 Feb 2015</span>
-
-    <p>Did you know that you can repeat the most recent Emacs command with <code>repeat</code>:</p>
-
-<blockquote>
-<p>Repeat most recently executed command.
-If REPEAT-ARG is non-nil (interactively, with a prefix argument),
-supply a prefix argument to that command.  Otherwise, give the
-command the same prefix argument it was given before, if any.</p>
-</blockquote>
-
-<p>The default binding to repeat is <kbd>C-x z</kbd>. You can then
-continue with just <kbd>z</kbd>: <kbd>C-x zzzzzzzz</kbd>.</p>
-
-<p>Unfortunately, since <code>defhydra</code> defines new command names based on the
-ones that you give it, passing <code>repeat</code> as one of the heads will not
-work. So I&#39;ve added <code>hydra-repeat</code> that&#39;s supposed to work in the same way.</p>
-
-<p>So now, I can define a Hydra like this:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-vi</span> <span class="p">()</span>
-  <span class="s">&quot;vi&quot;</span>
-  <span class="p">(</span><span class="s">&quot;h&quot;</span> <span class="nf">backward-char</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">next-line</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;k&quot;</span> <span class="nv">previous-line</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nf">forward-char</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;.&quot;</span> <span class="nv">hydra-repeat</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-v&quot;</span><span class="p">)</span> <span class="ss">&#39;hydra-vi/body</span><span class="p">)</span>
-</code></pre></div>
-<p>And if I press <kbd>C-v 4l..</kbd>, it will result in movement forward (<code>forward-char</code>) by 4 chars 3 times:</p>
-
-<ul>
-<li>first time from <kbd>4l</kbd></li>
-<li>other two times, with the same prefix 4, from <kbd>..</kbd></li>
-</ul>
 
   </div>
   
