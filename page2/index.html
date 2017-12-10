@@ -5,6 +5,7 @@
   <link href="http://gmpg.org/xfn/11" rel="profile">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="flattr:id" content="9yl9ry">
 
   <!-- Enable responsiveness on mobile devices-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
@@ -76,6 +77,12 @@
         
       
     
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/donate/">Donate</a>
+        
       
     
       
@@ -290,6 +297,128 @@
 
       <div class="container content">
         <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/2017/10/04/completion-at-point/">
+        Extending completion-at-point for Org-mode
+      </a>
+    </h1>
+
+    <span class="post-date">04 Oct 2017</span>
+
+    <h2 id="intro">Intro</h2>
+
+<p>When creating documents, context aware completion is a powerful
+mechanism that can help you improve the speed, correctness and
+discoverability.</p>
+
+<p>Emacs provides context aware completion via the <code>complete-symbol</code>
+command, bound to <kbd>C-M-i</kbd> by default. In order for it to do
+something useful, <code>completion-at-point-functions</code> has to be set up.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>Documentation:
+
+Special hook to find the completion table for the thing at point.
+Each function on this hook is called in turn without any argument and should
+return either nil to mean that it is not applicable at point,
+or a list of the form (START END COLLECTION) where
+START and END delimit the entity to complete and should include
+point, COLLECTION is the completion table to use to complete it.
+</code></pre></div>
+<p>For each <code>major-mode</code>, a different value of
+<code>completion-at-point-functions</code> can (and probably should) apply.  One
+of the modes that&#39;s set up nicely by default is <code>emacs-lisp-mode</code>:
+press <kbd>C-M-i</kbd> to get completion for Elisp variable and
+function names. Org-mode, on the other hand, is quite lacking in this
+regard: nothing useful happens with <kbd>C-M-i</kbd>.</p>
+
+<p>Here&#39;s my current setting for Org-mode:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">completion-at-point-functions</span>
+      <span class="o">&#39;</span><span class="p">(</span><span class="nv">org-completion-symbols</span>
+        <span class="nv">ora-cap-filesystem</span>
+        <span class="nv">org-completion-refs</span><span class="p">))</span>
+</code></pre></div>
+<h2 id="org-completion-symbols">org-completion-symbols</h2>
+
+<p>When I write about code in Org-mode, I quote items like this:</p>
+
+<blockquote>
+<p>=/home/oleh/=, =HammerFactoryFactory=, etc.</p>
+</blockquote>
+
+<p>Quoting has several advantages:</p>
+
+<ul>
+<li>It looks nice, since it&#39;s in a different face,</li>
+<li><code>flyspell</code> doesn&#39;t need to check it, which makes sense since it would
+fail on most variable and class names,</li>
+<li>Prevents Org from confusing directory names for italics mark up.</li>
+</ul>
+
+<p>Completion has one more advantage on top of that: if I refer to a
+symbol name multiple times within a document, completion helps me to
+enter it quickly and correctly. Here&#39;s the corresponding completion
+source:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">org-completion-symbols</span> <span class="p">()</span>
+  <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nv">looking-back</span> <span class="s">&quot;=[a-zA-Z]+&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">cands</span><span class="p">)</span>
+      <span class="p">(</span><span class="nb">save-match-data</span>
+        <span class="p">(</span><span class="k">save-excursion</span>
+          <span class="p">(</span><span class="nf">goto-char</span> <span class="p">(</span><span class="nf">point-min</span><span class="p">))</span>
+          <span class="p">(</span><span class="k">while</span> <span class="p">(</span><span class="nf">re-search-forward</span> <span class="s">&quot;=\\([a-zA-Z]+\\)=&quot;</span> <span class="no">nil</span> <span class="no">t</span><span class="p">)</span>
+            <span class="p">(</span><span class="nb">cl-pushnew</span>
+             <span class="p">(</span><span class="nv">match-string-no-properties</span> <span class="mi">0</span><span class="p">)</span> <span class="nv">cands</span> <span class="nb">:test</span> <span class="ss">&#39;equal</span><span class="p">))</span>
+          <span class="nv">cands</span><span class="p">))</span>
+      <span class="p">(</span><span class="nb">when</span> <span class="nv">cands</span>
+        <span class="p">(</span><span class="nf">list</span> <span class="p">(</span><span class="nf">match-beginning</span> <span class="mi">0</span><span class="p">)</span> <span class="p">(</span><span class="nf">match-end</span> <span class="mi">0</span><span class="p">)</span> <span class="nv">cands</span><span class="p">)))))</span>
+</code></pre></div>
+<ol>
+<li><p>First of all, it checks if the point is e.g. after <code>=A</code>, i.e. we
+are in fact entering a new quoted symbol. If that&#39;s not the case,
+return <code>nil</code> and let the other completion sources have a go.</p></li>
+<li><p>Next, it looks through the current buffer for each <code>=foo=</code> and
+<code>=bar=</code>, accumulating them into a list.</p></li>
+<li><p>Finally, it returns the bounds of what we&#39;ve got so far, plus the
+found candidates. It&#39;s important that the bounds are passed to the
+completion engine, so that it can delete everything inside the
+bounds before inserting the whole selected symbol.</p></li>
+</ol>
+
+<h2 id="org-cap-filesystem">org-cap-filesystem</h2>
+
+<p>This source is for completing file names:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">ora-cap-filesystem</span> <span class="p">()</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">path</span><span class="p">)</span>
+    <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="k">setq</span> <span class="nv">path</span> <span class="p">(</span><span class="nv">ffap-string-at-point</span><span class="p">))</span>
+      <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">compl</span>
+             <span class="p">(</span><span class="nf">all-completions</span> <span class="nv">path</span> <span class="nf">#&#39;</span><span class="nv">read-file-name-internal</span><span class="p">)))</span>
+        <span class="p">(</span><span class="nb">when</span> <span class="nv">compl</span>
+          <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">offset</span> <span class="p">(</span><span class="nv">ivy-completion-common-length</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">compl</span><span class="p">))))</span>
+            <span class="p">(</span><span class="nf">list</span> <span class="p">(</span><span class="nf">-</span> <span class="p">(</span><span class="nf">point</span><span class="p">)</span> <span class="nv">offset</span><span class="p">)</span> <span class="p">(</span><span class="nf">point</span><span class="p">)</span> <span class="nv">compl</span><span class="p">)))))))</span>
+</code></pre></div>
+<p>I usually enter <code>~</code>, so that <code>ffap-string-at-point</code> recognizes it as a
+path. Then complete each part of the path with <kbd>C-M-i</kbd>. It&#39;s
+very similar to <code>counsel-find-file</code>. In fact, I could just use
+<code>counsel-find-file</code> for this, with <kbd>M-o i</kbd> to insert the file
+name instead of opening the selected file.</p>
+
+<h2 id="org-completion-refs">org-completion-refs</h2>
+
+<p><code>org-completion-refs</code> is very similar to <code>org-completion-symbols</code>: it
+will collect all instances of e.g. <code>\label{foo}</code>, and offer them for
+completion when you enter <code>\ref{</code>. If you want to look at the code,
+it&#39;s available in <a href="https://github.com/abo-abo/oremacs/blob/github/modes/ora-org.el">my config</a>.</p>
+
+<h2 id="outro">Outro</h2>
+
+<p>I hope I convinced you about the usefulness of completion at
+point. It&#39;s especially cool since it&#39;s a universal interface for
+<code>major-mode</code>-specific completion. So any IDE-like package for any
+language could provide its own completion using the familiar
+interface. That could go a long way towards providing a &quot;just works&quot;
+experience, particularly when dealing with a new language.</p>
+
+  </div>
   
   <div class="post">
     <h1 class="post-title">
@@ -745,72 +874,6 @@ the appropriate symbol into the C++ buffer.</p>
 <p>I&#39;d like to thank the authors of <code>rtags</code> and <code>irony-mode</code> for these
 nice packages. Hopefully, <code>counsel-irony</code> is a nice addition. Happy
 hacking!</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2017/03/18/dired-ediff/">
-        Quickly ediff files from dired
-      </a>
-    </h1>
-
-    <span class="post-date">18 Mar 2017</span>
-
-    <blockquote>
-<p>ediff.el --- a comprehensive visual interface to diff &amp; patch</p>
-</blockquote>
-
-<p>I wrote about
-ediff <a href="https://oremacs.com/2015/01/17/setting-up-ediff/">years ago</a>.
-Today, I&#39;ll just reference a useful ediff snippet
-from <a href="https://github.com/abo-abo/oremacs">my config</a> that I&#39;ve added
-some time ago and refined only recently.</p>
-
-<p>The premise is quite simple: press <kbd>e</kbd> in <code>dired-mode</code> to
-immediately ediff two marked files, no questions asked:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="s">&quot;e&quot;</span> <span class="ss">&#39;ora-ediff-files</span><span class="p">)</span>
-</code></pre></div>
-<p>And here&#39;s the code, with a few bells and whistles:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="c1">;; -*- lexical-binding: t -*-</span>
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">ora-ediff-files</span> <span class="p">()</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">files</span> <span class="p">(</span><span class="nv">dired-get-marked-files</span><span class="p">))</span>
-        <span class="p">(</span><span class="nv">wnd</span> <span class="p">(</span><span class="nf">current-window-configuration</span><span class="p">)))</span>
-    <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">&lt;=</span> <span class="p">(</span><span class="nf">length</span> <span class="nv">files</span><span class="p">)</span> <span class="mi">2</span><span class="p">)</span>
-        <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">file1</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">files</span><span class="p">))</span>
-              <span class="p">(</span><span class="nv">file2</span> <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">cdr</span> <span class="nv">files</span><span class="p">)</span>
-                         <span class="p">(</span><span class="nv">cadr</span> <span class="nv">files</span><span class="p">)</span>
-                       <span class="p">(</span><span class="nv">read-file-name</span>
-                        <span class="s">&quot;file: &quot;</span>
-                        <span class="p">(</span><span class="nv">dired-dwim-target-directory</span><span class="p">)))))</span>
-          <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">file-newer-than-file-p</span> <span class="nv">file1</span> <span class="nv">file2</span><span class="p">)</span>
-              <span class="p">(</span><span class="nv">ediff-files</span> <span class="nv">file2</span> <span class="nv">file1</span><span class="p">)</span>
-            <span class="p">(</span><span class="nv">ediff-files</span> <span class="nv">file1</span> <span class="nv">file2</span><span class="p">))</span>
-          <span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;ediff-after-quit-hook-internal</span>
-                    <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span>
-                      <span class="p">(</span><span class="k">setq</span> <span class="nv">ediff-after-quit-hook-internal</span> <span class="no">nil</span><span class="p">)</span>
-                      <span class="p">(</span><span class="nf">set-window-configuration</span> <span class="nv">wnd</span><span class="p">))))</span>
-      <span class="p">(</span><span class="ne">error</span> <span class="s">&quot;no more than 2 files should be marked&quot;</span><span class="p">))))</span>
-</code></pre></div>
-<p>Some notes on how the extra code adds convenience:</p>
-
-<ol>
-<li><p>In case no files are marked, the file at point is used as the first
-file, and <code>read-file-name</code> is used for the second file.  Since I
-have the magic <code>(setq dired-dwim-target t)</code> in my config, in case a
-second <code>dired</code> buffer is open, <code>dired-dwim-target-directory</code> will
-offer it as the starting directory during completion. Very useful
-to compare two files in two different directories.</p></li>
-<li><p>Depending on the order of the arguments to <code>ediff-files</code>, the
-changes will appear either as added or removed;
-<code>file-newer-than-file-p</code> tries to put the arguments in a logical
-order by looking at the files&#39; last change times.</p></li>
-<li><p><code>ediff-after-quit-hook-internal</code> is used to restore the previous
-  window configuration after I quit <code>ediff</code> with <kbd>q</kbd>.</p></li>
-</ol>
-
-<p>That&#39;s about it. Hopefully, it&#39;s useful. Happy hacking.</p>
 
   </div>
   
