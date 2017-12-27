@@ -4,13 +4,85 @@
  <title>(or emacs</title>
  <link href="https://oremacs.com/atom.xml" rel="self"/>
  <link href="https://oremacs.com/"/>
- <updated>2017-12-10T18:06:32+01:00</updated>
+ <updated>2017-12-27T17:57:14+01:00</updated>
  <id>https://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Using digits to select company-mode candidates</title>
+   <link href="https://oremacs.com/2017/12/27/company-numbers/"/>
+   <updated>2017-12-27T00:00:00+01:00</updated>
+   <id>https://oremacs.com/2017/12/27/company-numbers</id>
+   <content type="html">&lt;p&gt;I&amp;#39;d like to share a customization of
+&lt;a href=&quot;https://github.com/company-mode/company-mode&quot;&gt;company-mode&lt;/a&gt; that I&amp;#39;ve
+been using for a while.  I refined it just recently, I&amp;#39;ll explain
+below how.&lt;/p&gt;
+
+&lt;h2 id=&quot;basic-setting&quot;&gt;Basic setting&lt;/h2&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;company-show-numbers&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now, numbers are shown next to the candidates, although they don&amp;#39;t do
+anything yet:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/company-numbers.png&quot; alt=&quot;company-numbers&quot;&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;add-some-bindings&quot;&gt;Add some bindings&lt;/h2&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;map&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;company-active-map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;mapc&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;map&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;%d&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ora-company-number&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;number-sequence&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;9&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;map&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot; &amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+                        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;company-abort&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;self-insert-command&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;map&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;return&amp;gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Besides binding &lt;kbd&gt;0&lt;/kbd&gt;..&lt;kbd&gt;9&lt;/kbd&gt; to complete their
+corresponding candidate, it also un-binds &lt;kbd&gt;RET&lt;/kbd&gt; and binds
+&lt;kbd&gt;SPC&lt;/kbd&gt; to close the company popup.&lt;/p&gt;
+
+&lt;h2 id=&quot;actual-code&quot;&gt;Actual code&lt;/h2&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ora-company-number&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Forward to &lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;`company-complete-number&amp;#39;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;.&lt;/span&gt;
+
+&lt;span class=&quot;s&quot;&gt;Unless the number is potentially part of the candidate.&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;In that case, insert the number.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;k&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;this-command-keys&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;re&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;concat&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;^&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;company-prefix&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;cl-find-if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;string-match&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;re&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+                    &lt;span class=&quot;nv&quot;&gt;company-candidates&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;self-insert-command&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;company-complete-number&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;string-to-number&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Initially, I would just bind &lt;code&gt;company-complete-number&lt;/code&gt;. The problem
+with that was that if my candidate list was &lt;code&gt;(&amp;quot;var0&amp;quot; &amp;quot;var1&amp;quot; &amp;quot;var2&amp;quot;)&lt;/code&gt;,
+then entering &lt;kbd&gt;1&lt;/kbd&gt; means:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;select the first candidate (i.e. &lt;code&gt;&amp;quot;var0&amp;quot;&lt;/code&gt;), instead of:&lt;/li&gt;
+&lt;li&gt;insert &lt;code&gt;&amp;quot;1&amp;quot;&lt;/code&gt;, resulting in &lt;code&gt;&amp;quot;var1&amp;quot;&lt;/code&gt;, i.e. the second candidate.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;My customization will now check &lt;code&gt;company-candidates&lt;/code&gt;&amp;mdash;the list of
+possible completions&amp;mdash;for the above mentioned conflict. And if
+it&amp;#39;s detected, the key pressed will be inserted instead of being used
+to select a candidate.&lt;/p&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;Looking at &lt;code&gt;git-log&lt;/code&gt;, I&amp;#39;ve been using &lt;code&gt;company-complete-number&lt;/code&gt; for at
+least 3 years now.  It&amp;#39;s quite useful, and now also more seamless,
+since I don&amp;#39;t have to type e.g. &lt;kbd&gt;C-q 2&lt;/kbd&gt; any more. In any
+case, thanks to the author and the contributors of
+&lt;code&gt;company-mode&lt;/code&gt;. Merry Christmas and happy hacking in the New Year!&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Comparison of transaction fees on Patreon and similar services</title>

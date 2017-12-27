@@ -300,6 +300,72 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/10/02/swiper-visual-line/">
+        Swiper and visual-line-mode
+      </a>
+    </h1>
+
+    <span class="post-date">02 Oct 2015</span>
+
+    <p>In case you encounter files with very long lines, the built-in
+<kbd>M-x</kbd> <code>visual-line-mode</code> might come in handy.  Although 1MB
+long one-line files are a disaster for Emacs, there&#39;s no problem
+handling smaller files with long lines that result from bad markdown
+renderers (notably Github).  They way <code>visual-line-mode</code> works, is it
+inserts virtual newlines in appropriate positions, so that no line is
+truncated.  The advantage is that these newlines aren&#39;t written to the
+file when the buffer is saved (otherwise, a simple <kbd>M-q</kbd>
+(<code>fill-paragraph</code>) would work too).</p>
+
+<p>Today I&#39;ve added <code>visual-line-mode</code> support to
+<a href="https://github.com/abo-abo/swiper">swiper</a>, so handling these files
+should be even easier now. The change was surprisingly simple: just
+two checks for <code>visual-line-mode</code> variable and these basic
+replacements:</p>
+
+<ul>
+<li><code>forward-line</code> -&gt; <code>line-move</code>,</li>
+<li><code>line-beginning-position</code> -&gt; <code>beginning-of-visual-line</code>,</li>
+<li><code>line-end-position</code> -&gt; <code>end-of-visual-line</code>.</li>
+</ul>
+
+<p>By the way, <code>visual-line-mode</code> is one of the small number of commands
+that I call by name instead of by key chord. But thanks to
+<code>counsel-M-x</code> and <code>smex</code> calling this command by name is as short as
+<kbd>C-t v RET</kbd>.  To explain a bit more, here&#39;s my setup:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="c1">;; make sure to install smex</span>
+<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-t&quot;</span><span class="p">)</span> <span class="ss">&#39;counsel-M-x</span><span class="p">)</span>
+</code></pre></div>
+<p>The default command bound to <kbd>C-t</kbd> is <code>transpose-chars</code> - a
+highly situational and ultimately counter-productive command
+(<kbd>M-DEL</kbd> and re-typing the word is faster than surgically
+navigating to the transpose point and calling <code>transpose-chars</code>, plus
+it trains the hands to type the word correctly next time).  Anyway,
+<kbd>C-t</kbd> is a prime binding for launching interactive commands.
+And since <code>smex</code> is installed it remembers that my most used command
+that starts with &quot;v&quot; is <code>visual-line-mode</code> - so it&#39;s the first one
+that gets selected after <kbd>C-t v</kbd>. This means that I can just
+press <kbd>RET</kbd> and be done with it.</p>
+
+<p><img src="/download/swiper-visual-line-mode.png" alt="swiper-visual-line-mode.png"></p>
+
+<p>Finally, related to <code>visual-line-mode</code>, here&#39;s a command I use to
+negate <kbd>M-q</kbd> (<code>fill-paragraph</code>) (<a href="http://www.emacswiki.org/emacs/UnfillParagraph">source</a>):</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-M-q&quot;</span><span class="p">)</span> <span class="ss">&#39;ora-unfill-paragraph</span><span class="p">)</span>
+
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">ora-unfill-paragraph</span> <span class="p">()</span>
+  <span class="s">&quot;Transform a paragraph into a single line.&quot;</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">fill-column</span> <span class="p">(</span><span class="nf">point-max</span><span class="p">)))</span>
+    <span class="p">(</span><span class="nv">fill-paragraph</span> <span class="no">nil</span> <span class="no">t</span><span class="p">)))</span>
+</code></pre></div>
+<p>Thanks to <a href="https://github.com/joostkremers">@joostkremers</a> for the
+suggestion in <a href="https://github.com/abo-abo/swiper/issues/227">#227</a>.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/09/29/tweak-ivy-faces/">
         More tweaks to Ivy minibuffer faces
       </a>
@@ -626,194 +692,6 @@ matched candidates.</p>
 
 <p>Thanks to <a href="https://github.com/drorbemet">@drorbemet</a> for giving me the
 idea in <a href="https://github.com/abo-abo/swiper/issues/197">#197</a>.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/08/05/swiper-0.6.0/">
-        Ivy-mode 0.6.0 is out
-      </a>
-    </h1>
-
-    <span class="post-date">05 Aug 2015</span>
-
-    <p>For those who don&#39;t keep up,
-<a href="https://github.com/abo-abo/swiper">ivy-mode</a> is a completion method
-that&#39;s similar to <code>ido</code>, but with emphasis on simplicity and
-customizability.  Currently, there are two related packages on MELPA:
-<code>swiper</code> and <code>counsel</code>:</p>
-
-<ul>
-<li><code>swiper</code> provides an <code>isearch</code> replacement, using <code>ivy-read</code> for completion, as well as the basic <code>ivy-mode</code>.</li>
-<li><code>counsel</code> provides some extra commands, like <code>-M-x</code>, <code>-ag</code>, <code>-load-theme</code> etc.</li>
-</ul>
-
-<p>The reasoning behind the split into two packages is that there&#39;s less
-update overhead if only one of them is updated.</p>
-
-<h2 id="completing-read-function-conundrum"><code>completing-read-function</code> conundrum</h2>
-
-<p>This is to explain a bit the presence of the <code>counsel</code>
-package. Initially, I hoped that <code>ivy-mode</code> could do most of the work,
-via the Emacs&#39; <code>completing-read-function</code> interface. How it works:
-most built-in packages will call <code>completing-read</code> when they require
-completion.  That function will forward the completion to
-<code>completing-read-function</code> if it&#39;s set. This is the way how things
-like <code>icomplete-mode</code> or <code>ivy-mode</code> or <code>helm-mode</code> work.</p>
-
-<p>Unfortunately, the interface rather limits what you can do in
-<code>completing-read-function</code>. Essentially, you&#39;re given a list of
-strings and you have to return a string. You have no idea which
-function called you, so you can&#39;t do any fancy stuff depending on the
-caller, short of examining <code>this-command</code> which isn&#39;t very reliable.
-You have no idea what will be done with the one string that you
-return, so you can&#39;t do something fancy like select two or three
-strings and perform that action for each of them.</p>
-
-<p>The result is that sometimes I have to replace the built-in functions,
-instead of re-using them. So instead of re-using <code>find-file</code>, I wrote
-my own <code>counsel-find-file</code> that looks like this:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel-find-file</span> <span class="p">()</span>
-  <span class="s">&quot;Forward to </span><span class="ss">`find-file&#39;</span><span class="s">.&quot;</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">ivy-read</span> <span class="s">&quot;Find file: &quot;</span> <span class="ss">&#39;read-file-name-internal</span>
-            <span class="nb">:matcher</span> <span class="nf">#&#39;</span><span class="nv">counsel--find-file-matcher</span>
-            <span class="nb">:action</span>
-            <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
-              <span class="p">(</span><span class="nv">with-ivy-window</span>
-                <span class="p">(</span><span class="nv">find-file</span> <span class="p">(</span><span class="nf">expand-file-name</span> <span class="nv">x</span> <span class="nv">ivy--directory</span><span class="p">))))</span>
-            <span class="nb">:preselect</span> <span class="p">(</span><span class="nb">when</span> <span class="nv">counsel-find-file-at-point</span>
-                         <span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;ffap</span><span class="p">)</span>
-                         <span class="p">(</span><span class="nv">ffap-guesser</span><span class="p">))</span>
-            <span class="nb">:require-match</span> <span class="ss">&#39;confirm-after-completion</span>
-            <span class="nb">:history</span> <span class="ss">&#39;file-name-history</span>
-            <span class="nb">:keymap</span> <span class="nv">counsel-find-file-map</span><span class="p">))</span>
-</code></pre></div>
-<p>It&#39;s still possible to call the original <code>find-file</code>, and you&#39;ll get
-<code>ivy-read</code> completion for it, but:</p>
-
-<ul>
-<li><code>ivy-resume</code> won&#39;t work, since <code>ivy-read</code> doesn&#39;t know what to do with the string that you select.</li>
-<li><kbd>C-M-n</kbd> (<code>ivy-next-line-and-call</code>) won&#39;t work to select another file within the same completion session, for the same reason.</li>
-<li><kbd>M-o</kbd> (<code>ivy-dispatching-done</code>) may work with some
-customization, but since it dispatches on <code>this-command</code> to get the
-extra actions, it can cause a problem if the command wasn&#39;t called
-directly.</li>
-</ul>
-
-<p>I think it would be cool to extend the built-in
-<code>completing-read-function</code> interface in the future Emacs
-versions. Both Ivy and Helm (which uses the same strategy of passing
-the action to the completion) would benefit from this.</p>
-
-<h2 id="release-summary-and-highlights">Release summary and highlights</h2>
-
-<p>It&#39;s been two months and 150 commits since the last version. The full
-release notes can be found inside the repository in
-<a href="https://github.com/abo-abo/swiper/blob/master/doc/Changelog.org">Changelog.org</a>
-or at Github&#39;s
-<a href="https://github.com/abo-abo/swiper/releases/tag/0.6.0">release</a> tab.</p>
-
-<p>I recommend to look through the whole list to see if anything catches your attention.
-I&#39;ll highlight a few things that I think the users might be interested in most.</p>
-
-<h3 id="fuzzy-completion">Fuzzy completion</h3>
-
-<p>This is off by default, since I think having less candidates is better than having more.
-You can customize this for all commands or per-command. For example:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-re-builders-alist</span>
-      <span class="o">&#39;</span><span class="p">((</span><span class="no">t</span> <span class="o">.</span> <span class="nv">ivy--regex-fuzzy</span><span class="p">)))</span>
-</code></pre></div>
-<h3 id="swiper-has-a-case-fold-search-optimization"><code>swiper</code> has a <code>case-fold-search</code> optimization</h3>
-
-<p>Binds case-fold-search to t when the input is all lower-case:</p>
-
-<ul>
-<li>input &quot;the&quot; matches both &quot;the&quot; and &quot;The&quot;.</li>
-<li>input &quot;The&quot; matches only &quot;The&quot;.</li>
-</ul>
-
-<h3 id="anzu-things">Anzu things</h3>
-
-<p>To see not only the number of matched candidates, but also the index of the current one, set this:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-count-format</span> <span class="s">&quot;(%d/%d) &quot;</span><span class="p">)</span>
-</code></pre></div>
-<h3 id="customize-additional-exit-points-for-any-command">Customize additional exit points for any command</h3>
-
-<p>For any command that uses <code>ivy-read</code> that is. Example for <code>ivy-switch-to-buffer</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">ivy-set-actions</span>
- <span class="ss">&#39;ivy-switch-buffer</span>
- <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;k&quot;</span>
-    <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
-      <span class="p">(</span><span class="nf">kill-buffer</span> <span class="nv">x</span><span class="p">)</span>
-      <span class="p">(</span><span class="nv">ivy--reset-state</span> <span class="nv">ivy-last</span><span class="p">))</span>
-    <span class="s">&quot;kill&quot;</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;j&quot;</span>
-    <span class="nv">ivy--switch-buffer-other-window-action</span>
-    <span class="s">&quot;other&quot;</span><span class="p">)))</span>
-</code></pre></div>
-<p>After this:</p>
-
-<ul>
-<li>Use <kbd>M-o k</kbd> to kill a buffer.</li>
-<li>Use <kbd>M-o j</kbd> to switch to a buffer in other window.</li>
-</ul>
-
-<p>You can always use <kbd>M-o o</kbd> to access the default action. When there is
-only one action, <kbd>M-o</kbd> does the same as <kbd>C-m</kbd>.</p>
-
-<h3 id="more-descriptions-with-a-built-in-hydra">More descriptions with a built-in Hydra</h3>
-
-<p>Toggle <kbd>C-o</kbd> in any completion session to get an overview of
-the things that you can do.</p>
-
-<h3 id="many-commands-that-interface-with-shell-calls">Many commands that interface with shell calls</h3>
-
-<p>The following commands will call the appropriate shell tool to give you a list of candidates:</p>
-
-<ul>
-<li><code>counsel-git-grep</code></li>
-<li><code>counsel-ag</code></li>
-<li><code>counsel-locate</code></li>
-<li><code>counsel-recoll</code></li>
-</ul>
-
-<p>These commands will refresh after each new letter entered, and they
-account for the fact that the shell call will usually take more time
-than the time it takes to input a new letter. So the process will be
-killed and restarted, resulting in virtually no keyboard delay and no
-downtime.</p>
-
-<h3 id="many-commands-that-offer-more-options-than-the-built-in-counterparts">Many commands that offer more options than the built-in counterparts</h3>
-
-<p>This list includes:</p>
-
-<ul>
-<li><code>counsel-find-file</code>,</li>
-<li><code>counsel-M-x</code>,</li>
-<li><code>counsel-load-theme</code>,</li>
-<li><code>counsel-org-tag</code> and <code>counsel-org-tag-agenda</code>.</li>
-</ul>
-
-<p>Most extra things that you can do are:</p>
-
-<ul>
-<li>Doing stuff with multiple candidates through <kbd>C-M-n</kbd> like in <a href="https://www.youtube.com/watch?v=V_whk214fec">this video</a>.</li>
-<li>Using <code>ivy-resume</code> to resume the last completion session.</li>
-</ul>
-
-<p>Make sure to try <code>counsel-org-tag</code>, this one is a bit tricky for
-completion, since it requires to return multiple candidates at once.
-So you can toggle each tag with <kbd>C-M-m</kbd> (<code>ivy-call</code>) and then
-exit with <kbd>C-m</kbd> (<code>ivy-done</code>). The currently selected tags
-will be displayed in the prompt.</p>
-
-<h2 id="outro">Outro</h2>
-
-<p>A big thanks to all people who contributed code and issues towards
-this release.  I&#39;m really happy that you&#39;re helping me to refine this
-nice package.</p>
 
   </div>
   

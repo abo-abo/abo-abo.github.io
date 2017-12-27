@@ -300,6 +300,73 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/03/18/ivy-git/">
+        Find file in a Git repo with ivy
+      </a>
+    </h1>
+
+    <span class="post-date">18 Mar 2015</span>
+
+    <p>I&#39;m really enjoying using <a href="https://github.com/abo-abo/swiper">ivy</a> for matching stuff.</p>
+
+<p>Here is today&#39;s <a href="https://github.com/abo-abo/swiper/blob/master/counsel.el">addition</a>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">couns-git</span> <span class="p">()</span>
+  <span class="s">&quot;Find file in the current Git repository.&quot;</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">default-directory</span> <span class="p">(</span><span class="nv">locate-dominating-file</span>
+                             <span class="nv">default-directory</span> <span class="s">&quot;.git&quot;</span><span class="p">))</span>
+         <span class="p">(</span><span class="nv">cands</span> <span class="p">(</span><span class="nv">split-string</span>
+                 <span class="p">(</span><span class="nv">shell-command-to-string</span>
+                  <span class="s">&quot;git ls-files --full-name --&quot;</span><span class="p">)</span>
+                 <span class="s">&quot;\n&quot;</span><span class="p">))</span>
+         <span class="p">(</span><span class="nv">file</span> <span class="p">(</span><span class="nv">ivy-read</span> <span class="s">&quot;Find file: &quot;</span> <span class="nv">cands</span><span class="p">)))</span>
+    <span class="p">(</span><span class="nb">when</span> <span class="nv">file</span>
+      <span class="p">(</span><span class="nv">find-file</span> <span class="nv">file</span><span class="p">))))</span>
+</code></pre></div>
+<p>This one will allow you to find a file in your Git repository.
+I&#39;ve bound it like this:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c f&quot;</span><span class="p">)</span> <span class="ss">&#39;couns-git</span><span class="p">)</span>
+</code></pre></div>
+<p>Here&#39;s how it looks like for selecting a file in the Emacs repo:</p>
+
+<p><img src="/download/couns-git.png" alt="couns-git.png"></p>
+
+<p>The speed isn&#39;t an issue for 3500 candidates, although I should try to add the number of candidates
+display pretty soon. It&#39;s just that there isn&#39;t a good spot in the minibuffer to show that.</p>
+
+<p>I&#39;ve also updated <code>ivy-next-line</code> and <code>ivy-previous-line</code> to switch to the previous history element
+in case <code>ivy-text</code> is empty. This is the exact behavior of <code>isearch</code>, so if you bind <code>swiper</code> to <kbd>C-s</kbd>
+and <kbd>C-r</kbd> like I do, you&#39;ll find that <kbd>C-s C-s</kbd> and <kbd>C-r C-r</kbd> work as expected.
+Thanks to <a href="https://github.com/johnmastro">@johnmastro</a> for the suggestion.</p>
+
+<p>Here&#39;s the current state of the keymap:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">defvar</span> <span class="nv">ivy-minibuffer-map</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">map</span> <span class="p">(</span><span class="nf">make-sparse-keymap</span><span class="p">)))</span>
+    <span class="p">(</span><span class="nf">define-key</span> <span class="nv">map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-m&quot;</span><span class="p">)</span> <span class="ss">&#39;ivy-done</span><span class="p">)</span>
+    <span class="p">(</span><span class="nf">define-key</span> <span class="nv">map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-n&quot;</span><span class="p">)</span> <span class="ss">&#39;ivy-next-line</span><span class="p">)</span>
+    <span class="p">(</span><span class="nf">define-key</span> <span class="nv">map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-p&quot;</span><span class="p">)</span> <span class="ss">&#39;ivy-previous-line</span><span class="p">)</span>
+    <span class="p">(</span><span class="nf">define-key</span> <span class="nv">map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-s&quot;</span><span class="p">)</span> <span class="ss">&#39;ivy-next-line</span><span class="p">)</span>
+    <span class="p">(</span><span class="nf">define-key</span> <span class="nv">map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-r&quot;</span><span class="p">)</span> <span class="ss">&#39;ivy-previous-line</span><span class="p">)</span>
+    <span class="p">(</span><span class="nf">define-key</span> <span class="nv">map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;SPC&quot;</span><span class="p">)</span> <span class="ss">&#39;self-insert-command</span><span class="p">)</span>
+    <span class="p">(</span><span class="nf">define-key</span> <span class="nv">map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;DEL&quot;</span><span class="p">)</span> <span class="ss">&#39;ivy-backward-delete-char</span><span class="p">)</span>
+    <span class="p">(</span><span class="nf">define-key</span> <span class="nv">map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-&lt;&quot;</span><span class="p">)</span> <span class="ss">&#39;ivy-beginning-of-buffer</span><span class="p">)</span>
+    <span class="p">(</span><span class="nf">define-key</span> <span class="nv">map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-&gt;&quot;</span><span class="p">)</span> <span class="ss">&#39;ivy-end-of-buffer</span><span class="p">)</span>
+    <span class="p">(</span><span class="nf">define-key</span> <span class="nv">map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-n&quot;</span><span class="p">)</span> <span class="ss">&#39;ivy-next-history-element</span><span class="p">)</span>
+    <span class="p">(</span><span class="nf">define-key</span> <span class="nv">map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-p&quot;</span><span class="p">)</span> <span class="ss">&#39;ivy-previous-history-element</span><span class="p">)</span>
+    <span class="p">(</span><span class="nf">define-key</span> <span class="nv">map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-g&quot;</span><span class="p">)</span> <span class="ss">&#39;minibuffer-keyboard-quit</span><span class="p">)</span>
+    <span class="nv">map</span><span class="p">)</span>
+  <span class="s">&quot;Keymap used in the minibuffer.&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>You can also try <code>counsel</code> for completing Elisp and <code>couns-clj</code> for completing Clojure.  As you can
+see, the implementation is very simple: you just get a list of strings, and you&#39;re done.</p>
+
+<p>If you want to implement some <code>ivy</code> completion for your favorite mode, I recommend to find the
+corresponding <code>ac-source</code> and see where it gets its list of strings.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/03/17/more-info/">
         More Info
       </a>
@@ -629,75 +696,6 @@ comparable speed and convenience:</p>
 
 <p>The default minibuffer height for <code>ivy</code> is set to 10 via <code>ivy-height</code>.  It&#39;s quite reasonable all-around, but
 for <code>counsel</code> I&#39;ve set it to 7 via a let binding.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/03/13/introducing-ivy/">
-        Swiper now has an ivy back end
-      </a>
-    </h1>
-
-    <span class="post-date">13 Mar 2015</span>
-
-    <h2 id="intro">Intro</h2>
-
-<p>Just three days ago, I wrote <code>swiper</code> and introduced it in
-<a href="http://oremacs.com/2015/03/10/no-swiping/">a post</a>.
-And while <code>swiper</code> solved the problem of <a href="https://github.com/ShingoFukuyama/helm-swoop">helm-swoop</a>
-being awkward for me to use, <code>swiper</code>&#39;s code itself is pretty awkward, since even after using <code>helm</code>
-a dozen times in my packages, I&#39;m still not well-versed in its internals.</p>
-
-<p>And, apparently, there are people who don&#39;t like <code>helm</code> because it updates a lot.  I don&#39;t know if
-it counts as a viable complaint, but I do agree that the <code>helm</code> update time is quite long.  So I
-wrote down an alternative completion back end for <code>swiper</code>. It looks quite similar to
-<code>ido-vertical-mode</code>, although it is completely unrelated to <code>ido</code>. In fact, the matching algorithm
-currently is similar to <code>helm-match-plugin</code>: <code>&quot;for example&quot;</code> is transformed into
-<code>&quot;\\(for\\).*\\(example\\)&quot;</code>.</p>
-
-<p><img src="/download/swiper-ivy.png" alt="swiper-ivy.png"></p>
-
-<h2 id="the-details">The Details</h2>
-
-<p>Currently, in the <code>ivy</code> version of <code>swiper</code> only the anchoring algorithm is missing.  Anchoring is
-what I call the process of selecting a close candidate when the number of candidates changes.  It
-seems that <code>helm</code> doesn&#39;t implement an anchoring algorithm, so both <code>helm-swoop</code> and <code>swiper</code>
-implement their own. I don&#39;t know how easy it would be to write down the proper generic thing, my
-current implementation for the <code>helm</code> version of <code>swiper</code> is quite hacky.</p>
-
-<p>Just to explain to you what needs to be done. Suppose there&#39;s an input &quot;ab&quot; that matches 50
-candidates, and the candidate number 42 is the current one. Now, if the user types one char to make
-the input into &quot;abc&quot;, the number of candidates has changed to 10, and the candidate that was current
-previously doesn&#39;t match any more. It is up to the matcher code to decide which of the 10 candidates
-has to be current now. Usually it doesn&#39;t matter much, but in the case of <code>swiper</code> it matters since
-the point will be moved to the current candidate in the original window.</p>
-
-<p>In any case, there&#39;s still a lot of things that have to be done for <code>ivy</code>, but I think that
-it&#39;s quite usable now. Actually, I&#39;ve already added it to my bindings:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="s">&quot;\C-s&quot;</span> <span class="ss">&#39;swiper</span><span class="p">)</span>
-</code></pre></div>
-<p>Here&#39;s how it looks like:</p>
-
-<p><img src="/download/ivy-swiper-1.png" alt="ivy-swiper-1.png"></p>
-
-<p>And here&#39;s an example of completion in <code>dired</code>:</p>
-
-<p><img src="/download/ivy-swiper-2.png" alt="ivy-swiper-2.png"></p>
-
-<p>You need to have Emacs 24.4 in order to get a nicer highlight in the minibuffer that uses
-<code>add-face-text-property</code> instead of the old <code>propertize</code>.</p>
-
-<p>There&#39;s a custom variable that decides the height of the minibuffer window, you can set it as you
-like:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defcustom</span> <span class="nv">ivy-height</span> <span class="mi">10</span>
-  <span class="s">&quot;Number of lines for the minibuffer window.&quot;</span>
-  <span class="nb">:type</span> <span class="ss">&#39;integer</span><span class="p">)</span>
-</code></pre></div>
-<h2 id="outro">Outro</h2>
-
-<p>Give the new back end <a href="https://github.com/abo-abo/swiper">a go</a>, see if you like it. It looks quite pretty and minimalist to me, but I&#39;m
-biased since I made it.</p>
 
   </div>
   

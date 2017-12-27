@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="flattr:id" content="9yl9ry">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Using digits to select company-mode candidates &middot; (or emacs
+    
+  </title>
+
+  <link rel="canonical" href="https://oremacs.com/2017/12/27/company-numbers/" />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="/public/css/octicons.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Scripts -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body class="layout-reverse theme-base-08">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <!-- <div class="sidebar-item"> -->
+  <!--   <p>unused</p> -->
+  <!-- </div> -->
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about/">About</a>
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/archive/">Archive</a>
+        
+      
+    
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/donate/">Donate</a>
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+
+    <div id="github" class="sidebar-nav-item">
+      <button type="button"
+              class="btn btn-info"
+              data-toggle="collapse"
+              data-target="#github-projects">
+        <span class="octicon octicon-mark-github"></span> My Emacs Projects
+      </button>
+      <div id="github-projects" class="collapse">
+        <ul style="margin-bottom:0em;">
+          <li>
+            <a href="https://github.com/abo-abo/lispy">lispy</a>
+            <p>vi-like Paredit</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/worf">worf</a>
+            <p>vi-like bindings for org-mode</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-window">ace-window</a>
+            <p>switch windows with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-link">ace-link</a>
+            <p>follow links with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/function-args">function-args</a>
+            <p>enhance <code>CEDET</code> for C++</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/helm-make">helm-make</a>
+            <p>select a Makefile target with <code>helm</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/make-it-so">make-it-so</a>
+            <p>transform files with Makefile recipes</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/org-download">org-download</a>
+            <p>drag-and-drop images to <code>org-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo?tab=repositories">
+              <span class="octicon octicon-octoface"></span>
+              and more
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
+
+  <div class="sidebar-item">
+    <p>
+      <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">
+        <img alt="Creative Commons License"
+             style="border-width:0;opacity: 0.3;"
+             src="https://licensebuttons.net/l/by-sa/4.0/88x31.png"/>
+      </a>
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">(or emacs</a>
+            <small>irrelevant)</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Using digits to select company-mode candidates</h1>
+  <span class="post-date">27 Dec 2017</span>
+  <p>I&#39;d like to share a customization of
+<a href="https://github.com/company-mode/company-mode">company-mode</a> that I&#39;ve
+been using for a while.  I refined it just recently, I&#39;ll explain
+below how.</p>
+
+<h2 id="basic-setting">Basic setting</h2>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">company-show-numbers</span> <span class="no">t</span><span class="p">)</span>
+</code></pre></div>
+<p>Now, numbers are shown next to the candidates, although they don&#39;t do
+anything yet:</p>
+
+<p><img src="/download/company-numbers.png" alt="company-numbers"></p>
+
+<h2 id="add-some-bindings">Add some bindings</h2>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">map</span> <span class="nv">company-active-map</span><span class="p">))</span>
+  <span class="p">(</span><span class="nf">mapc</span>
+   <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+     <span class="p">(</span><span class="nf">define-key</span> <span class="nv">map</span> <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;%d&quot;</span> <span class="nv">x</span><span class="p">)</span> <span class="ss">&#39;ora-company-number</span><span class="p">))</span>
+   <span class="p">(</span><span class="nv">number-sequence</span> <span class="mi">0</span> <span class="mi">9</span><span class="p">))</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">map</span> <span class="s">&quot; &quot;</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span>
+                        <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+                        <span class="p">(</span><span class="nv">company-abort</span><span class="p">)</span>
+                        <span class="p">(</span><span class="nf">self-insert-command</span> <span class="mi">1</span><span class="p">)))</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;&lt;return&gt;&quot;</span><span class="p">)</span> <span class="no">nil</span><span class="p">))</span>
+</code></pre></div>
+<p>Besides binding <kbd>0</kbd>..<kbd>9</kbd> to complete their
+corresponding candidate, it also un-binds <kbd>RET</kbd> and binds
+<kbd>SPC</kbd> to close the company popup.</p>
+
+<h2 id="actual-code">Actual code</h2>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">ora-company-number</span> <span class="p">()</span>
+  <span class="s">&quot;Forward to </span><span class="ss">`company-complete-number&#39;</span><span class="s">.</span>
+
+<span class="s">Unless the number is potentially part of the candidate.</span>
+<span class="s">In that case, insert the number.&quot;</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">k</span> <span class="p">(</span><span class="nf">this-command-keys</span><span class="p">))</span>
+         <span class="p">(</span><span class="nv">re</span> <span class="p">(</span><span class="nf">concat</span> <span class="s">&quot;^&quot;</span> <span class="nv">company-prefix</span> <span class="nv">k</span><span class="p">)))</span>
+    <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">cl-find-if</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">s</span><span class="p">)</span> <span class="p">(</span><span class="nf">string-match</span> <span class="nv">re</span> <span class="nv">s</span><span class="p">))</span>
+                    <span class="nv">company-candidates</span><span class="p">)</span>
+        <span class="p">(</span><span class="nf">self-insert-command</span> <span class="mi">1</span><span class="p">)</span>
+      <span class="p">(</span><span class="nv">company-complete-number</span> <span class="p">(</span><span class="nf">string-to-number</span> <span class="nv">k</span><span class="p">)))))</span>
+</code></pre></div>
+<p>Initially, I would just bind <code>company-complete-number</code>. The problem
+with that was that if my candidate list was <code>(&quot;var0&quot; &quot;var1&quot; &quot;var2&quot;)</code>,
+then entering <kbd>1</kbd> means:</p>
+
+<ul>
+<li>select the first candidate (i.e. <code>&quot;var0&quot;</code>), instead of:</li>
+<li>insert <code>&quot;1&quot;</code>, resulting in <code>&quot;var1&quot;</code>, i.e. the second candidate.</li>
+</ul>
+
+<p>My customization will now check <code>company-candidates</code>&mdash;the list of
+possible completions&mdash;for the above mentioned conflict. And if
+it&#39;s detected, the key pressed will be inserted instead of being used
+to select a candidate.</p>
+
+<h2 id="outro">Outro</h2>
+
+<p>Looking at <code>git-log</code>, I&#39;ve been using <code>company-complete-number</code> for at
+least 3 years now.  It&#39;s quite useful, and now also more seamless,
+since I don&#39;t have to type e.g. <kbd>C-q 2</kbd> any more. In any
+case, thanks to the author and the contributors of
+<code>company-mode</code>. Merry Christmas and happy hacking in the New Year!</p>
+
+</div>
+
+<div class="twitter-share">
+  <a href="https://twitter.com/share"
+     class="twitter-share-button"
+     data-via="_abo_abo"
+     data-dnt="true">
+    Tweet
+  </a>
+</div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'oremacs'; // required: replace example with your forum shortname
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+<script>
+  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+</script>
+<noscript>
+  Please enable JavaScript to view the
+  <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>
