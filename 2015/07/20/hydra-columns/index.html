@@ -296,7 +296,14 @@
       </div>
 
       <div class="container content">
-        <div class="post">
+        <script>
+if (window.location.host.indexOf('oremacs.com') > -1 &&
+    window.location.protocol != "https:") {
+    window.location.protocol = "https";
+}
+</script>
+
+<div class="post">
   <h1 class="post-title">Easily arrange hydra into a matrix</h1>
   <span class="post-date">20 Jul 2015</span>
   <h2 id="the-new-columns-option">The new <code>:columns</code> option</h2>

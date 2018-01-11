@@ -296,7 +296,14 @@
       </div>
 
       <div class="container content">
-        <div class="post">
+        <script>
+if (window.location.host.indexOf('oremacs.com') > -1 &&
+    window.location.protocol != "https:") {
+    window.location.protocol = "https";
+}
+</script>
+
+<div class="post">
   <h1 class="post-title">Re-introducing auto-yasnippet</h1>
   <span class="post-date">30 Jan 2015</span>
   <p>I wonder, when the code isn&#39;t touched in a long time, is it good (no

@@ -296,7 +296,14 @@
       </div>
 
       <div class="container content">
-        <div class="post">
+        <script>
+if (window.location.host.indexOf('oremacs.com') > -1 &&
+    window.location.protocol != "https:") {
+    window.location.protocol = "https";
+}
+</script>
+
+<div class="post">
   <h1 class="post-title">A Hydra for ivy/swiper</h1>
   <span class="post-date">26 Mar 2015</span>
   <p>Today I&#39;ll share a Hydra that I&#39;ve been working on that&#39;s similar to Lit Wakefield&#39;s original idea

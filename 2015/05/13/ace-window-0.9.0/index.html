@@ -296,7 +296,14 @@
       </div>
 
       <div class="container content">
-        <div class="post">
+        <script>
+if (window.location.host.indexOf('oremacs.com') > -1 &&
+    window.location.protocol != "https:") {
+    window.location.protocol = "https";
+}
+</script>
+
+<div class="post">
   <h1 class="post-title">ace-window 0.9.0 is out</h1>
   <span class="post-date">13 May 2015</span>
   <p><img src="https://cloud.githubusercontent.com/assets/390964/7583437/86180fa6-f895-11e4-80ef-c24a7bdf9bf6.png" alt="ace-window-keys.png"></p>

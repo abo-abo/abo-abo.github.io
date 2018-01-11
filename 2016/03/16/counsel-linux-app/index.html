@@ -296,7 +296,14 @@
       </div>
 
       <div class="container content">
-        <div class="post">
+        <script>
+if (window.location.host.indexOf('oremacs.com') > -1 &&
+    window.location.protocol != "https:") {
+    window.location.protocol = "https";
+}
+</script>
+
+<div class="post">
   <h1 class="post-title">Emacs completion for launching Linux desktop apps.</h1>
   <span class="post-date">16 Mar 2016</span>
   <p>I&#39;d like to highlight the new command <code>counsel-linux-app</code> that I

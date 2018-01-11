@@ -296,7 +296,14 @@
       </div>
 
       <div class="container content">
-        <div class="post">
+        <script>
+if (window.location.host.indexOf('oremacs.com') > -1 &&
+    window.location.protocol != "https:") {
+    window.location.protocol = "https";
+}
+</script>
+
+<div class="post">
   <h1 class="post-title">New in Hydra - :pre and :post clauses</h1>
   <span class="post-date">04 Feb 2015</span>
   <p>Only three commits happened since <code>0.6.1</code>, but already <a href="https://github.com/abo-abo/hydra/releases/tag/0.7.0">0.7.0</a> has to

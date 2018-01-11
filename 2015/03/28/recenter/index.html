@@ -296,7 +296,14 @@
       </div>
 
       <div class="container content">
-        <div class="post">
+        <script>
+if (window.location.host.indexOf('oremacs.com') > -1 &&
+    window.location.protocol != "https:") {
+    window.location.protocol = "https";
+}
+</script>
+
+<div class="post">
   <h1 class="post-title">recenter-positions, that's not how gravity works!</h1>
   <span class="post-date">28 Mar 2015</span>
   <p>Yesterday, I&#39;ve added a new binding to <code>swiper-map</code>: <kbd>C-l</kbd> will now call

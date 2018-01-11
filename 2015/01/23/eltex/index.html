@@ -296,7 +296,14 @@
       </div>
 
       <div class="container content">
-        <div class="post">
+        <script>
+if (window.location.host.indexOf('oremacs.com') > -1 &&
+    window.location.protocol != "https:") {
+    window.location.protocol = "https";
+}
+</script>
+
+<div class="post">
   <h1 class="post-title">ElTeX - generate full LaTeX documents from Emacs Lisp</h1>
   <span class="post-date">23 Jan 2015</span>
   <p>OK. Please stop laughing. It&#39;s a

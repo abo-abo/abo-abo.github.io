@@ -296,7 +296,14 @@
       </div>
 
       <div class="container content">
-        <div class="post">
+        <script>
+if (window.location.host.indexOf('oremacs.com') > -1 &&
+    window.location.protocol != "https:") {
+    window.location.protocol = "https";
+}
+</script>
+
+<div class="post">
   <h1 class="post-title">Hydra 0.12.0 is out</h1>
   <span class="post-date">22 Mar 2015</span>
   <p>With a month&#39;s time and almost 50 commits since that last one, a new version of Hydra has emerged.

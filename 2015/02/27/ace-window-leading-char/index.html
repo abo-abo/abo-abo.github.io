@@ -296,7 +296,14 @@
       </div>
 
       <div class="container content">
-        <div class="post">
+        <script>
+if (window.location.host.indexOf('oremacs.com') > -1 &&
+    window.location.protocol != "https:") {
+    window.location.protocol = "https";
+}
+</script>
+
+<div class="post">
   <h1 class="post-title">Customizing ace-window leading char</h1>
   <span class="post-date">27 Feb 2015</span>
   <p>With a recent change, it&#39;s now possible to customize

@@ -296,7 +296,14 @@
       </div>
 
       <div class="container content">
-        <div class="post">
+        <script>
+if (window.location.host.indexOf('oremacs.com') > -1 &&
+    window.location.protocol != "https:") {
+    window.location.protocol = "https";
+}
+</script>
+
+<div class="post">
   <h1 class="post-title">Swiper 0.3.0 is out, with ivy-mode.</h1>
   <span class="post-date">22 Apr 2015</span>
   <p>This <a href="https://github.com/abo-abo/swiper/releases/tag/0.3.0">release</a> packs more than 90 commits, which is quite a lot for me.

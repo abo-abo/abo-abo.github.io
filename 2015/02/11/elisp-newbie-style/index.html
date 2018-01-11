@@ -296,7 +296,14 @@
       </div>
 
       <div class="container content">
-        <div class="post">
+        <script>
+if (window.location.host.indexOf('oremacs.com') > -1 &&
+    window.location.protocol != "https:") {
+    window.location.protocol = "https";
+}
+</script>
+
+<div class="post">
   <h1 class="post-title">Elisp newbie-style</h1>
   <span class="post-date">11 Feb 2015</span>
   <p>I&#39;ve been cleaning up my .emacs lately, with the intention to put my

@@ -296,7 +296,14 @@
       </div>
 
       <div class="container content">
-        <div class="post">
+        <script>
+if (window.location.host.indexOf('oremacs.com') > -1 &&
+    window.location.protocol != "https:") {
+    window.location.protocol = "https";
+}
+</script>
+
+<div class="post">
   <h1 class="post-title">My org-protocol setup, part 2.</h1>
   <span class="post-date">08 Jan 2015</span>
   <p>This continues the code from <a href="/2015/01/07/org-protocol-1/">the part 1</a>.</p>

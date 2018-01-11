@@ -296,7 +296,14 @@
       </div>
 
       <div class="container content">
-        <div class="post">
+        <script>
+if (window.location.host.indexOf('oremacs.com') > -1 &&
+    window.location.protocol != "https:") {
+    window.location.protocol = "https";
+}
+</script>
+
+<div class="post">
   <h1 class="post-title">Wrap a region with a LaTeX environment</h1>
   <span class="post-date">02 Jan 2015</span>
   <p>Prompted by <a href="http://stackoverflow.com/questions/27736102/wrap-text-around-a-selection-in-emacs">this StackOverflow question</a>,

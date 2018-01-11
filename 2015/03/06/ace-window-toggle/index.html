@@ -296,7 +296,14 @@
       </div>
 
       <div class="container content">
-        <div class="post">
+        <script>
+if (window.location.host.indexOf('oremacs.com') > -1 &&
+    window.location.protocol != "https:") {
+    window.location.protocol = "https";
+}
+</script>
+
+<div class="post">
   <h1 class="post-title">Select the previous window with ace-window</h1>
   <span class="post-date">06 Mar 2015</span>
   <p>It&#39;s strange that I haven&#39;t implemented this feature before, as it&#39;s

@@ -296,7 +296,14 @@
       </div>
 
       <div class="container content">
-        <div class="post">
+        <script>
+if (window.location.host.indexOf('oremacs.com') > -1 &&
+    window.location.protocol != "https:") {
+    window.location.protocol = "https";
+}
+</script>
+
+<div class="post">
   <h1 class="post-title">Ivy-mode 0.5.0 is out</h1>
   <span class="post-date">23 May 2015</span>
   <p>At this point, <a href="https://github.com/abo-abo/swiper">swiper</a> is only a

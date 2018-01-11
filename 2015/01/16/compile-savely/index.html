@@ -296,7 +296,14 @@
       </div>
 
       <div class="container content">
-        <div class="post">
+        <script>
+if (window.location.host.indexOf('oremacs.com') > -1 &&
+    window.location.protocol != "https:") {
+    window.location.protocol = "https";
+}
+</script>
+
+<div class="post">
   <h1 class="post-title">Save before compile</h1>
   <span class="post-date">16 Jan 2015</span>
   <p>Here&#39;s a very simplistic function that I was using for a while:</p>

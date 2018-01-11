@@ -296,7 +296,14 @@
       </div>
 
       <div class="container content">
-        <div class="post">
+        <script>
+if (window.location.host.indexOf('oremacs.com') > -1 &&
+    window.location.protocol != "https:") {
+    window.location.protocol = "https";
+}
+</script>
+
+<div class="post">
   <h1 class="post-title">Emacs package management</h1>
   <span class="post-date">20 Mar 2015</span>
   <p>Lately, I&#39;ve been spending some time to automate and publish my Emacs config.  Being able to quickly

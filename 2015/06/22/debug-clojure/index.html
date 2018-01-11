@@ -296,7 +296,14 @@
       </div>
 
       <div class="container content">
-        <div class="post">
+        <script>
+if (window.location.host.indexOf('oremacs.com') > -1 &&
+    window.location.protocol != "https:") {
+    window.location.protocol = "https";
+}
+</script>
+
+<div class="post">
   <h1 class="post-title">Debug Clojure with CIDER and lispy</h1>
   <span class="post-date">22 Jun 2015</span>
   <p>To commemorate the release of <a href="http://batsov.com/articles/2015/06/16/cider-0-dot-9/">CIDER 0.9.0</a>, I&#39;ve just
