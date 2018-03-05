@@ -296,11 +296,20 @@
       </div>
 
       <div class="container content">
-        <div class="page">
+        <script>
+if (window.location.host.indexOf('oremacs.com') > -1 &&
+    window.location.protocol != "https:") {
+    window.location.protocol = "https";
+}
+</script>
+
+<div class="page">
   <h1 class="page-title">Archive</h1>
   <!-- ## Blog Posts -->
 
 <!-- 
+  * 05 Mar 2018 &raquo; [ Using exclusion patterns when grepping ](/2018/03/05/grep-exclude/)
+
   * 27 Dec 2017 &raquo; [ Using digits to select company-mode candidates ](/2017/12/27/company-numbers/)
 
   * 10 Dec 2017 &raquo; [ Comparison of transaction fees on Patreon and similar services ](/2017/12/10/patreon/)
@@ -639,6 +648,11 @@
  -->
 
 <p><table class="archive-items"></p>
+
+<p><tr>
+  <td><a href="/2018/03/05/grep-exclude/">Using exclusion patterns when grepping</a></td>
+  <td style="width:7em">05 Mar 2018</td>
+</tr></p>
 
 <p><tr>
   <td><a href="/2017/12/27/company-numbers/">Using digits to select company-mode candidates</a></td>

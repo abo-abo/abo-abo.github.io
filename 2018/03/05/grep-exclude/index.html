@@ -12,11 +12,11 @@
 
   <title>
     
-      Donate &middot; (or emacs
+      Using exclusion patterns when grepping &middot; (or emacs
     
   </title>
 
-  <link rel="canonical" href="https://oremacs.com/donate/" />
+  <link rel="canonical" href="https://oremacs.com/2018/03/05/grep-exclude/" />
 
   <!-- CSS -->
   <link rel="stylesheet" href="/public/css/poole.css">
@@ -81,7 +81,7 @@
     
       
         
-          <a class="sidebar-nav-item active" href="/donate/">Donate</a>
+          <a class="sidebar-nav-item" href="/donate/">Donate</a>
         
       
     
@@ -303,87 +303,106 @@ if (window.location.host.indexOf('oremacs.com') > -1 &&
 }
 </script>
 
-<div class="page">
-  <h1 class="page-title">Donate</h1>
-  <h2 id="why-contribute">Why contribute?</h2>
+<div class="post">
+  <h1 class="post-title">Using exclusion patterns when grepping</h1>
+  <span class="post-date">05 Mar 2018</span>
+  <h2 id="git">Git</h2>
 
-<p>Everything that I publish becomes available for all to use, reuse,
-remix, rewrite - do whatever you want, as long as you contribute it
-back into the community.</p>
+<p>I like <a href="https://git-scm.com/">Git</a>. A lot. After years of use it has
+really grown on me. It&#39;s (mostly) fast, (often) reliable, and (always)
+distributed. For me, all properties are important, but being able to
+do <code>git init</code> to start a new project in seconds is the best feature.</p>
 
-<p>I give willingly, and strive to give as much as I can, after I do my
-9-to-5 job that lets me stay alive. With enough success of my donation
-campaign, I could switch to a 4 days per week work.  Having one whole
-day per week to be free to do what I want would mean very much to me:
-I could undertake more complex tasks that require multiple hours of
-concentrated work, instead of just doing 1-2 hours of maintenance work
-every evening after a full work day.</p>
+<p>When it comes to working with Git day-to-day, a nice GUI can really
+make a difference. In Emacs world, of course it&#39;s
+<a href="https://magit.vc/">Magit</a>. Outside of Emacs (brr),
+<a href="https://git-cola.github.io/">git-cola</a> looks to be the most promising
+one. If you&#39;re aware of something better, please share - I&#39;m keeping a
+list of suggestions for my non-Emacs using colleagues.</p>
 
-<h2 id="transparency">Transparency</h2>
+<h2 id="ivy-integration-for-git">Ivy integration for Git</h2>
 
-<p>I will do my best to transparently report how much I money I&#39;ve
-collected in donations, how much was spent on transfer fees, taxes
-etc. My goal is not to collect rent. In fact, it&#39;s the opposite: I&#39;d
-like to maximize the amount of value that I deliver to the
-community. I know that if I were in charge of what I do with my most
-productive hours (I&#39;m not right now), I would use them a lot better.</p>
-
-<h2 id="donation-methods">Donation methods</h2>
-
-<h3 id="summary">Summary</h3>
-
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-<tbody>
-<tr>
-<td >1. Liberapay</td>
-<td ><a href="https://liberapay.com/abo-abo/donate">https://liberapay.com/abo-abo/donate</a></td>
-</tr>
-
-<tr>
-<td >2. Patreon</td>
-<td ><a href="https://www.patreon.com/abo_abo">https://www.patreon.com/abo_abo</a></td>
-</tr>
-
-<tr>
-<td >3. Flattr</td>
-<td ><a href="https://flattr.com/@abo-abo">https://flattr.com/@abo-abo</a></td>
-</tr>
-
-<tr>
-<td >4. Paypal</td>
-<td ><a href="https://paypal.me/aboabo">https://paypal.me/aboabo</a></td>
-</tr>
-</tbody>
-</table>
-
-<h3 id="liberapay">Liberapay</h3>
-
-<p>This method, although a bit obscure, is one that&#39;s most well aligned
-with my goals, and probably yours as well. According to Liberapay FAQ:</p>
+<p>The main two commands in <a href="https://github.com/abo-abo/swiper/">ivy</a>
+that I use for Git are:</p>
 
 <ul>
-<li>it&#39;s open source</li>
-<li>it does not take a cut of payments, and accepts
-<a href="https://liberapay.com/Liberapay/">donations</a> instead to cover the
-maintenance costs</li>
+<li><code>counsel-git</code>: select a file tracked by Git</li>
+<li><code>counsel-rg</code>: grep for a line in all files tracked by Git, using
+<a href="https://github.com/BurntSushi/ripgrep">ripgrep</a> as the backend.</li>
 </ul>
 
-<p>There are no fees for transfers between Liberapay users. You only pay
-the transaction fees for loading money into your account. So if you
-want to pay me €1 per month, you could set up a €20 balance for your
-account and that would be enough for 20 monthly donations. How much
-charing €20 into your account would cost you:</p>
+<p>There are many alternatives to <code>counsel-rg</code> that use a different
+backend: <code>counsel-git-grep</code>, <code>counsel-ag</code>, <code>counsel-ack</code>,
+<code>counsel-pt</code>. But <code>counsel-rg</code> is the fastest, especially when I have
+to deal with Git repositories that are 2Gb in size (short explanation:
+it&#39;s a Perforce repo with a bunch of binaries, because why not; and
+I&#39;m using <a href="https://git-scm.com/docs/git-p4">git-p4</a> to interact with
+it).</p>
 
-<ul>
-<li>€20.63 via Card (2.106% fee + €0.21 flat)</li>
-<li>€20.12 via Bank wire (0.585% fee)</li>
-<li>€20.59 via Direct debit (€0.59 flat)</li>
-</ul>
+<h2 id="using-ignore-with-ripgrep">Using <code>.ignore</code> with ripgrep</h2>
 
-<p>So if you choose the Bank wire option, I would get (20.00/20.12*100 =
-99.41%) of the money that you give.</p>
+<p>Adding an <code>.ignore</code> file to the root of your project can really speed
+up your searches.  In my sample project, I went from 10k files to less
+than 500 files.</p>
+
+<p>Example content:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>/TAGS
+*.min.js*
+/Build/Output/
+/ThirdParty/
+</code></pre></div>
+<p>As you can see, both file patterns and directories are supported.  One
+other nifty thing that I discovered only recently is that you can use
+<code>ripgrep</code> as the backed for <code>counsel-git</code> in addition to
+<code>counsel-rg</code>. Which means the same <code>.ignore</code> file is used for both
+commands. Here&#39;s the setting:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">counsel-git-cmd</span> <span class="s">&quot;rg --files&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>And here&#39;s my setting for <code>counsel-rg</code>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">counsel-rg-base-command</span>
+      <span class="s">&quot;rg -i -M 120 --no-heading --line-number --color never %s .&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>The main difference in comparison to the default
+<code>counsel-rg-base-command</code> is <code>-M 120</code> which means: truncate all lines
+that are longer than 120 characters. This is really helpful when Emacs
+is accepting input from <code>ripgrep</code>: a megabyte long line of minified JS
+is not only useless since you can&#39;t see it whole, but it will also
+likely hang Emacs for a while.</p>
+
+<h2 id="outro">Outro</h2>
+
+<p>I hope you found these bits of info useful. Happy hacking!</p>
 
 </div>
+
+<div class="twitter-share">
+  <a href="https://twitter.com/share"
+     class="twitter-share-button"
+     data-via="_abo_abo"
+     data-dnt="true">
+    Tweet
+  </a>
+</div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'oremacs'; // required: replace example with your forum shortname
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+<script>
+  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+</script>
+<noscript>
+  Please enable JavaScript to view the
+  <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
 
       </div>
     </div>

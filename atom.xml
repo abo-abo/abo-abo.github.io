@@ -4,13 +4,87 @@
  <title>(or emacs</title>
  <link href="https://oremacs.com/atom.xml" rel="self"/>
  <link href="https://oremacs.com/"/>
- <updated>2018-01-11T11:37:05+01:00</updated>
+ <updated>2018-03-05T20:43:19+01:00</updated>
  <id>https://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Using exclusion patterns when grepping</title>
+   <link href="https://oremacs.com/2018/03/05/grep-exclude/"/>
+   <updated>2018-03-05T00:00:00+01:00</updated>
+   <id>https://oremacs.com/2018/03/05/grep-exclude</id>
+   <content type="html">&lt;h2 id=&quot;git&quot;&gt;Git&lt;/h2&gt;
+
+&lt;p&gt;I like &lt;a href=&quot;https://git-scm.com/&quot;&gt;Git&lt;/a&gt;. A lot. After years of use it has
+really grown on me. It&amp;#39;s (mostly) fast, (often) reliable, and (always)
+distributed. For me, all properties are important, but being able to
+do &lt;code&gt;git init&lt;/code&gt; to start a new project in seconds is the best feature.&lt;/p&gt;
+
+&lt;p&gt;When it comes to working with Git day-to-day, a nice GUI can really
+make a difference. In Emacs world, of course it&amp;#39;s
+&lt;a href=&quot;https://magit.vc/&quot;&gt;Magit&lt;/a&gt;. Outside of Emacs (brr),
+&lt;a href=&quot;https://git-cola.github.io/&quot;&gt;git-cola&lt;/a&gt; looks to be the most promising
+one. If you&amp;#39;re aware of something better, please share - I&amp;#39;m keeping a
+list of suggestions for my non-Emacs using colleagues.&lt;/p&gt;
+
+&lt;h2 id=&quot;ivy-integration-for-git&quot;&gt;Ivy integration for Git&lt;/h2&gt;
+
+&lt;p&gt;The main two commands in &lt;a href=&quot;https://github.com/abo-abo/swiper/&quot;&gt;ivy&lt;/a&gt;
+that I use for Git are:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;counsel-git&lt;/code&gt;: select a file tracked by Git&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;counsel-rg&lt;/code&gt;: grep for a line in all files tracked by Git, using
+&lt;a href=&quot;https://github.com/BurntSushi/ripgrep&quot;&gt;ripgrep&lt;/a&gt; as the backend.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;There are many alternatives to &lt;code&gt;counsel-rg&lt;/code&gt; that use a different
+backend: &lt;code&gt;counsel-git-grep&lt;/code&gt;, &lt;code&gt;counsel-ag&lt;/code&gt;, &lt;code&gt;counsel-ack&lt;/code&gt;,
+&lt;code&gt;counsel-pt&lt;/code&gt;. But &lt;code&gt;counsel-rg&lt;/code&gt; is the fastest, especially when I have
+to deal with Git repositories that are 2Gb in size (short explanation:
+it&amp;#39;s a Perforce repo with a bunch of binaries, because why not; and
+I&amp;#39;m using &lt;a href=&quot;https://git-scm.com/docs/git-p4&quot;&gt;git-p4&lt;/a&gt; to interact with
+it).&lt;/p&gt;
+
+&lt;h2 id=&quot;using-ignore-with-ripgrep&quot;&gt;Using &lt;code&gt;.ignore&lt;/code&gt; with ripgrep&lt;/h2&gt;
+
+&lt;p&gt;Adding an &lt;code&gt;.ignore&lt;/code&gt; file to the root of your project can really speed
+up your searches.  In my sample project, I went from 10k files to less
+than 500 files.&lt;/p&gt;
+
+&lt;p&gt;Example content:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;/TAGS
+*.min.js*
+/Build/Output/
+/ThirdParty/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;As you can see, both file patterns and directories are supported.  One
+other nifty thing that I discovered only recently is that you can use
+&lt;code&gt;ripgrep&lt;/code&gt; as the backed for &lt;code&gt;counsel-git&lt;/code&gt; in addition to
+&lt;code&gt;counsel-rg&lt;/code&gt;. Which means the same &lt;code&gt;.ignore&lt;/code&gt; file is used for both
+commands. Here&amp;#39;s the setting:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;counsel-git-cmd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;rg --files&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And here&amp;#39;s my setting for &lt;code&gt;counsel-rg&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;counsel-rg-base-command&lt;/span&gt;
+      &lt;span class=&quot;s&quot;&gt;&amp;quot;rg -i -M 120 --no-heading --line-number --color never %s .&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The main difference in comparison to the default
+&lt;code&gt;counsel-rg-base-command&lt;/code&gt; is &lt;code&gt;-M 120&lt;/code&gt; which means: truncate all lines
+that are longer than 120 characters. This is really helpful when Emacs
+is accepting input from &lt;code&gt;ripgrep&lt;/code&gt;: a megabyte long line of minified JS
+is not only useless since you can&amp;#39;t see it whole, but it will also
+likely hang Emacs for a while.&lt;/p&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;I hope you found these bits of info useful. Happy hacking!&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Using digits to select company-mode candidates</title>
@@ -1258,7 +1332,7 @@ file. These flags are essential in helping the parser understand
 what&amp;#39;s going on.&lt;/p&gt;
 
 &lt;p&gt;Then, in the &lt;code&gt;build&lt;/code&gt; directory I start:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;rdm &amp;amp; jc -J .
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;rdm &amp;amp; rc -J .
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Finally, &lt;code&gt;rtags-find-symbol-at-point&lt;/code&gt; should work now. I still like to
 use CEDET as backup, it&amp;#39;s pretty good at tracking variables

@@ -300,6 +300,71 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/08/14/ivy-kill-ring-save/">
+        Store all current ivy candidates into the kill ring
+      </a>
+    </h1>
+
+    <span class="post-date">14 Aug 2015</span>
+
+    <p>I&#39;d like to highlight a new command added to
+<a href="https://github.com/abo-abo/swiper">ivy-mode</a> today:
+<code>ivy-kill-ring-save</code>.  It allows to store all current candidates to
+the kill ring. This could have a number of uses.</p>
+
+<h2 id="scenario-1">Scenario 1</h2>
+
+<p>Suppose you want to learn some Elisp, specifically all functions that
+start with <code>forward-</code>. Then call <code>counsel-describe-function</code> with
+&quot;forward-&quot; as input and press <kbd>M-w</kbd>. Then just yank this into
+some buffer, <code>org-mode</code> for instance, and go through the functions
+one-by-one takings notes on the way:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>forward-comment
+forward-paragraph
+forward-thing
+forward-symbol
+forward-visible-line
+forward-word
+forward-same-syntax
+forward-whitespace
+forward-button
+forward-line
+forward-list
+forward-sentence
+forward-point
+forward-to-indentation
+forward-ifdef
+forward-char
+forward-sexp
+forward-page
+</code></pre></div>
+<h2 id="scenario-2">Scenario 2</h2>
+
+<p>Suppose you want to store a subset of <code>projectile-find-file</code> names
+that match a pattern.  Just press <kbd>M-w</kbd> and those file names
+will be on the top of the kill ring. Of course, you need to have this setting on:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">projectile-completion-system</span> <span class="ss">&#39;ivy</span><span class="p">)</span>
+</code></pre></div>
+<p>This scenario should apply to basically any place where you&#39;re
+completing file names, like <code>counsel-locate</code> or
+<code>counsel-find-file</code>. Also
+<a href="https://github.com/technomancy/find-file-in-project">find-file-in-project</a>,
+which uses <code>ivy</code> for completion if it&#39;s installed.</p>
+
+<h2 id="outro">Outro</h2>
+
+<p>Note also that the command comes for free, since normally nothing is
+done by <kbd>M-w</kbd> when the region isn&#39;t active. When the region
+is active, this command will store the selected text instead of
+matched candidates.</p>
+
+<p>Thanks to <a href="https://github.com/drorbemet">@drorbemet</a> for giving me the
+idea in <a href="https://github.com/abo-abo/swiper/issues/197">#197</a>.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/08/05/swiper-0.6.0/">
         Ivy-mode 0.6.0 is out
       </a>
@@ -887,99 +952,6 @@ building the docstring by-hand, see if it&#39;s possible to transform it
 to the new style: adding and removing new heads will become easier.
 Thanks to <a href="https://github.com/Fuco1">@Fuco1</a> for the suggestion in
 <a href="https://github.com/abo-abo/hydra/issues/140">#140</a>.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/07/16/callback-quit/">
-        Quitting to command loop in Elisp
-      </a>
-    </h1>
-
-    <span class="post-date">16 Jul 2015</span>
-
-    <p>Today I&#39;d like to share an interesting bit of Elisp that comes up
-every now and then for me.  Imagine that you have this:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">useful-command</span> <span class="p">()</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">do-thing-1</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">do-thing-2</span> <span class="p">(</span><span class="nf">funcall</span> <span class="nv">callback-function</span><span class="p">))</span>
-  <span class="p">(</span><span class="nv">do-thing-3</span><span class="p">))</span>
-</code></pre></div>
-<p>Sometimes, when you are in <code>callback-function</code>, you might want to
-abandon the function that called you, <code>useful-command</code> in this case,
-and call a different function, with the current context.</p>
-
-<p>Here&#39;s what I&#39;ve come up with to do just that:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defmacro</span> <span class="nv">ivy-quit-and-run</span> <span class="p">(</span><span class="kp">&amp;rest</span> <span class="nv">body</span><span class="p">)</span>
-  <span class="s">&quot;Quit the minibuffer and run BODY afterwards.&quot;</span>
-  <span class="o">`</span><span class="p">(</span><span class="k">progn</span>
-     <span class="p">(</span><span class="nf">put</span> <span class="ss">&#39;quit</span> <span class="ss">&#39;error-message</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
-     <span class="p">(</span><span class="nv">run-at-time</span> <span class="no">nil</span> <span class="no">nil</span>
-                  <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span>
-                    <span class="p">(</span><span class="nf">put</span> <span class="ss">&#39;quit</span> <span class="ss">&#39;error-message</span> <span class="s">&quot;Quit&quot;</span><span class="p">)</span>
-                    <span class="o">,@</span><span class="nv">body</span><span class="p">))</span>
-     <span class="p">(</span><span class="nv">minibuffer-keyboard-quit</span><span class="p">)))</span>
-</code></pre></div>
-<p>To break it up into parts:</p>
-
-<ul>
-<li><p><code>minibuffer-keyboard-quit</code> will unwind the call stack all the way to
-the command loop, preventing e.g.  <code>do-thing-3</code> from being
-called. Note that the call stack can be as deep as you like, e.g.
-<code>useful-command</code> might be called by <code>utility-command</code> etc.</p></li>
-<li><p><code>run-at-time</code> with the argument <code>nil</code> will run the code as soon as
-possible, which is almost exactly after we&#39;re back into the command
-loop.</p></li>
-<li><p>The final trick is to prevent <code>Quit</code> from being displayed in the minibuffer.</p></li>
-</ul>
-
-<h2 id="sample-application">Sample application</h2>
-
-<p>Suppose that I&#39;ve called <code>find-file</code> when <code>ivy-mode</code> is
-active. Typically, I&#39;d select a file and press <kbd>C-m</kbd> to open
-it. However, sometimes I just want to see the selected file in <code>dired</code>
-instead of opening it. This code is from before
-<a href="http://oremacs.com/2015/07/09/counsel-rhythmbox/">ivy multi-action interface</a>,
-it plainly binds a command in <code>ivy-minibuffer-map</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">ivy-minibuffer-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-:&quot;</span><span class="p">)</span> <span class="ss">&#39;ivy-dired</span><span class="p">)</span>
-
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">ivy-dired</span> <span class="p">()</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">if</span> <span class="nv">ivy--directory</span>
-      <span class="p">(</span><span class="nv">ivy-quit-and-run</span>
-       <span class="p">(</span><span class="nv">dired</span> <span class="nv">ivy--directory</span><span class="p">)</span>
-       <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">re-search-forward</span>
-              <span class="p">(</span><span class="nf">regexp-quote</span>
-               <span class="p">(</span><span class="nf">substring</span> <span class="nv">ivy--current</span> <span class="mi">0</span> <span class="mi">-1</span><span class="p">))</span> <span class="no">nil</span> <span class="no">t</span><span class="p">)</span>
-         <span class="p">(</span><span class="nf">goto-char</span> <span class="p">(</span><span class="nf">match-beginning</span> <span class="mi">0</span><span class="p">))))</span>
-    <span class="p">(</span><span class="ne">user-error</span>
-     <span class="s">&quot;Not completing files currently&quot;</span><span class="p">)))</span>
-</code></pre></div>
-<p>So at the moment when <kbd>C-:</kbd> is pressed, the call stack is:</p>
-
-<ul>
-<li><kbd>C-x C-f</kbd> called <code>find-file</code>.</li>
-<li><code>find-file</code> called <code>completion-read-function</code> which is set to <code>ivy-completing-read</code>.</li>
-<li><code>ivy-completing-read</code> called <code>ivy-read</code>.</li>
-<li><code>ivy-read</code> called <code>read-from-minibuffer</code>.</li>
-</ul>
-
-<p>Thanks to the new macro, I can unwind all of that stuff, making sure
-nothing extra will be executed that was supposed to be executed after
-<code>read-from-minibuffer</code> had returned. In other words, the file will not
-be opened.  Instead, a <code>dired</code> buffer will be opened, centered on the
-selected candidate.</p>
-
-<p>What I described above can actually be a pretty common scenario, you
-could adapt it to <code>helm</code> or <code>avy</code> or <code>projectile</code>.  Basically to
-anything that includes some form of completion (i.e. commands that
-wait for input) and offers you a customizable keymap. Small
-disclaimer: the above code falls into the quick-and-dirty category, I
-don&#39;t recommend it if you can do something smarter instead. But if you
-can&#39;t do anything smarter due to being constrained by an interface you
-don&#39;t control, this macro could help you out.</p>
 
   </div>
   

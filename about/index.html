@@ -296,7 +296,14 @@
       </div>
 
       <div class="container content">
-        <div class="page">
+        <script>
+if (window.location.host.indexOf('oremacs.com') > -1 &&
+    window.location.protocol != "https:") {
+    window.location.protocol = "https";
+}
+</script>
+
+<div class="page">
   <h1 class="page-title">About</h1>
   <p>My name is Oleh, and since I spend so much time in Emacs, I&#39;ve decided
 that blogging about it might be a good idea.</p>
