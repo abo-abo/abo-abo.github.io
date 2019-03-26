@@ -300,6 +300,25 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2017/07/24/hydra-at-london-meetup/">
+        hydra.el talk @ london.el
+      </a>
+    </h1>
+
+    <span class="post-date">24 Jul 2017</span>
+
+    <p>Today I gave a talk on <a href="https://github.com/abo-abo/hydra">hydra</a> at the London Emacs meet up -
+<a href="https://www.meetup.com/London-Emacs-Hacking/events/241399003/">london.el</a>.
+My screen capture is available on <a href="https://youtu.be/ONHEDj3kWrE">youtube</a>,
+and the slides are <a href="https://oremacs.com/download/london.pdf">here</a>.</p>
+
+<p>Thanks to <a href="https://twitter.com/dotemacs">@dotemacs</a> for organizing the
+event and inviting me.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2017/04/09/ivy-0.9.0/">
         Ivy 0.9.0 is out
       </a>
@@ -964,130 +983,6 @@ community has already done it and shared the recipe with you.</li>
 <p>The most important usage tip: until you&#39;re sure that the command and
 the Makefile work properly make backups. In fact, make backups period.
 Happy hacking!</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2016/08/28/elf-mode/">
-        elf-mode - view the symbol list in a binary
-      </a>
-    </h1>
-
-    <span class="post-date">28 Aug 2016</span>
-
-    <p>Recently, I&#39;ve been looking at
-<a href="http://libigl.github.io/libigl/tutorial/tutorial.html#meshrepresentation">libigl</a>. I
-didn&#39;t manage to fully figure out their CMake build system for
-tutorials: although each tutorial has a <code>CMakeLists.txt</code>, it&#39;s only
-possible to build them all at once.</p>
-
-<p>So I decided to replace <code>CMakeLists.txt</code> with a good-old <code>Makefile</code>;
-how hard can it be?  Concerning includes, not at all hard: the missing
-files are found with <code>counsel-locate</code> and added to the include path.</p>
-
-<p>But I had some trouble matching a missing <code>ld</code> dependency to a library
-file. Fixed it with a bunch of googling and guesswork; I still wonder
-if there&#39;s a better way. But in the process, I&#39;ve found this useful
-command:</p>
-<div class="highlight"><pre><code class="language-shell" data-lang="shell"><span></span>readelf --syms libGL.so
-</code></pre></div>
-<p>which produces e.g.:</p>
-
-<pre><small>
-Symbol table '.dynsym' contains 2732 entries:
-   Num:    Value          Size Type    Bind   Vis      Ndx Name
-     0: 0000000000000000     0 NOTYPE  LOCAL  DEFAULT  UND
-     1: 000000000004faf0     0 SECTION LOCAL  DEFAULT    8
-     2: 00000000000e8f20     0 FUNC    GLOBAL DEFAULT   11 glGetIntegerui64i_vNV
-     3: 00000000000e13e0     0 FUNC    GLOBAL DEFAULT   11 glGetMultiTexEnvfvEXT
-     4: 00000000000d7440     0 FUNC    GLOBAL DEFAULT   11 glProgramUniform2uiv
-     5: 00000000000cfdc0     0 FUNC    GLOBAL DEFAULT   11 glMultiTexCoord3sv
-</small></pre>
-
-<p>This is a pretty good representation of a binary file: in this
-example, instead of one megabyte of gibberish I see a bit more than
-2732 lines describing the functions this file uses and provides.</p>
-
-<h2 id="viewing-the-symbol-list-automatically">Viewing the symbol list automatically</h2>
-
-<p>I liked the above representation so much that I want to see it by
-default. In Emacs, it&#39;s pretty easy to do with <code>auto-mode-alist</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">add-to-list</span> <span class="ss">&#39;auto-mode-alist</span> <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;\\.\\(?:a\\|so\\)\\&#39;&quot;</span> <span class="o">.</span> <span class="nv">elf-mode</span><span class="p">))</span>
-</code></pre></div>
-<p>The above code instructs Emacs to call <code>elf-mode</code> function whenever
-the file name ends in <code>*.a</code> or <code>*.so</code>.</p>
-
-<p>And here&#39;s the body of <code>elf-mode</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defvar-local</span> <span class="nv">elf-mode</span> <span class="no">nil</span><span class="p">)</span>
-
-<span class="c1">;;;###autoload</span>
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">elf-mode</span> <span class="p">()</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">inhibit-read-only</span> <span class="no">t</span><span class="p">))</span>
-    <span class="p">(</span><span class="k">if</span> <span class="nv">elf-mode</span>
-        <span class="p">(</span><span class="k">progn</span>
-          <span class="p">(</span><span class="nf">delete-region</span> <span class="p">(</span><span class="nf">point-min</span><span class="p">)</span> <span class="p">(</span><span class="nf">point-max</span><span class="p">))</span>
-          <span class="p">(</span><span class="nf">insert-file-contents</span> <span class="p">(</span><span class="nf">buffer-file-name</span><span class="p">))</span>
-          <span class="p">(</span><span class="k">setq</span> <span class="nv">elf-mode</span> <span class="no">nil</span><span class="p">))</span>
-      <span class="p">(</span><span class="k">setq</span> <span class="nv">elf-mode</span> <span class="no">t</span><span class="p">)</span>
-      <span class="p">(</span><span class="nf">delete-region</span> <span class="p">(</span><span class="nf">point-min</span><span class="p">)</span> <span class="p">(</span><span class="nf">point-max</span><span class="p">))</span>
-      <span class="p">(</span><span class="nf">insert</span> <span class="p">(</span><span class="nv">shell-command-to-string</span>
-               <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;readelf --syms %s&quot;</span> <span class="p">(</span><span class="nf">buffer-file-name</span><span class="p">)))))</span>
-    <span class="p">(</span><span class="nf">set-buffer-modified-p</span> <span class="no">nil</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">read-only-mode</span> <span class="mi">1</span><span class="p">)))</span>
-</code></pre></div>
-<p>The idea is very simple: <code>elf-mode</code> is a toggle function that replaces
-the buffer contents with the shell command output. It carefully uses
-<code>read-only-mode</code> and <code>set-buffer-modified-p</code> so that the file will not
-be overwritten by accident with the symbol names.</p>
-
-<h2 id="using-autoload-to-avoid-overhead">Using autoload to avoid overhead</h2>
-
-<p>As you might imagine, looking at binaries isn&#39;t really a common
-task. Is it worth to be dragging this code around from now on, loading
-it on each start? The answer is yes, of course. Since the actual cost
-is negligible until the feature is used.</p>
-
-<p>If you look above, <code>elf-mode</code> has an <code>;;;###autoload</code> cookie before
-it. The cookie results in this line in my <code>loaddefs.el</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">autoload</span> <span class="ss">&#39;elf-mode</span> <span class="s">&quot;modes/ora-elf&quot;</span> <span class="s">&quot;&quot;</span> <span class="no">t</span> <span class="no">nil</span><span class="p">)</span>
-</code></pre></div>
-<p>My <code>init.el</code> always loads <code>loaddefs.el</code>, but never loads <code>ora-elf.el</code>
-where the function is defined. That file is only loaded when the
-function <code>elf-mode</code> is called for the first time. The above <code>autoload</code>
-statement simply instructs Emacs to load a particular file when
-<code>elf-mode</code> needs to be called.</p>
-
-<p>When you use the package manager, the autoloads file is generated and
-loaded for you automatically:</p>
-<div class="highlight"><pre><code class="language-shell" data-lang="shell"><span></span>$ tree elpa/ace-link-20160811.112/
-
-elpa/ace-link-20160811.112/
-├── ace-link-autoloads.el
-├── ace-link.el
-├── ace-link.elc
-└── ace-link-pkg.el
-
-<span class="m">0</span> directories, <span class="m">4</span> files
-</code></pre></div>
-<p>Here, the package manager will always load <code>ace-link-autoloads.el</code>,
-which instructs Emacs to load <code>ace-link.el</code> when one of the
-<code>;;;###autoload</code> functions is called and <code>ace-link.el</code> isn&#39;t yet
-loaded.</p>
-
-<p>As an example of how useful delayed loading is: my 6000 line
-<a href="https://github.com/abo-abo/oremacs">config</a> starts in 1.8 seconds.
-About 40% of that time is spent on <code>(package-initialize)</code>, which I
-assume is the package manager loading all those <code>*-autoloads.el</code> files
-that I have in my <code>elpa/</code>.</p>
-
-<h2 id="outro">Outro</h2>
-
-<p>Let me know if there&#39;s interest to have <code>elf-mode</code> on MELPA.  Also, if
-anyone knows how to set mode automatically based on the first few
-chars of the file (all binaries seem to start with <code>^?ELF</code>), I&#39;d like
-to know that as well. Happy hacking!</p>
 
   </div>
   

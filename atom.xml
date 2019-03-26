@@ -4,13 +4,94 @@
  <title>(or emacs</title>
  <link href="https://oremacs.com/atom.xml" rel="self"/>
  <link href="https://oremacs.com/"/>
- <updated>2018-05-12T17:55:40+02:00</updated>
+ <updated>2019-03-26T20:14:54+01:00</updated>
  <id>https://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Progress bars for apt in shell</title>
+   <link href="https://oremacs.com/2019/03/24/shell-apt/"/>
+   <updated>2019-03-24T00:00:00+01:00</updated>
+   <id>https://oremacs.com/2019/03/24/shell-apt</id>
+   <content type="html">&lt;h2 id=&quot;intro&quot;&gt;Intro&lt;/h2&gt;
+
+&lt;p&gt;For a couple years now, I use &lt;kbd&gt;M-x&lt;/kbd&gt; &lt;code&gt;shell&lt;/code&gt; as my main shell. Recently, I have fixed one of
+the minor annoyances that go along with using &lt;code&gt;shell&lt;/code&gt; in Emacs. At least since Ubuntu 18.04, the
+terminal &amp;quot;progress bar&amp;quot; feature, displayed below is non-optional:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/apt-install-progress-1.png&quot; alt=&quot;apt-install-progress-1&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;It uses terminal escape codes to display the progress bar, and &lt;code&gt;shell-mode&lt;/code&gt; can&amp;#39;t handle them well,
+so they clobber a lot of the output.&lt;/p&gt;
+
+&lt;h2 id=&quot;initial-work-around&quot;&gt;Initial work around&lt;/h2&gt;
+
+&lt;p&gt;Previously, I was using this work around, since &lt;code&gt;apt-get&lt;/code&gt; doesn&amp;#39;t display the progress bar:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;# sudo apt upgrade&lt;/span&gt;
+sudo apt-get upgrade
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;progress-bar-in-the-mode-line&quot;&gt;Progress bar in the mode line&lt;/h2&gt;
+
+&lt;p&gt;But typing 4 extra chars is hard. And &lt;code&gt;apt-get&lt;/code&gt; will likely get these progress bars at some point as
+well. So I spent around an hour of my weekend hacking an Elisp solution. Here is the code:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;advice-add&lt;/span&gt;
+ &lt;span class=&quot;ss&quot;&gt;&amp;#39;ansi-color-apply-on-region&lt;/span&gt;
+ &lt;span class=&quot;nb&quot;&gt;:before&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ora-ansi-color-apply-on-region&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ora-ansi-color-apply-on-region&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;begin&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Fix progress bars for e.g. apt(8).&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;Display progress in the mode line instead.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;end-marker&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;copy-marker&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+        &lt;span class=&quot;nv&quot;&gt;mb&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;save-excursion&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;goto-char&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;copy-marker&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;begin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;re-search-forward&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;\0337&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;end-marker&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;mb&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;match-beginning&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;re-search-forward&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;\0338&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;end-marker&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ora-apt-progress-message&lt;/span&gt;
+           &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;substring-no-properties&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;delete-and-extract-region&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;mb&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;point&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+            &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;-2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ora-apt-progress-message&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;progress&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;mode-line-process&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;string-match&lt;/span&gt;
+             &lt;span class=&quot;s&quot;&gt;&amp;quot;Progress: \\[ *\\([0-9]+\\)%\\]&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;progress&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;list&lt;/span&gt;
+             &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;concat&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;:%s &amp;quot;&lt;/span&gt;
+                     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;match-string&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;progress&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                     &lt;span class=&quot;s&quot;&gt;&amp;quot;%%%% &amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+          &lt;span class=&quot;o&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;:%s&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;force-mode-line-update&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The solution will detect e.g. &lt;code&gt;&amp;quot;\0337...Progress: [ 25%]...\0338&amp;quot;&lt;/code&gt;, remove it from the shell buffer
+and display &lt;code&gt;&amp;quot;25%&amp;quot;&lt;/code&gt; in the mode line instead.&lt;/p&gt;
+
+&lt;h2 id=&quot;use-the-echo-area-instead-of-the-mode-line&quot;&gt;Use the Echo Area instead of the mode line&lt;/h2&gt;
+
+&lt;p&gt;The above is a good enough solution specifically for &lt;code&gt;apt(8)&lt;/code&gt;, but not for the generic case. Let&amp;#39;s
+try to emulate how e.g. &lt;code&gt;gnome-terminal&lt;/code&gt; handles these escape sequences.  It takes sequences like
+&lt;code&gt;&amp;quot;\0337.*\0338&amp;quot;&lt;/code&gt; and displays them in the bottom of the window. Kind of like the Emacs Echo
+Area. That&amp;#39;s easy enough to do:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ora-apt-progress-message&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;progress&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;message&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;replace-regexp-in-string&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;&amp;quot;%&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;%%&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ansi-color-apply&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;progress&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Above, we use &lt;code&gt;ansi-color-apply&lt;/code&gt; to get rid of any extra terminal escape codes.  I decided to stay
+with the Echo Area version instead of the mode line version. Here&amp;#39;s how it looks like:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/apt-install-progress-2.png&quot; alt=&quot;apt-install-progress-2&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;You can find all of the above code in &lt;a href=&quot;https://github.com/abo-abo/oremacs/blob/afa4d0e3b1a60467ec163220e9823d1f014ab6a4/modes/ora-shell.el&quot;&gt;my config&lt;/a&gt;.
+Happy hacking!&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Using exclusion patterns when grepping</title>

@@ -300,6 +300,65 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/06/08/describe-variable-tip/">
+        More productive describe-variable
+      </a>
+    </h1>
+
+    <span class="post-date">08 Jun 2015</span>
+
+    <p>I refer to <code>counsel-describe-variable</code> here, which you can get from
+the MELPA <code>counsel</code> package, or from
+<a href="https://github.com/abo-abo/swiper">Github</a>. If you&#39;re not familiar, <code>counsel</code> contains specialized functions using <code>ivy-mode</code> completion. Being specialized means that you can do more than usual, for instance here are the exit points of <code>counsel-describe-variable</code>:</p>
+
+<ul>
+<li><kbd>RET</kbd> calls <code>describe-variable</code>: a plain <code>describe-variable</code> with <code>ivy-mode</code> on
+looks like <code>counsel-describe-variable</code>, but has only this exit point.</li>
+<li><kbd>C-.</kbd> calls <code>counsel-find-symbol</code>: jump to symbol declaration.</li>
+<li><kbd>C-,</kbd> calls <code>counsel--info-lookup-symbol</code>: jump to symbol reference in <code>*Info*</code>.</li>
+</ul>
+
+<p>These can also be extended by binding new commands in <code>counsel-describe-map</code>.</p>
+
+<p>I&#39;ll just describe one useful scenario that happened just now. I was working on <a href="http://debbugs.gnu.org/cgi/bugreport.cgi?bug=20754">a <code>checkdoc.el</code> change</a>
+and was testing it with <code>avy.el</code>. And I got a few style warnings for this code, which I got from a <a href="https://github.com/abo-abo/avy/pull/59">contributor</a> (thanks for the code btw):</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">defvar</span> <span class="nv">avy-translate-char-function</span> <span class="nf">#&#39;identity</span>
+  <span class="s">&quot;Function to translate user input key. This can be useful for</span>
+<span class="s">adding mirror key. E.g. one can make SPACE an alternative of &#39;a&#39;,</span>
+<span class="s">by adding:</span>
+
+<span class="s">\(setq avy-translate-char-function</span>
+<span class="s">      (lambda (c) (if (= c 32) ?a c)))</span>
+
+<span class="s">to allow typing SPACE instead of character &#39;a&#39; to jump to the location</span>
+<span class="s">highlighted by &#39;a&#39;.&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>One of the warnings that <code>avy-translate-char-function</code> should be quoted while inside the docstring like so:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="s">&quot;</span><span class="ss">`avy-translate-char-function&#39;</span><span class="s">&quot;</span>
+</code></pre></div>
+<p>Of course that wouldn&#39;t play well with <code>setq</code>, so I wanted to see if
+any other variables that end in <code>-function</code> provide an example of use
+like here, and, if so, how they quote.</p>
+
+<p>This is my <a href="https://github.com/abo-abo/oremacs/blob/github/oleh/keys.el">personal configuration</a>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;&lt;f1&gt; v&quot;</span><span class="p">)</span> <span class="ss">&#39;counsel-describe-variable</span><span class="p">)</span>
+</code></pre></div>
+<p>So I did <kbd>&lt;f1&gt; v</kbd> <code>function$</code> to describe a variable that ends with <code>function</code>.
+Here, <code>$</code> is a part of <a href="http://www.emacswiki.org/emacs/RegularExpression">a regular expression</a>, which should be a priority to learn if you want to be a (not just) Emacs Power User.</p>
+
+<p>And now the key part: instead of pressing <kbd>RET</kbd> to describe just the current candidate, I repeatedly press <kbd>C-M-n</kbd> (<code>ivy-next-line-and-call</code>). After each <kbd>C-M-n</kbd>, the next candidate will be selected and the <code>*Help*</code> window will be updated.</p>
+
+<p>With this trick I was able to skim through the 346 matches in seconds. The conclusion was that an example isn&#39;t usually provided, with <code>nnmail-expiry-wait-function</code> being an exemption.
+In the end, I decided not to provide such an explicit example and shorten the doc to this:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">defvar</span> <span class="nv">avy-translate-char-function</span> <span class="nf">#&#39;identity</span>
+  <span class="s">&quot;Function to translate user input key into another key.</span>
+<span class="s">For example, to make SPC do the same as ?a, use</span>
+<span class="s">\(lambda (c) (if (= c 32) ?a c)).&quot;</span><span class="p">)</span>
+</code></pre></div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/06/04/git-grep-ivy-2/">
         counsel-git-grep, in async
       </a>
@@ -855,92 +914,6 @@ You just need to decide where to bind it:</p>
 you&#39;re looking to write some Elisp that retrieves and parses some HTML
 from a web service, it&#39;s nice to look at a simple implementation of
 how it&#39;s done.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/05/19/checkdoc-batch/">
-        New in Emacs - run checkdoc in batch mode
-      </a>
-    </h1>
-
-    <span class="post-date">19 May 2015</span>
-
-    <h2 id="more-checkdoc-goodness">More <code>checkdoc</code> goodness</h2>
-
-<p>If you&#39;re doing some Elisp coding, you should definitely check out the
-built-in <code>checkdoc</code> command. Too bad it&#39;s (was) interactive-only. With
-a small modification, I&#39;ve made it suitable for batch.</p>
-
-<p>You can check out how I did it in the
-<a href="https://github.com/abo-abo/avy">avy</a> (or
-<a href="https://github.com/abo-abo/lispy">lispy</a>) repository. Here&#39;s my
-<code>compile</code> target in the Makefile:</p>
-<div class="highlight"><pre><code class="language-Makefile" data-lang="Makefile"><span></span><span class="nv">emacs</span> <span class="o">?=</span> emacs
-
-<span class="nf">compile</span><span class="o">:</span>
-    <span class="k">$(</span>emacs<span class="k">)</span> -batch -l targets/avy-init.el
-</code></pre></div>
-<p>And here are the contents of avy-init.el:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">add-to-list</span> <span class="ss">&#39;load-path</span> <span class="nv">default-directory</span><span class="p">)</span>
-<span class="p">(</span><span class="nf">mapc</span> <span class="nf">#&#39;</span><span class="nv">byte-compile-file</span> <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;avy.el&quot;</span><span class="p">))</span>
-<span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;avy</span><span class="p">)</span>
-<span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;checkdoc</span><span class="p">)</span>
-<span class="p">(</span><span class="nb">with-current-buffer</span> <span class="p">(</span><span class="nv">find-file</span> <span class="s">&quot;avy.el&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">checkdoc-current-buffer</span> <span class="no">t</span><span class="p">))</span>
-</code></pre></div>
-<p>I made <code>compile</code> target a dependency of the <code>all</code> target, so with a
-single <code>make</code> I can:</p>
-
-<ul>
-<li>run the tests</li>
-<li>check for compiler warnings</li>
-<li>check for <code>checkdoc</code> style warnings</li>
-</ul>
-
-<h2 id="compile-over-ansi-term"><code>compile</code> over <code>ansi-term</code></h2>
-
-<p>There&#39;s no reason to use <code>ansi-term</code> (or an external shell) over
-<code>compile</code> in this case. Using <kbd>M-x</kbd> <code>compile</code> (or actually
-<kbd>M-x</kbd> <a href="https://github.com/abo-abo/helm-make">helm-make</a>) I
-can navigate to any compilation or style warning or failed test from
-the <code>*compilation*</code> buffer.</p>
-
-<p>For the lazy, it&#39;s possible to jump to errors with a mouse, but
-navigating errors is a breeze with this Hydra:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-error</span> <span class="p">(</span><span class="nv">global-map</span> <span class="s">&quot;M-g&quot;</span><span class="p">)</span>
-  <span class="s">&quot;goto-error&quot;</span>
-  <span class="p">(</span><span class="s">&quot;h&quot;</span> <span class="nv">first-error</span> <span class="s">&quot;first&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">next-error</span> <span class="s">&quot;next&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;k&quot;</span> <span class="nv">previous-error</span> <span class="s">&quot;prev&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;v&quot;</span> <span class="nv">recenter-top-bottom</span> <span class="s">&quot;recenter&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span> <span class="s">&quot;quit&quot;</span><span class="p">))</span>
-</code></pre></div>
-<p>There is also
-<a href="https://github.com/abo-abo/ace-link">ace-link-compilation</a>, but I
-tend not to use it often.</p>
-
-<p>I make good use of one of the coolest <code>compilation-mode</code> features:
-pressing <kbd>g</kbd> will restart the compilation process.</p>
-
-<h2 id="outro">Outro</h2>
-
-<p>Check out the new feature, I think it&#39;s really cool. Another incentive
-to try is that lately the
-<a href="https://savannah.gnu.org/git/?group=emacs">emacs trunk</a> has been
-extremely stable: I&#39;m on Emacs25 almost all the time now, since it
-feels a lot faster.</p>
-
-<p>Here are my aliasing settings:</p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ which newemacs
-/usr/local/bin/newemacs
-$ readlink -f <span class="sb">`</span>which newemacs<span class="sb">`</span>
-/home/oleh/git/gnu-emacs/src/emacs
-</code></pre></div>
-<p>To run the tests with <code>newemacs</code> instead of <code>emacs</code> (since that&#39;s the
-one for which <code>checkdoc</code> works in batch), use <kbd>M-x</kbd> <code>setenv</code>
--&gt; <code>emacs</code> -&gt; <code>newemacs</code>.</p>
 
   </div>
   

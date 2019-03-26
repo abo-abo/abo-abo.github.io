@@ -300,6 +300,121 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2016/04/04/hydra-doc-syntax/">
+        Extended syntax for hydra docstrings
+      </a>
+    </h1>
+
+    <span class="post-date">04 Apr 2016</span>
+
+    <p>I&#39;ve been getting more and more organized in tracking my tasks and
+time with Org-mode. Still using the usual suspects, of course: GTD and
+Pomodoro, I&#39;m just getting more diligent with them than in the
+previous years.</p>
+
+<p>So today I wanted to prettify the good old
+<code>org-agenda-view-mode-dispatch</code>, which is bound to <kbd>v</kbd> in
+<code>org-agenda-mode</code>. Currently, it&#39;s just a boring static <code>message</code> and
+<code>read-char</code> combination. Why not do it with a
+<a href="https://github.com/abo-abo/hydra">hydra</a> instead?</p>
+
+<p>Here&#39;s the current full code, that uses the newly extended doc syntax:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">org-agenda-mode-map</span>
+    <span class="s">&quot;v&quot;</span> <span class="ss">&#39;hydra-org-agenda-view/body</span><span class="p">)</span>
+
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">org-agenda-cts</span> <span class="p">()</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">args</span> <span class="p">(</span><span class="nf">get-text-property</span>
+               <span class="p">(</span><span class="nf">min</span> <span class="p">(</span><span class="nf">1-</span> <span class="p">(</span><span class="nf">point-max</span><span class="p">))</span> <span class="p">(</span><span class="nf">point</span><span class="p">))</span>
+               <span class="ss">&#39;org-last-args</span><span class="p">)))</span>
+    <span class="p">(</span><span class="nf">nth</span> <span class="mi">2</span> <span class="nv">args</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-org-agenda-view</span> <span class="p">(</span><span class="nb">:hint</span> <span class="nv">none</span><span class="p">)</span>
+  <span class="s">&quot;</span>
+<span class="s">_d_: ?d? day        _g_: time grid=?g? _a_: arch-trees</span>
+<span class="s">_w_: ?w? week       _[_: inactive      _A_: arch-files</span>
+<span class="s">_t_: ?t? fortnight  _f_: follow=?f?    _r_: report=?r?</span>
+<span class="s">_m_: ?m? month      _e_: entry =?e?    _D_: diary=?D?</span>
+<span class="s">_y_: ?y? year       _q_: quit          _L__l__c_: ?l?&quot;</span>
+  <span class="p">(</span><span class="s">&quot;SPC&quot;</span> <span class="nv">org-agenda-reset-view</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;d&quot;</span> <span class="nv">org-agenda-day-view</span>
+       <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">eq</span> <span class="ss">&#39;day</span> <span class="p">(</span><span class="nv">org-agenda-cts</span><span class="p">))</span>
+           <span class="s">&quot;[x]&quot;</span> <span class="s">&quot;[ ]&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="s">&quot;w&quot;</span> <span class="nv">org-agenda-week-view</span>
+       <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">eq</span> <span class="ss">&#39;week</span> <span class="p">(</span><span class="nv">org-agenda-cts</span><span class="p">))</span>
+           <span class="s">&quot;[x]&quot;</span> <span class="s">&quot;[ ]&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="s">&quot;t&quot;</span> <span class="nv">org-agenda-fortnight-view</span>
+       <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">eq</span> <span class="ss">&#39;fortnight</span> <span class="p">(</span><span class="nv">org-agenda-cts</span><span class="p">))</span>
+           <span class="s">&quot;[x]&quot;</span> <span class="s">&quot;[ ]&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="s">&quot;m&quot;</span> <span class="nv">org-agenda-month-view</span>
+       <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">eq</span> <span class="ss">&#39;month</span> <span class="p">(</span><span class="nv">org-agenda-cts</span><span class="p">))</span> <span class="s">&quot;[x]&quot;</span> <span class="s">&quot;[ ]&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="s">&quot;y&quot;</span> <span class="nv">org-agenda-year-view</span>
+       <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">eq</span> <span class="ss">&#39;year</span> <span class="p">(</span><span class="nv">org-agenda-cts</span><span class="p">))</span> <span class="s">&quot;[x]&quot;</span> <span class="s">&quot;[ ]&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nv">org-agenda-log-mode</span>
+       <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;% -3S&quot;</span> <span class="nv">org-agenda-show-log</span><span class="p">))</span>
+  <span class="p">(</span><span class="s">&quot;L&quot;</span> <span class="p">(</span><span class="nv">org-agenda-log-mode</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">4</span><span class="p">)))</span>
+  <span class="p">(</span><span class="s">&quot;c&quot;</span> <span class="p">(</span><span class="nv">org-agenda-log-mode</span> <span class="ss">&#39;clockcheck</span><span class="p">))</span>
+  <span class="p">(</span><span class="s">&quot;f&quot;</span> <span class="nv">org-agenda-follow-mode</span>
+       <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;% -3S&quot;</span> <span class="nv">org-agenda-follow-mode</span><span class="p">))</span>
+  <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="nv">org-agenda-archives-mode</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;A&quot;</span> <span class="p">(</span><span class="nv">org-agenda-archives-mode</span> <span class="ss">&#39;files</span><span class="p">))</span>
+  <span class="p">(</span><span class="s">&quot;r&quot;</span> <span class="nv">org-agenda-clockreport-mode</span>
+       <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;% -3S&quot;</span> <span class="nv">org-agenda-clockreport-mode</span><span class="p">))</span>
+  <span class="p">(</span><span class="s">&quot;e&quot;</span> <span class="nv">org-agenda-entry-text-mode</span>
+       <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;% -3S&quot;</span> <span class="nv">org-agenda-entry-text-mode</span><span class="p">))</span>
+  <span class="p">(</span><span class="s">&quot;g&quot;</span> <span class="nv">org-agenda-toggle-time-grid</span>
+       <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;% -3S&quot;</span> <span class="nv">org-agenda-use-time-grid</span><span class="p">))</span>
+  <span class="p">(</span><span class="s">&quot;D&quot;</span> <span class="nv">org-agenda-toggle-diary</span>
+       <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;% -3S&quot;</span> <span class="nv">org-agenda-include-diary</span><span class="p">))</span>
+  <span class="p">(</span><span class="s">&quot;!&quot;</span> <span class="nv">org-agenda-toggle-deadlines</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;[&quot;</span>
+   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">org-agenda-include-inactive-timestamps</span> <span class="no">t</span><span class="p">))</span>
+     <span class="p">(</span><span class="nv">org-agenda-check-type</span> <span class="no">t</span> <span class="ss">&#39;timeline</span> <span class="ss">&#39;agenda</span><span class="p">)</span>
+     <span class="p">(</span><span class="nv">org-agenda-redo</span><span class="p">)))</span>
+  <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="p">(</span><span class="nf">message</span> <span class="s">&quot;Abort&quot;</span><span class="p">)</span> <span class="nb">:exit</span> <span class="no">t</span><span class="p">))</span>
+</code></pre></div>
+<p>And here&#39;s how it looks like in action, I simply pressed <kbd>v</kbd> while in the agenda:</p>
+
+<p><img src="/download/hydra-sexp-docstring.png" alt="hydra-sexp-docstring.png"></p>
+
+<p>Since many functions that <code>org-agenda-view-mode-dispatch</code> calls are
+toggles, it makes sense for <code>hydra-org-agenda-view</code> to display the
+status of these toggles.</p>
+
+<p>And it&#39;s actually convenient to toggle a whole lot of things at once,
+and the default red hydra keys really come in handy here.</p>
+
+<h2 id="quick-explanation-of-the-syntax">Quick explanation of the syntax</h2>
+
+<p>Each head of a hydra looks like:</p>
+
+<blockquote>
+<p>(key cmd &amp;optional doc &amp;rest plist)</p>
+</blockquote>
+
+<p>The fairly new bit that I&#39;m using here is the ability to use a sexp
+instead of a plain string in the <code>doc</code> part.  This sexp will be
+evaluated each time the doc is re-displayed. This means that it can
+represent a changing variable, for instance the state of a minor mode
+or a variable.</p>
+
+<p>And here&#39;s the best part: the doc of each head can be quoted in the
+hydra&#39;s docstring by using the corresponding key, e.g. <code>?g?</code>.  This
+allows to have very complex docstrings while keeping them easily
+aligned in a tabular format.</p>
+
+<p>Here is only the hydra&#39;s docstring, copied from the above code:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>_d_: ?d? day        _g_: time grid=?g? _a_: arch-trees
+_w_: ?w? week       _[_: inactive      _A_: arch-files
+_t_: ?t? fortnight  _f_: follow=?f?    _r_: report=?r?
+_m_: ?m? month      _e_: entry =?e?    _D_: diary=?D?
+_y_: ?y? year       _q_: quit          _L__l__c_: ?l?
+</code></pre></div>
+<p>Doesn&#39;t that look simple?</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2016/03/16/counsel-linux-app/">
         Emacs completion for launching Linux desktop apps.
       </a>
@@ -527,94 +642,6 @@ lambda:</p>
 <p>Here&#39;s a line to make <code>avy-pop-mark</code> work also for <code>swiper</code>:</p>
 <div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">advice-add</span> <span class="ss">&#39;swiper</span> <span class="nb">:before</span> <span class="ss">&#39;avy-push-mark</span><span class="p">)</span>
 </code></pre></div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2016/01/18/emacs-rhythmbox/">
-        Using Emacs as system-wide Rhythmbox interface
-      </a>
-    </h1>
-
-    <span class="post-date">18 Jan 2016</span>
-
-    <p>In an
-<a href="http://oremacs.com/2015/07/09/counsel-rhythmbox/">earlier post</a>, I
-described how I&#39;ve been managing Rhythmbox from Emacs. I&#39;ve bound the
-entry point to <kbd>C-S-o</kbd>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-S-o&quot;</span><span class="p">)</span> <span class="ss">&#39;counsel-rhythmbox</span><span class="p">)</span>
-</code></pre></div>
-<p>Obviously, this entry point won&#39;t work while outside Emacs. Today,
-I&#39;ll describe how I&#39;ve made it work everywhere. Everywhere on Ubuntu
-14.04, that is, although a similar approach should work for other
-distributions.</p>
-
-<h2 id="step-1-make-sure-the-emacs-server-is-running">Step 1: Make sure the Emacs server is running</h2>
-
-<p>Here&#39;s the relevant part of my <a href="https://github.com/abo-abo/oremacs/blob/github/init.el">init.el</a>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;server</span><span class="p">)</span>
-<span class="p">(</span><span class="k">or</span> <span class="p">(</span><span class="nv">server-running-p</span><span class="p">)</span> <span class="p">(</span><span class="nv">server-start</span><span class="p">))</span>
-</code></pre></div>
-<p>Using <code>emacsclient</code> is essential to avoiding the extra startup time:
-even a startup time of one second feels sluggish when all I need is to
-open a menu with a song playlist.</p>
-
-<h2 id="step-2-install-the-relevant-x-window-tool">Step 2: Install the relevant X window tool</h2>
-
-<p>Initially, I only wrote a call to <code>emacsclient</code>, which resulted in the
-Emacs window gaining focus in the end.  Then I thought it would be
-nice to give the focus back the original window after the end of
-selection, and raise it as well.</p>
-
-<p>I wanted to do something with <code>wmctrl</code>, but I found that
-<a href="http://superuser.com/questions/382616/detecting-currently-active-window">xdotool</a>
-can do what I want in a simple way.</p>
-<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>sudo apt-get install xdotool
-</code></pre></div>
-<h2 id="step-3-write-a-shell-script">Step 3: Write a shell script</h2>
-<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span><span class="ch">#!/bin/bash</span>
-<span class="nv">wnd_id</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>xdotool getwindowfocus<span class="k">)</span><span class="s2">&quot;</span>
-emacsclient --eval <span class="s2">&quot;(progn (x-focus-frame nil) (counsel-rhythmbox))&quot;</span>
-xdotool windowfocus <span class="nv">$wnd_id</span>
-xdotool windowraise <span class="nv">$wnd_id</span>
-</code></pre></div>
-<p>Here, <code>(x-focus-frame nil)</code> will raise the Emacs window and give the
-keyboard input focus.  <code>emacsclient</code> will return as soon as I select
-something or press <kbd>C-g</kbd>. At that point the keyboard focus
-will be returned to whatever window had it when the script was
-invoked.</p>
-
-<p>By the way, here&#39;s a cool configuration that automatically makes a
-file executable if it starts with <code>#!</code>.</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">add-hook</span>
- <span class="ss">&#39;after-save-hook</span>
- <span class="ss">&#39;executable-make-buffer-file-executable-if-script-p</span><span class="p">)</span>
-</code></pre></div>
-<h2 id="step-4-bind-the-shell-script-to-a-key">Step 4: Bind the shell script to a key</h2>
-
-<p>Open this (possibly using <code>gnome-control-center</code> instead, if applicable):</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>unity-control-center keyboard
-</code></pre></div>
-<p>And add a new shortcut in <code>Shortcuts</code>/<code>Custom Shortcuts</code>. I&#39;ve bound
-that one to <kbd>C-S-o</kbd> as well.</p>
-
-<h2 id="the-final-result">The final result</h2>
-
-<p>It&#39;s pretty convenient: as I&#39;m scrolling something I&#39;m reading in
-Firefox with <kbd>j</kbd> (via
-<a href="https://addons.mozilla.org/en-US/firefox/addon/firemacs/">Firemacs</a>),
-I can seamlessly press <kbd>C-S-o moo RET</kbd> to play &quot;Sisters of
-the Moon&quot;, and continue scrolling the web page with <kbd>j</kbd>.</p>
-
-<p>What&#39;s more, Emacs has very nice support for input methods with
-<kbd>C-\</kbd> (<code>toggle-input-method</code>), so I can also quickly select
-Ukrainian-titled songs, while still keeping shortcuts like
-<kbd>C-n</kbd> and <kbd>C-m</kbd> (<em>without</em> having to switch the
-input method back).</p>
-
-<p>The whole experience is similar to <code>gnome-do</code>/<code>synapse</code>, which I was
-using a few years back, except better because now it&#39;s in Emacs.</p>
-
   </div>
   
 </div>

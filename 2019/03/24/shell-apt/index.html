@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="flattr:id" content="9yl9ry">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Progress bars for apt in shell &middot; (or emacs
+    
+  </title>
+
+  <link rel="canonical" href="https://oremacs.com/2019/03/24/shell-apt/" />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="/public/css/octicons.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Scripts -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body class="layout-reverse theme-base-08">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <!-- <div class="sidebar-item"> -->
+  <!--   <p>unused</p> -->
+  <!-- </div> -->
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about/">About</a>
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/archive/">Archive</a>
+        
+      
+    
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/donate/">Donate</a>
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+
+    <div id="github" class="sidebar-nav-item">
+      <button type="button"
+              class="btn btn-info"
+              data-toggle="collapse"
+              data-target="#github-projects">
+        <span class="octicon octicon-mark-github"></span> My Emacs Projects
+      </button>
+      <div id="github-projects" class="collapse">
+        <ul style="margin-bottom:0em;">
+          <li>
+            <a href="https://github.com/abo-abo/lispy">lispy</a>
+            <p>vi-like Paredit</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/worf">worf</a>
+            <p>vi-like bindings for org-mode</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-window">ace-window</a>
+            <p>switch windows with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-link">ace-link</a>
+            <p>follow links with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/function-args">function-args</a>
+            <p>enhance <code>CEDET</code> for C++</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/helm-make">helm-make</a>
+            <p>select a Makefile target with <code>helm</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/make-it-so">make-it-so</a>
+            <p>transform files with Makefile recipes</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/org-download">org-download</a>
+            <p>drag-and-drop images to <code>org-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo?tab=repositories">
+              <span class="octicon octicon-octoface"></span>
+              and more
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
+
+  <div class="sidebar-item">
+    <p>
+      <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">
+        <img alt="Creative Commons License"
+             style="border-width:0;opacity: 0.3;"
+             src="https://licensebuttons.net/l/by-sa/4.0/88x31.png"/>
+      </a>
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">(or emacs</a>
+            <small>irrelevant)</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <script>
+if (window.location.host.indexOf('oremacs.com') > -1 &&
+    window.location.protocol != "https:") {
+    window.location.protocol = "https";
+}
+</script>
+
+<div class="post">
+  <h1 class="post-title">Progress bars for apt in shell</h1>
+  <span class="post-date">24 Mar 2019</span>
+  <h2 id="intro">Intro</h2>
+
+<p>For a couple years now, I use <kbd>M-x</kbd> <code>shell</code> as my main shell. Recently, I have fixed one of
+the minor annoyances that go along with using <code>shell</code> in Emacs. At least since Ubuntu 18.04, the
+terminal &quot;progress bar&quot; feature, displayed below is non-optional:</p>
+
+<p><img src="/download/apt-install-progress-1.png" alt="apt-install-progress-1"></p>
+
+<p>It uses terminal escape codes to display the progress bar, and <code>shell-mode</code> can&#39;t handle them well,
+so they clobber a lot of the output.</p>
+
+<h2 id="initial-work-around">Initial work around</h2>
+
+<p>Previously, I was using this work around, since <code>apt-get</code> doesn&#39;t display the progress bar:</p>
+<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span><span class="c1"># sudo apt upgrade</span>
+sudo apt-get upgrade
+</code></pre></div>
+<h2 id="progress-bar-in-the-mode-line">Progress bar in the mode line</h2>
+
+<p>But typing 4 extra chars is hard. And <code>apt-get</code> will likely get these progress bars at some point as
+well. So I spent around an hour of my weekend hacking an Elisp solution. Here is the code:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">advice-add</span>
+ <span class="ss">&#39;ansi-color-apply-on-region</span>
+ <span class="nb">:before</span> <span class="ss">&#39;ora-ansi-color-apply-on-region</span><span class="p">)</span>
+
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">ora-ansi-color-apply-on-region</span> <span class="p">(</span><span class="nv">begin</span> <span class="nv">end</span><span class="p">)</span>
+  <span class="s">&quot;Fix progress bars for e.g. apt(8).</span>
+<span class="s">Display progress in the mode line instead.&quot;</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">end-marker</span> <span class="p">(</span><span class="nf">copy-marker</span> <span class="nv">end</span><span class="p">))</span>
+        <span class="nv">mb</span><span class="p">)</span>
+    <span class="p">(</span><span class="k">save-excursion</span>
+      <span class="p">(</span><span class="nf">goto-char</span> <span class="p">(</span><span class="nf">copy-marker</span> <span class="nv">begin</span><span class="p">))</span>
+      <span class="p">(</span><span class="k">while</span> <span class="p">(</span><span class="nf">re-search-forward</span> <span class="s">&quot;\0337&quot;</span> <span class="nv">end-marker</span> <span class="no">t</span><span class="p">)</span>
+        <span class="p">(</span><span class="k">setq</span> <span class="nv">mb</span> <span class="p">(</span><span class="nf">match-beginning</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">re-search-forward</span> <span class="s">&quot;\0338&quot;</span> <span class="nv">end-marker</span> <span class="no">t</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">ora-apt-progress-message</span>
+           <span class="p">(</span><span class="nf">substring-no-properties</span>
+            <span class="p">(</span><span class="nf">delete-and-extract-region</span> <span class="nv">mb</span> <span class="p">(</span><span class="nf">point</span><span class="p">))</span>
+            <span class="mi">2</span> <span class="mi">-2</span><span class="p">)))))))</span>
+
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">ora-apt-progress-message</span> <span class="p">(</span><span class="nv">progress</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">setq</span> <span class="nv">mode-line-process</span>
+        <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">string-match</span>
+             <span class="s">&quot;Progress: \\[ *\\([0-9]+\\)%\\]&quot;</span> <span class="nv">progress</span><span class="p">)</span>
+            <span class="p">(</span><span class="nf">list</span>
+             <span class="p">(</span><span class="nf">concat</span> <span class="s">&quot;:%s &quot;</span>
+                     <span class="p">(</span><span class="nv">match-string</span> <span class="mi">1</span> <span class="nv">progress</span><span class="p">)</span>
+                     <span class="s">&quot;%%%% &quot;</span><span class="p">))</span>
+          <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;:%s&quot;</span><span class="p">)))</span>
+  <span class="p">(</span><span class="nf">force-mode-line-update</span><span class="p">))</span>
+</code></pre></div>
+<p>The solution will detect e.g. <code>&quot;\0337...Progress: [ 25%]...\0338&quot;</code>, remove it from the shell buffer
+and display <code>&quot;25%&quot;</code> in the mode line instead.</p>
+
+<h2 id="use-the-echo-area-instead-of-the-mode-line">Use the Echo Area instead of the mode line</h2>
+
+<p>The above is a good enough solution specifically for <code>apt(8)</code>, but not for the generic case. Let&#39;s
+try to emulate how e.g. <code>gnome-terminal</code> handles these escape sequences.  It takes sequences like
+<code>&quot;\0337.*\0338&quot;</code> and displays them in the bottom of the window. Kind of like the Emacs Echo
+Area. That&#39;s easy enough to do:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">ora-apt-progress-message</span> <span class="p">(</span><span class="nv">progress</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">message</span>
+   <span class="p">(</span><span class="nv">replace-regexp-in-string</span>
+    <span class="s">&quot;%&quot;</span> <span class="s">&quot;%%&quot;</span>
+    <span class="p">(</span><span class="nv">ansi-color-apply</span> <span class="nv">progress</span><span class="p">))))</span>
+</code></pre></div>
+<p>Above, we use <code>ansi-color-apply</code> to get rid of any extra terminal escape codes.  I decided to stay
+with the Echo Area version instead of the mode line version. Here&#39;s how it looks like:</p>
+
+<p><img src="/download/apt-install-progress-2.png" alt="apt-install-progress-2"></p>
+
+<p>You can find all of the above code in <a href="https://github.com/abo-abo/oremacs/blob/afa4d0e3b1a60467ec163220e9823d1f014ab6a4/modes/ora-shell.el">my config</a>.
+Happy hacking!</p>
+
+</div>
+
+<div class="twitter-share">
+  <a href="https://twitter.com/share"
+     class="twitter-share-button"
+     data-via="_abo_abo"
+     data-dnt="true">
+    Tweet
+  </a>
+</div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'oremacs'; // required: replace example with your forum shortname
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+<script>
+  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+</script>
+<noscript>
+  Please enable JavaScript to view the
+  <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>
