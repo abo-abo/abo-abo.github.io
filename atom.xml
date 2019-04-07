@@ -4,13 +4,81 @@
  <title>(or emacs</title>
  <link href="https://oremacs.com/atom.xml" rel="self"/>
  <link href="https://oremacs.com/"/>
- <updated>2019-03-26T20:14:54+01:00</updated>
+ <updated>2019-04-07T14:45:36+02:00</updated>
  <id>https://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Swiper-isearch - a more isearch-like swiper</title>
+   <link href="https://oremacs.com/2019/04/07/swiper-isearch/"/>
+   <updated>2019-04-07T00:00:00+02:00</updated>
+   <id>https://oremacs.com/2019/04/07/swiper-isearch</id>
+   <content type="html">&lt;h2 id=&quot;intro&quot;&gt;Intro&lt;/h2&gt;
+
+&lt;p&gt;Since its introduction in 2015, &lt;a href=&quot;https://github.com/abo-abo/swiper&quot;&gt;swiper&lt;/a&gt;, while nice most of the time, had two problems:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Slow startup for large buffers.&lt;/li&gt;
+&lt;li&gt;Candidates were lines, so if you had two or more matches on the same line, the first one was selected.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Over time, workarounds were added to address these problems.&lt;/p&gt;
+
+&lt;h2 id=&quot;problem-1-slow-startup&quot;&gt;Problem 1: slow startup&lt;/h2&gt;
+
+&lt;p&gt;Almost right away, calling &lt;code&gt;font-lock-ensure&lt;/code&gt; was limited to only small enough buffers.&lt;/p&gt;
+
+&lt;p&gt;In 2016, &lt;code&gt;counsel-grep-or-swiper&lt;/code&gt; was &lt;a href=&quot;https://oremacs.com/2016/04/26/ivy-0.8.0/&quot;&gt;introduced&lt;/a&gt;. It
+uses an external process (&lt;code&gt;grep&lt;/code&gt;) to search through large files.&lt;/p&gt;
+
+&lt;p&gt;In 2017, I found &lt;a href=&quot;https://github.com/BurntSushi/ripgrep&quot;&gt;ripgrep&lt;/a&gt;, which does a &lt;a href=&quot;https://oremacs.com/2017/08/04/ripgrep/&quot;&gt;better
+job&lt;/a&gt; than &lt;code&gt;grep&lt;/code&gt; for searching one file:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;counsel-grep-base-command&lt;/span&gt;
+      &lt;span class=&quot;s&quot;&gt;&amp;quot;rg -i -M 120 --no-heading --line-number --color never %s %s&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The advantage here is that the search can be performed on very large files. The trade-off is that we
+have to type in at least 3 characters before we send it to the external process. Otherwise, when the
+process returns a lot of results, Emacs will lag while receiving all that output.&lt;/p&gt;
+
+&lt;h2 id=&quot;problem-2-candidates-are-lines&quot;&gt;Problem 2: candidates are lines&lt;/h2&gt;
+
+&lt;p&gt;In 2015, &lt;code&gt;swiper-avy&lt;/code&gt; was &lt;a href=&quot;https://oremacs.com/2015/05/23/swiper-0.5.0/&quot;&gt;added&lt;/a&gt;, which could also be
+used as a workaround for many candidates on a single line. Press &lt;kbd&gt;C-&amp;#39;&lt;/kbd&gt; to visually select
+any candidate on screen using &lt;a href=&quot;https://github.com/abo-abo/avy&quot;&gt;avy&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;enter-swiper-isearch&quot;&gt;Enter &lt;code&gt;swiper-isearch&lt;/code&gt;&lt;/h2&gt;
+
+&lt;p&gt;Finally, less than a week ago, I wrote &lt;code&gt;swiper-isearch&lt;/code&gt; to fix &lt;a href=&quot;https://github.com/abo-abo/swiper/issues/1931&quot;&gt;#1931&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Differences from the previous commands:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Every candidate is a point position and not a line. The UX of going from one candidate to the next
+is finally &lt;code&gt;isearch&lt;/code&gt;-like, I enjoy it a lot.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Unlike &lt;code&gt;swiper&lt;/code&gt;, no line numbers are added to the candidates. This allows it to be as fast as
+&lt;a href=&quot;https://github.com/syohex/emacs-anzu&quot;&gt;anzu&lt;/a&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Unlike &lt;code&gt;counsel-grep&lt;/code&gt;, no external process is used. So you get feedback even after inputting a
+single char.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I like it a lot so far, enough to make it my default search:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-s&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;swiper-isearch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;Try out &lt;code&gt;swiper-isearch&lt;/code&gt;, see if it can replace &lt;code&gt;swiper&lt;/code&gt; for you; &lt;code&gt;counsel-grep-or-swiper&lt;/code&gt; still has
+its place, I think. Happy hacking!&lt;/p&gt;
+
+&lt;p&gt;PS. Thanks to everyone who supports me on &lt;a href=&quot;https://liberapay.com/abo-abo&quot;&gt;Liberapay&lt;/a&gt; and
+&lt;a href=&quot;https://www.patreon.com/abo_abo&quot;&gt;Patreon&lt;/a&gt;!&lt;/p&gt;
+
+&lt;p&gt;PPS. Thanks to everyone who contributes &lt;a href=&quot;https://github.com/abo-abo/swiper/&quot;&gt;issues and patches&lt;/a&gt;!&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Progress bars for apt in shell</title>
@@ -1019,10 +1087,19 @@ bounds before inserting the whole selected symbol.&lt;/p&gt;&lt;/li&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ora-cap-filesystem&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
     &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;path&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ffap-string-at-point&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;compl&lt;/span&gt;
-             &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;all-completions&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;path&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;#&amp;#39;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;read-file-name-internal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;string-match&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;\\`file:\\(.*\\)\\&amp;#39;&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;path&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;match-string&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;compl&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;all-completions&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;path&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;#&amp;#39;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;read-file-name-internal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;compl&lt;/span&gt;
-          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;offset&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ivy-completion-common-length&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;car&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;compl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;str&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;car&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;compl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+                 &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;offset&lt;/span&gt;
+                  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;len&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;length&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+                    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;and&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                                &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;equal&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;get-text-property&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;face&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                                       &lt;span class=&quot;ss&quot;&gt;&amp;#39;completions-common-part&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+                      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cl-incf&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+                    &lt;span class=&quot;nv&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
             &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;list&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;point&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;offset&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;point&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;compl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;I usually enter &lt;code&gt;~&lt;/code&gt;, so that &lt;code&gt;ffap-string-at-point&lt;/code&gt; recognizes it as a

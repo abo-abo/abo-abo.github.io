@@ -217,6 +217,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -389,10 +393,19 @@ bounds before inserting the whole selected symbol.</p></li>
 <div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">ora-cap-filesystem</span> <span class="p">()</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">path</span><span class="p">)</span>
     <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="k">setq</span> <span class="nv">path</span> <span class="p">(</span><span class="nv">ffap-string-at-point</span><span class="p">))</span>
-      <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">compl</span>
-             <span class="p">(</span><span class="nf">all-completions</span> <span class="nv">path</span> <span class="nf">#&#39;</span><span class="nv">read-file-name-internal</span><span class="p">)))</span>
+      <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">string-match</span> <span class="s">&quot;\\`file:\\(.*\\)\\&#39;&quot;</span> <span class="nv">path</span><span class="p">)</span>
+        <span class="p">(</span><span class="k">setq</span> <span class="nv">path</span> <span class="p">(</span><span class="nv">match-string</span> <span class="mi">1</span> <span class="nv">path</span><span class="p">)))</span>
+      <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">compl</span> <span class="p">(</span><span class="nf">all-completions</span> <span class="nv">path</span> <span class="nf">#&#39;</span><span class="nv">read-file-name-internal</span><span class="p">)))</span>
         <span class="p">(</span><span class="nb">when</span> <span class="nv">compl</span>
-          <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">offset</span> <span class="p">(</span><span class="nv">ivy-completion-common-length</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">compl</span><span class="p">))))</span>
+          <span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">str</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">compl</span><span class="p">))</span>
+                 <span class="p">(</span><span class="nv">offset</span>
+                  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">i</span> <span class="mi">0</span><span class="p">)</span>
+                        <span class="p">(</span><span class="nv">len</span> <span class="p">(</span><span class="nf">length</span> <span class="nv">str</span><span class="p">)))</span>
+                    <span class="p">(</span><span class="k">while</span> <span class="p">(</span><span class="k">and</span> <span class="p">(</span><span class="nf">&lt;</span> <span class="nv">i</span> <span class="nv">len</span><span class="p">)</span>
+                                <span class="p">(</span><span class="nf">equal</span> <span class="p">(</span><span class="nf">get-text-property</span> <span class="nv">i</span> <span class="ss">&#39;face</span> <span class="nv">str</span><span class="p">)</span>
+                                       <span class="ss">&#39;completions-common-part</span><span class="p">))</span>
+                      <span class="p">(</span><span class="nb">cl-incf</span> <span class="nv">i</span><span class="p">))</span>
+                    <span class="nv">i</span><span class="p">)))</span>
             <span class="p">(</span><span class="nf">list</span> <span class="p">(</span><span class="nf">-</span> <span class="p">(</span><span class="nf">point</span><span class="p">)</span> <span class="nv">offset</span><span class="p">)</span> <span class="p">(</span><span class="nf">point</span><span class="p">)</span> <span class="nv">compl</span><span class="p">)))))))</span>
 </code></pre></div>
 <p>I usually enter <code>~</code>, so that <code>ffap-string-at-point</code> recognizes it as a

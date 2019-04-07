@@ -217,6 +217,10 @@
         
       
     
+      
+        
+      
+    
 
     <div id="github" class="sidebar-nav-item">
       <button type="button"
@@ -297,6 +301,137 @@
 
       <div class="container content">
         <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/2017/11/30/ivy-0.10.0/">
+        Ivy 0.10.0 is out
+      </a>
+    </h1>
+
+    <span class="post-date">30 Nov 2017</span>
+
+    <h2 id="intro">Intro</h2>
+
+<p><a href="https://github.com/abo-abo/swiper">Ivy</a> is a completion method that&#39;s
+similar to <code>Ido</code>, but with emphasis on simplicity and customizability.</p>
+
+<h2 id="overview">Overview</h2>
+
+<p>The current release constitutes of 280 commits and 8 months of
+progress since <code>0.9.0</code>. Many issues ranging from
+<a href="https://github.com/abo-abo/swiper/issues/952">#952</a> to
+<a href="https://github.com/abo-abo/swiper/issues/1336">#1336</a> were fixed.
+The number of people who contributed code as grown to
+<a href="https://github.com/abo-abo/swiper/graphs/contributors">91</a>; thanks,
+everyone!</p>
+
+<h2 id="details-on-changes">Details on changes</h2>
+
+<p><code>Changelog.org</code> has been a part of the repository since <code>0.6.0</code>, you
+can get the details of the current and past changes:</p>
+
+<ul>
+<li>in <a href="https://github.com/abo-abo/swiper/blob/master/doc/Changelog.org#0100">org-mode</a></li>
+<li>in <a href="http://oremacs.com/swiper/Changelog#0-10-0">HTML</a></li>
+</ul>
+
+<h2 id="highlights">Highlights</h2>
+
+<p>Many improvements are incremental and don&#39;t require any extra code to
+enable.  I&#39;ll go over a few selected features that require a bit of
+information to make a good use of them.</p>
+
+<h3 id="selectable-prompt">Selectable prompt</h3>
+
+<p>Off by default. You can turn it on like so:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-use-selectable-prompt</span> <span class="no">t</span><span class="p">)</span>
+</code></pre></div>
+<p>After this, your current input becomes selectable as a
+candidate. Press <kbd>C-p</kbd> when you&#39;re on the first candidate to
+select your input instead.</p>
+
+<p>This solves the long standing issue of e.g. creating a file or
+a directory <code>foo</code> when a file <code>foobar</code> already exists. Previously, the
+only solution was to use <kbd>C-M-j</kbd>.  It&#39;s still available, but
+now you can also select your input with <kbd>C-p</kbd> and press
+<kbd>RET</kbd>.</p>
+
+<h3 id="new-global-actions-for-ivy">New global actions for ivy</h3>
+
+<p><code>ivy-set-actions</code> was used to enable the following bindings:</p>
+
+<ul>
+<li>Press <kbd>M-o w</kbd> to copy the current candidate to the kill ring.</li>
+<li>Press <kbd>M-o i</kbd> to insert the current candidate into the buffer.</li>
+</ul>
+
+<p>These bindings are valid for any completion session by default.</p>
+
+<h3 id="use-c-d-in-ivy-occur-buffers">Use <kbd>C-d</kbd> in ivy-occur buffers</h3>
+
+<p>Here&#39;s an example use-case: search your source code for a variable
+name with e.g. <code>counsel-rg</code> and call <code>ivy-occur</code> (<kbd>C-c C-o</kbd>).
+Suppose you get 10 results, only 4 of which are interesting.  You can
+now delete the uninteresting ones with <kbd>C-d</kbd>. Then maybe
+check off the others with <kbd>C-d</kbd> as well as you complete them
+one by one. A sort of a TODO list.</p>
+
+<p>Similarly, if you want to go over variables to customize, you can call
+<code>counsel-describe-variable</code> with input <code>^counsel-[^-]</code> and then check
+off the ones you have already examined with <kbd>C-d</kbd>.</p>
+
+<h3 id="defcustoms-to-play-with">Defcustoms to play with</h3>
+
+<p>Here&#39;s the list of new <code>defcustom</code> or <code>defvar</code> that might be
+interesting to review:</p>
+
+<ul>
+<li><code>counsel-async-filter-update-time</code></li>
+<li><code>counsel-async-ignore-re</code></li>
+<li><code>counsel-describe-function-function</code></li>
+<li><code>counsel-describe-function-preselect</code></li>
+<li><code>counsel-find-file-ignore-regexp</code></li>
+<li><code>counsel-fzf-dir-function</code></li>
+<li><code>counsel-git-grep-skip-counting-lines</code></li>
+<li><code>counsel-git-log-split-string-re</code></li>
+<li><code>counsel-url-expansions</code></li>
+<li><code>ivy-auto-select-single-candidate</code></li>
+<li><code>ivy-magic-slash-non-match-action</code></li>
+<li><code>ivy--preferred-re-builders</code></li>
+<li><code>ivy-truncate-lines</code></li>
+</ul>
+
+<h2 id="new-commands">New Commands</h2>
+
+<p>14 new commands were added by me and many contributors. Here&#39;s the list:</p>
+
+<ul>
+<li><code>counsel-ack</code> - completion for <a href="https://beyondgrep.com/">ack</a></li>
+<li><code>counsel-apropos</code> - completion for <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Apropos.html">apropos</a></li>
+<li><code>counsel-file-register</code> - completion for <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/File-Registers.html">file registers</a></li>
+<li><code>counsel-fzf</code> - completion for <a href="https://github.com/junegunn/fzf">fzf</a></li>
+<li><code>counsel-git-change-worktree</code> - completion for <a href="https://git-scm.com/docs/git-worktree">git-worktree</a></li>
+<li><code>counsel-git-checkout</code> - completion for <a href="https://git-scm.com/docs/git-checkout">git-checkout</a></li>
+<li><code>counsel-minibuffer-history</code> - generalization of <code>counsel-expression-history</code> and <code>counsel-shell-command-history</code></li>
+<li><code>counsel-org-capture</code> - completion for <a href="http://orgmode.org/manual/Capture.html">org-capture</a></li>
+<li><code>counsel-org-file</code> - browse all attachments for the current Org file</li>
+<li><code>counsel-org-goto</code> - completion for Org headings</li>
+<li><code>counsel-org-goto-all</code> - completion for Org headings in all open buffers</li>
+<li><code>counsel-switch-to-shell-buffer</code> - switch to a shell buffer, or create one</li>
+<li><code>ivy-occur-delete-candidate</code> - delete current candidate in <code>ivy-occur-mode</code></li>
+<li><code>ivy-switch-view</code> - select a <a href="https://oremacs.com/2016/06/27/ivy-push-view/">window configuration</a>, decoupled from <code>ivy-switch-buffer</code></li>
+</ul>
+
+<p>My personal favorites are <code>counsel-fzf</code> and <code>counsel-org-file</code>.</p>
+
+<h2 id="outro">Outro</h2>
+
+<p>Again, thanks to all the contributors. Happy hacking!</p>
+
+<p>P.S. Please consider joining my <a href="https://www.patreon.com/abo_abo">74 patrons</a> to give me the opportunity to work on Free Software a lot more. We are currently at 30% of the goal.</p>
+
+  </div>
   
   <div class="post">
     <h1 class="post-title">
@@ -711,10 +846,19 @@ bounds before inserting the whole selected symbol.</p></li>
 <div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">ora-cap-filesystem</span> <span class="p">()</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">path</span><span class="p">)</span>
     <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="k">setq</span> <span class="nv">path</span> <span class="p">(</span><span class="nv">ffap-string-at-point</span><span class="p">))</span>
-      <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">compl</span>
-             <span class="p">(</span><span class="nf">all-completions</span> <span class="nv">path</span> <span class="nf">#&#39;</span><span class="nv">read-file-name-internal</span><span class="p">)))</span>
+      <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">string-match</span> <span class="s">&quot;\\`file:\\(.*\\)\\&#39;&quot;</span> <span class="nv">path</span><span class="p">)</span>
+        <span class="p">(</span><span class="k">setq</span> <span class="nv">path</span> <span class="p">(</span><span class="nv">match-string</span> <span class="mi">1</span> <span class="nv">path</span><span class="p">)))</span>
+      <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">compl</span> <span class="p">(</span><span class="nf">all-completions</span> <span class="nv">path</span> <span class="nf">#&#39;</span><span class="nv">read-file-name-internal</span><span class="p">)))</span>
         <span class="p">(</span><span class="nb">when</span> <span class="nv">compl</span>
-          <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">offset</span> <span class="p">(</span><span class="nv">ivy-completion-common-length</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">compl</span><span class="p">))))</span>
+          <span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">str</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">compl</span><span class="p">))</span>
+                 <span class="p">(</span><span class="nv">offset</span>
+                  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">i</span> <span class="mi">0</span><span class="p">)</span>
+                        <span class="p">(</span><span class="nv">len</span> <span class="p">(</span><span class="nf">length</span> <span class="nv">str</span><span class="p">)))</span>
+                    <span class="p">(</span><span class="k">while</span> <span class="p">(</span><span class="k">and</span> <span class="p">(</span><span class="nf">&lt;</span> <span class="nv">i</span> <span class="nv">len</span><span class="p">)</span>
+                                <span class="p">(</span><span class="nf">equal</span> <span class="p">(</span><span class="nf">get-text-property</span> <span class="nv">i</span> <span class="ss">&#39;face</span> <span class="nv">str</span><span class="p">)</span>
+                                       <span class="ss">&#39;completions-common-part</span><span class="p">))</span>
+                      <span class="p">(</span><span class="nb">cl-incf</span> <span class="nv">i</span><span class="p">))</span>
+                    <span class="nv">i</span><span class="p">)))</span>
             <span class="p">(</span><span class="nf">list</span> <span class="p">(</span><span class="nf">-</span> <span class="p">(</span><span class="nf">point</span><span class="p">)</span> <span class="nv">offset</span><span class="p">)</span> <span class="p">(</span><span class="nf">point</span><span class="p">)</span> <span class="nv">compl</span><span class="p">)))))))</span>
 </code></pre></div>
 <p>I usually enter <code>~</code>, so that <code>ffap-string-at-point</code> recognizes it as a
@@ -738,79 +882,6 @@ point. It&#39;s especially cool since it&#39;s a universal interface for
 language could provide its own completion using the familiar
 interface. That could go a long way towards providing a &quot;just works&quot;
 experience, particularly when dealing with a new language.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2017/08/04/ripgrep/">
-        Ripgrep
-      </a>
-    </h1>
-
-    <span class="post-date">04 Aug 2017</span>
-
-    <h2 id="counsel-rg">counsel-rg</h2>
-
-<p>Lately, due to working with a large code base, I&#39;ve grown more and
-more fond of <code>counsel-rg</code>.  It&#39;s an Elisp wrapper
-around <a href="https://github.com/BurntSushi/ripgrep">ripgrep</a> - a relatively
-new recursive grep tool that aims to be faster than the competition
-(<code>ag</code>, <code>git grep</code>, <code>pt</code>, <code>ack</code> etc).</p>
-
-<p>Besides being really fast, <code>rg</code> also has some really
-nice
-<a href="https://github.com/BurntSushi/ripgrep/blob/master/doc/rg.1.md">command switches</a>.
-One such switch is especially useful for Emacs:</p>
-
-<blockquote>
-<p>-M, --max-columns NUM
-: Don&#39;t print lines longer than this limit in bytes. Longer lines are omitted,
- and only the number of matches in that line is printed.</p>
-</blockquote>
-
-<p>The <code>-M</code> switch is useful twofold:</p>
-
-<ul>
-<li>Emacs is slow when dealing with long lines (by long I mean thousands of chars per line)</li>
-<li>Emacs is slow at accepting a huge amount of output from a process</li>
-</ul>
-
-<p>For each character you add to your input, <code>counsel-rg</code> starts a new
-shell command to recalculate the matches with the new input. This
-means that in order to avoid keyboard lag there&#39;s only about 0.1
-seconds available for both:</p>
-
-<ol>
-<li>Running the shell command.</li>
-<li>Accepting output from the shell command.</li>
-</ol>
-
-<p>So I&#39;m quite happy that <code>rg</code> speeds up both steps. Less time spent on
-these steps provides for much smoother searching.</p>
-
-<h2 id="counsel-grep-or-swiper">counsel-grep-or-swiper</h2>
-
-<p>I also work with large log files, one file at a time. For a long time,
-I&#39;ve used <code>counsel-grep-or-swiper</code> as my main search command:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-s&quot;</span><span class="p">)</span> <span class="ss">&#39;counsel-grep-or-swiper</span><span class="p">)</span>
-</code></pre></div>
-<p>But for a 40Mb log file with really long lines
-<code>counsel-grep-or-swiper</code> started to lag a bit. I tried <code>counsel-rg</code>,
-and it was actually faster than <code>grep</code>, although it was searching the
-whole directory. So I thought, why not use <code>rg</code> instead of <code>grep</code>? The
-switch is actually really easy and required only a simple user
-customization:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">counsel-grep-base-command</span>
- <span class="s">&quot;rg -i -M 120 --no-heading --line-number --color never &#39;%s&#39; %s&quot;</span><span class="p">)</span>
-</code></pre></div>
-<h2 id="outro">Outro</h2>
-
-<p>If you haven&#39;t tried <code>ripgrep</code> so far, I suggest you give it a go. Happy hacking!</p>
-
-<p>And if you&#39;re a C hacker and have some free time on your hands, why
-not look at the long lines and the process output issues in Emacs? I&#39;d
-be very grateful:)</p>
 
   </div>
   

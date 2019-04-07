@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="flattr:id" content="9yl9ry">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Swiper-isearch - a more isearch-like swiper &middot; (or emacs
+    
+  </title>
+
+  <link rel="canonical" href="https://oremacs.com/2019/04/07/swiper-isearch/" />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="/public/css/octicons.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Scripts -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body class="layout-reverse theme-base-08">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <!-- <div class="sidebar-item"> -->
+  <!--   <p>unused</p> -->
+  <!-- </div> -->
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about/">About</a>
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/archive/">Archive</a>
+        
+      
+    
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/donate/">Donate</a>
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+
+    <div id="github" class="sidebar-nav-item">
+      <button type="button"
+              class="btn btn-info"
+              data-toggle="collapse"
+              data-target="#github-projects">
+        <span class="octicon octicon-mark-github"></span> My Emacs Projects
+      </button>
+      <div id="github-projects" class="collapse">
+        <ul style="margin-bottom:0em;">
+          <li>
+            <a href="https://github.com/abo-abo/lispy">lispy</a>
+            <p>vi-like Paredit</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/worf">worf</a>
+            <p>vi-like bindings for org-mode</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-window">ace-window</a>
+            <p>switch windows with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-link">ace-link</a>
+            <p>follow links with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/function-args">function-args</a>
+            <p>enhance <code>CEDET</code> for C++</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/helm-make">helm-make</a>
+            <p>select a Makefile target with <code>helm</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/make-it-so">make-it-so</a>
+            <p>transform files with Makefile recipes</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/org-download">org-download</a>
+            <p>drag-and-drop images to <code>org-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo?tab=repositories">
+              <span class="octicon octicon-octoface"></span>
+              and more
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
+
+  <div class="sidebar-item">
+    <p>
+      <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">
+        <img alt="Creative Commons License"
+             style="border-width:0;opacity: 0.3;"
+             src="https://licensebuttons.net/l/by-sa/4.0/88x31.png"/>
+      </a>
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">(or emacs</a>
+            <small>irrelevant)</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <script>
+if (window.location.host.indexOf('oremacs.com') > -1 &&
+    window.location.protocol != "https:") {
+    window.location.protocol = "https";
+}
+</script>
+
+<div class="post">
+  <h1 class="post-title">Swiper-isearch - a more isearch-like swiper</h1>
+  <span class="post-date">07 Apr 2019</span>
+  <h2 id="intro">Intro</h2>
+
+<p>Since its introduction in 2015, <a href="https://github.com/abo-abo/swiper">swiper</a>, while nice most of the time, had two problems:</p>
+
+<ol>
+<li>Slow startup for large buffers.</li>
+<li>Candidates were lines, so if you had two or more matches on the same line, the first one was selected.</li>
+</ol>
+
+<p>Over time, workarounds were added to address these problems.</p>
+
+<h2 id="problem-1-slow-startup">Problem 1: slow startup</h2>
+
+<p>Almost right away, calling <code>font-lock-ensure</code> was limited to only small enough buffers.</p>
+
+<p>In 2016, <code>counsel-grep-or-swiper</code> was <a href="https://oremacs.com/2016/04/26/ivy-0.8.0/">introduced</a>. It
+uses an external process (<code>grep</code>) to search through large files.</p>
+
+<p>In 2017, I found <a href="https://github.com/BurntSushi/ripgrep">ripgrep</a>, which does a <a href="https://oremacs.com/2017/08/04/ripgrep/">better
+job</a> than <code>grep</code> for searching one file:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">counsel-grep-base-command</span>
+      <span class="s">&quot;rg -i -M 120 --no-heading --line-number --color never %s %s&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>The advantage here is that the search can be performed on very large files. The trade-off is that we
+have to type in at least 3 characters before we send it to the external process. Otherwise, when the
+process returns a lot of results, Emacs will lag while receiving all that output.</p>
+
+<h2 id="problem-2-candidates-are-lines">Problem 2: candidates are lines</h2>
+
+<p>In 2015, <code>swiper-avy</code> was <a href="https://oremacs.com/2015/05/23/swiper-0.5.0/">added</a>, which could also be
+used as a workaround for many candidates on a single line. Press <kbd>C-&#39;</kbd> to visually select
+any candidate on screen using <a href="https://github.com/abo-abo/avy">avy</a>.</p>
+
+<h2 id="enter-swiper-isearch">Enter <code>swiper-isearch</code></h2>
+
+<p>Finally, less than a week ago, I wrote <code>swiper-isearch</code> to fix <a href="https://github.com/abo-abo/swiper/issues/1931">#1931</a>.</p>
+
+<p>Differences from the previous commands:</p>
+
+<ul>
+<li><p>Every candidate is a point position and not a line. The UX of going from one candidate to the next
+is finally <code>isearch</code>-like, I enjoy it a lot.</p></li>
+<li><p>Unlike <code>swiper</code>, no line numbers are added to the candidates. This allows it to be as fast as
+<a href="https://github.com/syohex/emacs-anzu">anzu</a>.</p></li>
+<li><p>Unlike <code>counsel-grep</code>, no external process is used. So you get feedback even after inputting a
+single char.</p></li>
+</ul>
+
+<p>I like it a lot so far, enough to make it my default search:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-s&quot;</span><span class="p">)</span> <span class="ss">&#39;swiper-isearch</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="outro">Outro</h2>
+
+<p>Try out <code>swiper-isearch</code>, see if it can replace <code>swiper</code> for you; <code>counsel-grep-or-swiper</code> still has
+its place, I think. Happy hacking!</p>
+
+<p>PS. Thanks to everyone who supports me on <a href="https://liberapay.com/abo-abo">Liberapay</a> and
+<a href="https://www.patreon.com/abo_abo">Patreon</a>!</p>
+
+<p>PPS. Thanks to everyone who contributes <a href="https://github.com/abo-abo/swiper/">issues and patches</a>!</p>
+
+</div>
+
+<div class="twitter-share">
+  <a href="https://twitter.com/share"
+     class="twitter-share-button"
+     data-via="_abo_abo"
+     data-dnt="true">
+    Tweet
+  </a>
+</div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'oremacs'; // required: replace example with your forum shortname
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+<script>
+  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+</script>
+<noscript>
+  Please enable JavaScript to view the
+  <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>
