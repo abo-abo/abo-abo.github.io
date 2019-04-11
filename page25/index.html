@@ -304,6 +304,75 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/02/09/ido-vertical/">
+        ido-vertical - like ido, but vertical!
+      </a>
+    </h1>
+
+    <span class="post-date">09 Feb 2015</span>
+
+    <h2 id="intro">Intro</h2>
+
+<p>As I was releasing <a href="https://github.com/abo-abo/lispy/releases/tag/0.23.0">lispy 0.23.0</a>, which added
+an option for methods of jumping to semantic tags other than <code>helm</code>, I&#39;ve discovered
+<a href="https://github.com/gempesaw/ido-vertical-mode.el">ido-vertical-mode</a>. I also made some changes to
+it, so now it looks like this:</p>
+
+<p><img src="/download/lispy-ido-vertical.png" alt="lispy-ido-vertical"></p>
+
+<p>The changes are:</p>
+
+<ul>
+<li>the current text is highlighted in all matches</li>
+<li>the current number of total matches is displayed in the first line</li>
+<li>I also customized the face for the first match and the only match (you can&#39;t see that one here)</li>
+</ul>
+
+<p>Helm is still the big gun when it comes to completing lists with hundreds of candidates,
+but with the above changes, <code>ido-vertical-mode</code> comes close to what I need when jumping to tags.
+The only thing missing now is that the selected candidate is always on the first line,
+even when I press <kbd>C-n</kbd>, which isn&#39;t very intuitive.</p>
+
+<h2 id="stuff-related-to-lispy-release">Stuff related to <code>lispy</code> release</h2>
+
+<h3 id="other-completion-methods-available-in-lispy-goto">Other completion methods available in <code>lispy-goto</code></h3>
+
+<p>Depending on the modes you have enabled, you can complete with:</p>
+
+<ul>
+<li><code>helm</code></li>
+<li><code>ido</code></li>
+<li><code>ido-vertical-mode</code></li>
+<li><code>icomplete-mode</code></li>
+<li><code>icy-mode</code></li>
+<li>no mode, just plain completion</li>
+</ul>
+
+<h3 id="lispy-eval-other-window-now-uses-ace-window"><code>lispy-eval-other-window</code> now uses <code>ace-window</code></h3>
+
+<p>This function bound to <kbd>p</kbd> is very convenient for debugging
+Elisp: it allows you to eval the current sexp in the context of other
+window. This is very powerful: you can run and debug your function as
+you write it, statement by statement. Previously, this setup was
+viable only in a two-window split, because using <code>other-window</code>, it
+wasn&#39;t predictable in which window the eval would take place.  Now, if
+there are more than two windows, <code>aw-select</code> will select the window
+for the eval.  This selection will be remembered, so you don&#39;t have to
+select for the following evals, unless the window configuration
+changes.</p>
+
+<h2 id="outro">Outro</h2>
+
+<p>There are more changes that you can find in
+<a href="https://github.com/abo-abo/lispy/releases/tag/0.23.0">the release notes</a>
+if you&#39;re interested. You can find the new <code>ido-vertical</code> stuff in
+<a href="https://github.com/abo-abo/ido-vertical-mode.el">my fork</a>, until it
+gets merged.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/02/08/hydra-0.9.0/">
         Hydra 0.9.0 is out
       </a>
@@ -701,135 +770,6 @@ that lead to an improvement in <a href="https://github.com/abo-abo/auto-yasnippe
 I was able to quickly wrap words like this:</p>
 <div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>&lt;font color=&quot;#FF007F&quot;&gt;Rose&lt;/font&gt;
 </code></pre></div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/02/04/pre-hydra-post/">
-        New in Hydra - :pre and :post clauses
-      </a>
-    </h1>
-
-    <span class="post-date">04 Feb 2015</span>
-
-    <p>Only three commits happened since <code>0.6.1</code>, but already <a href="https://github.com/abo-abo/hydra/releases/tag/0.7.0">0.7.0</a> has to
-be released, since the behavior has changed slightly.</p>
-
-<h2 id="the-ultimate-window-switching-setup-revised">The ultimate window switching setup, revised</h2>
-
-<p>The code from the <a href="/2015/02/03/one-hydra-two-hydra/">last post</a> had to be changed.
-Note that only <code>ace-window</code>-related heads are affected, since <code>ace-window</code> uses <code>set-transient-map</code> as well.
-This was necessary to fix <a href="https://github.com/abo-abo/hydra/issues/15">issue #15</a> (unable to use <code>goto-line</code> in a Hydra, since it requires input).</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span>
- <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-M-o&quot;</span><span class="p">)</span>
- <span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-window</span> <span class="p">()</span>
-   <span class="s">&quot;window&quot;</span>
-   <span class="p">(</span><span class="s">&quot;h&quot;</span> <span class="nv">windmove-left</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">windmove-down</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;k&quot;</span> <span class="nv">windmove-up</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nv">windmove-right</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span>
-          <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-          <span class="p">(</span><span class="nv">ace-window</span> <span class="mi">1</span><span class="p">)</span>
-          <span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;ace-window-end-once-hook</span>
-                    <span class="ss">&#39;hydra-window/body</span><span class="p">)</span>
-          <span class="p">(</span><span class="nb">throw</span> <span class="ss">&#39;hydra-disable</span> <span class="no">t</span><span class="p">))</span>
-        <span class="s">&quot;ace&quot;</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;v&quot;</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span>
-          <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-          <span class="p">(</span><span class="nv">split-window-right</span><span class="p">)</span>
-          <span class="p">(</span><span class="nv">windmove-right</span><span class="p">))</span>
-        <span class="s">&quot;vert&quot;</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;x&quot;</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span>
-          <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-          <span class="p">(</span><span class="nv">split-window-below</span><span class="p">)</span>
-          <span class="p">(</span><span class="nv">windmove-down</span><span class="p">))</span>
-        <span class="s">&quot;horz&quot;</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;s&quot;</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span>
-          <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-          <span class="p">(</span><span class="nv">ace-window</span> <span class="mi">4</span><span class="p">)</span>
-          <span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;ace-window-end-once-hook</span>
-                    <span class="ss">&#39;hydra-window/body</span><span class="p">)</span>
-          <span class="p">(</span><span class="nb">throw</span> <span class="ss">&#39;hydra-disable</span> <span class="no">t</span><span class="p">))</span>
-        <span class="s">&quot;swap&quot;</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;t&quot;</span> <span class="nv">transpose-frame</span> <span class="s">&quot;&#39;&quot;</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;d&quot;</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span>
-          <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-          <span class="p">(</span><span class="nv">ace-window</span> <span class="mi">16</span><span class="p">)</span>
-          <span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;ace-window-end-once-hook</span>
-                    <span class="ss">&#39;hydra-window/body</span><span class="p">)</span>
-          <span class="p">(</span><span class="nb">throw</span> <span class="ss">&#39;hydra-disable</span> <span class="no">t</span><span class="p">))</span>
-        <span class="s">&quot;del&quot;</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;o&quot;</span> <span class="nv">delete-other-windows</span> <span class="s">&quot;one&quot;</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;i&quot;</span> <span class="nv">ace-maximize-window</span> <span class="s">&quot;ace-one&quot;</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span> <span class="s">&quot;cancel&quot;</span><span class="p">)))</span>
-</code></pre></div>
-<p>You can also see an awesome addition sneak in, with <code>transpose-frame</code>
-on <kbd>t</kbd>.</p>
-
-<h3 id="technical-note">Technical note</h3>
-
-<p>If you look closely at the code, you&#39;ll see the <code>ace-window</code>-related
-lambdas throwing the <code>hydra-disable</code> symbol. If the Hydra code catches
-that symbol, it will not call <code>set-transient-map</code> again, effectively
-making the head that threw the symbol blue.  In this example, though,
-<code>ace-window</code>-related functions are still red, since the Hydra is
-resumed by calling <code>hydra-window/body</code> in <code>ace-window-end-once-hook</code>.</p>
-
-<p>This is a trick that I have to play because of how <code>ace-jump-mode</code>
-works.  Hopefully, it won&#39;t be needed for other commands. But still,
-it&#39;s a simple trick that you can use if you want to have a head quit
-conditionally, or something.</p>
-
-<h2 id="goto-line-ad-infinum"><code>goto-line</code> ad infinum</h2>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-test</span> <span class="p">(</span><span class="nv">global-map</span> <span class="s">&quot;M-g&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;g&quot;</span> <span class="nv">goto-line</span> <span class="s">&quot;goto-line&quot;</span><span class="p">))</span>
-</code></pre></div>
-<p>With the Hydra above, it&#39;s possible to:</p>
-
-<ul>
-<li><kbd>M-g g</kbd> <code>10</code> <kbd>RET</kbd> to go to line <code>10</code></li>
-<li><kbd>g</kbd> <code>20</code> <kbd>RET</kbd> to go to line <code>20</code></li>
-<li><kbd>g</kbd> <code>50</code> <kbd>RET</kbd> to go to line <code>50</code> etc.</li>
-</ul>
-
-<h2 id="change-the-cursor-color-when-a-hydra-is-active">Change the cursor color when a Hydra is active</h2>
-
-<p>Here&#39;s how the new <code>:pre</code> and <code>:post</code> statements work:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span>
- <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-z&quot;</span><span class="p">)</span>
- <span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-vi</span>
-     <span class="p">(</span><span class="nb">:pre</span>
-      <span class="p">(</span><span class="nv">set-cursor-color</span> <span class="s">&quot;#40e0d0&quot;</span><span class="p">)</span>
-      <span class="nb">:post</span>
-      <span class="p">(</span><span class="nv">set-cursor-color</span> <span class="s">&quot;#ffffff&quot;</span><span class="p">))</span>
-   <span class="s">&quot;vi&quot;</span>
-   <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nf">forward-char</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;h&quot;</span> <span class="nf">backward-char</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">next-line</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;k&quot;</span> <span class="nv">previous-line</span><span class="p">)</span>
-   <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span> <span class="s">&quot;quit&quot;</span><span class="p">)))</span>
-</code></pre></div>
-<p>In this example, the cursor color will change for the duration of the Hydra.
-Both <code>:pre</code> and <code>:post</code> should match to a single Elisp statement; you can use <code>progn</code> to tie
-a bunch of statements together if you want.</p>
-
-<h2 id="a-more-evil-helm">A more evil <code>helm</code></h2>
-
-<p>Lit Wakefield has a nice <a href="http://angelic-sedition.github.io/blog/2015/02/03/a-more-evil-helm/">article</a> on
-using <code>hydra</code> and <code>helm</code> together. Do check it out, I&#39;ll certainly steal some of his code.</p>
-
-<h2 id="outro">Outro</h2>
-
-<p>I hope that you don&#39;t have an objection to Hydra being developed at a
-fast pace with many features popping up. I try my best to keep things
-backwards compatible, but I really want to quickly fix the areas where
-the code is lacking. Thanks to all the people contributing
-<a href="https://github.com/abo-abo/hydra/issues">issues</a>, especially
-<a href="https://github.com/atykhonov">@atykhonov</a> and
-<a href="https://github.com/nandryshak">@nandryshak</a> for the last two, which are the core
-of this version bump.</p>
-
   </div>
   
 </div>

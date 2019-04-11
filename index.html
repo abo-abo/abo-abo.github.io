@@ -304,6 +304,78 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2019/04/11/worf-change-time/">
+        Change the current time in Org-mode
+      </a>
+    </h1>
+
+    <span class="post-date">11 Apr 2019</span>
+
+    <h2 id="intro">Intro</h2>
+
+<p>I&#39;m constantly amazed by other people&#39;s Org workflows. Now that <a href="https://old.reddit.com/r/emacs/search?q=Weekly+tips+trick&restrict_sr=on&sort=relevance&t=all">the weekly tips</a> are a
+thing, I see more and more cool Org configs, and I&#39;m inspired to get more organized myself.</p>
+
+<p>My own Org usage is simplistic in some areas, and quite advanced in others. While I wrote a lot of
+code to manipulate Org files ( <a href="https://github.com/abo-abo/worf">worf</a>,
+<a href="https://github.com/abo-abo/org-download">org-download</a>, <a href="https://github.com/abo-abo/orca">orca</a>,
+<a href="https://github.com/abo-abo/org-fu">org-fu</a>, <a href="https://github.com/abo-abo/swiper">counsel</a>), the
+amount of Org files and TODO items that I have isn&#39;t huge:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">counsel-git</span> <span class="s">&quot;org$ !log&quot;</span><span class="p">)</span>
+<span class="c1">;; 174 items</span>
+
+<span class="p">(</span><span class="nv">counsel-rg</span> <span class="s">&quot;\\* DONE|CANCELLED|TODO&quot;</span><span class="p">)</span>
+<span class="c1">;; 8103 items</span>
+</code></pre></div>
+<p>Still, that&#39;s enough to get out-of-date files: just today I dug up a file with 20 outstanding TODO
+items that should have been canceled last November!</p>
+
+<h2 id="how-to-close-20-todos-using-a-timestamp-in-the-past">How to close 20 TODOs using a timestamp in the past</h2>
+
+<p>When I cancel an item, pressing <kbd>tc</kbd> (mnemonic for TODO-Cancel), Org mode inserts a time
+stamp with the current time. However, for this file, I wanted to use October 31st 2018 instead of
+the current time. Org mode already has options like <code>org-use-last-clock-out-time-as-effective-time</code>,
+<code>org-use-effective-time</code>, and <code>org-extend-today-until</code> that manipulate the current time for
+timestamps, but they didn&#39;t fit my use case.</p>
+
+<p>So I&#39;ve advised <code>org-current-effective-time</code>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defvar-local</span> <span class="nv">worf--current-effective-time</span> <span class="no">nil</span><span class="p">)</span>
+
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">worf--current-effective-time</span> <span class="p">(</span><span class="nv">orig-fn</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">or</span> <span class="nv">worf--current-effective-time</span>
+      <span class="p">(</span><span class="nf">funcall</span> <span class="nv">orig-fn</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="nv">advice-add</span> <span class="ss">&#39;org-current-effective-time</span>
+            <span class="nb">:around</span> <span class="nf">#&#39;</span><span class="nv">worf--current-effective-time</span><span class="p">)</span>
+
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">worf-change-time</span> <span class="p">()</span>
+  <span class="s">&quot;Set </span><span class="ss">`current-time&#39;</span><span class="s"> in the current buffer for </span><span class="ss">`org-todo&#39;</span><span class="s">.</span>
+<span class="s">Use </span><span class="ss">`keyboard-quit&#39;</span><span class="s"> to unset it.&quot;</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">setq</span> <span class="nv">worf--current-effective-time</span>
+        <span class="p">(</span><span class="k">condition-case</span> <span class="no">nil</span>
+            <span class="p">(</span><span class="nv">org-read-date</span> <span class="no">t</span> <span class="ss">&#39;totime</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">quit</span> <span class="no">nil</span><span class="p">))))</span>
+</code></pre></div>
+<p>A few things of note here:</p>
+
+<ul>
+<li><code>worf--current-effective-time</code> is buffer-local, so that it modifies time only for the current
+buffer</li>
+<li>I re-use the awesome <code>org-read-date</code> for a nice visual feedback when inputting the new time</li>
+<li>Instead of having a separate function to undo the current-time override, I capture the <code>quit</code>
+signal that <kbd>C-g</kbd> sends.</li>
+</ul>
+
+<h2 id="outro">Outro</h2>
+
+<p>The above code is already part of <a href="https://github.com/abo-abo/worf">worf</a> and is bound to
+<kbd>cT</kbd>. I even added it to <a href="https://oremacs.com/worf/README.html#worf-change-time">the manual</a>. I hope you find it useful. Happy organizing!</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2019/04/07/swiper-isearch/">
         Swiper-isearch - a more isearch-like swiper
       </a>
@@ -610,266 +682,6 @@ least 3 years now.  It&#39;s quite useful, and now also more seamless,
 since I don&#39;t have to type e.g. <kbd>C-q 2</kbd> any more. In any
 case, thanks to the author and the contributors of
 <code>company-mode</code>. Merry Christmas and happy hacking in the New Year!</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2017/12/10/patreon/">
-        Comparison of transaction fees on Patreon and similar services
-      </a>
-    </h1>
-
-    <span class="post-date">10 Dec 2017</span>
-
-    <p>On December 7, Patreon made an announcement about the change in their
-transaction fee structure. The results as of December 10 speak for
-themselves:</p>
-
-<blockquote>
-<p>December 2017 summary: -$29 in pledges, -6 patrons</p>
-</blockquote>
-
-<p>All leaving patrons marked &quot;I&#39;m not happy with Patreon&#39;s features or
-services.&quot; as the reason for leaving, with quotes ranging from:</p>
-
-<blockquote>
-<p>The billing changes are not great.</p>
-</blockquote>
-
-<p>to:</p>
-
-<blockquote>
-<p>Patreon&#39;s new fees are unacceptable</p>
-</blockquote>
-
-<p>In this article, I will explore the currently available methods for
-supporting sustainable Free Software development and compare their
-transaction fees.</p>
-
-<h2 id="my-experience">My experience</h2>
-
-<p>My experience taking donations is very short. I announced my <a href="http://oremacs.com/2017/10/18/patreon/">fund
-raising campaign</a> on
-<a href="https://www.patreon.com/abo_abo">Patreon</a> in October 2017.</p>
-
-<p>Here&#39;s what I collected so far, vs the actual money spent by the
-contributors:</p>
-
-<ul>
-<li>2017-11-01: <code>$140.42 / $162.50 = 86.41%</code></li>
-<li>2017-12-01: <code>$163.05 / $187.50 = 86.96%</code></li>
-</ul>
-
-<p>The numbers here are using the old Patreon rules that are going away
-this month.</p>
-
-<h2 id="real-numbers">Real numbers</h2>
-
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-<thead>
-<tr>
-<th scope="col"><b>method</b></th>
-<th scope="col"><b>formula</b></th>
-<th scope="col"><b>charged</b></th>
-<th scope="col"><b>donated</b></th>
-<th scope="col"><b>fee</b></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>old Patreon</td>
-<td>???</td>
-<td>$1.00</td>
-<td>$0.86</td>
-<td>14%</td>
-</tr>
-<tr style="border-bottom: 2px solid #000;"/>
-</tbody>
-
-<tbody>
-<tr>
-<td>new Patreon</td>
-<td>7.9% + $0.35</td>
-<td>$1.38</td>
-<td>$0.95</td>
-<td>31%</td>
-</tr>
-
-<tr>
-<td>&#xa0;</td>
-<td>&#xa0;</td>
-<td>$2.41</td>
-<td>$1.90</td>
-<td>21%</td>
-</tr>
-
-<tr>
-<td>&#xa0;</td>
-<td>&#xa0;</td>
-<td>$5.50</td>
-<td>$4.75</td>
-<td>14%</td>
-</tr>
-<tr style="border-bottom: 2px solid #000;"/>
-</tbody>
-<tbody>
-<tr>
-<td>OpenCollective</td>
-<td>12.9% + $0.30</td>
-<td>$1.33</td>
-<td>$0.90</td>
-<td>32%</td>
-</tr>
-
-<tr>
-<td>&#xa0;</td>
-<td>&#xa0;</td>
-<td>$2.36</td>
-<td>$1.80</td>
-<td>24%</td>
-</tr>
-
-<tr>
-<td>&#xa0;</td>
-<td>&#xa0;</td>
-<td>$5.45</td>
-<td>$4.50</td>
-<td>18%</td>
-</tr>
-<tr style="border-bottom: 2px solid #000;"/>
-</tbody>
-
-<tbody>
-<tr>
-<td>Flattr</td>
-<td>16.5%</td>
-<td>$1.00</td>
-<td>$0.84</td>
-<td>17%</td>
-</tr>
-
-<tr>
-<td>&#xa0;</td>
-<td>&#xa0;</td>
-<td>$2.00</td>
-<td>$1.67</td>
-<td>17%</td>
-</tr>
-
-<tr>
-<td>&#xa0;</td>
-<td>&#xa0;</td>
-<td>$5.00</td>
-<td>$4.18</td>
-<td>17%</td>
-</tr>
-<tr style="border-bottom: 2px solid #000;"/>
-</tbody>
-<tbody>
-<tr>
-<td>Liberapay</td>
-<td>0.585%</td>
-<td>$1.00</td>
-<td>$0.99</td>
-<td>1%</td>
-</tr>
-</tbody>
-</table>
-
-<h2 id="on-patreon">On Patreon</h2>
-
-<p>Just like everyone else, I&#39;m not happy with the incoming change to the
-Patreon fees. But even after the change, it&#39;s still a better deal than
-OpenCollective, which is used quite successfully e.g. by
-<a href="https://opencollective.com/cider">CIDER</a>.</p>
-
-<p>Just to restate the numbers in the table, if all backers give $1
-(which is the majority currently, and I actually would generally
-prefer 5 new $1 backers over 1 new $5 backer), with the old system I
-get $0.86, while with the new system it&#39;s $0.69. That&#39;s more than 100%
-increase in transaction fees.</p>
-
-<h2 id="on-opencollective">On OpenCollective</h2>
-
-<p>It&#39;s more expensive than the new Patreon fees in every category or
-scenario.</p>
-
-<h2 id="on-flattr">On Flattr</h2>
-
-<p>Flattr is in the same bucket as Patreon, except with slightly lower
-fees currently. Their default plan sounds absolutely ridiculous to me:
-you install a browser plug-in so that a for-profit corporation can
-track which websites you visit most often in order to distribute the
-payments you give them among those websites.</p>
-
-<p>If it were a completely local tool which doesn&#39;t upload any data on
-the internet and instead gives you a monthly report to adjust your
-donations, it would have been a good enough tool. Maybe with some
-adjustments for mind-share bubbles, which result in prominent projects
-getting more rewards than they can handle, while small projects fade
-away into obscurity without getting a chance. But right now it&#39;s
-completely crazy. Still, if you don&#39;t install the plug-in, you can
-probably still use Flattr and it will work similarly to Patreon.</p>
-
-<p>I made an <a href="https://flattr.com/@abo-abo">account</a>, just in case, but I
-wouldn&#39;t recommend going to Flattr unless you&#39;re already there, or the
-first impression it made on me is wrong.</p>
-
-<h2 id="on-paypal">On Paypal</h2>
-
-<p>Paypal is OK in a way, since a lot of the time the organizations like
-Patreon are just middle men on top of Paypal. On the other hand,
-there&#39;s no way to set up recurring donations. And it&#39;s harder for me
-to plan decisions regarding my livelihood if I don&#39;t know at least
-approximately the sum I&#39;ll be getting next month.</p>
-
-<p>My account, in case you want to make a lump sum donation:
-<a href="https://paypal.me/aboabo">paypal.me/aboabo</a>.</p>
-
-<h2 id="on-bitcoin">On Bitcoin</h2>
-
-<p>Bitcoin is similar to Paypal, except it also:</p>
-
-<ul>
-<li>has a very bad impact on the environment,</li>
-<li>is a speculative bubble that supports either earning or losing money
-without actually providing value to the society.</li>
-</ul>
-
-<p>I prefer to stay away from Bitcoin.</p>
-
-<h2 id="summary">Summary</h2>
-
-<p><a href="https://liberapay.com/abo-abo">Liberapay</a> sounds almost too good to
-be true. At the same time, their fees are very realistic, you could
-almost say optimal, since there are <em>no fees</em> for transfers between
-members. So you can spend either €20.64 (via card) or €20.12 (via bank
-wire) to charge €20 into your account and give me €1 per month at no
-further cost. If you change your mind after one month, you can
-withdraw your remaining €19 for free if you use a SEPA (Single Euro
-Payments Area) bank.</p>
-
-<p>If I set out today to set up a service similar to Liberapay, even with
-my best intentions and the most optimistic expectations, I don&#39;t see
-how a better offer could be made. I recommend anyone who wants to
-support me to try it out. And, of course, I will report back with real
-numbers if anything comes out of it.</p>
-
-<p>Thanks to all my patrons for their former and ongoing support.  At one
-point we were at 30% of the monthly goal (25% atm.). This made me very
-excited and optimistic about the future. Although I&#39;m doing Free
-Software for almost 5 years now, it&#39;s actually 3 years in academia and
-2 years in industry. Right now, I&#39;m feeling a burnout looming over the
-horizon, and I was really hoping to avoid it by spending less time
-working at for-profit corporations. Any help, either monetary or
-advice is appreciated. If you&#39;re a part of a Software Engineering or a
-Research collective that makes you feel inspired instead of exhausted
-in the evening and you have open positions in EU or on remote, have a
-look at my <a href="https://www.linkedin.com/in/oleh-krehel/">LinkedIn</a> -
-maybe we could become colleagues in the future. I&#39;ll accept
-connections from anyone - if you&#39;re reading this blog, we probably
-have a lot in common; and it&#39;s always better together.</p>
 
   </div>
   

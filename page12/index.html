@@ -304,6 +304,184 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/05/23/swiper-0.5.0/">
+        Ivy-mode 0.5.0 is out
+      </a>
+    </h1>
+
+    <span class="post-date">23 May 2015</span>
+
+    <p>At this point, <a href="https://github.com/abo-abo/swiper">swiper</a> is only a
+fraction of <code>ivy-mode</code>&#39;s functionality.  Still, it&#39;s nice to keep them
+all, together with <a href="http://melpa.org/#/counsel">counsel</a>, in a single
+repository: <code>counsel-git-grep</code> works much better this way.</p>
+
+<p>Anyway, I&#39;ll echo <a href="https://github.com/abo-abo/swiper/releases/tag/0.5.0">the release notes</a> here, there are quite a few exciting new features.</p>
+
+<h2 id="fixes">Fixes</h2>
+
+<ul>
+<li><kbd>TAB</kbd> shouldn&#39;t delete input when there&#39;s no candidate.</li>
+<li><kbd>TAB</kbd> should switch directories properly.</li>
+<li>require <code>dired</code> when completing file names, so that the directory face is loaded.</li>
+<li><kbd>TAB</kbd> should work with <code>confirm-nonexistent-file-or-buffer</code>.</li>
+<li><kbd>TAB</kbd> should handle empty input.</li>
+<li>work around <code>grep-read-files</code>: it should be possible to simply <kbd>M-x</kbd> <code>rgrep</code> <kbd>RET RET RET</kbd>.</li>
+<li>Fix the transition from a bad regex to a good one - you can input a bad regex to get 0 candidates, the candidates come back once the regex is fixed.</li>
+<li><code>ivy-switch-buffer</code> should pre-select <code>other-buffer</code> just like <code>switch-buffer</code> does it.</li>
+<li>Fix selecting &quot;C:\&quot; on Windows.</li>
+<li><code>counsel-git-grep</code> should warn if not in a repository.</li>
+<li><kbd>C-M-n</kbd> shouldn&#39;t try to call action if there isn&#39;t one.</li>
+<li>Turn on sorting for <code>counsel-info-lookup-symbol</code>.</li>
+<li><code>ivy-read</code> should check for an outdated cons initial-input.</li>
+</ul>
+
+<h2 id="new-features">New Features</h2>
+
+<h3 id="out-of-order-matching">Out of order matching</h3>
+
+<p>I actually like in-order matching, meaning the input &quot;in ma&quot; will match &quot;in-order matching&quot;, but not &quot;made in&quot;. But the users can switch to out-of-order matching if they use this code:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-re-builders-alist</span>
+          <span class="o">&#39;</span><span class="p">((</span><span class="no">t</span> <span class="o">.</span> <span class="nv">ivy--regex-ignore-order</span><span class="p">)))</span>
+</code></pre></div>
+<p><code>ivy-re-builders-alist</code> is the flexible way to customize the regex builders per-collection.  Using <code>t</code> here, means to use this regex builder for everything. You could choose to have in-order for files, and out-of-order for buffers and so on.</p>
+
+<h3 id="new-defcustom-ivy-tab-space">New defcustom: <code>ivy-tab-space</code></h3>
+
+<p>Use this to have a space inserted each time you press <kbd>TAB</kbd>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-tab-space</span> <span class="no">t</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="ignore-case-for-tab">ignore case for TAB</h3>
+
+<p>&quot;pub&quot; can expand to &quot;Public License&quot;.</p>
+
+<h3 id="new-command-counsel-load-library">New command: <code>counsel-load-library</code></h3>
+
+<p>This command is much better than the standard <code>load-libary</code> that it
+upgrades.  It applies a sort of <code>uniquify</code> effect to all your
+libraries, which is very useful:</p>
+
+<p><img src="https://cloud.githubusercontent.com/assets/2937359/7783947/7da9395e-0154-11e5-86cd-45d38c0f2c17.png" alt="counsel-load-library"></p>
+
+<p>In this case, I have <code>avy</code> installed both from the package manager and
+manually. I can easily distinguish them.</p>
+
+<p>Another cool feature is that instead of using <code>find-library</code> (which is
+also bad, since it would report two versions of <code>avy</code> with the same
+name and no way to distinguish them), you can simply use
+<code>counsel-load-library</code> and type <kbd>C-.</kbd> instead of
+<kbd>RET</kbd> to finalize.</p>
+
+<p>Here&#39;s another scenario: first load the library, then call
+<code>ivy-resume</code> and immediately open the library file.</p>
+
+<h3 id="new-command-ivy-partial">New command: <code>ivy-partial</code></h3>
+
+<p>Does a partial complete without exiting. Use this code to replace
+<code>ivy-partial-or-done</code> with this command:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">ivy-minibuffer-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;TAB&quot;</span><span class="p">)</span> <span class="ss">&#39;ivy-partial</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="allow-to-use-in-swiper">Allow to use <code>^</code> in <code>swiper</code></h3>
+
+<p>In regex terms, <code>^</code> is the beginning of line. You can now use this in
+<code>swiper</code> to filter your matches.</p>
+
+<h3 id="new-command-swiper-avy">New command: <code>swiper-avy</code></h3>
+
+<p>This command is crazy good: it combines the best features of <code>swiper</code>
+(all buffer an once, flexible input length) and <code>avy</code> (quickly select
+one candidate once you&#39;ve narrowed to about 10-20 candidates).</p>
+
+<p>For instance, I can enter &quot;to&quot; into <code>swiper</code> to get around 10 matches.  Instead of using <kbd>C-n</kbd> a bunch of times to select the one of 10 that I want, I just press <kbd>C-&#39;</kbd>, followed by <kbd>a</kbd> or <kbd>s</kbd> or <kbd>d</kbd> ... to select one of the matches visible on screen.</p>
+
+<p>So both packages use their best feature to cover up the others worst drawback.</p>
+
+<h3 id="add-support-for-virtual-buffers">Add support for virtual buffers</h3>
+
+<p>I was never a fan of <code>recentf</code> until now. The virtual buffers feature works in the same way as <code>ido-use-virtual-buffers</code>: when you call <code>ivy-switch-buffer</code>, your recently visited files as well as all your bookmarks are appended to the end of the buffer list.</p>
+
+<p>Suppose you killed a buffer and want to bring it back: now you do it as if you didn&#39;t kill the buffer and instead buried it. The bookmarks access is also nice.</p>
+
+<p>Here&#39;s how to configure it, along with some customization of <code>recentf</code>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-use-virtual-buffers</span> <span class="no">t</span><span class="p">)</span>
+
+<span class="p">(</span><span class="nb">use-package</span> <span class="nv">recentf</span>
+  <span class="nb">:config</span>
+  <span class="p">(</span><span class="k">setq</span> <span class="nv">recentf-exclude</span>
+        <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;COMMIT_MSG&quot;</span> <span class="s">&quot;COMMIT_EDITMSG&quot;</span> <span class="s">&quot;github.*txt$&quot;</span>
+          <span class="s">&quot;.*png$&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="k">setq</span> <span class="nv">recentf-max-saved-items</span> <span class="mi">60</span><span class="p">))</span>
+</code></pre></div>
+<h3 id="add-a-few-wrapper-commands-for-the-minibuffer">Add a few wrapper commands for the minibuffer</h3>
+
+<p>All these commands just forward to their built-in counterparts, only trying not to exit the first line of the minibuffer.</p>
+
+<ul>
+<li><kbd>M-DEL</kbd> calls <code>ivy-backward-kill-word</code></li>
+<li><kbd>C-d</kbd> calls <code>ivy-delete-char</code></li>
+<li><kbd>M-d</kbd> calls <code>ivy-kill-word</code></li>
+<li><kbd>C-f</kbd> calls <code>ivy-forward-char</code></li>
+</ul>
+
+<h3 id="allow-to-customize-the-minibuffer-formatter">Allow to customize the minibuffer formatter</h3>
+
+<p>See <a href="https://github.com/abo-abo/swiper/wiki/Customize-candidate-menu-style">the wiki</a> on how to customize
+the minibuffer display to look like this:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>100 Find file: ~/
+  file1
+  file2
+&gt; file3
+  file4
+</code></pre></div>
+<h3 id="when-completing-file-names-tab-should-defer-to-minibuffer-complete">When completing file names, <kbd>TAB</kbd> should defer to <code>minibuffer-complete</code></h3>
+
+<p>Thanks to this, you can <kbd>TAB</kbd>-complete your ssh hosts, e.g.:</p>
+
+<ul>
+<li><code>/ss</code> <kbd>TAB</kbd> -&gt; <code>/ssh</code></li>
+<li><code>/ssh:ol</code> <kbd>TAB</kbd> -&gt; <code>/ssh:oleh@</code></li>
+</ul>
+
+<h3 id="more-commands-work-with-ivy-resume">More commands work with <code>ivy-resume</code></h3>
+
+<p>I&#39;ve added:</p>
+
+<ul>
+<li><code>counsel-git-grep</code></li>
+<li><code>counsel-git</code></li>
+</ul>
+
+<p>Others (that start with <code>counsel-</code>) should work fine as well. Also don&#39;t forget that you can use <kbd>C-M-n</kbd> and <kbd>C-M-p</kbd> to:</p>
+
+<ul>
+<li>switch candidate</li>
+<li>call the action for the candidate</li>
+<li>stay in the minibuffer</li>
+</ul>
+
+<p>This is especially powerful for <code>counsel-git-grep</code>: you can easily check the whole repository for something with just typing in the query and holding <kbd>C-M-n</kbd>. The matches will be highlighted <code>swiper</code>-style, of course.</p>
+
+<h3 id="allow-to-recenter-during-counsel-git-grep">Allow to recenter during <code>counsel-git-grep</code></h3>
+
+<p>Use <kbd>C-l</kbd> to recenter.</p>
+
+<h3 id="update-the-quoting-of-spaces">Update the quoting of spaces</h3>
+
+<p>Split only on single spaces, from all other space groups, remove one space.</p>
+
+<p>As you might know, a space is used in place of <code>.*</code> in <code>ivy</code>. In case
+you want an actual space, you can now quote them even easier.</p>
+
+<h2 id="outro">Outro</h2>
+
+<p>Thanks to all who contributed, check out the new stuff, and make sure
+to bind <code>ivy-resume</code> to something short: it has become a really nice
+feature.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/05/22/define-word/">
         New on MELPA - define word at point
       </a>
@@ -617,101 +795,6 @@ old <code>ace-window</code>, I feel, is of the same magnitude as the jump betwee
 the muscle memory needs to be readjusted slightly.</p>
 
 <p>Big thanks to all who contributed, especially to <a href="https://github.com/joedicastro">@joedicastro</a>.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/05/08/avy-0.1.0/">
-        New on MELPA - avy
-      </a>
-    </h1>
-
-    <span class="post-date">08 May 2015</span>
-
-    <p>This package contains the library on which <a href="https://github.com/abo-abo/ace-window">ace-window</a> and
-<a href="https://github.com/abo-abo/ace-link">ace-link</a> now depend, as well as a multitude of navigation
-commands.</p>
-
-<p><img src="https://raw.githubusercontent.com/wiki/abo-abo/avy-jump/images/avy-avatar-1.png" alt="logo.png"></p>
-
-<h2 id="intro">Intro</h2>
-
-<p>Yes, they used to depend on <a href="https://github.com/winterTTr/ace-jump-mode">ace-jump-mode</a>, hence the
-<code>ace</code> in their names, but as I added features to my packages over time, it became harder to compose
-features because of <code>ace-jump-mode</code> inflexibility.</p>
-
-<p>Don&#39;t get me wrong, <code>ace-jump-mode</code> is a fine standalone package, and if you&#39;re using it only for
-jumping to chars, there are few reasons for you to make the switch. However, if you&#39;re interested in
-the new and juicy features, such as: </p>
-
-<ul>
-<li>jumping to word starts</li>
-<li>jumping to sub-word starts</li>
-<li>jumping to line beginnings or endings</li>
-<li>copying and moving lines</li>
-</ul>
-
-<p>with most of the features coming in <code>-0</code>, <code>-1</code>, or <code>-2</code> flavor, or if you&#39;re interested in building
-an <code>ace-jump-mode</code>-based package, then you should consider <a href="https://github.com/abo-abo/avy">avy</a>.</p>
-
-<h2 id="the-leading-chars-flavor">The leading chars flavor</h2>
-
-<p>All of the commands provided are about jumping to visible characters, and possibly doing some stuff.
-Since usually there are a lot of these visible characters, it&#39;s advantageous to first narrow them
-somewhat. So each command can be divided into two phases: the narrowing phase and the decision phase.</p>
-
-<p>There are 3 variations of the narrowing phase:</p>
-
-<ul>
-<li><p>The <code>-0</code> flavor, e.g. <code>avy-goto-word-0</code> or <code>avy-goto-line</code> doesn&#39;t narrow at all. The advantage
-that there&#39;s minimum context switching (no narrowing phase, only decision phase). The disadvantage
-is that the number of candidates in the decision phase can be quite large.</p></li>
-<li><p>The <code>-1</code> flavor, e.g. <code>avy-goto-word-1</code> or <code>avy-goto-char</code> narrows by the first character of the
-thing.  The disadvantage is the context switch: first you call the command, then you switch context
-to scan and input the leading char, then you switch context to scan and input the decision chars.
-The advantage is less candidates in the decision phase.</p></li>
-<li><p>The <code>-2</code> flavor is my favorite <code>avy-goto-char-2</code>: it reads <strong>two</strong> consecutive chars, instead of
-just one.  This doesn&#39;t impact the narrowing phase too much, since inputting two consecutive chars
-isn&#39;t much more than just one.  But it greatly decreases the number of candidates in the decision
-phase. The small amount of candidates allows me to use this setting for the decision:</p></li>
-</ul>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">avy-keys</span> <span class="o">&#39;</span><span class="p">(</span><span class="sc">?a</span> <span class="sc">?s</span> <span class="sc">?d</span> <span class="sc">?f</span> <span class="sc">?g</span> <span class="sc">?h</span> <span class="sc">?j</span> <span class="sc">?k</span> <span class="sc">?l</span><span class="p">))</span>
-</code></pre></div>
-<p>That&#39;s only 9 decision chars, all of them on the home row.</p>
-
-<h2 id="the-decision-char-overlay-flavors">The decision char overlay flavors</h2>
-
-<p>Once again, there are three, here are their corresponding <code>defcustom</code>s:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defcustom</span> <span class="nv">avy-goto-char-style</span> <span class="ss">&#39;pre</span>
-  <span class="s">&quot;Method of displaying the overlays for </span><span class="ss">`avy-goto-char&#39;</span><span class="s"> and </span><span class="ss">`avy-goto-char-2&#39;</span><span class="s">.&quot;</span>
-  <span class="nb">:type</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">choice</span>
-          <span class="p">(</span><span class="nv">const</span> <span class="nb">:tag</span> <span class="s">&quot;Pre&quot;</span> <span class="nv">pre</span><span class="p">)</span>
-          <span class="p">(</span><span class="nv">const</span> <span class="nb">:tag</span> <span class="s">&quot;At&quot;</span> <span class="nv">at</span><span class="p">)</span>
-          <span class="p">(</span><span class="nv">const</span> <span class="nb">:tag</span> <span class="s">&quot;Post&quot;</span> <span class="nv">post</span><span class="p">)))</span>
-
-<span class="p">(</span><span class="nb">defcustom</span> <span class="nv">avy-goto-word-style</span> <span class="ss">&#39;pre</span>
-  <span class="s">&quot;Method of displaying the overlays for </span><span class="ss">`avy-goto-word-0&#39;</span><span class="s"> and </span><span class="ss">`avy-goto-word-0&#39;</span><span class="s">.&quot;</span>
-  <span class="nb">:type</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">choice</span>
-          <span class="p">(</span><span class="nv">const</span> <span class="nb">:tag</span> <span class="s">&quot;Pre&quot;</span> <span class="nv">pre</span><span class="p">)</span>
-          <span class="p">(</span><span class="nv">const</span> <span class="nb">:tag</span> <span class="s">&quot;At&quot;</span> <span class="nv">at</span><span class="p">)</span>
-          <span class="p">(</span><span class="nv">const</span> <span class="nb">:tag</span> <span class="s">&quot;Post&quot;</span> <span class="nv">post</span><span class="p">)))</span>
-</code></pre></div>
-<p>If you&#39;re used to <code>ace-jump-mode</code>, the corresponding style is <code>at</code>, which displays the overlay at
-the target position, one character at a time.  I don&#39;t like this style most of the time, I prefer
-<code>pre</code> which is more similar to <code>vim-easymotion</code>: it will display the full char path at once, before
-the target position. This results in less feedback and more efficiency, in my opinion.</p>
-
-<h2 id="outro">Outro</h2>
-
-<p>Give the new package a try, it&#39;s already been pretty active the last few days, with bugs being fixed
-and new features appearing, thanks to all who contributed.</p>
-
-<p>If you want to see some screenshots, there are plenty at the
-<a href="https://github.com/abo-abo/avy">repository page</a>, and also in an earlier
-<a href="http://oremacs.com/2015/03/03/ace-window-full-path/">post</a>.</p>
-
-<p>Finally, the package in on <a href="http://melpa.org/#/avy">MELPA</a>, so it&#39;s convenient to install.  The only hassle is to decide where to bind all these commands.</p>
 
   </div>
   

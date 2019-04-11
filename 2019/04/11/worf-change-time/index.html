@@ -12,11 +12,11 @@
 
   <title>
     
-      (or emacs &middot; irrelevant)
+      Change the current time in Org-mode &middot; (or emacs
     
   </title>
 
-  <link rel="canonical" href="https://oremacs.com/page35/" />
+  <link rel="canonical" href="https://oremacs.com/2019/04/11/worf-change-time/" />
 
   <!-- CSS -->
   <link rel="stylesheet" href="/public/css/poole.css">
@@ -300,126 +300,107 @@
       </div>
 
       <div class="container content">
-        <div class="posts">
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2014/12/21/helm-backspace/">
-        Easy helm improvement
-      </a>
-    </h1>
+        <script>
+if (window.location.host.indexOf('oremacs.com') > -1 &&
+    window.location.protocol != "https:") {
+    window.location.protocol = "https";
+}
+</script>
 
-    <span class="post-date">21 Dec 2014</span>
+<div class="post">
+  <h1 class="post-title">Change the current time in Org-mode</h1>
+  <span class="post-date">11 Apr 2019</span>
+  <h2 id="intro">Intro</h2>
 
-    <p>When you press <kbd>DEL</kbd> (also known as backspace) in a <code>helm</code>
-buffer, and there isn&#39;t any input to delete, it only errors at you
-with:</p>
+<p>I&#39;m constantly amazed by other people&#39;s Org workflows. Now that <a href="https://old.reddit.com/r/emacs/search?q=Weekly+tips+trick&restrict_sr=on&sort=relevance&t=all">the weekly tips</a> are a
+thing, I see more and more cool Org configs, and I&#39;m inspired to get more organized myself.</p>
 
-<blockquote>
-<p>Text is read only</p>
-</blockquote>
+<p>My own Org usage is simplistic in some areas, and quite advanced in others. While I wrote a lot of
+code to manipulate Org files ( <a href="https://github.com/abo-abo/worf">worf</a>,
+<a href="https://github.com/abo-abo/org-download">org-download</a>, <a href="https://github.com/abo-abo/orca">orca</a>,
+<a href="https://github.com/abo-abo/org-fu">org-fu</a>, <a href="https://github.com/abo-abo/swiper">counsel</a>), the
+amount of Org files and TODO items that I have isn&#39;t huge:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">counsel-git</span> <span class="s">&quot;org$ !log&quot;</span><span class="p">)</span>
+<span class="c1">;; 174 items</span>
 
-<p>Why not make it do something useful instead, for instance close <code>helm</code>?</p>
-
-<p>Easy:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;helm</span><span class="p">)</span>
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">helm-backspace</span> <span class="p">()</span>
-  <span class="s">&quot;Forward to </span><span class="ss">`backward-delete-char&#39;</span><span class="s">.</span>
-<span class="s">On error (read-only), quit without selecting.&quot;</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">condition-case</span> <span class="no">nil</span>
-      <span class="p">(</span><span class="nv">backward-delete-char</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="p">(</span><span class="ne">error</span>
-     <span class="p">(</span><span class="nv">helm-keyboard-quit</span><span class="p">))))</span>
-
-<span class="p">(</span><span class="nf">define-key</span> <span class="nv">helm-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;DEL&quot;</span><span class="p">)</span> <span class="ss">&#39;helm-backspace</span><span class="p">)</span>
+<span class="p">(</span><span class="nv">counsel-rg</span> <span class="s">&quot;\\* DONE|CANCELLED|TODO&quot;</span><span class="p">)</span>
+<span class="c1">;; 8103 items</span>
 </code></pre></div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2014/12/20/poyekhali!/">
-        Poyekhali!
-      </a>
-    </h1>
+<p>Still, that&#39;s enough to get out-of-date files: just today I dug up a file with 20 outstanding TODO
+items that should have been canceled last November!</p>
 
-    <span class="post-date">20 Dec 2014</span>
+<h2 id="how-to-close-20-todos-using-a-timestamp-in-the-past">How to close 20 TODOs using a timestamp in the past</h2>
 
-    <p>Welcome to <b><code>(or emacs</code></b>!</p>
+<p>When I cancel an item, pressing <kbd>tc</kbd> (mnemonic for TODO-Cancel), Org mode inserts a time
+stamp with the current time. However, for this file, I wanted to use October 31st 2018 instead of
+the current time. Org mode already has options like <code>org-use-last-clock-out-time-as-effective-time</code>,
+<code>org-use-effective-time</code>, and <code>org-extend-today-until</code> that manipulate the current time for
+timestamps, but they didn&#39;t fit my use case.</p>
 
-<p>My name is Oleh and I&#39;ve been using Emacs for about 3 years now.  I
-think that it&#39;s an awesome editor, and I&#39;ve accumulated some know-how
-to make it even better (at least for me and people who think like me).
-Sharing is caring, so here we go.</p>
+<p>So I&#39;ve advised <code>org-current-effective-time</code>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defvar-local</span> <span class="nv">worf--current-effective-time</span> <span class="no">nil</span><span class="p">)</span>
 
-<h2 id="ace-window-update"><code>ace-window</code> update</h2>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">worf--current-effective-time</span> <span class="p">(</span><span class="nv">orig-fn</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">or</span> <span class="nv">worf--current-effective-time</span>
+      <span class="p">(</span><span class="nf">funcall</span> <span class="nv">orig-fn</span><span class="p">)))</span>
 
-<p>On this weekend I&#39;ve made a major update to my package
-<a href="https://github.com/abo-abo/ace-window">ace-window</a> that allows it to
-be used as a library. Luckily the change went smoothly, as there are
-no complaints in the github issues so far.  In case you don&#39;t know
-what the package does in the first place, a short blurb follows.</p>
+<span class="p">(</span><span class="nv">advice-add</span> <span class="ss">&#39;org-current-effective-time</span>
+            <span class="nb">:around</span> <span class="nf">#&#39;</span><span class="nv">worf--current-effective-time</span><span class="p">)</span>
 
-<h2 id="ace-windows-what-and-why"><code>ace-window</code>&#39;s &quot;what and why&quot;</h2>
-
-<p>I&#39;m sure you&#39;re aware of the <code>other-window</code> command. While it&#39;s great for
-two windows, it quickly loses its value when there are more windows:
-you need to call it many times, and since it&#39;s not easily predictable,
-you have to check each time if you&#39;re in the window that you wanted.</p>
-
-<p>Another approach is to use <code>windmove-left</code>, <code>windmove-up</code> etc.  These
-are fast and predictable. Their disadvantage is that they need 4 key
-bindings.  The default ones are shift+arrows, which are hard to reach.</p>
-
-<p>This package aims to take the speed and predictability of <code>windmove</code>
-and pack it into a single key binding, similar to <code>other-window</code>.  To
-achieve this, I&#39;m using the excellent
-<a href="https://github.com/winterTTr/ace-jump-mode">ace-jump-mode</a>.</p>
-
-<p>Here&#39;s how the package looks in action: <a href="/download/ace-window.gif">ace-window.gif</a></p>
-
-<p>Since switching windows is a frequently used operation, I recommend
-binding <code>ace-window</code> to something short, like <kbd>M-p</kbd>.</p>
-
-<p>By default, three actions are available:</p>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">worf-change-time</span> <span class="p">()</span>
+  <span class="s">&quot;Set </span><span class="ss">`current-time&#39;</span><span class="s"> in the current buffer for </span><span class="ss">`org-todo&#39;</span><span class="s">.</span>
+<span class="s">Use </span><span class="ss">`keyboard-quit&#39;</span><span class="s"> to unset it.&quot;</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">setq</span> <span class="nv">worf--current-effective-time</span>
+        <span class="p">(</span><span class="k">condition-case</span> <span class="no">nil</span>
+            <span class="p">(</span><span class="nv">org-read-date</span> <span class="no">t</span> <span class="ss">&#39;totime</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">quit</span> <span class="no">nil</span><span class="p">))))</span>
+</code></pre></div>
+<p>A few things of note here:</p>
 
 <ul>
-<li><kbd>M-p</kbd> - select window</li>
-<li><kbd>C-u M-p</kbd> - swap the current window with the selected window</li>
-<li><kbd>C-u C-u M-p</kbd> - delete the selected window</li>
+<li><code>worf--current-effective-time</code> is buffer-local, so that it modifies time only for the current
+buffer</li>
+<li>I re-use the awesome <code>org-read-date</code> for a nice visual feedback when inputting the new time</li>
+<li>Instead of having a separate function to undo the current-time override, I capture the <code>quit</code>
+signal that <kbd>C-g</kbd> sends.</li>
 </ul>
 
-<h2 id="finally-the-library-part">finally, the library part</h2>
+<h2 id="outro">Outro</h2>
 
-<p>So now, what if you want to select a window to maximize with <code>ace-window</code>?
-After the change that I&#39;ve mentioned, the code to do this is dirt simple:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">ace-maximize-window</span> <span class="p">()</span>
-  <span class="s">&quot;Ace maximize window.&quot;</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">setq</span> <span class="nv">aw--current-op</span>
-        <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">aj</span><span class="p">)</span>
-          <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">wnd</span> <span class="p">(</span><span class="nv">aj-position-window</span> <span class="nv">aj</span><span class="p">)))</span>
-            <span class="p">(</span><span class="nf">select-window</span> <span class="nv">wnd</span><span class="p">)</span>
-            <span class="p">(</span><span class="nv">delete-other-windows</span><span class="p">))))</span>
-  <span class="p">(</span><span class="nv">aw--doit</span> <span class="s">&quot; Ace - Maximize Window&quot;</span><span class="p">))</span>
+<p>The above code is already part of <a href="https://github.com/abo-abo/worf">worf</a> and is bound to
+<kbd>cT</kbd>. I even added it to <a href="https://oremacs.com/worf/README.html#worf-change-time">the manual</a>. I hope you find it useful. Happy organizing!</p>
 
-<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-M-o&quot;</span><span class="p">)</span> <span class="ss">&#39;ace-maximize-window</span><span class="p">)</span>
-</code></pre></div>
-  </div>
-  
 </div>
 
-<div class="pagination">
-  
-    <span class="pagination-item older">Older</span>
-  
-  
-    
-      <a class="pagination-item newer" href="/page34">Newer</a>
-    
-  
+<div class="twitter-share">
+  <a href="https://twitter.com/share"
+     class="twitter-share-button"
+     data-via="_abo_abo"
+     data-dnt="true">
+    Tweet
+  </a>
 </div>
 
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'oremacs'; // required: replace example with your forum shortname
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+<script>
+  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+</script>
+<noscript>
+  Please enable JavaScript to view the
+  <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
 
       </div>
     </div>

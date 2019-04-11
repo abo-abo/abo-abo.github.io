@@ -304,6 +304,86 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2016/02/15/counsel-ffap/">
+        Visiting URLs and issues with counsel-find-file
+      </a>
+    </h1>
+
+    <span class="post-date">15 Feb 2016</span>
+
+    <p>Many experienced Emacs users are aware of <code>ffap</code> command:</p>
+
+<blockquote>
+<p>Find FILENAME, guessing a default from text around point.
+If <code>ffap-url-regexp</code> is not nil, the FILENAME may also be an URL.</p>
+</blockquote>
+
+<p>It&#39;s a great way to open an link, if you plan things in advance. But
+for me it was usually <kbd>C-x C-f</kbd> (annoyed grunt) <kbd>C-g M-x
+ffap RET</kbd>.</p>
+
+<p>Now, thanks to <a href="https://github.com/abo-abo/swiper">counsel-find-file</a>,
+it&#39;s <kbd>C-x C-f</kbd> (anticipated annoyance, followed by a sigh of
+relief) <kbd>M-n</kbd>.</p>
+
+<p>With Ivy completion, <kbd>M-n</kbd> calls <code>ivy-next-history-element</code>,
+which tries to</p>
+
+<p><a href="http://endlessparentheses.com/predicting-the-future-with-the-m-n-key.html">predict the history element</a>
+in case you&#39;ve reached history&#39;s edge. The prediction usually simply
+inserts thing-at-point into the minibuffer. My favorite applications
+of this are:</p>
+
+<ul>
+<li><kbd>C-s M-n</kbd> - <code>swiper</code> thing-at-point, to get the occurrences
+of the current symbol in the current file.</li>
+<li><kbd>C-c j M-n</kbd> - <code>counsel-git-grep</code> thing-at-point, to get the
+mentions within the current project.</li>
+<li><kbd>C-c g M-n</kbd> - <code>counsel-git</code> thing-at-point to open a file
+to which the current symbol links.</li>
+</ul>
+
+<p>One thing I&#39;ve recently added is the <code>\_&lt;...\_&gt;</code> wrapper for when
+<code>major-mode</code> derives from <code>prog-mode</code>. Since the <code>\_&lt;</code> regex matches
+the symbol start, and <code>\_&gt;</code> matches the symbol end, there&#39;s no chance
+of getting partial matches. You can call <code>undo</code> or press
+<kbd>M-n</kbd> again in case the symbol bounds aren&#39;t useful.</p>
+
+<p>Finally, <kbd>C-x C-f M-n</kbd> can be used to open URLs. Recently,
+I&#39;ve added functionality to <code>counsel-find-file</code> that allows me to also
+visit Github issues by simply pointing at the plain issue number,
+e.g. <code>#123</code> in either a version-controlled file or in a Magit buffer.
+The command will query:</p>
+<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>$ git remote get-url origin
+</code></pre></div>
+<p>and fill in all the details. So I no longer bother with
+<code>bug-reference-url-format</code> and <code>bug-reference-mode</code> - now it&#39;s all
+automatic.</p>
+
+<p>It&#39;s also possible to make it work for places other than Github, for
+instance this code (already included in
+<a href="http://melpa.org/#/counsel">counsel</a>) makes it work for the Emacs Git
+repository:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">counsel-emacs-url-p</span> <span class="p">()</span>
+  <span class="s">&quot;Return a Debbugs issue URL at point.&quot;</span>
+  <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="k">and</span> <span class="p">(</span><span class="nf">looking-at</span> <span class="s">&quot;#[0-9]+&quot;</span><span class="p">)</span>
+             <span class="p">(</span><span class="k">or</span>
+              <span class="p">(</span><span class="nf">eq</span> <span class="p">(</span><span class="nv">vc-backend</span> <span class="p">(</span><span class="nf">buffer-file-name</span><span class="p">))</span> <span class="ss">&#39;Git</span><span class="p">)</span>
+              <span class="p">(</span><span class="nf">memq</span> <span class="nv">major-mode</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">magit-commit-mode</span><span class="p">))))</span>
+    <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">url</span> <span class="p">(</span><span class="nv">match-string-no-properties</span> <span class="mi">0</span><span class="p">))</span>
+          <span class="p">(</span><span class="nv">origin</span> <span class="p">(</span><span class="nv">shell-command-to-string</span>
+                   <span class="s">&quot;git remote get-url origin&quot;</span><span class="p">)))</span>
+      <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">string-match</span> <span class="s">&quot;git.sv.gnu.org:/srv/git/emacs.git&quot;</span>
+                          <span class="nv">origin</span><span class="p">)</span>
+        <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;http://debbugs.gnu.org/cgi/bugreport.cgi?bug=%s&quot;</span>
+                <span class="p">(</span><span class="nf">substring</span> <span class="nv">url</span> <span class="mi">1</span><span class="p">))))))</span>
+
+<span class="p">(</span><span class="nv">add-to-list</span> <span class="ss">&#39;ivy-ffap-url-functions</span> <span class="ss">&#39;counsel-emacs-url-p</span><span class="p">)</span>
+</code></pre></div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2016/01/23/avy-0.4.0/">
         avy 0.4.0 is out
       </a>
@@ -695,54 +775,6 @@ code and save it for later.</p>
 
 <p>Thanks to everyone who contributed issues, code and
 documentation. Enjoy the new release.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/11/30/hydra-lispy-move/">
-        I move my s-expressions back and forth
-      </a>
-    </h1>
-
-    <span class="post-date">30 Nov 2015</span>
-
-    <p>Some people find <a href="https://github.com/abo-abo/lispy">lispy</a> too weird
-and/or complex to try, quite possibly because of it&#39;s sort-of-modal
-key binding structure. Which is a shame, since out of 7k lines of
-lispy&#39;s code, only 500 lines do key bindings, the rest do all sorts of
-useful stuff, like sexp navigation/modification, outlines and REPL
-interaction.</p>
-
-<p>In this post, I&#39;ll show a short example of using lispy&#39;s functions
-outside of <code>lispy-mode</code>, and compare it with the default approach.</p>
-
-<h2 id="moving-s-expressions-while-the-point-is-anywhere">Moving s-expressions while the point is anywhere</h2>
-
-<p>Using this simple <a href="https://github.com/abo-abo/hydra">hydra</a>, and the
-key sequence <kbd>C-c m sss www</kbd> I got the following GIF:</p>
-
-<p><img src="/download/hydra-lispy-move-1.gif" alt="hydra-lispy-move-1.gif"></p>
-
-<h2 id="doing-the-same-lispy-way">Doing the same lispy-way</h2>
-
-<p>To do it the lispy-way, I move the point before the list that I wish
-to operate on (with
-<kbd>[</kbd> key), and press <kbd>sss www</kbd> to get the following GIF:</p>
-
-<p><img src="/download/hydra-lispy-move-2.gif" alt="hydra-lispy-move-2.gif"></p>
-
-<p>The difference here is that no hydra is necessary in the second case,
-the key bindings come only from <code>lispy-mode</code>.  But the first case will
-also work if <code>lispy-mode</code> is off.</p>
-
-<h2 id="which-way-is-better">Which way is better?</h2>
-
-<p>I think the second way is better, since it&#39;s faster and more clear,
-but you can decide for yourself. By the way, you can also move
-symbols, comments and sub-words (if that makes sense) with
-<kbd>w</kbd> and <kbd>s</kbd>, provided you mark them with a region
-first.</p>
 
   </div>
   

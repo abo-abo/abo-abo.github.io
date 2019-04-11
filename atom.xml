@@ -4,13 +4,81 @@
  <title>(or emacs</title>
  <link href="https://oremacs.com/atom.xml" rel="self"/>
  <link href="https://oremacs.com/"/>
- <updated>2019-04-07T14:45:36+02:00</updated>
+ <updated>2019-04-11T19:22:53+02:00</updated>
  <id>https://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Change the current time in Org-mode</title>
+   <link href="https://oremacs.com/2019/04/11/worf-change-time/"/>
+   <updated>2019-04-11T00:00:00+02:00</updated>
+   <id>https://oremacs.com/2019/04/11/worf-change-time</id>
+   <content type="html">&lt;h2 id=&quot;intro&quot;&gt;Intro&lt;/h2&gt;
+
+&lt;p&gt;I&amp;#39;m constantly amazed by other people&amp;#39;s Org workflows. Now that &lt;a href=&quot;https://old.reddit.com/r/emacs/search?q=Weekly+tips+trick&amp;restrict_sr=on&amp;sort=relevance&amp;t=all&quot;&gt;the weekly tips&lt;/a&gt; are a
+thing, I see more and more cool Org configs, and I&amp;#39;m inspired to get more organized myself.&lt;/p&gt;
+
+&lt;p&gt;My own Org usage is simplistic in some areas, and quite advanced in others. While I wrote a lot of
+code to manipulate Org files ( &lt;a href=&quot;https://github.com/abo-abo/worf&quot;&gt;worf&lt;/a&gt;,
+&lt;a href=&quot;https://github.com/abo-abo/org-download&quot;&gt;org-download&lt;/a&gt;, &lt;a href=&quot;https://github.com/abo-abo/orca&quot;&gt;orca&lt;/a&gt;,
+&lt;a href=&quot;https://github.com/abo-abo/org-fu&quot;&gt;org-fu&lt;/a&gt;, &lt;a href=&quot;https://github.com/abo-abo/swiper&quot;&gt;counsel&lt;/a&gt;), the
+amount of Org files and TODO items that I have isn&amp;#39;t huge:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;counsel-git&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;org$ !log&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;;; 174 items&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;counsel-rg&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;\\* DONE|CANCELLED|TODO&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;;; 8103 items&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Still, that&amp;#39;s enough to get out-of-date files: just today I dug up a file with 20 outstanding TODO
+items that should have been canceled last November!&lt;/p&gt;
+
+&lt;h2 id=&quot;how-to-close-20-todos-using-a-timestamp-in-the-past&quot;&gt;How to close 20 TODOs using a timestamp in the past&lt;/h2&gt;
+
+&lt;p&gt;When I cancel an item, pressing &lt;kbd&gt;tc&lt;/kbd&gt; (mnemonic for TODO-Cancel), Org mode inserts a time
+stamp with the current time. However, for this file, I wanted to use October 31st 2018 instead of
+the current time. Org mode already has options like &lt;code&gt;org-use-last-clock-out-time-as-effective-time&lt;/code&gt;,
+&lt;code&gt;org-use-effective-time&lt;/code&gt;, and &lt;code&gt;org-extend-today-until&lt;/code&gt; that manipulate the current time for
+timestamps, but they didn&amp;#39;t fit my use case.&lt;/p&gt;
+
+&lt;p&gt;So I&amp;#39;ve advised &lt;code&gt;org-current-effective-time&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defvar-local&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;worf--current-effective-time&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;worf--current-effective-time&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;orig-fn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;or&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;worf--current-effective-time&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;funcall&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;orig-fn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;advice-add&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;org-current-effective-time&lt;/span&gt;
+            &lt;span class=&quot;nb&quot;&gt;:around&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;#&amp;#39;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;worf--current-effective-time&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;defun&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;worf-change-time&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Set &lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;`current-time&amp;#39;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; in the current buffer for &lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;`org-todo&amp;#39;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;.&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;Use &lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;`keyboard-quit&amp;#39;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; to unset it.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interactive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;worf--current-effective-time&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;condition-case&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;org-read-date&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;totime&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;quit&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;A few things of note here:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;worf--current-effective-time&lt;/code&gt; is buffer-local, so that it modifies time only for the current
+buffer&lt;/li&gt;
+&lt;li&gt;I re-use the awesome &lt;code&gt;org-read-date&lt;/code&gt; for a nice visual feedback when inputting the new time&lt;/li&gt;
+&lt;li&gt;Instead of having a separate function to undo the current-time override, I capture the &lt;code&gt;quit&lt;/code&gt;
+signal that &lt;kbd&gt;C-g&lt;/kbd&gt; sends.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;The above code is already part of &lt;a href=&quot;https://github.com/abo-abo/worf&quot;&gt;worf&lt;/a&gt; and is bound to
+&lt;kbd&gt;cT&lt;/kbd&gt;. I even added it to &lt;a href=&quot;https://oremacs.com/worf/README.html#worf-change-time&quot;&gt;the manual&lt;/a&gt;. I hope you find it useful. Happy organizing!&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Swiper-isearch - a more isearch-like swiper</title>
