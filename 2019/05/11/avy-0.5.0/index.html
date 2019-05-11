@@ -344,16 +344,16 @@ Suppose you have bound:</p>
 
 <ul>
 <li><kbd>M-t w a</kbd> to jump there</li>
-<li><kbd>M-t x w a</kbd> - <code>avy-action-kill-move</code>: kill the word and move there,</li>
-<li><kbd>M-t X w a</kbd> - <code>avy-action-kill-stay</code>: kill the word without moving the point,</li>
-<li><kbd>M-t i w a</kbd> - <code>avy-action-ispell</code>: use ispell/flyspell to correct the word,</li>
-<li><kbd>M-t y w a</kbd> - <code>avy-action-yank</code>: yank the word at point,</li>
-<li><kbd>M-t t w a</kbd> - <code>avy-action-teleport</code>: kill the word and yank it at point,</li>
-<li><kbd>M-t z w a</kbd> - <code>avy-action-zap-to-char</code>: kill from point up to selected point.</li>
+<li><kbd>M-t w x a</kbd> - <code>avy-action-kill-move</code>: kill the word and move there,</li>
+<li><kbd>M-t w X a</kbd> - <code>avy-action-kill-stay</code>: kill the word without moving the point,</li>
+<li><kbd>M-t w i a</kbd> - <code>avy-action-ispell</code>: use ispell/flyspell to correct the word,</li>
+<li><kbd>M-t w y a</kbd> - <code>avy-action-yank</code>: yank the word at point,</li>
+<li><kbd>M-t w t a</kbd> - <code>avy-action-teleport</code>: kill the word and yank it at point,</li>
+<li><kbd>M-t w z a</kbd> - <code>avy-action-zap-to-char</code>: kill from point up to selected point.</li>
 </ul>
 
-<p>You can customize <code>avy-dispatch-alist</code> to modify these actions, and also ensure that it plays nicely
-with your <code>avy-keys</code>, if you customized them.</p>
+<p>You can customize <code>avy-dispatch-alist</code> to modify these actions, and also ensure that there&#39;s no
+overlap with your <code>avy-keys</code>, if you customized them.</p>
 
 <h3 id="new-avy-style-setting-words">New <code>avy-style</code> setting: &#39;words</h3>
 
