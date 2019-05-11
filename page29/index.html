@@ -304,6 +304,86 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/01/21/dired-shortcuts/">
+        Even more dired key bindings
+      </a>
+    </h1>
+
+    <span class="post-date">21 Jan 2015</span>
+
+    <p>I&#39;ve posted about <code>dired</code> quite a few times now.  Below, I&#39;ll do a
+short review of the old bindings and add a few remaining recipes from
+my <code>dired.el</code>.</p>
+
+<h2 id="old-stuff">Old stuff</h2>
+
+<ul>
+<li>Binding <kbd>r</kbd> to <code>dired-start-process</code> is covered <a href="/2015/01/04/dired-nohup/">here</a>.</li>
+<li>Binding <kbd>e</kbd> to <code>ediff-files</code> is mentioned <a href="/2015/01/17/setting-up-ediff/">here</a>.</li>
+<li>Binding <kbd>z</kbd> to <code>dired-get-size</code> is covered <a href="/2015/01/12/dired-file-size/">here</a>.</li>
+<li>Binding <kbd>&#96;</kbd> to <code>dired-open-term</code> is covered <a href="/2015/01/10/dired-ansi-term/">here</a>.</li>
+</ul>
+
+<h2 id="jump-to-a-file-with-ido">Jump to a file with <code>ido</code></h2>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="s">&quot;i&quot;</span> <span class="ss">&#39;ido-find-file</span><span class="p">)</span>
+</code></pre></div>
+<p>I use this one quite frequently: <kbd>i</kbd> is somehow mnemonic to
+<kbd>C-i</kbd>, which means completion.  Remember that you can select
+the current candidate with <kbd>C-m</kbd> and the current text
+(usually to create a new file) with <kbd>C-j</kbd>.</p>
+
+<h2 id="move-up-and-down">Move up and down</h2>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="s">&quot;j&quot;</span> <span class="ss">&#39;dired-next-line</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="s">&quot;k&quot;</span> <span class="ss">&#39;dired-previous-line</span><span class="p">)</span>
+</code></pre></div>
+<p>As I&#39;ve mentioned before, this is my standard recipe for all modes
+that don&#39;t self-insert.</p>
+
+<h2 id="flag-garbage-files">Flag garbage files</h2>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;%^&quot;</span><span class="p">)</span> <span class="ss">&#39;dired-flag-garbage-files</span><span class="p">)</span>
+</code></pre></div>
+<p>Huh, I always thought this was the default binding. I have no idea
+where this came from, but I use this plus <kbd>x</kbd> to get rid of
+the garbage produced by a LaTeX run:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">dired-garbage-files-regexp</span>
+      <span class="s">&quot;\\.idx\\|\\.run\\.xml$\\|\\.bbl$\\|\\.bcf$\\|.blg$\\|-blx.bib$\\|.nav$\\|.snm$\\|.out$\\|.synctex.gz$\\|\\(?:\\.\\(?:aux\\|bak\\|dvi\\|log\\|orig\\|rej\\|toc\\|pyg\\)\\)\\&#39;&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="emacs-adaptation-of-find">Emacs&#39; adaptation of <code>find</code></h2>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="s">&quot;F&quot;</span> <span class="ss">&#39;find-name-dired</span><span class="p">)</span>
+</code></pre></div>
+<p>This little function is essential if you want to do perform some
+operation on all files in the current directory and its sub
+directories that match a pattern. Basically the same thing that you
+would do with the UNIX <code>find</code>, just better.</p>
+
+<h2 id="ignore-unimportant-files">Ignore unimportant files</h2>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-o&quot;</span><span class="p">)</span> <span class="ss">&#39;dired-omit-mode</span><span class="p">)</span>
+</code></pre></div>
+<p>This will toggle the display of unimportant files, like:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">dired-omit-files</span> <span class="s">&quot;\\(?:.*\\.\\(?:aux\\|log\\|synctex\\.gz\\|run\\.xml\\|bcf\\|am\\|in\\)\\&#39;\\)\\|^\\.\\|-blx\\.bib&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="move-to-the-parent-directory">Move to the parent directory</h2>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="s">&quot;a&quot;</span>
+    <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span>
+      <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+      <span class="p">(</span><span class="nv">find-alternate-file</span> <span class="s">&quot;..&quot;</span><span class="p">)))</span>
+</code></pre></div>
+<p>There probably is a default function that does this. I&#39;ve been using
+this one for years, probably because it reuses the current <code>dired</code>
+buffer of opening the parent directory.</p>
+
+<h2 id="outro">Outro</h2>
+
+<p>Phew, that&#39;s a lot of bindings. I don&#39;t necessarily encourage you to
+use the same bindings as me; I just want to bring your attention to
+some of these functions, so that you can work them into your workflow.
+If you notice that I&#39;m using some obsolete stuff, do let me know, I&#39;m
+always looking to improve.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/01/20/introducing-hydra/">
         Behold The Mighty Hydra!
       </a>
@@ -970,65 +1050,6 @@ that annoys you when you try to save a file. Actually, it&#39;s not a bad idea -
 save was <code>0 minutes 34 seconds ago</code>; since then, you&#39;ve changed <code>27
 bytes</code> of information. Are you <strong>sure</strong> you want to save <code>[y/N]</code>?</p>
 </blockquote>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/01/16/compile-savely/">
-        Save before compile
-      </a>
-    </h1>
-
-    <span class="post-date">16 Jan 2015</span>
-
-    <p>Here&#39;s a very simplistic function that I was using for a while:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">save-and-compile</span> <span class="p">()</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">save-buffer</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">compile</span> <span class="s">&quot;make -j4&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">pop-to-buffer</span> <span class="nv">next-error-last-buffer</span><span class="p">))</span>
-</code></pre></div>
-<p>It will save the current buffer, run <code>compile</code> and switch to
-compilation buffer.</p>
-
-<h2 id="compilation-customization">Compilation customization</h2>
-
-<p>Turns out that there&#39;s no need to save, since I get away with this:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>(setq compilation-ask-about-save nil)
-</code></pre></div>
-<p>The documentation says:</p>
-
-<blockquote>
-<p>Non-nil means M-x <code>compile</code> asks which buffers to save before
-compiling.  Otherwise, it saves all modified buffers without asking.</p>
-</blockquote>
-
-<h2 id="select-compilation-target">Select compilation target</h2>
-
-<p>A year ago, I wrote a package that looks for a <code>Makefile</code> in the
-current directory, parses the available targets and allows you to
-choose one with <a href="https://github.com/emacs-helm/helm">helm</a>.  It&#39;s
-called <a href="https://github.com/abo-abo/helm-make">helm-make</a>.  It&#39;s almost
-the same as <kbd>M-x</kbd> <code>compile</code> (which also has completion for
-targets), and it wraps around <code>compile</code>, but I just find it to be more
-convenient.</p>
-
-<p>This package is as simple as it sounds, the only customization that
-you can do is to set <code>helm-make-do-save</code> to save all open buffers
-visiting the <code>Makefile</code>&#39;s directory. It also provides, in addition to
-the plain <code>helm-make</code> command, a <code>helm-make-projectile</code> command, which
-is almost the same, except the <code>Makefile</code> should come not from the
-current directory but from <code>projectile-project-root</code>.</p>
-
-<h2 id="some-error-navigation-to-go-with-your-compilation">Some error navigation to go with your compilation</h2>
-
-<p>I&#39;ve had these bindings for a very long time, just making sure
-that you&#39;re aware of these commands:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">[</span><span class="nv">f6</span><span class="p">]</span> <span class="ss">&#39;next-error</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">[</span><span class="nv">C-f6</span><span class="p">]</span> <span class="ss">&#39;previous-error</span><span class="p">)</span>
-</code></pre></div>
-<p>These bindings work for <kbd>M-x</kbd> <code>occur</code> and <code>rgrep</code> as well.</p>
 
   </div>
   
