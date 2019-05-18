@@ -4,13 +4,94 @@
  <title>(or emacs</title>
  <link href="https://oremacs.com/atom.xml" rel="self"/>
  <link href="https://oremacs.com/"/>
- <updated>2019-05-11T22:44:31+02:00</updated>
+ <updated>2019-05-18T14:33:12+02:00</updated>
  <id>https://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>hydra 0.15.0 is out</title>
+   <link href="https://oremacs.com/2019/05/18/hydra-0.15.0/"/>
+   <updated>2019-05-18T00:00:00+02:00</updated>
+   <id>https://oremacs.com/2019/05/18/hydra-0.15.0</id>
+   <content type="html">&lt;p&gt;This release consists of 45 commits done over the course of the last 2 years. With this version, I
+have introduced a
+&lt;a href=&quot;https://github.com/abo-abo/hydra/blob/f27fce1b2f0a9162e159557bdeb2c0c94defb4d2/doc/Changelog.org#0150&quot;&gt;Changelog.org&lt;/a&gt;,
+similar to what &lt;a href=&quot;https://github.com/abo-abo/swiper/blob/master/doc/Changelog.org&quot;&gt;ivy&lt;/a&gt; and
+&lt;a href=&quot;https://github.com/abo-abo/avy/blob/master/doc/Changelog.org&quot;&gt;avy&lt;/a&gt; have.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/Hydra.jpg&quot; alt=&quot;hydra&quot;&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;highlights&quot;&gt;Highlights&lt;/h2&gt;
+
+&lt;h3 id=&quot;display-hints-using-posframe&quot;&gt;Display hints using posframe&lt;/h3&gt;
+
+&lt;p&gt;A new defcustom &lt;code&gt;hydra-hint-display-type&lt;/code&gt; was introduced that can be either &lt;code&gt;lv&lt;/code&gt; (the default),
+&lt;code&gt;message&lt;/code&gt;, or &lt;code&gt;posframe&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/tumashu/posframe&quot;&gt;Posframe&lt;/a&gt; is a package that leverages a new feature in Emacs
+26.1: the ability to display child frames. The advantage of using child frames is that you can
+easily position them anywhere within your frame area. For example, the default setting is to put it
+in the center of the current window, which is closer to where your eyes are focused than the
+minibuffer. Child frames don&amp;#39;t interfere with the content of the buffers which they
+overlap. Finally, you can select a different font for the child frame.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/hydra-posframe.png&quot; alt=&quot;hydra-posframe&quot;&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;less-boilerplate-in-defhydra&quot;&gt;Less boilerplate in defhydra&lt;/h3&gt;
+
+&lt;p&gt;You no longer have to add &lt;code&gt;:hint nil&lt;/code&gt;, and you can skip the docstring as well:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-clock&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:exit&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;q&amp;quot;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;quit&amp;quot;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:column&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Clock&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;c&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-clock-cancel&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;cancel&amp;quot;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:column&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Do&amp;quot;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:exit&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;d&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-clock-display&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;display&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;e&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-clock-modify-effort-estimate&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;effort&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;i&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-clock-in&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;in&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;j&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-clock-goto&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;jump&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;o&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-clock-out&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;out&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;r&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-clock-report&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;report&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;add-heads-to-an-existing-hydra&quot;&gt;Add heads to an existing hydra&lt;/h3&gt;
+
+&lt;p&gt;You can now add heads to an existing hydra like this:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-extendable&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;extendable&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;j&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;next-line&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;down&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;defhydra+&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-extendable&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;k&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;previous-line&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;up&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The new macro &lt;code&gt;defhydra+&lt;/code&gt; takes the same arguments as &lt;code&gt;defhydra&lt;/code&gt;, so it&amp;#39;s quite easy to split up or
+join your hydras.&lt;/p&gt;
+
+&lt;p&gt;The use case of &lt;code&gt;defhydra+&lt;/code&gt; is when you have many packages that want to add heads to an existing
+hydra. Some of them may be optional or loaded lazily.&lt;/p&gt;
+
+&lt;p&gt;You can now have a base &lt;code&gt;defhydra&lt;/code&gt;, and then use &lt;code&gt;defhydra+&lt;/code&gt; to add heads to it when a new package
+is loaded. Example:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-toggle&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;q&amp;quot;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;quit&amp;quot;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:column&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Exit&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;w&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;whitespace-mode&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;whitespace-mode: %S&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;whitespace-mode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+       &lt;span class=&quot;nb&quot;&gt;:column&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Toggles&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;use-package&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;:config&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;defhydra+&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-toggle&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;l&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-toggle-link-display&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;org link display: %S&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-descriptive-links&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;Big thanks to all contributors, and I hope you enjoy the new release. Happy hacking!&lt;/p&gt;
+
+&lt;p&gt;PS. Thanks to everyone who supports me on &lt;a href=&quot;https://liberapay.com/abo-abo&quot;&gt;Liberapay&lt;/a&gt; and
+&lt;a href=&quot;https://www.patreon.com/abo_abo&quot;&gt;Patreon&lt;/a&gt;!&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>avy 0.5.0 is out</title>

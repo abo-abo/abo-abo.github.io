@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="flattr:id" content="9yl9ry">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      hydra 0.15.0 is out &middot; (or emacs
+    
+  </title>
+
+  <link rel="canonical" href="https://oremacs.com/2019/05/18/hydra-0.15.0/" />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="/public/css/octicons.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Scripts -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body class="layout-reverse theme-base-08">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <!-- <div class="sidebar-item"> -->
+  <!--   <p>unused</p> -->
+  <!-- </div> -->
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about/">About</a>
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/archive/">Archive</a>
+        
+      
+    
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/donate/">Donate</a>
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+
+    <div id="github" class="sidebar-nav-item">
+      <button type="button"
+              class="btn btn-info"
+              data-toggle="collapse"
+              data-target="#github-projects">
+        <span class="octicon octicon-mark-github"></span> My Emacs Projects
+      </button>
+      <div id="github-projects" class="collapse">
+        <ul style="margin-bottom:0em;">
+          <li>
+            <a href="https://github.com/abo-abo/lispy">lispy</a>
+            <p>vi-like Paredit</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/worf">worf</a>
+            <p>vi-like bindings for org-mode</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-window">ace-window</a>
+            <p>switch windows with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-link">ace-link</a>
+            <p>follow links with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/function-args">function-args</a>
+            <p>enhance <code>CEDET</code> for C++</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/helm-make">helm-make</a>
+            <p>select a Makefile target with <code>helm</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/make-it-so">make-it-so</a>
+            <p>transform files with Makefile recipes</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/org-download">org-download</a>
+            <p>drag-and-drop images to <code>org-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo?tab=repositories">
+              <span class="octicon octicon-octoface"></span>
+              and more
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
+
+  <div class="sidebar-item">
+    <p>
+      <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">
+        <img alt="Creative Commons License"
+             style="border-width:0;opacity: 0.3;"
+             src="https://licensebuttons.net/l/by-sa/4.0/88x31.png"/>
+      </a>
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">(or emacs</a>
+            <small>irrelevant)</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <script>
+if (window.location.host.indexOf('oremacs.com') > -1 &&
+    window.location.protocol != "https:") {
+    window.location.protocol = "https";
+}
+</script>
+
+<div class="post">
+  <h1 class="post-title">hydra 0.15.0 is out</h1>
+  <span class="post-date">18 May 2019</span>
+  <p>This release consists of 45 commits done over the course of the last 2 years. With this version, I
+have introduced a
+<a href="https://github.com/abo-abo/hydra/blob/f27fce1b2f0a9162e159557bdeb2c0c94defb4d2/doc/Changelog.org#0150">Changelog.org</a>,
+similar to what <a href="https://github.com/abo-abo/swiper/blob/master/doc/Changelog.org">ivy</a> and
+<a href="https://github.com/abo-abo/avy/blob/master/doc/Changelog.org">avy</a> have.</p>
+
+<p><img src="/download/Hydra.jpg" alt="hydra"></p>
+
+<h2 id="highlights">Highlights</h2>
+
+<h3 id="display-hints-using-posframe">Display hints using posframe</h3>
+
+<p>A new defcustom <code>hydra-hint-display-type</code> was introduced that can be either <code>lv</code> (the default),
+<code>message</code>, or <code>posframe</code>.</p>
+
+<p><a href="https://github.com/tumashu/posframe">Posframe</a> is a package that leverages a new feature in Emacs
+26.1: the ability to display child frames. The advantage of using child frames is that you can
+easily position them anywhere within your frame area. For example, the default setting is to put it
+in the center of the current window, which is closer to where your eyes are focused than the
+minibuffer. Child frames don&#39;t interfere with the content of the buffers which they
+overlap. Finally, you can select a different font for the child frame.</p>
+
+<p><img src="/download/hydra-posframe.png" alt="hydra-posframe"></p>
+
+<h3 id="less-boilerplate-in-defhydra">Less boilerplate in defhydra</h3>
+
+<p>You no longer have to add <code>:hint nil</code>, and you can skip the docstring as well:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-clock</span> <span class="p">(</span><span class="nb">:exit</span> <span class="no">t</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span> <span class="s">&quot;quit&quot;</span> <span class="nb">:column</span> <span class="s">&quot;Clock&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;c&quot;</span> <span class="nv">org-clock-cancel</span> <span class="s">&quot;cancel&quot;</span> <span class="nb">:column</span> <span class="s">&quot;Do&quot;</span> <span class="nb">:exit</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;d&quot;</span> <span class="nv">org-clock-display</span> <span class="s">&quot;display&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;e&quot;</span> <span class="nv">org-clock-modify-effort-estimate</span> <span class="s">&quot;effort&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;i&quot;</span> <span class="nv">org-clock-in</span> <span class="s">&quot;in&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">org-clock-goto</span> <span class="s">&quot;jump&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;o&quot;</span> <span class="nv">org-clock-out</span> <span class="s">&quot;out&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;r&quot;</span> <span class="nv">org-clock-report</span> <span class="s">&quot;report&quot;</span><span class="p">))</span>
+</code></pre></div>
+<h3 id="add-heads-to-an-existing-hydra">Add heads to an existing hydra</h3>
+
+<p>You can now add heads to an existing hydra like this:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-extendable</span> <span class="p">()</span>
+  <span class="s">&quot;extendable&quot;</span>
+  <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">next-line</span> <span class="s">&quot;down&quot;</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nv">defhydra+</span> <span class="nv">hydra-extendable</span> <span class="p">()</span>
+  <span class="p">(</span><span class="s">&quot;k&quot;</span> <span class="nv">previous-line</span> <span class="s">&quot;up&quot;</span><span class="p">))</span>
+</code></pre></div>
+<p>The new macro <code>defhydra+</code> takes the same arguments as <code>defhydra</code>, so it&#39;s quite easy to split up or
+join your hydras.</p>
+
+<p>The use case of <code>defhydra+</code> is when you have many packages that want to add heads to an existing
+hydra. Some of them may be optional or loaded lazily.</p>
+
+<p>You can now have a base <code>defhydra</code>, and then use <code>defhydra+</code> to add heads to it when a new package
+is loaded. Example:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-toggle</span> <span class="p">()</span>
+  <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span> <span class="s">&quot;quit&quot;</span> <span class="nb">:column</span> <span class="s">&quot;Exit&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;w&quot;</span> <span class="nv">whitespace-mode</span>
+       <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;whitespace-mode: %S&quot;</span> <span class="nv">whitespace-mode</span><span class="p">)</span>
+       <span class="nb">:column</span> <span class="s">&quot;Toggles&quot;</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nb">use-package</span> <span class="nv">org</span>
+    <span class="nb">:config</span>
+  <span class="p">(</span><span class="nv">defhydra+</span> <span class="nv">hydra-toggle</span> <span class="p">()</span>
+    <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nv">org-toggle-link-display</span>
+         <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;org link display: %S&quot;</span> <span class="nv">org-descriptive-links</span><span class="p">))))</span>
+</code></pre></div>
+<h2 id="outro">Outro</h2>
+
+<p>Big thanks to all contributors, and I hope you enjoy the new release. Happy hacking!</p>
+
+<p>PS. Thanks to everyone who supports me on <a href="https://liberapay.com/abo-abo">Liberapay</a> and
+<a href="https://www.patreon.com/abo_abo">Patreon</a>!</p>
+
+</div>
+
+<div class="twitter-share">
+  <a href="https://twitter.com/share"
+     class="twitter-share-button"
+     data-via="_abo_abo"
+     data-dnt="true">
+    Tweet
+  </a>
+</div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'oremacs'; // required: replace example with your forum shortname
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+<script>
+  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+</script>
+<noscript>
+  Please enable JavaScript to view the
+  <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>

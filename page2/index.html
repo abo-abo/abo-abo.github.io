@@ -304,6 +304,84 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2018/03/05/grep-exclude/">
+        Using exclusion patterns when grepping
+      </a>
+    </h1>
+
+    <span class="post-date">05 Mar 2018</span>
+
+    <h2 id="git">Git</h2>
+
+<p>I like <a href="https://git-scm.com/">Git</a>. A lot. After years of use it has
+really grown on me. It&#39;s (mostly) fast, (often) reliable, and (always)
+distributed. For me, all properties are important, but being able to
+do <code>git init</code> to start a new project in seconds is the best feature.</p>
+
+<p>When it comes to working with Git day-to-day, a nice GUI can really
+make a difference. In Emacs world, of course it&#39;s
+<a href="https://magit.vc/">Magit</a>. Outside of Emacs (brr),
+<a href="https://git-cola.github.io/">git-cola</a> looks to be the most promising
+one. If you&#39;re aware of something better, please share - I&#39;m keeping a
+list of suggestions for my non-Emacs using colleagues.</p>
+
+<h2 id="ivy-integration-for-git">Ivy integration for Git</h2>
+
+<p>The main two commands in <a href="https://github.com/abo-abo/swiper/">ivy</a>
+that I use for Git are:</p>
+
+<ul>
+<li><code>counsel-git</code>: select a file tracked by Git</li>
+<li><code>counsel-rg</code>: grep for a line in all files tracked by Git, using
+<a href="https://github.com/BurntSushi/ripgrep">ripgrep</a> as the backend.</li>
+</ul>
+
+<p>There are many alternatives to <code>counsel-rg</code> that use a different
+backend: <code>counsel-git-grep</code>, <code>counsel-ag</code>, <code>counsel-ack</code>,
+<code>counsel-pt</code>. But <code>counsel-rg</code> is the fastest, especially when I have
+to deal with Git repositories that are 2Gb in size (short explanation:
+it&#39;s a Perforce repo with a bunch of binaries, because why not; and
+I&#39;m using <a href="https://git-scm.com/docs/git-p4">git-p4</a> to interact with
+it).</p>
+
+<h2 id="using-ignore-with-ripgrep">Using <code>.ignore</code> with ripgrep</h2>
+
+<p>Adding an <code>.ignore</code> file to the root of your project can really speed
+up your searches.  In my sample project, I went from 10k files to less
+than 500 files.</p>
+
+<p>Example content:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>/TAGS
+*.min.js*
+/Build/Output/
+/ThirdParty/
+</code></pre></div>
+<p>As you can see, both file patterns and directories are supported.  One
+other nifty thing that I discovered only recently is that you can use
+<code>ripgrep</code> as the backed for <code>counsel-git</code> in addition to
+<code>counsel-rg</code>. Which means the same <code>.ignore</code> file is used for both
+commands. Here&#39;s the setting:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">counsel-git-cmd</span> <span class="s">&quot;rg --files&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>And here&#39;s my setting for <code>counsel-rg</code>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">counsel-rg-base-command</span>
+      <span class="s">&quot;rg -i -M 120 --no-heading --line-number --color never %s .&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>The main difference in comparison to the default
+<code>counsel-rg-base-command</code> is <code>-M 120</code> which means: truncate all lines
+that are longer than 120 characters. This is really helpful when Emacs
+is accepting input from <code>ripgrep</code>: a megabyte long line of minified JS
+is not only useless since you can&#39;t see it whole, but it will also
+likely hang Emacs for a while.</p>
+
+<h2 id="outro">Outro</h2>
+
+<p>I hope you found these bits of info useful. Happy hacking!</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2017/12/27/company-numbers/">
         Using digits to select company-mode candidates
       </a>
@@ -877,138 +955,6 @@ that makes <kbd>r</kbd> work this way.</p>
 figuring out how it should work exactly.  Please consider joining my
 <a href="https://www.patreon.com/abo_abo">72 patrons</a> to give me the
 opportunity to work on Free Software a lot more. Happy hacking!</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2017/10/28/orca/">
-        Orca - new package to improve org-capture from browser
-      </a>
-    </h1>
-
-    <span class="post-date">28 Oct 2017</span>
-
-    <h2 id="intro">Intro</h2>
-
-<p><a href="https://github.com/abo-abo/orca">Orca</a> is a new Emacs package, an
-attempt to refactor my old <a href="https://github.com/abo-abo/org-fu">org-fu</a>
-into something that&#39;s much more re-usable and easier to get started
-with.</p>
-
-<h2 id="orca-functionality">Orca functionality</h2>
-
-<h3 id="problem">Problem:</h3>
-
-<p>When capturing from Firefox using
-<a href="http://orgmode.org/worg/org-contrib/org-protocol.html">org-protocol</a> (together with
-<a href="https://addons.mozilla.org/en-US/firefox/addon/org-capture/">this addon</a>):</p>
-
-<ul>
-<li>either I refile each time I capture, which is slow</li>
-<li>or my captures pile up in one place, which is messy</li>
-</ul>
-
-<h3 id="solution">Solution:</h3>
-
-<ol>
-<li>Define rules for where links from certain websites should be captured.</li>
-<li>Allow to capture directly into the current org-mode buffer, since it&#39;s likely related to what I&#39;m working with on.</li>
-</ol>
-
-<h3 id="part-1-rules-example">Part 1: Rules example</h3>
-
-<p>Here is my example list of configurations:</p>
-
-<ul>
-<li>Capture URL matching <a href="https://www.reddit.com/emacs/">https://www.reddit.com/emacs/</a> to <code>emacs.org:Reddit</code>,</li>
-<li>Capture URL matching <a href="https://emacs.stackexchange.com/">https://emacs.stackexchange.com/</a> to <code>emacs.org:Questions</code>,</li>
-<li>If nothing else matches, capture to <code>ent.org:Articles</code>.</li>
-</ul>
-
-<p>Corresponding code:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">orca-handler-list</span>
-      <span class="o">&#39;</span><span class="p">((</span><span class="nv">orca-handler-match-url</span>
-         <span class="s">&quot;https://www.reddit.com/&quot;</span>
-         <span class="s">&quot;~/Dropbox/org/wiki/emacs.org&quot;</span> <span class="s">&quot;Reddit&quot;</span><span class="p">)</span>
-        <span class="p">(</span><span class="nv">orca-handler-match-url</span>
-         <span class="s">&quot;https://emacs.stackexchange.com/&quot;</span>
-         <span class="s">&quot;~/Dropbox/org/wiki/emacs.org&quot;</span> <span class="s">&quot;\\* Questions&quot;</span><span class="p">)</span>
-        <span class="p">(</span><span class="nv">orca-handler-file</span>
-         <span class="s">&quot;~/Dropbox/org/ent.org&quot;</span> <span class="s">&quot;\\* Articles&quot;</span><span class="p">)))</span>
-</code></pre></div>
-<h3 id="part-2-current-buffer-example">Part 2: Current buffer example</h3>
-
-<p>For example, I&#39;m researching how to implement something with
-<a href="https://www.docker.com/">docker</a>.  This means that I have
-<code>docker.org</code> open, along with dozens of tabs in the browser.</p>
-
-<p>I can configure to capture into the current org-mode buffer with a <code>*
-Tasks</code> heading like this:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">push</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">orca-handler-current-buffer</span> <span class="s">&quot;\\* Tasks&quot;</span><span class="p">)</span> <span class="nv">orca-handler-list</span><span class="p">)</span>
-</code></pre></div>
-<p>Since <code>docker.org</code> has <code>* Tasks</code>, I just click the capture button in
-Firefox and follow up with an immediate <kbd>C-c C-c</kbd> in Emacs.
-The link is already in the right position, no need for an extra refile
-step.</p>
-
-<h2 id="using-customize-with-orca">Using <code>customize</code> with orca</h2>
-
-<p>You can set up the capture rules using <kbd>M-x</kbd>
-<code>customize-group</code> <kbd>RET</kbd> <code>orca</code> <kbd>RET</kbd>.</p>
-
-<p>Here&#39;s a screenshot:
-<img src="/download/orca-customize.png" alt="orca-customize"></p>
-
-<p>As you see, the customization is a list of an arbitrary length, with
-each element falling into one of three categories, each backed by an
-Elisp function (<code>orca-handler-current-buffer</code>, <code>orca-handler-file</code>,
-and <code>orca-handler-match-url</code>). Each function takes a different number
-of arguments (one, two, and three, respectively) - they are all
-annotated by the interface.</p>
-
-<p>Here&#39;s the code that describes the expected <code>:type</code> to <code>customize</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defcustom</span> <span class="nv">orca-handler-list</span>
-  <span class="c1">;; ...</span>
-  <span class="nb">:type</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">repeat</span>
-          <span class="p">(</span><span class="nv">choice</span>
-           <span class="p">(</span><span class="nf">list</span>
-            <span class="nb">:tag</span> <span class="s">&quot;Current buffer&quot;</span>
-            <span class="p">(</span><span class="nv">const</span> <span class="nv">orca-handler-current-buffer</span><span class="p">)</span>
-            <span class="p">(</span><span class="nf">string</span> <span class="nb">:tag</span> <span class="s">&quot;Heading&quot;</span><span class="p">))</span>
-           <span class="p">(</span><span class="nf">list</span>
-            <span class="nb">:tag</span> <span class="s">&quot;URL matching regex&quot;</span>
-            <span class="p">(</span><span class="nv">const</span> <span class="nv">orca-handler-match-url</span><span class="p">)</span>
-            <span class="p">(</span><span class="nf">string</span> <span class="nb">:tag</span> <span class="s">&quot;URL&quot;</span><span class="p">)</span>
-            <span class="p">(</span><span class="nf">string</span> <span class="nb">:tag</span> <span class="s">&quot;File&quot;</span><span class="p">)</span>
-            <span class="p">(</span><span class="nf">string</span> <span class="nb">:tag</span> <span class="s">&quot;Heading&quot;</span><span class="p">))</span>
-           <span class="p">(</span><span class="nf">list</span>
-            <span class="nb">:tag</span> <span class="s">&quot;Default&quot;</span>
-            <span class="p">(</span><span class="nv">const</span> <span class="nv">orca-handler-file</span><span class="p">)</span>
-            <span class="p">(</span><span class="nf">string</span> <span class="nb">:tag</span> <span class="s">&quot;File&quot;</span><span class="p">)</span>
-            <span class="p">(</span><span class="nf">string</span> <span class="nb">:tag</span> <span class="s">&quot;Heading&quot;</span><span class="p">)))))</span>
-</code></pre></div>
-<p>You can read more about the customization types in <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Composite-Types.html">this manual section</a>.</p>
-
-<h2 id="outro">Outro</h2>
-
-<p>I hope you enjoy <code>orca</code>. I&#39;ve submitted it to MELPA. Hopefully, it
-will be available for an easy install very soon.</p>
-
-<p>Org-mode is a beautiful thing, but my previous attempts to configure
-it were huge config files of loosely related (i.e. the only thing in
-common was Org-mode) stuff spanning hundreds of lines. Orca is an
-improvement in this respect, since it focuses on a very narrow
-domain. It still tries to be flexible (just like <code>org-capture</code>) - you
-can plug in your own functions into <code>orca-handler-list</code>. But
-initially, the flexibility can be constrained into the
-<code>customize-group</code> interface, to allow for a self-documenting solution
-that&#39;s easy to get started with. Happy hacking!</p>
-
-<p>PS. Thanks to all my patrons for advancing my
-<a href="https://oremacs.com/2017/10/18/patreon/">Patreon campaign</a>!
-As of this writing, we&#39;re almost at the <a href="https://www.patreon.com/abo_abo">25% mark</a>
-with 61 contributors.</p>
 
   </div>
   

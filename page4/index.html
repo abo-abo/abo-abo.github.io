@@ -304,6 +304,257 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2017/04/09/ivy-0.9.0/">
+        Ivy 0.9.0 is out
+      </a>
+    </h1>
+
+    <span class="post-date">09 Apr 2017</span>
+
+    <h2 id="intro">Intro</h2>
+
+<p><a href="https://github.com/abo-abo/swiper">Ivy</a> is a completion method that&#39;s
+similar to <code>Ido</code>, but with emphasis on simplicity and customizability.</p>
+
+<h2 id="overview">Overview</h2>
+
+<p>The current release constitutes of <code>339</code> commits and almost a full
+year of progress since <code>0.8.0</code>. Many issues ranging
+from <a href="https://github.com/abo-abo/swiper/issues/493">#493</a>
+to <a href="https://github.com/abo-abo/swiper/issues/946">#946</a> were fixed.
+The number of people who contributed code as grown
+to <a href="https://github.com/abo-abo/swiper/graphs/contributors">63</a>;
+thanks, everyone!</p>
+
+<h2 id="details-on-changes">Details on changes</h2>
+
+<p><code>Changelog.org</code> has been a part of the repository since <code>0.6.0</code>, you
+can get the details of the current and past changes:</p>
+
+<ul>
+<li>in <a href="https://github.com/abo-abo/swiper/blob/master/doc/Changelog.org#090">org-mode</a></li>
+<li>in <a href="http://oremacs.com/swiper/Changelog.html#0.9.0">HTML</a></li>
+</ul>
+
+<h2 id="highlights">Highlights</h2>
+
+<p>Many improvements are incremental and don&#39;t require any extra code to
+enable.  I&#39;ll go over a few selected features that require a bit of
+information to make a good use of them.</p>
+
+<h3 id="a-better-action-choice-interface">A better action choice interface</h3>
+
+<p>For all <code>ivy</code> completions, pressing <kbd>M-o</kbd> allows to execute
+one of the custom actions for the current command. Now you have an
+option to use <a href="https://github.com/abo-abo/hydra">hydra</a> for selecting
+an action. Use this code to turn on the feature:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;ivy-hydra</span><span class="p">)</span>
+</code></pre></div>
+<p>One big advantage of the new interface is that you can peak at the
+action list with <kbd>M-o</kbd> without dismissing the candidate
+list. Press <kbd>M-o</kbd> again to go back to candidate selection
+without selecting an action.</p>
+
+<p>Here&#39;s some code from my config that ensures that I always have some extra actions to choose from:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">ora-insert</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">insert</span>
+   <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">stringp</span> <span class="nv">x</span><span class="p">)</span>
+       <span class="nv">x</span>
+     <span class="p">(</span><span class="nf">car</span> <span class="nv">x</span><span class="p">))))</span>
+
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">ora-kill-new</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">kill-new</span>
+   <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">stringp</span> <span class="nv">x</span><span class="p">)</span>
+       <span class="nv">x</span>
+     <span class="p">(</span><span class="nf">car</span> <span class="nv">x</span><span class="p">))))</span>
+
+<span class="p">(</span><span class="nv">ivy-set-actions</span>
+ <span class="no">t</span>
+ <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;i&quot;</span> <span class="nv">ora-insert</span> <span class="s">&quot;insert&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;w&quot;</span> <span class="nv">ora-kill-new</span> <span class="s">&quot;copy&quot;</span><span class="p">)))</span>
+</code></pre></div>
+<h3 id="grepping">Grepping</h3>
+
+<p>The new <code>counsel-rg</code> joins the group of grepping commands in <code>counsel</code>
+(<code>counsel-ag</code>, <code>counsel-git-grep</code>, <code>counsel-grep</code>, <code>counsel-pt</code>). It
+wraps around the newly popular and very
+fast <a href="https://github.com/BurntSushi/ripgrep">ripgrep</a> shell tool.</p>
+
+<p>A nice improvement to the grepping commands is the ability to specify
+extra flags when you press <kbd>C-u</kbd> (<code>universal-argument</code>)
+before the
+command. See <a href="https://github.com/abo-abo/swiper/pull/774">this gif</a>
+for an example of excluding <code>*.el</code> from the files searched by <code>ag</code>.</p>
+
+<h3 id="counsel-find-file">counsel-find-file</h3>
+
+<ul>
+<li><p>Press <kbd>M-o b</kbd> to change the current directory to one of the
+virtual buffers&#39; directories. You continue to select a file from that
+directory.</p></li>
+<li><p>Press <kbd>M-o r</kbd> to find the current file as root.</p></li>
+</ul>
+
+<h3 id="counsel-git-log">counsel-git-log</h3>
+
+<p>You can now customize
+<code>counsel-git-log-cmd</code>. See
+<a href="https://github.com/abo-abo/swiper/issues/652">#652</a> for using this to
+make <code>counsel-git-log</code> work on Windows.</p>
+
+<h3 id="counsel-mode">counsel-mode</h3>
+
+<ul>
+<li><code>counsel-info-lookup-symbol</code> now substitutes the built in <code>info-lookup-symbol</code>.</li>
+<li>Pressing <kbd>C-r</kbd> while in the minibuffer of <code>eval-expression</code>
+or <code>shell-command</code> now gives you completion of your previous
+history.</li>
+</ul>
+
+<h3 id="counsel-yank-pop">counsel-yank-pop</h3>
+
+<p>Use the new <code>counsel-yank-pop-separator</code> variable to make
+<code>counsel-yank-pop</code> look
+like <a href="https://github.com/abo-abo/swiper/issues/660">this</a>.</p>
+
+<h3 id="ivy">ivy</h3>
+
+<p>There was breaking change for alist type collections some months
+ago. Right now the action functions receive an <code>item</code> from the
+collection, instead of <code>(cdr item)</code> like before. If anything breaks,
+the easy fix is to add an extra <code>cdr</code> to the action function.</p>
+
+<p>Unique index for alist completion was added. The uniqueness assumption
+is that the completion system is passed a list of unique strings, of
+which one (or more) are selected. Unlike plain string completion,
+alists may require violating the uniqueness assumption: there may be
+two elements with the same <code>car</code> but different <code>cdr</code>. Example: C
+function declaration and definition for tag completion. Until now,
+whenever two equal strings were sent to <code>ivy-read</code>, only the first one
+could be selected. Now, each alist car gets an integer index assigned
+to it as a text property <code>&#39;idx</code>. So it&#39;s possible to differentiate two
+alist items with the same key.</p>
+
+<p>Action functions don&#39;t require using <code>with-ivy-window</code> anymore.  This
+allows for a lot of simplification, e.g. use <code>insert</code> instead of
+<code>(lambda (x) (with-ivy-window (insert x)))</code>.</p>
+
+<h3 id="ivy-switch-buffer">ivy-switch-buffer</h3>
+
+<p>You can now customize faces in <code>ivy-switch-buffer</code> by the mode of each buffer.
+Here&#39;s a snippet from my config:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-switch-buffer-faces-alist</span>
+      <span class="o">&#39;</span><span class="p">((</span><span class="nv">emacs-lisp-mode</span> <span class="o">.</span> <span class="nv">swiper-match-face-1</span><span class="p">)</span>
+        <span class="p">(</span><span class="nv">dired-mode</span> <span class="o">.</span> <span class="nv">ivy-subdir</span><span class="p">)</span>
+        <span class="p">(</span><span class="nv">org-mode</span> <span class="o">.</span> <span class="nv">org-level-4</span><span class="p">)))</span>
+</code></pre></div>
+<p>Looks neat, I think:</p>
+
+<p><img src="/download/ivy-switch-buffer-faces-alist.png" alt="ivy-switch-buffer-faces-alist"></p>
+
+<h3 id="swiper">swiper</h3>
+
+<p>Customize <code>swiper-include-line-number-in-search</code> if you&#39;d like to
+match line numbers while using <code>swiper</code>.</p>
+
+<h2 id="new-commands">New Commands</h2>
+
+<h3 id="counsel-bookmark">counsel-bookmark</h3>
+
+<p>Offers completion for <code>bookmark-jump</code>. Press <kbd>M-o d</kbd> to
+delete a bookmark and <kbd>M-o e</kbd> to edit it.</p>
+
+<p>A custom option <code>counsel-bookmark-avoid-dired</code>, which is off by
+default, allows to continue completion for bookmarked
+directories. Turn it on with:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">counsel-bookmark-avoid-dired</span> <span class="no">t</span><span class="p">)</span>
+</code></pre></div>
+<p>and when you choose a bookmarked directory, the choice will be
+forwarded to <code>counsel-find-file</code> instead of opening a <code>dired-mode</code>
+buffer.</p>
+
+<h3 id="counsel-colors-emacs-and-counsel-colors-web">counsel-colors-emacs and counsel-colors-web</h3>
+
+<p>Completion for colors by name:</p>
+
+<ul>
+<li>the default action inserts the color name.</li>
+<li><kbd>M-o h</kbd> inserts the color hex name.</li>
+<li><kbd>M-o N</kbd> copies the color name to the kill ring.</li>
+<li><kbd>M-o H</kbd> copies the color hex name to the kill ring.</li>
+</ul>
+
+<p>The colors are displayed in the minibuffer, it looks really cool:</p>
+
+<p><img src="/download/counsel-colors-emacs.png" alt="counsel-colors-emacs"></p>
+
+<p>You also get 108 shades of grey to choose from, for some reason.</p>
+
+<h3 id="counsel-faces">counsel-faces</h3>
+
+<p>Completion for faces by name:</p>
+
+<p><img src="/download/counsel-faces.png" alt="counsel-faces"></p>
+
+<h3 id="counsel-command-history">counsel-command-history</h3>
+
+<p>Shows the history of the Emacs commands executed and lets you select
+and eval one
+again. See <a href="https://github.com/abo-abo/swiper/pull/826">#826</a> for a
+nice screenshot.</p>
+
+<h3 id="counsel-company">counsel-company</h3>
+
+<p>Picks up <code>company</code>&#39;s candidates and inserts the result into the buffer.</p>
+
+<h3 id="counsel-dired-jump-and-counsel-file-jump">counsel-dired-jump and counsel-file-jump</h3>
+
+<p>Jump to a directory or a file in the current directory.</p>
+
+<h3 id="counsel-dpkg-and-counsel-rpm">counsel-dpkg and counsel-rpm</h3>
+
+<p>Wrap around the popular system package managers.</p>
+
+<h3 id="counsel-package">counsel-package</h3>
+
+<p>Install or uninstall Emacs packages with completion.</p>
+
+<h3 id="counsel-mark-ring">counsel-mark-ring</h3>
+
+<p>Navigate the current buffer&#39;s mark ring.</p>
+
+<h3 id="counsel-semantic">counsel-semantic</h3>
+
+<p>Navigate the current buffer&#39;s tags.</p>
+
+<h3 id="counsel-outline">counsel-outline</h3>
+
+<p>Navigate the current buffer&#39;s outlines.</p>
+
+<h3 id="counsel-recentf">counsel-recentf</h3>
+
+<p>Completion for <code>recentf</code>.</p>
+
+<h3 id="counsel-find-library">counsel-find-library</h3>
+
+<p>Completion for <code>find-library</code>.</p>
+
+<h3 id="counsel-hydra-heads">counsel-hydra-heads</h3>
+
+<p>Completion for the last hydra&#39;s heads.</p>
+
+<h3 id="counsel-org-agenda-headlines">counsel-org-agenda-headlines</h3>
+
+<p>Completion for headlines of files in your <code>org-agenda-files</code>.</p>
+
+<h2 id="outro">Outro</h2>
+
+<p>Again, thanks to all the contributors. Happy hacking!</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2017/03/28/emacs-cpp-ide/">
         Using Emacs as a C++ IDE
       </a>
@@ -841,42 +1092,6 @@ that I have in my <code>elpa/</code>.</p>
 anyone knows how to set mode automatically based on the first few
 chars of the file (all binaries seem to start with <code>^?ELF</code>), I&#39;d like
 to know that as well. Happy hacking!</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2016/07/29/brand-new-swiper-all/">
-        Swipe all the files!
-      </a>
-    </h1>
-
-    <span class="post-date">29 Jul 2016</span>
-
-    <p>If you&#39;ve ever tried the <code>swiper-all</code> from
-<a href="https://github.com/abo-abo/swiper">swiper</a>, forget everything about
-it.  The command was super-awkward, since it had to parse all your
-open files before giving you a chance enter anything, resulting in
-dozens of seconds before the prompt.</p>
-
-<p>Recently, I&#39;ve had some time to examine and improve it and the result
-looks very promising. The new command is now async, which means
-there&#39;s no delay before the prompt comes up. Here&#39;s a result I got
-with no delay while having around 50 buffers open:</p>
-
-<p><img src="/download/swiper-all.png" alt="swiper-all.png"></p>
-
-<p>The shortcut I&#39;m using:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c u&quot;</span><span class="p">)</span> <span class="ss">&#39;swiper-all</span><span class="p">)</span>
-</code></pre></div>
-<p>For efficiency&#39;s sake a small trade off had to be made: the line
-numbers are no longer displayed. This actually results in an advantage
-that you can select different candidates on the same line.</p>
-
-<p>There are still a few things I plan to try for the new command, like
-adding file-less buffers, caching for incremental regexes and maybe
-even newlines in wild cards, but even now it seems very usable. So
-give it a try, enjoy and happy hacking!</p>
 
   </div>
   

@@ -304,6 +304,143 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/02/06/the-synergy/">
+        The Elisp Synergy
+      </a>
+    </h1>
+
+    <span class="post-date">06 Feb 2015</span>
+
+    <p>After having written <a href="https://github.com/abo-abo?tab=repositories">a few Emacs packages</a>, it happens
+sometimes when I&#39;m reading questions on <a href="http://emacs.stackexchange.com/questions">Emacs Stack Exchange</a>,
+I think to myself that either:</p>
+
+<blockquote>
+<p>I&#39;ve done this before in package X</p>
+</blockquote>
+
+<p>or:</p>
+
+<blockquote>
+<p>This feature would fit nicely in package Y</p>
+</blockquote>
+
+<p>On very rare occasions it happens that a question matches two packages at once.
+Here is such a <a href="http://emacs.stackexchange.com/questions/8006/">question</a>:</p>
+
+<blockquote>
+<h3 id="is-there-a-yasnippet-producing-a-prepopulated-doxygen-comment">Is there a yasnippet producing a prepopulated doxygen comment?</h3>
+
+<p>For the following C++ function:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>bool importantStuff(double a, double b);
+</code></pre></div>
+<p>It should output the following snippet, perhaps without the tags:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>/**
+* &lt;Insert description of importantStuff&gt;
+*
+* @param a &lt;Insert description of a&gt;
+* @param b &lt;Insert description of b&gt;
+* @return &lt;Insert description of the return value&gt;
+*/
+</code></pre></div></blockquote>
+
+<p>Well, I&#39;ve got a package called <a href="https://github.com/abo-abo/function-args">function-args</a>
+for C++ that uses CEDET to:</p>
+
+<ul>
+<li>display tool-tips with function arguments</li>
+<li>jump to a semantic tag in current file</li>
+<li>do a bit of completion</li>
+<li>do a bit of generation (like inherited function signatures)</li>
+</ul>
+
+<p>And the expansion part can be handled by <a href="https://github.com/abo-abo/auto-yasnippet">auto-yasnippet</a>, which
+I&#39;ve covered in <a href="/2015/01/30/auto-yasnippet/">an earlier post</a>.</p>
+
+<h2 id="the-code">The code</h2>
+
+<p>I think it might be useful to look at the code, since it&#39;s small and shows how to use <code>CEDET</code>&#39;s and
+<code>auto-yasnippet</code>&#39;s API:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">moo-doxygen</span> <span class="p">()</span>
+  <span class="s">&quot;Generate a doxygen yasnippet and expand it with </span><span class="ss">`aya-expand&#39;</span><span class="s">.</span>
+<span class="s">The point should be on the top-level function name.&quot;</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">move-beginning-of-line</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">tag</span> <span class="p">(</span><span class="nv">semantic-current-tag</span><span class="p">)))</span>
+    <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nv">semantic-tag-of-class-p</span> <span class="nv">tag</span> <span class="ss">&#39;function</span><span class="p">)</span>
+      <span class="p">(</span><span class="ne">error</span> <span class="s">&quot;Expected function, got %S&quot;</span> <span class="nv">tag</span><span class="p">))</span>
+    <span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">name</span> <span class="p">(</span><span class="nv">semantic-tag-name</span> <span class="nv">tag</span><span class="p">))</span>
+           <span class="p">(</span><span class="nv">attrs</span> <span class="p">(</span><span class="nv">semantic-tag-attributes</span> <span class="nv">tag</span><span class="p">))</span>
+           <span class="p">(</span><span class="nv">args</span> <span class="p">(</span><span class="nf">plist-get</span> <span class="nv">attrs</span> <span class="nb">:arguments</span><span class="p">))</span>
+           <span class="p">(</span><span class="nv">ord</span> <span class="mi">1</span><span class="p">))</span>
+      <span class="p">(</span><span class="k">setq</span> <span class="nv">aya-current</span>
+            <span class="p">(</span><span class="nf">format</span>
+             <span class="s">&quot;/**</span>
+<span class="s">* $1</span>
+<span class="s">*</span>
+<span class="s">%s</span>
+<span class="s">* @return $%d</span>
+<span class="s">*/</span>
+<span class="s">&quot;</span>
+             <span class="p">(</span><span class="nf">mapconcat</span>
+              <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+                <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;* @param %s $%d&quot;</span>
+                        <span class="p">(</span><span class="nf">car</span> <span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">incf</span> <span class="nv">ord</span><span class="p">)))</span>
+              <span class="nv">args</span>
+              <span class="s">&quot;\n&quot;</span><span class="p">)</span>
+             <span class="p">(</span><span class="nb">incf</span> <span class="nv">ord</span><span class="p">)))</span>
+      <span class="p">(</span><span class="nv">aya-expand</span><span class="p">))))</span>
+</code></pre></div>
+<h2 id="the-bonus">The bonus</h2>
+
+<p>If you&#39;re interested in <a href="http://www.doxygen.org/">Doxygen</a>, here&#39;s a
+bit of code that I found laying around. It will prettify
+e.g. <code>&lt;tt&gt;Numerical Recipies&lt;/tt&gt;</code> to <font color="#8b4513">Numerical
+Recipies</font> in the comments.
+This code uses a similar approach to the one used in my posts
+about <a href="/2015/01/11/pretty-elisp-regex/">prettifying Elisp regex</a>,
+and <a href="/2015/01/23/eltex/">ElTeX</a>.</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defface</span> <span class="nv">font-lock-doxygen-face</span>
+    <span class="o">&#39;</span><span class="p">((</span><span class="no">nil</span> <span class="p">(</span><span class="nb">:foreground</span> <span class="s">&quot;SaddleBrown&quot;</span> <span class="nb">:background</span> <span class="s">&quot;#f7f7f7&quot;</span><span class="p">)</span> <span class="p">))</span>
+    <span class="s">&quot;Special face to highlight doxygen tags such as &lt;tt&gt;...&lt;/tt&gt;</span>
+<span class="s">and &lt;code&gt;...&lt;/code&gt;.&quot;</span>
+    <span class="nb">:group</span> <span class="ss">&#39;font-lock-highlighting-faces</span><span class="p">)</span>
+
+<span class="p">(</span><span class="nv">font-lock-add-keywords</span>
+ <span class="ss">&#39;c++-mode</span>
+ <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;\\(&lt;\\(?:code\\|tt\\)&gt;\&quot;?\\)\\([^&lt;]*?\\)\\(\&quot;?&lt;/\\(?:code\\|tt\\)&gt;\\)&quot;</span>
+    <span class="p">(</span><span class="mi">0</span> <span class="p">(</span><span class="k">prog1</span> <span class="p">()</span>
+         <span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">expr</span> <span class="p">(</span><span class="nv">match-string-no-properties</span> <span class="mi">2</span><span class="p">))</span>
+                <span class="p">(</span><span class="nv">expr-len</span> <span class="p">(</span><span class="nf">length</span> <span class="nv">expr</span><span class="p">)))</span>
+           <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">eq</span> <span class="mi">1</span> <span class="nv">expr-len</span><span class="p">)</span>
+               <span class="p">(</span><span class="nv">compose-region</span> <span class="p">(</span><span class="nf">match-beginning</span> <span class="mi">0</span><span class="p">)</span>
+                               <span class="p">(</span><span class="nf">match-end</span> <span class="mi">0</span><span class="p">)</span>
+                               <span class="p">(</span><span class="nf">aref</span> <span class="nv">expr</span> <span class="mi">0</span><span class="p">))</span>
+             <span class="p">(</span><span class="nv">compose-region</span> <span class="p">(</span><span class="nf">match-beginning</span> <span class="mi">1</span><span class="p">)</span>
+                             <span class="p">(</span><span class="nf">1+</span> <span class="p">(</span><span class="nf">match-end</span> <span class="mi">1</span><span class="p">))</span>
+                             <span class="p">(</span><span class="nf">aref</span> <span class="nv">expr</span> <span class="mi">0</span><span class="p">))</span>
+             <span class="p">(</span><span class="nv">compose-region</span> <span class="p">(</span><span class="nf">1-</span> <span class="p">(</span><span class="nf">match-beginning</span> <span class="mi">3</span><span class="p">))</span>
+                             <span class="p">(</span><span class="nf">match-end</span> <span class="mi">3</span><span class="p">)</span>
+                             <span class="p">(</span><span class="nf">aref</span> <span class="nv">expr</span> <span class="p">(</span><span class="nf">1-</span> <span class="nv">expr-len</span><span class="p">)))))))</span>
+    <span class="p">(</span><span class="mi">0</span> <span class="ss">&#39;font-lock-doxygen-face</span> <span class="no">t</span><span class="p">))))</span>
+</code></pre></div>
+<h2 id="outro">Outro</h2>
+
+<p>I hope that the code listed here will be useful to someone other than
+me. It&#39;s a nice highlight of how a language can be made <em>much</em> cooler
+by just having a package manager that allows to quickly glue various
+things together.  I mean, what would happen to JavaScript without npm
+(besides stopping people requiring Angular just to use arrays)?</p>
+
+<p>C++, on the other hand, is too cool to care about such things as
+package managers and modules and stuff.  But we&#39;re stuck with it for
+performance reasons, so might as well try to make the experience more
+bearable by adding some niceties to <code>c++-mode</code>.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/02/05/amaranth-hydra/">
         Introducing amaranth Hydras
       </a>
@@ -810,94 +947,6 @@ just without citing.</p>
 
 <p>I hope that you enjoy the update and let me know when you invent some
 efficient blue or red-and-blue Hydras. Happy hacking!</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/02/01/blogging-about-blogging/">
-        Blogging about blogging
-      </a>
-    </h1>
-
-    <span class="post-date">01 Feb 2015</span>
-
-    <p>In Emacs, of course. As I mentioned before, this blog is run using
-<a href="http://jekyllrb.com/">Jekyll</a> and a fork of the
-<a href="https://github.com/poole/lanyon">lanyon</a> theme.</p>
-
-<p>It started out pretty convenient: thanks to <code>jekyll serve</code> I would see
-the live updates at <code>http://localhost:4000/</code> as I was editing the
-markdown. But after a few posts, I&#39;ve experienced a drastic decrease
-in refresh time: it went from under a second to 15 seconds. Below, I&#39;ll show how I&#39;ve managed
-to speed it back up.</p>
-
-<h2 id="no-posts-no-problem">No posts - no problem</h2>
-
-<p>Thanks to <code>(require &#39;dired-x)</code> I can jump from the current post to the
-posts directory with <kbd>C-x C-j</kbd>. It even puts the point on the current file. Now:</p>
-
-<ul>
-<li><kbd>m</kbd> to mark to current file</li>
-<li><kbd>t</kbd> to invert the mark, making the current file unmarked and all others marked</li>
-<li><kbd>D</kbd> to delete all marked files. No need to worry, since
-they are all version-controlled (except the original one, which isn&#39;t
-being deleted), <code>dired</code> even asks you for confirmation, so I hit
-<kbd>y</kbd>.</li>
-</ul>
-
-<p>Now, that there is only one post in the whole blog, <code>jekyll serve</code> is
-much faster at refreshing.</p>
-
-<h2 id="even-faster-jekyll-serve">Even faster <code>jekyll serve</code></h2>
-
-<p>Which brings me to the next point. Since I&#39;m calling it so much, might
-as well wrap it in some Elisp. Elisp is like frosting - it makes everything better:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">jekyll-serve</span> <span class="p">()</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">default-directory</span>
-          <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">string-match</span> <span class="s">&quot;_posts/$&quot;</span> <span class="nv">default-directory</span><span class="p">)</span>
-              <span class="p">(</span><span class="nv">directory-parent</span> <span class="nv">default-directory</span><span class="p">)</span>
-            <span class="nv">default-directory</span><span class="p">))</span>
-         <span class="p">(</span><span class="nv">buffer</span> <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">get-buffer</span> <span class="s">&quot;*jekyll*&quot;</span><span class="p">)</span>
-                     <span class="p">(</span><span class="nv">switch-to-buffer</span> <span class="s">&quot;*jekyll*&quot;</span><span class="p">)</span>
-                   <span class="p">(</span><span class="nv">ansi-term</span> <span class="s">&quot;/bin/bash&quot;</span> <span class="s">&quot;jekyll&quot;</span><span class="p">)))</span>
-         <span class="p">(</span><span class="nv">proc</span> <span class="p">(</span><span class="nf">get-buffer-process</span> <span class="nv">buffer</span><span class="p">)))</span>
-    <span class="p">(</span><span class="nv">term-send-string</span> <span class="nv">proc</span> <span class="s">&quot;jekyll serve\n&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">sit-for</span> <span class="mi">3</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">browse-url</span> <span class="s">&quot;localhost:4000&quot;</span><span class="p">)))</span>
-</code></pre></div>
-<p>This function, when called from the current post or the current blog, will:</p>
-
-<ul>
-<li>open a new <code>ansi-term</code> called <code>*jekyll*</code></li>
-<li>issue a <code>jekyll serve</code> command to it</li>
-<li>wait for 3 seconds for Jekyll to start</li>
-<li>open <code>localhost:4000</code> in Firefox</li>
-</ul>
-
-<h2 id="one-post-isnt-a-blog">One post isn&#39;t a blog</h2>
-
-<p>Here&#39;s how to quickly bring back the deleted posts.</p>
-
-<ul>
-<li>Fire up <a href="https://github.com/magit/magit">magit</a>; I have <code>magit-status</code> bound to <kbd>μm</kbd>.</li>
-<li>Stage the current post with <kbd>s</kbd> (<code>magit-stage-item</code>).</li>
-<li>Start the commit with <kbd>C</kbd> (<code>magit-commit-add-log</code>). I&#39;m using my own modification of <code>magit-commit-add-log</code>
-that arranges the whitespace in a nice way, when aimed at a file instead of a hunk.</li>
-<li>I get <code>_posts/2015-02-01-blogging-about-blogging.md:</code> string auto-generated by <kbd>C</kbd>.</li>
-<li>I just amend it to look like <code>_posts/2015-02-01-blogging-about-blogging.md: add</code> and finalize the commit with
-<kbd>C-c C-c</kbd> (<code>git-commit-commit</code>).</li>
-<li>Now I have around 40 files marked as deleted, but not staged. I create a stash with <kbd>zz</kbd> and name it <code>foo</code>
-or something. Then delete the stash with <code>magit-discard-item</code>, which I like to bind to <kbd>d</kbd> to be similar
-to <code>dired</code>. Now it&#39;s as if these files were never deleted.</li>
-</ul>
-
-<p>Whoa, now that I look at it, it&#39;s a lot of steps. But somehow <code>dired</code>
-and <code>magit</code> are very similar to
-<a href="http://en.wikipedia.org/wiki/Super_Mario_Bros.">Super Mario Bros</a>: it
-takes long to explain what you&#39;re doing, but as you play it, it&#39;s very
-simple and natural.</p>
 
   </div>
   
