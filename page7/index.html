@@ -304,6 +304,94 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2016/01/18/emacs-rhythmbox/">
+        Using Emacs as system-wide Rhythmbox interface
+      </a>
+    </h1>
+
+    <span class="post-date">18 Jan 2016</span>
+
+    <p>In an
+<a href="http://oremacs.com/2015/07/09/counsel-rhythmbox/">earlier post</a>, I
+described how I&#39;ve been managing Rhythmbox from Emacs. I&#39;ve bound the
+entry point to <kbd>C-S-o</kbd>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-S-o&quot;</span><span class="p">)</span> <span class="ss">&#39;counsel-rhythmbox</span><span class="p">)</span>
+</code></pre></div>
+<p>Obviously, this entry point won&#39;t work while outside Emacs. Today,
+I&#39;ll describe how I&#39;ve made it work everywhere. Everywhere on Ubuntu
+14.04, that is, although a similar approach should work for other
+distributions.</p>
+
+<h2 id="step-1-make-sure-the-emacs-server-is-running">Step 1: Make sure the Emacs server is running</h2>
+
+<p>Here&#39;s the relevant part of my <a href="https://github.com/abo-abo/oremacs/blob/github/init.el">init.el</a>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;server</span><span class="p">)</span>
+<span class="p">(</span><span class="k">or</span> <span class="p">(</span><span class="nv">server-running-p</span><span class="p">)</span> <span class="p">(</span><span class="nv">server-start</span><span class="p">))</span>
+</code></pre></div>
+<p>Using <code>emacsclient</code> is essential to avoiding the extra startup time:
+even a startup time of one second feels sluggish when all I need is to
+open a menu with a song playlist.</p>
+
+<h2 id="step-2-install-the-relevant-x-window-tool">Step 2: Install the relevant X window tool</h2>
+
+<p>Initially, I only wrote a call to <code>emacsclient</code>, which resulted in the
+Emacs window gaining focus in the end.  Then I thought it would be
+nice to give the focus back the original window after the end of
+selection, and raise it as well.</p>
+
+<p>I wanted to do something with <code>wmctrl</code>, but I found that
+<a href="http://superuser.com/questions/382616/detecting-currently-active-window">xdotool</a>
+can do what I want in a simple way.</p>
+<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>sudo apt-get install xdotool
+</code></pre></div>
+<h2 id="step-3-write-a-shell-script">Step 3: Write a shell script</h2>
+<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span><span class="ch">#!/bin/bash</span>
+<span class="nv">wnd_id</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>xdotool getwindowfocus<span class="k">)</span><span class="s2">&quot;</span>
+emacsclient --eval <span class="s2">&quot;(progn (x-focus-frame nil) (counsel-rhythmbox))&quot;</span>
+xdotool windowfocus <span class="nv">$wnd_id</span>
+xdotool windowraise <span class="nv">$wnd_id</span>
+</code></pre></div>
+<p>Here, <code>(x-focus-frame nil)</code> will raise the Emacs window and give the
+keyboard input focus.  <code>emacsclient</code> will return as soon as I select
+something or press <kbd>C-g</kbd>. At that point the keyboard focus
+will be returned to whatever window had it when the script was
+invoked.</p>
+
+<p>By the way, here&#39;s a cool configuration that automatically makes a
+file executable if it starts with <code>#!</code>.</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">add-hook</span>
+ <span class="ss">&#39;after-save-hook</span>
+ <span class="ss">&#39;executable-make-buffer-file-executable-if-script-p</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="step-4-bind-the-shell-script-to-a-key">Step 4: Bind the shell script to a key</h2>
+
+<p>Open this (possibly using <code>gnome-control-center</code> instead, if applicable):</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>unity-control-center keyboard
+</code></pre></div>
+<p>And add a new shortcut in <code>Shortcuts</code>/<code>Custom Shortcuts</code>. I&#39;ve bound
+that one to <kbd>C-S-o</kbd> as well.</p>
+
+<h2 id="the-final-result">The final result</h2>
+
+<p>It&#39;s pretty convenient: as I&#39;m scrolling something I&#39;m reading in
+Firefox with <kbd>j</kbd> (via
+<a href="https://addons.mozilla.org/en-US/firefox/addon/firemacs/">Firemacs</a>),
+I can seamlessly press <kbd>C-S-o moo RET</kbd> to play &quot;Sisters of
+the Moon&quot;, and continue scrolling the web page with <kbd>j</kbd>.</p>
+
+<p>What&#39;s more, Emacs has very nice support for input methods with
+<kbd>C-\</kbd> (<code>toggle-input-method</code>), so I can also quickly select
+Ukrainian-titled songs, while still keeping shortcuts like
+<kbd>C-n</kbd> and <kbd>C-m</kbd> (<em>without</em> having to switch the
+input method back).</p>
+
+<p>The whole experience is similar to <code>gnome-do</code>/<code>synapse</code>, which I was
+using a few years back, except better because now it&#39;s in Emacs.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2016/01/06/ivy-flx/">
         Better fuzzy matching support in Ivy
       </a>
@@ -734,146 +822,6 @@ overlooked.  Just as <code>ivy-resume</code> implements a sort of <kbd>DEL</kbd>
 or <kbd>C-u</kbd> key for completion, <code>ivy-occur</code> implements a
 convenient way to switch and store the completion context, a sort of
 <kbd>C-x o</kbd> or <kbd>C-x b</kbd> for completion.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/10/23/dired-compress/">
-        New in Emacs 25 - convenient compression/decompression in Dired
-      </a>
-    </h1>
-
-    <span class="post-date">23 Oct 2015</span>
-
-    <p>Today I&#39;ll describe my past and current workflows for compressing
-files and directories in Dired.  In my opinion, Dired is one of the
-best features of Emacs - a great abstraction of <code>cd</code>+<code>ls</code> that lets
-you get things done much faster. The default binding for <code>dired</code> is
-<kbd>C-x d</kbd> (I bind it to <kbd>C-;-d</kbd> though, see my
-<a href="http://oremacs.com/2015/02/14/semi-xmodmap/">xmodmap post</a>).</p>
-
-<h2 id="my-previous-workflow">My previous workflow</h2>
-
-<p>To compress several files in Dired, first I compile a list of files to
-work on by marking them with <kbd>m</kbd> (<code>dired-mark</code>), navigating
-to ones that you want with <kbd>n</kbd> (<code>dired-next-line</code>) and
-<kbd>p</kbd> (<code>dired-previous-line</code>).</p>
-
-<p>Once a list is ready, I press <kbd>&amp;</kbd> (<code>dired-do-async-shell-command</code>), which allows me to run an arbitrary shell command.
-I enter:</p>
-<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>tar -czf ~/tmp/path/foo.tar.gz *
-</code></pre></div>
-<p>into the minibuffer, press <kbd>RET</kbd> and I&#39;m done. It&#39;s a
-standard shell command with 2 advantages:</p>
-
-<ol>
-<li>I get <kbd>TAB</kbd> completion for the directory of the created archive.</li>
-<li><code>*</code> means the selected file list, so I don&#39;t enter them by hand.</li>
-</ol>
-
-<h2 id="my-current-workflow">My current workflow</h2>
-
-<p>Since I often forget the command for <code>tar</code>, and I really don&#39;t want to
-remember the commands for <code>zip</code> etc, I&#39;ve implemented a more convenient approach:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">dired-mode-map</span> <span class="s">&quot;c&quot;</span> <span class="ss">&#39;dired-do-compress-to</span><span class="p">)</span>
-</code></pre></div>
-<p>This new command <code>dired-do-compress-to</code>, bound to <kbd>c</kbd>, will
-prompt me for a file name of the output archive. So now it&#39;s easier to
-type in that file name, if you use <code>ido-mode</code> / <code>ivy-mode</code> /
-<code>helm-mode</code>. What&#39;s more, the command will be automatically determined
-from the archive extension and executed. Here&#39;s the corresponding
-customization variable:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">defvar</span> <span class="nv">dired-compress-files-alist</span>
-  <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;\\.tar\\.gz\\&#39;&quot;</span> <span class="o">.</span> <span class="s">&quot;tar -c %i | gzip -c9 &gt; %o&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="s">&quot;\\.zip\\&#39;&quot;</span> <span class="o">.</span> <span class="s">&quot;zip %o -r --filesync %i&quot;</span><span class="p">))</span>
-  <span class="s">&quot;Control the compression shell command for </span><span class="ss">`dired-do-compress-to&#39;</span><span class="s">.</span>
-
-<span class="s">Each element is (REGEXP . CMD), where REGEXP is the name of the</span>
-<span class="s">archive to which you want to compress, and CMD the the</span>
-<span class="s">corresponding command.</span>
-
-<span class="s">Within CMD, %i denotes the input file(s), and %o denotes the</span>
-<span class="s">output file. %i path(s) are relative, while %o is absolute.&quot;</span><span class="p">)</span>
-</code></pre></div>
-<p>This thing is pretty self-explanatory. It currently only supports
-<code>*.tar.gz</code> and <code>*.zip</code>, use <kbd>M-x</kbd> <code>report-emacs-bug</code> if you
-want to add more options.</p>
-
-<h2 id="other-improvements-in-compression-decompression">Other improvements in compression/decompression</h2>
-
-<p>I improved the good-old <kbd>Z</kbd> (<code>dired-do-compress</code>) as
-well. Now it can compress directories to <code>*.tar.gz</code>, as well as
-decompress <code>*.tar.gz</code> and <code>*.zip</code> to directories.  It&#39;s all automatic,
-you only have to press <kbd>Z</kbd>, either on an archive to
-decompress, or on a directory to compress.</p>
-
-<h2 id="easy-way-to-have-a-bleeding-edge-emacs">Easy way to have a bleeding edge Emacs</h2>
-
-<p>If you want to get these improvements right now and are on a Debian
-type system (I use Ubuntu), you can use:</p>
-<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>sudo apt-add-repository ppa:ubuntu-elisp/ppa
-sudo apt-get update
-sudo apt-get install emacs-snapshot
-</code></pre></div>
-<p>Then just use <code>emacs-snapshot</code> executable. It updates every few days.</p>
-
-<p>Myself, I track the Emacs master from
-<a href="http://savannah.gnu.org/projects/emacs">git</a>. But <code>emacs-snapshot</code> is
-very useful for CI tests, and can also be used by people who don&#39;t
-want to build the executable from git.</p>
-
-<h2 id="how-to-get-your-improvements-into-emacs">How to get your improvements into Emacs</h2>
-
-<p>If you&#39;d like to contribute code to the Emacs core yourself, it takes
-two steps:</p>
-
-<ol>
-<li><p>Sign the Copyright Assignment
-(<a href="http://orgmode.org/w/org-mode.git?p=org-mode.git;a=blob_plain;f=request-assign-future.txt;hb=HEAD">CA</a>).
-This gives the Copyright for your changes to Emacs to the Free
-Software Foundation. This is useful so that the FSF can defend your
-rights in court, in case the GPL regarding your contribution is broken
-by someone.</p></li>
-<li><p><kbd>M-x</kbd> <code>report-emacs-bug</code> and attach a patch.</p></li>
-</ol>
-
-<p>It seems that some people could have a moral objection to the CA. I
-see no reason for it whatsoever.  Since Elisp libraries make calls to
-GPL code and are GPL themselves, you have to publish Elisp code under
-GPL, there&#39;s no choice there.  GPL means basically that, while you&#39;re
-still acknowledged as the author, everyone else has about as much
-right to your code as you do. No one can hide or restrict access to
-it, but neither can you. The CA is a further step, which makes the FSF
-own the Copyright to your <em>changes</em> to Emacs. You submit these changes
-yourself, and the Copyright over these changes isn&#39;t really that
-useful: they&#39;re only changes - they do nothing on their own, outside
-of Emacs. Besides, with the FSF owning the Copyright, the range of
-things that you can do to your code stays exactly the same as if you
-owned the Copyright, as long as you publish under GPL.</p>
-
-<p>To illustrate, the FSF CA is very polite and benign, compared to the
-CA that I have to give to Elsevier when I publish an article.  That CA
-means that a multi-billion dollar corporation owns the right to my
-paper until the end of time, and can charge people to view it
-(including myself and my peers) as much as they see fit (currently,
-$30). Of course, I don&#39;t receive a dime of that money, but hey - I get
-published, and at least I can share my article <em>for free</em> for the
-first 50 days of the publish date. And if that one doesn&#39;t seem
-draconian enough for you, just think of the NDAs in commercial
-companies: out there, you can&#39;t even publish or mention anything
-related to your work. So please, if you&#39;re hating on the FSF, do
-reconsider, they&#39;re the good guys in my book.</p>
-
-<p>Eventually, after a few submitted patches, you&#39;ll be granted commit
-access. This is a great way to implement small improvements faster.
-However, the larger issues that aren&#39;t simple improvements still need
-to be discussed with other developers, either on debbugs or on
-emacs-devel. For example, initially I went with the <code>tar -czf</code>
-command. But it turns out that it can&#39;t be used on Solaris 10 or AIX
-7.1. Whatever those things are, people still use Emacs on them, and
-it&#39;s important that the core features are usable on all supported
-systems.</p>
 
   </div>
   

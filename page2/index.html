@@ -304,6 +304,91 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2019/03/24/shell-apt/">
+        Progress bars for apt in shell
+      </a>
+    </h1>
+
+    <span class="post-date">24 Mar 2019</span>
+
+    <h2 id="intro">Intro</h2>
+
+<p>For a couple years now, I use <kbd>M-x</kbd> <code>shell</code> as my main shell. Recently, I have fixed one of
+the minor annoyances that go along with using <code>shell</code> in Emacs. At least since Ubuntu 18.04, the
+terminal &quot;progress bar&quot; feature, displayed below is non-optional:</p>
+
+<p><img src="/download/apt-install-progress-1.png" alt="apt-install-progress-1"></p>
+
+<p>It uses terminal escape codes to display the progress bar, and <code>shell-mode</code> can&#39;t handle them well,
+so they clobber a lot of the output.</p>
+
+<h2 id="initial-work-around">Initial work around</h2>
+
+<p>Previously, I was using this work around, since <code>apt-get</code> doesn&#39;t display the progress bar:</p>
+<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span><span class="c1"># sudo apt upgrade</span>
+sudo apt-get upgrade
+</code></pre></div>
+<h2 id="progress-bar-in-the-mode-line">Progress bar in the mode line</h2>
+
+<p>But typing 4 extra chars is hard. And <code>apt-get</code> will likely get these progress bars at some point as
+well. So I spent around an hour of my weekend hacking an Elisp solution. Here is the code:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">advice-add</span>
+ <span class="ss">&#39;ansi-color-apply-on-region</span>
+ <span class="nb">:before</span> <span class="ss">&#39;ora-ansi-color-apply-on-region</span><span class="p">)</span>
+
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">ora-ansi-color-apply-on-region</span> <span class="p">(</span><span class="nv">begin</span> <span class="nv">end</span><span class="p">)</span>
+  <span class="s">&quot;Fix progress bars for e.g. apt(8).</span>
+<span class="s">Display progress in the mode line instead.&quot;</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">end-marker</span> <span class="p">(</span><span class="nf">copy-marker</span> <span class="nv">end</span><span class="p">))</span>
+        <span class="nv">mb</span><span class="p">)</span>
+    <span class="p">(</span><span class="k">save-excursion</span>
+      <span class="p">(</span><span class="nf">goto-char</span> <span class="p">(</span><span class="nf">copy-marker</span> <span class="nv">begin</span><span class="p">))</span>
+      <span class="p">(</span><span class="k">while</span> <span class="p">(</span><span class="nf">re-search-forward</span> <span class="s">&quot;\0337&quot;</span> <span class="nv">end-marker</span> <span class="no">t</span><span class="p">)</span>
+        <span class="p">(</span><span class="k">setq</span> <span class="nv">mb</span> <span class="p">(</span><span class="nf">match-beginning</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">re-search-forward</span> <span class="s">&quot;\0338&quot;</span> <span class="nv">end-marker</span> <span class="no">t</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">ora-apt-progress-message</span>
+           <span class="p">(</span><span class="nf">substring-no-properties</span>
+            <span class="p">(</span><span class="nf">delete-and-extract-region</span> <span class="nv">mb</span> <span class="p">(</span><span class="nf">point</span><span class="p">))</span>
+            <span class="mi">2</span> <span class="mi">-2</span><span class="p">)))))))</span>
+
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">ora-apt-progress-message</span> <span class="p">(</span><span class="nv">progress</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">setq</span> <span class="nv">mode-line-process</span>
+        <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">string-match</span>
+             <span class="s">&quot;Progress: \\[ *\\([0-9]+\\)%\\]&quot;</span> <span class="nv">progress</span><span class="p">)</span>
+            <span class="p">(</span><span class="nf">list</span>
+             <span class="p">(</span><span class="nf">concat</span> <span class="s">&quot;:%s &quot;</span>
+                     <span class="p">(</span><span class="nv">match-string</span> <span class="mi">1</span> <span class="nv">progress</span><span class="p">)</span>
+                     <span class="s">&quot;%%%% &quot;</span><span class="p">))</span>
+          <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;:%s&quot;</span><span class="p">)))</span>
+  <span class="p">(</span><span class="nf">force-mode-line-update</span><span class="p">))</span>
+</code></pre></div>
+<p>The solution will detect e.g. <code>&quot;\0337...Progress: [ 25%]...\0338&quot;</code>, remove it from the shell buffer
+and display <code>&quot;25%&quot;</code> in the mode line instead.</p>
+
+<h2 id="use-the-echo-area-instead-of-the-mode-line">Use the Echo Area instead of the mode line</h2>
+
+<p>The above is a good enough solution specifically for <code>apt(8)</code>, but not for the generic case. Let&#39;s
+try to emulate how e.g. <code>gnome-terminal</code> handles these escape sequences.  It takes sequences like
+<code>&quot;\0337.*\0338&quot;</code> and displays them in the bottom of the window. Kind of like the Emacs Echo
+Area. That&#39;s easy enough to do:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">ora-apt-progress-message</span> <span class="p">(</span><span class="nv">progress</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">message</span>
+   <span class="p">(</span><span class="nv">replace-regexp-in-string</span>
+    <span class="s">&quot;%&quot;</span> <span class="s">&quot;%%&quot;</span>
+    <span class="p">(</span><span class="nv">ansi-color-apply</span> <span class="nv">progress</span><span class="p">))))</span>
+</code></pre></div>
+<p>Above, we use <code>ansi-color-apply</code> to get rid of any extra terminal escape codes.  I decided to stay
+with the Echo Area version instead of the mode line version. Here&#39;s how it looks like:</p>
+
+<p><img src="/download/apt-install-progress-2.png" alt="apt-install-progress-2"></p>
+
+<p>You can find all of the above code in <a href="https://github.com/abo-abo/oremacs/blob/afa4d0e3b1a60467ec163220e9823d1f014ab6a4/modes/ora-shell.el">my config</a>.
+Happy hacking!</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2018/03/05/grep-exclude/">
         Using exclusion patterns when grepping
       </a>
@@ -844,117 +929,6 @@ interesting to review:</p>
 <p>Again, thanks to all the contributors. Happy hacking!</p>
 
 <p>P.S. Please consider joining my <a href="https://www.patreon.com/abo_abo">74 patrons</a> to give me the opportunity to work on Free Software a lot more. We are currently at 30% of the goal.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2017/11/18/dired-occur/">
-        Save Ivy file completions to Dired
-      </a>
-    </h1>
-
-    <span class="post-date">18 Nov 2017</span>
-
-    <h2 id="intro">Intro</h2>
-
-<p>I think <code>ivy-occur</code> (<kbd>C-c C-o</kbd>) is one of the coolest
-features in <a href="https://github.com/abo-abo/swiper">ivy</a>.  It allows you
-to save your current search into a new buffer. This has many uses:</p>
-
-<ul>
-<li>get a full overview of all candidates</li>
-<li>many useful modal bindings (<kbd>q</kbd>, <kbd>j</kbd>,
-<kbd>k</kbd>, <kbd>f</kbd>) and mouse support</li>
-<li>ability to manipulate candidates as text</li>
-<li>save the search for later, with the option to refresh the search with <kbd>g</kbd></li>
-<li>go over candidates as a TODO list, using <kbd>C-d</kbd> to remove elements</li>
-</ul>
-
-<p>Everything above works for any <code>ivy-read</code> session. But the most
-powerful features come into play when <code>ivy-occur</code> gets customized for
-a specific collection.</p>
-
-<h2 id="ivy-occur-for-grep-like-functions"><code>ivy-occur</code> for grep-like functions</h2>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">ivy-set-occur</span> <span class="ss">&#39;swiper</span> <span class="ss">&#39;swiper-occur</span><span class="p">)</span>
-</code></pre></div>
-<p>Thanks to this default customization, the resulting <code>*ivy-occur
-swiper*</code> buffer is in <code>ivy-occur-grep-mode</code> which inherits from
-<code>grep-mode</code>. Additionally, you can use
-<code>ivy-wgrep-change-to-wgrep-mode</code> <kbd>C-x C-q</kbd> to edit the result
-in-place - pressing <kbd>C-x C-s</kbd> will save the changes.</p>
-
-<p>Similar customizations are available for <code>counsel-git-grep</code>,
-<code>counsel-ag</code>, <code>counsel-rg</code>, and <code>counsel-grep</code>.</p>
-
-<h2 id="ivy-occur-for-ivy-switch-buffer"><code>ivy-occur</code> for <code>ivy-switch-buffer</code></h2>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">ivy-set-occur</span> <span class="ss">&#39;ivy-switch-buffer</span> <span class="ss">&#39;ivy-switch-buffer-occur</span><span class="p">)</span>
-</code></pre></div>
-<p>This makes <kbd>C-c C-o</kbd> open your candidates in the powerful
-<code>ibuffer</code>, which adds additional info to your buffer list and allows
-you to manipulate buffers easily.</p>
-
-<p>For instance, to delete all matching buffers you can do <kbd>C-c C-o
-tD</kbd>.</p>
-
-<p>The source code is short enough to be included here:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">ivy-switch-buffer-occur</span> <span class="p">()</span>
-  <span class="s">&quot;Occur function for </span><span class="ss">`ivy-switch-buffer&#39;</span><span class="s"> using </span><span class="ss">`ibuffer&#39;</span><span class="s">.&quot;</span>
-  <span class="p">(</span><span class="nv">ibuffer</span> <span class="no">nil</span> <span class="p">(</span><span class="nf">buffer-name</span><span class="p">)</span> <span class="p">(</span><span class="nf">list</span> <span class="p">(</span><span class="nf">cons</span> <span class="ss">&#39;name</span> <span class="nv">ivy--old-re</span><span class="p">))))</span>
-</code></pre></div>
-<p>The interface is quite simple: <code>ivy-occur</code> is responsible for
-generating a new buffer, and the occur function
-e.g. <code>ivy-switch-buffer-occur</code> is to fill that buffer with useful
-info, based on the current search parameters like <code>ivy-text</code> and
-<code>ivy--old-re</code>.</p>
-
-<h2 id="ivy-occur-for-counsel-find-file-like-functions"><code>ivy-occur</code> for <code>counsel-find-file</code>-like functions</h2>
-
-<p>This is a brand new feature that works for <code>counsel-find-file</code>,
-<code>counsel-git</code>, and <code>counsel-fzf</code> (which itself is quite new, thanks to
-<a href="https://github.com/jojojames">@jojojames</a> for contributing it).</p>
-
-<p>Since these functions are used to complete file names, we obviously
-want <code>ivy-occur</code> to open a Dired buffer.</p>
-
-<h3 id="example-1">Example 1</h3>
-
-<p>To delete all <code>*.elc</code> files in the current folder do:</p>
-
-<ul>
-<li><kbd>C-x C-f</kbd> <code>elc$</code> <kbd>C-c C-o</kbd> <kbd>tDy</kbd>.</li>
-</ul>
-
-<h3 id="example-2">Example 2</h3>
-
-<p>To copy all Org files in a Git project to some directory do:</p>
-
-<ul>
-<li><kbd>M-x</kbd> <code>counsel-git</code> <code>org$</code> <kbd>C-c C-o</kbd> <kbd>tC</kbd>.</li>
-</ul>
-
-<h3 id="example-3">Example 3</h3>
-
-<p>To get a list of videos to watch do:</p>
-
-<ul>
-<li><kbd>M-x</kbd> <code>counsel-fzf</code> <code>mp4$</code> <kbd>C-c C-o</kbd>.</li>
-</ul>
-
-<p>I can further e.g. mark 3 files with <kbd>m</kbd> and use <kbd>r</kbd>
-to send these 3 files to <code>vlc</code> as a list. See <a href="https://oremacs.com/2015/01/04/dired-nohup/">this
-post</a> for my dired setup
-that makes <kbd>r</kbd> work this way.</p>
-
-<p>You can remove some files afterwards with the usual <kbd>D</kbd> or
-<kbd>dx</kbd>. And to redisplay the buffer use <kbd>g</kbd>.</p>
-
-<h2 id="outro">Outro</h2>
-
-<p>I hope you like the new feature. I had a really good few hours
-figuring out how it should work exactly.  Please consider joining my
-<a href="https://www.patreon.com/abo_abo">72 patrons</a> to give me the
-opportunity to work on Free Software a lot more. Happy hacking!</p>
 
   </div>
   

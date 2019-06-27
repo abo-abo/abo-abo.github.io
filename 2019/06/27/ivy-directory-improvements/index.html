@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="flattr:id" content="9yl9ry">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Ivy usability improvements when dealing with directories &middot; (or emacs
+    
+  </title>
+
+  <link rel="canonical" href="https://oremacs.com/2019/06/27/ivy-directory-improvements/" />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="/public/css/octicons.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Scripts -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body class="layout-reverse theme-base-08">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <!-- <div class="sidebar-item"> -->
+  <!--   <p>unused</p> -->
+  <!-- </div> -->
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about/">About</a>
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/archive/">Archive</a>
+        
+      
+    
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/donate/">Donate</a>
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+
+    <div id="github" class="sidebar-nav-item">
+      <button type="button"
+              class="btn btn-info"
+              data-toggle="collapse"
+              data-target="#github-projects">
+        <span class="octicon octicon-mark-github"></span> My Emacs Projects
+      </button>
+      <div id="github-projects" class="collapse">
+        <ul style="margin-bottom:0em;">
+          <li>
+            <a href="https://github.com/abo-abo/lispy">lispy</a>
+            <p>vi-like Paredit</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/worf">worf</a>
+            <p>vi-like bindings for org-mode</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-window">ace-window</a>
+            <p>switch windows with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-link">ace-link</a>
+            <p>follow links with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/function-args">function-args</a>
+            <p>enhance <code>CEDET</code> for C++</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/helm-make">helm-make</a>
+            <p>select a Makefile target with <code>helm</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/make-it-so">make-it-so</a>
+            <p>transform files with Makefile recipes</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/org-download">org-download</a>
+            <p>drag-and-drop images to <code>org-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo?tab=repositories">
+              <span class="octicon octicon-octoface"></span>
+              and more
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
+
+  <div class="sidebar-item">
+    <p>
+      <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">
+        <img alt="Creative Commons License"
+             style="border-width:0;opacity: 0.3;"
+             src="https://licensebuttons.net/l/by-sa/4.0/88x31.png"/>
+      </a>
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">(or emacs</a>
+            <small>irrelevant)</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <script>
+if (window.location.host.indexOf('oremacs.com') > -1 &&
+    window.location.protocol != "https:") {
+    window.location.protocol = "https";
+}
+</script>
+
+<div class="post">
+  <h1 class="post-title">Ivy usability improvements when dealing with directories</h1>
+  <span class="post-date">27 Jun 2019</span>
+  <h2 id="introduction">Introduction</h2>
+
+<p>When <a href="https://github.com/abo-abo/swiper">Ivy</a> just started out as a completion framework, the
+functionality was supposed to be simple: select one string from a list of strings. The UI is simple
+enough:</p>
+
+<ul>
+<li>Show the list of strings that match the entered text,</li>
+<li>Use <kbd>C-n</kbd> and <kbd>C-p</kbd> to navigate them,</li>
+<li>Use <kbd>C-m</kbd> or <kbd>C-j</kbd> to submit.</li>
+</ul>
+
+<p>Emacs has three key bindings that mean &quot;Enter&quot;: <kbd>RET</kbd>, <kbd>C-m</kbd>, and
+<kbd>C-j</kbd>. But in terminal mode, <code>emacs -nw</code>, <kbd>RET</kbd> and <kbd>C-m</kbd> are the same
+binding: Emacs can&#39;t distinguish them. So we have at most two bindings. Fortunately, the world of
+completion is simple at the moment, and we only need one binding.</p>
+
+<h2 id="file-name-completion">File name completion</h2>
+
+<p>Enter file name completion. When you&#39;re completing file names, you are selecting not one string, but
+many strings in succession while moving from one directory to the next. So we need at least two key
+bindings:</p>
+
+<ul>
+<li>Use <kbd>C-m</kbd> (<code>ivy-done</code>) to select the current candidate and exit completion.</li>
+<li>Use <kbd>C-j</kbd> (<code>ivy-alt-done</code>) to change the current directory to the current candidate without exiting completion.</li>
+</ul>
+
+<p>What to do when <kbd>C-j</kbd> is used on a file and not on a directory? Might as well open the
+file: same action as <kbd>C-m</kbd>. OK, we had two key bindings, and we have used them. Hopefully
+nothing else comes up.</p>
+
+<p>Enter creating a new file, i.e. selecting something that&#39;s not on the list of strings.
+Suppose I call <code>find-file</code>, enter &quot;do&quot;, and the only match is a directory named &quot;doc&quot;:</p>
+
+<ul>
+<li>Pressing <kbd>C-m</kbd> will end completion with the &quot;doc&quot; directory selected.</li>
+<li>Pressing <kbd>C-j</kbd> will continue completion inside the &quot;doc&quot; directory.</li>
+</ul>
+
+<p>So creating a file named &quot;do&quot; is the third action. Our two &quot;Enter&quot; keybindings are already taken by
+the first two different useful actions. So we need a third key binding. The one I chose is
+<kbd>C-M-j</kbd> (<code>ivy-immediate-done</code>).  It means: I don&#39;t care that the current input is not on
+the list of candidate strings, submit it anyway.</p>
+
+<h2 id="directory-creation">Directory creation</h2>
+
+<p>Enter directory creation: <code>dired-create-directory</code> and <code>make-directory</code>. These built-in Emacs
+commands request file name completion, but what they tell Ivy is no different from what <code>find-file</code>
+tells: &quot;I want to select a file&quot;. However, for these commands, the <kbd>C-M-j</kbd> action is the
+one that makes most sense. Here it would be nice for Ivy to take the back seat and just act like an
+interactive <code>ls</code>, since the user will enter a completely new string that&#39;s not on the list of
+candidates.</p>
+
+<p>For a long time, you still had to use <kbd>C-M-j</kbd> with those commands, to much frustration of
+new but also existing users, including myself. But a few days ago, I looked at the prompt that
+<code>dired-create-directory</code> uses: &quot;Create directory: &quot;. That prompt is passed to Ivy. Using the prompt
+to detect the intention of the command is a bit of a hack, but I think in this case it&#39;s
+justifiable. So now Ivy will recognize that the intention commands that request file name completion
+and pass the &quot;Create directory: &quot; prompt is to create a directory, and all key bindings will do just
+that: <kbd>C-m</kbd>, <kbd>C-j</kbd>, and <kbd>C-M-j</kbd> will behave the same in this case.</p>
+
+<h2 id="an-alternative-key-binding-scheme">An alternative key binding scheme</h2>
+
+<p>Note that <kbd>C-m</kbd> and <kbd>C-j</kbd> behave differently only for directories. But thanks to
+the fact that &quot;.&quot; is always the first candidate, <kbd>C-m</kbd> for directories is equivalent to
+<kbd>C-j C-j</kbd>. So we can get away with just using <code>ivy-alt-done</code>, and bind <kbd>C-m</kbd> to
+<code>ivy-immediate-done</code>. Or swap the two meanings:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">ivy-minibuffer-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-j&quot;</span><span class="p">)</span> <span class="ss">&#39;ivy-immediate-done</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">define-key</span> <span class="nv">ivy-minibuffer-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-m&quot;</span><span class="p">)</span> <span class="ss">&#39;ivy-alt-done</span><span class="p">)</span>
+</code></pre></div>
+<p>The price to pay here is the extra context switch when we simply want to select a directory.  We
+could the bind <code>ivy-done</code> to <kbd>C-M-j</kbd> and avoid the context switch, but then we&#39;re back to
+three bindings once more. Still, I thought that swapping the bindings is an interesting idea worth
+sharing.</p>
+
+<h2 id="canceling-dired-dwim-target">Canceling <code>dired-dwim-target</code></h2>
+
+<p>Setting <code>dired-dwim-target</code> is a nice productivity boost. It allows to use Emacs in a similar way to
+a two-pane file explorer, like <a href="https://linux.die.net/man/1/mc">mc(1)</a>. But it was really annoying when I was in <code>dir-1</code> with the
+intention to copy a file to a different name in <code>dir-1</code> (e.g. create a backup, or copy a template),
+but the current directory was set to <code>dir-2</code> because of a random <code>dired</code> window I had open. In that
+case, I had to call <code>delete-other-windows</code>, perform the copy, and then restore the window
+configuration with <code>winner-undo</code>.</p>
+
+<p>I did the above many times over many years, until I finally dug into the code of <code>dired.el</code> to see
+how <code>dired-dwim-target</code> worked. Turns out it was storing <code>dir-1</code> in the <code>minibuffer-defaults</code>
+variable.  So now Ivy will use that variable when I press <kbd>M-n</kbd>. All in all, it was a five
+minute fix.  But rather than regret that I didn&#39;t do it years ago, I&#39;m glad I did it now. It only
+remains to build some muscle memory to press <kbd>M-n</kbd> in that situation.</p>
+
+<p>I&#39;m guesstimating that <code>dired-dwim-target</code> works to my advantage 90% of the time when I press
+<kbd>C</kbd> in <code>dired</code>.  For the other 10% of the times, I can now press <kbd>M-n</kbd>.</p>
+
+<h2 id="outro">Outro</h2>
+
+<p>I hope you find the new functionality useful. I&#39;m always open to <a href="https://github.com/abo-abo/swiper/issues/">new ideas and pull
+requests</a>. Happy hacking!</p>
+
+</div>
+
+<div class="twitter-share">
+  <a href="https://twitter.com/share"
+     class="twitter-share-button"
+     data-via="_abo_abo"
+     data-dnt="true">
+    Tweet
+  </a>
+</div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'oremacs'; // required: replace example with your forum shortname
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+<script>
+  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+</script>
+<noscript>
+  Please enable JavaScript to view the
+  <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>

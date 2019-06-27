@@ -4,13 +4,119 @@
  <title>(or emacs</title>
  <link href="https://oremacs.com/atom.xml" rel="self"/>
  <link href="https://oremacs.com/"/>
- <updated>2019-05-18T14:33:12+02:00</updated>
+ <updated>2019-06-27T21:12:40+02:00</updated>
  <id>https://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Ivy usability improvements when dealing with directories</title>
+   <link href="https://oremacs.com/2019/06/27/ivy-directory-improvements/"/>
+   <updated>2019-06-27T00:00:00+02:00</updated>
+   <id>https://oremacs.com/2019/06/27/ivy-directory-improvements</id>
+   <content type="html">&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
+
+&lt;p&gt;When &lt;a href=&quot;https://github.com/abo-abo/swiper&quot;&gt;Ivy&lt;/a&gt; just started out as a completion framework, the
+functionality was supposed to be simple: select one string from a list of strings. The UI is simple
+enough:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Show the list of strings that match the entered text,&lt;/li&gt;
+&lt;li&gt;Use &lt;kbd&gt;C-n&lt;/kbd&gt; and &lt;kbd&gt;C-p&lt;/kbd&gt; to navigate them,&lt;/li&gt;
+&lt;li&gt;Use &lt;kbd&gt;C-m&lt;/kbd&gt; or &lt;kbd&gt;C-j&lt;/kbd&gt; to submit.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Emacs has three key bindings that mean &amp;quot;Enter&amp;quot;: &lt;kbd&gt;RET&lt;/kbd&gt;, &lt;kbd&gt;C-m&lt;/kbd&gt;, and
+&lt;kbd&gt;C-j&lt;/kbd&gt;. But in terminal mode, &lt;code&gt;emacs -nw&lt;/code&gt;, &lt;kbd&gt;RET&lt;/kbd&gt; and &lt;kbd&gt;C-m&lt;/kbd&gt; are the same
+binding: Emacs can&amp;#39;t distinguish them. So we have at most two bindings. Fortunately, the world of
+completion is simple at the moment, and we only need one binding.&lt;/p&gt;
+
+&lt;h2 id=&quot;file-name-completion&quot;&gt;File name completion&lt;/h2&gt;
+
+&lt;p&gt;Enter file name completion. When you&amp;#39;re completing file names, you are selecting not one string, but
+many strings in succession while moving from one directory to the next. So we need at least two key
+bindings:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Use &lt;kbd&gt;C-m&lt;/kbd&gt; (&lt;code&gt;ivy-done&lt;/code&gt;) to select the current candidate and exit completion.&lt;/li&gt;
+&lt;li&gt;Use &lt;kbd&gt;C-j&lt;/kbd&gt; (&lt;code&gt;ivy-alt-done&lt;/code&gt;) to change the current directory to the current candidate without exiting completion.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;What to do when &lt;kbd&gt;C-j&lt;/kbd&gt; is used on a file and not on a directory? Might as well open the
+file: same action as &lt;kbd&gt;C-m&lt;/kbd&gt;. OK, we had two key bindings, and we have used them. Hopefully
+nothing else comes up.&lt;/p&gt;
+
+&lt;p&gt;Enter creating a new file, i.e. selecting something that&amp;#39;s not on the list of strings.
+Suppose I call &lt;code&gt;find-file&lt;/code&gt;, enter &amp;quot;do&amp;quot;, and the only match is a directory named &amp;quot;doc&amp;quot;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Pressing &lt;kbd&gt;C-m&lt;/kbd&gt; will end completion with the &amp;quot;doc&amp;quot; directory selected.&lt;/li&gt;
+&lt;li&gt;Pressing &lt;kbd&gt;C-j&lt;/kbd&gt; will continue completion inside the &amp;quot;doc&amp;quot; directory.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;So creating a file named &amp;quot;do&amp;quot; is the third action. Our two &amp;quot;Enter&amp;quot; keybindings are already taken by
+the first two different useful actions. So we need a third key binding. The one I chose is
+&lt;kbd&gt;C-M-j&lt;/kbd&gt; (&lt;code&gt;ivy-immediate-done&lt;/code&gt;).  It means: I don&amp;#39;t care that the current input is not on
+the list of candidate strings, submit it anyway.&lt;/p&gt;
+
+&lt;h2 id=&quot;directory-creation&quot;&gt;Directory creation&lt;/h2&gt;
+
+&lt;p&gt;Enter directory creation: &lt;code&gt;dired-create-directory&lt;/code&gt; and &lt;code&gt;make-directory&lt;/code&gt;. These built-in Emacs
+commands request file name completion, but what they tell Ivy is no different from what &lt;code&gt;find-file&lt;/code&gt;
+tells: &amp;quot;I want to select a file&amp;quot;. However, for these commands, the &lt;kbd&gt;C-M-j&lt;/kbd&gt; action is the
+one that makes most sense. Here it would be nice for Ivy to take the back seat and just act like an
+interactive &lt;code&gt;ls&lt;/code&gt;, since the user will enter a completely new string that&amp;#39;s not on the list of
+candidates.&lt;/p&gt;
+
+&lt;p&gt;For a long time, you still had to use &lt;kbd&gt;C-M-j&lt;/kbd&gt; with those commands, to much frustration of
+new but also existing users, including myself. But a few days ago, I looked at the prompt that
+&lt;code&gt;dired-create-directory&lt;/code&gt; uses: &amp;quot;Create directory: &amp;quot;. That prompt is passed to Ivy. Using the prompt
+to detect the intention of the command is a bit of a hack, but I think in this case it&amp;#39;s
+justifiable. So now Ivy will recognize that the intention commands that request file name completion
+and pass the &amp;quot;Create directory: &amp;quot; prompt is to create a directory, and all key bindings will do just
+that: &lt;kbd&gt;C-m&lt;/kbd&gt;, &lt;kbd&gt;C-j&lt;/kbd&gt;, and &lt;kbd&gt;C-M-j&lt;/kbd&gt; will behave the same in this case.&lt;/p&gt;
+
+&lt;h2 id=&quot;an-alternative-key-binding-scheme&quot;&gt;An alternative key binding scheme&lt;/h2&gt;
+
+&lt;p&gt;Note that &lt;kbd&gt;C-m&lt;/kbd&gt; and &lt;kbd&gt;C-j&lt;/kbd&gt; behave differently only for directories. But thanks to
+the fact that &amp;quot;.&amp;quot; is always the first candidate, &lt;kbd&gt;C-m&lt;/kbd&gt; for directories is equivalent to
+&lt;kbd&gt;C-j C-j&lt;/kbd&gt;. So we can get away with just using &lt;code&gt;ivy-alt-done&lt;/code&gt;, and bind &lt;kbd&gt;C-m&lt;/kbd&gt; to
+&lt;code&gt;ivy-immediate-done&lt;/code&gt;. Or swap the two meanings:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ivy-minibuffer-map&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-j&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ivy-immediate-done&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ivy-minibuffer-map&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-m&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;ivy-alt-done&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The price to pay here is the extra context switch when we simply want to select a directory.  We
+could the bind &lt;code&gt;ivy-done&lt;/code&gt; to &lt;kbd&gt;C-M-j&lt;/kbd&gt; and avoid the context switch, but then we&amp;#39;re back to
+three bindings once more. Still, I thought that swapping the bindings is an interesting idea worth
+sharing.&lt;/p&gt;
+
+&lt;h2 id=&quot;canceling-dired-dwim-target&quot;&gt;Canceling &lt;code&gt;dired-dwim-target&lt;/code&gt;&lt;/h2&gt;
+
+&lt;p&gt;Setting &lt;code&gt;dired-dwim-target&lt;/code&gt; is a nice productivity boost. It allows to use Emacs in a similar way to
+a two-pane file explorer, like &lt;a href=&quot;https://linux.die.net/man/1/mc&quot;&gt;mc(1)&lt;/a&gt;. But it was really annoying when I was in &lt;code&gt;dir-1&lt;/code&gt; with the
+intention to copy a file to a different name in &lt;code&gt;dir-1&lt;/code&gt; (e.g. create a backup, or copy a template),
+but the current directory was set to &lt;code&gt;dir-2&lt;/code&gt; because of a random &lt;code&gt;dired&lt;/code&gt; window I had open. In that
+case, I had to call &lt;code&gt;delete-other-windows&lt;/code&gt;, perform the copy, and then restore the window
+configuration with &lt;code&gt;winner-undo&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;I did the above many times over many years, until I finally dug into the code of &lt;code&gt;dired.el&lt;/code&gt; to see
+how &lt;code&gt;dired-dwim-target&lt;/code&gt; worked. Turns out it was storing &lt;code&gt;dir-1&lt;/code&gt; in the &lt;code&gt;minibuffer-defaults&lt;/code&gt;
+variable.  So now Ivy will use that variable when I press &lt;kbd&gt;M-n&lt;/kbd&gt;. All in all, it was a five
+minute fix.  But rather than regret that I didn&amp;#39;t do it years ago, I&amp;#39;m glad I did it now. It only
+remains to build some muscle memory to press &lt;kbd&gt;M-n&lt;/kbd&gt; in that situation.&lt;/p&gt;
+
+&lt;p&gt;I&amp;#39;m guesstimating that &lt;code&gt;dired-dwim-target&lt;/code&gt; works to my advantage 90% of the time when I press
+&lt;kbd&gt;C&lt;/kbd&gt; in &lt;code&gt;dired&lt;/code&gt;.  For the other 10% of the times, I can now press &lt;kbd&gt;M-n&lt;/kbd&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;I hope you find the new functionality useful. I&amp;#39;m always open to &lt;a href=&quot;https://github.com/abo-abo/swiper/issues/&quot;&gt;new ideas and pull
+requests&lt;/a&gt;. Happy hacking!&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>hydra 0.15.0 is out</title>
