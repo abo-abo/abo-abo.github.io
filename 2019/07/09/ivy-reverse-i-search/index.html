@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="flattr:id" content="9yl9ry">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Ivy reverse-i-search &middot; (or emacs
+    
+  </title>
+
+  <link rel="canonical" href="https://oremacs.com/2019/07/09/ivy-reverse-i-search/" />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="/public/css/octicons.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Scripts -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body class="layout-reverse theme-base-08">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <!-- <div class="sidebar-item"> -->
+  <!--   <p>unused</p> -->
+  <!-- </div> -->
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+          <a class="sidebar-nav-item" href="/about/">About</a>
+        
+          <a class="sidebar-nav-item" href="/archive/">Archive</a>
+        
+          <a class="sidebar-nav-item" href="/donate/">Donate</a>
+        <div id="github" class="sidebar-nav-item">
+      <button type="button"
+              class="btn btn-info"
+              data-toggle="collapse"
+              data-target="#github-projects">
+        <span class="octicon octicon-mark-github"></span> My Emacs Projects
+      </button>
+      <div id="github-projects" class="collapse">
+        <ul style="margin-bottom:0em;">
+          <li>
+            <a href="https://github.com/abo-abo/lispy">lispy</a>
+            <p>vi-like Paredit</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/worf">worf</a>
+            <p>vi-like bindings for org-mode</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-window">ace-window</a>
+            <p>switch windows with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-link">ace-link</a>
+            <p>follow links with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/function-args">function-args</a>
+            <p>enhance <code>CEDET</code> for C++</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/helm-make">helm-make</a>
+            <p>select a Makefile target with <code>helm</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/make-it-so">make-it-so</a>
+            <p>transform files with Makefile recipes</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/org-download">org-download</a>
+            <p>drag-and-drop images to <code>org-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo?tab=repositories">
+              <span class="octicon octicon-octoface"></span>
+              and more
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
+
+  <div class="sidebar-item">
+    <p>
+      <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">
+        <img alt="Creative Commons License"
+             style="border-width:0;opacity: 0.3;"
+             src="https://licensebuttons.net/l/by-sa/4.0/88x31.png"/>
+      </a>
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">(or emacs</a>
+            <small>irrelevant)</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <script>
+if (window.location.host.indexOf('oremacs.com') > -1 &&
+    window.location.protocol != "https:") {
+    window.location.protocol = "https";
+}
+</script>
+
+<div class="post">
+  <h1 class="post-title">Ivy reverse-i-search</h1>
+  <span class="post-date">09 Jul 2019</span>
+  <h2 id="introduction">Introduction</h2>
+
+<p>I&#39;m sure many are aware of the <kbd>C-r</kbd> functionality in <a href="https://www.gnu.org/software/bash/manual/html_node/Commands-For-History.html#Commands-For-History">bash</a> (a whole lot of Emacs
+bindings are valid in bash and do the same thing). I also like the quirky Emacs-style prompt, that
+uses a backquote to open and a straight quote to close a your quoted input:</p>
+
+<p><img src="/download/bash-reverse-i-search.png" alt="bash-reverse-i-search.png"></p>
+
+<p>So when you want to <code>cd</code> to somewhere where you were before you do <kbd>C-r</kbd> <code>cd</code>. And then the
+<kbd>C-r</kbd> &quot;roulette&quot; begins: you keep pressing <kbd>C-r</kbd> over and over, in the hopes to find
+what you were looking for.</p>
+
+<h2 id="getting-better-history-completion-with-ivy">Getting better history completion with Ivy</h2>
+
+<p><a href="https://github.com/abo-abo/swiper">Ivy</a> improves the &quot;roulette&quot; situation in two ways:</p>
+
+<ul>
+<li>You get an overview of the matching candidates and their count,</li>
+<li>You can quickly narrow down the candidates with fuzzy matching.</li>
+</ul>
+
+<p>Here&#39;s the basic setup to enable <kbd>C-r</kbd> completion using ivy:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">minibuffer-local-map</span>
+    <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-r&quot;</span><span class="p">)</span> <span class="ss">&#39;counsel-minibuffer-history</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">define-key</span> <span class="nv">shell-mode-map</span>
+    <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-r&quot;</span><span class="p">)</span> <span class="ss">&#39;counsel-shell-history</span><span class="p">)</span>
+</code></pre></div>
+<p>The first key binding is also part of <code>counsel-mode</code>, while the second needs to be set up separately,
+after <code>shell-mode</code> was loaded.</p>
+
+<p>And here&#39;s how <code>counsel-shell-history</code> looks like:</p>
+
+<p><img src="/download/counsel-shell-history.png" alt="counsel-shell-history.png"></p>
+
+<p>The cool thing is that <code>ivy-reverse-i-search</code> applies to <em>any</em> Ivy command, not just for shell
+command completion. I find it especially useful for:</p>
+
+<ul>
+<li><code>counsel-find-file</code></li>
+<li><code>eval-expression</code></li>
+</ul>
+
+<h2 id="recent-improvement-delete-history-items">Recent improvement: delete history items</h2>
+
+<p>While searching with regexes is great, it&#39;s not so great when the old stuff that we won&#39;t ever need
+gets in the way. So now you can delete it with <kbd>C-k</kbd>. Since <kbd>C-k</kbd> also has to
+serve as <code>ivy-kill-line</code>, the history deleting behavior will only come into effect when the point is
+at the end of the line (so that <code>ivy-kill-line</code> does not make sense anyway).</p>
+
+<p><img src="/download/ivy-reverse-i-search-kill.png" alt="ivy-reverse-i-search-kill.png"></p>
+
+<p>This way, your typos don&#39;t stay around to haunt you.</p>
+
+<h2 id="outro">Outro</h2>
+
+<p>I hope you&#39;ll find <code>ivy-reverse-i-search</code> a useful boost to your completion needs. Happy hacking!</p>
+
+</div>
+
+<div class="twitter-share">
+  <a href="https://twitter.com/share"
+     class="twitter-share-button"
+     data-via="_abo_abo"
+     data-dnt="true">
+    Tweet
+  </a>
+</div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'oremacs'; // required: replace example with your forum shortname
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+<script>
+  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+</script>
+<noscript>
+  Please enable JavaScript to view the
+  <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>

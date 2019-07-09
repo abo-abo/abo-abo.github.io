@@ -52,177 +52,12 @@
 
   <nav class="sidebar-nav">
     <a class="sidebar-nav-item" href="/">Home</a>
-
-    
-
-    
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
           <a class="sidebar-nav-item" href="/about/">About</a>
-        
-      
-    
-      
         
           <a class="sidebar-nav-item" href="/archive/">Archive</a>
         
-      
-    
-      
-    
-      
-        
           <a class="sidebar-nav-item" href="/donate/">Donate</a>
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-      
-        
-      
-    
-
-    <div id="github" class="sidebar-nav-item">
+        <div id="github" class="sidebar-nav-item">
       <button type="button"
               class="btn btn-info"
               data-toggle="collapse"
@@ -301,6 +136,137 @@
 
       <div class="container content">
         <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/2015/07/23/ivy-multiaction/">
+        New Ivy multi-action exit
+      </a>
+    </h1>
+
+    <span class="post-date">23 Jul 2015</span>
+
+    <p>So many Emacs commands and bindings, but little time to learn them
+all.  That&#39;s why many-in-one solutions like
+<a href="https://github.com/abo-abo/hydra">hydra</a> are often a good deal: you
+only remember the base binding, and get more info along the way if you
+get lost.</p>
+
+<p>I&#39;ve wanted to optimize this approach when it comes to completion as
+well.  In
+<a href="http://oremacs.com/2015/06/08/describe-variable-tip/">last month&#39;s post</a>
+I described how you can get help / jump to definition / jump to info
+for the current <kbd>F1 v</kbd> (<code>counsel-describe-variable</code>)
+candidate with <kbd>C-m</kbd> / <kbd>C-.</kbd> / <kbd>C-,</kbd>.
+While that approach can be viable, it has a few problems. The first
+problem is that it&#39;s not discoverable: you may be using <kbd>C-m</kbd>
+option for ages and not know that <kbd>C-.</kbd> and <kbd>C-,</kbd>
+exist. The second problem is that it&#39;s not extensible: if you wanted
+more actions, there are hardly any good bindings left in the
+minibuffer to bind those actions.</p>
+
+<p>In
+<a href="http://oremacs.com/2015/07/09/counsel-rhythmbox/">a more recent post</a>,
+I described a solution that alleviates both problems. When you press
+<kbd>C-o</kbd>, you see how many actions are
+available, and you can cycle them with <kbd>w</kbd> and
+<kbd>s</kbd>. However, while discoverable, this approach is cumbersome
+if you already know what you want to do. Especially cycling can&#39;t be
+great when there are a lot of actions.</p>
+
+<p>So today I&#39;ve added a new approach in addition to the previous one.
+When you press <kbd>M-o</kbd> (<code>ivy-dispatching-done</code>), you get a hint
+showing you which actions are available.  It&#39;s like <kbd>C-m</kbd>
+(<code>ivy-done</code>), only allows you to quickly select the
+action. Conveniently, the default action is bound to <kbd>o</kbd>, so
+<kbd>M-o o</kbd> is equivalent to <kbd>C-m</kbd>.</p>
+
+<p>Here&#39;s how I add one more action to the default one of <code>ivy-switch-buffer</code>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">ivy-set-actions</span>
+ <span class="ss">&#39;ivy-switch-buffer</span>
+ <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;k&quot;</span>
+    <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+      <span class="p">(</span><span class="nf">kill-buffer</span> <span class="nv">x</span><span class="p">)</span>
+      <span class="p">(</span><span class="nv">ivy--reset-state</span> <span class="nv">ivy-last</span><span class="p">))</span>
+    <span class="s">&quot;kill&quot;</span><span class="p">)))</span>
+</code></pre></div>
+<p>So now:</p>
+
+<ul>
+<li><kbd>M-o o</kbd> will still switch to selected buffer.</li>
+<li><kbd>M-o k</kbd> will kill the selected buffer.</li>
+</ul>
+
+<p>If you&#39;re familiar with <code>hydra</code>, the format is the same: <code>(key cmd
+hint)</code>.  This approach is very extensible: you can add actions and
+bindings to commands without changing the code of the original
+command. It&#39;s really fast: you&#39;re typing just one extra key to select
+an action. And you&#39;ll hardly run out of keys to bind, with 25 lower
+case keys at your disposal (other bindings work as well, I just think
+that lower case keys are the fastest to press).</p>
+
+<p>In case you wonder what <code>(ivy--reset-state ivy-last)</code> does, it&#39;s used
+to update the list of buffers, since one of them was deleted. This
+way, you can delete e.g. 4 buffers with <kbd>C-x b C-o s gggg</kbd>,
+and have the buffer list update after each <kbd>g</kbd>.</p>
+
+<h2 id="new-functionality-in-action">New functionality in action</h2>
+
+<p>Let&#39;s look at one package that has a multitude of actions available
+for each candidate - <code>projectile</code>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">defvar</span> <span class="nv">helm-projectile-projects-map</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">map</span> <span class="p">(</span><span class="nf">make-sparse-keymap</span><span class="p">)))</span>
+    <span class="p">(</span><span class="nf">set-keymap-parent</span> <span class="nv">map</span> <span class="nv">helm-map</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">helm-projectile-define-key</span> <span class="nv">map</span>
+        <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-d&quot;</span><span class="p">)</span> <span class="nf">#&#39;</span><span class="nv">dired</span>
+        <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-g&quot;</span><span class="p">)</span> <span class="nf">#&#39;</span><span class="nv">helm-projectile-vc</span>
+        <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-e&quot;</span><span class="p">)</span> <span class="nf">#&#39;</span><span class="nv">helm-projectile-switch-to-eshell</span>
+        <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-s&quot;</span><span class="p">)</span> <span class="nf">#&#39;</span><span class="nv">helm-find-files-grep</span>
+        <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-c&quot;</span><span class="p">)</span> <span class="nf">#&#39;</span><span class="nv">helm-projectile-compile-project</span>
+        <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-t&quot;</span><span class="p">)</span> <span class="nf">#&#39;</span><span class="nv">helm-projectile-test-project</span>
+        <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-r&quot;</span><span class="p">)</span> <span class="nf">#&#39;</span><span class="nv">helm-projectile-run-project</span>
+        <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-D&quot;</span><span class="p">)</span> <span class="nf">#&#39;</span><span class="nv">helm-projectile-remove-known-project</span><span class="p">)</span>
+    <span class="nv">map</span><span class="p">)</span>
+  <span class="s">&quot;Mapping for known projectile projects.&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>Here&#39;s the basic Ivy function for selecting a project:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">ivy-switch-project</span> <span class="p">()</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">ivy-read</span>
+   <span class="s">&quot;Switch to project: &quot;</span>
+   <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">projectile-project-p</span><span class="p">)</span>
+       <span class="p">(</span><span class="nf">cons</span> <span class="p">(</span><span class="nv">abbreviate-file-name</span> <span class="p">(</span><span class="nv">projectile-project-root</span><span class="p">))</span>
+             <span class="p">(</span><span class="nv">projectile-relevant-known-projects</span><span class="p">))</span>
+     <span class="nv">projectile-known-projects</span><span class="p">)</span>
+   <span class="nb">:action</span> <span class="nf">#&#39;</span><span class="nv">projectile-switch-project-by-name</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c m&quot;</span><span class="p">)</span> <span class="ss">&#39;ivy-switch-project</span><span class="p">)</span>
+</code></pre></div>
+<p>And now let&#39;s add all those actions:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">ivy-set-actions</span>
+ <span class="ss">&#39;ivy-switch-project</span>
+ <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;d&quot;</span> <span class="nv">dired</span> <span class="s">&quot;Open Dired in project&#39;s directory&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;v&quot;</span> <span class="nv">helm-projectile-vc</span> <span class="s">&quot;Open project root in vc-dir or magit&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;e&quot;</span> <span class="nv">helm-projectile-switch-to-eshell</span> <span class="s">&quot;Switch to Eshell&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;g&quot;</span>
+    <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+      <span class="p">(</span><span class="nv">helm-do-grep-1</span> <span class="p">(</span><span class="nf">list</span> <span class="nv">x</span><span class="p">)))</span>
+    <span class="s">&quot;Grep in projects&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;c&quot;</span> <span class="nv">helm-projectile-compile-project</span> <span class="s">&quot;Compile project&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;r&quot;</span> <span class="nv">helm-projectile-remove-known-project</span> <span class="s">&quot;Remove project(s)&quot;</span><span class="p">)))</span>
+</code></pre></div>
+<p>Here&#39;s what I get now after pressing <kbd>M-o</kbd>:</p>
+
+<p><img src="/download/ivy-multiaction.png" alt="ivy-multiaction.png"></p>
+
+<p>Looks pretty good, I think. I hope you find the new approach useful.
+The multi-action exit is currently enabled by default for
+<code>ivy-switch-buffer</code>, <code>counsel-locate</code> and <code>counsel-rhythmbox</code>, but you
+can add actions yourself to almost any command that uses <code>ivy-read</code>.
+In the rare case when <code>ivy-read</code> isn&#39;t in the tail position, you can
+use <a href="http://oremacs.com/2015/07/16/callback-quit/">ivy-quit-and-run</a>
+inside the added action functions.</p>
+
+  </div>
   
   <div class="post">
     <h1 class="post-title">
@@ -656,135 +622,6 @@ older one?</p>
 </ol>
 
 <p>Thanks to <a href="https://github.com/QiangF">@QiangF</a> for the suggestion in <a href="https://github.com/abo-abo/hydra/issues/135">#135</a>.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/07/02/counsel-locate/">
-        Power up your locate command
-      </a>
-    </h1>
-
-    <span class="post-date">02 Jul 2015</span>
-
-    <h2 id="locate"><code>locate</code></h2>
-
-<p>I&#39;m sure many people know that Emacs comes with a <code>locate</code>
-command. This command, if you&#39;re on a Linux system, will find all
-files on your system that match a particular pattern. The advantage of
-<code>locate</code> over <code>find</code> when searching the whole system, is that it is
-much faster, since it uses a pre-computed database.  This database is
-updated periodically, you can force an update with:</p>
-<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>sudo updatedb
-</code></pre></div>
-<p>Of course <code>find</code> is faster if you need to search only a specific
-directory instead of the whole system, but sometimes you just don&#39;t
-know that directory.</p>
-
-<h2 id="counsel-locate"><code>counsel-locate</code></h2>
-
-<h3 id="dynamic">Dynamic</h3>
-
-<p>The way <code>locate</code> works it that it asks you for a query, which is
-glob-based instead of regex-based, and then prints the results to a
-static buffer.</p>
-
-<p>On the other hand, <code>counsel-locate</code> is dynamic: each time you input a
-new character a new <code>locate</code> query is ran, and the old one is
-terminated.  On my system, it takes around 2 seconds for a query to
-complete, so it requires a bit of patience.</p>
-
-<h3 id="regex-based">Regex-based</h3>
-
-<p>I like regex way more than globs for some reason. Here&#39;s the command
-called for the input <code>mp3$</code>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>locate -i --regex mp3$
-</code></pre></div>
-<p>Of course, the standard <a href="https://github.com/abo-abo/swiper">ivy-mode</a>
-method is used to build the regex from a list of space separated
-words.  So the input <code>fleet mp3$</code> will result in:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>locate -i --regex \\(fleet\\).*?\\(mp3$\\)
-</code></pre></div>
-<p>You could go your own way and update the regex matcher to be
-<code>ivy--regex-fuzzy</code>, which results in:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>locate -i --regex f.*l.*e.*e.*t.* .*m.*p.*3$
-</code></pre></div>
-<p>But I think less matches is usually better than more matches.</p>
-
-<h3 id="multi-exit">Multi-exit</h3>
-
-<p>This is just the coolest feature. Basically, for each file you locate, you can easily:</p>
-
-<ul>
-<li>Open it in Emacs (default).</li>
-<li>Open it with <code>xdg-open</code>, so that PDF files are forwarded to <code>evince</code>
-and MP3 files are forwarded to <code>rhythmbox</code> etc.</li>
-<li>Open it in <code>dired</code>.</li>
-</ul>
-
-<p>Here&#39;s an example of how to do it. First I call <code>counsel-locate</code>,
-which I like to bind to <kbd>C-x l</kbd>.  Then I enter <code>emacs pdf$</code>
-and wait around 2 seconds for the 248 results to come up. Then I
-scroll to the 18th result and press <kbd>C-o</kbd> to open up the
-<a href="https://github.com/abo-abo/hydra">hydra</a>-based option panel:</p>
-
-<p><img src="/download/counsel-locate-1.png" alt="counsel-locate-1.png"></p>
-
-<p>The last column (Action) is newer than others. As you can see, it has
-3 exit points, which I can scroll with <kbd>w</kbd> and <kbd>s</kbd>.
-And currently I&#39;m on the default exit point, which would open the file
-in Emacs.</p>
-
-<p>For the next screenshot:</p>
-
-<ul>
-<li>I pressed <kbd>s</kbd> twice to change the action to <code>dired</code>.</li>
-<li>I pressed <kbd>c</kbd> to make the current action execute each time a new candidate is selected.</li>
-</ul>
-
-<p><img src="/download/counsel-locate-2.png" alt="counsel-locate-2.png"></p>
-
-<p>So now, I could just scroll through all my directories on my system
-that contain PDF files related to Emacs by just holding <kbd>j</kbd>.</p>
-
-<p>A similar thing can be done for music tracks:</p>
-
-<ul>
-<li><kbd>C-x l</kbd> <code>dire mp3$</code> to get the list of all Dire Straits tracks on my system.</li>
-<li><kbd>C-o s</kbd> to switch the action from &quot;open in Emacs&quot; to &quot;xdg-open&quot;.</li>
-<li>From here, I could open one track after another by pressing <kbd>C-M-n</kbd> repeatedly. Or I can press <kbd>c</kbd> and then <kbd>j</kbd> repeatedly.</li>
-</ul>
-
-<p>I&#39;ve been experimenting with opening EPS and PDF files in quick
-succession. It&#39;s still a work in progress, since I need to use a special
-<code>wmctrl</code> script to prevent the Emacs window from losing focus each
-time a new Evince instance is opened.</p>
-
-<h2 id="outro">Outro</h2>
-
-<p>You can check out the new feature by installing <code>counsel</code> from
-MELPA. It will automatically fetch <code>ivy-mode</code> as well. When you enable
-<code>ivy-mode</code>, besides doing all your completion, it will also remap
-<code>switch-to-buffer</code> to <code>ivy-switch-buffer</code>.  That command also has a
-multi-exit: pressing <kbd>C-o sd</kbd> instead of <kbd>C-m</kbd> will
-kill the selected buffer instead of switching to it.  It&#39;s a very
-minor optimization: instead of <kbd>C-m C-x k</kbd> you press <kbd>C-o
-sd</kbd>, however you could e.g.  use <kbd>C-o scjjjj</kbd> to kill
-five buffers at once.</p>
-
-<p>While the idea of multi-exits is powerful, it&#39;s hard to find places to
-use it efficiently. I think <code>counsel-locate</code> is a nice place for it,
-although it could work without it:</p>
-
-<ul>
-<li>Find file in Emacs with <kbd>C-m</kbd> in the completion interface.</li>
-<li>Call <code>dired-jump</code> with <kbd>C-x C-j</kbd>.</li>
-<li>Type <kbd>!</kbd> and <code>xdg-open</code> <kbd>RET</kbd>.</li>
-<li>Select and kill the unneeded file with <kbd>C-x k</kbd>.</li>
-</ul>
-
-<p>I hope you see now why I prefer <kbd>C-o sd</kbd>.</p>
 
   </div>
   

@@ -4,13 +4,77 @@
  <title>(or emacs</title>
  <link href="https://oremacs.com/atom.xml" rel="self"/>
  <link href="https://oremacs.com/"/>
- <updated>2019-06-27T21:12:40+02:00</updated>
+ <updated>2019-07-09T18:06:13+02:00</updated>
  <id>https://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Ivy reverse-i-search</title>
+   <link href="https://oremacs.com/2019/07/09/ivy-reverse-i-search/"/>
+   <updated>2019-07-09T00:00:00+02:00</updated>
+   <id>https://oremacs.com/2019/07/09/ivy-reverse-i-search</id>
+   <content type="html">&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
+
+&lt;p&gt;I&amp;#39;m sure many are aware of the &lt;kbd&gt;C-r&lt;/kbd&gt; functionality in &lt;a href=&quot;https://www.gnu.org/software/bash/manual/html_node/Commands-For-History.html#Commands-For-History&quot;&gt;bash&lt;/a&gt; (a whole lot of Emacs
+bindings are valid in bash and do the same thing). I also like the quirky Emacs-style prompt, that
+uses a backquote to open and a straight quote to close a your quoted input:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/bash-reverse-i-search.png&quot; alt=&quot;bash-reverse-i-search.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;So when you want to &lt;code&gt;cd&lt;/code&gt; to somewhere where you were before you do &lt;kbd&gt;C-r&lt;/kbd&gt; &lt;code&gt;cd&lt;/code&gt;. And then the
+&lt;kbd&gt;C-r&lt;/kbd&gt; &amp;quot;roulette&amp;quot; begins: you keep pressing &lt;kbd&gt;C-r&lt;/kbd&gt; over and over, in the hopes to find
+what you were looking for.&lt;/p&gt;
+
+&lt;h2 id=&quot;getting-better-history-completion-with-ivy&quot;&gt;Getting better history completion with Ivy&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/abo-abo/swiper&quot;&gt;Ivy&lt;/a&gt; improves the &amp;quot;roulette&amp;quot; situation in two ways:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;You get an overview of the matching candidates and their count,&lt;/li&gt;
+&lt;li&gt;You can quickly narrow down the candidates with fuzzy matching.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Here&amp;#39;s the basic setup to enable &lt;kbd&gt;C-r&lt;/kbd&gt; completion using ivy:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;minibuffer-local-map&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-r&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;counsel-minibuffer-history&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;define-key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;shell-mode-map&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-r&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;counsel-shell-history&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The first key binding is also part of &lt;code&gt;counsel-mode&lt;/code&gt;, while the second needs to be set up separately,
+after &lt;code&gt;shell-mode&lt;/code&gt; was loaded.&lt;/p&gt;
+
+&lt;p&gt;And here&amp;#39;s how &lt;code&gt;counsel-shell-history&lt;/code&gt; looks like:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/counsel-shell-history.png&quot; alt=&quot;counsel-shell-history.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;The cool thing is that &lt;code&gt;ivy-reverse-i-search&lt;/code&gt; applies to &lt;em&gt;any&lt;/em&gt; Ivy command, not just for shell
+command completion. I find it especially useful for:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;counsel-find-file&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;eval-expression&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;recent-improvement-delete-history-items&quot;&gt;Recent improvement: delete history items&lt;/h2&gt;
+
+&lt;p&gt;While searching with regexes is great, it&amp;#39;s not so great when the old stuff that we won&amp;#39;t ever need
+gets in the way. So now you can delete it with &lt;kbd&gt;C-k&lt;/kbd&gt;. Since &lt;kbd&gt;C-k&lt;/kbd&gt; also has to
+serve as &lt;code&gt;ivy-kill-line&lt;/code&gt;, the history deleting behavior will only come into effect when the point is
+at the end of the line (so that &lt;code&gt;ivy-kill-line&lt;/code&gt; does not make sense anyway).&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/ivy-reverse-i-search-kill.png&quot; alt=&quot;ivy-reverse-i-search-kill.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;This way, your typos don&amp;#39;t stay around to haunt you.&lt;/p&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;I hope you&amp;#39;ll find &lt;code&gt;ivy-reverse-i-search&lt;/code&gt; a useful boost to your completion needs. Happy hacking!&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Ivy usability improvements when dealing with directories</title>
@@ -2228,7 +2292,7 @@ command:&lt;/p&gt;
 &lt;p&gt;which produces e.g.:&lt;/p&gt;
 
 &lt;pre&gt;&lt;small&gt;
-Symbol table &#39;.dynsym&#39; contains 2732 entries:
+Symbol table '.dynsym' contains 2732 entries:
    Num:    Value          Size Type    Bind   Vis      Ndx Name
      0: 0000000000000000     0 NOTYPE  LOCAL  DEFAULT  UND
      1: 000000000004faf0     0 SECTION LOCAL  DEFAULT    8
@@ -9344,7 +9408,7 @@ time ago (you can find a lot of additional info there):&lt;/p&gt;
 &lt;span class=&quot;variable-name&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;j-other&quot;&gt;=:&lt;/span&gt; &lt;span class=&quot;j-verb&quot;&gt;[:&lt;/span&gt;((&lt;span class=&quot;j-verb&quot;&gt;[:*&lt;/span&gt;&lt;span class=&quot;j-adverb&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;j-verb&quot;&gt;_9:&lt;/span&gt;c&lt;span class=&quot;j-adverb&quot;&gt;\&lt;/span&gt;&lt;span class=&quot;j-verb&quot;&gt;]&lt;/span&gt;)&lt;span class=&quot;j-conjunction&quot;&gt;&quot;&lt;/span&gt;1&lt;span class=&quot;j-verb&quot;&gt;#]&lt;/span&gt;)i&lt;span class=&quot;j-conjunction&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;j-verb&quot;&gt;{+&lt;/span&gt;&lt;span class=&quot;j-conjunction&quot;&gt;&quot;&lt;/span&gt;1 1(&lt;span class=&quot;j-verb&quot;&gt;&amp;gt;:i.&lt;/span&gt;9)&lt;span class=&quot;j-verb&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;j-adverb&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;j-verb&quot;&gt;[:&lt;/span&gt;i&lt;span class=&quot;j-conjunction&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;j-verb&quot;&gt;=i.&lt;/span&gt;&lt;span class=&quot;j-conjunction&quot;&gt;&amp;amp;&lt;/span&gt;0
 &lt;span class=&quot;variable-name&quot;&gt;r&lt;/span&gt; &lt;span class=&quot;j-other&quot;&gt;=:&lt;/span&gt; &lt;span class=&quot;j-verb&quot;&gt;[:,&lt;/span&gt;&lt;span class=&quot;j-conjunction&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;j-verb&quot;&gt;$:&lt;/span&gt;&lt;span class=&quot;j-conjunction&quot;&gt;@.&lt;/span&gt;(0&lt;span class=&quot;j-verb&quot;&gt;:e.,&lt;/span&gt;)&lt;span class=&quot;j-verb&quot;&gt;[:;&lt;/span&gt;(&lt;span class=&quot;j-verb&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;j-conjunction&quot;&gt;@&lt;/span&gt;t)&lt;span class=&quot;j-conjunction&quot;&gt;&quot;&lt;/span&gt;1
 &lt;span class=&quot;variable-name&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;j-other&quot;&gt;=:&lt;/span&gt; 9 9&lt;span class=&quot;j-conjunction&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;j-verb&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;j-conjunction&quot;&gt;@&lt;/span&gt;r&lt;span class=&quot;j-conjunction&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;j-verb&quot;&gt;,&lt;/span&gt;
-&lt;span class=&quot;j-verb&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;variable-name&quot;&gt;m&lt;/span&gt; &lt;span class=&quot;j-other&quot;&gt;=:&lt;/span&gt; 9 9 &lt;span class=&quot;j-verb&quot;&gt;$&quot;.&lt;/span&gt;&lt;span class=&quot;j-conjunction&quot;&gt;&quot;&lt;/span&gt;0&lt;span class=&quot;string&quot;&gt;&#39;200370009009200007001004002050000800008000900006000040900100500800007600400089001&#39;&lt;/span&gt;
+&lt;span class=&quot;j-verb&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;variable-name&quot;&gt;m&lt;/span&gt; &lt;span class=&quot;j-other&quot;&gt;=:&lt;/span&gt; 9 9 &lt;span class=&quot;j-verb&quot;&gt;$&quot;.&lt;/span&gt;&lt;span class=&quot;j-conjunction&quot;&gt;&quot;&lt;/span&gt;0&lt;span class=&quot;string&quot;&gt;'200370009009200007001004002050000800008000900006000040900100500800007600400089001'&lt;/span&gt;
 s m
 &lt;span class=&quot;org-block-end-line&quot;&gt;#+end_src
 &lt;/span&gt;
@@ -9410,7 +9474,7 @@ s m
 
 &lt;pre&gt;
 &lt;span class=&quot;org-block-begin-line&quot;&gt;#+begin_src J
-&lt;/span&gt;load &lt;span class=&quot;string&quot;&gt;&#39;plot&#39;&lt;/span&gt;
+&lt;/span&gt;load &lt;span class=&quot;string&quot;&gt;'plot'&lt;/span&gt;
 plot 1 &lt;span class=&quot;j-verb&quot;&gt;o.&lt;/span&gt; 0&lt;span class=&quot;j-adverb&quot;&gt;.&lt;/span&gt;1 &lt;span class=&quot;j-verb&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;j-verb&quot;&gt;i.&lt;/span&gt;200
 &lt;span class=&quot;org-block-end-line&quot;&gt;#+end_src
 &lt;/span&gt;
@@ -16220,7 +16284,7 @@ in this case.&lt;/li&gt;
 &lt;pre&gt;
 &lt;span class=&quot;diff-context&quot;&gt;&lt;span class=&quot;region&quot;&gt;     (let* ((source (helm-get-current-source))
             (kmap (and (listp source) ; Check if source is empty.
-                       (assoc-default &#39;keymap source))))
+                       (assoc-default 'keymap source))))
 &lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;diff-indicator-removed&quot;&gt;&lt;span class=&quot;region&quot;&gt;-&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;diff-removed&quot;&gt;&lt;span class=&quot;region&quot;&gt;      (when kmap (setq overriding-local-map kmap)))))
 &lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;diff-indicator-added&quot;&gt;&lt;span class=&quot;region&quot;&gt;+&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;diff-added&quot;&gt;&lt;span class=&quot;region&quot;&gt;      (when kmap (set-transient-map kmap)))))&lt;/span&gt;&lt;/span&gt;&lt;/pre&gt;
 
