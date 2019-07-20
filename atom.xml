@@ -4,13 +4,164 @@
  <title>(or emacs</title>
  <link href="https://oremacs.com/atom.xml" rel="self"/>
  <link href="https://oremacs.com/"/>
- <updated>2019-07-09T18:06:13+02:00</updated>
+ <updated>2019-07-20T20:35:34+02:00</updated>
  <id>https://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Ivy 0.12.0 is out</title>
+   <link href="https://oremacs.com/2019/07/20/ivy-0.12.0/"/>
+   <updated>2019-07-20T00:00:00+02:00</updated>
+   <id>https://oremacs.com/2019/07/20/ivy-0.12.0</id>
+   <content type="html">&lt;h2 id=&quot;intro&quot;&gt;Intro&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/abo-abo/swiper&quot;&gt;Ivy&lt;/a&gt; is a completion method that&amp;#39;s
+similar to &lt;code&gt;Ido&lt;/code&gt;, but with emphasis on simplicity and customizability.&lt;/p&gt;
+
+&lt;h2 id=&quot;overview&quot;&gt;Overview&lt;/h2&gt;
+
+&lt;p&gt;The current release constitutes of 398 commits and 6 months of
+progress since &lt;code&gt;0.11.0&lt;/code&gt;. Many issues ranging from
+&lt;a href=&quot;https://github.com/abo-abo/swiper/issues/1904&quot;&gt;#1904&lt;/a&gt; to
+&lt;a href=&quot;https://github.com/abo-abo/swiper/issues/2151&quot;&gt;#2151&lt;/a&gt; were fixed.
+The number of people who contributed code as grown to
+&lt;a href=&quot;https://github.com/abo-abo/swiper/graphs/contributors&quot;&gt;148&lt;/a&gt;. Thanks,
+everyone!&lt;/p&gt;
+
+&lt;h2 id=&quot;details-on-changes&quot;&gt;Details on changes&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;Changelog.org&lt;/code&gt; has been a part of the repository since &lt;code&gt;0.6.0&lt;/code&gt;, you
+can get the details of the current and past changes:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;in &lt;a href=&quot;https://github.com/abo-abo/swiper/blob/master/doc/Changelog.org#0120&quot;&gt;org-mode&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;in &lt;a href=&quot;http://oremacs.com/swiper/Changelog#0.12.0&quot;&gt;HTML&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;highlights&quot;&gt;Highlights&lt;/h2&gt;
+
+&lt;p&gt;Many improvements are incremental and don&amp;#39;t require any extra code to
+enable.  I&amp;#39;ll go over a few selected features that require a bit of
+information to make a good use of them.&lt;/p&gt;
+
+&lt;h3 id=&quot;new-bindings&quot;&gt;New bindings&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;counsel-descbinds&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;M-o x&lt;/kbd&gt; execute action.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;counsel-file-jump&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;M-o d&lt;/kbd&gt; dired.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;counsel-find-file&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;M-o c&lt;/kbd&gt; copy file.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;&amp;#96;&lt;/kbd&gt; bookmarks: efficiently jump between recent directories.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;$&lt;/kbd&gt; directories stored in environment variables.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;C-DEL&lt;/kbd&gt; go up directory. Customize: &lt;code&gt;counsel-up-directory-level&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;RET&lt;/kbd&gt; open file. Customize: &lt;code&gt;counsel-find-file-extern-extensions&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;//&lt;/kbd&gt; when on remote, cd to remote root.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;/ C-j&lt;/kbd&gt; select local root.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;~&lt;/kbd&gt; when on remote, cd to remote home.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;/ C-j ~&lt;/kbd&gt; cd to local home from remote.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;counsel-git-log&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;M-o v&lt;/kbd&gt; open the current commit in &lt;code&gt;magit&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;counsel-rg&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;C-x C-d&lt;/kbd&gt; change the current directory for grep.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ivy-avy&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;C-v&lt;/kbd&gt; to scroll down.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;M-v&lt;/kbd&gt; to scroll up.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ivy-read&lt;/code&gt; &lt;kbd&gt;C-o&lt;/kbd&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;m&lt;/kbd&gt; mark and move down.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;u&lt;/kbd&gt; unmark and move down.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;DEL&lt;/kbd&gt; move up and unmark.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;t&lt;/kbd&gt; toggle marks.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;d&lt;/kbd&gt; perform the action on all marked elements.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ivy-switch-buffer&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;C-k&lt;/kbd&gt; kill buffer.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;M-o x&lt;/kbd&gt; open buffer file externally.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ivy-reverse-i-search&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;C-k&lt;/kbd&gt; remove item from the history.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;new-commands-extensions&quot;&gt;New Commands extensions&lt;/h2&gt;
+
+&lt;p&gt;These commands are new variants and adaptations of existing commands.&lt;/p&gt;
+
+&lt;p&gt;Thing at point variants:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;swiper-all-thing-at-point&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;swiper-isearch-thing-at-point&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;swiper-thing-at-point&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Search variants that go backwards:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;swiper-backward&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;counsel-grep-or-swiper-backward&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;swiper-isearch-backward.&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;A variant of &lt;code&gt;ivy-switch-buffer&lt;/code&gt; with live preview:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;counsel-switch-buffer&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;counsel-switch-buffer-other-window&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;And finally:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;counsel-dired&lt;/code&gt; - like &lt;code&gt;counsel-find-file&lt;/code&gt;, but open &lt;code&gt;dired&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;swiper-isearch-toggle&lt;/code&gt; - toggle between &lt;code&gt;swiper&lt;/code&gt; and &lt;code&gt;isearch&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;new-commands&quot;&gt;New Commands&lt;/h2&gt;
+
+&lt;p&gt;I have put these separately so they don&amp;#39;t get lost in the crowd. Be sure to try them out.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;counsel-compile&lt;/code&gt; - completion for &lt;code&gt;compile&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;counsel-register&lt;/code&gt; - completion for registers.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;counsel-minor&lt;/code&gt; - completion for minor modes.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;swiper-isearch&lt;/code&gt; - a faster &lt;code&gt;swiper&lt;/code&gt; that&amp;#39;s not line-based.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;Again, thanks to all the contributors. Happy hacking!&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Ivy reverse-i-search</title>

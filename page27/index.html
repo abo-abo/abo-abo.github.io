@@ -139,6 +139,135 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/02/04/pre-hydra-post/">
+        New in Hydra - :pre and :post clauses
+      </a>
+    </h1>
+
+    <span class="post-date">04 Feb 2015</span>
+
+    <p>Only three commits happened since <code>0.6.1</code>, but already <a href="https://github.com/abo-abo/hydra/releases/tag/0.7.0">0.7.0</a> has to
+be released, since the behavior has changed slightly.</p>
+
+<h2 id="the-ultimate-window-switching-setup-revised">The ultimate window switching setup, revised</h2>
+
+<p>The code from the <a href="/2015/02/03/one-hydra-two-hydra/">last post</a> had to be changed.
+Note that only <code>ace-window</code>-related heads are affected, since <code>ace-window</code> uses <code>set-transient-map</code> as well.
+This was necessary to fix <a href="https://github.com/abo-abo/hydra/issues/15">issue #15</a> (unable to use <code>goto-line</code> in a Hydra, since it requires input).</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span>
+ <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-M-o&quot;</span><span class="p">)</span>
+ <span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-window</span> <span class="p">()</span>
+   <span class="s">&quot;window&quot;</span>
+   <span class="p">(</span><span class="s">&quot;h&quot;</span> <span class="nv">windmove-left</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">windmove-down</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;k&quot;</span> <span class="nv">windmove-up</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nv">windmove-right</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span>
+          <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">ace-window</span> <span class="mi">1</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;ace-window-end-once-hook</span>
+                    <span class="ss">&#39;hydra-window/body</span><span class="p">)</span>
+          <span class="p">(</span><span class="nb">throw</span> <span class="ss">&#39;hydra-disable</span> <span class="no">t</span><span class="p">))</span>
+        <span class="s">&quot;ace&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;v&quot;</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span>
+          <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">split-window-right</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">windmove-right</span><span class="p">))</span>
+        <span class="s">&quot;vert&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;x&quot;</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span>
+          <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">split-window-below</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">windmove-down</span><span class="p">))</span>
+        <span class="s">&quot;horz&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;s&quot;</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span>
+          <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">ace-window</span> <span class="mi">4</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;ace-window-end-once-hook</span>
+                    <span class="ss">&#39;hydra-window/body</span><span class="p">)</span>
+          <span class="p">(</span><span class="nb">throw</span> <span class="ss">&#39;hydra-disable</span> <span class="no">t</span><span class="p">))</span>
+        <span class="s">&quot;swap&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;t&quot;</span> <span class="nv">transpose-frame</span> <span class="s">&quot;&#39;&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;d&quot;</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span>
+          <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">ace-window</span> <span class="mi">16</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;ace-window-end-once-hook</span>
+                    <span class="ss">&#39;hydra-window/body</span><span class="p">)</span>
+          <span class="p">(</span><span class="nb">throw</span> <span class="ss">&#39;hydra-disable</span> <span class="no">t</span><span class="p">))</span>
+        <span class="s">&quot;del&quot;</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;o&quot;</span> <span class="nv">delete-other-windows</span> <span class="s">&quot;one&quot;</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;i&quot;</span> <span class="nv">ace-maximize-window</span> <span class="s">&quot;ace-one&quot;</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span> <span class="s">&quot;cancel&quot;</span><span class="p">)))</span>
+</code></pre></div>
+<p>You can also see an awesome addition sneak in, with <code>transpose-frame</code>
+on <kbd>t</kbd>.</p>
+
+<h3 id="technical-note">Technical note</h3>
+
+<p>If you look closely at the code, you&#39;ll see the <code>ace-window</code>-related
+lambdas throwing the <code>hydra-disable</code> symbol. If the Hydra code catches
+that symbol, it will not call <code>set-transient-map</code> again, effectively
+making the head that threw the symbol blue.  In this example, though,
+<code>ace-window</code>-related functions are still red, since the Hydra is
+resumed by calling <code>hydra-window/body</code> in <code>ace-window-end-once-hook</code>.</p>
+
+<p>This is a trick that I have to play because of how <code>ace-jump-mode</code>
+works.  Hopefully, it won&#39;t be needed for other commands. But still,
+it&#39;s a simple trick that you can use if you want to have a head quit
+conditionally, or something.</p>
+
+<h2 id="goto-line-ad-infinum"><code>goto-line</code> ad infinum</h2>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-test</span> <span class="p">(</span><span class="nv">global-map</span> <span class="s">&quot;M-g&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;g&quot;</span> <span class="nv">goto-line</span> <span class="s">&quot;goto-line&quot;</span><span class="p">))</span>
+</code></pre></div>
+<p>With the Hydra above, it&#39;s possible to:</p>
+
+<ul>
+<li><kbd>M-g g</kbd> <code>10</code> <kbd>RET</kbd> to go to line <code>10</code></li>
+<li><kbd>g</kbd> <code>20</code> <kbd>RET</kbd> to go to line <code>20</code></li>
+<li><kbd>g</kbd> <code>50</code> <kbd>RET</kbd> to go to line <code>50</code> etc.</li>
+</ul>
+
+<h2 id="change-the-cursor-color-when-a-hydra-is-active">Change the cursor color when a Hydra is active</h2>
+
+<p>Here&#39;s how the new <code>:pre</code> and <code>:post</code> statements work:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span>
+ <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-z&quot;</span><span class="p">)</span>
+ <span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-vi</span>
+     <span class="p">(</span><span class="nb">:pre</span>
+      <span class="p">(</span><span class="nv">set-cursor-color</span> <span class="s">&quot;#40e0d0&quot;</span><span class="p">)</span>
+      <span class="nb">:post</span>
+      <span class="p">(</span><span class="nv">set-cursor-color</span> <span class="s">&quot;#ffffff&quot;</span><span class="p">))</span>
+   <span class="s">&quot;vi&quot;</span>
+   <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nf">forward-char</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;h&quot;</span> <span class="nf">backward-char</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">next-line</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;k&quot;</span> <span class="nv">previous-line</span><span class="p">)</span>
+   <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span> <span class="s">&quot;quit&quot;</span><span class="p">)))</span>
+</code></pre></div>
+<p>In this example, the cursor color will change for the duration of the Hydra.
+Both <code>:pre</code> and <code>:post</code> should match to a single Elisp statement; you can use <code>progn</code> to tie
+a bunch of statements together if you want.</p>
+
+<h2 id="a-more-evil-helm">A more evil <code>helm</code></h2>
+
+<p>Lit Wakefield has a nice <a href="http://angelic-sedition.github.io/blog/2015/02/03/a-more-evil-helm/">article</a> on
+using <code>hydra</code> and <code>helm</code> together. Do check it out, I&#39;ll certainly steal some of his code.</p>
+
+<h2 id="outro">Outro</h2>
+
+<p>I hope that you don&#39;t have an objection to Hydra being developed at a
+fast pace with many features popping up. I try my best to keep things
+backwards compatible, but I really want to quickly fix the areas where
+the code is lacking. Thanks to all the people contributing
+<a href="https://github.com/abo-abo/hydra/issues">issues</a>, especially
+<a href="https://github.com/atykhonov">@atykhonov</a> and
+<a href="https://github.com/nandryshak">@nandryshak</a> for the last two, which are the core
+of this version bump.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/02/03/one-hydra-two-hydra/">
         One Hydra Two Hydra Red Hydra Blue Hydra
       </a>
@@ -699,223 +828,6 @@ bindings and asks no questions.</p>
          <span class="p">(</span><span class="nf">mapc</span> <span class="nf">#&#39;</span><span class="nv">abel-define</span> <span class="nv">value</span><span class="p">))</span>
   <span class="nb">:group</span> <span class="ss">&#39;abel</span><span class="p">)</span>
 </code></pre></div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/01/30/auto-yasnippet/">
-        Re-introducing auto-yasnippet
-      </a>
-    </h1>
-
-    <span class="post-date">30 Jan 2015</span>
-
-    <p>I wonder, when the code isn&#39;t touched in a long time, is it good (no
-need for changes) or bad (became obsolete)?  Let&#39;s find out. I&#39;ll
-explain here
-<a href="https://github.com/abo-abo/auto-yasnippet">auto-yasnippet</a>, my
-<em>second</em> package in MELPA out of more than a dozen currently that saw
-almost no changes since the initial commit two years ago, and see if
-you like it.</p>
-
-<h2 id="short-description-of-yasnippet">Short description of <code>yasnippet</code></h2>
-
-<blockquote>
-<p><a href="https://github.com/capitaomorte/yasnippet">YASnippet</a> is a template
-system for Emacs. It allows you to type an abbreviation and
-automatically expand it into function templates. Bundled language
-templates include: C, C++, C#, Perl, Python, Ruby, SQL, LaTeX, HTML,
-CSS and more.</p>
-</blockquote>
-
-<h3 id="snippet-step-by-step">Snippet step-by-step</h3>
-
-<p>Here&#39;s one of the snippets that I use for <code>emacs-lisp-mode</code>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span># -*- mode: snippet -*-
-# name: function
-# key: d
-# --
-(defun $1 ($2)
-$0)
-</code></pre></div>
-<ul>
-<li>The name of the snippet, <code>function</code> is more like a comment than
-anything else.</li>
-<li>On the other hand, <code>key</code> is very important: it&#39;s what I have to
-insert in the buffer to get the expansion with <kbd>M-x</kbd>
-<code>yas-expand</code>.</li>
-<li>Everything after <code># --</code> is the snippet body.</li>
-<li>This particular snippet has two fields, in places of <code>$1</code> and <code>$2</code>.</li>
-<li><code>$0</code> is where the point will be when the snippet expansion is finished</li>
-</ul>
-
-<p>As I expand, pressing <kbd>TAB</kbd> will move from field to field
-until the expansion is finished.</p>
-
-<h3 id="snippets-are-mode-local">Snippets are mode-local</h3>
-
-<p>Here&#39;s the corresponding snippet for <code>clojure-mode</code>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span># -*- mode: snippet -*-
-# name: defn
-# key: d
-# --
-(defn $1 [$2]
-$0)
-</code></pre></div>
-<p>As you see, the <code>key</code> here is the same; you&#39;re allowed to overload
-them based on the current <code>major-mode</code>.</p>
-
-<p>Even after <a href="/archive/">quite a few posts</a>, I still keep forgetting
-Jekyll&#39;s syntax for the post header. This is my reminder:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span># -*- mode: snippet -*-
-# name: post
-# key: post
-# --
----
-layout: post
-title: $0
----
-</code></pre></div>
-<h3 id="mirrors-in-snippets">Mirrors in snippets</h3>
-
-<p>This simple snippet introduces a powerful concept, and an important
-<code>yasnippet</code> feature that <code>auto-yasnippet</code> uses:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span># -*- mode: snippet -*-
-#name : class ... { ... }
-# --
-class $1$2
-{
-public:
- $1($0)
-};
-</code></pre></div>
-<p>This is a snippet for a class declaration in <code>c++-mode</code>; <code>$1</code>, the
-name of the class, is mirrored in the name of the constructor. This
-way, you don&#39;t have to enter it twice.</p>
-
-<h2 id="what-auto-yasnippet-does">What <code>auto-yasnippet</code> does</h2>
-
-<p>All the snippets listed above are pre-configured, persistent and very
-rarely changed.  They are like <em>plain functions</em> in the source
-code. Each of them needs their own file and so on.</p>
-
-<p>What <code>auto-yasnippet</code> provides are <em>throw-away lambdas</em>, that don&#39;t
-need a file and aren&#39;t persistent.</p>
-
-<h3 id="basic-install-of-auto-yasnippet">Basic install of <code>auto-yasnippet</code></h3>
-
-<p>To get a usable install, you just need to bind <code>aya-create</code>, which is
-similar in spirit to <kbd>M-w</kbd> (<code>kill-ring-save</code>):</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;H-w&quot;</span><span class="p">)</span> <span class="ss">&#39;aya-create</span><span class="p">)</span>
-</code></pre></div>
-<p>and <code>aya-expand</code>, which is similar to <kbd>C-y</kbd> (<code>yank</code>):</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;H-y&quot;</span><span class="p">)</span> <span class="ss">&#39;aya-expand</span><span class="p">)</span>
-</code></pre></div>
-<p>I also like to bind:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-o&quot;</span><span class="p">)</span> <span class="ss">&#39;aya-open-line</span><span class="p">)</span>
-</code></pre></div>
-<p>I&#39;m using <kbd>C-o</kbd> to do all of these:</p>
-
-<ul>
-<li><code>expand-abbrev</code></li>
-<li><code>yas-expand</code> and <code>yas-next-field-or-maybe-expand</code></li>
-<li><code>open-line</code></li>
-</ul>
-
-<h3 id="example-1-javascript">Example 1: JavaScript</h3>
-
-<p>Let&#39;s say that you have this code and want to generate more like it:</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span></span><span class="nx">field1</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;field1&quot;</span><span class="p">);</span>
-</code></pre></div>
-<p>Let&#39;s even assume that you know how <code>auto-yasnippet</code> works and wrote down a slightly modified code beforehand:</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span></span><span class="nx">field</span><span class="o">~</span><span class="mi">1</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;field~1&quot;</span><span class="p">);</span>
-</code></pre></div>
-<p>Here, <code>~</code> are meant to represent <code>yasnippet</code>&#39;s mirrors, they will be
-consistent across every expansion. Now you type <kbd>H-w</kbd> (<code>aya-create</code>), which works on the current
-line when there&#39;s no region. Your code becomes the initial one without <code>~</code>, and <code>aya-current</code> variable now holds:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="nv">aya-current</span>
-<span class="c1">;; =&gt; &quot;field$1 = document.getElementById(\&quot;field$1\&quot;);&quot;</span>
-</code></pre></div>
-<p>By typing e.g. <kbd>H-y 2 C-o RET</kbd>, <kbd>H-y 3 C-o RET</kbd>, <kbd>H-y Final C-o RET</kbd> you get:</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span></span><span class="nx">field2</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;field2&quot;</span><span class="p">);</span>
-<span class="nx">field3</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;field3&quot;</span><span class="p">);</span>
-<span class="nx">fieldFinal</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;fieldFinal&quot;</span><span class="p">);</span>
-</code></pre></div>
-<p>Note again, that there would be little point to saving this snippet in
-a file, since the situation where you need to use it may not come up
-again.</p>
-
-<h3 id="example-2-java">Example 2: Java</h3>
-
-<p>Here&#39;s the starting code, with fields and mirrors already in place
-(note one mirror named <code>~On</code>, one field named <code>~on</code> and one field
-named <code>~true</code>):</p>
-<div class="highlight"><pre><code class="language-Java" data-lang="Java"><span></span><span class="kd">class</span> <span class="nc">Light</span><span class="o">~</span><span class="n">On</span> <span class="kd">implements</span> <span class="n">Runnable</span> <span class="o">{</span>
-  <span class="kd">public</span> <span class="n">Light</span><span class="o">~</span><span class="n">On</span><span class="o">()</span> <span class="o">{}</span>
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
-    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Turning ~on lights&quot;</span><span class="o">);</span>
-    <span class="n">light</span> <span class="o">=</span> <span class="o">~</span><span class="kc">true</span><span class="o">;</span>
-  <span class="o">}</span>
-<span class="o">}</span>
-</code></pre></div>
-<p>Since the code spans multiple lines, as is often the case with Java, you need to mark it
-with a region before <kbd>H-w</kbd>.</p>
-
-<p>Here&#39;s the final result:</p>
-<div class="highlight"><pre><code class="language-Java" data-lang="Java"><span></span><span class="kd">class</span> <span class="nc">LightOn</span> <span class="kd">implements</span> <span class="n">Runnable</span> <span class="o">{</span>
-  <span class="kd">public</span> <span class="nf">LightOn</span><span class="o">()</span> <span class="o">{}</span>
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
-    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Turning on lights&quot;</span><span class="o">);</span>
-    <span class="n">light</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
-  <span class="o">}</span>
-<span class="o">}</span>
-<span class="kd">class</span> <span class="nc">LightOff</span> <span class="kd">implements</span> <span class="n">Runnable</span> <span class="o">{</span>
-  <span class="kd">public</span> <span class="nf">LightOff</span><span class="o">()</span> <span class="o">{}</span>
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
-    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Turning off lights&quot;</span><span class="o">);</span>
-    <span class="n">light</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
-  <span class="o">}</span>
-<span class="o">}</span>
-</code></pre></div>
-<p>No need for <code>AbstractLightFactoryAdapterProvider</code> when we can just
-copy-paste stuff with <code>auto-yasnippet</code>. In fact, I should probably
-emphasize that when describing <code>auto-yasnippet</code>: it&#39;s just an advanced
-copy-paste tool.</p>
-
-<h3 id="example-3-c">Example 3: C++</h3>
-
-<p>Suppose that I want to generate <code>curl</code> from the <code>grad</code>. I can start with this template:</p>
-<div class="highlight"><pre><code class="language-c++" data-lang="c++"><span></span><span class="k">const</span> <span class="n">Point</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">curl</span><span class="p">(</span><span class="n">grad</span><span class="p">[</span><span class="o">~</span><span class="mi">2</span><span class="p">][</span><span class="o">~</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">grad</span><span class="p">[</span><span class="o">~</span><span class="mi">1</span><span class="p">][</span><span class="o">~</span><span class="mi">2</span><span class="p">],</span>
-</code></pre></div>
-<p>Here, I need less than a line, so region needs to be marked again. The result:</p>
-<div class="highlight"><pre><code class="language-C++" data-lang="C++"><span></span>    <span class="k">const</span> <span class="n">Point</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">curl</span><span class="p">(</span><span class="n">grad</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">grad</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span>
-                        <span class="n">grad</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">grad</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
-                        <span class="n">grad</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">grad</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]);</span>
-</code></pre></div>
-<p>Note how annoying it would be to triple check that the indices match.
-This time, I just had to check the first line.</p>
-
-<h3 id="example-4-taking-out-of-the-equation">Example 4: taking <code>~</code> out of the equation</h3>
-
-<p>This works only for one-line snippets with a single mirror parameter.
-In the JavaScript example, you can leave a <code>$</code> instead of each
-occurrence of <code>$1</code>, and with the point in place of the last occurrence
-you call <kbd>H-w</kbd> (<code>aya-create</code>).  Here, <code>|</code> represents the point:</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span></span><span class="nx">field$</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;|&quot;</span><span class="p">);</span>
-</code></pre></div>
-<p>The final result is the same:</p>
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span></span><span class="nx">field1</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;field1&quot;</span><span class="p">);</span>
-<span class="nx">field2</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;field2&quot;</span><span class="p">);</span>
-<span class="nx">field3</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;field3&quot;</span><span class="p">);</span>
-<span class="nx">fieldFinal</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;fieldFinal&quot;</span><span class="p">);</span>
-</code></pre></div>
-<h2 id="outro">Outro</h2>
-
-<p>I hope that this package will lessen your suffering when dealing with
-verbose programming languages and repetitive text, and that a day will
-come when repetition is no longer needed and <code>auto-yasnippet</code> will
-become obsolete.</p>
-
   </div>
   
 </div>

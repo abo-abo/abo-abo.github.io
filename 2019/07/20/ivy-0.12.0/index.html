@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="flattr:id" content="9yl9ry">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Ivy 0.12.0 is out &middot; (or emacs
+    
+  </title>
+
+  <link rel="canonical" href="https://oremacs.com/2019/07/20/ivy-0.12.0/" />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="/public/css/octicons.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Scripts -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body class="layout-reverse theme-base-08">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <!-- <div class="sidebar-item"> -->
+  <!--   <p>unused</p> -->
+  <!-- </div> -->
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+          <a class="sidebar-nav-item" href="/about/">About</a>
+        
+          <a class="sidebar-nav-item" href="/archive/">Archive</a>
+        
+          <a class="sidebar-nav-item" href="/donate/">Donate</a>
+        <div id="github" class="sidebar-nav-item">
+      <button type="button"
+              class="btn btn-info"
+              data-toggle="collapse"
+              data-target="#github-projects">
+        <span class="octicon octicon-mark-github"></span> My Emacs Projects
+      </button>
+      <div id="github-projects" class="collapse">
+        <ul style="margin-bottom:0em;">
+          <li>
+            <a href="https://github.com/abo-abo/lispy">lispy</a>
+            <p>vi-like Paredit</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/worf">worf</a>
+            <p>vi-like bindings for org-mode</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-window">ace-window</a>
+            <p>switch windows with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/ace-link">ace-link</a>
+            <p>follow links with <code>ace-jump-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/function-args">function-args</a>
+            <p>enhance <code>CEDET</code> for C++</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/helm-make">helm-make</a>
+            <p>select a Makefile target with <code>helm</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/make-it-so">make-it-so</a>
+            <p>transform files with Makefile recipes</p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo/org-download">org-download</a>
+            <p>drag-and-drop images to <code>org-mode</code></p>
+          </li>
+          <li>
+            <a href="https://github.com/abo-abo?tab=repositories">
+              <span class="octicon octicon-octoface"></span>
+              and more
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
+
+  <div class="sidebar-item">
+    <p>
+      <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">
+        <img alt="Creative Commons License"
+             style="border-width:0;opacity: 0.3;"
+             src="https://licensebuttons.net/l/by-sa/4.0/88x31.png"/>
+      </a>
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">(or emacs</a>
+            <small>irrelevant)</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <script>
+if (window.location.host.indexOf('oremacs.com') > -1 &&
+    window.location.protocol != "https:") {
+    window.location.protocol = "https";
+}
+</script>
+
+<div class="post">
+  <h1 class="post-title">Ivy 0.12.0 is out</h1>
+  <span class="post-date">20 Jul 2019</span>
+  <h2 id="intro">Intro</h2>
+
+<p><a href="https://github.com/abo-abo/swiper">Ivy</a> is a completion method that&#39;s
+similar to <code>Ido</code>, but with emphasis on simplicity and customizability.</p>
+
+<h2 id="overview">Overview</h2>
+
+<p>The current release constitutes of 398 commits and 6 months of
+progress since <code>0.11.0</code>. Many issues ranging from
+<a href="https://github.com/abo-abo/swiper/issues/1904">#1904</a> to
+<a href="https://github.com/abo-abo/swiper/issues/2151">#2151</a> were fixed.
+The number of people who contributed code as grown to
+<a href="https://github.com/abo-abo/swiper/graphs/contributors">148</a>. Thanks,
+everyone!</p>
+
+<h2 id="details-on-changes">Details on changes</h2>
+
+<p><code>Changelog.org</code> has been a part of the repository since <code>0.6.0</code>, you
+can get the details of the current and past changes:</p>
+
+<ul>
+<li>in <a href="https://github.com/abo-abo/swiper/blob/master/doc/Changelog.org#0120">org-mode</a></li>
+<li>in <a href="http://oremacs.com/swiper/Changelog#0.12.0">HTML</a></li>
+</ul>
+
+<h2 id="highlights">Highlights</h2>
+
+<p>Many improvements are incremental and don&#39;t require any extra code to
+enable.  I&#39;ll go over a few selected features that require a bit of
+information to make a good use of them.</p>
+
+<h3 id="new-bindings">New bindings</h3>
+
+<ul>
+<li><code>counsel-descbinds</code>
+
+<ul>
+<li><kbd>M-o x</kbd> execute action.</li>
+</ul></li>
+<li><code>counsel-file-jump</code>
+
+<ul>
+<li><kbd>M-o d</kbd> dired.</li>
+</ul></li>
+<li><code>counsel-find-file</code>
+
+<ul>
+<li><kbd>M-o c</kbd> copy file.</li>
+<li><kbd>&#96;</kbd> bookmarks: efficiently jump between recent directories.</li>
+<li><kbd>$</kbd> directories stored in environment variables.</li>
+<li><kbd>C-DEL</kbd> go up directory. Customize: <code>counsel-up-directory-level</code>.</li>
+<li><kbd>RET</kbd> open file. Customize: <code>counsel-find-file-extern-extensions</code>.</li>
+<li><kbd>//</kbd> when on remote, cd to remote root.</li>
+<li><kbd>/ C-j</kbd> select local root.</li>
+<li><kbd>~</kbd> when on remote, cd to remote home.</li>
+<li><kbd>/ C-j ~</kbd> cd to local home from remote.</li>
+</ul></li>
+<li><code>counsel-git-log</code>
+
+<ul>
+<li><kbd>M-o v</kbd> open the current commit in <code>magit</code>.</li>
+</ul></li>
+<li><code>counsel-rg</code>
+
+<ul>
+<li><kbd>C-x C-d</kbd> change the current directory for grep.</li>
+</ul></li>
+<li><code>ivy-avy</code>
+
+<ul>
+<li><kbd>C-v</kbd> to scroll down.</li>
+<li><kbd>M-v</kbd> to scroll up.</li>
+</ul></li>
+<li><code>ivy-read</code> <kbd>C-o</kbd>
+
+<ul>
+<li><kbd>m</kbd> mark and move down.</li>
+<li><kbd>u</kbd> unmark and move down.</li>
+<li><kbd>DEL</kbd> move up and unmark.</li>
+<li><kbd>t</kbd> toggle marks.</li>
+<li><kbd>d</kbd> perform the action on all marked elements.</li>
+</ul></li>
+<li><code>ivy-switch-buffer</code>
+
+<ul>
+<li><kbd>C-k</kbd> kill buffer.</li>
+<li><kbd>M-o x</kbd> open buffer file externally.</li>
+</ul></li>
+<li><code>ivy-reverse-i-search</code>
+
+<ul>
+<li><kbd>C-k</kbd> remove item from the history.</li>
+</ul></li>
+</ul>
+
+<h2 id="new-commands-extensions">New Commands extensions</h2>
+
+<p>These commands are new variants and adaptations of existing commands.</p>
+
+<p>Thing at point variants:</p>
+
+<ul>
+<li><code>swiper-all-thing-at-point</code>.</li>
+<li><code>swiper-isearch-thing-at-point</code>.</li>
+<li><code>swiper-thing-at-point</code>.</li>
+</ul>
+
+<p>Search variants that go backwards:</p>
+
+<ul>
+<li><code>swiper-backward</code>.</li>
+<li><code>counsel-grep-or-swiper-backward</code>.</li>
+<li><code>swiper-isearch-backward.</code></li>
+</ul>
+
+<p>A variant of <code>ivy-switch-buffer</code> with live preview:</p>
+
+<ul>
+<li><code>counsel-switch-buffer</code>.</li>
+<li><code>counsel-switch-buffer-other-window</code>.</li>
+</ul>
+
+<p>And finally:</p>
+
+<ul>
+<li><code>counsel-dired</code> - like <code>counsel-find-file</code>, but open <code>dired</code>.</li>
+<li><code>swiper-isearch-toggle</code> - toggle between <code>swiper</code> and <code>isearch</code>.</li>
+</ul>
+
+<h2 id="new-commands">New Commands</h2>
+
+<p>I have put these separately so they don&#39;t get lost in the crowd. Be sure to try them out.</p>
+
+<ul>
+<li><code>counsel-compile</code> - completion for <code>compile</code>.</li>
+<li><code>counsel-register</code> - completion for registers.</li>
+<li><code>counsel-minor</code> - completion for minor modes.</li>
+<li><code>swiper-isearch</code> - a faster <code>swiper</code> that&#39;s not line-based.</li>
+</ul>
+
+<h2 id="outro">Outro</h2>
+
+<p>Again, thanks to all the contributors. Happy hacking!</p>
+
+</div>
+
+<div class="twitter-share">
+  <a href="https://twitter.com/share"
+     class="twitter-share-button"
+     data-via="_abo_abo"
+     data-dnt="true">
+    Tweet
+  </a>
+</div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'oremacs'; // required: replace example with your forum shortname
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+<script>
+  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+</script>
+<noscript>
+  Please enable JavaScript to view the
+  <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>

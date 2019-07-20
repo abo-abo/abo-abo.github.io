@@ -139,6 +139,161 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2019/07/20/ivy-0.12.0/">
+        Ivy 0.12.0 is out
+      </a>
+    </h1>
+
+    <span class="post-date">20 Jul 2019</span>
+
+    <h2 id="intro">Intro</h2>
+
+<p><a href="https://github.com/abo-abo/swiper">Ivy</a> is a completion method that&#39;s
+similar to <code>Ido</code>, but with emphasis on simplicity and customizability.</p>
+
+<h2 id="overview">Overview</h2>
+
+<p>The current release constitutes of 398 commits and 6 months of
+progress since <code>0.11.0</code>. Many issues ranging from
+<a href="https://github.com/abo-abo/swiper/issues/1904">#1904</a> to
+<a href="https://github.com/abo-abo/swiper/issues/2151">#2151</a> were fixed.
+The number of people who contributed code as grown to
+<a href="https://github.com/abo-abo/swiper/graphs/contributors">148</a>. Thanks,
+everyone!</p>
+
+<h2 id="details-on-changes">Details on changes</h2>
+
+<p><code>Changelog.org</code> has been a part of the repository since <code>0.6.0</code>, you
+can get the details of the current and past changes:</p>
+
+<ul>
+<li>in <a href="https://github.com/abo-abo/swiper/blob/master/doc/Changelog.org#0120">org-mode</a></li>
+<li>in <a href="http://oremacs.com/swiper/Changelog#0.12.0">HTML</a></li>
+</ul>
+
+<h2 id="highlights">Highlights</h2>
+
+<p>Many improvements are incremental and don&#39;t require any extra code to
+enable.  I&#39;ll go over a few selected features that require a bit of
+information to make a good use of them.</p>
+
+<h3 id="new-bindings">New bindings</h3>
+
+<ul>
+<li><code>counsel-descbinds</code>
+
+<ul>
+<li><kbd>M-o x</kbd> execute action.</li>
+</ul></li>
+<li><code>counsel-file-jump</code>
+
+<ul>
+<li><kbd>M-o d</kbd> dired.</li>
+</ul></li>
+<li><code>counsel-find-file</code>
+
+<ul>
+<li><kbd>M-o c</kbd> copy file.</li>
+<li><kbd>&#96;</kbd> bookmarks: efficiently jump between recent directories.</li>
+<li><kbd>$</kbd> directories stored in environment variables.</li>
+<li><kbd>C-DEL</kbd> go up directory. Customize: <code>counsel-up-directory-level</code>.</li>
+<li><kbd>RET</kbd> open file. Customize: <code>counsel-find-file-extern-extensions</code>.</li>
+<li><kbd>//</kbd> when on remote, cd to remote root.</li>
+<li><kbd>/ C-j</kbd> select local root.</li>
+<li><kbd>~</kbd> when on remote, cd to remote home.</li>
+<li><kbd>/ C-j ~</kbd> cd to local home from remote.</li>
+</ul></li>
+<li><code>counsel-git-log</code>
+
+<ul>
+<li><kbd>M-o v</kbd> open the current commit in <code>magit</code>.</li>
+</ul></li>
+<li><code>counsel-rg</code>
+
+<ul>
+<li><kbd>C-x C-d</kbd> change the current directory for grep.</li>
+</ul></li>
+<li><code>ivy-avy</code>
+
+<ul>
+<li><kbd>C-v</kbd> to scroll down.</li>
+<li><kbd>M-v</kbd> to scroll up.</li>
+</ul></li>
+<li><code>ivy-read</code> <kbd>C-o</kbd>
+
+<ul>
+<li><kbd>m</kbd> mark and move down.</li>
+<li><kbd>u</kbd> unmark and move down.</li>
+<li><kbd>DEL</kbd> move up and unmark.</li>
+<li><kbd>t</kbd> toggle marks.</li>
+<li><kbd>d</kbd> perform the action on all marked elements.</li>
+</ul></li>
+<li><code>ivy-switch-buffer</code>
+
+<ul>
+<li><kbd>C-k</kbd> kill buffer.</li>
+<li><kbd>M-o x</kbd> open buffer file externally.</li>
+</ul></li>
+<li><code>ivy-reverse-i-search</code>
+
+<ul>
+<li><kbd>C-k</kbd> remove item from the history.</li>
+</ul></li>
+</ul>
+
+<h2 id="new-commands-extensions">New Commands extensions</h2>
+
+<p>These commands are new variants and adaptations of existing commands.</p>
+
+<p>Thing at point variants:</p>
+
+<ul>
+<li><code>swiper-all-thing-at-point</code>.</li>
+<li><code>swiper-isearch-thing-at-point</code>.</li>
+<li><code>swiper-thing-at-point</code>.</li>
+</ul>
+
+<p>Search variants that go backwards:</p>
+
+<ul>
+<li><code>swiper-backward</code>.</li>
+<li><code>counsel-grep-or-swiper-backward</code>.</li>
+<li><code>swiper-isearch-backward.</code></li>
+</ul>
+
+<p>A variant of <code>ivy-switch-buffer</code> with live preview:</p>
+
+<ul>
+<li><code>counsel-switch-buffer</code>.</li>
+<li><code>counsel-switch-buffer-other-window</code>.</li>
+</ul>
+
+<p>And finally:</p>
+
+<ul>
+<li><code>counsel-dired</code> - like <code>counsel-find-file</code>, but open <code>dired</code>.</li>
+<li><code>swiper-isearch-toggle</code> - toggle between <code>swiper</code> and <code>isearch</code>.</li>
+</ul>
+
+<h2 id="new-commands">New Commands</h2>
+
+<p>I have put these separately so they don&#39;t get lost in the crowd. Be sure to try them out.</p>
+
+<ul>
+<li><code>counsel-compile</code> - completion for <code>compile</code>.</li>
+<li><code>counsel-register</code> - completion for registers.</li>
+<li><code>counsel-minor</code> - completion for minor modes.</li>
+<li><code>swiper-isearch</code> - a faster <code>swiper</code> that&#39;s not line-based.</li>
+</ul>
+
+<h2 id="outro">Outro</h2>
+
+<p>Again, thanks to all the contributors. Happy hacking!</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2019/07/09/ivy-reverse-i-search/">
         Ivy reverse-i-search
       </a>
@@ -487,78 +642,6 @@ candidates. Here&#39;s an example hydra to facilitate it:</p>
 <h2 id="outro">Outro</h2>
 
 <p>Big thanks to all contributors, and I hope you enjoy the new release. Happy hacking!</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2019/04/11/worf-change-time/">
-        Change the current time in Org-mode
-      </a>
-    </h1>
-
-    <span class="post-date">11 Apr 2019</span>
-
-    <h2 id="intro">Intro</h2>
-
-<p>I&#39;m constantly amazed by other people&#39;s Org workflows. Now that <a href="https://old.reddit.com/r/emacs/search?q=Weekly+tips+trick&restrict_sr=on&sort=relevance&t=all">the weekly tips</a> are a
-thing, I see more and more cool Org configs, and I&#39;m inspired to get more organized myself.</p>
-
-<p>My own Org usage is simplistic in some areas, and quite advanced in others. While I wrote a lot of
-code to manipulate Org files ( <a href="https://github.com/abo-abo/worf">worf</a>,
-<a href="https://github.com/abo-abo/org-download">org-download</a>, <a href="https://github.com/abo-abo/orca">orca</a>,
-<a href="https://github.com/abo-abo/org-fu">org-fu</a>, <a href="https://github.com/abo-abo/swiper">counsel</a>), the
-amount of Org files and TODO items that I have isn&#39;t huge:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">counsel-git</span> <span class="s">&quot;org$ !log&quot;</span><span class="p">)</span>
-<span class="c1">;; 174 items</span>
-
-<span class="p">(</span><span class="nv">counsel-rg</span> <span class="s">&quot;\\* DONE|CANCELLED|TODO&quot;</span><span class="p">)</span>
-<span class="c1">;; 8103 items</span>
-</code></pre></div>
-<p>Still, that&#39;s enough to get out-of-date files: just today I dug up a file with 20 outstanding TODO
-items that should have been canceled last November!</p>
-
-<h2 id="how-to-close-20-todos-using-a-timestamp-in-the-past">How to close 20 TODOs using a timestamp in the past</h2>
-
-<p>When I cancel an item, pressing <kbd>tc</kbd> (mnemonic for TODO-Cancel), Org mode inserts a time
-stamp with the current time. However, for this file, I wanted to use October 31st 2018 instead of
-the current time. Org mode already has options like <code>org-use-last-clock-out-time-as-effective-time</code>,
-<code>org-use-effective-time</code>, and <code>org-extend-today-until</code> that manipulate the current time for
-timestamps, but they didn&#39;t fit my use case.</p>
-
-<p>So I&#39;ve advised <code>org-current-effective-time</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defvar-local</span> <span class="nv">worf--current-effective-time</span> <span class="no">nil</span><span class="p">)</span>
-
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">worf--current-effective-time</span> <span class="p">(</span><span class="nv">orig-fn</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">or</span> <span class="nv">worf--current-effective-time</span>
-      <span class="p">(</span><span class="nf">funcall</span> <span class="nv">orig-fn</span><span class="p">)))</span>
-
-<span class="p">(</span><span class="nv">advice-add</span> <span class="ss">&#39;org-current-effective-time</span>
-            <span class="nb">:around</span> <span class="nf">#&#39;</span><span class="nv">worf--current-effective-time</span><span class="p">)</span>
-
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">worf-change-time</span> <span class="p">()</span>
-  <span class="s">&quot;Set </span><span class="ss">`current-time&#39;</span><span class="s"> in the current buffer for </span><span class="ss">`org-todo&#39;</span><span class="s">.</span>
-<span class="s">Use </span><span class="ss">`keyboard-quit&#39;</span><span class="s"> to unset it.&quot;</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">setq</span> <span class="nv">worf--current-effective-time</span>
-        <span class="p">(</span><span class="k">condition-case</span> <span class="no">nil</span>
-            <span class="p">(</span><span class="nv">org-read-date</span> <span class="no">t</span> <span class="ss">&#39;totime</span><span class="p">)</span>
-          <span class="p">(</span><span class="nv">quit</span> <span class="no">nil</span><span class="p">))))</span>
-</code></pre></div>
-<p>A few things of note here:</p>
-
-<ul>
-<li><code>worf--current-effective-time</code> is buffer-local, so that it modifies time only for the current
-buffer</li>
-<li>I re-use the awesome <code>org-read-date</code> for a nice visual feedback when inputting the new time</li>
-<li>Instead of having a separate function to undo the current-time override, I capture the <code>quit</code>
-signal that <kbd>C-g</kbd> sends.</li>
-</ul>
-
-<h2 id="outro">Outro</h2>
-
-<p>The above code is already part of <a href="https://github.com/abo-abo/worf">worf</a> and is bound to
-<kbd>cT</kbd>. I even added it to <a href="https://oremacs.com/worf/README.html#worf-change-time">the manual</a>. I hope you find it useful. Happy organizing!</p>
 
   </div>
   
