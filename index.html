@@ -139,6 +139,140 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2019/10/16/ivy-0.13.0/">
+        Ivy 0.13.0 is out
+      </a>
+    </h1>
+
+    <span class="post-date">16 Oct 2019</span>
+
+    <h2 id="intro">Intro</h2>
+
+<p><a href="https://github.com/abo-abo/swiper">Ivy</a> is a completion method that&#39;s
+similar to <code>Ido</code>, but with emphasis on simplicity and customizability.</p>
+
+<h2 id="overview">Overview</h2>
+
+<p>The current release constitutes of 183 commits and 3 months of
+progress since <code>0.12.0</code>. Many issues ranging from
+<a href="https://github.com/abo-abo/swiper/issues/2153">#2153</a> to
+<a href="https://github.com/abo-abo/swiper/issues/2278">#2278</a> were fixed.
+The number of people who contributed code as grown to form 148 to
+<a href="https://github.com/abo-abo/swiper/graphs/contributors">160</a>. Thanks,
+everyone!</p>
+
+<h2 id="details-on-changes">Details on changes</h2>
+
+<p><code>Changelog.org</code> has been a part of the repository since <code>0.6.0</code>, you
+can get the details of the current and past changes:</p>
+
+<ul>
+<li>in <a href="https://github.com/abo-abo/swiper/blob/master/doc/Changelog.org#0130">org-mode</a></li>
+<li>in <a href="http://oremacs.com/swiper/Changelog#0.13.0">HTML</a></li>
+</ul>
+
+<h2 id="highlights">Highlights</h2>
+
+<p>Many improvements are incremental and don&#39;t require any extra code to
+enable.  I&#39;ll go over a few selected features that require a bit of
+information to make a good use of them.</p>
+
+<h3 id="new-bindings">New bindings</h3>
+
+<ul>
+<li><code>counsel-find-file</code>
+
+<ul>
+<li><kbd>~~</kbd> to move to the local home directory from remote or <code>/sudo::</code>.</li>
+<li><kbd>/ RET ~</kbd> achieves the same thing, but is longer.</li>
+<li><kbd>M-o R</kbd> calls <code>find-file-read-only</code>.</li>
+</ul></li>
+<li><code>counsel-git-grep</code>
+
+<ul>
+<li><kbd>C-x C-d</kbd> to switch the current directory.</li>
+</ul></li>
+<li><code>swiper-isearch</code>
+
+<ul>
+<li><kbd>M-o w</kbd> to copy the current line and go back to where you started.</li>
+</ul></li>
+</ul>
+
+<h2 id="new-features">New features</h2>
+
+<h3 id="counsel-package"><code>counsel-package</code></h3>
+
+<p>The idea of <code>counsel-package</code> is to install and remove packages with a single binding:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c P&quot;</span><span class="p">)</span> <span class="ss">&#39;counsel-package</span><span class="p">)</span>
+</code></pre></div>
+<p>But if the package contents weren&#39;t up to date, a separate <kbd>M-x</kbd> <code>package-refresh-contents</code>
+had to be triggered, which was an annoying overhead. Now <code>counsel-package</code> will look at the time
+stamps of the appropriate <code>archive-contents</code> files, and call <code>package-refresh-contents</code> if the
+timestamp is outdated by more than 4 hours.</p>
+
+<h3 id="counsel-m-x"><code>counsel-M-x</code></h3>
+
+<p>Some commands are intended to be called only via their key binding. Make them disappear
+from <code>counsel-M-x</code> like this:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">put</span> <span class="ss">&#39;counsel-find-symbol</span> <span class="ss">&#39;no-counsel-M-x</span> <span class="no">t</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="counsel-rg"><code>counsel-rg</code></h3>
+
+<p>The default setting of <code>ivy-case-fold-search-default</code> is <code>&#39;auto</code>, which means:</p>
+
+<ul>
+<li>the input &quot;emacs&quot; matches &quot;emacs&quot;, &quot;EMACS&quot;, and &quot;Emacs&quot;</li>
+<li>the input &quot;Emacs&quot; matches only &quot;Emacs&quot;</li>
+</ul>
+
+<p>This now also applies to <code>counsel-rg</code>: Ivy will pass the <code>-i</code> flag to <code>ripgrep</code> appropriately, based
+on <code>ivy-case-fold-search-default</code>. You should remove the <code>-S</code> flag from <code>counsel-rg-base-command</code> if
+you customized it.</p>
+
+<h3 id="ivy-update-candidates"><code>ivy-update-candidates</code></h3>
+
+<p>This is a new API for asynchronous calls. To use it, pass to <code>ivy-read</code>: <code>:dynamic-collection t</code>,
+and a collection function that takes a user input string, starts some asynchronous process based on
+that input, and returns <code>0</code>. The <code>0</code> return result tells Ivy that no candidates were returned;
+instead, <code>ivy-update-candidates</code> is used in the async callback.</p>
+
+<p>See <code>counsel-google</code> for a reference implementation.</p>
+
+<h3 id="ivy-use-virtual-buffers"><code>ivy-use-virtual-buffers</code></h3>
+
+<p>You can now choose between: recent files, or bookmarks, or both, or none. Don&#39;t forget that
+<code>counsel-set-variable</code> makes it very easy to set customization options.</p>
+
+<h2 id="new-commands">New Commands</h2>
+
+<p>I have put these separately so they don&#39;t get lost in the crowd. Be sure to try them out.</p>
+
+<ul>
+<li><code>counsel-buffer-or-recentf</code> - list buffers visiting files (highlighted) then the <code>recentf</code> file
+list.</li>
+<li><code>counsel-fonts</code> - show a list of all supported font families for a particular frame.</li>
+<li><code>counsel-google</code> - asynchronously query the Google predictive search API.</li>
+<li><code>counsel-major</code> - switch <code>major-mode</code>.</li>
+<li><code>counsel-slime-repl-history</code> - browse SLIME REPL history.</li>
+</ul>
+
+<h2 id="outro">Outro</h2>
+
+<p>Again, thanks to all the contributors. Happy hacking!</p>
+
+<p>PS. Thanks to everyone who supports me on <a href="https://liberapay.com/abo-abo">Liberapay</a> and
+<a href="https://www.patreon.com/abo_abo">Patreon</a>!</p>
+
+<p>I am now also on <a href="https://github.com/users/abo-abo/sponsorship">Github sponsors</a>, which is an
+interesting new effort by Github. The cool thing is that&#39;s more integrated with Github, there are
+less transaction fees, and Github matches every donation for up to $5000 for a whole year.
+Please consider joining there, since every $1 per month that you donate is doubled by Github.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2019/07/20/ivy-0.12.0/">
         Ivy 0.12.0 is out
       </a>
@@ -552,96 +686,6 @@ is loaded. Example:</p>
 
 <p>PS. Thanks to everyone who supports me on <a href="https://liberapay.com/abo-abo">Liberapay</a> and
 <a href="https://www.patreon.com/abo_abo">Patreon</a>!</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2019/05/11/avy-0.5.0/">
-        avy 0.5.0 is out
-      </a>
-    </h1>
-
-    <span class="post-date">11 May 2019</span>
-
-    <p>This release consists of 109 commits done over the course of the last 3 years by me and many
-<a href="https://github.com/abo-abo/avy/graphs/contributors">contributors</a>. Similarly to the <code>0.4.0</code>
-release, the release notes are in
-<a href="https://github.com/abo-abo/avy/blob/master/doc/Changelog.org#050">Changelog.org</a>. I recommend
-reading them <a href="https://raw.githubusercontent.com/abo-abo/avy/master/doc/Changelog.org">inside Emacs</a>.</p>
-
-<p><img src="https://raw.githubusercontent.com/wiki/abo-abo/avy/images/avy-avatar-1.png" alt="avy.png"></p>
-
-<h2 id="highlights">Highlights</h2>
-
-<p>A lot of new code is just straight upgrades, you don&#39;t need to do
-anything extra to use them. Below, I&#39;ll describe the other part of the
-new code, which is new commands and custom vars.</p>
-
-<h3 id="new-api-functions">New API functions</h3>
-
-<p>New functions have been added as drop-in replacements of double-dash (private) Avy functions that
-were used in other packages and configs. Please replace the references to the obsolete functions.</p>
-
-<ul>
-<li><code>avy-jump</code> is a drop-in replacement of <code>avy--generic-jump</code>,</li>
-<li><code>avy-process</code> is a drop-in replacement of <code>avy--process</code>.</li>
-</ul>
-
-<h3 id="new-dispatch-actions">New dispatch actions</h3>
-
-<p>The concept of dispatch actions was introduced in <a href="https://oremacs.com/2016/01/23/avy-0.4.0/">0.4.0</a>.
-Suppose you have bound:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-t&quot;</span><span class="p">)</span> <span class="ss">&#39;avy-goto-word-1</span><span class="p">)</span>
-</code></pre></div>
-<p>and a word that starts with a &quot;w&quot; and is select-able with &quot;a&quot;. Here&#39;s what you can do now:</p>
-
-<ul>
-<li><kbd>M-t w a</kbd> to jump there</li>
-<li><kbd>M-t w x a</kbd> - <code>avy-action-kill-move</code>: kill the word and move there,</li>
-<li><kbd>M-t w X a</kbd> - <code>avy-action-kill-stay</code>: kill the word without moving the point,</li>
-<li><kbd>M-t w i a</kbd> - <code>avy-action-ispell</code>: use ispell/flyspell to correct the word,</li>
-<li><kbd>M-t w y a</kbd> - <code>avy-action-yank</code>: yank the word at point,</li>
-<li><kbd>M-t w t a</kbd> - <code>avy-action-teleport</code>: kill the word and yank it at point,</li>
-<li><kbd>M-t w z a</kbd> - <code>avy-action-zap-to-char</code>: kill from point up to selected point.</li>
-</ul>
-
-<p>You can customize <code>avy-dispatch-alist</code> to modify these actions, and also ensure that there&#39;s no
-overlap with your <code>avy-keys</code>, if you customized them.</p>
-
-<h3 id="new-avy-style-setting-words">New <code>avy-style</code> setting: &#39;words</h3>
-
-<p>You can now customize:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">avy-style</span> <span class="ss">&#39;words</span><span class="p">)</span>
-</code></pre></div>
-<p>And you&#39;ll see overlays like &quot;by&quot;, &quot;if&quot;, &quot;is&quot;, &quot;it&quot;, &quot;my&quot; for 2-letter sequences, and &quot;can&quot;, &quot;car&quot;,
-&quot;cog&quot; for 3-letter sequences. You might find them easier to type than &quot;hla&quot;, &quot;lls&quot; and &quot;jhl&quot;. But
-you will have to adjust your <code>avy-dispatch-alist</code>, e.g. to use only upper case characters.</p>
-
-<p><img src="/download/avy-style-words.png" alt="avy-style-words"></p>
-
-<h3 id="avy-linum-mode"><code>avy-linum-mode</code></h3>
-
-<p>This is feature is a mix of <code>linum-mode</code> and <code>ace-window-display-mode</code>. You&#39;ll see the overlays when
-you enable this mode, so that there&#39;s less context switch when you call <code>avy-goto-line</code>.</p>
-
-<h3 id="restarting-an-avy-search">Restarting an <code>avy</code> search</h3>
-
-<p>Suppose you jumped to a word that starts with &quot;a&quot;. Now you want to jump to a different word that
-also starts with &quot;a&quot;. You can use <code>avy-resume</code> for this.</p>
-
-<p>Additionally, you can use <code>avy-next</code> and <code>avy-prev</code> to cycle between the last <code>avy</code>
-candidates. Here&#39;s an example hydra to facilitate it:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-avy-cycle</span> <span class="p">()</span>
-  <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">avy-next</span> <span class="s">&quot;next&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;k&quot;</span> <span class="nv">avy-prev</span> <span class="s">&quot;prev&quot;</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span> <span class="s">&quot;quit&quot;</span><span class="p">))</span>
-
-<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-M-&#39;&quot;</span><span class="p">)</span> <span class="ss">&#39;hydra-avy-cycle/body</span><span class="p">)</span>
-</code></pre></div>
-<h2 id="outro">Outro</h2>
-
-<p>Big thanks to all contributors, and I hope you enjoy the new release. Happy hacking!</p>
 
   </div>
   

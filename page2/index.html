@@ -139,6 +139,96 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2019/05/11/avy-0.5.0/">
+        avy 0.5.0 is out
+      </a>
+    </h1>
+
+    <span class="post-date">11 May 2019</span>
+
+    <p>This release consists of 109 commits done over the course of the last 3 years by me and many
+<a href="https://github.com/abo-abo/avy/graphs/contributors">contributors</a>. Similarly to the <code>0.4.0</code>
+release, the release notes are in
+<a href="https://github.com/abo-abo/avy/blob/master/doc/Changelog.org#050">Changelog.org</a>. I recommend
+reading them <a href="https://raw.githubusercontent.com/abo-abo/avy/master/doc/Changelog.org">inside Emacs</a>.</p>
+
+<p><img src="https://raw.githubusercontent.com/wiki/abo-abo/avy/images/avy-avatar-1.png" alt="avy.png"></p>
+
+<h2 id="highlights">Highlights</h2>
+
+<p>A lot of new code is just straight upgrades, you don&#39;t need to do
+anything extra to use them. Below, I&#39;ll describe the other part of the
+new code, which is new commands and custom vars.</p>
+
+<h3 id="new-api-functions">New API functions</h3>
+
+<p>New functions have been added as drop-in replacements of double-dash (private) Avy functions that
+were used in other packages and configs. Please replace the references to the obsolete functions.</p>
+
+<ul>
+<li><code>avy-jump</code> is a drop-in replacement of <code>avy--generic-jump</code>,</li>
+<li><code>avy-process</code> is a drop-in replacement of <code>avy--process</code>.</li>
+</ul>
+
+<h3 id="new-dispatch-actions">New dispatch actions</h3>
+
+<p>The concept of dispatch actions was introduced in <a href="https://oremacs.com/2016/01/23/avy-0.4.0/">0.4.0</a>.
+Suppose you have bound:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;M-t&quot;</span><span class="p">)</span> <span class="ss">&#39;avy-goto-word-1</span><span class="p">)</span>
+</code></pre></div>
+<p>and a word that starts with a &quot;w&quot; and is select-able with &quot;a&quot;. Here&#39;s what you can do now:</p>
+
+<ul>
+<li><kbd>M-t w a</kbd> to jump there</li>
+<li><kbd>M-t w x a</kbd> - <code>avy-action-kill-move</code>: kill the word and move there,</li>
+<li><kbd>M-t w X a</kbd> - <code>avy-action-kill-stay</code>: kill the word without moving the point,</li>
+<li><kbd>M-t w i a</kbd> - <code>avy-action-ispell</code>: use ispell/flyspell to correct the word,</li>
+<li><kbd>M-t w y a</kbd> - <code>avy-action-yank</code>: yank the word at point,</li>
+<li><kbd>M-t w t a</kbd> - <code>avy-action-teleport</code>: kill the word and yank it at point,</li>
+<li><kbd>M-t w z a</kbd> - <code>avy-action-zap-to-char</code>: kill from point up to selected point.</li>
+</ul>
+
+<p>You can customize <code>avy-dispatch-alist</code> to modify these actions, and also ensure that there&#39;s no
+overlap with your <code>avy-keys</code>, if you customized them.</p>
+
+<h3 id="new-avy-style-setting-words">New <code>avy-style</code> setting: &#39;words</h3>
+
+<p>You can now customize:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">avy-style</span> <span class="ss">&#39;words</span><span class="p">)</span>
+</code></pre></div>
+<p>And you&#39;ll see overlays like &quot;by&quot;, &quot;if&quot;, &quot;is&quot;, &quot;it&quot;, &quot;my&quot; for 2-letter sequences, and &quot;can&quot;, &quot;car&quot;,
+&quot;cog&quot; for 3-letter sequences. You might find them easier to type than &quot;hla&quot;, &quot;lls&quot; and &quot;jhl&quot;. But
+you will have to adjust your <code>avy-dispatch-alist</code>, e.g. to use only upper case characters.</p>
+
+<p><img src="/download/avy-style-words.png" alt="avy-style-words"></p>
+
+<h3 id="avy-linum-mode"><code>avy-linum-mode</code></h3>
+
+<p>This is feature is a mix of <code>linum-mode</code> and <code>ace-window-display-mode</code>. You&#39;ll see the overlays when
+you enable this mode, so that there&#39;s less context switch when you call <code>avy-goto-line</code>.</p>
+
+<h3 id="restarting-an-avy-search">Restarting an <code>avy</code> search</h3>
+
+<p>Suppose you jumped to a word that starts with &quot;a&quot;. Now you want to jump to a different word that
+also starts with &quot;a&quot;. You can use <code>avy-resume</code> for this.</p>
+
+<p>Additionally, you can use <code>avy-next</code> and <code>avy-prev</code> to cycle between the last <code>avy</code>
+candidates. Here&#39;s an example hydra to facilitate it:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-avy-cycle</span> <span class="p">()</span>
+  <span class="p">(</span><span class="s">&quot;j&quot;</span> <span class="nv">avy-next</span> <span class="s">&quot;next&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;k&quot;</span> <span class="nv">avy-prev</span> <span class="s">&quot;prev&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="no">nil</span> <span class="s">&quot;quit&quot;</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-M-&#39;&quot;</span><span class="p">)</span> <span class="ss">&#39;hydra-avy-cycle/body</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="outro">Outro</h2>
+
+<p>Big thanks to all contributors, and I hope you enjoy the new release. Happy hacking!</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2019/04/11/worf-change-time/">
         Change the current time in Org-mode
       </a>
@@ -441,82 +531,6 @@ likely hang Emacs for a while.</p>
 <h2 id="outro">Outro</h2>
 
 <p>I hope you found these bits of info useful. Happy hacking!</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2017/12/27/company-numbers/">
-        Using digits to select company-mode candidates
-      </a>
-    </h1>
-
-    <span class="post-date">27 Dec 2017</span>
-
-    <p>I&#39;d like to share a customization of
-<a href="https://github.com/company-mode/company-mode">company-mode</a> that I&#39;ve
-been using for a while.  I refined it just recently, I&#39;ll explain
-below how.</p>
-
-<h2 id="basic-setting">Basic setting</h2>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">company-show-numbers</span> <span class="no">t</span><span class="p">)</span>
-</code></pre></div>
-<p>Now, numbers are shown next to the candidates, although they don&#39;t do
-anything yet:</p>
-
-<p><img src="/download/company-numbers.png" alt="company-numbers"></p>
-
-<h2 id="add-some-bindings">Add some bindings</h2>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">map</span> <span class="nv">company-active-map</span><span class="p">))</span>
-  <span class="p">(</span><span class="nf">mapc</span>
-   <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
-     <span class="p">(</span><span class="nf">define-key</span> <span class="nv">map</span> <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;%d&quot;</span> <span class="nv">x</span><span class="p">)</span> <span class="ss">&#39;ora-company-number</span><span class="p">))</span>
-   <span class="p">(</span><span class="nv">number-sequence</span> <span class="mi">0</span> <span class="mi">9</span><span class="p">))</span>
-  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">map</span> <span class="s">&quot; &quot;</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span>
-                        <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-                        <span class="p">(</span><span class="nv">company-abort</span><span class="p">)</span>
-                        <span class="p">(</span><span class="nf">self-insert-command</span> <span class="mi">1</span><span class="p">)))</span>
-  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;&lt;return&gt;&quot;</span><span class="p">)</span> <span class="no">nil</span><span class="p">))</span>
-</code></pre></div>
-<p>Besides binding <kbd>0</kbd>..<kbd>9</kbd> to complete their
-corresponding candidate, it also un-binds <kbd>RET</kbd> and binds
-<kbd>SPC</kbd> to close the company popup.</p>
-
-<h2 id="actual-code">Actual code</h2>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">ora-company-number</span> <span class="p">()</span>
-  <span class="s">&quot;Forward to </span><span class="ss">`company-complete-number&#39;</span><span class="s">.</span>
-
-<span class="s">Unless the number is potentially part of the candidate.</span>
-<span class="s">In that case, insert the number.&quot;</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">k</span> <span class="p">(</span><span class="nf">this-command-keys</span><span class="p">))</span>
-         <span class="p">(</span><span class="nv">re</span> <span class="p">(</span><span class="nf">concat</span> <span class="s">&quot;^&quot;</span> <span class="nv">company-prefix</span> <span class="nv">k</span><span class="p">)))</span>
-    <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">cl-find-if</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">s</span><span class="p">)</span> <span class="p">(</span><span class="nf">string-match</span> <span class="nv">re</span> <span class="nv">s</span><span class="p">))</span>
-                    <span class="nv">company-candidates</span><span class="p">)</span>
-        <span class="p">(</span><span class="nf">self-insert-command</span> <span class="mi">1</span><span class="p">)</span>
-      <span class="p">(</span><span class="nv">company-complete-number</span> <span class="p">(</span><span class="nf">string-to-number</span> <span class="nv">k</span><span class="p">)))))</span>
-</code></pre></div>
-<p>Initially, I would just bind <code>company-complete-number</code>. The problem
-with that was that if my candidate list was <code>(&quot;var0&quot; &quot;var1&quot; &quot;var2&quot;)</code>,
-then entering <kbd>1</kbd> means:</p>
-
-<ul>
-<li>select the first candidate (i.e. <code>&quot;var0&quot;</code>), instead of:</li>
-<li>insert <code>&quot;1&quot;</code>, resulting in <code>&quot;var1&quot;</code>, i.e. the second candidate.</li>
-</ul>
-
-<p>My customization will now check <code>company-candidates</code>&mdash;the list of
-possible completions&mdash;for the above mentioned conflict. And if
-it&#39;s detected, the key pressed will be inserted instead of being used
-to select a candidate.</p>
-
-<h2 id="outro">Outro</h2>
-
-<p>Looking at <code>git-log</code>, I&#39;ve been using <code>company-complete-number</code> for at
-least 3 years now.  It&#39;s quite useful, and now also more seamless,
-since I don&#39;t have to type e.g. <kbd>C-q 2</kbd> any more. In any
-case, thanks to the author and the contributors of
-<code>company-mode</code>. Merry Christmas and happy hacking in the New Year!</p>
 
   </div>
   

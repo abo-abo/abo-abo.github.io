@@ -4,13 +4,143 @@
  <title>(or emacs</title>
  <link href="https://oremacs.com/atom.xml" rel="self"/>
  <link href="https://oremacs.com/"/>
- <updated>2019-07-20T20:35:34+02:00</updated>
+ <updated>2019-10-16T18:18:28+02:00</updated>
  <id>https://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Ivy 0.13.0 is out</title>
+   <link href="https://oremacs.com/2019/10/16/ivy-0.13.0/"/>
+   <updated>2019-10-16T00:00:00+02:00</updated>
+   <id>https://oremacs.com/2019/10/16/ivy-0.13.0</id>
+   <content type="html">&lt;h2 id=&quot;intro&quot;&gt;Intro&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/abo-abo/swiper&quot;&gt;Ivy&lt;/a&gt; is a completion method that&amp;#39;s
+similar to &lt;code&gt;Ido&lt;/code&gt;, but with emphasis on simplicity and customizability.&lt;/p&gt;
+
+&lt;h2 id=&quot;overview&quot;&gt;Overview&lt;/h2&gt;
+
+&lt;p&gt;The current release constitutes of 183 commits and 3 months of
+progress since &lt;code&gt;0.12.0&lt;/code&gt;. Many issues ranging from
+&lt;a href=&quot;https://github.com/abo-abo/swiper/issues/2153&quot;&gt;#2153&lt;/a&gt; to
+&lt;a href=&quot;https://github.com/abo-abo/swiper/issues/2278&quot;&gt;#2278&lt;/a&gt; were fixed.
+The number of people who contributed code as grown to form 148 to
+&lt;a href=&quot;https://github.com/abo-abo/swiper/graphs/contributors&quot;&gt;160&lt;/a&gt;. Thanks,
+everyone!&lt;/p&gt;
+
+&lt;h2 id=&quot;details-on-changes&quot;&gt;Details on changes&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;Changelog.org&lt;/code&gt; has been a part of the repository since &lt;code&gt;0.6.0&lt;/code&gt;, you
+can get the details of the current and past changes:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;in &lt;a href=&quot;https://github.com/abo-abo/swiper/blob/master/doc/Changelog.org#0130&quot;&gt;org-mode&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;in &lt;a href=&quot;http://oremacs.com/swiper/Changelog#0.13.0&quot;&gt;HTML&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;highlights&quot;&gt;Highlights&lt;/h2&gt;
+
+&lt;p&gt;Many improvements are incremental and don&amp;#39;t require any extra code to
+enable.  I&amp;#39;ll go over a few selected features that require a bit of
+information to make a good use of them.&lt;/p&gt;
+
+&lt;h3 id=&quot;new-bindings&quot;&gt;New bindings&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;counsel-find-file&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;~~&lt;/kbd&gt; to move to the local home directory from remote or &lt;code&gt;/sudo::&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;/ RET ~&lt;/kbd&gt; achieves the same thing, but is longer.&lt;/li&gt;
+&lt;li&gt;&lt;kbd&gt;M-o R&lt;/kbd&gt; calls &lt;code&gt;find-file-read-only&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;counsel-git-grep&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;C-x C-d&lt;/kbd&gt; to switch the current directory.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;swiper-isearch&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;kbd&gt;M-o w&lt;/kbd&gt; to copy the current line and go back to where you started.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;new-features&quot;&gt;New features&lt;/h2&gt;
+
+&lt;h3 id=&quot;counsel-package&quot;&gt;&lt;code&gt;counsel-package&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;The idea of &lt;code&gt;counsel-package&lt;/code&gt; is to install and remove packages with a single binding:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;global-set-key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-c P&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;counsel-package&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;But if the package contents weren&amp;#39;t up to date, a separate &lt;kbd&gt;M-x&lt;/kbd&gt; &lt;code&gt;package-refresh-contents&lt;/code&gt;
+had to be triggered, which was an annoying overhead. Now &lt;code&gt;counsel-package&lt;/code&gt; will look at the time
+stamps of the appropriate &lt;code&gt;archive-contents&lt;/code&gt; files, and call &lt;code&gt;package-refresh-contents&lt;/code&gt; if the
+timestamp is outdated by more than 4 hours.&lt;/p&gt;
+
+&lt;h3 id=&quot;counsel-m-x&quot;&gt;&lt;code&gt;counsel-M-x&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;Some commands are intended to be called only via their key binding. Make them disappear
+from &lt;code&gt;counsel-M-x&lt;/code&gt; like this:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;put&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;counsel-find-symbol&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;no-counsel-M-x&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;counsel-rg&quot;&gt;&lt;code&gt;counsel-rg&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;The default setting of &lt;code&gt;ivy-case-fold-search-default&lt;/code&gt; is &lt;code&gt;&amp;#39;auto&lt;/code&gt;, which means:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;the input &amp;quot;emacs&amp;quot; matches &amp;quot;emacs&amp;quot;, &amp;quot;EMACS&amp;quot;, and &amp;quot;Emacs&amp;quot;&lt;/li&gt;
+&lt;li&gt;the input &amp;quot;Emacs&amp;quot; matches only &amp;quot;Emacs&amp;quot;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;This now also applies to &lt;code&gt;counsel-rg&lt;/code&gt;: Ivy will pass the &lt;code&gt;-i&lt;/code&gt; flag to &lt;code&gt;ripgrep&lt;/code&gt; appropriately, based
+on &lt;code&gt;ivy-case-fold-search-default&lt;/code&gt;. You should remove the &lt;code&gt;-S&lt;/code&gt; flag from &lt;code&gt;counsel-rg-base-command&lt;/code&gt; if
+you customized it.&lt;/p&gt;
+
+&lt;h3 id=&quot;ivy-update-candidates&quot;&gt;&lt;code&gt;ivy-update-candidates&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;This is a new API for asynchronous calls. To use it, pass to &lt;code&gt;ivy-read&lt;/code&gt;: &lt;code&gt;:dynamic-collection t&lt;/code&gt;,
+and a collection function that takes a user input string, starts some asynchronous process based on
+that input, and returns &lt;code&gt;0&lt;/code&gt;. The &lt;code&gt;0&lt;/code&gt; return result tells Ivy that no candidates were returned;
+instead, &lt;code&gt;ivy-update-candidates&lt;/code&gt; is used in the async callback.&lt;/p&gt;
+
+&lt;p&gt;See &lt;code&gt;counsel-google&lt;/code&gt; for a reference implementation.&lt;/p&gt;
+
+&lt;h3 id=&quot;ivy-use-virtual-buffers&quot;&gt;&lt;code&gt;ivy-use-virtual-buffers&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;You can now choose between: recent files, or bookmarks, or both, or none. Don&amp;#39;t forget that
+&lt;code&gt;counsel-set-variable&lt;/code&gt; makes it very easy to set customization options.&lt;/p&gt;
+
+&lt;h2 id=&quot;new-commands&quot;&gt;New Commands&lt;/h2&gt;
+
+&lt;p&gt;I have put these separately so they don&amp;#39;t get lost in the crowd. Be sure to try them out.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;counsel-buffer-or-recentf&lt;/code&gt; - list buffers visiting files (highlighted) then the &lt;code&gt;recentf&lt;/code&gt; file
+list.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;counsel-fonts&lt;/code&gt; - show a list of all supported font families for a particular frame.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;counsel-google&lt;/code&gt; - asynchronously query the Google predictive search API.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;counsel-major&lt;/code&gt; - switch &lt;code&gt;major-mode&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;counsel-slime-repl-history&lt;/code&gt; - browse SLIME REPL history.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;Again, thanks to all the contributors. Happy hacking!&lt;/p&gt;
+
+&lt;p&gt;PS. Thanks to everyone who supports me on &lt;a href=&quot;https://liberapay.com/abo-abo&quot;&gt;Liberapay&lt;/a&gt; and
+&lt;a href=&quot;https://www.patreon.com/abo_abo&quot;&gt;Patreon&lt;/a&gt;!&lt;/p&gt;
+
+&lt;p&gt;I am now also on &lt;a href=&quot;https://github.com/users/abo-abo/sponsorship&quot;&gt;Github sponsors&lt;/a&gt;, which is an
+interesting new effort by Github. The cool thing is that&amp;#39;s more integrated with Github, there are
+less transaction fees, and Github matches every donation for up to $5000 for a whole year.
+Please consider joining there, since every $1 per month that you donate is doubled by Github.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Ivy 0.12.0 is out</title>

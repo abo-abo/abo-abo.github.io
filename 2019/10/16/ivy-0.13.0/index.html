@@ -12,11 +12,11 @@
 
   <title>
     
-      A simple multiple-cursors extension to swiper &middot; (or emacs
+      Ivy 0.13.0 is out &middot; (or emacs
     
   </title>
 
-  <link rel="canonical" href="https://oremacs.com/2015/10/14/swiper-mc/" />
+  <link rel="canonical" href="https://oremacs.com/2019/10/16/ivy-0.13.0/" />
 
   <!-- CSS -->
   <link rel="stylesheet" href="/public/css/poole.css">
@@ -143,72 +143,130 @@ if (window.location.host.indexOf('oremacs.com') > -1 &&
 </script>
 
 <div class="post">
-  <h1 class="post-title">A simple multiple-cursors extension to swiper</h1>
-  <span class="post-date">14 Oct 2015</span>
-  <p>When using Emacs, it happens sometimes that I accumulate too many
-buffers. The usual next action is to close the buffers for the project
-that I&#39;m not currently working on. Previously, I marked those buffers
-in <code>*Buffer List*</code> by hand with <kbd>d</kbd> and
-<kbd>C-n</kbd>. Today, I&#39;ll show a faster way.</p>
+  <h1 class="post-title">Ivy 0.13.0 is out</h1>
+  <span class="post-date">16 Oct 2019</span>
+  <h2 id="intro">Intro</h2>
 
-<p>It&#39;s very easy to select these buffers in <code>*Buffer List*</code> with
-<a href="https://github.com/abo-abo/swiper">swiper</a>: just type a part the
-shared directory name. Another example is to select all <code>dired</code>
-buffers: a &quot;dired by&quot; input will usually match all of them, since they
-all have <code>Dired by name</code> in their line.</p>
+<p><a href="https://github.com/abo-abo/swiper">Ivy</a> is a completion method that&#39;s
+similar to <code>Ido</code>, but with emphasis on simplicity and customizability.</p>
 
-<p>Afterwards, I want to open
-<a href="https://github.com/magnars/multiple-cursors.el">multiple-cursors</a> for
-each matched line. I&#39;ve bound this action to <kbd>C-7</kbd>. Here&#39;s
-the very simple code:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">swiper-mc</span> <span class="p">()</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;multiple-cursors</span> <span class="no">nil</span> <span class="no">t</span><span class="p">)</span>
-    <span class="p">(</span><span class="ne">error</span> <span class="s">&quot;multiple-cursors isn&#39;t installed&quot;</span><span class="p">))</span>
-  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">cands</span> <span class="p">(</span><span class="nf">nreverse</span> <span class="nv">ivy--old-cands</span><span class="p">)))</span>
-    <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nv">string=</span> <span class="nv">ivy-text</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
-      <span class="p">(</span><span class="nv">ivy-set-action</span>
-       <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">_</span><span class="p">)</span>
-         <span class="p">(</span><span class="k">let</span> <span class="p">(</span><span class="nv">cand</span><span class="p">)</span>
-           <span class="p">(</span><span class="k">while</span> <span class="p">(</span><span class="k">setq</span> <span class="nv">cand</span> <span class="p">(</span><span class="nb">pop</span> <span class="nv">cands</span><span class="p">))</span>
-             <span class="p">(</span><span class="nv">swiper--action</span> <span class="nv">cand</span><span class="p">)</span>
-             <span class="p">(</span><span class="nb">when</span> <span class="nv">cands</span>
-               <span class="p">(</span><span class="nv">mc/create-fake-cursor-at-point</span><span class="p">))))</span>
-         <span class="p">(</span><span class="nv">mc/maybe-multiple-cursors-mode</span><span class="p">)))</span>
-      <span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-exit</span> <span class="ss">&#39;done</span><span class="p">)</span>
-      <span class="p">(</span><span class="nv">exit-minibuffer</span><span class="p">))))</span>
-</code></pre></div>
-<p>After <kbd>C-7</kbd>, here&#39;s the sequence to delete the selected buffers:</p>
+<h2 id="overview">Overview</h2>
+
+<p>The current release constitutes of 183 commits and 3 months of
+progress since <code>0.12.0</code>. Many issues ranging from
+<a href="https://github.com/abo-abo/swiper/issues/2153">#2153</a> to
+<a href="https://github.com/abo-abo/swiper/issues/2278">#2278</a> were fixed.
+The number of people who contributed code as grown to form 148 to
+<a href="https://github.com/abo-abo/swiper/graphs/contributors">160</a>. Thanks,
+everyone!</p>
+
+<h2 id="details-on-changes">Details on changes</h2>
+
+<p><code>Changelog.org</code> has been a part of the repository since <code>0.6.0</code>, you
+can get the details of the current and past changes:</p>
 
 <ul>
-<li><kbd>d</kbd> (<code>Buffer-menu-delete</code>) to mark each item for deletion.</li>
-<li><kbd>C-g</kbd> (<code>keyboard-quit</code>) to exit <code>multiple-cursors</code>.</li>
-<li><kbd>x</kbd> (<code>Buffer-menu-execute</code>) to execute the deletions.</li>
+<li>in <a href="https://github.com/abo-abo/swiper/blob/master/doc/Changelog.org#0130">org-mode</a></li>
+<li>in <a href="http://oremacs.com/swiper/Changelog#0.13.0">HTML</a></li>
 </ul>
 
-<p>And that&#39;s it: all selected buffers are now deleted.  To summarize,
-<kbd>C-s</kbd> <code>dired by</code> <kbd>C-7 d C-g x</kbd> will close all
-<code>dired</code> buffers from your <code>*Buffer List*</code>.</p>
+<h2 id="highlights">Highlights</h2>
 
-<p>Other interesting applications are also possible, like mass renames in
-<code>wdired</code>, or un-commenting everything in a function.  For example,
-suppose that you have this code:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">progn</span>
-  <span class="c1">;; (check-1)</span>
-  <span class="p">(</span><span class="nv">foo</span><span class="p">)</span>
-  <span class="c1">;; (check-2)</span>
-  <span class="p">(</span><span class="nv">bar</span><span class="p">)</span>
-  <span class="c1">;; (check-3)</span>
-  <span class="p">(</span><span class="nv">baz</span><span class="p">))</span>
+<p>Many improvements are incremental and don&#39;t require any extra code to
+enable.  I&#39;ll go over a few selected features that require a bit of
+information to make a good use of them.</p>
+
+<h3 id="new-bindings">New bindings</h3>
+
+<ul>
+<li><code>counsel-find-file</code>
+
+<ul>
+<li><kbd>~~</kbd> to move to the local home directory from remote or <code>/sudo::</code>.</li>
+<li><kbd>/ RET ~</kbd> achieves the same thing, but is longer.</li>
+<li><kbd>M-o R</kbd> calls <code>find-file-read-only</code>.</li>
+</ul></li>
+<li><code>counsel-git-grep</code>
+
+<ul>
+<li><kbd>C-x C-d</kbd> to switch the current directory.</li>
+</ul></li>
+<li><code>swiper-isearch</code>
+
+<ul>
+<li><kbd>M-o w</kbd> to copy the current line and go back to where you started.</li>
+</ul></li>
+</ul>
+
+<h2 id="new-features">New features</h2>
+
+<h3 id="counsel-package"><code>counsel-package</code></h3>
+
+<p>The idea of <code>counsel-package</code> is to install and remove packages with a single binding:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c P&quot;</span><span class="p">)</span> <span class="ss">&#39;counsel-package</span><span class="p">)</span>
 </code></pre></div>
-<p>If it&#39;s a part of a larger buffer, you can narrow with <kbd>C-x nd</kbd> (<code>narrow-to-defun</code>)
-or <kbd>C-x nn</kbd> (<code>narrow-to-region</code>).  Then <kbd>C-s ;; C-7 DEL DEL C-d C-g</kbd> to
-remove all comments.</p>
+<p>But if the package contents weren&#39;t up to date, a separate <kbd>M-x</kbd> <code>package-refresh-contents</code>
+had to be triggered, which was an annoying overhead. Now <code>counsel-package</code> will look at the time
+stamps of the appropriate <code>archive-contents</code> files, and call <code>package-refresh-contents</code> if the
+timestamp is outdated by more than 4 hours.</p>
 
-<p>I have to say that the functionality intersects a bit with
-<code>mc/mark-all-like-this</code>. Except you know the result ahead of time
-(number and position of matches), and you can use a regex instead of a
-literal string.</p>
+<h3 id="counsel-m-x"><code>counsel-M-x</code></h3>
+
+<p>Some commands are intended to be called only via their key binding. Make them disappear
+from <code>counsel-M-x</code> like this:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">put</span> <span class="ss">&#39;counsel-find-symbol</span> <span class="ss">&#39;no-counsel-M-x</span> <span class="no">t</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="counsel-rg"><code>counsel-rg</code></h3>
+
+<p>The default setting of <code>ivy-case-fold-search-default</code> is <code>&#39;auto</code>, which means:</p>
+
+<ul>
+<li>the input &quot;emacs&quot; matches &quot;emacs&quot;, &quot;EMACS&quot;, and &quot;Emacs&quot;</li>
+<li>the input &quot;Emacs&quot; matches only &quot;Emacs&quot;</li>
+</ul>
+
+<p>This now also applies to <code>counsel-rg</code>: Ivy will pass the <code>-i</code> flag to <code>ripgrep</code> appropriately, based
+on <code>ivy-case-fold-search-default</code>. You should remove the <code>-S</code> flag from <code>counsel-rg-base-command</code> if
+you customized it.</p>
+
+<h3 id="ivy-update-candidates"><code>ivy-update-candidates</code></h3>
+
+<p>This is a new API for asynchronous calls. To use it, pass to <code>ivy-read</code>: <code>:dynamic-collection t</code>,
+and a collection function that takes a user input string, starts some asynchronous process based on
+that input, and returns <code>0</code>. The <code>0</code> return result tells Ivy that no candidates were returned;
+instead, <code>ivy-update-candidates</code> is used in the async callback.</p>
+
+<p>See <code>counsel-google</code> for a reference implementation.</p>
+
+<h3 id="ivy-use-virtual-buffers"><code>ivy-use-virtual-buffers</code></h3>
+
+<p>You can now choose between: recent files, or bookmarks, or both, or none. Don&#39;t forget that
+<code>counsel-set-variable</code> makes it very easy to set customization options.</p>
+
+<h2 id="new-commands">New Commands</h2>
+
+<p>I have put these separately so they don&#39;t get lost in the crowd. Be sure to try them out.</p>
+
+<ul>
+<li><code>counsel-buffer-or-recentf</code> - list buffers visiting files (highlighted) then the <code>recentf</code> file
+list.</li>
+<li><code>counsel-fonts</code> - show a list of all supported font families for a particular frame.</li>
+<li><code>counsel-google</code> - asynchronously query the Google predictive search API.</li>
+<li><code>counsel-major</code> - switch <code>major-mode</code>.</li>
+<li><code>counsel-slime-repl-history</code> - browse SLIME REPL history.</li>
+</ul>
+
+<h2 id="outro">Outro</h2>
+
+<p>Again, thanks to all the contributors. Happy hacking!</p>
+
+<p>PS. Thanks to everyone who supports me on <a href="https://liberapay.com/abo-abo">Liberapay</a> and
+<a href="https://www.patreon.com/abo_abo">Patreon</a>!</p>
+
+<p>I am now also on <a href="https://github.com/users/abo-abo/sponsorship">Github sponsors</a>, which is an
+interesting new effort by Github. The cool thing is that&#39;s more integrated with Github, there are
+less transaction fees, and Github matches every donation for up to $5000 for a whole year.
+Please consider joining there, since every $1 per month that you donate is doubled by Github.</p>
 
 </div>
 

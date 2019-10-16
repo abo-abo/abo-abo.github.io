@@ -139,6 +139,82 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2017/12/27/company-numbers/">
+        Using digits to select company-mode candidates
+      </a>
+    </h1>
+
+    <span class="post-date">27 Dec 2017</span>
+
+    <p>I&#39;d like to share a customization of
+<a href="https://github.com/company-mode/company-mode">company-mode</a> that I&#39;ve
+been using for a while.  I refined it just recently, I&#39;ll explain
+below how.</p>
+
+<h2 id="basic-setting">Basic setting</h2>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">company-show-numbers</span> <span class="no">t</span><span class="p">)</span>
+</code></pre></div>
+<p>Now, numbers are shown next to the candidates, although they don&#39;t do
+anything yet:</p>
+
+<p><img src="/download/company-numbers.png" alt="company-numbers"></p>
+
+<h2 id="add-some-bindings">Add some bindings</h2>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">map</span> <span class="nv">company-active-map</span><span class="p">))</span>
+  <span class="p">(</span><span class="nf">mapc</span>
+   <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+     <span class="p">(</span><span class="nf">define-key</span> <span class="nv">map</span> <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;%d&quot;</span> <span class="nv">x</span><span class="p">)</span> <span class="ss">&#39;ora-company-number</span><span class="p">))</span>
+   <span class="p">(</span><span class="nv">number-sequence</span> <span class="mi">0</span> <span class="mi">9</span><span class="p">))</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">map</span> <span class="s">&quot; &quot;</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span>
+                        <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+                        <span class="p">(</span><span class="nv">company-abort</span><span class="p">)</span>
+                        <span class="p">(</span><span class="nf">self-insert-command</span> <span class="mi">1</span><span class="p">)))</span>
+  <span class="p">(</span><span class="nf">define-key</span> <span class="nv">map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;&lt;return&gt;&quot;</span><span class="p">)</span> <span class="no">nil</span><span class="p">))</span>
+</code></pre></div>
+<p>Besides binding <kbd>0</kbd>..<kbd>9</kbd> to complete their
+corresponding candidate, it also un-binds <kbd>RET</kbd> and binds
+<kbd>SPC</kbd> to close the company popup.</p>
+
+<h2 id="actual-code">Actual code</h2>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">ora-company-number</span> <span class="p">()</span>
+  <span class="s">&quot;Forward to </span><span class="ss">`company-complete-number&#39;</span><span class="s">.</span>
+
+<span class="s">Unless the number is potentially part of the candidate.</span>
+<span class="s">In that case, insert the number.&quot;</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">k</span> <span class="p">(</span><span class="nf">this-command-keys</span><span class="p">))</span>
+         <span class="p">(</span><span class="nv">re</span> <span class="p">(</span><span class="nf">concat</span> <span class="s">&quot;^&quot;</span> <span class="nv">company-prefix</span> <span class="nv">k</span><span class="p">)))</span>
+    <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">cl-find-if</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">s</span><span class="p">)</span> <span class="p">(</span><span class="nf">string-match</span> <span class="nv">re</span> <span class="nv">s</span><span class="p">))</span>
+                    <span class="nv">company-candidates</span><span class="p">)</span>
+        <span class="p">(</span><span class="nf">self-insert-command</span> <span class="mi">1</span><span class="p">)</span>
+      <span class="p">(</span><span class="nv">company-complete-number</span> <span class="p">(</span><span class="nf">string-to-number</span> <span class="nv">k</span><span class="p">)))))</span>
+</code></pre></div>
+<p>Initially, I would just bind <code>company-complete-number</code>. The problem
+with that was that if my candidate list was <code>(&quot;var0&quot; &quot;var1&quot; &quot;var2&quot;)</code>,
+then entering <kbd>1</kbd> means:</p>
+
+<ul>
+<li>select the first candidate (i.e. <code>&quot;var0&quot;</code>), instead of:</li>
+<li>insert <code>&quot;1&quot;</code>, resulting in <code>&quot;var1&quot;</code>, i.e. the second candidate.</li>
+</ul>
+
+<p>My customization will now check <code>company-candidates</code>&mdash;the list of
+possible completions&mdash;for the above mentioned conflict. And if
+it&#39;s detected, the key pressed will be inserted instead of being used
+to select a candidate.</p>
+
+<h2 id="outro">Outro</h2>
+
+<p>Looking at <code>git-log</code>, I&#39;ve been using <code>company-complete-number</code> for at
+least 3 years now.  It&#39;s quite useful, and now also more seamless,
+since I don&#39;t have to type e.g. <kbd>C-q 2</kbd> any more. In any
+case, thanks to the author and the contributors of
+<code>company-mode</code>. Merry Christmas and happy hacking in the New Year!</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2017/12/10/patreon/">
         Comparison of transaction fees on Patreon and similar services
       </a>
@@ -768,84 +844,6 @@ that&#39;s easy to get started with. Happy hacking!</p>
 <a href="https://oremacs.com/2017/10/18/patreon/">Patreon campaign</a>!
 As of this writing, we&#39;re almost at the <a href="https://www.patreon.com/abo_abo">25% mark</a>
 with 61 contributors.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2017/10/18/patreon/">
-        Please consider supporting me on Patreon
-      </a>
-    </h1>
-
-    <span class="post-date">18 Oct 2017</span>
-
-    <p>In light of the recent success of the
-<a href="https://www.kickstarter.com/projects/1681258897/its-magit-the-magical-git-client">Magit Kickstarter</a>
-(congratulations to <a href="https://magit.vc/">@tarsius</a>, by the way), I got a lot more optimistic about Free Software crowdfunding.</p>
-
-<p>So I opened a Patreon account where you can support my work:
-<a href="https://www.patreon.com/abo_abo">https://www.patreon.com/abo_abo</a>.
-The goal I set there is both optimistic and (hopefully) realistic: I&#39;d
-like to hack on Free Software 1 day per week indefinitely, reducing my
-real world job days to 4 per week.</p>
-
-<p>Ideally, I&#39;d like to work on Free Software full time (one can dream),
-but it doesn&#39;t look like that level of donations is attainable right
-now. But I think I could accomplish a lot working a full day per week:</p>
-
-<ul>
-<li>improve the level of maintenance of my current projects</li>
-<li>polish and release a few projects I have in a semi-complete unreleased state</li>
-<li>produce more content on my <a href="https://www.youtube.com/user/abo5abo/videos">YouTube channel</a></li>
-<li>maybe start working on an Emacs book</li>
-</ul>
-
-<p>Here&#39;s a list of
-<a href="https://github.com/search?q=user:abo-abo+&s=stars&type=Repositories">popular repositories</a>
-I&#39;ve made over the last 5 years in my free time (all Free Software under GPL):</p>
-
-<ul>
-<li><a href="https://github.com/abo-abo/hydra">hydra</a></li>
-<li><a href="https://github.com/abo-abo/swiper">swiper</a></li>
-<li><a href="https://github.com/abo-abo/avy">avy</a></li>
-<li><a href="https://github.com/abo-abo/lispy">lispy</a></li>
-<li><a href="https://github.com/abo-abo/ace-window">ace-window</a></li>
-<li><a href="https://github.com/abo-abo/org-download">org-download</a></li>
-<li><a href="https://github.com/abo-abo/oremacs">oremacs</a></li>
-<li><a href="https://github.com/abo-abo/function-args">function-args</a></li>
-<li><a href="https://github.com/abo-abo/auto-yasnippet">auto-yasnippet</a></li>
-<li><a href="https://github.com/abo-abo/ace-link">ace-link</a></li>
-<li><a href="https://github.com/abo-abo/pamparam">pamparam</a></li>
-<li><a href="https://github.com/abo-abo/worf">worf</a></li>
-<li><a href="https://github.com/abo-abo/tiny">tiny</a></li>
-<li><a href="https://github.com/abo-abo/swiper-helm">swiper-helm</a></li>
-<li><a href="https://github.com/abo-abo/define-word">define-word</a></li>
-<li><a href="https://github.com/abo-abo/make-it-so">make-it-so</a></li>
-<li><a href="https://github.com/abo-abo/lpy">lpy</a></li>
-<li><a href="https://github.com/abo-abo/helm-make">helm-make</a></li>
-<li><a href="https://github.com/abo-abo/org-fu">org-fu</a></li>
-<li><a href="https://github.com/abo-abo/helm-j-cheatsheet">helm-j-cheatsheet</a></li>
-<li><a href="https://github.com/abo-abo/zoutline">zoutline</a></li>
-<li><a href="https://github.com/abo-abo/plain-org-wiki">plain-org-wiki</a></li>
-<li><a href="https://github.com/abo-abo/gtk-pomodoro-indicator">gtk-pomodoro-indicator</a></li>
-<li><a href="https://github.com/abo-abo/headlong">headlong</a></li>
-<li><a href="https://github.com/abo-abo/elf-mode">elf-mode</a></li>
-<li><a href="https://github.com/abo-abo/cook">cook</a></li>
-<li><a href="https://github.com/abo-abo/eclipse-theme">eclipse-theme</a></li>
-</ul>
-
-<p>If you are a user of my work, don&#39;t feel any pressure to donate. We
-are all here voluntarily: I publish because I enjoy it, you use the
-software because you find it useful. But out there is the real world,
-and, although I like my real world job enough, I can&#39;t say that would
-I do it voluntarily if I had enough money to meet my needs.</p>
-
-<blockquote>
-<p>If you do what you love, you&#39;ll never work a day in your life</p>
-</blockquote>
-
-<p>I&#39;d like to do what I love, and I wish you all the same. Happy hacking!</p>
 
   </div>
   
