@@ -4,13 +4,100 @@
  <title>(or emacs</title>
  <link href="https://oremacs.com/atom.xml" rel="self"/>
  <link href="https://oremacs.com/"/>
- <updated>2019-10-16T18:18:28+02:00</updated>
+ <updated>2020-12-31T22:13:33+01:00</updated>
  <id>https://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Happy New Year!</title>
+   <link href="https://oremacs.com/2020/12/31/happy-new-year/"/>
+   <updated>2020-12-31T00:00:00+01:00</updated>
+   <id>https://oremacs.com/2020/12/31/happy-new-year</id>
+   <content type="html">&lt;h2 id=&quot;intro&quot;&gt;Intro&lt;/h2&gt;
+
+&lt;p&gt;As 2020 is almost running out, I have noticed that I didn&amp;#39;t manage to post anything this year.  So
+here&amp;#39;s a haphazard attempt to fix that.&lt;/p&gt;
+
+&lt;h2 id=&quot;org-roam&quot;&gt;Org-roam&lt;/h2&gt;
+
+&lt;p&gt;I&amp;#39;d like to share a wonderful Emacs package I&amp;#39;ve started using this year:
+&lt;a href=&quot;https://github.com/org-roam/org-roam&quot;&gt;org-roam&lt;/a&gt;. Even though in my Org notes I see that I
+encountered this package in February 2020, I&amp;#39;ve actually started using it on December 10, trying to
+figure out what &lt;a href=&quot;https://en.wikipedia.org/wiki/Zettelkasten&quot;&gt;Zettelkasten&lt;/a&gt; are and how to deal with
+them.&lt;/p&gt;
+
+&lt;p&gt;Overall, 22 days isn&amp;#39;t a whole lot of experience, and I&amp;#39;m looking forward to see how useful
+Zettelkasten and &lt;code&gt;org-roam&lt;/code&gt; will be to me in a year. But I already have written down 341 notes,
+which amounts to around 15 notes per day.&lt;/p&gt;
+
+&lt;p&gt;In my previous/current system, &lt;a href=&quot;https://github.com/abo-abo/plain-org-wiki&quot;&gt;plain-org-wiki&lt;/a&gt;, I
+organize my knowledge into 209 tag categories. For instance, one of them, &lt;code&gt;Linux&lt;/code&gt;, has 290
+entries. Another, &lt;code&gt;VPN&lt;/code&gt;, has 15 entries. I&amp;#39;ll show an example of how &lt;code&gt;org-roam&lt;/code&gt; improved my workflow
+by showing a note I&amp;#39;ve added:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;#+title: Use a custom DNS when resolving a specific host on Linux&lt;/p&gt;
+
+&lt;p&gt;On &lt;code&gt;Linux&lt;/code&gt;, I have a &lt;code&gt;DNS&lt;/code&gt; server that can resolve certain VPN-only websites.  But the problem is
+that it&amp;#39;s only available if I&amp;#39;m connected to my work VPN. So I can&amp;#39;t configure it in a common way,
+since the common way would simply use that DNS always, whether or not it&amp;#39;s up. The =dnsmasq=
+package solves all these issues.&lt;/p&gt;
+
+&lt;p&gt;The code: &lt;code&gt;local&lt;/code&gt;, and &lt;code&gt;permalink&lt;/code&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Above is one zettel - a note named &amp;quot;Use a custom DNS when resolving a specific host on Linux&amp;quot; that&amp;#39;s
+liked to two other notes: &amp;quot;Linux&amp;quot;, and &amp;quot;DNS&amp;quot;. Both of those notes are basically empty files that are
+used for tagging purposes. I use &lt;kbd&gt;M-x&lt;/kbd&gt; &lt;code&gt;org-roam-buffer-activate&lt;/code&gt; to see what other notes
+are linked to them.&lt;/p&gt;
+
+&lt;p&gt;Suppose, instead of using &lt;code&gt;org-roam&lt;/code&gt;, I wanted to add the above piece of knowledge to my old system
+of tagged data. Does this information belong in &lt;code&gt;Linux.org&lt;/code&gt; or in &lt;code&gt;VPN.org&lt;/code&gt;? Moreover, do I really
+want to add one more entry to &lt;code&gt;Linux.org&lt;/code&gt;? It&amp;#39;s getting really crowded with 290 entries already
+there. So with the old system, it&amp;#39;s the anxiety on where to put the note combined with the pressure
+of keeping it short. Both things are solved by using Zettelkasten!&lt;/p&gt;
+
+&lt;h2 id=&quot;org-roam-config&quot;&gt;Org-roam config&lt;/h2&gt;
+
+&lt;p&gt;Here&amp;#39;s &lt;a href=&quot;https://github.com/abo-abo/oremacs/blob/15e6a33d314121ea0b3f1659dbc3ee8181dce854/modes/ora-org-roam.el&quot;&gt;my config for
+org-roam&lt;/a&gt;
+so far.&lt;/p&gt;
+
+&lt;p&gt;All of the functionality that I use is in the &lt;a href=&quot;https://github.com/abo-abo/hydra&quot;&gt;hydra&lt;/a&gt; below:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;defhydra&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hydra-org-roam&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;:exit&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;:idle&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Launcher for &lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;`org-roam&amp;#39;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;i&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-roam-insert&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;insert&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;f&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ora-org-roam-find-file&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;find-file&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;v&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-roam-buffer-activate&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;backlinks&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;t&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ora-roam-todo&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;todo&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The only difference between &lt;code&gt;ora-org-roam-find-file&lt;/code&gt; and &lt;code&gt;org-roam-find-file&lt;/code&gt; is that my variant
+supports &lt;a href=&quot;https://github.com/abo-abo/swiper&quot;&gt;ivy&lt;/a&gt; actions.&lt;/p&gt;
+
+&lt;p&gt;And &lt;code&gt;ora-roam-todo&lt;/code&gt; is a small wrapper around this code, which gives me an overview of loose ends in
+my notes that I&amp;#39;d like to follow up on:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;progn&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;unread-command-events&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;listify-key-sequence&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kbd&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;C-c C-o M-&amp;gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;counsel-rg&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;^\\* TODO&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;org-roam-directory&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;--sort modified&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;What the above does technically: runs &lt;code&gt;counsel-rg&lt;/code&gt; on my &lt;code&gt;org-roam-directory&lt;/code&gt; looking for &lt;code&gt;* TODO&lt;/code&gt;,
+while sorting on the file modification date, instead of the default sorting by path. Here, &lt;kbd&gt;C-c
+C-o&lt;/kbd&gt; is the binding of &lt;code&gt;ivy-occur&lt;/code&gt;, and &lt;kbd&gt;M-&amp;gt;&lt;/kbd&gt; is &lt;code&gt;end-of-buffer&lt;/code&gt;. And the whole code
+overall produces an ivy-occur buffer without having to go into minibuffer and press &lt;kbd&gt;C-c
+C-o&lt;/kbd&gt; manually. The &lt;code&gt;unread-command-events&lt;/code&gt; trick is a nice way to automate this.&lt;/p&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;I&amp;#39;d like to thank the creators of &lt;code&gt;org-roam&lt;/code&gt;. Well done!&lt;/p&gt;
+
+&lt;p&gt;Happy New Year! I wish everyone good health, justice, equality, and happiness!&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Ivy 0.13.0 is out</title>

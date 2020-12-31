@@ -139,6 +139,37 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/02/16/hydra-multi/">
+        Binding one function multiple times in Hydra
+      </a>
+    </h1>
+
+    <span class="post-date">16 Feb 2015</span>
+
+    <p>Here&#39;s a recent feature that&#39;s now available in <a href="https://github.com/abo-abo/hydra">hydra</a>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-zoom</span> <span class="p">(</span><span class="nv">global-map</span> <span class="s">&quot;&lt;f2&gt;&quot;</span><span class="p">)</span>
+  <span class="s">&quot;zoom&quot;</span>
+  <span class="p">(</span><span class="s">&quot;g&quot;</span> <span class="nv">text-scale-increase</span> <span class="s">&quot;in&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nv">text-scale-decrease</span> <span class="s">&quot;out&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;0&quot;</span> <span class="p">(</span><span class="nv">text-scale-set</span> <span class="mi">0</span><span class="p">)</span> <span class="s">&quot;reset&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;1&quot;</span> <span class="p">(</span><span class="nv">text-scale-set</span> <span class="mi">0</span><span class="p">)</span> <span class="nb">:bind</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="p">(</span><span class="s">&quot;2&quot;</span> <span class="p">(</span><span class="nv">text-scale-set</span> <span class="mi">0</span><span class="p">)</span> <span class="nb">:bind</span> <span class="no">nil</span> <span class="nb">:color</span> <span class="nv">blue</span><span class="p">))</span>
+</code></pre></div>
+<p>Here, the entry points are <kbd>&lt;f2&gt; g</kbd>, <kbd>&lt;f2&gt; l</kbd>, and <kbd>&lt;f2&gt; 0</kbd>, the
+others aren&#39;t bound in the global map.
+You can also have the same function in both red and blue versions. Here&#39;s how the hint will look like:</p>
+
+<p><img src="/download/hydra-multi.png" alt="hydra-multi"></p>
+
+<p>The multiply-defined functions will be neatly grouped together.</p>
+
+<p>If you remember, <code>(text-scale-set 0)</code> uses a sexp syntax for a Hydra
+head: it will be wrapped in <code>(lambda () (interactive) ...)</code> automatically.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/02/15/sudo-stuffs/">
         Doing sudo stuff with tramp
       </a>
@@ -478,195 +509,6 @@ I want to use <code>helm-mode</code> (or <code>icy-mode</code> or <code>icomplet
 completion, but not all.</p>
 
 <p>You can find the package at <a href="https://github.com/abo-abo/ido-occasional">ido-occasional</a>.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/02/11/elisp-newbie-style/">
-        Elisp newbie-style
-      </a>
-    </h1>
-
-    <span class="post-date">11 Feb 2015</span>
-
-    <p>I&#39;ve been cleaning up my .emacs lately, with the intention to put my
-whole config on Github. Today, I&#39;ll show you a useful function for
-describing the current buffer&#39;s key bindings. The function will
-generate something like this (with all letters, of course):</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="c1">;; (global-set-key (kbd &quot;a&quot;) &#39;self-insert-command)</span>
-<span class="c1">;; ...</span>
-<span class="c1">;; (global-set-key (kbd &quot;C-b&quot;) &#39;backward-char)</span>
-<span class="c1">;; ...</span>
-<span class="c1">;; (global-set-key (kbd &quot;M-c&quot;) &#39;subword-capitalize)</span>
-<span class="c1">;; ...</span>
-<span class="c1">;; (global-set-key (kbd &quot;C-M-d&quot;) &#39;down-list)</span>
-<span class="c1">;; ...</span>
-<span class="c1">;; (global-set-key (kbd &quot;η&quot;) &#39;save-and-switch-buffer)</span>
-<span class="c1">;; ...</span>
-<span class="c1">;; (global-set-key (kbd &quot;C-θ&quot;) &#39;ins-single-quotes)</span>
-<span class="c1">;; ...</span>
-<span class="c1">;; (global-set-key (kbd &quot;M-ι&quot;) &#39;nil)</span>
-<span class="c1">;; ...</span>
-<span class="c1">;; (global-set-key (kbd &quot;C-M-κ&quot;) &#39;nil)</span>
-</code></pre></div>
-<p>First, I&#39;ll show you how I wrote it down as a newbie, and
-then today&#39;s corrections with some remarks.</p>
-
-<h2 id="old-style">Old style</h2>
-
-<p>Please don&#39;t try this at home:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="c1">;;;###autoload</span>
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">keys-latin</span> <span class="p">()</span>
-  <span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">c</span> <span class="nv">from</span> <span class="sc">?a</span> <span class="nv">to</span> <span class="sc">?z</span>
-     <span class="nv">collect</span> <span class="p">(</span><span class="nf">string</span> <span class="nv">c</span><span class="p">)))</span>
-
-<span class="c1">;;;###autoload</span>
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">keys-greek</span> <span class="p">()</span>
-  <span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">c</span> <span class="nv">from</span> <span class="sc">?α</span> <span class="nv">to</span> <span class="sc">?ω</span>
-     <span class="nv">collect</span> <span class="p">(</span><span class="nf">string</span> <span class="nv">c</span><span class="p">)))</span>
-
-<span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;dash</span><span class="p">)</span>
-<span class="c1">;;;###autoload</span>
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">keys-describe-prefix</span> <span class="p">(</span><span class="nv">letters</span> <span class="nv">prefix</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">-&gt;&gt;</span> <span class="nv">letters</span>
-    <span class="p">(</span><span class="nf">mapcar</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">letter</span><span class="p">)</span> <span class="p">(</span><span class="nf">concat</span> <span class="nv">prefix</span> <span class="nv">letter</span><span class="p">)))</span>
-    <span class="p">(</span><span class="nf">mapcar</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">key</span><span class="p">)</span>
-              <span class="p">(</span><span class="nf">cons</span> <span class="nv">key</span>
-                    <span class="p">(</span><span class="nf">prin1-to-string</span> <span class="p">(</span><span class="nf">key-binding</span> <span class="p">(</span><span class="nv">kbd</span> <span class="nv">key</span><span class="p">))))))</span>
-    <span class="p">(</span><span class="nf">mapcar</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">binding</span><span class="p">)</span>
-              <span class="p">(</span><span class="nf">concat</span>
-               <span class="s">&quot;;; (global-set-key (kbd \&quot;&quot;</span>
-               <span class="p">(</span><span class="nf">car</span> <span class="nv">binding</span><span class="p">)</span>
-               <span class="s">&quot;\&quot;) &#39;&quot;</span>
-               <span class="p">(</span><span class="nf">cdr</span> <span class="nv">binding</span><span class="p">)</span>
-               <span class="s">&quot;)\n&quot;</span><span class="p">)))</span>
-    <span class="p">(</span><span class="nf">apply</span> <span class="nf">#&#39;concat</span><span class="p">)))</span>
-
-<span class="c1">;;;###autoload</span>
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">keys-describe-prefixes</span> <span class="p">()</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="nb">with-output-to-temp-buffer</span> <span class="s">&quot;*Bindings*&quot;</span>
-    <span class="p">(</span><span class="nf">mapcar</span>
-     <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">f-letters</span><span class="p">)</span>
-       <span class="p">(</span><span class="nf">mapcar</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">prefix</span><span class="p">)</span>
-                 <span class="p">(</span><span class="nf">princ</span> <span class="p">(</span><span class="nv">keys-describe-prefix</span> <span class="nv">f-letters</span> <span class="nv">prefix</span><span class="p">))</span>
-                 <span class="p">(</span><span class="nf">princ</span> <span class="s">&quot;\n\n&quot;</span><span class="p">))</span>
-               <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;&quot;</span> <span class="s">&quot;C-&quot;</span> <span class="s">&quot;M-&quot;</span> <span class="s">&quot;C-M-&quot;</span><span class="p">)))</span>
-     <span class="p">(</span><span class="nf">list</span> <span class="p">(</span><span class="nv">keys-latin</span><span class="p">)</span> <span class="p">(</span><span class="nv">keys-greek</span><span class="p">)))))</span>
-</code></pre></div>
-<h2 id="corrections">Corrections</h2>
-
-<h3 id="redundant-autoloads">Redundant autoloads</h3>
-
-<p>Since the entry point of the whole thing is <code>keys-describe-prefixes</code>, only it needs to be autoloaded.
-Once an autoloaded function is called, it will load the whole buffer. So if e.g. <code>keys-latin</code> is
-not being used anywhere else outside this file, it doesn&#39;t need an autoload.</p>
-
-<h3 id="redundant-functions">Redundant functions</h3>
-
-<p><code>keys-latin</code> and <code>keys-greek</code> are actually very small and not used anywhere else. It might be better
-to just inline them into <code>keys-describe-prefixes</code>.</p>
-
-<h3 id="redundant-libraries">Redundant libraries</h3>
-
-<p>Here, <code>dash</code> is required just for the <code>-&gt;&gt;</code> macro, which can actually
-be obtained from a core library <code>subr-x</code> as <code>thread-last</code>.</p>
-
-<p>But even then, it&#39;s just better to unwind the whole thing. After that, it becomes clear that
-the three consecutive <code>mapcar</code>s could be folded into a single <code>mapcar</code> with the help of a <code>let</code> binding.</p>
-
-<p>After the fold, it starts to look silly, since I&#39;m <code>cons</code>ing just to
-take a <code>car</code> and <code>cdr</code> later:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">keys-describe-prefix</span> <span class="p">(</span><span class="nv">letters</span> <span class="nv">prefix</span><span class="p">)</span>
-  <span class="p">(</span><span class="nf">apply</span> <span class="nf">#&#39;concat</span>
-         <span class="p">(</span><span class="nf">mapcar</span>
-          <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">letter</span><span class="p">)</span>
-            <span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">key</span> <span class="p">(</span><span class="nf">concat</span> <span class="nv">prefix</span> <span class="nv">letter</span><span class="p">))</span>
-                   <span class="p">(</span><span class="nv">binding</span>
-                    <span class="p">(</span><span class="nf">cons</span> <span class="nv">key</span>
-                          <span class="p">(</span><span class="nf">prin1-to-string</span>
-                           <span class="p">(</span><span class="nf">key-binding</span> <span class="p">(</span><span class="nv">kbd</span> <span class="nv">key</span><span class="p">))))))</span>
-              <span class="p">(</span><span class="nf">concat</span>
-               <span class="s">&quot;;; (global-set-key (kbd \&quot;&quot;</span>
-               <span class="p">(</span><span class="nf">car</span> <span class="nv">binding</span><span class="p">)</span>
-               <span class="s">&quot;\&quot;) &#39;&quot;</span>
-               <span class="p">(</span><span class="nf">cdr</span> <span class="nv">binding</span><span class="p">)</span>
-               <span class="s">&quot;)\n&quot;</span><span class="p">)))</span>
-          <span class="nv">letters</span><span class="p">)))</span>
-</code></pre></div>
-<p>Here&#39;s a simplification, removing <code>binding</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">keys-describe-prefix</span> <span class="p">(</span><span class="nv">letters</span> <span class="nv">prefix</span><span class="p">)</span>
-  <span class="p">(</span><span class="nf">apply</span> <span class="nf">#&#39;concat</span>
-         <span class="p">(</span><span class="nf">mapcar</span>
-          <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">letter</span><span class="p">)</span>
-            <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">key</span> <span class="p">(</span><span class="nf">concat</span> <span class="nv">prefix</span> <span class="nv">letter</span><span class="p">)))</span>
-              <span class="p">(</span><span class="nf">concat</span>
-               <span class="s">&quot;;; (global-set-key (kbd \&quot;&quot;</span>
-               <span class="nv">key</span>
-               <span class="s">&quot;\&quot;) &#39;&quot;</span>
-               <span class="p">(</span><span class="nf">prin1-to-string</span>
-                <span class="p">(</span><span class="nf">key-binding</span> <span class="p">(</span><span class="nv">kbd</span> <span class="nv">key</span><span class="p">)))</span>
-               <span class="s">&quot;)\n&quot;</span><span class="p">)))</span>
-          <span class="nv">letters</span><span class="p">)))</span>
-</code></pre></div>
-<p>I guess that I didn&#39;t know about <code>format</code> function back then, and the fact that <code>&quot;%S&quot;</code> key is equivalent
-to <code>prin1-to-string</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">keys-describe-prefix</span> <span class="p">(</span><span class="nv">letters</span> <span class="nv">prefix</span><span class="p">)</span>
-  <span class="p">(</span><span class="nf">apply</span> <span class="nf">#&#39;concat</span>
-         <span class="p">(</span><span class="nf">mapcar</span>
-          <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">letter</span><span class="p">)</span>
-            <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">key</span> <span class="p">(</span><span class="nf">concat</span> <span class="nv">prefix</span> <span class="nv">letter</span><span class="p">)))</span>
-              <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;;; (global-set-key (kbd \&quot;%s\&quot;) &#39;%S)\n&quot;</span>
-                      <span class="nv">key</span>
-                      <span class="p">(</span><span class="nf">key-binding</span> <span class="p">(</span><span class="nv">kbd</span> <span class="nv">key</span><span class="p">)))))</span>
-          <span class="nv">letters</span><span class="p">)))</span>
-</code></pre></div>
-<p>Next, the combination <code>(apply #&#39;concat (mapcar ...))</code> is already implemented in C as <code>mapconcat</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">keys-describe-prefix</span> <span class="p">(</span><span class="nv">letters</span> <span class="nv">prefix</span><span class="p">)</span>
-  <span class="p">(</span><span class="nf">mapconcat</span>
-   <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">letter</span><span class="p">)</span>
-     <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">key</span> <span class="p">(</span><span class="nf">concat</span> <span class="nv">prefix</span> <span class="nv">letter</span><span class="p">)))</span>
-       <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;;; (global-set-key (kbd \&quot;%s\&quot;) &#39;%S)&quot;</span>
-               <span class="nv">key</span>
-               <span class="p">(</span><span class="nf">key-binding</span> <span class="p">(</span><span class="nv">kbd</span> <span class="nv">key</span><span class="p">)))))</span>
-   <span class="nv">letters</span>
-   <span class="s">&quot;\n&quot;</span><span class="p">))</span>
-</code></pre></div>
-<p>In the end, <code>keys-describe-prefix</code> turned out to be so small that I could just inline it into
-<code>keys-describe-prefixes</code>.</p>
-
-<h2 id="final-version">Final version</h2>
-
-<p>Note that here I also replaced <code>mapcar</code> with <code>dolist</code>:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="c1">;;;###autoload</span>
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">keys-describe-prefixes</span> <span class="p">()</span>
-  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
-  <span class="p">(</span><span class="nb">with-output-to-temp-buffer</span> <span class="s">&quot;*Bindings*&quot;</span>
-    <span class="p">(</span><span class="nb">dolist</span> <span class="p">(</span><span class="nv">letter-group</span> <span class="p">(</span><span class="nf">list</span>
-                           <span class="p">(</span><span class="nb">cl-loop</span> <span class="nv">for</span> <span class="nv">c</span> <span class="nv">from</span> <span class="sc">?a</span> <span class="nv">to</span> <span class="sc">?z</span>
-                                    <span class="nv">collect</span> <span class="p">(</span><span class="nf">string</span> <span class="nv">c</span><span class="p">))</span>
-                           <span class="p">(</span><span class="nb">cl-loop</span> <span class="nv">for</span> <span class="nv">c</span> <span class="nv">from</span> <span class="sc">?α</span> <span class="nv">to</span> <span class="sc">?ω</span>
-                                    <span class="nv">collect</span> <span class="p">(</span><span class="nf">string</span> <span class="nv">c</span><span class="p">))))</span>
-      <span class="p">(</span><span class="nb">dolist</span> <span class="p">(</span><span class="nv">prefix</span> <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;&quot;</span> <span class="s">&quot;C-&quot;</span> <span class="s">&quot;M-&quot;</span> <span class="s">&quot;C-M-&quot;</span><span class="p">))</span>
-        <span class="p">(</span><span class="nf">princ</span> <span class="p">(</span><span class="nf">mapconcat</span>
-                <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">letter</span><span class="p">)</span>
-                  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">key</span> <span class="p">(</span><span class="nf">concat</span> <span class="nv">prefix</span> <span class="nv">letter</span><span class="p">)))</span>
-                    <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;;; (global-set-key (kbd \&quot;%s\&quot;) &#39;%S)&quot;</span>
-                            <span class="nv">key</span>
-                            <span class="p">(</span><span class="nf">key-binding</span> <span class="p">(</span><span class="nv">kbd</span> <span class="nv">key</span><span class="p">)))))</span>
-                <span class="nv">letter-group</span>
-                <span class="s">&quot;\n&quot;</span><span class="p">))</span>
-        <span class="p">(</span><span class="nf">princ</span> <span class="s">&quot;\n\n&quot;</span><span class="p">)))))</span>
-</code></pre></div>
-<p>I hope that this sort of analysis can be useful for people starting to
-learn Elisp.  And if you have corrections for the final version, do
-let me know, I don&#39;t mind being schooled, as long as I get better in
-the end.</p>
-
-<p>The output of <code>keys-describe-prefixes</code> can be used to learn some
-bindings that you didn&#39;t know about, and also as a template to
-redefine some bindings that you don&#39;t need.</p>
 
   </div>
   

@@ -139,6 +139,42 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2016/07/29/brand-new-swiper-all/">
+        Swipe all the files!
+      </a>
+    </h1>
+
+    <span class="post-date">29 Jul 2016</span>
+
+    <p>If you&#39;ve ever tried the <code>swiper-all</code> from
+<a href="https://github.com/abo-abo/swiper">swiper</a>, forget everything about
+it.  The command was super-awkward, since it had to parse all your
+open files before giving you a chance enter anything, resulting in
+dozens of seconds before the prompt.</p>
+
+<p>Recently, I&#39;ve had some time to examine and improve it and the result
+looks very promising. The new command is now async, which means
+there&#39;s no delay before the prompt comes up. Here&#39;s a result I got
+with no delay while having around 50 buffers open:</p>
+
+<p><img src="/download/swiper-all.png" alt="swiper-all.png"></p>
+
+<p>The shortcut I&#39;m using:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-c u&quot;</span><span class="p">)</span> <span class="ss">&#39;swiper-all</span><span class="p">)</span>
+</code></pre></div>
+<p>For efficiency&#39;s sake a small trade off had to be made: the line
+numbers are no longer displayed. This actually results in an advantage
+that you can select different candidates on the same line.</p>
+
+<p>There are still a few things I plan to try for the new command, like
+adding file-less buffers, caching for incremental regexes and maybe
+even newlines in wild cards, but even now it seems very usable. So
+give it a try, enjoy and happy hacking!</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2016/06/27/ivy-push-view/">
         Bookmark the current window layout with Ivy
       </a>
@@ -714,33 +750,6 @@ _m_: ?m? month      _e_: entry =?e?    _D_: diary=?D?
 _y_: ?y? year       _q_: quit          _L__l__c_: ?l?
 </code></pre></div>
 <p>Doesn&#39;t that look simple?</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2016/03/16/counsel-linux-app/">
-        Emacs completion for launching Linux desktop apps.
-      </a>
-    </h1>
-
-    <span class="post-date">16 Mar 2016</span>
-
-    <p>I&#39;d like to highlight the new command <code>counsel-linux-app</code> that I
-recently added to the <a href="https://github.com/abo-abo/swiper">counsel</a>
-package:</p>
-
-<p><img src="/download/counsel-linux-app-1.png" alt="counsel-linux-app-1.png"></p>
-
-<p>This command looks through your <code>/usr/share/applications/*.desktop</code>
-and offers to launch them, just like the launcher that you normally
-get when you press the super key. My current system is Ubuntu, and the
-launcher here is really horrible, so I&#39;m glad to have a much faster
-and reliable replacement.</p>
-
-<p>Here&#39;s another screenshot, I open the keyboard settings quite often:</p>
-
-<p><img src="/download/counsel-linux-app-2.png" alt="counsel-linux-app-2.png"></p>
 
   </div>
   

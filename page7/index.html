@@ -139,6 +139,33 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2016/03/16/counsel-linux-app/">
+        Emacs completion for launching Linux desktop apps.
+      </a>
+    </h1>
+
+    <span class="post-date">16 Mar 2016</span>
+
+    <p>I&#39;d like to highlight the new command <code>counsel-linux-app</code> that I
+recently added to the <a href="https://github.com/abo-abo/swiper">counsel</a>
+package:</p>
+
+<p><img src="/download/counsel-linux-app-1.png" alt="counsel-linux-app-1.png"></p>
+
+<p>This command looks through your <code>/usr/share/applications/*.desktop</code>
+and offers to launch them, just like the launcher that you normally
+get when you press the super key. My current system is Ubuntu, and the
+launcher here is really horrible, so I&#39;m glad to have a much faster
+and reliable replacement.</p>
+
+<p>Here&#39;s another screenshot, I open the keyboard settings quite often:</p>
+
+<p><img src="/download/counsel-linux-app-2.png" alt="counsel-linux-app-2.png"></p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2016/02/24/dired-rsync/">
         Using rsync in dired
       </a>
@@ -426,70 +453,6 @@ input method back).</p>
 
 <p>The whole experience is similar to <code>gnome-do</code>/<code>synapse</code>, which I was
 using a few years back, except better because now it&#39;s in Emacs.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2016/01/06/ivy-flx/">
-        Better fuzzy matching support in Ivy
-      </a>
-    </h1>
-
-    <span class="post-date">06 Jan 2016</span>
-
-    <p>Recently, I wrote some code to add better highlighting for
-<a href="https://github.com/abo-abo/swiper">Ivy</a>&#39;s fuzzy matcher. Here&#39;s a
-quick step-by-step to get an equivalent of
-<a href="https://github.com/lewang/flx">flx-ido-mode</a> working with Ivy.</p>
-
-<h2 id="step-1-install-the-packages">Step 1: install the packages</h2>
-
-<p><kbd>M-x</kbd> <code>package-install</code> - <code>counsel</code> and <code>flx</code> (MELPA should be configured).</p>
-
-<h2 id="step-2-configure-ivy-re-builders-alist">Step 2: configure <code>ivy-re-builders-alist</code></h2>
-
-<p>Here&#39;s the default setting:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-re-builders-alist</span>
-      <span class="o">&#39;</span><span class="p">((</span><span class="no">t</span> <span class="o">.</span> <span class="nv">ivy--regex-plus</span><span class="p">)))</span>
-</code></pre></div>
-<p>The default matcher will use a <code>.*</code> regex wild card in place of each
-single space in the input.  If you want to use the fuzzy matcher,
-which instead uses a <code>.*</code> regex wild card between each input letter,
-write this in your config:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-re-builders-alist</span>
-      <span class="o">&#39;</span><span class="p">((</span><span class="no">t</span> <span class="o">.</span> <span class="nv">ivy--regex-fuzzy</span><span class="p">)))</span>
-</code></pre></div>
-<p>You can also mix the two regex builders, for example:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-re-builders-alist</span>
-      <span class="o">&#39;</span><span class="p">((</span><span class="nv">ivy-switch-buffer</span> <span class="o">.</span> <span class="nv">ivy--regex-plus</span><span class="p">)</span>
-        <span class="p">(</span><span class="no">t</span> <span class="o">.</span> <span class="nv">ivy--regex-fuzzy</span><span class="p">)))</span>
-</code></pre></div>
-<p>The <code>t</code> key is used for all fall-through cases, otherwise the key is
-the command or collection name.</p>
-
-<p>The fuzzy matcher often results in substantially more matching
-candidates than the regular one for similar input. That&#39;s why some
-kind of sorting is important to bring the more relevant matching
-candidates to the start of the list. Luckily, that&#39;s already been
-figured out in <code>flx</code>, so to have it working just make sure that the
-<code>flx</code> package is installed.</p>
-
-<h2 id="step-3-optionally-configure-ivy-initial-inputs-alist">Step 3: optionally configure <code>ivy-initial-inputs-alist</code></h2>
-
-<p>The <code>ivy-initial-inputs-alist</code> variable is pretty useful in
-conjunction with the default matcher. It&#39;s usually used to insert <code>^</code>
-into the input area for certain commands.</p>
-
-<p>If you&#39;re going fuzzy all the way, you can do without the initial <code>^</code>,
-and simply let <code>flx</code> (hopefully) sort the matches in a nice way:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="k">setq</span> <span class="nv">ivy-initial-inputs-alist</span> <span class="no">nil</span><span class="p">)</span>
-</code></pre></div>
-<h2 id="the-result">The result</h2>
-
-<p>Here&#39;s how <kbd>M-x</kbd> <code>counsel-M-x</code> looks like now:</p>
-
-<p><img src="/download/ivy-flx-highlight.png" alt="ivy-flx-highlight.png"></p>
 
   </div>
   
