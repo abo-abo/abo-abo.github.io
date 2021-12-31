@@ -139,6 +139,130 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2016/08/28/elf-mode/">
+        elf-mode - view the symbol list in a binary
+      </a>
+    </h1>
+
+    <span class="post-date">28 Aug 2016</span>
+
+    <p>Recently, I&#39;ve been looking at
+<a href="http://libigl.github.io/libigl/tutorial/tutorial.html#meshrepresentation">libigl</a>. I
+didn&#39;t manage to fully figure out their CMake build system for
+tutorials: although each tutorial has a <code>CMakeLists.txt</code>, it&#39;s only
+possible to build them all at once.</p>
+
+<p>So I decided to replace <code>CMakeLists.txt</code> with a good-old <code>Makefile</code>;
+how hard can it be?  Concerning includes, not at all hard: the missing
+files are found with <code>counsel-locate</code> and added to the include path.</p>
+
+<p>But I had some trouble matching a missing <code>ld</code> dependency to a library
+file. Fixed it with a bunch of googling and guesswork; I still wonder
+if there&#39;s a better way. But in the process, I&#39;ve found this useful
+command:</p>
+<div class="highlight"><pre><code class="language-shell" data-lang="shell"><span></span>readelf --syms libGL.so
+</code></pre></div>
+<p>which produces e.g.:</p>
+
+<pre><small>
+Symbol table '.dynsym' contains 2732 entries:
+   Num:    Value          Size Type    Bind   Vis      Ndx Name
+     0: 0000000000000000     0 NOTYPE  LOCAL  DEFAULT  UND
+     1: 000000000004faf0     0 SECTION LOCAL  DEFAULT    8
+     2: 00000000000e8f20     0 FUNC    GLOBAL DEFAULT   11 glGetIntegerui64i_vNV
+     3: 00000000000e13e0     0 FUNC    GLOBAL DEFAULT   11 glGetMultiTexEnvfvEXT
+     4: 00000000000d7440     0 FUNC    GLOBAL DEFAULT   11 glProgramUniform2uiv
+     5: 00000000000cfdc0     0 FUNC    GLOBAL DEFAULT   11 glMultiTexCoord3sv
+</small></pre>
+
+<p>This is a pretty good representation of a binary file: in this
+example, instead of one megabyte of gibberish I see a bit more than
+2732 lines describing the functions this file uses and provides.</p>
+
+<h2 id="viewing-the-symbol-list-automatically">Viewing the symbol list automatically</h2>
+
+<p>I liked the above representation so much that I want to see it by
+default. In Emacs, it&#39;s pretty easy to do with <code>auto-mode-alist</code>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">add-to-list</span> <span class="ss">&#39;auto-mode-alist</span> <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;\\.\\(?:a\\|so\\)\\&#39;&quot;</span> <span class="o">.</span> <span class="nv">elf-mode</span><span class="p">))</span>
+</code></pre></div>
+<p>The above code instructs Emacs to call <code>elf-mode</code> function whenever
+the file name ends in <code>*.a</code> or <code>*.so</code>.</p>
+
+<p>And here&#39;s the body of <code>elf-mode</code>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defvar-local</span> <span class="nv">elf-mode</span> <span class="no">nil</span><span class="p">)</span>
+
+<span class="c1">;;;###autoload</span>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">elf-mode</span> <span class="p">()</span>
+  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">inhibit-read-only</span> <span class="no">t</span><span class="p">))</span>
+    <span class="p">(</span><span class="k">if</span> <span class="nv">elf-mode</span>
+        <span class="p">(</span><span class="k">progn</span>
+          <span class="p">(</span><span class="nf">delete-region</span> <span class="p">(</span><span class="nf">point-min</span><span class="p">)</span> <span class="p">(</span><span class="nf">point-max</span><span class="p">))</span>
+          <span class="p">(</span><span class="nf">insert-file-contents</span> <span class="p">(</span><span class="nf">buffer-file-name</span><span class="p">))</span>
+          <span class="p">(</span><span class="k">setq</span> <span class="nv">elf-mode</span> <span class="no">nil</span><span class="p">))</span>
+      <span class="p">(</span><span class="k">setq</span> <span class="nv">elf-mode</span> <span class="no">t</span><span class="p">)</span>
+      <span class="p">(</span><span class="nf">delete-region</span> <span class="p">(</span><span class="nf">point-min</span><span class="p">)</span> <span class="p">(</span><span class="nf">point-max</span><span class="p">))</span>
+      <span class="p">(</span><span class="nf">insert</span> <span class="p">(</span><span class="nv">shell-command-to-string</span>
+               <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;readelf --syms %s&quot;</span> <span class="p">(</span><span class="nf">buffer-file-name</span><span class="p">)))))</span>
+    <span class="p">(</span><span class="nf">set-buffer-modified-p</span> <span class="no">nil</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">read-only-mode</span> <span class="mi">1</span><span class="p">)))</span>
+</code></pre></div>
+<p>The idea is very simple: <code>elf-mode</code> is a toggle function that replaces
+the buffer contents with the shell command output. It carefully uses
+<code>read-only-mode</code> and <code>set-buffer-modified-p</code> so that the file will not
+be overwritten by accident with the symbol names.</p>
+
+<h2 id="using-autoload-to-avoid-overhead">Using autoload to avoid overhead</h2>
+
+<p>As you might imagine, looking at binaries isn&#39;t really a common
+task. Is it worth to be dragging this code around from now on, loading
+it on each start? The answer is yes, of course. Since the actual cost
+is negligible until the feature is used.</p>
+
+<p>If you look above, <code>elf-mode</code> has an <code>;;;###autoload</code> cookie before
+it. The cookie results in this line in my <code>loaddefs.el</code>:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">autoload</span> <span class="ss">&#39;elf-mode</span> <span class="s">&quot;modes/ora-elf&quot;</span> <span class="s">&quot;&quot;</span> <span class="no">t</span> <span class="no">nil</span><span class="p">)</span>
+</code></pre></div>
+<p>My <code>init.el</code> always loads <code>loaddefs.el</code>, but never loads <code>ora-elf.el</code>
+where the function is defined. That file is only loaded when the
+function <code>elf-mode</code> is called for the first time. The above <code>autoload</code>
+statement simply instructs Emacs to load a particular file when
+<code>elf-mode</code> needs to be called.</p>
+
+<p>When you use the package manager, the autoloads file is generated and
+loaded for you automatically:</p>
+<div class="highlight"><pre><code class="language-shell" data-lang="shell"><span></span>$ tree elpa/ace-link-20160811.112/
+
+elpa/ace-link-20160811.112/
+├── ace-link-autoloads.el
+├── ace-link.el
+├── ace-link.elc
+└── ace-link-pkg.el
+
+<span class="m">0</span> directories, <span class="m">4</span> files
+</code></pre></div>
+<p>Here, the package manager will always load <code>ace-link-autoloads.el</code>,
+which instructs Emacs to load <code>ace-link.el</code> when one of the
+<code>;;;###autoload</code> functions is called and <code>ace-link.el</code> isn&#39;t yet
+loaded.</p>
+
+<p>As an example of how useful delayed loading is: my 6000 line
+<a href="https://github.com/abo-abo/oremacs">config</a> starts in 1.8 seconds.
+About 40% of that time is spent on <code>(package-initialize)</code>, which I
+assume is the package manager loading all those <code>*-autoloads.el</code> files
+that I have in my <code>elpa/</code>.</p>
+
+<h2 id="outro">Outro</h2>
+
+<p>Let me know if there&#39;s interest to have <code>elf-mode</code> on MELPA.  Also, if
+anyone knows how to set mode automatically based on the first few
+chars of the file (all binaries seem to start with <code>^?ELF</code>), I&#39;d like
+to know that as well. Happy hacking!</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2016/07/29/brand-new-swiper-all/">
         Swipe all the files!
       </a>
@@ -635,121 +759,6 @@ for Emacs to simply receive that input.</li>
 <h2 id="outro">Outro</h2>
 
 <p>Thanks to all the contributors. Happy hacking!</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2016/04/04/hydra-doc-syntax/">
-        Extended syntax for hydra docstrings
-      </a>
-    </h1>
-
-    <span class="post-date">04 Apr 2016</span>
-
-    <p>I&#39;ve been getting more and more organized in tracking my tasks and
-time with Org-mode. Still using the usual suspects, of course: GTD and
-Pomodoro, I&#39;m just getting more diligent with them than in the
-previous years.</p>
-
-<p>So today I wanted to prettify the good old
-<code>org-agenda-view-mode-dispatch</code>, which is bound to <kbd>v</kbd> in
-<code>org-agenda-mode</code>. Currently, it&#39;s just a boring static <code>message</code> and
-<code>read-char</code> combination. Why not do it with a
-<a href="https://github.com/abo-abo/hydra">hydra</a> instead?</p>
-
-<p>Here&#39;s the current full code, that uses the newly extended doc syntax:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">org-agenda-mode-map</span>
-    <span class="s">&quot;v&quot;</span> <span class="ss">&#39;hydra-org-agenda-view/body</span><span class="p">)</span>
-
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">org-agenda-cts</span> <span class="p">()</span>
-  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">args</span> <span class="p">(</span><span class="nf">get-text-property</span>
-               <span class="p">(</span><span class="nf">min</span> <span class="p">(</span><span class="nf">1-</span> <span class="p">(</span><span class="nf">point-max</span><span class="p">))</span> <span class="p">(</span><span class="nf">point</span><span class="p">))</span>
-               <span class="ss">&#39;org-last-args</span><span class="p">)))</span>
-    <span class="p">(</span><span class="nf">nth</span> <span class="mi">2</span> <span class="nv">args</span><span class="p">)))</span>
-
-<span class="p">(</span><span class="nv">defhydra</span> <span class="nv">hydra-org-agenda-view</span> <span class="p">(</span><span class="nb">:hint</span> <span class="nv">none</span><span class="p">)</span>
-  <span class="s">&quot;</span>
-<span class="s">_d_: ?d? day        _g_: time grid=?g? _a_: arch-trees</span>
-<span class="s">_w_: ?w? week       _[_: inactive      _A_: arch-files</span>
-<span class="s">_t_: ?t? fortnight  _f_: follow=?f?    _r_: report=?r?</span>
-<span class="s">_m_: ?m? month      _e_: entry =?e?    _D_: diary=?D?</span>
-<span class="s">_y_: ?y? year       _q_: quit          _L__l__c_: ?l?&quot;</span>
-  <span class="p">(</span><span class="s">&quot;SPC&quot;</span> <span class="nv">org-agenda-reset-view</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;d&quot;</span> <span class="nv">org-agenda-day-view</span>
-       <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">eq</span> <span class="ss">&#39;day</span> <span class="p">(</span><span class="nv">org-agenda-cts</span><span class="p">))</span>
-           <span class="s">&quot;[x]&quot;</span> <span class="s">&quot;[ ]&quot;</span><span class="p">))</span>
-  <span class="p">(</span><span class="s">&quot;w&quot;</span> <span class="nv">org-agenda-week-view</span>
-       <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">eq</span> <span class="ss">&#39;week</span> <span class="p">(</span><span class="nv">org-agenda-cts</span><span class="p">))</span>
-           <span class="s">&quot;[x]&quot;</span> <span class="s">&quot;[ ]&quot;</span><span class="p">))</span>
-  <span class="p">(</span><span class="s">&quot;t&quot;</span> <span class="nv">org-agenda-fortnight-view</span>
-       <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">eq</span> <span class="ss">&#39;fortnight</span> <span class="p">(</span><span class="nv">org-agenda-cts</span><span class="p">))</span>
-           <span class="s">&quot;[x]&quot;</span> <span class="s">&quot;[ ]&quot;</span><span class="p">))</span>
-  <span class="p">(</span><span class="s">&quot;m&quot;</span> <span class="nv">org-agenda-month-view</span>
-       <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">eq</span> <span class="ss">&#39;month</span> <span class="p">(</span><span class="nv">org-agenda-cts</span><span class="p">))</span> <span class="s">&quot;[x]&quot;</span> <span class="s">&quot;[ ]&quot;</span><span class="p">))</span>
-  <span class="p">(</span><span class="s">&quot;y&quot;</span> <span class="nv">org-agenda-year-view</span>
-       <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">eq</span> <span class="ss">&#39;year</span> <span class="p">(</span><span class="nv">org-agenda-cts</span><span class="p">))</span> <span class="s">&quot;[x]&quot;</span> <span class="s">&quot;[ ]&quot;</span><span class="p">))</span>
-  <span class="p">(</span><span class="s">&quot;l&quot;</span> <span class="nv">org-agenda-log-mode</span>
-       <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;% -3S&quot;</span> <span class="nv">org-agenda-show-log</span><span class="p">))</span>
-  <span class="p">(</span><span class="s">&quot;L&quot;</span> <span class="p">(</span><span class="nv">org-agenda-log-mode</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">4</span><span class="p">)))</span>
-  <span class="p">(</span><span class="s">&quot;c&quot;</span> <span class="p">(</span><span class="nv">org-agenda-log-mode</span> <span class="ss">&#39;clockcheck</span><span class="p">))</span>
-  <span class="p">(</span><span class="s">&quot;f&quot;</span> <span class="nv">org-agenda-follow-mode</span>
-       <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;% -3S&quot;</span> <span class="nv">org-agenda-follow-mode</span><span class="p">))</span>
-  <span class="p">(</span><span class="s">&quot;a&quot;</span> <span class="nv">org-agenda-archives-mode</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;A&quot;</span> <span class="p">(</span><span class="nv">org-agenda-archives-mode</span> <span class="ss">&#39;files</span><span class="p">))</span>
-  <span class="p">(</span><span class="s">&quot;r&quot;</span> <span class="nv">org-agenda-clockreport-mode</span>
-       <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;% -3S&quot;</span> <span class="nv">org-agenda-clockreport-mode</span><span class="p">))</span>
-  <span class="p">(</span><span class="s">&quot;e&quot;</span> <span class="nv">org-agenda-entry-text-mode</span>
-       <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;% -3S&quot;</span> <span class="nv">org-agenda-entry-text-mode</span><span class="p">))</span>
-  <span class="p">(</span><span class="s">&quot;g&quot;</span> <span class="nv">org-agenda-toggle-time-grid</span>
-       <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;% -3S&quot;</span> <span class="nv">org-agenda-use-time-grid</span><span class="p">))</span>
-  <span class="p">(</span><span class="s">&quot;D&quot;</span> <span class="nv">org-agenda-toggle-diary</span>
-       <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;% -3S&quot;</span> <span class="nv">org-agenda-include-diary</span><span class="p">))</span>
-  <span class="p">(</span><span class="s">&quot;!&quot;</span> <span class="nv">org-agenda-toggle-deadlines</span><span class="p">)</span>
-  <span class="p">(</span><span class="s">&quot;[&quot;</span>
-   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">org-agenda-include-inactive-timestamps</span> <span class="no">t</span><span class="p">))</span>
-     <span class="p">(</span><span class="nv">org-agenda-check-type</span> <span class="no">t</span> <span class="ss">&#39;timeline</span> <span class="ss">&#39;agenda</span><span class="p">)</span>
-     <span class="p">(</span><span class="nv">org-agenda-redo</span><span class="p">)))</span>
-  <span class="p">(</span><span class="s">&quot;q&quot;</span> <span class="p">(</span><span class="nf">message</span> <span class="s">&quot;Abort&quot;</span><span class="p">)</span> <span class="nb">:exit</span> <span class="no">t</span><span class="p">))</span>
-</code></pre></div>
-<p>And here&#39;s how it looks like in action, I simply pressed <kbd>v</kbd> while in the agenda:</p>
-
-<p><img src="/download/hydra-sexp-docstring.png" alt="hydra-sexp-docstring.png"></p>
-
-<p>Since many functions that <code>org-agenda-view-mode-dispatch</code> calls are
-toggles, it makes sense for <code>hydra-org-agenda-view</code> to display the
-status of these toggles.</p>
-
-<p>And it&#39;s actually convenient to toggle a whole lot of things at once,
-and the default red hydra keys really come in handy here.</p>
-
-<h2 id="quick-explanation-of-the-syntax">Quick explanation of the syntax</h2>
-
-<p>Each head of a hydra looks like:</p>
-
-<blockquote>
-<p>(key cmd &amp;optional doc &amp;rest plist)</p>
-</blockquote>
-
-<p>The fairly new bit that I&#39;m using here is the ability to use a sexp
-instead of a plain string in the <code>doc</code> part.  This sexp will be
-evaluated each time the doc is re-displayed. This means that it can
-represent a changing variable, for instance the state of a minor mode
-or a variable.</p>
-
-<p>And here&#39;s the best part: the doc of each head can be quoted in the
-hydra&#39;s docstring by using the corresponding key, e.g. <code>?g?</code>.  This
-allows to have very complex docstrings while keeping them easily
-aligned in a tabular format.</p>
-
-<p>Here is only the hydra&#39;s docstring, copied from the above code:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>_d_: ?d? day        _g_: time grid=?g? _a_: arch-trees
-_w_: ?w? week       _[_: inactive      _A_: arch-files
-_t_: ?t? fortnight  _f_: follow=?f?    _r_: report=?r?
-_m_: ?m? month      _e_: entry =?e?    _D_: diary=?D?
-_y_: ?y? year       _q_: quit          _L__l__c_: ?l?
-</code></pre></div>
-<p>Doesn&#39;t that look simple?</p>
 
   </div>
   

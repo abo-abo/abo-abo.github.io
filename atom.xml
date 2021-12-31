@@ -4,13 +4,102 @@
  <title>(or emacs</title>
  <link href="https://oremacs.com/atom.xml" rel="self"/>
  <link href="https://oremacs.com/"/>
- <updated>2020-12-31T22:13:33+01:00</updated>
+ <updated>2021-12-31T18:36:15+01:00</updated>
  <id>https://oremacs.com</id>
  <author>
    <name></name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Happy New Year 2022!</title>
+   <link href="https://oremacs.com/2021/12/31/happy-new-year/"/>
+   <updated>2021-12-31T00:00:00+01:00</updated>
+   <id>https://oremacs.com/2021/12/31/happy-new-year</id>
+   <content type="html">&lt;h2 id=&quot;intro&quot;&gt;Intro&lt;/h2&gt;
+
+&lt;p&gt;In 2020, I managed to squeeze out just one post. Well, 2021 ran out just as fast as 2020. So here we
+are:&lt;/p&gt;
+
+&lt;pre&gt;
+  &lt;span class=&quot;diff-context&quot;&gt; 2020-12-31-happy-new-year.md&lt;/span&gt;
+  &lt;span class=&quot;diff-indicator-added&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;diff-added&quot;&gt;2021-12-31-happy-new-year.md
+&lt;/span&gt;
+&lt;/pre&gt;
+
+&lt;p&gt;This year, I&amp;#39;ll review a really cool package I&amp;#39;ve found. It&amp;#39;s not new, I just didn&amp;#39;t manage to
+stumble upon it over the years. So it&amp;#39;s new to me, and might be a useful pointer to others as well.&lt;/p&gt;
+
+&lt;h2 id=&quot;emmet-mode&quot;&gt;Emmet-mode&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/smihica/emmet-mode&quot;&gt;Emmet-mode&lt;/a&gt; is a wonderful Emacs package which greatly
+improves HTML code generation. It&amp;#39;s based on &lt;a href=&quot;https://emmet.io/&quot;&gt;Emmet&lt;/a&gt;, so you can read up on the
+syntax &lt;a href=&quot;https://docs.emmet.io/abbreviations/syntax/&quot;&gt;here&lt;/a&gt;.  I&amp;#39;ve discovered it quite recently after
+reading Arjen Wiersma&amp;#39;s
+&lt;a href=&quot;https://arjenwiersma.nl/writeups/emacs/22-years-of-emacs/&quot;&gt;22-years-of-emacs&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The gist is that &lt;code&gt;ul#nav&amp;gt;li.item$*4&amp;gt;a{Item $}&lt;/code&gt; will expand to:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-html&quot; data-lang=&quot;html&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;ul&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;nav&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;li&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;item1&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;Item 1&lt;span class=&quot;p&quot;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;li&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;li&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;item2&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;Item 2&lt;span class=&quot;p&quot;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;li&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;li&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;item3&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;Item 3&lt;span class=&quot;p&quot;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;li&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;li&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;item4&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;Item 4&lt;span class=&quot;p&quot;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;li&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;ul&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The above reminded me of &lt;a href=&quot;https://oremacs.com/2014/12/26/the-little-package-that-could/&quot;&gt;tiny.el&lt;/a&gt;,
+the concept of using &lt;code&gt;*4&lt;/code&gt; to create four items, and &lt;code&gt;$&lt;/code&gt; for automatic numbering is very similar.&lt;/p&gt;
+
+&lt;p&gt;Emmet goes above and beyond the 3 &lt;a href=&quot;https://github.com/joaotavora/yasnippet&quot;&gt;yasnippets&lt;/a&gt; I had in my
+config for inserting HTML tags. Note also the handy &lt;code&gt;html:5&lt;/code&gt; snippet, which expands to:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-html&quot; data-lang=&quot;html&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;!doctype html&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;html&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;lang&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;en&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;meta&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;charset&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;UTF-8&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;title&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;Document&lt;span class=&quot;p&quot;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;title&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;body&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;body&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;html&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And as a cherry on top, when used in &lt;code&gt;clojure-mode&lt;/code&gt;, these snippets will produce &lt;a href=&quot;https://github.com/weavejester/hiccup&quot;&gt;hiccup&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;getting-emmet-mode-for-free&quot;&gt;Getting emmet-mode for free&lt;/h2&gt;
+
+&lt;p&gt;As I wrote &lt;a href=&quot;https://oremacs.com/2015/05/17/avy-goto-line/&quot;&gt;earlier&lt;/a&gt; (feels like ages ago), I like to
+get functionality for free, i.e. without having to sacrifice any old key bindings or learning new
+key bindings. So I&amp;#39;ve integrated the code of &lt;code&gt;emmet-expand-line&lt;/code&gt; with &lt;kbd&gt;C-o&lt;/kbd&gt; (&lt;code&gt;ora-open-line&lt;/code&gt;).
+&lt;br&gt;&lt;a href=&quot;https://github.com/abo-abo/oremacs/blob/614aaac1b49bb61fecfeae4671ec78b863ab054e/keys.el#L347&quot;&gt;Here&lt;/a&gt; is the relevant cond branch:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elisp&quot; data-lang=&quot;elisp&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;and&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;&amp;#39;emmet-mode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;expr&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;emmet-expr-on-line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;markup&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;emmet-transform&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;first&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;expr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;delete-region&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;second&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;expr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;third&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;expr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;emmet-insert-and-flash&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;markup&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;emmet-reposition-cursor&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;expr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;We check if &lt;code&gt;emmet-mode&lt;/code&gt; has detected a valid snippet at point. In that case, expand it. This allows
+us to chain multiple snippet engines (like &lt;code&gt;yasnippet&lt;/code&gt;, &lt;code&gt;auto-yasnippet&lt;/code&gt;, &lt;code&gt;tiny&lt;/code&gt;, &lt;code&gt;emmet-mode&lt;/code&gt;), and
+even provide a &lt;code&gt;hydra&lt;/code&gt; as a fallback for even more easy to reach commands on &lt;kbd&gt;C-o&lt;/kbd&gt;!&lt;/p&gt;
+
+&lt;h2 id=&quot;personal&quot;&gt;Personal&lt;/h2&gt;
+
+&lt;p&gt;Our son, Lev, was born on May 7, 2021. He is our love, happiness, our shining light in 2021.
+And also the reason why I didn&amp;#39;t have too much free time to do Emacs stuff.
+Big thanks to &lt;a href=&quot;https://github.com/basil-conto&quot;&gt;Basil L. Contovounesios&lt;/a&gt; for helping me maintain Ivy!
+I&amp;#39;m hoping to be much more active on Github in 2022.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/download/lev_1.jpg&quot; alt=&quot;Lev&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;In other personal news, I&amp;#39;m currently looking for a new job as a Software Engineer.  If you&amp;#39;d like
+me to work with you, please get in touch via &lt;a href=&quot;https://www.linkedin.com/in/oleh-krehel/&quot;&gt;LinkedIn&lt;/a&gt; or
+&lt;a href=&quot;https://twitter.com/_abo_abo&quot;&gt;Twitter&lt;/a&gt;.  Also, a big thanks to everyone
+&lt;a href=&quot;https://oremacs.com/donate/&quot;&gt;donating&lt;/a&gt; to support my open-source work. It means a lot.&lt;/p&gt;
+
+&lt;h2 id=&quot;outro&quot;&gt;Outro&lt;/h2&gt;
+
+&lt;p&gt;I wish everyone reading this good health in 2022! And happy hacking!&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Happy New Year!</title>

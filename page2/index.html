@@ -139,6 +139,116 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2019/06/27/ivy-directory-improvements/">
+        Ivy usability improvements when dealing with directories
+      </a>
+    </h1>
+
+    <span class="post-date">27 Jun 2019</span>
+
+    <h2 id="introduction">Introduction</h2>
+
+<p>When <a href="https://github.com/abo-abo/swiper">Ivy</a> just started out as a completion framework, the
+functionality was supposed to be simple: select one string from a list of strings. The UI is simple
+enough:</p>
+
+<ul>
+<li>Show the list of strings that match the entered text,</li>
+<li>Use <kbd>C-n</kbd> and <kbd>C-p</kbd> to navigate them,</li>
+<li>Use <kbd>C-m</kbd> or <kbd>C-j</kbd> to submit.</li>
+</ul>
+
+<p>Emacs has three key bindings that mean &quot;Enter&quot;: <kbd>RET</kbd>, <kbd>C-m</kbd>, and
+<kbd>C-j</kbd>. But in terminal mode, <code>emacs -nw</code>, <kbd>RET</kbd> and <kbd>C-m</kbd> are the same
+binding: Emacs can&#39;t distinguish them. So we have at most two bindings. Fortunately, the world of
+completion is simple at the moment, and we only need one binding.</p>
+
+<h2 id="file-name-completion">File name completion</h2>
+
+<p>Enter file name completion. When you&#39;re completing file names, you are selecting not one string, but
+many strings in succession while moving from one directory to the next. So we need at least two key
+bindings:</p>
+
+<ul>
+<li>Use <kbd>C-m</kbd> (<code>ivy-done</code>) to select the current candidate and exit completion.</li>
+<li>Use <kbd>C-j</kbd> (<code>ivy-alt-done</code>) to change the current directory to the current candidate without exiting completion.</li>
+</ul>
+
+<p>What to do when <kbd>C-j</kbd> is used on a file and not on a directory? Might as well open the
+file: same action as <kbd>C-m</kbd>. OK, we had two key bindings, and we have used them. Hopefully
+nothing else comes up.</p>
+
+<p>Enter creating a new file, i.e. selecting something that&#39;s not on the list of strings.
+Suppose I call <code>find-file</code>, enter &quot;do&quot;, and the only match is a directory named &quot;doc&quot;:</p>
+
+<ul>
+<li>Pressing <kbd>C-m</kbd> will end completion with the &quot;doc&quot; directory selected.</li>
+<li>Pressing <kbd>C-j</kbd> will continue completion inside the &quot;doc&quot; directory.</li>
+</ul>
+
+<p>So creating a file named &quot;do&quot; is the third action. Our two &quot;Enter&quot; keybindings are already taken by
+the first two different useful actions. So we need a third key binding. The one I chose is
+<kbd>C-M-j</kbd> (<code>ivy-immediate-done</code>).  It means: I don&#39;t care that the current input is not on
+the list of candidate strings, submit it anyway.</p>
+
+<h2 id="directory-creation">Directory creation</h2>
+
+<p>Enter directory creation: <code>dired-create-directory</code> and <code>make-directory</code>. These built-in Emacs
+commands request file name completion, but what they tell Ivy is no different from what <code>find-file</code>
+tells: &quot;I want to select a file&quot;. However, for these commands, the <kbd>C-M-j</kbd> action is the
+one that makes most sense. Here it would be nice for Ivy to take the back seat and just act like an
+interactive <code>ls</code>, since the user will enter a completely new string that&#39;s not on the list of
+candidates.</p>
+
+<p>For a long time, you still had to use <kbd>C-M-j</kbd> with those commands, to much frustration of
+new but also existing users, including myself. But a few days ago, I looked at the prompt that
+<code>dired-create-directory</code> uses: &quot;Create directory: &quot;. That prompt is passed to Ivy. Using the prompt
+to detect the intention of the command is a bit of a hack, but I think in this case it&#39;s
+justifiable. So now Ivy will recognize that the intention commands that request file name completion
+and pass the &quot;Create directory: &quot; prompt is to create a directory, and all key bindings will do just
+that: <kbd>C-m</kbd>, <kbd>C-j</kbd>, and <kbd>C-M-j</kbd> will behave the same in this case.</p>
+
+<h2 id="an-alternative-key-binding-scheme">An alternative key binding scheme</h2>
+
+<p>Note that <kbd>C-m</kbd> and <kbd>C-j</kbd> behave differently only for directories. But thanks to
+the fact that &quot;.&quot; is always the first candidate, <kbd>C-m</kbd> for directories is equivalent to
+<kbd>C-j C-j</kbd>. So we can get away with just using <code>ivy-alt-done</code>, and bind <kbd>C-m</kbd> to
+<code>ivy-immediate-done</code>. Or swap the two meanings:</p>
+<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nf">define-key</span> <span class="nv">ivy-minibuffer-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-j&quot;</span><span class="p">)</span> <span class="ss">&#39;ivy-immediate-done</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">define-key</span> <span class="nv">ivy-minibuffer-map</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;C-m&quot;</span><span class="p">)</span> <span class="ss">&#39;ivy-alt-done</span><span class="p">)</span>
+</code></pre></div>
+<p>The price to pay here is the extra context switch when we simply want to select a directory.  We
+could the bind <code>ivy-done</code> to <kbd>C-M-j</kbd> and avoid the context switch, but then we&#39;re back to
+three bindings once more. Still, I thought that swapping the bindings is an interesting idea worth
+sharing.</p>
+
+<h2 id="canceling-dired-dwim-target">Canceling <code>dired-dwim-target</code></h2>
+
+<p>Setting <code>dired-dwim-target</code> is a nice productivity boost. It allows to use Emacs in a similar way to
+a two-pane file explorer, like <a href="https://linux.die.net/man/1/mc">mc(1)</a>. But it was really annoying when I was in <code>dir-1</code> with the
+intention to copy a file to a different name in <code>dir-1</code> (e.g. create a backup, or copy a template),
+but the current directory was set to <code>dir-2</code> because of a random <code>dired</code> window I had open. In that
+case, I had to call <code>delete-other-windows</code>, perform the copy, and then restore the window
+configuration with <code>winner-undo</code>.</p>
+
+<p>I did the above many times over many years, until I finally dug into the code of <code>dired.el</code> to see
+how <code>dired-dwim-target</code> worked. Turns out it was storing <code>dir-1</code> in the <code>minibuffer-defaults</code>
+variable.  So now Ivy will use that variable when I press <kbd>M-n</kbd>. All in all, it was a five
+minute fix.  But rather than regret that I didn&#39;t do it years ago, I&#39;m glad I did it now. It only
+remains to build some muscle memory to press <kbd>M-n</kbd> in that situation.</p>
+
+<p>I&#39;m guesstimating that <code>dired-dwim-target</code> works to my advantage 90% of the time when I press
+<kbd>C</kbd> in <code>dired</code>.  For the other 10% of the times, I can now press <kbd>M-n</kbd>.</p>
+
+<h2 id="outro">Outro</h2>
+
+<p>I hope you find the new functionality useful. I&#39;m always open to <a href="https://github.com/abo-abo/swiper/issues/">new ideas and pull
+requests</a>. Happy hacking!</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2019/05/18/hydra-0.15.0/">
         hydra 0.15.0 is out
       </a>
@@ -453,91 +563,6 @@ its place, I think. Happy hacking!</p>
 <a href="https://www.patreon.com/abo_abo">Patreon</a>!</p>
 
 <p>PPS. Thanks to everyone who contributes <a href="https://github.com/abo-abo/swiper/">issues and patches</a>!</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2019/03/24/shell-apt/">
-        Progress bars for apt in shell
-      </a>
-    </h1>
-
-    <span class="post-date">24 Mar 2019</span>
-
-    <h2 id="intro">Intro</h2>
-
-<p>For a couple years now, I use <kbd>M-x</kbd> <code>shell</code> as my main shell. Recently, I have fixed one of
-the minor annoyances that go along with using <code>shell</code> in Emacs. At least since Ubuntu 18.04, the
-terminal &quot;progress bar&quot; feature, displayed below is non-optional:</p>
-
-<p><img src="/download/apt-install-progress-1.png" alt="apt-install-progress-1"></p>
-
-<p>It uses terminal escape codes to display the progress bar, and <code>shell-mode</code> can&#39;t handle them well,
-so they clobber a lot of the output.</p>
-
-<h2 id="initial-work-around">Initial work around</h2>
-
-<p>Previously, I was using this work around, since <code>apt-get</code> doesn&#39;t display the progress bar:</p>
-<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span><span class="c1"># sudo apt upgrade</span>
-sudo apt-get upgrade
-</code></pre></div>
-<h2 id="progress-bar-in-the-mode-line">Progress bar in the mode line</h2>
-
-<p>But typing 4 extra chars is hard. And <code>apt-get</code> will likely get these progress bars at some point as
-well. So I spent around an hour of my weekend hacking an Elisp solution. Here is the code:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nv">advice-add</span>
- <span class="ss">&#39;ansi-color-apply-on-region</span>
- <span class="nb">:before</span> <span class="ss">&#39;ora-ansi-color-apply-on-region</span><span class="p">)</span>
-
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">ora-ansi-color-apply-on-region</span> <span class="p">(</span><span class="nv">begin</span> <span class="nv">end</span><span class="p">)</span>
-  <span class="s">&quot;Fix progress bars for e.g. apt(8).</span>
-<span class="s">Display progress in the mode line instead.&quot;</span>
-  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">end-marker</span> <span class="p">(</span><span class="nf">copy-marker</span> <span class="nv">end</span><span class="p">))</span>
-        <span class="nv">mb</span><span class="p">)</span>
-    <span class="p">(</span><span class="k">save-excursion</span>
-      <span class="p">(</span><span class="nf">goto-char</span> <span class="p">(</span><span class="nf">copy-marker</span> <span class="nv">begin</span><span class="p">))</span>
-      <span class="p">(</span><span class="k">while</span> <span class="p">(</span><span class="nf">re-search-forward</span> <span class="s">&quot;\0337&quot;</span> <span class="nv">end-marker</span> <span class="no">t</span><span class="p">)</span>
-        <span class="p">(</span><span class="k">setq</span> <span class="nv">mb</span> <span class="p">(</span><span class="nf">match-beginning</span> <span class="mi">0</span><span class="p">))</span>
-        <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">re-search-forward</span> <span class="s">&quot;\0338&quot;</span> <span class="nv">end-marker</span> <span class="no">t</span><span class="p">)</span>
-          <span class="p">(</span><span class="nv">ora-apt-progress-message</span>
-           <span class="p">(</span><span class="nf">substring-no-properties</span>
-            <span class="p">(</span><span class="nf">delete-and-extract-region</span> <span class="nv">mb</span> <span class="p">(</span><span class="nf">point</span><span class="p">))</span>
-            <span class="mi">2</span> <span class="mi">-2</span><span class="p">)))))))</span>
-
-<span class="p">(</span><span class="nb">defun</span> <span class="nv">ora-apt-progress-message</span> <span class="p">(</span><span class="nv">progress</span><span class="p">)</span>
-  <span class="p">(</span><span class="k">setq</span> <span class="nv">mode-line-process</span>
-        <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">string-match</span>
-             <span class="s">&quot;Progress: \\[ *\\([0-9]+\\)%\\]&quot;</span> <span class="nv">progress</span><span class="p">)</span>
-            <span class="p">(</span><span class="nf">list</span>
-             <span class="p">(</span><span class="nf">concat</span> <span class="s">&quot;:%s &quot;</span>
-                     <span class="p">(</span><span class="nv">match-string</span> <span class="mi">1</span> <span class="nv">progress</span><span class="p">)</span>
-                     <span class="s">&quot;%%%% &quot;</span><span class="p">))</span>
-          <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;:%s&quot;</span><span class="p">)))</span>
-  <span class="p">(</span><span class="nf">force-mode-line-update</span><span class="p">))</span>
-</code></pre></div>
-<p>The solution will detect e.g. <code>&quot;\0337...Progress: [ 25%]...\0338&quot;</code>, remove it from the shell buffer
-and display <code>&quot;25%&quot;</code> in the mode line instead.</p>
-
-<h2 id="use-the-echo-area-instead-of-the-mode-line">Use the Echo Area instead of the mode line</h2>
-
-<p>The above is a good enough solution specifically for <code>apt(8)</code>, but not for the generic case. Let&#39;s
-try to emulate how e.g. <code>gnome-terminal</code> handles these escape sequences.  It takes sequences like
-<code>&quot;\0337.*\0338&quot;</code> and displays them in the bottom of the window. Kind of like the Emacs Echo
-Area. That&#39;s easy enough to do:</p>
-<div class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">ora-apt-progress-message</span> <span class="p">(</span><span class="nv">progress</span><span class="p">)</span>
-  <span class="p">(</span><span class="nf">message</span>
-   <span class="p">(</span><span class="nv">replace-regexp-in-string</span>
-    <span class="s">&quot;%&quot;</span> <span class="s">&quot;%%&quot;</span>
-    <span class="p">(</span><span class="nv">ansi-color-apply</span> <span class="nv">progress</span><span class="p">))))</span>
-</code></pre></div>
-<p>Above, we use <code>ansi-color-apply</code> to get rid of any extra terminal escape codes.  I decided to stay
-with the Echo Area version instead of the mode line version. Here&#39;s how it looks like:</p>
-
-<p><img src="/download/apt-install-progress-2.png" alt="apt-install-progress-2"></p>
-
-<p>You can find all of the above code in <a href="https://github.com/abo-abo/oremacs/blob/afa4d0e3b1a60467ec163220e9823d1f014ab6a4/modes/ora-shell.el">my config</a>.
-Happy hacking!</p>
 
   </div>
   
